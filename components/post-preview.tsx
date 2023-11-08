@@ -18,21 +18,24 @@ export default function PostPreview({
           <CoverImage title={title} coverImage={coverImage} slug={slug} />
         )}
       </div>
-      <h3 className="text-3xl mb-3 leading-snug">
+      <h3 className="text-2xl mb-3 leading-snug heading1 font-bold">
         <Link
           href={`/posts/${slug}`}
-          className="hover:underline"
+          className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
           dangerouslySetInnerHTML={{ __html: title }}
         ></Link>
       </h3>
-      <div className="text-lg mb-4">
+      <div className="flex items-center gap-4">
+      <Avatar author={author} />
+      <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
+      <div className="text-md mb-4 pt-4">
         <Date dateString={date} />
       </div>
-      <div
-        className="text-lg leading-relaxed mb-4"
+      </div>
+      {/* <div
+        className="text-lg leading-normal mb-4 body"
         dangerouslySetInnerHTML={{ __html: excerpt }}
-      />
-      <Avatar author={author} />
+      /> */}
     </div>
   )
 }

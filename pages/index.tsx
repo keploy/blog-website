@@ -7,18 +7,34 @@ import Intro from '../components/intro'
 import Layout from '../components/layout'
 import { getAllPostsForHome } from '../lib/api'
 import { CMS_NAME } from '../lib/constants'
+import Header from '../components/header'
 
 export default function Index({ allPosts: { edges }, preview }) {
   const heroPost = edges[0]?.node
-  const morePosts = edges.slice(1)
+  const excerpt = getExcerpt(edges[0]?.node.excerpt); 
+  const morePosts = edges.slice(1) 
+
+  function getExcerpt(content) {
+    const maxWords = 50;
+    // Split the content into an array of words
+    const words = content.split(' ');
+  
+    // Ensure the excerpt does not exceed the maximum number of words
+    if (words.length > maxWords) {
+      return words.slice(0, maxWords).join(' ') + '...';
+    }
+  
+    return content;
+  }
 
   return (
     <Layout preview={preview}>
       <Head>
-        <title>{`Next.js Blog Example with ${CMS_NAME}`}</title>
+        <title>{`Keploy`}</title>
       </Head>
       <Container>
-        <Intro />
+        {/* <Intro /> */}
+        <Header />
         {heroPost && (
           <HeroPost
             title={heroPost.title}
@@ -26,7 +42,7 @@ export default function Index({ allPosts: { edges }, preview }) {
             date={heroPost.date}
             author={heroPost.author}
             slug={heroPost.slug}
-            excerpt={heroPost.excerpt}
+            excerpt={excerpt}
           />
         )}
         {morePosts.length > 0 && <MoreStories posts={morePosts} />}
