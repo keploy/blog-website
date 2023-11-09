@@ -26,7 +26,7 @@ Copy the .env.local.example file in this directory to .env.local (which will be 
 cp .env.local.example .env.local
 ```
 
-Then open .env.local and set WORDPRESS_API_URL to be the URL to your GraphQL endpoint in WordPress. For example: https://myapp.wpengine.com/graphql.
+Then open .env.local and set WORDPRESS_API_URL to be the URL to your GraphQL endpoint in WordPress. For example: https://Testapp.com/graphql.
 
 Your .env.local file should look like this:
 
