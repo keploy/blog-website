@@ -63,7 +63,54 @@ export async function getAllPostsForHome(preview) {
   const data = await fetchAPI(
     `
     query AllPosts {
-      posts(first: 20, where: { orderby: { field: DATE, order: DESC } }) {
+      posts(first: 100, where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+              }
+            }
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `,
+    {
+      variables: {
+        onlyEnabled: !preview,
+        preview,
+      },
+    }
+  )
+
+  return data?.posts
+}
+
+
+// Fnction for fetching post with technology category
+
+export async function getAllPostsForTechnology(preview) {
+  const data = await fetchAPI(
+    `
+    query AllPostsForCategory{
+      posts(first: 20, where: { orderby: { field: DATE, order: DESC } categoryName: "technology" }) {
         edges {
           node {
             title
@@ -85,6 +132,13 @@ export async function getAllPostsForHome(preview) {
                 }
               }
             }
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
           }
         }
       }
@@ -92,14 +146,14 @@ export async function getAllPostsForHome(preview) {
   `,
     {
       variables: {
-        onlyEnabled: !preview,
         preview,
       },
     }
-  )
+  );
 
   return data?.posts
 }
+
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post
