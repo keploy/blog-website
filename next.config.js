@@ -11,6 +11,7 @@ const { protocol, hostname, port, pathname } = new URL(
 
 /** @type {import('next').NextConfig} */
 module.exports = {
+  basePath: '/blog',
   images: {
     domains: ['secure.gravatar.com', 'keploy.io'],
     remotePatterns: [
