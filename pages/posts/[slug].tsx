@@ -17,6 +17,7 @@ import { CMS_NAME } from '../../lib/constants'
 export default function Post({ post, posts, preview }) {
   const router = useRouter()
   const morePosts = posts?.edges
+  console.log();
 
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />

@@ -31,10 +31,10 @@ export default function Header() {
             <Link href={"https://keploy.io/docs/"}>Docs</Link>
           </li>
           <li className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]">
-            <Link href={"/"}>Blog</Link>
+            <Link href={"/technology"}>Blog</Link>
           </li>
           <li className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]">
-            <Link href={"https://community.keploy.io/"}>Community</Link>
+            <Link href={"/"}>Community</Link>
           </li>
         </ul>
       </div>
@@ -51,10 +51,10 @@ export default function Header() {
             <Link href={"https://keploy.io/docs/"}>Docs</Link>
           </li>
           <li className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]">
-            <Link href={"/"}>Blog</Link>
+            <Link href={"/technology"}>Blog</Link>
           </li>
           <li className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]">
-            <Link href={"https://community.keploy.io/"}>Community</Link>
+            <Link href={"/"}>Community</Link>
           </li>
         </ul>
       </div>
