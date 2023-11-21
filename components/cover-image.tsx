@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function CoverImage({ title, coverImage, slug, isCommunity }: Props) {
-  const basePath = isCommunity ? '/community/posts/' : '/technology/posts/';
+  const basePath = isCommunity ? '/community/' : '/technology/';
 
   const image = (
     <Image

@@ -13,7 +13,7 @@ export default function HeroPost({
   isCommunity = false,
 }) {
 
-  const basePath = isCommunity ? '/community/posts' : '/technology/posts';
+  const basePath = isCommunity ? '/community' : '/technology';
 
   return (
     <section>
