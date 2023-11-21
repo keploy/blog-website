@@ -10,17 +10,20 @@ export default function PostPreview({
   excerpt,
   author,
   slug,
+  isCommunity = false,
 }) {
+
+  const basePath = isCommunity ? '/community/posts' : '/technology/posts';
   return (
     <div>
       <div className="mb-5">
         {coverImage && (
-          <CoverImage title={title} coverImage={coverImage} slug={slug} />
+          <CoverImage title={title} coverImage={coverImage} slug={slug} isCommunity={isCommunity} />
         )}
       </div>
       <h3 className="text-2xl mb-3 leading-snug heading1 font-bold">
         <Link
-          href={`/posts/${slug}`}
+          href={`${basePath}/${slug}`}
           className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
           dangerouslySetInnerHTML={{ __html: title }}
         ></Link>

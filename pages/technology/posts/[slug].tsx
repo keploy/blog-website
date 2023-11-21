@@ -55,7 +55,7 @@ export default function Post({ post, posts, preview }) {
             </article>
 
             <SectionSeparator />
-            {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+            {morePosts.length > 0 && <MoreStories posts={morePosts} isCommunity={false} />}
           </>
         )}
       </Container>
@@ -84,7 +84,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug()
 
   return {
-    paths: allPosts.edges.map(({ node }) => `technology/posts/${node.slug}`) || [],
+    paths: allPosts.edges.map(({ node }) => `/technology/posts/${node.slug}`) || [],
     fallback: true,
   }
 }

@@ -45,7 +45,7 @@ export default function Index({ allPosts: { edges }, preview }) {
             excerpt={excerpt}
           />
         )}
-        {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+        {morePosts.length > 0 && <MoreStories posts={morePosts} isCommunity={false} />}
       </Container>
     </Layout>
   )
