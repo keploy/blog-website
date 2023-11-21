@@ -59,11 +59,55 @@ export async function getAllPostsWithSlug() {
   return data?.posts
 }
 
-export async function getAllPostsForHome(preview) {
+// export async function getAllPostsForHome(preview) {
+//   const data = await fetchAPI(
+//     `
+//     query AllPosts {
+//       posts(first: 100, where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
+//         edges {
+//           node {
+//             title
+//             excerpt
+//             slug
+//             date
+//             featuredImage {
+//               node {
+//                 sourceUrl
+//               }
+//             }
+//             author {
+//               node {
+//                 name
+//               }
+//             }
+//             categories {
+//               edges {
+//                 node {
+//                   name
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   `,
+//     {
+//       variables: {
+//         onlyEnabled: !preview,
+//         preview,
+//       },
+//     }
+//   )
+
+//   return data?.posts
+// }
+
+export async function getAllPostsForHome(preview, limit, cursor) {
   const data = await fetchAPI(
     `
-    query AllPosts {
-      posts(first: 100, where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
+    query AllPostsForHome($limit: Int!, $cursor: String) {
+      posts(first: $limit, after: $cursor, where: { orderby: { field: DATE, order: DESC } }) {
         edges {
           node {
             title
@@ -89,19 +133,26 @@ export async function getAllPostsForHome(preview) {
             }
           }
         }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
       }
     }
   `,
     {
       variables: {
-        onlyEnabled: !preview,
-        preview,
+        limit,
+        cursor,
       },
     }
-  )
+  );
 
-  return data?.posts
+  return data?.posts;
 }
+
+
+
 
 
 // Fnction for fetching post with technology category
