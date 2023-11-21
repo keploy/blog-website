@@ -1,17 +1,17 @@
 import Head from 'next/head'
 import { GetStaticProps } from 'next'
-import Container from '../components/container'
-import MoreStories from '../components/more-stories'
-import HeroPost from '../components/hero-post'
-import Intro from '../components/intro'
-import Layout from '../components/layout'
-import { getAllPostsForTechnology } from '../lib/api'
-import { CMS_NAME } from '../lib/constants'
-import Header from '../components/header'
+import Container from '../../components/container'
+import MoreStories from '../../components/more-stories'
+import HeroPost from '../../components/hero-post'
+import Intro from '../../components/intro'
+import Layout from '../../components/layout'
+import { getAllPostsForHome } from '../../lib/api'
+import { CMS_NAME } from '../../lib/constants'
+import Header from '../../components/header'
 
-export default function Technology({ allPosts: { edges }, preview }) {
+export default function Community({ allPosts: { edges }, preview }) {
   const heroPost = edges[0]?.node
-  const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt) : null; 
+  const excerpt = getExcerpt(edges[0]?.node.excerpt); 
   const morePosts = edges.slice(1) 
 
   function getExcerpt(content) {
@@ -52,7 +52,7 @@ export default function Technology({ allPosts: { edges }, preview }) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const allPosts = await getAllPostsForTechnology(preview)
+  const allPosts = await getAllPostsForHome(preview)
 
   return {
     props: { allPosts, preview },
