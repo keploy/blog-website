@@ -15,7 +15,7 @@ export default function PostHeader({
     <>
       <PostTitle>{title}</PostTitle>
       <div className="hidden md:flex flex-col items-center justify-center md:mb-12">
-        <Avatar author={author} />
+        {/* <Avatar author={author} /> */}
         <div className="mb-6 text-lg">
           <Date dateString={date} />
           <Categories categories={categories} />
