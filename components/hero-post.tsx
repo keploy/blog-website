@@ -10,20 +10,24 @@ export default function HeroPost({
   excerpt,
   author,
   slug,
+  isCommunity = false,
 }) {
+
+  const basePath = isCommunity ? '/community/posts' : '/technology/posts';
+
   return (
     <section>
       <div className="lg:grid lg:grid-cols-2 lg:gap-x-16 mb-20 md:mb-28">
         <div className="mb-8 md:mb-16">
           {coverImage && (
-            <CoverImage title={title} coverImage={coverImage} slug={slug} />
+            <CoverImage title={title} coverImage={coverImage} slug={slug} isCommunity={isCommunity} />
           )}
         </div>
         <div className="">
           <div>
             <h3 className="heading1 mb-4 text-4xl lg:text-6xl font-bold leading-tight">
               <Link
-                href={`/posts/${slug}`}
+                href={`${basePath}/${slug}`}
                 className="hero-title-link title-link  bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
                 dangerouslySetInnerHTML={{ __html: title }}
               ></Link>

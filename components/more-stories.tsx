@@ -1,7 +1,6 @@
 import PostPreview from './post-preview'
 
-export default function MoreStories({ posts }) {
-  console.log(posts);
+export default function MoreStories({ posts, isCommunity }) {
 
   return (
     <section>
@@ -18,6 +17,7 @@ export default function MoreStories({ posts }) {
             author={node.author}
             slug={node.slug}
             excerpt={node.excerpt}
+            isCommunity={isCommunity}
           />
         ))}
       </div>

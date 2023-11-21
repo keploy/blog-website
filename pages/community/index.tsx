@@ -43,9 +43,10 @@ export default function Community({ allPosts: { edges }, preview }) {
             author={heroPost.author}
             slug={heroPost.slug}
             excerpt={excerpt}
+            isCommunity={true}
           />
         )}
-        {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+        {morePosts.length > 0 && <MoreStories posts={morePosts} isCommunity={true} />}
       </Container>
     </Layout>
   )
