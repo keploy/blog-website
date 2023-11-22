@@ -13,7 +13,7 @@ export default function Community({ allPosts: { edges }, preview }) {
   const heroPost = edges[0]?.node
   const excerpt = getExcerpt(edges[0]?.node.excerpt); 
   const morePosts = edges.slice(1) 
-
+  console.log(heroPost.ppmaAuthorName);
   function getExcerpt(content) {
     const maxWords = 50;
     // Split the content into an array of words
@@ -40,7 +40,7 @@ export default function Community({ allPosts: { edges }, preview }) {
             title={heroPost.title}
             coverImage={heroPost.featuredImage}
             date={heroPost.date}
-            author={heroPost.author}
+            author={heroPost.ppmaAuthorName}
             slug={heroPost.slug}
             excerpt={excerpt}
             isCommunity={true}
