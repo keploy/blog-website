@@ -14,7 +14,7 @@ export default function MoreStories({ posts, isCommunity }) {
             title={node.title}
             coverImage={node.featuredImage}
             date={node.date}
-            author={node.author}
+            author={node.ppmaAuthorName}
             slug={node.slug}
             excerpt={node.excerpt}
             isCommunity={isCommunity}

@@ -80,6 +80,7 @@ export async function getAllPostsForHome(preview) {
                 name
               }
             }
+            ppmaAuthorName
             categories {
               edges {
                 node {
