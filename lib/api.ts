@@ -133,6 +133,7 @@ export async function getAllPostsForTechnology(preview) {
                 }
               }
             }
+            ppmaAuthorName
             categories {
               edges {
                 node {
