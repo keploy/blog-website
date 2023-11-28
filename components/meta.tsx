@@ -32,7 +32,7 @@ export default function Meta() {
       <meta name="theme-color" content="#000" />
       <link rel="alternate" type="application/rss+xml" href="blog/feed.xml" />
       <meta name="description" content={`Kepoy Blog`} />
-      <meta property="og:image" content={HOME_OG_IMAGE_URL} />
+      <meta property="og:image" content='https://keploy.io/wp/wp-content/uploads/2023/11/thumbnil--e1701152864829.png' />
 
       {/* <link
         rel="stylesheet"
