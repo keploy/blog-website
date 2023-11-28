@@ -1,5 +1,5 @@
-import Head from 'next/head'
-import { CMS_NAME, HOME_OG_IMAGE_URL } from '../lib/constants'
+import Head from "next/head";
+import { CMS_NAME, HOME_OG_IMAGE_URL } from "../lib/constants";
 
 export default function Meta() {
   return (
@@ -22,21 +22,25 @@ export default function Meta() {
         href="blog/favicon/Group.png"
       />
       <link rel="manifest" href="blog/favicon/site.webmanifest" />
-      <link
-        rel="mask-icon"
-        href="blog/favicon/Group.svg"
-        color="#000000"
-      />
+      <link rel="mask-icon" href="blog/favicon/Group.svg" color="#000000" />
       <link rel="shortcut icon" href="blog/favicon/Group" />
       <meta name="msapplication-TileColor" content="#000000" />
-      <meta name="msapplication-config" content="blog/favicon/browserconfig.xml" />
+      <meta
+        name="msapplication-config"
+        content="blog/favicon/browserconfig.xml"
+      />
       <meta name="theme-color" content="#000" />
       <link rel="alternate" type="application/rss+xml" href="blog/feed.xml" />
-      <meta
-        name="description"
-        content={`Kepoy Blog`}
-      />
+      <meta name="description" content={`Kepoy Blog`} />
       <meta property="og:image" content={HOME_OG_IMAGE_URL} />
+
+      {/* <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css"
+      />
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+      <script>hljs.highlightAll();</script> */}
     </Head>
-  )
+  );
 }
