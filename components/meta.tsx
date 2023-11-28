@@ -32,7 +32,7 @@ export default function Meta() {
       <meta name="theme-color" content="#000" />
       <link rel="alternate" type="application/rss+xml" href="blog/feed.xml" />
       <meta name="description" content={`Kepoy Blog`} />
-      <meta property="og:image" content='https://ibb.co/LzrXwTk' />
+      <meta property="og:image" content={HOME_OG_IMAGE_URL} />
       <meta property="og:image:width" content='1200' />
       <meta property="og:image:height" content='627' />
 
