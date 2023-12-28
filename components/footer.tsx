@@ -1,14 +1,6 @@
-interface LinkItem {
-  text: string;
-  url: string;
-}
-interface Section {
-  title: string;
-  links: LinkItem[];
-}
-
+import Link from "next/link";
 export default function Footer() {
-  const sections: Section[] = [
+  const sections = [
     {
       title: "Resources",
       links: [
@@ -35,16 +27,14 @@ export default function Footer() {
         <div className="grid sm:grid-cols-12 gap-8 py-8 md:py-12">
           <div className="sm:col-span-12 lg:col-span-3">
             <div className="mb-2">
-              <a
-                href={"https://keploy.io/"}
-                className="block"
-                aria-label="Keploy"
-              >
-                <img
-                  src="/blog/images/sidebyside-transparent.svg"
-                  width={130}
-                  alt=""
-                />
+              <a className="block" aria-label="Keploy" href="/">
+                <Link href={"https://keploy.io/"}>
+                  <img
+                    src="/blog/images/sidebyside-transparent.svg"
+                    width={130}
+                    alt=""
+                  />
+                </Link>
               </a>
             </div>
             <div className="text-sm text-neutral-300">
@@ -68,7 +58,7 @@ export default function Footer() {
               key={index}
               className="sm:col-span-6 md:col-span-4 lg:col-span-3"
             >
-              <h6 className="text-[#ff914d] font-[500] mb-2 footer-font tracking-tighter">
+              <h6 className="text-[#ff914d] font-[500] mb-2 footer-font tracking-tighter mb-2">
                 {section?.title}
               </h6>
               <ul className="text-sm">
@@ -87,7 +77,7 @@ export default function Footer() {
           ))}
 
           <div className="sm:col-span-6 md:col-span-4 lg:col-span-3">
-            <h6 className="text-[#ff914d] font-[500] mb-2 footer-font tracking-tighter">
+            <h6 className="text-[#ff914d] font-[500] mb-2 footer-font tracking-tighter mb-2">
               Find us on CNCF Landscape
             </h6>
             <a href="https://landscape.cncf.io/card-mode?selected=keploy">
@@ -148,4 +138,6 @@ export default function Footer() {
       </div>
     </footer>
   );
-};
+}
+
+
