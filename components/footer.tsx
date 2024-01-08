@@ -1,6 +1,17 @@
 import Link from "next/link";
-export default function Footer() {
-  const sections = [
+
+interface LinkItem {
+  text: string;
+  url: string;
+}
+
+interface Section {
+  title: string;
+  links: LinkItem[];
+}
+
+const Footer: React.FC = () => {
+  const sections: Section[] = [
     {
       title: "Resources",
       links: [
@@ -27,15 +38,17 @@ export default function Footer() {
         <div className="grid sm:grid-cols-12 gap-8 py-8 md:py-12">
           <div className="sm:col-span-12 lg:col-span-3">
             <div className="mb-2">
-              <a className="block" aria-label="Keploy" href="/">
-                <Link href={"https://keploy.io/"}>
-                  <img
-                    src="/blog/images/sidebyside-transparent.svg"
-                    width={130}
-                    alt=""
-                  />
-                </Link>
-              </a>
+              <Link
+                href={"https://keploy.io/"}
+                className="block"
+                aria-label="Keploy"
+              >
+                <img
+                  src="/blog/images/sidebyside-transparent.svg"
+                  width={130}
+                  alt=""
+                />
+              </Link>
             </div>
             <div className="text-sm text-neutral-300">
               <a
@@ -138,6 +151,5 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
-
-
+};
+export default Footer;
