@@ -1,17 +1,7 @@
 import Link from "next/link";
 
-interface LinkItem {
-  text: string;
-  url: string;
-}
-
-interface Section {
-  title: string;
-  links: LinkItem[];
-}
-
-const Footer: React.FC = () => {
-  const sections: Section[] = [
+export default function Footer() {
+  const sections = [
     {
       title: "Resources",
       links: [
@@ -151,5 +141,4 @@ const Footer: React.FC = () => {
       </div>
     </footer>
   );
-};
-export default Footer;
+}
