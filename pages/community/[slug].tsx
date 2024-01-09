@@ -10,6 +10,7 @@ import PostHeader from '../../components/post-header'
 import SectionSeparator from '../../components/section-separator'
 import Layout from '../../components/layout'
 import PostTitle from '../../components/post-title'
+import PostContentTitle from '../../components/post-content-table'
 import Tags from '../../components/tags'
 import { getAllPostsWithSlug, getPostAndMorePosts } from '../../lib/api'
 import { CMS_NAME } from '../../lib/constants'
@@ -48,10 +49,18 @@ export default function Post({ post, posts, preview }) {
                 author={post.ppmaAuthorName}
                 categories={post.categories}
               />
-              <PostBody content={post.content} />
-              <footer>
-                {post.tags.edges.length > 0 && <Tags tags={post.tags} />}
-              </footer>
+              <div className="flex flex-wrap mx-auto">
+                {/* Left side */}
+                <PostContentTitle content={post.content} />
+                {/* Right side */}
+                <div
+                  className="w-full md:w-3/5 lg:w-2/3 xl:w-3/4 min-h-screen">
+                  <PostBody content={post.content} />
+                  <footer>
+                    {post.tags.edges.length > 0 && <Tags tags={post.tags} />}
+                  </footer>
+                </div>
+              </div>
             </article>
 
             <SectionSeparator />
