@@ -84,6 +84,20 @@ const GithubBtn = () => {
   );
 };
 
+const MenuBtn = () => {
+  return (
+    <svg
+      className="w-6 h-6 fill-current text-gray-900"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect y="4" width="24" height="2"></rect>
+      <rect y="11" width="24" height="2"></rect>
+      <rect y="18" width="24" height="2"></rect>
+    </svg>
+  );
+};
+
 export default function Header() {
   const [toggleMenu, setToggleMenu] = useState(false);
 
@@ -127,9 +141,13 @@ export default function Header() {
               <WaitListBtn />
             </div>
             <div className="flex lg:hidden">
-              <button onClick={toggleMenuHandler}>
+              <button
+                onClick={toggleMenuHandler}
+                className={toggleMenu ? "hamburger active" : "hamburger "}
+              >
                 <span className="sr-only">Menu</span>
-                <img src="/blog/images/Menu.svg" className="w-6 h-6"></img>
+                <MenuBtn />
+                {/* <img src="/blog/images/Menu.svg" className="w-6 h-6"></img> */}
               </button>
               <div>
                 {toggleMenu ? (
