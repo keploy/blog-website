@@ -49,7 +49,7 @@ export default function Post({ post, posts, preview }) {
                 author={post.ppmaAuthorName}
                 categories={post.categories}
               />
-              <div className="flex flex-wrap mx-auto">
+              <div className="flex flex-wrap mx-auto justify-center">
                 {/* Left side */}
                 <PostContentTitle content={post.content} />
                 {/* Right side */}
