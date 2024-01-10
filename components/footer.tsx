@@ -1,4 +1,3 @@
-import Link from "next/link";
 interface LinkItem {
   text: string;
   url: string;
@@ -8,7 +7,7 @@ interface Section {
   links: LinkItem[];
 }
 
-const Footer: React.FC = () => {
+export default function Footer() {
   const sections: Section[] = [
     {
       title: "Resources",
@@ -36,7 +35,7 @@ const Footer: React.FC = () => {
         <div className="grid sm:grid-cols-12 gap-8 py-8 md:py-12">
           <div className="sm:col-span-12 lg:col-span-3">
             <div className="mb-2">
-              <Link
+              <a
                 href={"https://keploy.io/"}
                 className="block"
                 aria-label="Keploy"
@@ -46,7 +45,7 @@ const Footer: React.FC = () => {
                   width={130}
                   alt=""
                 />
-              </Link>
+              </a>
             </div>
             <div className="text-sm text-neutral-300">
               <a
@@ -150,5 +149,3 @@ const Footer: React.FC = () => {
     </footer>
   );
 };
-
-export default Footer;
