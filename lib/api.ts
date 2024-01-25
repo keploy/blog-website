@@ -156,6 +156,22 @@ export async function getAllPostsForTechnology(preview) {
   return data?.posts
 }
 
+export async function getAllAuthors(){
+  const data = await fetchAPI(
+    `query getAllAuthors{
+      posts(first:1000){
+        edges{
+          node{
+            ppmaAuthorName
+          }
+        }
+      }
+    }`
+  )
+
+  return data?.posts
+}
+
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post
