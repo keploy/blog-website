@@ -163,6 +163,16 @@ export async function getAllAuthors(){
         edges{
           node{
             ppmaAuthorName
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
           }
         }
       }
