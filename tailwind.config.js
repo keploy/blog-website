@@ -12,7 +12,6 @@ module.exports = {
         'accent-7': '#333',
         success: '#0070f3',
         cyan: '#79FFE1',
-        darkBlue:"#0F172A",
       },
       spacing: {
         28: '7rem',
@@ -33,9 +32,6 @@ module.exports = {
         small: '0 5px 10px rgba(0, 0, 0, 0.12)',
         medium: '0 8px 30px rgba(0, 0, 0, 0.12)',
       },
-      fontFamily:{
-        'sansp': ['Helvetica', 'Arial', 'sans-serif'],
-      }
     },
   },
   plugins: [],
