@@ -40,7 +40,16 @@ export default function AuthorMapping({
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
+  const handleNextPage = () =>{
+    if(currentPage<totalPages){
+    setCurrentPage(currentPage+1);
+    }
+  }
+  const handlePrevPage = () =>{
+    if(currentPage>1){
+      setCurrentPage(currentPage-1);
+    }
+  }
   return (
     <div>
       {visibleAuthors.map((author, index) => (
@@ -63,7 +72,12 @@ export default function AuthorMapping({
       <div>
         <hr className="border-b border-gray-700 my-4" />
       </div>
+      
       <div className="flex justify-center mt-4">
+      <button className={`mx-2 px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800`}
+      onClick={handlePrevPage}>
+        Back---
+        </button>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
           <button
             key={pageNumber}
@@ -75,6 +89,10 @@ export default function AuthorMapping({
             {pageNumber}
           </button>
         ))}
+        <button className={`mx-2 px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800`}
+        onClick={handleNextPage}>
+        ---Next
+        </button>
       </div>
     </div>
   );
