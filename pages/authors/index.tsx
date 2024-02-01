@@ -11,11 +11,11 @@ export default function authors({AllAuthors:{edges},preview}){
     // console.log(authorImage);
     // console.log(authorNameArray);
     return(
-        <div className="bg-gradient-to-r from-blue-100 to-purple-100">
+        <div className="bg-darkBlue">
         <Layout preview={preview} >
         <Header/>
         <Container>
-            <h1 className="text-7xl font-mono text-blue-800">Authors...</h1>
+            <h1 className="text-7xl font-extrabold font-sansp text-slate-200">Authors</h1>
             <AuthorMapping AuthorArray={authorArray} />
         </Container>
         </Layout>

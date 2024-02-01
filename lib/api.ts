@@ -182,6 +182,33 @@ export async function getAllAuthors(){
   return data?.posts
 }
 
+export async function getPostsByAuthor(){
+  const data = await fetchAPI(
+    `query getPostsByAuthor{
+      posts(first: 10000) 
+      {
+        edges {
+          node {
+           title
+           ppmaAuthorName
+           slug
+           categories {
+            edges {
+              node {
+                name
+              }
+            }
+          }
+          }
+        }
+      }
+    }
+    `
+  )
+
+  return data?.posts
+}
+
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post
