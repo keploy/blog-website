@@ -192,6 +192,11 @@ export async function getPostsByAuthor(){
            title
            ppmaAuthorName
            slug
+           featuredImage {
+            node {
+              sourceUrl
+            }
+          }
            categories {
             edges {
               node {

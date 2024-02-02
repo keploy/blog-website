@@ -9,7 +9,6 @@ export default function AuthorMapping({
 
   const authorData = [];
   const ppmaAuthorNameArray = [];
-  const slugArray = [];
 
   AuthorArray.forEach((item) => {
     const ppmaAuthorName = formatAuthorName(item.ppmaAuthorName);

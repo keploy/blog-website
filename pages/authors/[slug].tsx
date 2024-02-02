@@ -9,14 +9,12 @@ import PostByAuthorMapping from "../../components/postByAuthorMapping";
 export default function authorPage({preview,filteredPosts}){
     const router = useRouter();
     const {slug} = router.query;
-    const AuthorName = slug;
     return(
-        <div className="bg-gradient-to-r from-blue-100 to-purple-100">
+        <div className="authormapping">
         <Layout preview={preview} >
         <Header/>
         <Container>
-        <h1 className="text-4xl font-bold mb-4">Author Details</h1>
-          <p className="text-lg mb-2">Posts by {slug}:</p>
+        <h1 className="text-6xl font-bold mb-4 text-slate-200">Author Details</h1>
         <PostByAuthorMapping 
         filteredPosts = {filteredPosts}
         />
@@ -42,7 +40,6 @@ export const getStaticProps:GetStaticProps = async({
     const { slug } = params;
     const postsByAuthor = await getPostsByAuthor();
     const filteredPosts = postsByAuthor.edges.filter((item) => item.node.ppmaAuthorName === slug);
-    console.log(filteredPosts);
     return{
         props:{preview,filteredPosts},
         revalidate:10,
