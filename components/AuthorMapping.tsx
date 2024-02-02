@@ -40,20 +40,26 @@ export default function AuthorMapping({
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  const handleNextPage = () =>{
-    if(currentPage<totalPages){
-    setCurrentPage(currentPage+1);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
     }
-  }
-  const handlePrevPage = () =>{
-    if(currentPage>1){
-      setCurrentPage(currentPage-1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     }
-  }
+  };
+
   return (
     <div>
       {visibleAuthors.map((author, index) => (
-        <div key={index} className="p-5 rounded-lg ml-2 md:ml-4 lg:ml-8 xl:ml-12 mt-5 mb-5 flex flex-col sm:flex-row justify-between hover:shadow-md hover:shadow-white-600">
+        <div
+          key={index}
+          className="p-5 rounded-lg ml-2 md:ml-4 lg:ml-8 xl:ml-12 mt-5 mb-5 flex flex-col sm:flex-row justify-between hover:shadow-md hover:shadow-white-600"
+        >
           <div className="flex items-center mb-3 sm:mb-0">
             <img
               src={author.avatarUrl}
@@ -72,26 +78,30 @@ export default function AuthorMapping({
       <div>
         <hr className="border-b border-gray-700 my-4" />
       </div>
-      
-      <div className="flex justify-center mt-4">
-      <button className={`mx-2 px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800`}
-      onClick={handlePrevPage}>
-        Back---
+
+      <div className="flex justify-center mt-4 sm:mt-8">
+        <button
+          className={`mx-1 sm:mx-2 px-4 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800`}
+          onClick={handlePrevPage}
+        >
+          Back
         </button>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
           <button
             key={pageNumber}
             onClick={() => handlePageChange(pageNumber)}
-            className={`mx-2 px-3 py-2 rounded-md ${
+            className={`mx-1 sm:mx-2 px-4 py-3 rounded-md text-sm ${
               pageNumber === currentPage ? "bg-gray-800 text-white" : "bg-gray-300 text-gray-800"
             }`}
           >
             {pageNumber}
           </button>
         ))}
-        <button className={`mx-2 px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800`}
-        onClick={handleNextPage}>
-        ---Next
+        <button
+          className={`mx-1 sm:mx-2 px-4 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800`}
+          onClick={handleNextPage}
+        >
+          Next
         </button>
       </div>
     </div>
