@@ -55,30 +55,28 @@ export default function AuthorMapping({
   return (
     <div>
       {visibleAuthors.map((author, index) => (
-        <div
-          key={index}
-          className="p-5 rounded-lg ml-2 md:ml-4 lg:ml-8 xl:ml-12 mt-5 mb-5 flex flex-col sm:flex-row justify-between hover:shadow-md hover:shadow-white-600"
-        >
-          <div className="flex items-center mb-3 sm:mb-0">
-            <img
-              src={author.avatarUrl}
-              alt={`${author.ppmaAuthorName}'s Avatar`}
-              className="w-15 h-15 rounded-full mr-3 sm:mr-6"
-            />
-            <h2 className="text-xl font-medium  text-slate-300">{author.ppmaAuthorName}</h2>
+        <Link href={`/authors/${author.slug}`} key={index}>
+          <div
+            className="p-5 rounded-lg ml-2 md:ml-4 lg:ml-8 xl:ml-12 mt-5 mb-5 flex flex-col sm:flex-row justify-between rounded-lg border border-transparent transform transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+          >
+            <div className="flex items-center mb-3 sm:mb-0">
+              <img
+                src={author.avatarUrl}
+                alt={`${author.ppmaAuthorName}'s Avatar`}
+                className="w-12 h-12 rounded-full mr-3 sm:mr-6"
+              />
+              <h2 className="text-xl font-medium text-slate-300">
+                {author.ppmaAuthorName}
+              </h2>
+            </div>
           </div>
-          <Link href={`/authors/${author.slug}`}>
-            <button className="bg-gradient-to-r from-blue-200 to-purple-100 text-purple px-4 py-3 rounded-2xl shadow-md mt-2 sm:mt-0 hover:bg-gradient-to-r hover:from-purple-200 hover:to-blue-100 hover:ease-in duration-500 text-sm text-blue-800">
-              View Posts
-            </button>
-          </Link>
-        </div>
+        </Link>
       ))}
       <div>
         <hr className="border-b border-gray-700 my-4" />
       </div>
 
-      <div className="flex justify-center mt-4 sm:mt-8">
+      <div className="flex justify-center mt- mb-4 sm:mt-8">
         <button
           className={`mx-1 sm:mx-2 px-4 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800`}
           onClick={handlePrevPage}
@@ -90,7 +88,9 @@ export default function AuthorMapping({
             key={pageNumber}
             onClick={() => handlePageChange(pageNumber)}
             className={`mx-1 sm:mx-2 px-4 py-3 rounded-md text-sm ${
-              pageNumber === currentPage ? "bg-gray-800 text-white" : "bg-gray-300 text-gray-800"
+              pageNumber === currentPage
+                ? "bg-gray-800 text-white"
+                : "bg-gray-300 text-gray-800"
             }`}
           >
             {pageNumber}
