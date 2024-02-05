@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function AuthorMapping({
   AuthorArray,
-  itemsPerPage = 5 // You can customize the number of items per page
+  itemsPerPage = 6 // You can customize the number of items per page
 }) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -54,27 +54,29 @@ export default function AuthorMapping({
 
   return (
     <div>
-      {visibleAuthors.map((author, index) => (
-        <Link href={`/authors/${author.slug}`} key={index}>
-          <div
-            className="p-5 rounded-lg ml-2 md:ml-4 lg:ml-8 xl:ml-12 mt-5 mb-5 flex flex-col sm:flex-row justify-between rounded-lg border border-transparent transform transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          >
-            <div className="flex items-center mb-3 sm:mb-0">
-              <img
-                src={author.avatarUrl}
-                alt={`${author.ppmaAuthorName}'s Avatar`}
-                className="w-12 h-12 rounded-full mr-3 sm:mr-6"
-              />
-              <h2 className="text-xl font-medium text-slate-300">
-                {author.ppmaAuthorName}
-              </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {visibleAuthors.map((author, index) => (
+          <Link href={`/authors/${author.slug}`} key={index}>
+            <div
+              className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between rounded-lg border border-transparent transform transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+            >
+              <div className="flex items-center mb-3 sm:mb-0">
+                <img
+                  src={author.avatarUrl}
+                  alt={`${author.ppmaAuthorName}'s Avatar`}
+                  className="w-12 h-12 rounded-full mr-3 sm:mr-6"
+                />
+                <h2 className="text-xl font-medium text-slate-300">
+                  {author.ppmaAuthorName}
+                </h2>
+              </div>
             </div>
-          </div>
-        </Link>
-      ))}
-      <div>
-        <hr className="border-b border-gray-700 my-4" />
+          </Link>
+        ))}
       </div>
+        <div>
+          <hr className="border-b border-gray-700 my-4" />
+        </div>
 
       <div className="flex justify-center mt- mb-4 sm:mt-8">
         <button
