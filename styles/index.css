@@ -184,3 +184,7 @@ pre {
   background-color: #222222 !important;
   color: antiquewhite;
 }
+
+.footer-font{
+  font-family: '__Inter_e66fe9', '__Inter_Fallback_e66fe9', sans-serif;
+}
