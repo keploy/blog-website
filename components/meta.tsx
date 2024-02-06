@@ -34,9 +34,6 @@ export default function Meta({featuredImage}) {
       <meta name="description" content={`Kepoy Blog`} />
       <meta property="og:title" content="Keploy's Blog" />
       <meta property="og:description" content="A place for all the blogs." />
-      <meta property="og:image" content={HOME_OG_IMAGE_URL} />
-      <meta property="og:image:width" content='1200' />
-      <meta property="og:image:height" content='627' />
       {featuredImage && (
         <>
           <meta property="og:image" content={featuredImage} />
@@ -45,7 +42,12 @@ export default function Meta({featuredImage}) {
         </>
       )}
       {!featuredImage && (
-        <meta property="og:image" content={HOME_OG_IMAGE_URL} />
+        <>
+        <meta property="og:image" content={HOME_OG_IMAGE_URL}/>
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="627" />
+        </>
+        
       )}
       {/* <link
         rel="stylesheet"
