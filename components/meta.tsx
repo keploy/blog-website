@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { CMS_NAME, HOME_OG_IMAGE_URL } from "../lib/constants";
 
-export default function Meta() {
+export default function Meta({featuredImage}) {
   return (
     <Head>
       <link
@@ -37,7 +37,16 @@ export default function Meta() {
       <meta property="og:image" content={HOME_OG_IMAGE_URL} />
       <meta property="og:image:width" content='1200' />
       <meta property="og:image:height" content='627' />
-
+      {featuredImage && (
+        <>
+          <meta property="og:image" content={featuredImage} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="627" />
+        </>
+      )}
+      {!featuredImage && (
+        <meta property="og:image" content={HOME_OG_IMAGE_URL} />
+      )}
       {/* <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css"
