@@ -7,11 +7,6 @@ export default function AuthorMapping({
 }) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    // Set the container height to at least 70% of the viewport height
-    const minHeight = Math.max(window.innerHeight * 0.7, 300); // Ensure a minimum height of 300px
-    document.getElementById("authorContainer").style.minHeight = `${minHeight}px`;
-  }, []);
 
   const authorData = [];
   const ppmaAuthorNameArray = [];
@@ -59,7 +54,7 @@ export default function AuthorMapping({
   };
 
   return (
-    <div id="authorContainer" className="h-[70vh] min-h-[300px]">
+    <div className="container mx-auto mt-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-accent-1 m-4">
         {visibleAuthors.map((author, index) => (
           <Link href={`/authors/${author.slug}`} key={index}>
