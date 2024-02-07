@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function AuthorMapping({
   AuthorArray,
-  itemsPerPage = 6 // You can customize the number of items per page
+  itemsPerPage = 8 // You can customize the number of items per page
 }) {
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    // Set the container height to at least 70% of the viewport height
+    const minHeight = Math.max(window.innerHeight * 0.7, 300); // Ensure a minimum height of 300px
+    document.getElementById("authorContainer").style.minHeight = `${minHeight}px`;
+  }, []);
 
   const authorData = [];
   const ppmaAuthorNameArray = [];
@@ -53,20 +59,20 @@ export default function AuthorMapping({
   };
 
   return (
-    <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div id="authorContainer" className="h-[70vh] min-h-[300px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-accent-1 m-4">
         {visibleAuthors.map((author, index) => (
           <Link href={`/authors/${author.slug}`} key={index}>
             <div
-              className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between rounded-lg border border-transparent transform transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+              className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between rounded-lg border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30"
             >
               <div className="flex items-center mb-3 sm:mb-0">
                 <img
                   src={author.avatarUrl}
                   alt={`${author.ppmaAuthorName}'s Avatar`}
-                  className="w-12 h-12 rounded-full mr-3 sm:mr-6"
+                  className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
                 />
-                <h2 className="text-xl font-medium text-slate-300">
+                <h2 className="text-xl font-medium text-slate-900 sm:text-sm ">
                   {author.ppmaAuthorName}
                 </h2>
               </div>
@@ -74,14 +80,16 @@ export default function AuthorMapping({
           </Link>
         ))}
       </div>
-        <div>
-          <hr className="border-b border-gray-700 my-4" />
-        </div>
-
-      <div className="flex justify-center mt- mb-4 sm:mt-8">
+      <div>
+        <hr className="border-b border-gray-200 my-4" />
+      </div>
+      <div className="flex justify-center mb-4 sm:mt-4 sm:mb-3">
         <button
-          className={`mx-1 sm:mx-2 px-4 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800`}
+          className={`mx-1 sm:mx-2 px-4 py-2 rounded-md ${
+            currentPage <=1  ? "bg-gray-400 text-gray-600" : "bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800"
+          }`}
           onClick={handlePrevPage}
+          disabled={currentPage < 1}
         >
           Back
         </button>
@@ -99,8 +107,11 @@ export default function AuthorMapping({
           </button>
         ))}
         <button
-          className={`mx-1 sm:mx-2 px-4 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800`}
+          className={`mx-1 sm:mx-1 px-4 py-2 rounded-md ${
+            currentPage >= totalPages ? "bg-gray-400 text-gray-600" : "bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800"
+          }`}
           onClick={handleNextPage}
+          disabled={currentPage >= totalPages}
         >
           Next
         </button>

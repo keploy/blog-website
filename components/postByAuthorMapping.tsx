@@ -5,7 +5,7 @@ const PostByAuthorMapping = ({ filteredPosts }) => {
 
   return (
     <div className="container mx-auto mt-8">
-      <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold mb-8 text-slate-300">
+      <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold mb-8 text-slate-900">
         Posts by {AuthorName}
       </h1>
 
@@ -13,9 +13,9 @@ const PostByAuthorMapping = ({ filteredPosts }) => {
         {filteredPosts.map(({ node }) => (
           <li key={node.slug} className="mb-8">
             <a href={`/blog/${node.categories.edges[0].node.name}/${node.slug}`}>
-              <div className="group rounded-lg border border-transparent px-5 py-4 transition duration-300 ease-in-out transform hover:scale-105 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
+              <div className="group rounded-lg border border-transparent px-5 py-4 transition duration-300 ease-in-out transform hover:scale-105 transition-colors hover:border-accent-2 hover:dark:bg-neutral-400/30">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg sm:text-xl font-bold mb-2 text-slate-300 mr-4">
+                  <h2 className="text-lg sm:text-xl font-bold mb-2 text-slate-600 mr-4">
                     {node.title}
                   </h2>
                 </div>

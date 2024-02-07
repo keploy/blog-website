@@ -10,11 +10,11 @@ export default function authorPage({preview,filteredPosts}){
     const router = useRouter();
     const {slug} = router.query;
     return(
-        <div className="authormapping">
+        <div className="bg-accent-1">
         <Layout preview={preview} >
         <Header/>
         <Container>
-        <h1 className="text-6xl font-bold mb-4 text-slate-200">Author Details</h1>
+        <h1 className="text-6xl font-bold mb-4 text-slate-900  bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]">Author Details</h1>
         <PostByAuthorMapping 
         filteredPosts = {filteredPosts}
         />

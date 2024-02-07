@@ -239,6 +239,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       excerpt
       slug
       date
+      ppmaAuthorName
       featuredImage {
         node {
           sourceUrl
@@ -283,6 +284,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
                   ...AuthorFields
                 }
               }
+              ppmaAuthorName
             }
           }
         }
@@ -294,6 +296,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
         edges {
           node {
             ...PostFields
+            
           }
         }
       }
