@@ -17,14 +17,13 @@ import { CMS_NAME } from "../../lib/constants";
 export default function Post({ post, posts, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
-  console.log();
 
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />;
   }
 
   return (
-    <Layout preview={preview} featuredImage={post.featuredImage.node.sourceUrl}>
+    <Layout preview={preview} featuredImage={post.featuredImage.node.sourceUrl} Title={post.title} Description={`Blog About ${post.title}`}>
       <Header />
       <Container>
         {router.isFallback ? (

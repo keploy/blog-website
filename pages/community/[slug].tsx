@@ -24,7 +24,7 @@ export default function Post({ post, posts, preview }) {
   }
 
   return (
-    <Layout preview={preview} featuredImage={post.featuredImage.node.sourceUrl}>
+    <Layout preview={preview} featuredImage={post.featuredImage.node.sourceUrl} Title={post.title} Description={`Blog About ${post.title}`}>
       <Header />
       <Container>
         {router.isFallback ? (

@@ -12,7 +12,7 @@ import Link from "next/link";
 import { HOME_OG_IMAGE_URL } from "../lib/constants";
 export default function Index({ allPosts: { edges }, preview }) {
   return (
-    <Layout preview={preview} featuredImage={HOME_OG_IMAGE_URL}>
+    <Layout preview={preview} featuredImage={HOME_OG_IMAGE_URL} Title={`Keploy's Blog`} Description={"Elevate Your Tech Insight.Frontiers of Innovation and Integration."}>
       <Head>
         <title>{`Keploy`}</title>
       </Head>
