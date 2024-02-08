@@ -7,7 +7,7 @@ import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-python"
 import "prismjs/components/prism-yaml"
 import "prismjs/components/prism-javascript"
-
+import "prismjs/components/prism-go"
 export default function PrismLoader() {
   useEffect(() => {
     Prism.highlightAll();
