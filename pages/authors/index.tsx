@@ -13,7 +13,7 @@ export default function Authors({ AllAuthors: { edges }, preview }) {
       <Layout preview={preview}>
         <Header />
         <Container>
-          <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold font-mono text-slate-900 ">
+          <h1 className="bg-gradient-to-r ml-10 from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
             AUTHORS
           </h1>
           <AuthorMapping AuthorArray={authorArray} />

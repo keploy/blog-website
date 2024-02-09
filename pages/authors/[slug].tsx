@@ -14,7 +14,7 @@ export default function authorPage({ preview, filteredPosts }) {
       <Layout preview={preview}>
         <Header />
         <Container>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 text-slate-900">
+          <h1 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-6xl sm:xl font-bold tracking-tighter leading-tight">
             Author Details
           </h1>
 

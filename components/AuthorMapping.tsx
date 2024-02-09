@@ -67,7 +67,7 @@ export default function AuthorMapping({
                   alt={`${author.ppmaAuthorName}'s Avatar`}
                   className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
                 />
-                <h2 className="text-xl font-medium text-slate-900 sm:text-sm ">
+                <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-2xl heading1 md:text-xl font-bold tracking-tighter leading-tight">
                   {author.ppmaAuthorName}
                 </h2>
               </div>
@@ -81,7 +81,7 @@ export default function AuthorMapping({
       <div className="flex justify-center mb-4 sm:mt-4 sm:mb-3">
         <button
           className={`mx-1 sm:mx-2 px-4 py-2 rounded-md ${
-            currentPage <=1  ? "bg-gray-400 text-gray-600" : "bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800"
+            currentPage <=1  ? "bg-gray-300 text-gray-600" : "bg-gray-300 text-gray-600 hover:bg-gray-300 hover:text-gray-800"
           }`}
           onClick={handlePrevPage}
           disabled={currentPage < 1}
@@ -94,7 +94,7 @@ export default function AuthorMapping({
             onClick={() => handlePageChange(pageNumber)}
             className={`mx-1 sm:mx-2 px-4 py-3 rounded-md text-sm ${
               pageNumber === currentPage
-                ? "bg-gray-800 text-white"
+                ? "bg-gray-300 text-white"
                 : "bg-gray-300 text-gray-800"
             }`}
           >
@@ -103,7 +103,7 @@ export default function AuthorMapping({
         ))}
         <button
           className={`mx-1 sm:mx-1 px-4 py-2 rounded-md ${
-            currentPage >= totalPages ? "bg-gray-400 text-gray-600" : "bg-gray-800 text-white hover:bg-gray-300 hover:text-gray-800"
+            currentPage >= totalPages ? "bg-gray-300 text-gray-600" : "bg-gray-300 text-gray-600 hover:bg-gray-300 hover:text-gray-800"
           }`}
           onClick={handleNextPage}
           disabled={currentPage >= totalPages}

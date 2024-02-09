@@ -5,7 +5,7 @@ const PostByAuthorMapping = ({ filteredPosts }) => {
 
   return (
     <div className="container mx-auto mt-8">
-      <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold mb-8 text-slate-900">
+      <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold mb-8 text-slate-900 bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom font-bold tracking-tighter leading-tight w-max">
         Posts by {AuthorName}
       </h1>
 
