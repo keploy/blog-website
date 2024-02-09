@@ -38,7 +38,7 @@ export default function Post({ post, posts, preview }) {
   }
   
   return (
-    <Layout preview={preview}>
+    <Layout preview={preview} featuredImage={post.featuredImage.node.sourceUrl} Title={post.title} Description={`Blog About ${post.title}`}>
       <Header />
       <Container>
         {router.isFallback ? (
@@ -50,10 +50,6 @@ export default function Post({ post, posts, preview }) {
                 <title>
                   {`${post.title} | Next.js Blog Example with ${CMS_NAME}`}
                 </title>
-                <meta
-                  property="og:image"
-                  content={post.featuredImage?.node.sourceUrl}
-                />
               </Head>
               <PostHeader
                 title={post.title}

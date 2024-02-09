@@ -26,9 +26,9 @@ export default function Index({ allPosts: { edges }, preview }) {
 
     return content;
   }
-
+  console.log(heroPost);
   return (
-    <Layout preview={preview}>
+    <Layout preview={preview} featuredImage={heroPost.featuredImage.node.sourceUrl} Title={heroPost.title} Description={`Blog from the Technology Page`}>
       <Head>
         <title>{`Keploy`}</title>
       </Head>
