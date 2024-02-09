@@ -16,7 +16,7 @@ export default function HeroPost({
 
   return (
     <section>
-      <div className="bg-gray-100 border px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center lg:hover:-translate-y-0.5 lg:hover:-translate-x-0.5 lg:hover:shadow-md transition">
+      <div className="bg-gray-100 border px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center  lg:hover:shadow-md transition">
         <div className="mb-8 lg:mb-0 ">
           {coverImage && (
             <CoverImage
