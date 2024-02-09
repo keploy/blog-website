@@ -59,7 +59,7 @@ export default function AuthorMapping({
         {visibleAuthors.map((author, index) => (
           <Link href={`/authors/${author.slug}`} key={index}>
             <div
-              className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between rounded-lg border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30"
+              className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between rounded-lg border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30 hover:scale-105 cursor-pointer"
             >
               <div className="flex items-center mb-3 sm:mb-0">
                 <img
