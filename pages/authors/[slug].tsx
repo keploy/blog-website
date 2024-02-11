@@ -12,9 +12,10 @@ import { fileURLToPath } from "url";
 export default function authorPage({ preview, filteredPosts }) {
   const router = useRouter();
   const { slug } = router.query;
+  const authorName  =  filteredPosts[0].node.ppmaAuthorName;
   return (
     <div className="bg-accent-1">
-      <Layout preview={preview} featuredImage={HOME_OG_IMAGE_URL} Title={`${filteredPosts[0].node.Title} Page`} Description={`Giving the List of all the Authors`}>
+      <Layout preview={preview} featuredImage={HOME_OG_IMAGE_URL} Title={`${authorName} Page`} Description={`Posts by ${authorName}`}>
         <Header />
         <Container>
           <h1 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-6xl sm:xl font-bold tracking-tighter leading-tight">
