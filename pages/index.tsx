@@ -5,30 +5,46 @@ import MoreStories from "../components/more-stories";
 import HeroPost from "../components/hero-post";
 import Intro from "../components/intro";
 import Layout from "../components/layout";
-import { getAllPostsForHome } from "../lib/api";
+import { getAllPostsForHome, getAllPostsForTechnology } from "../lib/api";
 import { CMS_NAME } from "../lib/constants";
 import Header from "../components/header";
 import Link from "next/link";
 import { HOME_OG_IMAGE_URL } from "../lib/constants";
-export default function Index({ allPosts: { edges }, preview }) {
+import TopBlogs from "../components/topBlogs";
+export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
-    <Layout preview={preview} featuredImage={HOME_OG_IMAGE_URL} Title={`Keploy's Blog`} Description={"Elevate Your Tech Insight.Frontiers of Innovation and Integration."}>
+    <Layout
+      preview={preview}
+      featuredImage={HOME_OG_IMAGE_URL}
+      Title={`Keploy's Blog`}
+      Description={
+        "Elevate Your Tech Insight.Frontiers of Innovation and Integration."
+      }
+    >
       <Head>
         <title>{`Keploy`}</title>
       </Head>
       <Header />
       <Container>
         <div className="">
-          <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
+          <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-col lg:flex-row justify-between items-center">
+            <div className="blog-hero-img">
+              <img
+                src="/blog/images/blog-bunny.png"
+                alt="hero image"
+                width={600}
+                height={600}
+              />
+            </div>
             <div className="content">
-              <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
+              <h2 className=" font-bold 2xl:text-7xl text-6xl lg:text-8xl text-secondary-300 ">
                 Keploy's Blog
               </h2>
-              <p className="content-body body 2xl:text-2xl text-lg w-max mt-6">
+              <p className="content-body body 2xl:text-xl text-sm  mt-2 text-center">
                 Elevate Your Tech Insight. Navigating the <br />
                 Frontiers of Innovation and Integration.
               </p>
-              <div className="btn-wrapper flex gap-4 mt-6">
+              {/* <div className="btn-wrapper flex gap-4 mt-6">
                 <Link
                   href="/technology"
                   className="tech-blog cursor-pointer 2xl:text-xl text-lg body md:px-12 px-8 py-2 border-2 border-black rounded-xl hover:bg-orange-400 hover:text-white hover:border-orange-400 "
@@ -41,26 +57,20 @@ export default function Index({ allPosts: { edges }, preview }) {
                 >
                   Community
                 </Link>
-              </div>
-            </div>
-
-            <div className="blog-hero-img">
-              <img
-                src="/blog/images/blog-bunny.png"
-                alt="hero image"
-                width={600}
-                height={600}
-                className=""
-              />
+              </div> */}
             </div>
           </div>
-          <div className="open-source-vector-container bottom-9 mb-12 flex md:justify-start justify-center">
+          <TopBlogs
+            communityPosts={communityPosts}
+            technologyPosts={technologyPosts}
+          />
+          {/* <div className="open-source-vector-container bottom-9 mb-12 flex md:justify-start justify-center">
             <img
               src="/blog/images/open-source-vector.png"
               alt="vector"
               className=" spin-anim"
             />
-          </div>
+          </div> */}
         </div>
       </Container>
     </Layout>
@@ -68,10 +78,21 @@ export default function Index({ allPosts: { edges }, preview }) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const allPosts = await getAllPostsForHome(preview);
+  const allCommunityPosts = await getAllPostsForHome(preview);
+  const allTehcnologyPosts = await getAllPostsForTechnology(preview);
 
   return {
-    props: { allPosts, preview },
+    props: {
+      communityPosts:
+        allCommunityPosts?.edges?.length > 3
+          ? allCommunityPosts?.edges?.slice(0, 3)
+          : allCommunityPosts?.edges,
+      technologyPosts:
+        allTehcnologyPosts?.edges?.length > 3
+          ? allTehcnologyPosts?.edges?.slice(0, 3)
+          : allTehcnologyPosts.edges,
+      preview,
+    },
     revalidate: 10,
   };
 };
