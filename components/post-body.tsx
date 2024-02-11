@@ -9,6 +9,7 @@ export default function PostBody({ content }) {
       <div
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: content }}
+        suppressHydrationWarning
       />
     </div>
   )
