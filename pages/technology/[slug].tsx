@@ -18,18 +18,12 @@ import PrismLoader from "../../components/prism-loader";
 export default function Post({ post, posts, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
-  console.log(post.content);
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />;
   }
   console.log(post.content);
   return (
-    <Layout preview={preview}>
-      <Head>
-        <title>{`${post.title} | Next.js Blog Example with ${CMS_NAME}`}</title>
-        <meta property="og:image" content={post.featuredImage?.node.sourceUrl} />
-      </Head>
-
+    <Layout preview={preview} featuredImage={post.featuredImage.node.sourceUrl} Title={post.title} Description={`Blog About ${post.title}`}>
       <Header />
       <Container>
         {router.isFallback ? (
@@ -38,6 +32,11 @@ export default function Post({ post, posts, preview }) {
           <>
             <PrismLoader /> {/* Load Prism.js here */}
             <article>
+              <Head>
+                <title>
+                  {`${post.title} | Next.js Blog Example with ${CMS_NAME}`}
+                </title>
+              </Head>
               <PostHeader
                 title={post.title}
                 coverImage={post.featuredImage}
