@@ -10,9 +10,17 @@ import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { fileURLToPath } from "url";
 
 export default function authorPage({ preview, filteredPosts }) {
+  if (!filteredPosts || filteredPosts.length === 0) {
+    return (
+      <div>
+        <p>No posts found for this author.</p>
+      </div>
+    );
+  }
   const router = useRouter();
   const { slug } = router.query;
-  const authorName  =  filteredPosts[0].node.ppmaAuthorName;
+  const authorName  =  filteredPosts[0]?.node?.ppmaAuthorName;
+
   return (
     <div className="bg-accent-1">
       <Layout preview={preview} featuredImage={HOME_OG_IMAGE_URL} Title={`${authorName} Page`} Description={`Posts by ${authorName}`}>
