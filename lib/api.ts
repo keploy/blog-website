@@ -156,6 +156,64 @@ export async function getAllPostsForTechnology(preview) {
   return data?.posts
 }
 
+export async function getAllAuthors(){
+  const data = await fetchAPI(
+    `query getAllAuthors{
+      posts(first:1000){
+        edges{
+          node{
+            ppmaAuthorName
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    }`
+  )
+
+  return data?.posts
+}
+
+export async function getPostsByAuthor(){
+  const data = await fetchAPI(
+    `query getPostsByAuthor{
+      posts(first: 10000) 
+      {
+        edges {
+          node {
+           title
+           ppmaAuthorName
+           slug
+           featuredImage {
+            node {
+              sourceUrl
+            }
+          }
+           categories {
+            edges {
+              node {
+                name
+              }
+            }
+          }
+          }
+        }
+      }
+    }
+    `
+  )
+
+  return data?.posts
+}
+
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post
@@ -181,6 +239,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       excerpt
       slug
       date
+      ppmaAuthorName
       featuredImage {
         node {
           sourceUrl
@@ -225,6 +284,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
                   ...AuthorFields
                 }
               }
+              ppmaAuthorName
             }
           }
         }
@@ -236,6 +296,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
         edges {
           node {
             ...PostFields
+            
           }
         }
       }
