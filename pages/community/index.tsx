@@ -27,7 +27,7 @@ export default function Community({ allPosts: { edges }, preview }) {
   }
 
   return (
-    <Layout preview={preview} featuredImage={heroPost.featuredImage.node.sourceUrl} Title={heroPost.title} Description={`Blog from the Technology Page`}>
+    <Layout preview={preview} featuredImage={heroPost?.featuredImage?.node.sourceUrl} Title={heroPost?.title} Description={`Blog from the Technology Page`}>
       <Head>
         <title>{`Keploy`}</title>
       </Head>
