@@ -46,7 +46,7 @@ export default function Post({ post, posts, preview }) {
             <article>
               <Head>
                 <title>
-                  {`${post?.title} | Next.js Blog Example with ${CMS_NAME}`}
+                  {`${post?.title} | Keploy Blog`}
                 </title>
               </Head>
               <PostHeader
