@@ -32,22 +32,6 @@ const postBody = ({ content, post }) => {
   return replacedContent;
 };
 
-// Define formatAuthor function before the Post component
-
-
-const postBody = ({ content, post }) => {
-  // Define the regular expression pattern to match the entire URL structure
-  const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
-
-  // Replace the URL in the content with the desired one using the regular expression
-  const replacedContent = content.replace(
-    urlPattern,
-    `/blog/authors/${post.ppmaAuthorName}/`
-  );
-
-  return replacedContent;
-};
-
 export default function Post({ post, posts, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
