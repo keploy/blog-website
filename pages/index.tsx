@@ -1,9 +1,6 @@
 import Head from "next/head";
 import { GetStaticProps } from "next";
 import Container from "../components/container";
-import MoreStories from "../components/more-stories";
-import HeroPost from "../components/hero-post";
-import Intro from "../components/intro";
 import Layout from "../components/layout";
 import { getAllPostsForHome, getAllPostsForTechnology } from "../lib/api";
 import { CMS_NAME } from "../lib/constants";
@@ -28,16 +25,8 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       <Container>
         <div className="">
           <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-col lg:flex-row justify-between items-center">
-            <div className="blog-hero-img">
-              <img
-                src="/blog/images/blog-bunny.png"
-                alt="hero image"
-                width={600}
-                height={600}
-              />
-            </div>
             <div className="content">
-              <h2 className=" font-bold 2xl:text-7xl text-6xl lg:text-8xl text-secondary-300 ">
+              <h2 className=" font-bold 2xl:text-7xl text-6xl lg:text-8xl text-orange-400 ">
                 Keploy's Blog
               </h2>
               <p className="content-body body 2xl:text-xl text-sm  mt-2 text-center">
@@ -58,6 +47,14 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
                   Community
                 </Link>
               </div> */}
+            </div>
+            <div className="blog-hero-img">
+              <img
+                src="/blog/images/blog-bunny.png"
+                alt="hero image"
+                width={600}
+                height={600}
+              />
             </div>
           </div>
           <TopBlogs
