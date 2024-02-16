@@ -27,7 +27,6 @@ const postBody = ({ content, post }) => {
 
   return replacedContent;
 };
-
 export default function Post({ post, posts, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
