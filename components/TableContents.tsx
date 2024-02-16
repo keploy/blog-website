@@ -22,7 +22,7 @@ function TOCItem({ id, title }) {
     <li className={itemClasses}>
       <button
         onClick={handleClick}
-        className="block py-1 pl-2 w-full rounded-md text-left transition-colors duration-300 ease-in-out bg-gray-200 hover:bg-gray-300"
+        className="block py-1 pl-2 w-full rounded-md text-left  text-sm transition-colors duration-300 ease-in-out bg-gray-100 hover:bg-gray-300"
       >
         {title}
       </button>
