@@ -15,11 +15,23 @@ export default function Index({ allPosts: { edges }, preview }) {
   const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
   const morePosts = edges.slice(1);
 
+  function getExcerpt(content) {
+    const maxWords = 50;
+    // Split the content into an array of words
+    const words = content.split(" ");
+
+    // Ensure the excerpt does not exceed the maximum number of words
+    if (words.length > maxWords) {
+      return words.slice(0, maxWords).join(" ") + "...";
+    }
+
+    return content;
+  }
   return (
     <Layout
       preview={preview}
-      featuredImage={heroPost.featuredImage.node.sourceUrl}
-      Title={heroPost.title}
+      featuredImage={heroPost?.featuredImage?.node.sourceUrl}
+      Title={heroPost?.title}
       Description={`Blog from the Technology Page`}
     >
       <Head>
