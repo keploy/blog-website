@@ -1,18 +1,23 @@
 import Head from "next/head";
 import { GetStaticProps } from "next";
 import Container from "../components/container";
-import MoreStories from "../components/more-stories";
-import HeroPost from "../components/hero-post";
-import Intro from "../components/intro";
 import Layout from "../components/layout";
-import { getAllPostsForHome } from "../lib/api";
+import { getAllPostsForHome, getAllPostsForTechnology } from "../lib/api";
 import { CMS_NAME } from "../lib/constants";
 import Header from "../components/header";
 import Link from "next/link";
 import { HOME_OG_IMAGE_URL } from "../lib/constants";
-export default function Index({ allPosts: { edges }, preview }) {
+import TopBlogs from "../components/topBlogs";
+export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
-    <Layout preview={preview} featuredImage={HOME_OG_IMAGE_URL} Title={`Keploy's Blog`} Description={"Elevate Your Tech Insight.Frontiers of Innovation and Integration."}>
+    <Layout
+      preview={preview}
+      featuredImage={HOME_OG_IMAGE_URL}
+      Title={`Keploy's Blog`}
+      Description={
+        "Elevate Your Tech Insight.Frontiers of Innovation and Integration."
+      }
+    >
       <Head>
         <title>{`Keploy`}</title>
       </Head>
@@ -62,16 +67,31 @@ export default function Index({ allPosts: { edges }, preview }) {
             />
           </div>
         </div>
+        <TopBlogs
+          communityPosts={communityPosts}
+          technologyPosts={technologyPosts}
+        />
       </Container>
     </Layout>
   );
 }
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const allPosts = await getAllPostsForHome(preview);
+  const allCommunityPosts = await getAllPostsForHome(preview);
+  const allTehcnologyPosts = await getAllPostsForTechnology(preview);
 
   return {
-    props: { allPosts, preview },
+    props: {
+      communityPosts:
+        allCommunityPosts?.edges?.length > 3
+          ? allCommunityPosts?.edges?.slice(0, 3)
+          : allCommunityPosts?.edges,
+      technologyPosts:
+        allTehcnologyPosts?.edges?.length > 3
+          ? allTehcnologyPosts?.edges?.slice(0, 3)
+          : allTehcnologyPosts.edges,
+      preview,
+    },
     revalidate: 10,
   };
 };

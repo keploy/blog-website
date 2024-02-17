@@ -46,11 +46,15 @@ const GithubBtn = () => {
 
   useEffect(() => {
     const init = async () => {
-      const response = await fetch(
-        "https://api.github.com/repos/keploy/keploy"
-      );
-      const data = await response.json();
-      setStars(data.stargazers_count);
+      try {
+        const response = await fetch(
+          "https://api.github.com/repos/keploy/keploy"
+        );
+        const data = await response.json();
+        setStars(data.stargazers_count);
+      } catch (err) {
+        console.error(err);
+      }
     };
     init();
   }, []);
