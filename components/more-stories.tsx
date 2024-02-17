@@ -1,7 +1,7 @@
-import PostPreview from './post-preview'
+import { getExcerpt } from "../utils/excerpt";
+import PostPreview from "./post-preview";
 
 export default function MoreStories({ posts, isCommunity }) {
-
   return (
     <section>
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
@@ -16,11 +16,11 @@ export default function MoreStories({ posts, isCommunity }) {
             date={node.date}
             author={node.ppmaAuthorName}
             slug={node.slug}
-            excerpt={node.excerpt}
+            excerpt={getExcerpt(node.excerpt, 20)}
             isCommunity={isCommunity}
           />
         ))}
       </div>
     </section>
-  )
+  );
 }

@@ -8,26 +8,20 @@ import Layout from "../../components/layout";
 import { getAllPostsForTechnology } from "../../lib/api";
 import { CMS_NAME } from "../../lib/constants";
 import Header from "../../components/header";
+import { getExcerpt } from "../../utils/excerpt";
 
 export default function Index({ allPosts: { edges }, preview }) {
   const heroPost = edges[0]?.node;
-  const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt) : null;
+  const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
   const morePosts = edges.slice(1);
 
-  function getExcerpt(content) {
-    const maxWords = 50;
-    // Split the content into an array of words
-    const words = content.split(" ");
-
-    // Ensure the excerpt does not exceed the maximum number of words
-    if (words.length > maxWords) {
-      return words.slice(0, maxWords).join(" ") + "...";
-    }
-
-    return content;
-  }
   return (
-    <Layout preview={preview} featuredImage={heroPost?.featuredImage?.node.sourceUrl} Title={heroPost?.title} Description={`Blog from the Technology Page`}>
+    <Layout
+      preview={preview}
+      featuredImage={heroPost?.featuredImage?.node.sourceUrl}
+      Title={heroPost?.title}
+      Description={`Blog from the Technology Page`}
+    >
       <Head>
         <title>{`Keploy`}</title>
       </Head>

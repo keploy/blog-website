@@ -12,20 +12,24 @@ export default function HeroPost({
   slug,
   isCommunity = false,
 }) {
-
-  const basePath = isCommunity ? '/community' : '/technology';
+  const basePath = isCommunity ? "/community" : "/technology";
 
   return (
     <section>
-      <div className="lg:grid lg:grid-cols-2 lg:gap-x-16 mb-20 md:mb-28">
-        <div className="mb-8 md:mb-16">
+      <div className="bg-gray-100 border px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center  lg:hover:shadow-md transition">
+        <div className="mb-8 lg:mb-0 ">
           {coverImage && (
-            <CoverImage title={title} coverImage={coverImage} slug={slug} isCommunity={isCommunity} />
+            <CoverImage
+              title={title}
+              coverImage={coverImage}
+              slug={slug}
+              isCommunity={isCommunity}
+            />
           )}
         </div>
         <div className="">
           <div>
-            <h3 className="heading1 mb-4 text-4xl lg:text-6xl font-bold leading-tight">
+            <h3 className="heading1  text-4xl lg:text-6xl font-bold leading-none">
               <Link
                 href={`${basePath}/${slug}`}
                 className="hero-title-link title-link  bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
@@ -34,7 +38,7 @@ export default function HeroPost({
             </h3>
           </div>
           <div className="flex items-center gap-4">
-            <Avatar author={author} />
+            <Avatar author={author ? author : "Anonymous"} />
             <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
             <div className="text-md mb-4 pt-4">
               <Date dateString={date} />
@@ -42,7 +46,7 @@ export default function HeroPost({
           </div>
           <div>
             <div
-              className="body xl:text-lg text-md leading-relaxed mb-4"
+              className="body xl:text-md text-md leading-relaxed mb-4 text-slate-600"
               dangerouslySetInnerHTML={{ __html: excerpt }}
             />
           </div>
