@@ -25,7 +25,7 @@ export default function PostPreview({
           />
         )}
       </div>
-      <h3 className="text-2xl leading-snug leading-none heading1 font-bold">
+      <h3 className="text-2xl leading-none heading1 font-bold">
         <Link
           href={`${basePath}/${slug}`}
           className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"

@@ -8,6 +8,8 @@ import Header from "../components/header";
 import Link from "next/link";
 import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import TopBlogs from "../components/topBlogs";
+import Testimonials from "../components/testimonials";
+
 export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
     <Layout
@@ -71,6 +73,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
           communityPosts={communityPosts}
           technologyPosts={technologyPosts}
         />
+        <Testimonials/>
       </Container>
     </Layout>
   );
