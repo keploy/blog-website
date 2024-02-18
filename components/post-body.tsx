@@ -95,9 +95,9 @@ export default function PostBody({ content }) {
   };
 
   return (
-    <div className="flex">
+     <div className="flex">
       {/* Table of Contents */}
-      <div className="hidden lg:block w-1/4 overflow-y-auto sticky top-20 h-screen mr-2 z-30">
+      <div className="w-1/4 overflow-y-auto sticky left-0 top-20 h-screen pr-20 z-100">
         <TOC headings={tocItems} />
       </div>
       {/* Content */}
