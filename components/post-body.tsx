@@ -95,9 +95,9 @@ export default function PostBody({ content }) {
   };
 
   return (
-     <div className="flex">
+    <div className="flex flex-col lg:flex-row">
       {/* Table of Contents */}
-      <div className="w-1/4 overflow-y-auto sticky left-0 top-20 h-screen pr-20 z-100">
+      <div className="w-full lg:w-1/4 overflow-y-auto sticky top-0 z-100 lg:top-20 max-h-screen lg:max-h-auto lg:overflow-visible">
         <TOC headings={tocItems} />
       </div>
       {/* Content */}
@@ -106,5 +106,9 @@ export default function PostBody({ content }) {
       </div>
     </div>
   );
+  
+  
+  
+  
   
 }
