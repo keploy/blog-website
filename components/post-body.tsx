@@ -6,21 +6,36 @@ import styles from "./post-body.module.css";
 export default function PostBody({ content }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   useEffect(() => {
     const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
     const tocItems = headings.map((heading, index) => {
       const id = `heading-${index}`;
       heading.setAttribute("id", id);
-      return { id, title: heading.textContent, type: heading.tagName.toLowerCase() };
+      return {
+        id,
+        title: heading.textContent,
+        type: heading.tagName.toLowerCase(),
+      };
     });
     tocItems.shift();
-    const index = tocItems.findIndex(item => item.title === "More Stories");
+    const index = tocItems.findIndex((item) => item.title === "More Stories");
     if (index !== -1) {
       tocItems.splice(index + 1); // Remove elements starting from index + 1 to the end
     }
     setTocItems(tocItems);
     setCopySuccessList(Array(tocItems.length).fill(false));
+
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth <= 1100);
+    };
+
+    checkScreenSize(); // Initial check
+    window.addEventListener("resize", checkScreenSize);
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
   }, []);
 
   const handleCopyClick = (code, index) => {
@@ -42,7 +57,6 @@ export default function PostBody({ content }) {
       });
   };
 
-  // Function to detect and wrap code blocks with copy button
   const renderCodeBlocks = () => {
     const codeBlocks = content.match(/<pre[\s\S]*?<\/pre>/gm);
 
@@ -69,6 +83,7 @@ export default function PostBody({ content }) {
             <pre
               dangerouslySetInnerHTML={{ __html: part }}
               className={`language-${language}`}
+              suppressHydrationWarning
             />
             <button
               onClick={() => handleCopyClick(code, index)}
@@ -97,18 +112,13 @@ export default function PostBody({ content }) {
   return (
     <div className="flex flex-col lg:flex-row">
       {/* Table of Contents */}
-      <div className="w-full lg:w-1/4 overflow-y-auto sticky top-0 z-100 lg:top-20 max-h-screen lg:max-h-auto lg:overflow-visible">
+      <div className={`w-full lg:w-1/4 mr-5 top-20 ${isSmallScreen ? 'flex items-center justify-center' : 'sticky'}`}>
         <TOC headings={tocItems} />
       </div>
       {/* Content */}
-      <div className="w-full lg:w-3/4 p-4">
+      <div className="w-full lg:w-3/5 ml-10 p-4">
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
       </div>
     </div>
   );
-  
-  
-  
-  
-  
 }
