@@ -38,7 +38,9 @@ export default function Post({ post, posts, preview }) {
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />;
   }
-
+  if (!post || !post.content) {
+    return ''; // or handle this case differently based on your requirements
+  }
   return (
     <Layout
       preview={preview}

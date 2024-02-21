@@ -33,6 +33,9 @@ export default function Post({ post, posts, preview }) {
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />;
   }
+  if (!post || !post.content) {
+    return ''; // or handle this case differently based on your requirements
+  }
   // console.log(post.content);
   return (
     <Layout
@@ -76,7 +79,7 @@ export default function Post({ post, posts, preview }) {
           {morePosts.length > 0 && (
             <MoreStories posts={morePosts} isCommunity={false} />
           )}
-        </article>
+        </article>  
       </Container>
     </Layout>
   );
