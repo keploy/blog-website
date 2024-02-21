@@ -19,7 +19,7 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
             author={node.ppmaAuthorName}
             slug={node.slug}
             excerpt={getExcerpt(node.excerpt, 20)}
-            isCommunity={true}
+            isCommunity={false}
           />
         ))}
       </div>
@@ -46,7 +46,7 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
             author={node.ppmaAuthorName}
             slug={node.slug}
             excerpt={getExcerpt(node.excerpt, 20)}
-            isCommunity={false}
+            isCommunity={true}
           />
         ))}
       </div>
