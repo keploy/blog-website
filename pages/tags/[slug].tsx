@@ -29,12 +29,12 @@ export default function PostByTags({ postsByTags, preview }) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allTags = await getAllTags();
-  const paths = allTags.edges.flatMap(({ node }) => {
+  const path = allTags.edges.flatMap(({ node }) => {
     const tagNames = node.tags.edges.map(({ node }) => node.name);
     return tagNames.map(tagName => `/tags/${tagName}`);
   }) || [];
   return {
-    paths,
+    paths : path,
     fallback: true,
   };
 };
@@ -43,8 +43,14 @@ export const getStaticProps: GetStaticProps = async ({
   preview = false,
   params,
 }) => {
-  const { slug } = params;
-  const postsByTags = await getAllPostsFromTags(slug, preview);
+  let { slug } = params;
+  if (Array.isArray(slug)) {
+    slug = slug.join('-');
+  } else {
+    // Replace spaces with dashes
+    slug = slug.replace(/\s+/g, '-');
+  }
+  const postsByTags = await getAllPostsFromTags(slug.toString(), preview);
   return {
     props: { postsByTags, preview },
     revalidate: 10,

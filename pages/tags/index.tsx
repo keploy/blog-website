@@ -38,7 +38,7 @@ export default function Tags({ allTags: { edges }, preview }) {
       <Header />
       <Container>
         <h1 className="text-4xl font-semibold mb-4">Tags</h1>
-        <div className="flex flex-wrap gap-2 mb-2">
+        <div className="flex flex-wrap gap-2 mb-10">
           {uniqueEdges.map(({ name }) => (
             <Link href={`/tags/${name}`} key={name}>
               <button

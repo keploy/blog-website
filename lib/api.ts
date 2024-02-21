@@ -80,11 +80,11 @@ export async function getAllTags() {
   return data?.posts;
 }
 
-export async function getAllPostsFromTags(tagName, preview) {
+export async function getAllPostsFromTags(tagName:String, preview) {
   const data = await fetchAPI(
     `
     query AllPosts($tagName: String!) {
-      posts(first: 100, where: { orderby: { field: DATE, order: DESC }, tag: $tagName }) {
+      posts(first: 10000, where: { orderby: { field: DATE, order: DESC }, tag: $tagName }) {
         edges {
           node {
             title

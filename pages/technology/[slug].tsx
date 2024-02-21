@@ -34,7 +34,6 @@ export default function Post({ post, posts, preview }) {
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />;
   }
-  // console.log(post.content);
   return (
     <Layout preview={preview} featuredImage={post?.featuredImage?.node.sourceUrl} Title={post?.title} Description={`Blog About ${post?.title}`}>
       <Header />
@@ -74,7 +73,6 @@ export default function Post({ post, posts, preview }) {
 
 export const getStaticProps: GetStaticProps = async ({ params, preview = false, previewData }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
-
   return {
     props: {
       preview,
