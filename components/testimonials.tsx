@@ -73,7 +73,7 @@ const Testimonials = () => {
                     content={"Hey people, I wanted to share about my first month as an open source contributor at Keploy -Picked up 10 issues including bugs, features, documentation and opened 3 issues. -Submitted 8 PR's, out of which 2 have been merged and rest are on review"}/>
                 
                     <Tweet avatar={"https://pbs.twimg.com/profile_images/1712175220176355329/sLXbk_PZ_400x400.jpg"} 
-                    name={"TadasG | ProDevtivity.com"}
+                    name={"TadasG"}
                     id={"JustADude404"} 
                     post={"https://x.com/JustADude404/status/1746888711491424681?s=20"}
                     content={"Keploy is a tool which can automatically generate tests based on data from your running app. It simply attaches to your app, reads the data being passed through, and generates tests with real data. Pretty cool, huh?"}/>
