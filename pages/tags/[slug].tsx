@@ -11,7 +11,6 @@ export default function PostByTags({ postsByTags, preview }) {
   const posts = postsByTags?.edges || [];
   const router = useRouter();
   const {slug} = router.query;
-  console.log(slug);
   return (
     <Layout
       preview={preview}
@@ -20,7 +19,7 @@ export default function PostByTags({ postsByTags, preview }) {
       Description={`List of All the Tags`}
     >
       <Head>
-        <title>{`${slug}`}</title>
+        <title>{`${slug} posts`}</title>
       </Head>
       <Header />
       <Container>
