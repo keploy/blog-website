@@ -15,8 +15,8 @@ export default function PostByTags({ postsByTags, preview }) {
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`Tags`}
-      Description={`List of All the Tags`}
+      Title={`${slug} posts`}
+      Description={`Posts by tag-${slug}`}
     >
       <Head>
         <title>{`${slug} posts`}</title>
