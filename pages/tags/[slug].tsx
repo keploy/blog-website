@@ -6,9 +6,12 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Container from "../../components/container";
 import { getAllPostsFromTags, getAllTags } from "../../lib/api";
 import TagsStories from "../../components/TagsStories";
-
+import { useRouter } from "next/router";
 export default function PostByTags({ postsByTags, preview }) {
   const posts = postsByTags?.edges || [];
+  const router = useRouter();
+  const {slug} = router.query;
+  console.log(slug);
   return (
     <Layout
       preview={preview}
@@ -17,7 +20,7 @@ export default function PostByTags({ postsByTags, preview }) {
       Description={`List of All the Tags`}
     >
       <Head>
-        <title>{`Keploy`}</title>
+        <title>{`${slug}`}</title>
       </Head>
       <Header />
       <Container>

@@ -33,7 +33,7 @@ export default function Tags({ allTags: { edges }, preview }) {
       Description={`List of All the Tags`}
     >
       <Head>
-        <title>{`Keploy`}</title>
+        <title>{`Tags`}</title>
       </Head>
       <Header />
       <Container>

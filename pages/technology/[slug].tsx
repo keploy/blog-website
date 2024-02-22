@@ -14,7 +14,7 @@ import Tags from "../../components/tags";
 import { getAllPostsWithSlug, getPostAndMorePosts } from "../../lib/api";
 import { CMS_NAME } from "../../lib/constants";
 import PrismLoader from "../../components/prism-loader";
-
+import ContainerSlug from "../../components/containerSlug";
 const postBody = ({ content, post }) => {
   // Define the regular expression pattern to match the entire URL structure
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
@@ -27,15 +27,23 @@ const postBody = ({ content, post }) => {
 
   return replacedContent;
 };
-
 export default function Post({ post, posts, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />;
   }
+  if (!post || !post.content) {
+    return ''; // or handle this case differently based on your requirements
+  }
+  // console.log(post.content);
   return (
-    <Layout preview={preview} featuredImage={post?.featuredImage?.node.sourceUrl} Title={post?.title} Description={`Blog About ${post?.title}`}>
+    <Layout
+      preview={preview}
+      featuredImage={post?.featuredImage?.node.sourceUrl}
+      Title={post?.title}
+      Description={`Blog About ${post?.title}`}
+    >
       <Header />
       <Container>
         {router.isFallback ? (
@@ -45,9 +53,7 @@ export default function Post({ post, posts, preview }) {
             <PrismLoader /> {/* Load Prism.js here */}
             <article>
               <Head>
-                <title>
-                  {`${post?.title} | Keploy Blog`}
-                </title>
+                <title>{`${post.title} | Keploy Blog`}</title>
               </Head>
               <PostHeader
                 title={post.title}
@@ -56,22 +62,34 @@ export default function Post({ post, posts, preview }) {
                 author={post.ppmaAuthorName}
                 categories={post.categories}
               />
-              <PostBody content={postBody({ content: post.content, post })} />
-              <footer>
-                {post.tags.edges.length > 0 && <Tags tags={post.tags} />}
-              </footer>
             </article>
-
-            <SectionSeparator />
-            {morePosts.length > 0 && <MoreStories posts={morePosts} isCommunity={false} />}
           </>
         )}
+      </Container>
+      <ContainerSlug>
+        {/* PostBody component placed outside the Container */}
+        <PostBody content={postBody({ content: post.content, post })} />
+      </ContainerSlug>
+      <Container>
+        <article>
+          <footer>
+            {post.tags.edges.length > 0 && <Tags tags={post.tags} />}
+          </footer>
+          <SectionSeparator />
+          {morePosts.length > 0 && (
+            <MoreStories posts={morePosts} isCommunity={false} />
+          )}
+        </article>  
       </Container>
     </Layout>
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({ params, preview = false, previewData }) => {
+export const getStaticProps: GetStaticProps = async ({
+  params,
+  preview = false,
+  previewData,
+}) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   return {
     props: {
