@@ -118,7 +118,7 @@ export default function Header() {
               <Link href={"https://keploy.io/"}>
                 <img
                   src="/blog/images/sidebyside-transparent.svg"
-                  alt=""
+                  alt="Keploy Logo"
                   className="w-auto h-10"
                 />
               </Link>

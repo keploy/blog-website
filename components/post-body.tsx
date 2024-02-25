@@ -1,12 +1,46 @@
-import { useState } from 'react';
-import { IoCopyOutline, IoCheckmarkOutline } from 'react-icons/io5'; // Importing icons
-import styles from './post-body.module.css';
+import { useState, useEffect } from "react";
+import TOC from "./TableContents"; // Importing TOC component
+import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importing icons
+import styles from "./post-body.module.css";
 
 export default function PostBody({ content }) {
-  const [copySuccessList, setCopySuccessList] = useState(Array(content.match(/<pre[\s\S]*?<\/pre>/gm)?.length || 0).fill(false));
+  const [tocItems, setTocItems] = useState([]);
+  const [copySuccessList, setCopySuccessList] = useState([]);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
+    const tocItems = headings.map((heading, index) => {
+      const id = `heading-${index}`;
+      heading.setAttribute("id", id);
+      return {
+        id,
+        title: heading.textContent,
+        type: heading.tagName.toLowerCase(),
+      };
+    });
+    tocItems.shift();
+    const index = tocItems.findIndex((item) => item.title === "More Stories");
+    if (index !== -1) {
+      tocItems.splice(index + 1); // Remove elements starting from index + 1 to the end
+    }
+    setTocItems(tocItems);
+    setCopySuccessList(Array(tocItems.length).fill(false));
+
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth <= 1100);
+    };
+
+    checkScreenSize(); // Initial check
+    window.addEventListener("resize", checkScreenSize);
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
+  }, []);
 
   const handleCopyClick = (code, index) => {
-    navigator.clipboard.writeText(code)
+    navigator.clipboard
+      .writeText(code)
       .then(() => {
         const updatedList = [...copySuccessList];
         updatedList[index] = true;
@@ -23,7 +57,6 @@ export default function PostBody({ content }) {
       });
   };
 
-  // Function to detect and wrap code blocks with copy button
   const renderCodeBlocks = () => {
     const codeBlocks = content.match(/<pre[\s\S]*?<\/pre>/gm);
 
@@ -40,16 +73,27 @@ export default function PostBody({ content }) {
     return content.split(/(<pre[\s\S]*?<\/pre>)/gm).map((part, index) => {
       if (/<pre[\s\S]*?<\/pre>/.test(part)) {
         const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
-        const code = codeMatch ? codeMatch[1] : ''; // Extract code if available
-        const language = codeMatch && codeMatch[0].includes('language-') ? codeMatch[0].split('language-')[1].split('"')[0] : 'bash'; // Extract language if available, otherwise default to 'bash'
+        const code = codeMatch ? codeMatch[1] : ""; // Extract code if available
+        const language =
+          codeMatch && codeMatch[0].includes("language-")
+            ? codeMatch[0].split("language-")[1].split('"')[0]
+            : "bash"; // Extract language if available, otherwise default to 'bash'
         return (
-          <div key={index} className="relative">
-            <pre dangerouslySetInnerHTML={{ __html: part }} className={`language-${language}`} />
+          <div key={index} className="relative mb-4">
+            <pre
+              dangerouslySetInnerHTML={{ __html: part }}
+              className={`language-${language}`}
+              suppressHydrationWarning
+            />
             <button
               onClick={() => handleCopyClick(code, index)}
-              className="absolute top-0 right-0 mt-2 mr-2 px-2 py-1 bg-inherit text-white rounded hover:bg-inherit"
+              className="absolute top-0 right-0 mt-2 mr-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
             >
-              {copySuccessList[index] ? <IoCheckmarkOutline /> : <IoCopyOutline />}
+              {copySuccessList[index] ? (
+                <IoCheckmarkOutline />
+              ) : (
+                <IoCopyOutline />
+              )}
             </button>
           </div>
         );
@@ -66,9 +110,14 @@ export default function PostBody({ content }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="prose lg:prose-xl">{/* Using Tailwind's prose class for better typography */}
-        {renderCodeBlocks()}
+    <div className="flex flex-col lg:flex-row">
+      {/* Table of Contents */}
+      <div className={`w-full lg:w-1/4 mr-5 top-20 ${isSmallScreen ? 'flex items-center justify-center' : 'sticky'}`}>
+        <TOC headings={tocItems} />
+      </div>
+      {/* Content */}
+      <div className="w-full lg:w-3/5 ml-10 p-4">
+        <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import Header from "../components/header";
 import Link from "next/link";
 import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import TopBlogs from "../components/topBlogs";
+import Image from "next/image";
 export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
     <Layout
@@ -26,7 +27,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
         <div className="">
           <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
             <div className="content">
-              <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
+              <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-500">
                 Keploy's Blog
               </h2>
               <p className="content-body body 2xl:text-2xl text-lg w-max mt-6">
@@ -50,11 +51,13 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
             </div>
 
             <div className="blog-hero-img">
-              <img
+              <Image
                 src="/blog/images/blog-bunny.png"
                 alt="hero image"
                 width={600}
                 height={600}
+                quality={10}
+                loading="eager"
                 className=""
               />
             </div>
