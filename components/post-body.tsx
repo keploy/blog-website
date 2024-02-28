@@ -26,6 +26,16 @@ export default function PostBody({ content }) {
     }
     setTocItems(tocItems);
     setCopySuccessList(Array(tocItems.length).fill(false));
+    // change style of view all post link
+    const viewAllPost: HTMLAnchorElement = Object.assign(
+      [],
+      document.querySelectorAll("a")
+    ).filter((v) => v.innerText == "View all posts")[0];
+    viewAllPost.style.setProperty("background-color", "orange", "important");
+    viewAllPost.style.setProperty("color", "black", "important");
+    viewAllPost.style.setProperty("text-decoration-line", "none", "important");
+    viewAllPost.style.setProperty("padding", "0.5rem 1rem", "important");
+    viewAllPost.style.setProperty("border-radius", "0.5rem", "important");
 
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth <= 1100);
@@ -112,7 +122,11 @@ export default function PostBody({ content }) {
   return (
     <div className="flex flex-col lg:flex-row">
       {/* Table of Contents */}
-      <div className={`w-full lg:w-1/4 mr-5 top-20 ${isSmallScreen ? 'flex items-center justify-center' : 'sticky'}`}>
+      <div
+        className={`w-full lg:w-1/4 mr-5 top-20 ${
+          isSmallScreen ? "flex items-center justify-center" : "sticky"
+        }`}
+      >
         <TOC headings={tocItems} />
       </div>
       {/* Content */}
