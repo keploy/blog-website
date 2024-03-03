@@ -128,7 +128,7 @@ const Testimonials = () => {
 
             <Tweet
               avatar={
-                "https://pbs.twimg.com/profile_images/1458242061744754691/k93jHFvz_400x400.jpg"
+                "https://pbs.twimg.com/profile_images/1763255658777120770/7SsuKwlS_400x400.jpg"
               }
               name={"Akash Singh"}
               id={"Kind_Of_Akash"}
