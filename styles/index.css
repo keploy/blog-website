@@ -108,10 +108,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto+Condensed:wght@200;300;400;500;600;700&display=swap");
 
 .heading1 {
-  font-family: "Roboto Condensed", sans-serif;
+  font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
 }
 .body {
-  font-family: "Lato", sans-serif;
+  font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
 }
 
 body {
@@ -186,5 +186,5 @@ pre {
 }
 
 .footer-font{
-  font-family: '__Inter_e66fe9', '__Inter_Fallback_e66fe9', sans-serif;
+  font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
 }
