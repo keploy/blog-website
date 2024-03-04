@@ -61,6 +61,7 @@ export default function Post({ post, posts, preview }) {
                 date={post.date}
                 author={post.ppmaAuthorName}
                 categories={post.categories}
+                content={post.content}
               />
             </article>
           </>
@@ -79,7 +80,7 @@ export default function Post({ post, posts, preview }) {
           {morePosts.length > 0 && (
             <MoreStories posts={morePosts} isCommunity={false} />
           )}
-        </article>  
+        </article>
       </Container>
     </Layout>
   );
