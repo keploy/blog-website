@@ -61,14 +61,14 @@ export default function Post({ post, posts, preview }) {
                 date={post.date}
                 author={post.ppmaAuthorName}
                 categories={post.categories}
-              />
+                              />
             </article>
           </>
         )}
       </Container>
       <ContainerSlug>
         {/* PostBody component placed outside the Container */}
-        <PostBody content={postBody({ content: post.content, post })} />
+        <PostBody content={postBody({ content: post.content, post })} key={post.title} />
       </ContainerSlug>
       <Container>
         <article>
