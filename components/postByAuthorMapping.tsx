@@ -6,9 +6,9 @@ const PostByAuthorMapping = ({ filteredPosts ,authorData}) => {
   return (
     <div className="container mx-auto mt-8">
       <div className="mb-5">
-      <AuthorDescription authorData={authorData}/>
+      <AuthorDescription authorData={authorData} AuthorName={AuthorName}/>
       </div>
-      <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold mb-8 text-slate-900 bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom font-bold tracking-tighter leading-tight w-max">
+      <h1 className="text-xl sm:text-3xl lg:text-4xl mt-10 font-bold mb-8 text-slate-900 bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom font-bold tracking-tighter leading-tight w-max">
         Posts by {AuthorName}
       </h1>
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

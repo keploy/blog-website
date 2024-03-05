@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { FaEnvelope } from 'react-icons/fa'; // Import Font Awesome icon for email
-import { IoLogoLinkedin } from 'react-icons/io'; // Import LinkedIn icon from react-icons/io
+import { FaEnvelope } from "react-icons/fa"; // Import Font Awesome icon for email
+import { IoLogoLinkedin } from "react-icons/io"; // Import LinkedIn icon from react-icons/io
 
-const AuthorDescription = ({ authorData }) => {
+const AuthorDescription = ({ authorData, AuthorName }) => {
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const [authorName, setAuthorName] = useState("");
-  const [authorEmail, setAuthorEmail] = useState("");
   const [authorLinkedIn, setAuthorLinkedIn] = useState("");
   const [authorDescription, setAuthorDescription] = useState("");
   const [showMore, setShowMore] = useState(false);
+
+  const AuthorNameNew =
+    AuthorName[0].toUpperCase() + AuthorName.slice(1).toLowerCase();
 
   useEffect(() => {
     // Create a temporary div element to parse the HTML content
@@ -20,9 +22,6 @@ const AuthorDescription = ({ authorData }) => {
       ".pp-author-boxes-avatar img"
     );
     const authorNameElement = tempDiv.querySelector(".pp-author-boxes-name a");
-    const emailLink = tempDiv.querySelector(
-      '.pp-author-boxes-meta.multiple-authors-links a[aria-label="Email"]'
-    );
     const linkedinLink = tempDiv.querySelector(
       '.pp-author-boxes-meta.multiple-authors-links a[aria-label="Website"]'
     );
@@ -31,18 +30,23 @@ const AuthorDescription = ({ authorData }) => {
     );
     if (avatarImgElement) {
       setAvatarImgSrc(avatarImgElement.getAttribute("src"));
+    } else {
+      setAvatarImgSrc("n/a");
     }
     if (authorNameElement) {
       setAuthorName(authorNameElement.textContent);
+    } else {
+      setAuthorName(AuthorNameNew);
     }
     if (authorDescriptionElement) {
       setAuthorDescription(authorDescriptionElement.textContent.trim());
-    }
-    if (emailLink) {
-      setAuthorEmail(emailLink.getAttribute("href").replace("mailto:", ""));
+    } else {
+      setAuthorDescription("n/a");
     }
     if (linkedinLink) {
       setAuthorLinkedIn(linkedinLink.getAttribute("href"));
+    } else {
+      setAuthorLinkedIn("n/a");
     }
   }, [authorData]);
 
@@ -51,13 +55,26 @@ const AuthorDescription = ({ authorData }) => {
     setShowMore(!showMore);
   };
 
+  const FormatDescription = (description) => {
+    return description.split(". ");
+  };
+
+  const newAuthorDescription = FormatDescription(authorDescription);
+
   // Render the extracted information
   return (
     <div className="max-w-9xl mx-auto bg-slate-000 shadow-md rounded-lg overflow-hidden flex">
       <div className="w-1/5 p-8 flex justify-center items-center">
-        {avatarImgSrc && (
+        {avatarImgSrc !== "n/a" && (
           <img
             src={avatarImgSrc}
+            alt="Author Avatar"
+            className="object-cover rounded-full sm:h-30 sm:w-30"
+          />
+        )}
+        {avatarImgSrc === "n/a" && (
+          <img
+            src="/blog/images/author.png"
             alt="Author Avatar"
             className="object-cover rounded-full sm:h-30 sm:w-30"
           />
@@ -68,56 +85,52 @@ const AuthorDescription = ({ authorData }) => {
         <div className="heading1 uppercase tracking-wide text-base text-black font-semibold">
           Author Details
         </div>
-        <p className="mt-2 text-gray-600 heading1">
-          <span className="font-semibold">Author Name:</span> {authorName}
-        </p>
-        <p className="heading1 mt-2 text-gray-600">
-          <span className="font-semibold">Author Description:</span>{" "}
-          {showMore
-            ? authorDescription
-            : `${authorDescription.split(" ").slice(0, 20).join(" ")}...`}
-          {!showMore && authorDescription.split(" ").length > 20 && (
-            <button
-              onClick={toggleShowMore}
-              className="text-slate-500 hover:underline focus:outline-none"
-            >
-              Show more
-            </button>
-          )}
-          {showMore && (
-            <div className="mt-0">
-              <br />
+        <ul className="list-disc mt-2 text-gray-600 heading1">
+          <div className="mb-2">
+            <span className="font-semibold">Author Name:</span> {authorName}
+          </div>
+          <div>
+            <span className="font-semibold">Author Description:</span>{" "}
+            {newAuthorDescription.map((item, index) => (
+              <li key={index} className= { !showMore && index >= 1 ? " ml-5 hidden" : "ml-5"}>
+                {item}
+              </li>
+            ))}
+            {!showMore && (
               <button
                 onClick={toggleShowMore}
-                className="heading1 text-slate-500 hover:underline focus:outline-none"
+                className="text-slate-500 hover:underline focus:outline-none"
+              >
+                Show more
+              </button>
+            )}
+            {showMore && (
+              <button
+                onClick={toggleShowMore}
+                className="text-slate-500 hover:underline focus:outline-none"
               >
                 Show less
               </button>
+            )}
+          </div>
+          {authorLinkedIn !== "n/a" && (
+            <div className="mt-2">
+              <IoLogoLinkedin className="h-5 w-5 inline mr-1" />
+              <a
+                href={authorLinkedIn}
+                className="heading1 text-slate-500 hover:underline"
+              >
+                LinkedIn
+              </a>
             </div>
           )}
-        </p>
-        {authorEmail && (
-          <p className="hedaing1 mt-2 text-gray-600">
-            <FaEnvelope className="h-5 w-5 inline mr-2" /> {/* Replace SVG with FaEnvelope */}
-            <a
-              href={`mailto:${authorEmail}`}
-              className="heading1 text-slate-500 hover:underline"
-            >
-              Email
-            </a>
-          </p>
-        )}
-        {authorLinkedIn && (
-          <p className="mt-2 text-gray-600">
-            <IoLogoLinkedin className="h-5 w-5 inline mr-2" /> {/* Replace SVG with IoLogoLinkedin */}
-            <a
-              href={authorLinkedIn}
-              className="heading1 text-slate-500 hover:underline"
-            >
-              LinkedIn
-            </a>
-          </p>
-        )}
+          {authorLinkedIn === "n/a" && (
+            <div className="mt-2">
+              <IoLogoLinkedin className="h-5 w-5 inline mr-2" />
+              <span className="text-gray-600">n/a</span>
+            </div>
+          )}
+        </ul>
       </div>
     </div>
   );
