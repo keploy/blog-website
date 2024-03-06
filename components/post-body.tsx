@@ -46,7 +46,7 @@ export default function PostBody({ content }) {
     return () => {
       window.removeEventListener("resize", checkScreenSize);
     };
-  }, []);
+  }, [content]);
 
   const handleCopyClick = (code, index) => {
     navigator.clipboard

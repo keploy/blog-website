@@ -36,7 +36,7 @@ export default function Post({ post, posts, preview }) {
   if (!post || !post.content) {
     return ''; // or handle this case differently based on your requirements
   }
-  // console.log(post.content);
+// console.log(post.content);
   return (
     <Layout
       preview={preview}
@@ -61,14 +61,14 @@ export default function Post({ post, posts, preview }) {
                 date={post.date}
                 author={post.ppmaAuthorName}
                 categories={post.categories}
-                              />
+              />
             </article>
           </>
         )}
       </Container>
       <ContainerSlug>
         {/* PostBody component placed outside the Container */}
-        <PostBody content={postBody({ content: post.content, post })} key={post.title} />
+        <PostBody content={postBody({ content: post.content, post })} />
       </ContainerSlug>
       <Container>
         <article>
@@ -79,7 +79,7 @@ export default function Post({ post, posts, preview }) {
           {morePosts.length > 0 && (
             <MoreStories posts={morePosts} isCommunity={false} />
           )}
-        </article>  
+        </article>
       </Container>
     </Layout>
   );
