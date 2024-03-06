@@ -26,44 +26,6 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   return json.data;
 }
 
-async function fetchContentWithShortcodes(contentId: string) {
-  const headers = { 'Content-Type': 'application/json' };
-
-  if (process.env.WORDPRESS_AUTH_REFRESH_TOKEN) {
-    headers[
-      'Authorization'
-    ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
-  }
-
-  // Fetch the content by its ID
-  const res = await fetch(`https://keploy.io/wp/author/${contentId}`, {
-    headers,
-    method: 'GET',
-  });
-
-  const htmlContent = await res.text(); // Get the response as text (HTML)
-
-  return htmlContent; // Return the HTML content
-}
-
-// Example usage
-export async function fetchDataUsingShortcodes(contentId: string) {
-  try {
-    const htmlContent = await fetchContentWithShortcodes(contentId);
-    // Parse the HTML content to extract data using DOM manipulation or regular expressions
-    // Example: const authorData = parseAuthorDataFromHTML(htmlContent);
-    if (!htmlContent.includes('<meta property="og:title" content="Page not found - Keploy CMS" />')) {
-      // If the content contains the specified meta tag, reject it
-      return htmlContent;
-    } // Return the parsed data
-    return "No Content";
-  } catch (error) {
-    console.error(error);
-    throw new Error('Failed to fetch data using shortcodes');
-  }
-}
-
-
 export async function getPreviewPost(id, idType = "DATABASE_ID") {
   const data = await fetchAPI(
     `
@@ -221,34 +183,34 @@ export async function getAllAuthors() {
 export async function getPostsByAuthor() {
   const data = await fetchAPI(
     `query getPostsByAuthor{
-      posts(first: 10000) 
-      {
+      posts(first: 1000) {
         edges {
           node {
-           title
-           ppmaAuthorName
-           slug
-           featuredImage {
-            node {
-              sourceUrl
-            }
-          }
-           categories {
-            edges {
+            title
+            ppmaAuthorName
+            slug
+            featuredImage {
               node {
-                name
+                sourceUrl
               }
             }
-          }
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+            content
           }
         }
       }
-    }
-    `
+    }`
   );
 
   return data?.posts;
 }
+
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post;

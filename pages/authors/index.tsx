@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import { getAllAuthors } from "../../lib/api";
+import { getAllAuthors} from "../../lib/api";
 import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Container from "../../components/container";

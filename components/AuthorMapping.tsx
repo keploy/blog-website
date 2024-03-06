@@ -32,7 +32,6 @@ export default function AuthorMapping({
       slug
     });
   });
-
   const totalPages = Math.ceil(authorData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const visibleAuthors = authorData.slice(startIndex, startIndex + itemsPerPage);

@@ -3,17 +3,14 @@ import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Container from "../../components/container";
 import {
-  fetchDataUsingShortcodes,
   getAllAuthors,
   getPostsByAuthor,
 } from "../../lib/api";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { isStringLiteral } from "typescript";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
-import { changeName } from "../../utils/changeName";
 
-export default function authorPage({ preview, filteredPosts, authorData }) {
+export default function authorPage({ preview, filteredPosts}) {
   if (!filteredPosts || filteredPosts.length === 0) {
     return (
       <div>
@@ -21,8 +18,6 @@ export default function authorPage({ preview, filteredPosts, authorData }) {
       </div>
     );
   }
-  const router = useRouter();
-  const { slug } = router.query;
   const authorName = filteredPosts[0]?.node?.ppmaAuthorName;
 
   return (
@@ -39,7 +34,7 @@ export default function authorPage({ preview, filteredPosts, authorData }) {
             Author Details
           </h1>
 
-          <PostByAuthorMapping filteredPosts={filteredPosts} authorData={authorData}/>
+          <PostByAuthorMapping filteredPosts={filteredPosts}/>
         </Container>
       </Layout>
     </div>
@@ -64,20 +59,8 @@ export const getStaticProps: GetStaticProps = async ({
   const filteredPosts = postsByAuthor.edges.filter(
     (item) => item.node.ppmaAuthorName === slug
   );
-  const authorName = changeName(filteredPosts[0].node.ppmaAuthorName);
-  // console.log(authorName);
-  let authorData = null;
-  // console.log(authorData)
-  for (let i = 0; i < authorName.length; i++) {
-    const authorHtmlContent = await fetchDataUsingShortcodes(authorName[i]);
-    if (authorHtmlContent !== "No Content") {
-      authorData = authorHtmlContent;
-      break; // Break the loop after finding the first valid content
-    }
-  }
-  // // console.log(authorData);
   return {
-    props: { preview, filteredPosts, authorData },
+    props: { preview, filteredPosts },
     revalidate: 10,
   };
 };

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FaEnvelope } from "react-icons/fa"; // Import Font Awesome icon for email
 import { IoLogoLinkedin } from "react-icons/io"; // Import LinkedIn icon from react-icons/io
 
 const AuthorDescription = ({ authorData, AuthorName }) => {
@@ -34,7 +33,10 @@ const AuthorDescription = ({ authorData, AuthorName }) => {
       setAvatarImgSrc("n/a");
     }
     if (authorNameElement) {
-      setAuthorName(authorNameElement.textContent);
+      var NewName = authorNameElement.textContent;
+      NewName  = NewName.charAt(0).toUpperCase() + NewName.slice(1).toLowerCase();
+      console.log(NewName)
+      setAuthorName(NewName);
     } else {
       setAuthorName(AuthorNameNew);
     }
