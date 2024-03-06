@@ -9,7 +9,7 @@ import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { fileURLToPath } from "url";
 
-export default function authorPage({ preview, filteredPosts }) {
+export default function AuthorPage({ preview, filteredPosts }) {
   if (!filteredPosts || filteredPosts.length === 0) {
     return (
       <div>
@@ -17,8 +17,7 @@ export default function authorPage({ preview, filteredPosts }) {
       </div>
     );
   }
-  const router = useRouter();
-  const { slug } = router.query;
+
   const authorName  =  filteredPosts[0]?.node?.ppmaAuthorName;
 
   return (
