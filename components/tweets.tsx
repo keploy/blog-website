@@ -29,7 +29,6 @@ const Tweets = ({ avatar, name, id, post, content }) => {
           />
         </div>
         <div className="pt-2">{content}</div>
-        <div className=""></div>
       </a>
     </>
   );

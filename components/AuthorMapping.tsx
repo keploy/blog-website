@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AuthorMapping({
   AuthorArray,
@@ -62,7 +63,7 @@ export default function AuthorMapping({
               className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between rounded-lg border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30 hover:scale-105 cursor-pointer"
             >
               <div className="flex items-center mb-3 sm:mb-0">
-                <img
+                <Image
                   src={author.avatarUrl}
                   alt={`${author.ppmaAuthorName}'s Avatar`}
                   className="w-12 h-12 rounded-full mr-3 sm:mr-2 "

@@ -1,6 +1,7 @@
 import Alert from './alert'
 import Footer from './footer'
 import Meta from './meta'
+import Script from 'next/script';
 
 export default function Layout({ preview, children , featuredImage,Title,Description}) {
   return (
@@ -12,8 +13,9 @@ export default function Layout({ preview, children , featuredImage,Title,Descrip
       </div>
       <Footer />
 
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS"></script>
-      <script
+      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS"/>
+      <Script
+          id="google-ga"
       type="text/javascript"
       dangerouslySetInnerHTML={{
         __html: `
@@ -24,7 +26,9 @@ export default function Layout({ preview, children , featuredImage,Title,Descrip
         `,
       }}
     />
-      <script
+
+      <Script
+          id="msclarity"
       type="text/javascript"
       dangerouslySetInnerHTML={{
         __html: `
