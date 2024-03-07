@@ -33,7 +33,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const allTags = await getAllTags();
   const path = allTags.edges.flatMap(({ node }) => {
     const tagNames = node.tags.edges.map(({ node }) => node.name);
-    return tagNames.map(tagName => `/tags/${tagName}`);
+    return tagNames.map(tagName => `/tag/${tagName}`);
   }) || [];
   return {
     paths : path,
