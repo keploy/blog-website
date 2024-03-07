@@ -10,7 +10,7 @@ import PostHeader from "../../components/post-header";
 import SectionSeparator from "../../components/section-separator";
 import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
-import Tags from "../../components/tags";
+import Tags from "../../components/tag";
 import { getAllPostsWithSlug, getPostAndMorePosts } from "../../lib/api";
 import { CMS_NAME } from "../../lib/constants";
 import PrismLoader from "../../components/prism-loader";
