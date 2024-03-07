@@ -7,19 +7,19 @@ export default function Meta({ featuredImage , Title , Description }) {
       <link
         rel="apple-touch-icon"
         sizes="180x180"
-        href="blog/favicon/Group.png"
+        href="/blog/favicon/Group.png"
       />
       <link
         rel="icon"
         type="image/png"
         sizes="32x32"
-        href="blog/favicon/Group.png"
+        href="/blog/favicon/Group.png"
       />
       <link
         rel="icon"
         type="image/png"
         sizes="16x16"
-        href="blog/favicon/Group.png"
+        href="/blog/favicon/Group.png"
       />
       <link rel="manifest" href="blog/favicon/site.webmanifest" />
       <link rel="mask-icon" href="blog/favicon/Group.svg" color="#000000" />

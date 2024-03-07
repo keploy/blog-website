@@ -2,14 +2,16 @@ import { useRouter } from "next/router";
 import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Container from "../../components/container";
-import { getAllAuthors, getPostsByAuthor } from "../../lib/api";
+import {
+  getAllAuthors,
+  getContent,
+  getPostsByAuthor,
+} from "../../lib/api";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { isStringLiteral } from "typescript";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
-import { fileURLToPath } from "url";
 
-export default function AuthorPage({ preview, filteredPosts }) {
+export default function AuthorPage({ preview, filteredPosts ,content }) {
   if (!filteredPosts || filteredPosts.length === 0) {
     return (
       <div>
@@ -22,14 +24,19 @@ export default function AuthorPage({ preview, filteredPosts }) {
 
   return (
     <div className="bg-accent-1">
-      <Layout preview={preview} featuredImage={HOME_OG_IMAGE_URL} Title={`${authorName} Page`} Description={`Posts by ${authorName}`}>
+      <Layout
+        preview={preview}
+        featuredImage={HOME_OG_IMAGE_URL}
+        Title={`${authorName} Page`}
+        Description={`Posts by ${authorName}`}
+      >
         <Header />
         <Container>
           <h1 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-6xl sm:xl font-bold tracking-tighter leading-tight">
             Author Details
           </h1>
 
-          <PostByAuthorMapping filteredPosts={filteredPosts} />
+          <PostByAuthorMapping filteredPosts={filteredPosts} Content={content}/>
         </Container>
       </Layout>
     </div>
@@ -54,8 +61,11 @@ export const getStaticProps: GetStaticProps = async ({
   const filteredPosts = postsByAuthor.edges.filter(
     (item) => item.node.ppmaAuthorName === slug
   );
+  const postId = (filteredPosts[0].node.postId);
+  const content = await getContent(postId);
+
   return {
-    props: { preview, filteredPosts },
+    props: { preview, filteredPosts , content},
     revalidate: 10,
   };
 };
