@@ -27,6 +27,16 @@ export default function PostBody({ content }) {
     }
     setTocItems(tocItems);
     setCopySuccessList(Array(tocItems.length).fill(false));
+    // change style of view all post link
+    const viewAllPost: HTMLAnchorElement = Object.assign(
+      [],
+      document.querySelectorAll("a")
+    ).filter((v) => v.innerText == "View all posts")[0];
+    viewAllPost.style.setProperty("background-color", "orange", "important");
+    viewAllPost.style.setProperty("color", "black", "important");
+    viewAllPost.style.setProperty("text-decoration-line", "none", "important");
+    viewAllPost.style.setProperty("padding", "0.5rem 1rem", "important");
+    viewAllPost.style.setProperty("border-radius", "0.5rem", "important");
 
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth <= 1100);
@@ -37,7 +47,7 @@ export default function PostBody({ content }) {
     return () => {
       window.removeEventListener("resize", checkScreenSize);
     };
-  }, []);
+  }, [content]);
 
   const handleCopyClick = (code, index) => {
     navigator.clipboard

@@ -43,6 +43,75 @@ export async function getPreviewPost(id, idType = "DATABASE_ID") {
   return data.post;
 }
 
+export async function getAllTags() {
+  const data = await fetchAPI(`
+    query GetTagNodes {
+      posts(first: 95) {
+        edges {
+          node {
+            tags {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+  return data?.posts;
+}
+
+
+
+export async function getAllPostsFromTags(tagName: String, preview) {
+  const data = await fetchAPI(
+    `
+    query AllPosts($tagName: String!) {
+      posts(first: 100, where: { orderby: { field: DATE, order: DESC }, tag: $tagName }) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+              }
+            }
+            ppmaAuthorName
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    `,
+    {
+      variables: {
+        tagName,
+        onlyEnabled: !preview,
+        preview,
+      },
+    }
+  );
+
+  return data?.posts;
+}
+
 export async function getAllPostsWithSlug() {
   const data = await fetchAPI(`
     {
