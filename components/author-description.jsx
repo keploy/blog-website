@@ -34,8 +34,9 @@ const AuthorDescription = ({ authorData, AuthorName }) => {
     }
     if (authorNameElement) {
       var NewName = authorNameElement.textContent;
-      NewName  = NewName.charAt(0).toUpperCase() + NewName.slice(1).toLowerCase();
-      console.log(NewName)
+      NewName =
+        NewName.charAt(0).toUpperCase() + NewName.slice(1).toLowerCase();
+      console.log(NewName);
       setAuthorName(NewName);
     } else {
       setAuthorName(AuthorNameNew);
@@ -65,8 +66,8 @@ const AuthorDescription = ({ authorData, AuthorName }) => {
 
   // Render the extracted information
   return (
-    <div className="max-w-9xl mx-auto bg-slate-000 shadow-md rounded-lg overflow-hidden flex">
-      <div className="w-1/5 p-8 flex justify-center items-center">
+    <div className="max-w-9xl mx-auto bg-slate-000 shadow-md rounded-lg overflow-hidden flex flex-col sm:flex-row md:flex-row lg:flex-row">
+      <div className="w-3/5 self-center sm:w-1/4 p-8 flex justify-center items-center">
         {avatarImgSrc !== "n/a" && (
           <img
             src={avatarImgSrc}
@@ -83,7 +84,7 @@ const AuthorDescription = ({ authorData, AuthorName }) => {
         )}
       </div>
 
-      <div className="w-2/3 p-8">
+      <div className="w-full sm:w-2/3 p-8">
         <div className="heading1 uppercase tracking-wide text-base text-black font-semibold">
           Author Details
         </div>
@@ -94,7 +95,10 @@ const AuthorDescription = ({ authorData, AuthorName }) => {
           <div>
             <span className="font-semibold">Author Description:</span>{" "}
             {newAuthorDescription.map((item, index) => (
-              <li key={index} className= { !showMore && index >= 1 ? " ml-5 hidden" : "ml-5"}>
+              <li
+                key={index}
+                className={!showMore && index >= 1 ? " ml-5 hidden" : "ml-5"}
+              >
                 {item}
               </li>
             ))}

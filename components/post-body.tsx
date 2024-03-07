@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import TOC from "./TableContents"; // Importing TOC component
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importing icons
 import styles from "./post-body.module.css";
-
+import AuthorDescription from "./author-description";
 export default function PostBody({ content }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [replacedContent, setReplacedContent] = useState(content); // State to hold replaced content
 
   useEffect(() => {
     const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
@@ -58,67 +59,88 @@ export default function PostBody({ content }) {
   };
 
   const renderCodeBlocks = () => {
-    const codeBlocks = content.match(/<pre[\s\S]*?<\/pre>/gm);
+    const codeBlocks = replacedContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
     if (!codeBlocks) {
       return (
         <div
           className={styles.content}
-          dangerouslySetInnerHTML={{ __html: content }}
+          dangerouslySetInnerHTML={{ __html: replacedContent }}
           suppressHydrationWarning
         />
       );
     }
 
-    return content.split(/(<pre[\s\S]*?<\/pre>)/gm).map((part, index) => {
-      if (/<pre[\s\S]*?<\/pre>/.test(part)) {
-        const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
-        const code = codeMatch ? codeMatch[1] : ""; // Extract code if available
-        const language =
-          codeMatch && codeMatch[0].includes("language-")
-            ? codeMatch[0].split("language-")[1].split('"')[0]
-            : "bash"; // Extract language if available, otherwise default to 'bash'
+    return replacedContent
+      .split(/(<pre[\s\S]*?<\/pre>)/gm)
+      .map((part, index) => {
+        if (/<pre[\s\S]*?<\/pre>/.test(part)) {
+          const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
+          const code = codeMatch ? codeMatch[1] : ""; // Extract code if available
+          const language =
+            codeMatch && codeMatch[0].includes("language-")
+              ? codeMatch[0].split("language-")[1].split('"')[0]
+              : "bash"; // Extract language if available, otherwise default to 'bash'
+          return (
+            <div key={index} className="relative mb-4">
+              <pre
+                dangerouslySetInnerHTML={{ __html: part }}
+                className={`language-${language}`}
+                suppressHydrationWarning
+              />
+              <button
+                onClick={() => handleCopyClick(code, index)}
+                className="absolute top-0 right-0 mt-2 mr-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+              >
+                {copySuccessList[index] ? (
+                  <IoCheckmarkOutline />
+                ) : (
+                  <IoCopyOutline />
+                )}
+              </button>
+            </div>
+          );
+        }
         return (
-          <div key={index} className="relative mb-4">
-            <pre
-              dangerouslySetInnerHTML={{ __html: part }}
-              className={`language-${language}`}
-              suppressHydrationWarning
-            />
-            <button
-              onClick={() => handleCopyClick(code, index)}
-              className="absolute top-0 right-0 mt-2 mr-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
-            >
-              {copySuccessList[index] ? (
-                <IoCheckmarkOutline />
-              ) : (
-                <IoCopyOutline />
-              )}
-            </button>
-          </div>
+          <div
+            key={index}
+            className={styles.content}
+            dangerouslySetInnerHTML={{ __html: part }}
+            suppressHydrationWarning
+          />
         );
-      }
-      return (
-        <div
-          key={index}
-          className={styles.content}
-          dangerouslySetInnerHTML={{ __html: part }}
-          suppressHydrationWarning
-        />
-      );
-    });
+      });
   };
+
+  useEffect(() => {
+    // Replace content inside the specified class
+    const replacedContentWithAuthorDescription = replacedContent.replace(
+      /(<ul class="pp-multiple-authors-boxes-ul[\s\S]*?<\/ul>)/gm,
+      `<div id="author-description-placeholder"></div>` // Placeholder for AuthorDescription
+    );
+    setReplacedContent(replacedContentWithAuthorDescription);
+  }, [replacedContent]);
+  
+  
 
   return (
     <div className="flex flex-col lg:flex-row">
       {/* Table of Contents */}
-      <div className={`w-full lg:w-1/4 mr-5 top-20 ${isSmallScreen ? 'flex items-center justify-center' : 'sticky'}`}>
+      <div
+        className={`w-full lg:w-1/4 mr-5 top-20 ${
+          isSmallScreen ? "flex items-center justify-center" : "sticky"
+        }`}
+      >
         <TOC headings={tocItems} />
       </div>
       {/* Content */}
       <div className="w-full lg:w-3/5 ml-10 p-4">
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
+        <div id="author-description">
+      <AuthorDescription authorData={content} AuthorName={"Arindam"} />
       </div>
+      </div>
+     
     </div>
   );
 }
