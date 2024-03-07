@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 const PostByAuthorMapping = ({ filteredPosts }) => {
   const AuthorName = filteredPosts[0].node.ppmaAuthorName;
@@ -19,7 +20,7 @@ const PostByAuthorMapping = ({ filteredPosts }) => {
                     {node.title}
                   </h2>
                 </div>
-                <img
+                <Image
                   src={node.featuredImage.node.sourceUrl}
                   alt={node.title}
                   className="w-full h-32 object-cover mb-4 rounded-md"
