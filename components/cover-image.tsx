@@ -30,6 +30,7 @@ export default function CoverImage({
       className={cn("rounded-md transition-border duration-300", {
         "  transition-scale duration-300": slug,
       })}
+      priority
     />
   );
   return (

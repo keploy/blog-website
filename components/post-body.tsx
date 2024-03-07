@@ -113,13 +113,24 @@ export default function PostBody({ content ,authorName }) {
   };
 
   useEffect(() => {
-    // Replace content inside the specified class
-    const replacedContentWithAuthorDescription = replacedContent.replace(
-      /(<ul class="pp-multiple-authors-boxes-ul[\s\S]*?<\/ul>)/gm,
-      `<div id="author-description-placeholder"></div>` // Placeholder for AuthorDescription
+    // Remove the content inside the specified class
+    var replacedContentWithAuthorDescription = replacedContent.replace(
+      /<div class="post-toc-header">[\s\S]*?<\/div>/gm,
+      '' // Replace with an empty string to remove the content
     );
+  
+    // Replace the content inside the specified class with a placeholder for AuthorDescription
+    replacedContentWithAuthorDescription = replacedContentWithAuthorDescription.replace(
+      /(<ul class="pp-multiple-authors-boxes-ul[\s\S]*?<\/ul>)/gm,
+      '<div id="author-description-placeholder"></div>' // Placeholder for AuthorDescription
+    );
+  
+    // Set the updated replaced content
     setReplacedContent(replacedContentWithAuthorDescription);
   }, [replacedContent]);
+  
+  
+  
 
   return (
     <div className="flex flex-col lg:flex-row">
