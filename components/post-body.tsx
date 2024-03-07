@@ -3,7 +3,7 @@ import TOC from "./TableContents"; // Importing TOC component
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importing icons
 import styles from "./post-body.module.css";
 import AuthorDescription from "./author-description";
-export default function PostBody({ content }) {
+export default function PostBody({ content ,authorName }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -27,16 +27,6 @@ export default function PostBody({ content }) {
     }
     setTocItems(tocItems);
     setCopySuccessList(Array(tocItems.length).fill(false));
-    // change style of view all post link
-    const viewAllPost: HTMLAnchorElement = Object.assign(
-      [],
-      document.querySelectorAll("a")
-    ).filter((v) => v.innerText == "View all posts")[0];
-    viewAllPost.style.setProperty("background-color", "orange", "important");
-    viewAllPost.style.setProperty("color", "black", "important");
-    viewAllPost.style.setProperty("text-decoration-line", "none", "important");
-    viewAllPost.style.setProperty("padding", "0.5rem 1rem", "important");
-    viewAllPost.style.setProperty("border-radius", "0.5rem", "important");
 
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth <= 1100);
@@ -130,8 +120,6 @@ export default function PostBody({ content }) {
     );
     setReplacedContent(replacedContentWithAuthorDescription);
   }, [replacedContent]);
-  
-  
 
   return (
     <div className="flex flex-col lg:flex-row">
@@ -147,10 +135,13 @@ export default function PostBody({ content }) {
       <div className="w-full lg:w-3/5 ml-10 p-4">
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
         <div id="author-description">
-      <AuthorDescription authorData={content} AuthorName={"Arindam"} />
+          <AuthorDescription
+            authorData={content}
+            AuthorName={authorName}
+            isPost={true}
+          />
+        </div>
       </div>
-      </div>
-     
     </div>
   );
 }

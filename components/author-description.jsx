@@ -1,13 +1,14 @@
+import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { IoLogoLinkedin } from "react-icons/io"; // Import LinkedIn icon from react-icons/io
 
-const AuthorDescription = ({ authorData, AuthorName }) => {
+const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [authorLinkedIn, setAuthorLinkedIn] = useState("");
   const [authorDescription, setAuthorDescription] = useState("");
   const [showMore, setShowMore] = useState(false);
-
   const AuthorNameNew =
     AuthorName[0].toUpperCase() + AuthorName.slice(1).toLowerCase();
 
@@ -36,12 +37,9 @@ const AuthorDescription = ({ authorData, AuthorName }) => {
       var NewName = authorNameElement.textContent;
       NewName =
         NewName.charAt(0).toUpperCase() + NewName.slice(1).toLowerCase();
-      console.log(NewName);
       setAuthorName(NewName);
-    } else {
-      setAuthorName(AuthorNameNew);
     }
-    if (authorDescriptionElement) {
+    if (authorDescriptionElement.textContent.trim().length > 0) {
       setAuthorDescription(authorDescriptionElement.textContent.trim());
     } else {
       setAuthorDescription("n/a");
@@ -59,26 +57,34 @@ const AuthorDescription = ({ authorData, AuthorName }) => {
   };
 
   const FormatDescription = (description) => {
-    return description.split(". ");
+    const des = description.split(". ");
+    const len = des.length;
+    return {
+      newAuthorDescription: des,
+      length: len,
+    };
   };
 
-  const newAuthorDescription = FormatDescription(authorDescription);
-
+  const { newAuthorDescription, length } = FormatDescription(authorDescription);
   // Render the extracted information
   return (
     <div className="max-w-9xl mx-auto bg-slate-000 shadow-md rounded-lg overflow-hidden flex flex-col sm:flex-row md:flex-row lg:flex-row">
       <div className="w-3/5 self-center sm:w-1/4 p-8 flex justify-center items-center">
         {avatarImgSrc !== "n/a" && (
-          <img
+          <Image
             src={avatarImgSrc}
             alt="Author Avatar"
+            width={200}
+            height={200}
             className="object-cover rounded-full sm:h-30 sm:w-30"
           />
         )}
         {avatarImgSrc === "n/a" && (
-          <img
+          <Image
             src="/blog/images/author.png"
             alt="Author Avatar"
+            width={200}
+            height={200}
             className="object-cover rounded-full sm:h-30 sm:w-30"
           />
         )}
@@ -88,24 +94,29 @@ const AuthorDescription = ({ authorData, AuthorName }) => {
         <div className="heading1 uppercase tracking-wide text-base text-black font-semibold">
           Author Details
         </div>
-        <ul className="list-disc mt-2 text-gray-600 heading1">
+        <div className="list-disc mt-2 text-gray-600 heading1">
           <div className="mb-2">
-            <span className="font-semibold">Author Name:</span> {authorName}
+            <span className="font-semibold">Author Name:</span>{" "}
+            {authorName.length > 0 ? authorName : AuthorNameNew}
           </div>
           <div>
             <span className="font-semibold">Author Description:</span>{" "}
-            {newAuthorDescription.map((item, index) => (
-              <li
-                key={index}
-                className={!showMore && index >= 1 ? " ml-5 hidden" : "ml-5"}
-              >
-                {item}
-              </li>
-            ))}
-            {!showMore && (
+            {length > 0 ? (
+              newAuthorDescription.map((item, index) => (
+                <li
+                  key={index}
+                  className={!showMore && index >= 1 ? " ml-5 hidden" : "ml-5"}
+                >
+                  {item}
+                </li>
+              ))
+            ) : (
+              <span className="text-gray-600">n/a</span>
+            )}
+            {!showMore && length > 2 && newAuthorDescription.length && (
               <button
                 onClick={toggleShowMore}
-                className="text-slate-500 hover:underline focus:outline-none"
+                className=" text-slate-500 hover:underline mt-1"
               >
                 Show more
               </button>
@@ -113,7 +124,7 @@ const AuthorDescription = ({ authorData, AuthorName }) => {
             {showMore && (
               <button
                 onClick={toggleShowMore}
-                className="text-slate-500 hover:underline focus:outline-none"
+                className="text-slate-400 focus:outline-none hover:underline  mt-1"
               >
                 Show less
               </button>
@@ -136,7 +147,16 @@ const AuthorDescription = ({ authorData, AuthorName }) => {
               <span className="text-gray-600">n/a</span>
             </div>
           )}
-        </ul>
+          {isPost && (
+            <div className="mt-2  flex justify-end">
+              <button className="text-slate-100 place-self-end focus:outline-none hover:bg-slate-800 hover:text-slate-50 bg-slate-500 p-2 rounded-lg mt-1">
+                <Link href={`/authors/${AuthorName}`}>
+                View All Posts
+                </Link>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
