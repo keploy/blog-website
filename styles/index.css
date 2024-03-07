@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
+
 @tailwind base;
 
 /* Write your own custom base styles here */
@@ -105,13 +107,18 @@
 
 /* Custom CSS */
 
-@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto+Condensed:wght@200;300;400;500;600;700&display=swap");
+.baloo-2-600 {
+  font-family: "Baloo 2", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
 
 .heading1 {
-  font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
+  font-family: "Baloo 2", "bold", sans-serif;
 }
 .body {
-  font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
+  font-family: "Baloo 2", sans-serif;
 }
 
 body {

@@ -4,10 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const menuItems = [
-  // { text: "Home", link: "https://keploy.io/" },
   { text: "Docs", link: "https://keploy.io/docs" },
-  { text: "Blog", link: "/technology" },
-  { text: "Community", link: "/community" },
+  { text: "Tech Blogs", link: "/technology" },
+  { text: "Guest Posts", link: "/community" },
 ];
 
 const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
@@ -34,7 +33,7 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   return (
     <Link
       href="https://docs.google.com/forms/d/e/1FAIpQLSdj9q7dyRh3D7ZzRExHLWRRkNPOnLnFfrbKqSwqH3Ur4HzP4g/viewform"
-      className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d]  hover:font-semibold ml-3"
+      className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d]  hover:text-primary-300 ml-3"
     >
       <span>Join Waitlist</span>
     </Link>
@@ -114,7 +113,7 @@ export default function Header() {
       <header className="fixed w-full z-30 bg-neutral-100 md:bg-opacity-90 transition duration-300 ease-in-out ">
         <div className="max-w-6xl mx-auto px-5 sm:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
-            <div className="shrink-0 mr-4 flex-1">
+            <div className="shrink-0 mr-4 flex-grow-0 w-2/12">
               <Link href={"https://keploy.io/"}>
                 <img
                   src="/blog/images/sidebyside-transparent.svg"
@@ -123,14 +122,14 @@ export default function Header() {
                 />
               </Link>
             </div>
-            <nav className="hidden lg:flex md:grow flex-1">
+            <nav className="hidden lg:flex flex-grow-0 w-6/12 ">
               <ul className="flex grow justify-end flex-wrap items-center">
                 {menuItems.map((item, index) => {
                   return (
                     <li key={index}>
                       <Link
                         href={item.link}
-                        className="font-medium text-gray-600  hover:text-orange-400 px-5 py-3 flex items-center transition duration-150 ease-in-out"
+                        className="font-medium text-gray-600 hover:text-primary-300 px-5 py-3 flex flex-grow-0 lg:flex items-center transition duration-150 ease-in-out"
                       >
                         {item.text}
                       </Link>
@@ -155,7 +154,7 @@ export default function Header() {
               </button>
               <div>
                 {toggleMenu ? (
-                  <nav className="absolute top-full h-screen pb-16 z-20 left-0 w-full overflow-scroll bg-white opacity-100 translate-y-0">
+                  <nav className="absolute top-full h-screen pb-16 z-20 flex-grow-0 left-0 w-full overflow-scroll bg-white opacity-100 translate-y-0">
                     <ul className="px-5 py-2">
                       <li>
                         <GithubBtn />
