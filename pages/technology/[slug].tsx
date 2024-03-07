@@ -68,7 +68,7 @@ export default function Post({ post, posts, preview }) {
       </Container>
       <ContainerSlug>
         {/* PostBody component placed outside the Container */}
-        <PostBody content={postBody({ content: post.content, post })} />
+        <PostBody content={postBody({ content: post.content, post })} authorName={post.ppmaAuthorName} />
       </ContainerSlug>
       <Container>
         <article>
