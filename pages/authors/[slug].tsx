@@ -4,13 +4,14 @@ import Header from "../../components/header";
 import Container from "../../components/container";
 import {
   getAllAuthors,
+  getContent,
   getPostsByAuthor,
 } from "../../lib/api";
 import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 
-export default function authorPage({ preview, filteredPosts}) {
+export default function AuthorPage({ preview, filteredPosts ,content }) {
   if (!filteredPosts || filteredPosts.length === 0) {
     return (
       <div>
@@ -18,7 +19,8 @@ export default function authorPage({ preview, filteredPosts}) {
       </div>
     );
   }
-  const authorName = filteredPosts[0]?.node?.ppmaAuthorName;
+
+  const authorName  =  filteredPosts[0]?.node?.ppmaAuthorName;
 
   return (
     <div className="bg-accent-1">
@@ -34,7 +36,7 @@ export default function authorPage({ preview, filteredPosts}) {
             Author Details
           </h1>
 
-          <PostByAuthorMapping filteredPosts={filteredPosts}/>
+          <PostByAuthorMapping filteredPosts={filteredPosts} Content={content}/>
         </Container>
       </Layout>
     </div>
@@ -59,8 +61,11 @@ export const getStaticProps: GetStaticProps = async ({
   const filteredPosts = postsByAuthor.edges.filter(
     (item) => item.node.ppmaAuthorName === slug
   );
+  const postId = (filteredPosts[0].node.postId);
+  const content = await getContent(postId);
+
   return {
-    props: { preview, filteredPosts },
+    props: { preview, filteredPosts , content},
     revalidate: 10,
   };
 };

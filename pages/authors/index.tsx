@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import { getAllAuthors} from "../../lib/api";
+import { getAllAuthors } from "../../lib/api";
 import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Container from "../../components/container";
@@ -11,7 +11,12 @@ export default function Authors({ AllAuthors: { edges }, preview }) {
 
   return (
     <div className="bg-accent-1">
-      <Layout preview={preview} featuredImage={HOME_OG_IMAGE_URL} Title={`Authors Page`} Description={`Giving the List of all the Authors`}>
+      <Layout
+        preview={preview}
+        featuredImage={HOME_OG_IMAGE_URL}
+        Title={`Authors Page`}
+        Description={`Giving the List of all the Authors`}
+      >
         <Header />
         <Container>
           <h1 className="bg-gradient-to-r ml-10 from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">

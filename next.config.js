@@ -14,7 +14,7 @@ module.exports = {
   basePath: '/blog',
   assetPrefix: "/blog",
   images: {
-    domains: ['secure.gravatar.com', 'keploy.io'],
+    domains: ['secure.gravatar.com', 'keploy.io', 'pbs.twimg.com'],
     remotePatterns: [
       {
         protocol: 'https',

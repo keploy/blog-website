@@ -58,6 +58,26 @@ export async function getAllPostsWithSlug() {
   return data?.posts;
 }
 
+export async function getContent(postId: number) {
+  const data = await fetchAPI(
+    `
+    query getContent($postId: Int!) {
+      postBy(postId: $postId) {
+        content
+      }
+    }
+    `,
+    {
+      variables: {
+        postId,
+      },
+    }
+  );
+
+  // Extract and return the content
+  return data.postBy.content;
+}
+
 export async function getAllPostsForHome(preview) {
   const data = await fetchAPI(
     `
@@ -186,6 +206,7 @@ export async function getPostsByAuthor() {
       posts(first: 1000) {
         edges {
           node {
+            postId
             title
             ppmaAuthorName
             slug
@@ -201,7 +222,6 @@ export async function getPostsByAuthor() {
                 }
               }
             }
-            content
           }
         }
       }
@@ -210,7 +230,6 @@ export async function getPostsByAuthor() {
 
   return data?.posts;
 }
-
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post;
