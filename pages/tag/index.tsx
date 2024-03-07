@@ -40,7 +40,7 @@ export default function Tags({ allTags: { edges },preview }) {
         <h1 className="text-4xl font-semibold mb-4">Tags</h1>
         <div className="flex flex-wrap gap-2 mb-10">
           {uniqueEdges.map(({ name }) => (
-            <Link href={`/tags/${name}`} key={name}>
+            <Link href={`/tag/${name}`} key={name}>
               <button className="bg-slate-200 hover:bg-slate-300 text-slate-500 font-bold py-2 px-4 rounded">
                 {name}
               </button>
