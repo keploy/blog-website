@@ -15,36 +15,32 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`Keploy's Blog`}
-      Description={
-        "Elevate Your Tech Insight.Frontiers of Innovation and Integration."
-      }
-    >
+      Title={`Keploy Tech Blog`}
+      Description={" Empowering your tech journey with expert advice and analysis"}>
       <Head>
-        <title>{`Keploy`}</title>
+        <title>{`Keploy Blog`}</title>
       </Head>
       <Header />
       <Container>
         <div className="">
           <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
-            <div className="content">
+            <div className="content ">
               <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
                 Keploy Blog
               </h2>
-              <p className="content-body body 2xl:text-2xl text-lg w-max mt-6">
-                Elevate Your Tech Insight. Navigating the <br />
-                Frontiers of Innovation and Integration.
+              <p className="content-body body 2xl:text-2xl text-lg mt-6">
+                Empowering your tech journey with expert advice and analysis
               </p>
-              <div className="btn-wrapper flex gap-4 mt-6">
+              <div className="btn-wrapper flex flex-wrap gap-4 mt-6 ">
                 <Link
                   href="/technology"
-                  className="tech-blog cursor-pointer 2xl:text-xl text-lg body md:px-12 px-8 py-2 border-2 border-black rounded-xl hover:bg-orange-400 hover:text-white hover:border-orange-400 "
+                  className="tech-blog cursor-pointer text-lg md:text-xl 2xl:text-2xl body px-4 py-1 md:px-8 md:py-2 border-2 border-black rounded-xl hover:bg-orange-400 hover:text-white hover:border-orange-400"
                 >
                   Technology
                 </Link>
                 <Link
                   href="/community"
-                  className="community-blog cursor-pointer 2xl:text-xl text-lg body md:px-12 px-8 py-2 border-2 border-black rounded-xl hover:bg-orange-400 hover:text-white hover:border-orange-400 "
+                  className="community-blog cursor-pointer text-lg md:text-xl 2xl:text-2xl body px-8 py-1 md:px-8 md:py-2 border-2 border-black rounded-xl hover:bg-orange-400 hover:text-white hover:border-orange-400 "
                 >
                   Community
                 </Link>
