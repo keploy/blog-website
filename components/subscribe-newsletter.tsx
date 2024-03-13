@@ -31,7 +31,7 @@ export default function SubscribeNewsletter() {
   };
 
   return (
-    <div className="overflow-x-hidden" ref={myComponent}>
+    <div className="overflow-x-hidden sticky top-20" ref={myComponent}>
       <div
         className={`${
           isVisible ? styles["slide-in"] : "translate-x-full opacity-0"
