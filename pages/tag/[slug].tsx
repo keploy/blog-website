@@ -7,7 +7,7 @@ import Container from "../../components/container";
 import { getAllPostsFromTags, getAllTags } from "../../lib/api";
 import TagsStories from "../../components/TagsStories";
 import { useRouter } from "next/router";
-export default function PostByTags({ postsByTags, preview }) {
+export default function PostByTags({ postsByTags,preview}) {
   const posts = postsByTags?.edges || [];
   const router = useRouter();
   const {slug} = router.query;
@@ -30,20 +30,17 @@ export default function PostByTags({ postsByTags, preview }) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allTags = await getAllTags();
-  const path = allTags.edges.flatMap(({ node }) => {
-    const tagNames = node.tags.edges.map(({ node }) => node.name);
-    return tagNames.map(tagName => `/tag/${tagName}`);
-  }) || [];
+  const edgesAllTags = await getAllTags();
+  const paths = edgesAllTags.map((node) => `/tag/${node.name}`) || []; // Extract tag names from the nodes and create paths
   return {
-    paths : path,
+    paths: paths,
     fallback: true,
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({
-  preview = false,
-  params,
+  preview=false,
+  params
 }) => {
   let { slug } = params;
   if (Array.isArray(slug)) {
@@ -52,9 +49,9 @@ export const getStaticProps: GetStaticProps = async ({
     // Replace spaces with dashes
     slug = slug.replace(/\s+/g, '-');
   }
-  const postsByTags = await getAllPostsFromTags(slug.toString(), preview);
+  const postsByTags = await getAllPostsFromTags(slug.toString(),preview);
   return {
-    props: { postsByTags, preview },
+    props: { postsByTags,preview},
     revalidate: 10,
   };
 };
