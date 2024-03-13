@@ -7,24 +7,7 @@ import Head from "next/head";
 import { getAllTags } from "../../lib/api";
 import Link from "next/link";
 
-function removeDuplicates(edges) {
-  let tagsArray = [];
-  edges?.forEach(({ node }) => {
-    node?.tags.edges.forEach(({ node: tagNode }) => {
-      const { name } = tagNode;
-      const trimmedName = name.trim(); // Trim whitespace
-      if (!tagsArray.some((item) => item?.name.trim() === trimmedName)) {
-        tagsArray.push(tagNode);
-      }
-    });
-  });
-  return tagsArray;
-}
-
-export default function Tags({ allTags: { edges },preview }) {
-
-  const uniqueEdges = removeDuplicates(edges);
-
+export default function Tags({ edgesAllTags, preview }) {
   return (
     <Layout
       preview={preview}
@@ -39,7 +22,7 @@ export default function Tags({ allTags: { edges },preview }) {
       <Container>
         <h1 className="text-4xl font-semibold mb-4">Tags</h1>
         <div className="flex flex-wrap gap-2 mb-10">
-          {uniqueEdges.map(({ name }) => (
+        {edgesAllTags.map(({ name }) => (
             <Link href={`/tag/${name}`} key={name}>
               <button className="bg-slate-200 hover:bg-slate-300 text-slate-500 font-bold py-2 px-4 rounded">
                 {name}
@@ -53,10 +36,9 @@ export default function Tags({ allTags: { edges },preview }) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  
-  const allTags = await getAllTags();
+  const edgesAllTags = await getAllTags();
   return {
-    props: { allTags,preview },
+    props: { edgesAllTags, preview },
     revalidate: 10,
   };
 };
