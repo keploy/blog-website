@@ -7,4 +7,4 @@ Disallow: /blog.keploy.io/
 Disallow: /telemetry.keploy.io/
 Disallow: /student.keploy.io/
 Disallow: /wp/
-Sitemap: https://www.keploy.io/sitemap.xml
+Sitemap: https://www.keploy.io/blog/sitemap.xml
