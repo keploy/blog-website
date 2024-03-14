@@ -12,7 +12,7 @@ import SectionSeparator from "../../components/section-separator";
 import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
 import Tag from "../../components/tag";
-import { getAllPostsWithSlug, getPostAndMorePosts } from "../../lib/api";
+import { getAllPostsWithSlug, getMoreStoriesForSlugs, getPostAndMorePosts } from "../../lib/api";
 import { CMS_NAME } from "../../lib/constants";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
@@ -93,11 +93,12 @@ export const getStaticProps: GetStaticProps = async ({
   previewData,
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
+  const { communityMoreStories } = await getMoreStoriesForSlugs();
   return {
     props: {
       preview,
       post: data.post,
-      posts: data.posts,
+      posts: communityMoreStories,
     },
     revalidate: 10,
   };
