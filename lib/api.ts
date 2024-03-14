@@ -314,6 +314,105 @@ export async function getPostsByAuthor() {
   return data?.posts;
 }
 
+export async function getMoreStoriesForSlugs() {
+  const data = await fetchAPI(
+    `
+    query AllPostsForCategory {
+      techPosts: posts(first: 10, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+            ppmaAuthorName
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+      communityPosts: posts(first: 10, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+            ppmaAuthorName
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    `,
+    {
+      variables: {
+      },
+    }
+  );
+
+  const techPosts = data?.techPosts?.edges.map(({ node }) => node) || [];
+  const communityPosts =
+    data?.communityPosts?.edges.map(({ node }) => node) || [];
+
+  const newTechPosts = [...techPosts, ...communityPosts];
+  const newCommunityPosts = [...communityPosts, ...techPosts];
+
+  const techMoreStories = {
+    edges: newTechPosts.map((node) => ({ node })),
+  };
+
+  const communityMoreStories = {
+    edges: newCommunityPosts.map((node) => ({ node })),
+  };
+
+  return {
+    techMoreStories,
+    communityMoreStories,
+  };
+}
+
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post;
   // The slug may be the id of an unpublished post
