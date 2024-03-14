@@ -17,7 +17,7 @@ export default function MoreStories({ posts, isCommunity }) {
             author={node.ppmaAuthorName}
             slug={node.slug}
             excerpt={getExcerpt(node.excerpt, 20)}
-            isCommunity={isCommunity}
+            isCommunity={node.categories.edges[0].node.name === "technology"?false:true}
           />
         ))}
       </div>
