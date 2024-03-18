@@ -100,7 +100,7 @@ export default function PostBody({ content, authorName }) {
               ? codeMatch[0].split("language-")[1].split('"')[0]
               : "bash"; // Extract language if available, otherwise default to 'bash'
           return (
-            <div key={index} className="relative mb-4">
+            <div key={index} className="relative mb-4 mx-auto">
               <pre
                 dangerouslySetInnerHTML={{ __html: part }}
                 className={`language-${language}`}
@@ -115,6 +115,13 @@ export default function PostBody({ content, authorName }) {
                 ) : (
                   <IoCopyOutline />
                 )}
+              </button>
+              <button
+                disabled
+                className="absolute top-1 left-1 text-orange-400 border-2 border-gray-400 border-b-0 rounded  rounded-b-none px-2 flex flex-col gap-y-1 capitalize"
+              >
+                {language}
+                <span className="h-[1px] w-full border rounded-full border-gray-400"></span>
               </button>
             </div>
           );
