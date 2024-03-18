@@ -3,6 +3,8 @@ import TOC from "./TableContents"; // Importing TOC component
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importing icons
 import styles from "./post-body.module.css";
 import AuthorDescription from "./author-description";
+import SubscribeNewsletter from "./subscribe-newsletter";
+
 export default function PostBody({ content, authorName }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
@@ -136,14 +138,13 @@ export default function PostBody({ content, authorName }) {
   };
 
 
-
   return (
     <div className="flex flex-col lg:flex-row">
       {/* Table of Contents */}
       <div
         className={`w-full lg:w-1/4 mr-5 top-20 ${
           isSmallScreen ? "flex items-center justify-center" : "sticky"
-        }`}
+          }`}
       >
         <TOC headings={tocItems} />
       </div>
@@ -157,6 +158,10 @@ export default function PostBody({ content, authorName }) {
             isPost={true}
           />
         </div>
+      </div>
+      {/* Subscription */}
+      <div className="w-full lg:w-1/5 p-4 h-auto flex flex-col justify-center">
+        <SubscribeNewsletter />
       </div>
     </div>
   );
