@@ -19,6 +19,8 @@ import {
 import { CMS_NAME } from "../../lib/constants";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
+import { useScroll } from "@react-spring/web";
+import { useRef } from "react";
 const postBody = ({ content, post }) => {
   // Define the regular expression pattern to match the entire URL structure
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
@@ -33,7 +35,12 @@ const postBody = ({ content, post }) => {
 };
 export default function Post({ post, posts, preview }) {
   const router = useRouter();
+  const postBodyRef = useRef();
   const morePosts = posts?.edges;
+  const { scrollYProgress } = useScroll({
+    container: postBodyRef.current,
+    config: { precision: 2 },
+  });
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />;
   }
@@ -48,7 +55,7 @@ export default function Post({ post, posts, preview }) {
       Title={post?.title}
       Description={`Blog About ${post?.title}`}
     >
-      <Header />
+      <Header scrollYProgress={scrollYProgress} />
       <Container>
         {router.isFallback ? (
           <PostTitle>Loading…</PostTitle>
@@ -70,13 +77,15 @@ export default function Post({ post, posts, preview }) {
           </>
         )}
       </Container>
-      <ContainerSlug>
-        {/* PostBody component placed outside the Container */}
-        <PostBody
-          content={postBody({ content: post.content, post })}
-          authorName={post.ppmaAuthorName}
-        />
-      </ContainerSlug>
+      <div ref={postBodyRef}>
+        <ContainerSlug>
+          {/* PostBody component placed outside the Container */}
+          <PostBody
+            content={postBody({ content: post.content, post })}
+            authorName={post.ppmaAuthorName}
+          />
+        </ContainerSlug>
+      </div>
       <Container>
         <article>
           <footer>
@@ -99,7 +108,7 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { techMoreStories } = await getMoreStoriesForSlugs();
-  
+
   return {
     props: {
       preview,

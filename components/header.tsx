@@ -1,4 +1,5 @@
 "use client";
+import { SpringValue, animated } from "@react-spring/web";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -101,7 +102,11 @@ const MenuBtn = () => {
   );
 };
 
-export default function Header() {
+export default function Header({
+  scrollYProgress,
+}: {
+  scrollYProgress?: SpringValue<number>;
+}) {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   const toggleMenuHandler = () => {
@@ -181,6 +186,22 @@ export default function Header() {
             </div>
           </div>
         </div>
+        {scrollYProgress && (
+          <div className="relative w-full">
+            <animated.div
+              className="h-1 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-r-full z-10 transition-all duration-500 ease-in relative"
+              style={{
+                width: scrollYProgress.to((v) => {
+                  let a = Number(v.toPrecision(2));
+                  a = a * 100;
+                  a = Math.round(a);
+                  return String(a) + "%";
+                }),
+              }}
+            ></animated.div>
+            <div className="top-0 absolute w-full h-1 bg-gray-200 "></div>
+          </div>
+        )}
       </header>
     </div>
   );
