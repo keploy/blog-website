@@ -181,6 +181,13 @@ export default function Header() {
             </div>
           </div>
         </div>
+        <div className="relative h-1">
+          <div className="h-full bg-gradient-to-r from-orange-500 to-yellow-500 rounded-r-full"
+          style={{
+            width: "90%"
+          }}></div>
+          <div className="h-full absolute top-0 w-full bg-gray-300 -z-10"></div>
+        </div>
       </header>
     </div>
   );
