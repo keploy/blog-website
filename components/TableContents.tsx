@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 function TOCItem({ id, title, type, onClick }) {
-  const itemClasses = "mb-1 text-slate-600 space-y-1";
+  const itemClasses =
+    "mb-1 text-slate-600 space-y-1";
 
   // Calculate margin left based on heading type
   let marginLeft;
@@ -26,7 +27,7 @@ function TOCItem({ id, title, type, onClick }) {
     <li className={itemClasses} style={{ marginLeft }}>
       <button
         onClick={() => onClick(id)}
-        className="block py-1 w-full rounded-md text-left text-sm"
+        className="block py-1 w-full rounded-md text-left text-sm hover:text-base transition-all duration-150 ease-in-out"
       >
         {title}
       </button>
