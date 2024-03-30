@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { SpringValue, animated } from "@react-spring/web";
 
 const menuItems = [
   { text: "Docs", link: "https://keploy.io/docs" },
@@ -94,14 +95,18 @@ const MenuBtn = () => {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect y="4" width="24" height="2"/>
-      <rect y="11" width="24" height="2"/>
-      <rect y="18" width="24" height="2"/>
+      <rect y="4" width="24" height="2" />
+      <rect y="11" width="24" height="2" />
+      <rect y="18" width="24" height="2" />
     </svg>
   );
 };
 
-export default function Header() {
+export default function Header({
+  readProgress,
+}: {
+  readProgress?: SpringValue<number>;
+}) {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   const toggleMenuHandler = () => {
@@ -181,13 +186,18 @@ export default function Header() {
             </div>
           </div>
         </div>
-        <div className="relative h-1">
-          <div className="h-full bg-gradient-to-r from-orange-500 to-yellow-500 rounded-r-full"
-          style={{
-            width: "90%"
-          }}></div>
-          <div className="h-full absolute top-0 w-full bg-gray-300 -z-10"></div>
-        </div>
+        {readProgress && (
+          <div className="relative h-1">
+            <animated.div
+              className="h-full bg-gradient-to-r from-orange-500 to-yellow-500 rounded-r-full"
+              style={{
+                width: readProgress.to((v) => v + "%"),
+              }}
+            >
+            </animated.div>
+            <div className="h-full absolute top-0 w-full bg-gray-300 -z-10"></div>
+          </div>
+        )}
       </header>
     </div>
   );
