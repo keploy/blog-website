@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
+import sideBySideSvg from "../public/images/sidebyside-transparent.svg"
 const menuItems = [
   { text: "Docs", link: "https://keploy.io/docs" },
   { text: "Tech Blogs", link: "/technology" },
@@ -60,7 +60,7 @@ const GithubBtn = () => {
 
   return (
     <button className="border border-orange-500 rounded overflow-hidden p-2 w-full lg:w-auto border-opacity-25 sm:border-opacity-100">
-      <a
+      <Link
         className="flex items-center ml-4 lg:ml-0 gap-2 text-sm text-orange-500 font-extrabold transition-colors hover:text-primary-300"
         href=" https://github.com/keploy/keploy"
       >
@@ -82,7 +82,7 @@ const GithubBtn = () => {
         <span className="text-base flex gap-1">
           ⭐️ <p>{stars}</p>
         </span>
-      </a>
+      </Link>
     </button>
   );
 };
@@ -115,8 +115,8 @@ export default function Header() {
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="shrink-0 mr-4 flex-grow-0 w-2/12">
               <Link href={"https://keploy.io/"}>
-                <img
-                  src="/blog/images/sidebyside-transparent.svg"
+                <Image
+                  src={sideBySideSvg}
                   alt="Keploy Logo"
                   className="w-auto h-10"
                 />
