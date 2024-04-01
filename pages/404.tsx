@@ -1,12 +1,19 @@
-import { useEffect } from "react"
-import { useRouter } from "next/router"
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export default function Custom404() {
-  const router = useRouter()
+  const router = useRouter();
+  const category = router.asPath.split("/")[1];
 
   useEffect(() => {
-    router.replace("/")
-  })
+    if (category === "community") {
+      router.replace("/technology");
+    } else if (category === "technology") {
+      router.replace("/community");
+    } else {
+      router.replace("/");
+    }
+  }, [category, router]);
 
-  return null
+  return null;
 }
