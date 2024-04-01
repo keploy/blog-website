@@ -1,6 +1,7 @@
 import React from "react";
 import AuthorDescription from "./author-description";
 import Image from "next/image";
+import Link from "next/link";
 import { animated, useInView, easings } from "@react-spring/web";
 
 function Node({ node }) {
@@ -24,7 +25,7 @@ function Node({ node }) {
   );
   return (
     <animated.li className="mb-8" ref={cardRef} style={cardSpringStyles}>
-      <a href={`/blog/${node.categories.edges[0].node.name}/${node.slug}`}>
+      <Link href={`/${node.categories.edges[0].node.name}/${node.slug}`}>
         <div className="group rounded-lg border border-transparent px-5 py-4 transition duration-300 ease-in-out transform hover:scale-105 transition-colors hover:border-accent-2 hover:dark:bg-neutral-400/30">
           <div className="flex items-center justify-between">
             <h2 className="text-lg sm:text-xl font-bold mb-2 text-slate-600 mr-4">
@@ -44,7 +45,7 @@ function Node({ node }) {
           </p>
           {/* Additional details can be added based on your needs */}
         </div>
-      </a>
+      </Link>
     </animated.li>
   );
 }
