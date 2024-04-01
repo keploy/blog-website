@@ -62,7 +62,7 @@ const GithubBtn = () => {
     <button className="border border-orange-500 rounded overflow-hidden p-2 w-full lg:w-auto border-opacity-25 sm:border-opacity-100">
       <Link
         className="flex items-center ml-4 lg:ml-0 gap-2 text-sm text-orange-500 font-extrabold transition-colors hover:text-primary-300"
-        href=" https://github.com/keploy/keploy"
+        href="https://github.com/keploy/keploy"
       >
         <svg
           className="h-5 w-5"
