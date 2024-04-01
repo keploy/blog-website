@@ -4,7 +4,7 @@ import Image from "next/image";
 import { animated, useInView, easings } from "@react-spring/web";
 
 function Node({ node }) {
-  const [ref, springStyles] = useInView(
+  const [cardRef, cardSpringStyles] = useInView(
     () => ({
       from: {
         opacity: 0,
@@ -23,7 +23,7 @@ function Node({ node }) {
     }
   );
   return (
-    <animated.li className="mb-8" ref={ref} style={springStyles}>
+    <animated.li className="mb-8" ref={cardRef} style={cardSpringStyles}>
       <a href={`/blog/${node.categories.edges[0].node.name}/${node.slug}`}>
         <div className="group rounded-lg border border-transparent px-5 py-4 transition duration-300 ease-in-out transform hover:scale-105 transition-colors hover:border-accent-2 hover:dark:bg-neutral-400/30">
           <div className="flex items-center justify-between">
