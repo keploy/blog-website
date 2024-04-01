@@ -37,7 +37,7 @@ export default function Post({ post, posts, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
   const postBodyRef = useRef<HTMLDivElement>();
-  const a = useSpringValue(0);
+  const readProgress = useSpringValue(0);
   useScroll({
     onChange(v) {
       const topOffset = postBodyRef.current.offsetTop;
@@ -51,7 +51,7 @@ export default function Post({ post, posts, preview }) {
       } else {
         v.value.scrollY = 100;
       }
-      a.set(v.value.scrollY);
+      readProgress.set(v.value.scrollY);
     },
   });
   if (!router.isFallback && !post?.slug) {
@@ -67,7 +67,7 @@ export default function Post({ post, posts, preview }) {
       Title={post?.title}
       Description={`Blog About ${post?.title}`}
     >
-      <Header readProgress={a} />
+      <Header readProgress={readProgress} />
       <Container>
         {router.isFallback ? (
           <PostTitle>Loading…</PostTitle>
