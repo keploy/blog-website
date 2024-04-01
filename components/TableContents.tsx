@@ -27,7 +27,7 @@ function TOCItem({ id, title, type, onClick }) {
     <li className={itemClasses} style={{ marginLeft }}>
       <button
         onClick={() => onClick(id)}
-        className="block py-1 w-full rounded-md text-left text-sm hover:text-base transition-all duration-150 ease-in-out"
+        className="block py-1 w-full rounded-md text-left text-sm text-black opacity-75 hover:opacity-100 transition-all duration-150 ease-in-out"
       >
         {title}
       </button>
