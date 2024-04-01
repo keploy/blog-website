@@ -16,7 +16,6 @@ import {
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
-import { CMS_NAME } from "../../lib/constants";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
 const postBody = ({ content, post }) => {
