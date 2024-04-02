@@ -76,7 +76,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
             alt="Author Avatar"
             width={200}
             height={200}
-            className="object-cover rounded-full sm:h-30 sm:w-30"
+            className="object-cover rounded-full sm:h-30 sm:w-30 aspect-square"
             priority
           />
         )}
@@ -86,7 +86,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
             alt="Author Avatar"
             width={200}
             height={200}
-            className="object-cover rounded-full sm:h-30 sm:w-30"
+            className="object-cover rounded-full sm:h-30 sm:w-30 aspect-square"
             priority
           />
         )}
