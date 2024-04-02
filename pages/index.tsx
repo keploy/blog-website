@@ -10,37 +10,43 @@ import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
+
+import spinImage from "../public/images/open-source-vector.png";
+
 export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
       Title={`Keploy Tech Blog`}
-      Description={" Empowering your tech journey with expert advice and analysis"}>
+      Description={
+        " Empowering your tech journey with expert advice and analysis"
+      }
+    >
       <Head>
         <title>{`Keploy Blog`}</title>
       </Head>
       <Header />
       <Container>
         <div className="">
-          <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
+          <div className="flex flex-wrap-reverse items-center mb-4 home-container md:mb-0 lg:flex-nowrap justify-evenly">
             <div className="content ">
-              <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
+              <h2 className="text-6xl font-bold text-orange-400 heading1 2xl:text-7xl">
                 Keploy Blog
               </h2>
-              <p className="content-body body 2xl:text-2xl text-lg mt-6">
+              <p className="mt-6 text-lg content-body body 2xl:text-2xl">
                 Empowering your tech journey with expert advice and analysis
               </p>
-              <div className="btn-wrapper flex flex-wrap gap-4 mt-6 ">
+              <div className="flex flex-wrap gap-4 mt-6 btn-wrapper ">
                 <Link
                   href="/technology"
-                  className="tech-blog cursor-pointer text-lg md:text-xl 2xl:text-2xl body px-4 py-1 md:px-8 md:py-2 border-2 border-black rounded-xl hover:bg-orange-400 hover:text-white hover:border-orange-400"
+                  className="px-4 py-1 text-lg border-2 border-black cursor-pointer tech-blog md:text-xl 2xl:text-2xl body md:px-8 md:py-2 rounded-xl hover:bg-orange-400 hover:text-white hover:border-orange-400"
                 >
                   Technology
                 </Link>
                 <Link
                   href="/community"
-                  className="community-blog cursor-pointer text-lg md:text-xl 2xl:text-2xl body px-8 py-1 md:px-8 md:py-2 border-2 border-black rounded-xl hover:bg-orange-400 hover:text-white hover:border-orange-400 "
+                  className="px-8 py-1 text-lg border-2 border-black cursor-pointer community-blog md:text-xl 2xl:text-2xl body md:px-8 md:py-2 rounded-xl hover:bg-orange-400 hover:text-white hover:border-orange-400 "
                 >
                   Community
                 </Link>
@@ -56,11 +62,13 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
               />
             </div>
           </div>
-          <div className="open-source-vector-container bottom-9 mb-12 flex md:justify-start justify-center">
-            <img
-              src="/blog/images/open-source-vector.png"
+          <div className="flex justify-center mb-12 open-source-vector-container bottom-9 md:justify-start">
+            <Image
+              src={spinImage}
               alt="vector"
               className=" spin-anim"
+              // width={300}
+              // height={300}
             />
           </div>
         </div>

@@ -5,17 +5,20 @@ const Tweets = ({ avatar, name, id, post, content }) => {
   return (
     <>
       <a
-        className="bg-gray-100 border p-6 rounded-md lg:hover:shadow-md transition m-1"
+        className="p-6 m-1 transition bg-gray-100 border rounded-md lg:hover:shadow-md"
         href={post}
         target="_blank"
       >
         <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row gap-2 items-center">
-            <img
-              src={avatar}
-              alt="profile_image"
-              className="rounded-full h-12"
-            />
+          <div className="flex flex-row items-center gap-2">
+            <div className="relative w-12 h-12">
+              <Image
+                src={avatar}
+                alt="profile_image"
+                className="h-12 rounded-full"
+                fill
+              />
+            </div>
             <div className="flex flex-col justify-center">
               <div className="font-bold">{name}</div>
               <div className="">@{id}</div>
