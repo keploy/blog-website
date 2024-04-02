@@ -9,6 +9,7 @@ import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
+import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
     <Layout
@@ -56,10 +57,10 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
             </div>
           </div>
           <div className="open-source-vector-container bottom-9 mb-12 flex md:justify-start justify-center">
-            <img
-              src="/blog/images/open-source-vector.png"
+            <Image
+              src={OpenSourceVectorPng}
               alt="vector"
-              className=" spin-anim"
+              className="spin-anim"
             />
           </div>
         </div>
