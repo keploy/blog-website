@@ -1,10 +1,11 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Tweets = ({ avatar, name, id, post, content }) => {
   return (
     <>
-      <a
+      <Link
         className="bg-gray-100 border p-6 rounded-md lg:hover:shadow-md transition m-1"
         href={post}
         target="_blank"
@@ -31,7 +32,7 @@ const Tweets = ({ avatar, name, id, post, content }) => {
           />
         </div>
         <div className="pt-2">{content}</div>
-      </a>
+      </Link>
     </>
   );
 };
