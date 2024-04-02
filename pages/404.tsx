@@ -16,7 +16,7 @@ export default function Custom404() {
       } else {
         router.replace("/");
       } 
-    }, 2000);
+    }, );
 
     return () => clearTimeout(redirectTimeout);
   }, [category, router]);
