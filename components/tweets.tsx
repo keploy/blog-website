@@ -5,12 +5,12 @@ const Tweets = ({ avatar, name, id, post, content }) => {
   return (
     <>
       <a
-        className="p-6 m-1 transition bg-gray-100 border rounded-md lg:hover:shadow-md"
+        className="bg-gray-100 border p-6 rounded-md lg:hover:shadow-md transition m-1"
         href={post}
         target="_blank"
       >
         <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center gap-2">
+          <div className="flex flex-row gap-2 items-center">
             <div className="relative w-12 h-12">
               <Image
                 src={avatar}
