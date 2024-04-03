@@ -139,7 +139,7 @@ export default function PostBody({ content, authorName }) {
 
 
   return (
-    <div className="flex flex-col lg:flex-row">
+    <div className="flex flex-col lg:flex-row items-start">
       {/* Table of Contents */}
       <div
         className={`w-full lg:w-1/4 mr-5 top-20 ${
@@ -160,7 +160,7 @@ export default function PostBody({ content, authorName }) {
         </div>
       </div>
       {/* Subscription */}
-      <div className="w-full lg:w-1/5 p-4 h-auto flex flex-col justify-center">
+      <div className="w-full lg:w-1/5 p-4 h-auto flex flex-col justify-center sticky top-20">
         <SubscribeNewsletter />
       </div>
     </div>
