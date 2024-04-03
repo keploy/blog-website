@@ -81,7 +81,7 @@ export default function SubscribeNewsletter() {
     <div className="hidden lg:block ">
     <Image src={newsletterBunny} alt="Image" />
   </div>
-    <div className="overflow-x-hidden -mt-8 shadow-md border-b-primary-300 border-b-2 py-6 px-4 sticky top-20" ref={myComponent}>
+    <div className="overflow-x-hidden -mt-8 shadow-md border-b-primary-300 border-b-2 py-6 px-4 sticky top-20 ml-10 md:ml-0 w-full" ref={myComponent}>
       <div
         className={`${isVisible ? styles["slide-in"] : "translate-x-full opacity-0"
           }`}
@@ -93,42 +93,48 @@ export default function SubscribeNewsletter() {
           <p className="text-sm text-black pb-2 text-center">
          To get the latest blogs and updates straight to your inbox.
           </p>
-          <form
-            className="flex flex-col gap-y-4 text-sm"
-            onSubmit={submitHandler}
-          >
+          <form className="flex flex-col gap-y-4 text-sm" onSubmit={submitHandler}>
+            {/* Full Name input with auto-writing effect for the placeholder */}
             <input
               type="text"
-              placeholder="Full Name"
-              className="rounded px-2 py-1"
+              className="rounded px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
+              style={{animation: "autowrite 2s steps(30) infinite"}}
+              placeholder="Full Name"
             />
+            {/* Email input with auto-writing effect for the placeholder */}
             <input
               type="email"
-              placeholder="Email"
-              className="rounded px-2 py-1"
+              className="rounded px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              style={{animation: "autowrite 20s steps(30) infinite"}}
+              placeholder="Email"
             />
+            {/* Company Name input with auto-writing effect for the placeholder */}
             <input
               type="text"
-              placeholder="Company Name"
-              className="rounded px-2 py-1"
+              className="rounded px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
+              style={{animation: "autowrite 2s steps(30) infinite"}}
+              placeholder="Company Name"
             />
-  <div>
-                  <a className="btn text-secondary-300 bg-primary-300 hover:text-white w-full mb-4 sm:w-auto sm:mb-0" href="https://calendar.app.google/8Ncpff4QnAhpVnYd8">Subscribe</a>
-                </div>
-                            {/* <button
-              className={`bg-gradient-to-t ${email ? "from-orange-300 to-orange-600" : "from-gray-300 to-gray-600"} px-2 py-1 rounded hover:to-orange-700 font-bold border-1 border-transparent text-white shadow mt-2 w-min ml-auto`}
-              type="submit"
-              disabled={!email}
-            >
-              Subscribe
-            </button> */}
+            <div>
+            <button
+                className={`btn text-secondary-300 bg-primary-300 w-full mb-4 sm:mb-0 px-2 py-1 rounded font-bold border-1 border-transparent text-white shadow mt-2 ${!email ? "opacity-50 cursor-not-allowed" : "hover:text-white"}`}
+                type="submit"
+                disabled={!email}
+              >
+                Subscribe
+              </button>
+
+            </div>
           </form>
+          <span className="text-xs mt-2 border-none mb-2 text-center block">
+          *<strong>We won&#39;t spam you</strong> one newsletter per month at most.
+        </span>
         </div>
         {subscribed && <p className="text-sm text-accent-200 mt-3">Thanks for subscribing!</p>}
       </div>
