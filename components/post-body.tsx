@@ -98,7 +98,7 @@ export default function PostBody({ content, authorName }) {
               ? codeMatch[0].split("language-")[1].split('"')[0]
               : "bash"; // Extract language if available, otherwise default to 'bash'
           return (
-            <div key={index} className="relative mx-auto mb-4">
+            <div key={index} className="relative mb-4 mx-auto">
               <pre
                 dangerouslySetInnerHTML={{ __html: part }}
                 className={`language-${language}`}
@@ -106,7 +106,7 @@ export default function PostBody({ content, authorName }) {
               />
               <button
                 onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
+                className="absolute top-0 right-0 mt-2 mr-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
               >
                 {copySuccessList[index] ? (
                   <IoCheckmarkOutline />
@@ -116,7 +116,7 @@ export default function PostBody({ content, authorName }) {
               </button>
               <button
                 disabled
-                className="absolute flex flex-col px-2 text-orange-400 capitalize border-2 border-b-0 border-gray-400 rounded rounded-b-none top-1 left-1 gap-y-1"
+                className="absolute top-1 left-1 text-orange-400 border-2 border-gray-400 border-b-0 rounded  rounded-b-none px-2 flex flex-col gap-y-1 capitalize"
               >
                 {language}
                 <span className="h-[1px] w-full border rounded-full border-gray-400"></span>
@@ -135,6 +135,8 @@ export default function PostBody({ content, authorName }) {
       });
   };
 
+
+
   return (
     <div className="flex flex-col lg:flex-row">
       {/* Table of Contents */}
@@ -142,7 +144,7 @@ export default function PostBody({ content, authorName }) {
         <TOC headings={tocItems} />
       </div>
       {/* Content */}
-      <div className="w-full p-4 ml-10 lg:w-3/5">
+      <div className="w-full lg:w-3/5 ml-10 p-4">
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
         <div id="author-description">
           <AuthorDescription
