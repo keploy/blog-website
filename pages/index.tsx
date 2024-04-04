@@ -3,13 +3,13 @@ import { GetStaticProps } from "next";
 import Container from "../components/container";
 import Layout from "../components/layout";
 import { getAllPostsForHome, getAllPostsForTechnology } from "../lib/api";
-import { CMS_NAME } from "../lib/constants";
 import Header from "../components/header";
 import Link from "next/link";
 import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
+import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
     <Layout
@@ -57,10 +57,10 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
             </div>
           </div>
           <div className="open-source-vector-container bottom-9 mb-12 flex md:justify-start justify-center">
-            <img
-              src="/blog/images/open-source-vector.png"
+            <Image
+              src={OpenSourceVectorPng}
               alt="vector"
-              className=" spin-anim"
+              className="spin-anim"
             />
           </div>
         </div>
