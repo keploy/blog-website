@@ -142,8 +142,7 @@ export default function PostBody({ content, authorName }) {
     <div className="flex flex-col lg:flex-row items-start">
       {/* Table of Contents */}
       <div
-        className={`w-full lg:w-1/4 mr-5 top-20 ${
-          isSmallScreen ? "flex items-center justify-center" : "sticky"
+        className={`w-full lg:w-1/4 mr-5 top-20 ${isSmallScreen ? "flex items-center justify-center" : "sticky"
           }`}
       >
         <TOC headings={tocItems} />
@@ -160,8 +159,8 @@ export default function PostBody({ content, authorName }) {
         </div>
       </div>
       {/* Subscription */}
-      <div className="w-full lg:w-1/5 p-4 h-auto flex flex-col justify-center sticky top-20">
-        <SubscribeNewsletter />
+      <div className="w-full lg:w-1/5 ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20 ">
+        <SubscribeNewsletter isSmallScreen={isSmallScreen} />
       </div>
     </div>
   );
