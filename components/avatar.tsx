@@ -1,5 +1,3 @@
-import Image from 'next/image'
-
 export default function Avatar({ author }) {
   // const isAuthorHaveFullName = author?.node?.firstName && author?.node?.lastName
   // const name = isAuthorHaveFullName
