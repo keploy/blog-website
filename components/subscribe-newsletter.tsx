@@ -81,14 +81,19 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!props.isSmallScreen) {
-        gsap.to(bunnyRef.current, { y: -160, duration: 0.8, yoyo: true, repeat: 1 });
+        gsap.to(bunnyRef.current, { y: -180, duration: 1, yoyo: true, repeat: 1 })
+          .then(() => {
+            gsap.to(bunnyRef.current, { y: 100, duration: 0.4 }); 
+          });
       } else {
         gsap.to(bunnyRef.current, { y: 0 });
       }
     }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [props.isSmallScreen]);
+    return () => {
+      clearTimeout(timer);
+      gsap.killTweensOf(bunnyRef.current); 
+    };
+  }, []);
   return (
     <div className="flex flex-col" ref={bunnyRef}>
       <div className="hidden lg:block ">
