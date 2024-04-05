@@ -93,7 +93,7 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
       clearTimeout(timer);
       gsap.killTweensOf(bunnyRef.current); 
     };
-  }, []);
+  }, [props.isSmallScreen]);
   return (
     <div className="flex flex-col" ref={bunnyRef}>
       <div className="hidden lg:block ">
