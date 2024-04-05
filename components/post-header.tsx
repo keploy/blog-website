@@ -30,7 +30,7 @@ export default function PostHeader({
           <div className="relative">
             <Image src={BrushStroke} alt="Background" className="opacity-80" />
             <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center">
-              <p className="text-white text-md font-semibold">Hermione</p>
+              <p className="text-white text-md font-semibold">{author}</p>
             </div>
           </div>
         </div>
