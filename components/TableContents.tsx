@@ -44,9 +44,10 @@ export default function TOC({ headings, isList, setIsList }) {
     const container = tocRef.current;
 
     function resizeHandler() {
-      console.log(container.scrollHeight, container.clientHeight)
-      setIsList(container.scrollHeight > container.clientHeight);
+      setIsList(container.clientHeight > window.innerHeight * 0.8);
     }
+
+    resizeHandler()
     window.addEventListener("resize", resizeHandler)
 
     return () => { window.removeEventListener("resize", resizeHandler) }
@@ -85,7 +86,7 @@ export default function TOC({ headings, isList, setIsList }) {
           ))}
         </select>
       </div>
-      <div className="hidden lg:inline-block left-0 top-20  overflow-auto bg-inherit p-4 sticky ">
+      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
         <div className="mb-2 text-lg font-semibold">Table of Contents</div>
         {isList ?
           <select
@@ -99,7 +100,7 @@ export default function TOC({ headings, isList, setIsList }) {
             ))}
           </select>
           :
-          <nav ref={tocRef} className="max-h-[80vh]">
+          <nav ref={tocRef}>
             <ul className="pl-0 leading-5">
               {headings.map((item, index) => (
                 <TOCItem
