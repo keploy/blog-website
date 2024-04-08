@@ -56,7 +56,7 @@ export default function TOC({ headings }) {
 
   // Function to check if screen width is small
   const checkScreenSize = () => {
-    setIsSmallScreen(window.innerWidth <= 1024); // Adjust breakpoint as needed
+    setIsSmallScreen(window.innerWidth < 1024); // Adjust breakpoint as needed
   };
 
   useEffect(() => {
