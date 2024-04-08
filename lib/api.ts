@@ -133,6 +133,13 @@ export async function getAllPostsWithSlug() {
         edges {
           node {
             slug
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
           }
         }
       }

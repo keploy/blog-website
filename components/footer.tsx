@@ -36,7 +36,7 @@ export default function Footer() {
               <Logo />
             </div>
             <div className="text-sm text-neutral-300">
-              <a href="https://keploy.io/docs/security/" className="text-neutral-300 hover:text-primary-300 hover:underline transition duration-150 ease-in-out">Security</a> · <a href="https://docs.keploy.io/privacy-policy/" className="text-neutral-300 hover:text-primary-300 hover:underline transition duration-150 ease-in-out">Privacy Policy</a>
+              <Link href="https://keploy.io/docs/security/" className="text-neutral-300 hover:text-primary-300 hover:underline transition duration-150 ease-in-out">Security</Link> · <Link href="https://docs.keploy.io/privacy-policy/" className="text-neutral-300 hover:text-primary-300 hover:underline transition duration-150 ease-in-out">Privacy Policy</Link>
             </div>
           </div>
 
@@ -51,12 +51,12 @@ export default function Footer() {
               <ul className="text-sm">
                 {section?.links?.map((link, linkIndex) => (
                   <li key={linkIndex} className="mb-2">
-                    <a
+                    <Link
                       href={link.url}
                       className="text-[#e6e2d4] hover:text-[#ff914d] transition duration-150 ease-in-out"
                     >
                       {link.text}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -77,7 +77,7 @@ export default function Footer() {
         <div className="md:flex md:items-center md:justify-between py-4 md:py-8 border-t border-gray-200">
           <ul className="flex mb-4 md:order-1 md:ml-4 md:mb-0">
             <li>
-              <a
+              <Link
                 href="https://twitter.com/Keployio"
                 className="flex justify-center items-center text-secondary-300 hover:text-primary-300 bg-white hover:bg-white-100 rounded-full shadow transition duration-150 ease-in-out"
                 aria-label="Twitter"
@@ -95,10 +95,10 @@ export default function Footer() {
                     <path d="M 20.476562 0.00390625 L 24.464844 0.00390625 L 15.753906 10.167969 L 26 23.996094 L 17.976562 23.996094 L 11.691406 15.609375 L 4.503906 23.996094 L 0.511719 23.996094 L 9.828125 13.125 L 0 0.00390625 L 8.226562 0.00390625 L 13.90625 7.671875 Z M 19.078125 21.558594 L 21.285156 21.558594 L 7.027344 2.3125 L 4.65625 2.3125 Z M 19.078125 21.558594 "></path>                  
                   </svg>
                 </svg>
-              </a>
+              </Link>
             </li>
             <li className="ml-4">
-              <a
+              <Link
                 href="https://www.github.com/keploy/keploy"
                 className="flex justify-center items-center text-secondary-300 hover:text-primary-300 bg-white hover:bg-white-100 rounded-full shadow transition duration-150 ease-in-out"
                 aria-label="Github"
@@ -110,7 +110,7 @@ export default function Footer() {
                 >
                   <path d="M16 8.2c-4.4 0-8 3.6-8 8 0 3.5 2.3 6.5 5.5 7.6.4.1.5-.2.5-.4V22c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.3 1.9.9 2.3.7.1-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.1-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8.6-.2 1.3-.3 2-.3s1.4.1 2 .3c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.1 0 3.1-1.9 3.7-3.7 3.9.3.4.6.9.6 1.6v2.2c0 .2.1.5.6.4 3.2-1.1 5.5-4.1 5.5-7.6-.1-4.4-3.7-8-8.1-8z"/>
                 </svg>
-              </a>
+              </Link>
             </li>
           </ul>
           <div className="text-sm text-neutral-300 mr-4">
