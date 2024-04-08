@@ -129,9 +129,13 @@ export const getStaticProps: GetStaticProps = async ({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug();
-
+  const communtiyPosts = allPosts.edges
+  .filter(({ node }) =>
+    node.categories.edges.some(({ node }) => node.name === 'community')
+  )
+  .map(({ node }) => `/community/${node.slug}`) || [];
   return {
-    paths: allPosts.edges.map(({ node }) => `/community/${node.slug}`) || [],
-    fallback: true,
+    paths: communtiyPosts,
+    fallback: false,
   };
 };
