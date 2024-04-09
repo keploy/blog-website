@@ -13,7 +13,6 @@ import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
 import Tag from "../../components/tag";
 import { getAllPostsWithSlug, getMoreStoriesForSlugs, getPostAndMorePosts } from "../../lib/api";
-import { CMS_NAME } from "../../lib/constants";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
 import { useRef } from "react";
@@ -130,9 +129,13 @@ export const getStaticProps: GetStaticProps = async ({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug();
-
+  const communtiyPosts = allPosts.edges
+  .filter(({ node }) =>
+    node.categories.edges.some(({ node }) => node.name === 'community')
+  )
+  .map(({ node }) => `/community/${node.slug}`) || [];
   return {
-    paths: allPosts.edges.map(({ node }) => `/community/${node.slug}`) || [],
-    fallback: true,
+    paths: communtiyPosts,
+    fallback: false,
   };
 };
