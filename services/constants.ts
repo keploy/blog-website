@@ -1,1 +1,1 @@
-export const newsLetterSubscriptionUrl = process.env.NEXT_PUBLIC_NEWS_LETTER_SUBSCRIPTION_URL
+export const newsLetterSubscriptionUrl = process.env.NEXT_PUBLIC_NEWS_LETTER_SUBSCRIPTION_URL|| ""

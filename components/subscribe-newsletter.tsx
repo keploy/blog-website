@@ -7,33 +7,35 @@ import { gsap } from "gsap";
 
 export const subscribeMutation = (formData: { fullName: string, email: string, companyName: string, message: string }) => {
 
-
-  return fetch(newsLetterSubscriptionUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Origin': 'http://localhost:3000',
-    },
-    body: JSON.stringify({
-      query: 'mutation Subscribe($input: GuestInput!) { subscription(guestInput: $input) }',
-      variables: {
-        input: {
-          fullName: formData.fullName,
-          email: formData.email,
-          company: formData.companyName,
-          message: formData.message
+  if (newsLetterSubscriptionUrl){
+    return fetch(newsLetterSubscriptionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Origin': 'https://keploy.io',
+      },
+      body: JSON.stringify({
+        query: 'mutation Subscribe($input: GuestInput!) { subscription(guestInput: $input) }',
+        variables: {
+          input: {
+            fullName: formData.fullName,
+            email: formData.email,
+            company: formData.companyName,
+            message: formData.message
+          }
         }
+      }),
+    }).then(async (response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    }),
-  }).then(async (response) => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
-  }).catch((error) => {
-    console.error("Error during subscription:", error);
-    throw error;
-  });
+      return response.json();
+    }).catch((error) => {
+      console.error("Error during subscription:", error);
+      throw error;
+    });
+  }
+
 };
 
 
@@ -79,21 +81,26 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
   const bunnyRef = useRef(null);
 
   useEffect(() => {
+    const currentBunnyRef = bunnyRef.current;
+    
     const timer = setTimeout(() => {
       if (!props.isSmallScreen) {
-        gsap.to(bunnyRef.current, { y: -180, duration: 1, yoyo: true, repeat: 1 })
+        gsap.to(currentBunnyRef, { y: -180, duration: 1, yoyo: true, repeat: 1 })
           .then(() => {
-            gsap.to(bunnyRef.current, { y: 100, duration: 0.4 }); 
+            gsap.to(currentBunnyRef, { y: 100, duration: 0.4 }); 
           });
       } else {
-        gsap.to(bunnyRef.current, { y: 0 });
+        gsap.to(currentBunnyRef, { y: 0 });
       }
     }, 1000);
+    
     return () => {
       clearTimeout(timer);
-      gsap.killTweensOf(bunnyRef.current); 
+      if (currentBunnyRef) {
+        gsap.killTweensOf(currentBunnyRef);
+      }
     };
-  }, [props.isSmallScreen]);
+}, [props.isSmallScreen]);
   return (
     <div className="flex flex-col" ref={bunnyRef}>
       <div className="hidden lg:block ">
@@ -104,7 +111,7 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
           className={`${isVisible ? styles["slide-in"] : "translate-x-full opacity-0"
             }`}
         >
-          <div className={"flex flex-col divide-y-2 gap-y-2"}>
+          <div className={"flex flex-col gap-y-2"}>
             <p className="text-sm text-black pb-2 text-center">
               To get the latest blogs and updates straight to your inbox.
             </p>
@@ -135,9 +142,9 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
               />
               <div>
                 <button
-                  className={`btn text-secondary-300 bg-primary-300 w-full mb-4 sm:mb-0 px-2 py-1 rounded font-bold border-1 border-transparent text-white shadow mt-2 ${!email ? "opacity-50 cursor-not-allowed" : "hover:text-white"}`}
+                  className={`btn text-secondary-300 bg-primary-300 w-full mb-4 sm:mb-0 px-2 py-1 rounded font-bold border-1 border-transparent text-white shadow mt-2 ${Boolean(!email || !fullName) ? "opacity-50 cursor-not-allowed" : "hover:text-white"}`}
                   type="submit"
-                  disabled={!email}
+                  disabled={!email || !fullName}
                 >
                   Subscribe
                 </button>
@@ -145,7 +152,7 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
               </div>
             </form>
             <span className="text-xs mt-2 border-none mb-2 text-center block">
-              *<strong>We won&#39;t spam you</strong> one newsletter per month at most.
+              *<strong>We won&#39;t spam you</strong> only one Email every month.
             </span>
           </div>
           {subscribed && <p className="text-sm text-green-800 text-center font-semibold mt-3">Thanks for subscribing!</p>}
