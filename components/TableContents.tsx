@@ -52,8 +52,8 @@ export default function TOC({ headings, isList, setIsList }) {
 
     return () => { window.removeEventListener("resize", resizeHandler) }
 
-
-  }, [tocRef.current])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleItemClick = (id) => {
     const element = document.getElementById(id);
