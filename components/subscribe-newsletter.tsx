@@ -91,6 +91,9 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
 
     handleSubscribe(payload)
   };
+  const isSubscribeDisabled = ()=>{
+    return Boolean(!email || !fullName || !companyName)    
+  }
   const bunnyRef = useRef(null);
 
   useEffect(() => {
@@ -155,9 +158,9 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
               />
               <div>
                 <button
-                  className={`btn text-secondary-300 bg-primary-300 w-full mb-4 sm:mb-0 px-2 py-1 rounded font-bold border-1 border-transparent text-white shadow mt-2 ${Boolean(!email || !fullName) ? "opacity-50 cursor-not-allowed" : "hover:text-white"}`}
+                  className={`btn text-secondary-300 bg-primary-300 w-full mb-4 sm:mb-0 px-2 py-1 rounded font-bold border-1 border-transparent text-white shadow mt-2 ${isSubscribeDisabled() ? "opacity-50 cursor-not-allowed" : "hover:text-white"}`}
                   type="submit"
-                  disabled={!email || !fullName}
+                  disabled={isSubscribeDisabled()}
                 >
                   Subscribe
                 </button>
