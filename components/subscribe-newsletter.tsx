@@ -71,13 +71,17 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
     }
   };
   const submitHandler = (e) => {
-    if (!isValidEmail(email)) {
-      setEmailError("Please enter a valid email address."); 
-      return;
-    }
-    setEmailError(""); 
-
     e.preventDefault();
+
+      if (!isValidEmail(email)) {
+    setEmailError("Please enter a valid email address."); 
+
+    setTimeout(() => {
+      return setEmailError("");
+    }, 2000);
+    return 
+  }
+
     const payload = {
       fullName,
       email,
