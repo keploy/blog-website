@@ -87,7 +87,7 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
       if (!props.isSmallScreen) {
         gsap.to(currentBunnyRef, { y: -180, duration: 1, yoyo: true, repeat: 1 })
           .then(() => {
-            gsap.to(currentBunnyRef, { y: 100, duration: 0.4 }); 
+            gsap.to(currentBunnyRef, { y: 140, duration: 0.4 }); 
           });
       } else {
         gsap.to(currentBunnyRef, { y: 0 });
