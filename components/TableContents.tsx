@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-function TOCItem({ id, title, type, onClick }) {
+function TOCItem({
+  id,
+  title,
+  type,
+  onClick,
+}: {
+  id: string;
+  title: string;
+  type: string;
+  onClick: (id: string) => void;
+}) {
   const itemClasses = "mb-1 text-slate-600 space-y-1";
 
   // Calculate margin left based on heading type

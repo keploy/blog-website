@@ -1,15 +1,10 @@
 import cn from "classnames";
 import Image from "next/image";
 import Link from "next/link";
+import { Post } from "../types/post";
 
-interface Props {
-  title: string;
-  coverImage: {
-    node: {
-      sourceUrl: string;
-    };
-  };
-  slug?: string;
+interface Props extends Partial<Pick<Post, "title" | "slug">> {
+  coverImage: Post["featuredImage"];
   isCommunity?: boolean;
 }
 

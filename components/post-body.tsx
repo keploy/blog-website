@@ -3,7 +3,14 @@ import TOC from "./TableContents"; // Importing TOC component
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importing icons
 import styles from "./post-body.module.css";
 import AuthorDescription from "./author-description";
-export default function PostBody({ content, authorName }) {
+import { Post } from "../types/post";
+export default function PostBody({
+  content,
+  authorName,
+}: {
+  content: Post["content"],
+  authorName: Post["ppmaAuthorName"],
+}) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -134,8 +141,6 @@ export default function PostBody({ content, authorName }) {
         );
       });
   };
-
-
 
   return (
     <div className="flex flex-col lg:flex-row">

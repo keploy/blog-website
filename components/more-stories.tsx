@@ -1,7 +1,14 @@
+import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostPreview from "./post-preview";
 
-export default function MoreStories({ posts, isCommunity }) {
+export default function MoreStories({
+  posts,
+  isCommunity,
+}: {
+  posts: { node: Post }[];
+  isCommunity: boolean;
+}) {
   return (
     <section>
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
@@ -17,7 +24,9 @@ export default function MoreStories({ posts, isCommunity }) {
             author={node.ppmaAuthorName}
             slug={node.slug}
             excerpt={getExcerpt(node.excerpt, 20)}
-            isCommunity={node.categories.edges[0].node.name === "technology"?false:true}
+            isCommunity={
+              node.categories.edges[0].node.name === "technology" ? false : true
+            }
           />
         ))}
       </div>
