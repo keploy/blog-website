@@ -46,8 +46,11 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [subscribed, setSubscribed] = useState<boolean>(false);
+  const [emailError, setEmailError] = useState('');
   const message = "NEWSLETTER"
-
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
   const handleSubscribe = async (payload) => {
     try {
       const response = await subscribeMutation(payload);
@@ -68,6 +71,12 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
     }
   };
   const submitHandler = (e) => {
+    if (!isValidEmail(email)) {
+      setEmailError("Please enter a valid email address."); 
+      return;
+    }
+    setEmailError(""); 
+
     e.preventDefault();
     const payload = {
       fullName,
@@ -155,6 +164,7 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
               *<strong>We won&#39;t spam you</strong> only one Email every month.
             </span>
           </div>
+          {emailError && <p className="text-sm text-red-500 text-center font-semibold mt-3">{emailError}</p>}
           {subscribed && <p className="text-sm text-green-800 text-center font-semibold mt-3">Thanks for subscribing!</p>}
         </div>
       </div>
