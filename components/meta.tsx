@@ -1,7 +1,16 @@
 import Head from "next/head";
 import { CMS_NAME, HOME_OG_IMAGE_URL } from "../lib/constants";
+import { Post } from "../types/post";
 
-export default function Meta({ featuredImage , Title , Description }) {
+export default function Meta({
+  featuredImage,
+  Title,
+  Description,
+}: {
+  featuredImage: Post["featuredImage"]["node"]["sourceUrl"];
+  Title: Post["title"];
+  Description: string;
+}) {
   return (
     <Head>
       <link
@@ -25,11 +34,11 @@ export default function Meta({ featuredImage , Title , Description }) {
       <link rel="mask-icon" href="blog/favicon/Group.svg" color="#000000" />
       <link rel="shortcut icon" href="blog/favicon/Group" />
 
-      <meta name="twitter:card" content="summary_large_image"/>
-      <meta name="twitter:title" content={Title}/>
-      <meta name="twitter:description" content={Description}/>
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={Title} />
+      <meta name="twitter:description" content={Description} />
       {/* Twitter Summary card images must be at least 120x120px */}
-      <meta name="twitter:image" content={featuredImage}/>
+      <meta name="twitter:image" content={featuredImage} />
 
       <meta name="msapplication-TileColor" content="#000000" />
       <meta
@@ -46,15 +55,15 @@ export default function Meta({ featuredImage , Title , Description }) {
           <meta property="og:image" content={featuredImage} />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="627" />
-          <meta name="twitter:image" content={featuredImage}/>
+          <meta name="twitter:image" content={featuredImage} />
         </>
       )}
       {!featuredImage && (
         <>
-        <meta property="og:image" content={HOME_OG_IMAGE_URL}/>
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="627" />
-        <meta name="twitter:image" content={HOME_OG_IMAGE_URL}/>
+          <meta property="og:image" content={HOME_OG_IMAGE_URL} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="627" />
+          <meta name="twitter:image" content={HOME_OG_IMAGE_URL} />
         </>
       )}
       {/* <link

@@ -2,6 +2,7 @@ import Avatar from "./avatar";
 import Date from "./date";
 import CoverImage from "./cover-image";
 import Link from "next/link";
+import { Post } from "../types/post";
 
 export default function PostPreview({
   title,
@@ -11,6 +12,14 @@ export default function PostPreview({
   author,
   slug,
   isCommunity = false,
+}: {
+  title: Post["title"];
+  coverImage: Post["featuredImage"];
+  date: Post["date"];
+  excerpt: Post["excerpt"];
+  author: Post["ppmaAuthorName"];
+  slug: Post["slug"];
+  isCommunity?: boolean;
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
   return (
