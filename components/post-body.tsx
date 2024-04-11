@@ -10,6 +10,7 @@ export default function PostBody({ content, authorName }) {
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); // State to hold replaced content
+  const [isList, setIsList] = useState(false);
 
   useEffect(() => {
     const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
@@ -100,7 +101,7 @@ export default function PostBody({ content, authorName }) {
               ? codeMatch[0].split("language-")[1].split('"')[0]
               : "bash"; // Extract language if available, otherwise default to 'bash'
           return (
-            <div key={index} className="relative mb-4 mx-auto">
+            <div key={index} className="relative mx-auto mb-4">
               <pre
                 dangerouslySetInnerHTML={{ __html: part }}
                 className={`language-${language}`}
@@ -108,7 +109,7 @@ export default function PostBody({ content, authorName }) {
               />
               <button
                 onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 mt-2 mr-2 px-2 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+                className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
               >
                 {copySuccessList[index] ? (
                   <IoCheckmarkOutline />
@@ -118,7 +119,7 @@ export default function PostBody({ content, authorName }) {
               </button>
               <button
                 disabled
-                className="absolute top-1 left-1 text-orange-400 border-2 border-gray-400 border-b-0 rounded  rounded-b-none px-2 flex flex-col gap-y-1 capitalize"
+                className="absolute flex flex-col px-2 text-orange-400 capitalize border-2 border-b-0 border-gray-400 rounded rounded-b-none top-1 left-1 gap-y-1"
               >
                 {language}
                 <span className="h-[1px] w-full border rounded-full border-gray-400"></span>
@@ -137,18 +138,15 @@ export default function PostBody({ content, authorName }) {
       });
   };
 
-
   return (
-    <div className="flex flex-col lg:flex-row items-start">
+    <div className={`flex flex-col  ${isList ? "items-center" : "items-center lg:items-start lg:flex-row"} `}>
+
       {/* Table of Contents */}
-      <div
-        className={`w-full lg:w-1/4 mr-5 top-20 ${isSmallScreen ? "flex items-center justify-center" : "sticky"
-          }`}
-      >
-        <TOC headings={tocItems} />
+      <div className={`flex items-center justify-center w-full mr-5 md:w-2/4 lg:w-1/4 top-20 lg:block ${isList ? "" : "lg:sticky"}`}>
+        <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
       {/* Content */}
-      <div className="w-full lg:w-3/5 ml-10 p-4">
+      <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`}>
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
         <div id="author-description">
           <AuthorDescription
