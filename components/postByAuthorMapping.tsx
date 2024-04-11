@@ -2,6 +2,54 @@ import React from "react";
 import AuthorDescription from "./author-description";
 import Image from "next/image";
 import { Post } from "../types/post";
+import Link from "next/link";
+import { animated, useInView, easings } from "@react-spring/web";
+
+function Node({ node }) {
+  const [cardRef, cardSpringStyles] = useInView(
+    () => ({
+      from: {
+        opacity: 0,
+      },
+      to: {
+        opacity: 100,
+      },
+      config: {
+        duration: 500,
+        delay: 100,
+        easing: easings.easeInCubic,
+      },
+    }),
+    {
+      rootMargin: "-200px 0px",
+    }
+  );
+  return (
+    <animated.li className="mb-8" ref={cardRef} style={cardSpringStyles}>
+      <Link href={`/${node.categories.edges[0].node.name}/${node.slug}`}>
+        <div className="group rounded-lg border border-transparent px-5 py-4 transition duration-300 ease-in-out transform hover:scale-105 transition-colors hover:border-accent-2 hover:dark:bg-neutral-400/30">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg sm:text-xl font-bold mb-2 text-slate-600 mr-4">
+              {node.title}
+            </h2>
+          </div>
+          <Image
+            src={node.featuredImage.node.sourceUrl}
+            alt={node.title}
+            className="w-full h-32 object-cover mb-4 rounded-md"
+            height={200}
+            width={200}
+          />
+          <p className="text-gray-400 mb-2">Author: {node.ppmaAuthorName}</p>
+          <p className="text-gray-500 mb-4">
+            Category: {node.categories.edges[0].node.name}
+          </p>
+          {/* Additional details can be added based on your needs */}
+        </div>
+      </Link>
+    </animated.li>
+  );
+}
 
 const PostByAuthorMapping = ({
   filteredPosts,
@@ -24,35 +72,9 @@ const PostByAuthorMapping = ({
         Posts by {AuthorName}
       </h1>
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {filteredPosts.map(({ node }) => (
-          <li key={node.slug} className="mb-8">
-            <a
-              href={`/blog/${node.categories.edges[0].node.name}/${node.slug}`}
-            >
-              <div className="group rounded-lg border border-transparent px-5 py-4 transition duration-300 ease-in-out transform hover:scale-105 transition-colors hover:border-accent-2 hover:dark:bg-neutral-400/30">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg sm:text-xl font-bold mb-2 text-slate-600 mr-4">
-                    {node.title}
-                  </h2>
-                </div>
-                <Image
-                  src={node.featuredImage.node.sourceUrl}
-                  alt={node.title}
-                  className="w-full h-32 object-cover mb-4 rounded-md"
-                  height={200}
-                  width={200}
-                />
-                <p className="text-gray-400 mb-2">
-                  Author: {node.ppmaAuthorName}
-                </p>
-                <p className="text-gray-500 mb-4">
-                  Category: {node.categories.edges[0].node.name}
-                </p>
-                {/* Additional details can be added based on your needs */}
-              </div>
-            </a>
-          </li>
-        ))}
+        {filteredPosts.map(({ node }) => {
+          return <Node node={node} key={node.slug} />;
+        })}
       </ul>
     </div>
   );

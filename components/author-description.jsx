@@ -76,7 +76,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
             alt="Author Avatar"
             width={200}
             height={200}
-            className="object-cover rounded-full sm:h-30 sm:w-30"
+            className="object-cover rounded-full sm:h-30 sm:w-30 aspect-square"
             priority
           />
         )}
@@ -86,7 +86,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
             alt="Author Avatar"
             width={200}
             height={200}
-            className="object-cover rounded-full sm:h-30 sm:w-30"
+            className="object-cover rounded-full sm:h-30 sm:w-30 aspect-square"
             priority
           />
         )}
@@ -135,12 +135,12 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
           {authorLinkedIn !== "n/a" && (
             <div className="mt-2">
               <IoLogoLinkedin className="h-5 w-5 inline mr-1" />
-              <a
+              <Link
                 href={authorLinkedIn}
                 className="heading1 text-slate-500 hover:underline"
               >
                 LinkedIn
-              </a>
+              </Link>
             </div>
           )}
           {authorLinkedIn === "n/a" && (

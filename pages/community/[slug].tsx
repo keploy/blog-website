@@ -13,10 +13,10 @@ import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
 import Tag from "../../components/tag";
 import { getAllPostsWithSlug, getMoreStoriesForSlugs, getPostAndMorePosts } from "../../lib/api";
-import { CMS_NAME } from "../../lib/constants";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
-
+import { useRef } from "react";
+import { useScroll, useSpringValue } from "@react-spring/web";
 // Define formatAuthor function before the Post component
 
 const postBody = ({ content, post }) => {
@@ -35,6 +35,24 @@ const postBody = ({ content, post }) => {
 export default function Post({ post, posts, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
+  const postBodyRef = useRef<HTMLDivElement>();
+  const readProgress = useSpringValue(0);
+  useScroll({
+    onChange(v) {
+      const topOffset = postBodyRef.current.offsetTop;
+      const clientHeight = postBodyRef.current.clientHeight;
+      if (v.value.scrollY < topOffset) v.value.scrollY = 0;
+      else if (
+        v.value.scrollY > topOffset &&
+        v.value.scrollY < clientHeight + topOffset
+      ) {
+        v.value.scrollY = ((v.value.scrollY - topOffset) / clientHeight) * 100;
+      } else {
+        v.value.scrollY = 100;
+      }
+      readProgress.set(v.value.scrollY);
+    },
+  });
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />;
   }
@@ -48,7 +66,7 @@ export default function Post({ post, posts, preview }) {
       Title={post?.title}
       Description={`Blog About ${post?.title}`}
     >
-      <Header />
+      <Header readProgress={readProgress} />
       <Container>
         {router.isFallback ? (
           <PostTitle>Loading…</PostTitle>
@@ -71,17 +89,22 @@ export default function Post({ post, posts, preview }) {
         )}
       </Container>
       <ContainerSlug>
-      {/* PostBody component placed outside the Container */}
-      <PostBody content={postBody({ content: post.content, post })} authorName={post.ppmaAuthorName} />
+        {/* PostBody component placed outside the Container */}
+        <div ref={postBodyRef}>
+          <PostBody
+            content={postBody({ content: post.content, post })}
+            authorName={post.ppmaAuthorName}
+          />
+        </div>
       </ContainerSlug>
       <Container>
         <article>
-      <footer>{post.tags.edges.length > 0 && <Tag tags={post.tags} />}</footer>
-      <SectionSeparator />
-      {morePosts.length > 0 && (
-        <MoreStories posts={morePosts} isCommunity={true} />
-      )}
-      </article>
+          <footer>{post.tags.edges.length > 0 && <Tag tags={post.tags} />}</footer>
+          <SectionSeparator />
+          {morePosts.length > 0 && (
+            <MoreStories posts={morePosts} isCommunity={true} />
+          )}
+        </article>
       </Container>
     </Layout>
   );
@@ -106,9 +129,13 @@ export const getStaticProps: GetStaticProps = async ({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug();
-
+  const communtiyPosts = allPosts.edges
+  .filter(({ node }) =>
+    node.categories.edges.some(({ node }) => node.name === 'community')
+  )
+  .map(({ node }) => `/community/${node.slug}`) || [];
   return {
-    paths: allPosts.edges.map(({ node }) => `/community/${node.slug}`) || [],
-    fallback: true,
+    paths: communtiyPosts,
+    fallback: false,
   };
 };
