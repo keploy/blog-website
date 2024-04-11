@@ -16,9 +16,10 @@ import {
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
-import { CMS_NAME } from "../../lib/constants";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
+import { useRef } from "react";
+import { useScroll, useSpringValue } from "@react-spring/web";
 const postBody = ({ content, post }) => {
   // Define the regular expression pattern to match the entire URL structure
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
@@ -34,6 +35,24 @@ const postBody = ({ content, post }) => {
 export default function Post({ post, posts, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
+  const postBodyRef = useRef<HTMLDivElement>();
+  const readProgress = useSpringValue(0);
+  useScroll({
+    onChange(v) {
+      const topOffset = postBodyRef.current.offsetTop;
+      const clientHeight = postBodyRef.current.clientHeight;
+      if (v.value.scrollY < topOffset) v.value.scrollY = 0;
+      else if (
+        v.value.scrollY > topOffset &&
+        v.value.scrollY < clientHeight + topOffset
+      ) {
+        v.value.scrollY = ((v.value.scrollY - topOffset) / clientHeight) * 100;
+      } else {
+        v.value.scrollY = 100;
+      }
+      readProgress.set(v.value.scrollY);
+    },
+  });
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />;
   }
@@ -48,7 +67,7 @@ export default function Post({ post, posts, preview }) {
       Title={post?.title}
       Description={`Blog About ${post?.title}`}
     >
-      <Header />
+      <Header readProgress={readProgress} />
       <Container>
         {router.isFallback ? (
           <PostTitle>Loading…</PostTitle>
@@ -72,10 +91,12 @@ export default function Post({ post, posts, preview }) {
       </Container>
       <ContainerSlug>
         {/* PostBody component placed outside the Container */}
-        <PostBody
-          content={postBody({ content: post.content, post })}
-          authorName={post.ppmaAuthorName}
-        />
+        <div ref={postBodyRef}>
+          <PostBody
+            content={postBody({ content: post.content, post })}
+            authorName={post.ppmaAuthorName}
+          />
+        </div>
       </ContainerSlug>
       <Container>
         <article>
@@ -99,7 +120,7 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { techMoreStories } = await getMoreStoriesForSlugs();
-  
+
   return {
     props: {
       preview,
@@ -112,9 +133,13 @@ export const getStaticProps: GetStaticProps = async ({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug();
-
+  const technologyPosts = allPosts.edges
+  .filter(({ node }) =>
+    node.categories.edges.some(({ node }) => node.name === 'technology')
+  )
+  .map(({ node }) => `/technology/${node.slug}`) || [];
   return {
-    paths: allPosts.edges.map(({ node }) => `/technology/${node.slug}`) || [],
-    fallback: true,
+    paths: technologyPosts,
+    fallback: false,
   };
 };

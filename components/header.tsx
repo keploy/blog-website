@@ -2,7 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
+import sideBySideSvg from "../public/images/sidebyside-transparent.svg"
+import { SpringValue, animated } from "@react-spring/web";
 const menuItems = [
   { text: "Docs", link: "https://keploy.io/docs" },
   { text: "Tech Blogs", link: "/technology" },
@@ -60,9 +61,9 @@ const GithubBtn = () => {
 
   return (
     <button className="border border-orange-500 rounded overflow-hidden p-2 w-full lg:w-auto border-opacity-25 sm:border-opacity-100">
-      <a
+      <Link
         className="flex items-center ml-4 lg:ml-0 gap-2 text-sm text-orange-500 font-extrabold transition-colors hover:text-primary-300"
-        href=" https://github.com/keploy/keploy"
+        href="https://github.com/keploy/keploy"
       >
         <svg
           className="h-5 w-5"
@@ -82,7 +83,7 @@ const GithubBtn = () => {
         <span className="text-base flex gap-1">
           ⭐️ <p>{stars}</p>
         </span>
-      </a>
+      </Link>
     </button>
   );
 };
@@ -94,14 +95,18 @@ const MenuBtn = () => {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect y="4" width="24" height="2"/>
-      <rect y="11" width="24" height="2"/>
-      <rect y="18" width="24" height="2"/>
+      <rect y="4" width="24" height="2" />
+      <rect y="11" width="24" height="2" />
+      <rect y="18" width="24" height="2" />
     </svg>
   );
 };
 
-export default function Header() {
+export default function Header({
+  readProgress,
+}: {
+  readProgress?: SpringValue<number>;
+}) {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   const toggleMenuHandler = () => {
@@ -115,8 +120,8 @@ export default function Header() {
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="shrink-0 mr-4 flex-grow-0 w-2/12">
               <Link href={"https://keploy.io/"}>
-                <img
-                  src="/blog/images/sidebyside-transparent.svg"
+                <Image
+                  src={sideBySideSvg}
                   alt="Keploy Logo"
                   className="w-auto h-10"
                 />
@@ -181,6 +186,18 @@ export default function Header() {
             </div>
           </div>
         </div>
+        {readProgress && (
+          <div className="relative h-1">
+            <animated.div
+              className="h-full bg-gradient-to-r from-orange-500 to-yellow-500 rounded-r-full"
+              style={{
+                width: readProgress.to((v) => v + "%"),
+              }}
+            >
+            </animated.div>
+            <div className="h-full absolute top-0 w-full bg-gray-300 -z-10"></div>
+          </div>
+        )}
       </header>
     </div>
   );

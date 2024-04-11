@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 function TOCItem({
   id,
@@ -36,7 +36,7 @@ function TOCItem({
     <li className={itemClasses} style={{ marginLeft }}>
       <button
         onClick={() => onClick(id)}
-        className="block py-1 w-full rounded-md text-left text-sm"
+        className="block w-full py-1 text-sm text-left text-black transition-all duration-150 ease-in-out rounded-md opacity-75 hover:text-orange-500 hover:opacity-100"
       >
         {title}
       </button>
@@ -44,7 +44,27 @@ function TOCItem({
   );
 }
 
-export default function TOC({ headings }) {
+export default function TOC({ headings, isList, setIsList }) {
+
+  const tocRef = useRef(null);
+
+  useEffect(() => {
+    if (!tocRef.current) return;
+
+    const container = tocRef.current;
+
+    function resizeHandler() {
+      setIsList(container.clientHeight > window.innerHeight * 0.8);
+    }
+
+    resizeHandler()
+    window.addEventListener("resize", resizeHandler)
+
+    return () => { window.removeEventListener("resize", resizeHandler) }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const handleItemClick = (id) => {
     const element = document.getElementById(id);
     if (element) {
@@ -60,29 +80,13 @@ export default function TOC({ headings }) {
     }
   };
 
-  // State to track screen width
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
-
-  // Function to check if screen width is small
-  const checkScreenSize = () => {
-    setIsSmallScreen(window.innerWidth <= 1100); // Adjust breakpoint as needed
-  };
-
-  useEffect(() => {
-    checkScreenSize(); // Initial check
-    window.addEventListener("resize", checkScreenSize); // Event listener for screen resize
-    return () => {
-      window.removeEventListener("resize", checkScreenSize); // Cleanup on component unmount
-    };
-  }, []);
-
   // Render dropdown if on a small screen, otherwise render regular TOC
-  if (isSmallScreen) {
-    return (
-      <div className="inline-block left-0 top-20 p-4">
-        <div className="text-lg font-semibold mb-2">Table of Contents</div>
+  return (
+    <>
+      <div className="left-0 inline-block p-4 lg:hidden top-20">
+        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
         <select
-          className="block w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 rounded-md shadow-sm text-sm leading-tight focus:outline-none focus:shadow-outline"
+          className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
           onChange={(e) => handleItemClick(e.target.value)}
         >
           {headings.map((item, index) => (
@@ -92,25 +96,34 @@ export default function TOC({ headings }) {
           ))}
         </select>
       </div>
-    );
-  } else {
-    return (
-      <div className="inline-block left-0 top-20 overflow-y-auto h-auto bg-inherit p-4 sticky">
-        <div className="text-lg font-semibold mb-2">Table of Contents</div>
-        <nav>
-          <ul className="pl-0 leading-5">
+      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
+        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
+        {isList ?
+          <select
+            className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
+            onChange={(e) => handleItemClick(e.target.value)}
+          >
             {headings.map((item, index) => (
-              <TOCItem
-                key={index}
-                id={item.id}
-                title={item.title}
-                type={item.type}
-                onClick={handleItemClick}
-              />
+              <option key={index} value={item.id}>
+                {item.title}
+              </option>
             ))}
-          </ul>
-        </nav>
+          </select>
+          :
+          <nav ref={tocRef}>
+            <ul className="pl-0 leading-5">
+              {headings.map((item, index) => (
+                <TOCItem
+                  key={index}
+                  id={item.id}
+                  title={item.title}
+                  type={item.type}
+                  onClick={handleItemClick}
+                />
+              ))}
+            </ul>
+          </nav>}
       </div>
-    );
-  }
+    </>
+  );
 }

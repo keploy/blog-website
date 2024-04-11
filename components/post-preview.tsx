@@ -3,6 +3,7 @@ import Date from "./date";
 import CoverImage from "./cover-image";
 import Link from "next/link";
 import { Post } from "../types/post";
+import { animated, easings, useInView } from "@react-spring/web";
 
 export default function PostPreview({
   title,
@@ -22,8 +23,30 @@ export default function PostPreview({
   isCommunity?: boolean;
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
+  const [ref, springStyles] = useInView(
+    () => ({
+      from: {
+        opacity: 0,
+      },
+      to: {
+        opacity: 100,
+      },
+      config: {
+        duration: 500,
+        delay: 100,
+        easing: easings.easeInCubic,
+      },
+    }),
+    {
+      rootMargin: "-200px 0px",
+    }
+  );
   return (
-    <div className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition">
+    <animated.div
+      className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition"
+      ref={ref}
+      style={springStyles}
+    >
       <div className="mb-5">
         {coverImage && (
           <CoverImage
@@ -52,6 +75,6 @@ export default function PostPreview({
         className="text-sm leading-normal mb-4 body text-slate-600"
         dangerouslySetInnerHTML={{ __html: excerpt }}
       />
-    </div>
+    </animated.div>
   );
 }
