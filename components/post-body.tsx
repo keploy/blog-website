@@ -3,7 +3,9 @@ import TOC from "./TableContents"; // Importing TOC component
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importing icons
 import styles from "./post-body.module.css";
 import AuthorDescription from "./author-description";
+import SubscribeNewsletter from "./subscribe-newsletter";
 import { Post } from "../types/post";
+
 export default function PostBody({
   content,
   authorName,
@@ -160,6 +162,10 @@ export default function PostBody({
             isPost={true}
           />
         </div>
+      </div>
+      {/* Subscription */}
+      <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20 ">
+        <SubscribeNewsletter isSmallScreen={isSmallScreen} />
       </div>
     </div>
   );
