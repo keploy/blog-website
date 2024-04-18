@@ -12,11 +12,17 @@ import SectionSeparator from "../../components/section-separator";
 import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
 import Tag from "../../components/tag";
-import { getAllPostsWithSlug, getMoreStoriesForSlugs, getPostAndMorePosts } from "../../lib/api";
+import {
+  getAllPostsWithSlug,
+  getMoreStoriesForSlugs,
+  getPostAndMorePosts,
+} from "../../lib/api";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
+import { getReviewAuthorDetails } from "../../lib/api";
+import { calculateReadingTime } from "../../utils/calculateReadingTime";
 // Define formatAuthor function before the Post component
 
 const postBody = ({ content, post }) => {
@@ -32,9 +38,16 @@ const postBody = ({ content, post }) => {
   return replacedContent;
 };
 
-export default function Post({ post, posts, preview }) {
+export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
+  const [avatarImgSrc, setAvatarImgSrc] = useState("");
+  const time = 10 + calculateReadingTime(post.content);
+  const blogwriter = [{ name: post.ppmaAuthorName, ImageUrl: avatarImgSrc }];
+  const blogreviewer = [
+    { name: post.author.node.name, ImageUrl: post.author.node.avatar.url },
+  ];
+
   const postBodyRef = useRef<HTMLDivElement>();
   const readProgress = useSpringValue(0);
   useScroll({
@@ -53,12 +66,25 @@ export default function Post({ post, posts, preview }) {
       readProgress.set(v.value.scrollY);
     },
   });
-  if (!router.isFallback && !post?.slug) {
-    return <ErrorPage statusCode={404} />;
-  }
-  if (!post || !post.content) {
-    return ''; // or handle this case differently based on your requirements
-  }
+  useEffect(() => {
+    if (post && post.content) {
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = post.content;
+      const avatarImgElement = tempDiv.querySelector(".pp-author-boxes-avatar img");
+      if (avatarImgElement) {
+        setAvatarImgSrc(avatarImgElement.getAttribute("src"));
+      } else {
+        setAvatarImgSrc("n/a");
+      }
+    }
+  }, [post]);
+
+  useEffect(() => {
+    if (!router.isFallback && !post?.slug) {
+      router.push("/404"); // Redirect to 404 page if slug is not available
+    }
+  }, [router, router.isFallback, post]);
+
   return (
     <Layout
       preview={preview}
@@ -83,6 +109,9 @@ export default function Post({ post, posts, preview }) {
                 date={post.date}
                 author={post.ppmaAuthorName}
                 categories={post.categories}
+                BlogWriter={blogwriter}
+                BlogReviewer={blogreviewer}
+                TimeToRead={time}
               />
             </article>
           </>
@@ -94,12 +123,15 @@ export default function Post({ post, posts, preview }) {
           <PostBody
             content={postBody({ content: post.content, post })}
             authorName={post.ppmaAuthorName}
+            ReviewAuthorDetails={reviewAuthorDetails}
           />
         </div>
       </ContainerSlug>
       <Container>
         <article>
-          <footer>{post.tags.edges.length > 0 && <Tag tags={post.tags} />}</footer>
+          <footer>
+            {post.tags.edges.length > 0 && <Tag tags={post.tags} />}
+          </footer>
           <SectionSeparator />
           {morePosts.length > 0 && (
             <MoreStories posts={morePosts} isCommunity={true} />
@@ -117,11 +149,15 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { communityMoreStories } = await getMoreStoriesForSlugs();
+  const authorDetails = await getReviewAuthorDetails(
+    data.post.author.node.name
+  );
   return {
     props: {
       preview,
       post: data.post,
       posts: communityMoreStories,
+      reviewAuthorDetails: authorDetails,
     },
     revalidate: 10,
   };
@@ -129,11 +165,12 @@ export const getStaticProps: GetStaticProps = async ({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug();
-  const communtiyPosts = allPosts.edges
-  .filter(({ node }) =>
-    node.categories.edges.some(({ node }) => node.name === 'community')
-  )
-  .map(({ node }) => `/community/${node.slug}`) || [];
+  const communtiyPosts =
+    allPosts.edges
+      .filter(({ node }) =>
+        node.categories.edges.some(({ node }) => node.name === "community")
+      )
+      .map(({ node }) => `/community/${node.slug}`) || [];
   return {
     paths: communtiyPosts,
     fallback: false,

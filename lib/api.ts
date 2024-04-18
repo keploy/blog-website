@@ -213,6 +213,38 @@ export async function getAllPostsForHome(preview) {
   return data?.posts;
 }
 
+//Fetching Reviewing author details
+
+export async function getReviewAuthorDetails(authorName) {
+  const data = await fetchAPI(
+    `
+    query AuthorDetailsByName($authorName: String!) {
+      users(where: { search: $authorName }) {
+        edges {
+          node {
+            name
+            email
+            avatar {
+              url
+            }
+            description
+          }
+        }
+      }
+    }
+    `,
+    {
+      variables: {
+        authorName,
+      },
+    }
+  );
+
+  return data?.users;
+}
+
+
+
 // Fnction for fetching post with technology category
 
 export async function getAllPostsForTechnology(preview) {

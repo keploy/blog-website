@@ -4,13 +4,16 @@ import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importin
 import styles from "./post-body.module.css";
 import AuthorDescription from "./author-description";
 import SubscribeNewsletter from "./subscribe-newsletter";
-
-export default function PostBody({ content, authorName }) {
+import ReviewingAuthor from "./ReviewingAuthor";
+import Link from "next/link";
+export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); // State to hold replaced content
   const [isList, setIsList] = useState(false);
+  var sameAuthor = authorName === ReviewAuthorDetails.edges[0].node.name
+
 
   useEffect(() => {
     const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
@@ -48,6 +51,10 @@ export default function PostBody({ content, authorName }) {
         '<div id="author-description-placeholder"></div>' // Placeholder for AuthorDescription
       );
 
+    replacedContentWithAuthorDescription = replacedContentWithAuthorDescription.replace(
+      /<h2 class="widget-title box-header-title">[\s\S]*?<\/h2>/gm,
+      "" // Replace with an empty string to remove the content
+    );
     // Set the updated replaced content
     setReplacedContent(replacedContentWithAuthorDescription);
 
@@ -139,22 +146,41 @@ export default function PostBody({ content, authorName }) {
   };
 
   return (
-    <div className={`flex flex-col  ${isList ? "items-center" : "items-center lg:items-start lg:flex-row"} `}>
-
+    <div
+      className={`flex flex-col  ${
+        isList ? "items-center" : "items-center lg:items-start lg:flex-row"
+      } `}
+    >
       {/* Table of Contents */}
-      <div className={`flex items-center justify-center w-full mr-5 md:w-2/4 lg:w-1/4 top-20 lg:block ${isList ? "" : "lg:sticky"}`}>
+      <div
+        className={`flex items-center justify-center w-full mr-5 md:w-2/4 lg:w-1/4 top-20 lg:block ${
+          isList ? "" : "lg:sticky"
+        }`}
+      >
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
       {/* Content */}
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`}>
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
-        <div id="author-description">
+        <hr className=" border-gray-300 mt-10 mb-20"/>
+        <div className="hover:scale-101 duration-300 my-5">
+        <h1 className="text-2xl font-medium text-gray-500">Authored By:</h1>
           <AuthorDescription
             authorData={content}
             AuthorName={authorName}
-            isPost={true}
+            isPost={false}
           />
         </div>
+        {!sameAuthor && <div className="my-5">
+          <h1 className="text-2xl font-medium text-gray-500">Reviewed By:</h1>
+          <div className="hover:scale-101 duration-300">
+            <ReviewingAuthor
+              name={ReviewAuthorDetails.edges[0].node.name}
+              avatar={ReviewAuthorDetails.edges[0].node.avatar.url}
+              description={ReviewAuthorDetails.edges[0].node.description}
+            />
+          </div>
+        </div>}
       </div>
       {/* Subscription */}
       <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20 ">
