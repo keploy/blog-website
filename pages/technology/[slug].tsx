@@ -37,7 +37,7 @@ const postBody = ({ content, post }) => {
 export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
-  const time  = 10+calculateReadingTime(post.content)
+  const time = 10 + calculateReadingTime(post.content);
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const blogwriter = [{ name: post.ppmaAuthorName, ImageUrl: avatarImgSrc }];
   const blogreviewer = [
@@ -65,7 +65,9 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     if (post && post.content) {
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = post.content;
-      const avatarImgElement = tempDiv.querySelector(".pp-author-boxes-avatar img");
+      const avatarImgElement = tempDiv.querySelector(
+        ".pp-author-boxes-avatar img"
+      );
       if (avatarImgElement) {
         setAvatarImgSrc(avatarImgElement.getAttribute("src"));
       } else {
@@ -105,7 +107,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 categories={post.categories}
                 BlogWriter={blogwriter}
                 BlogReviewer={blogreviewer}
-                TimeToRead = {time}
+                TimeToRead={time}
               />
             </article>
           </>

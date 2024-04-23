@@ -70,7 +70,9 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     if (post && post.content) {
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = post.content;
-      const avatarImgElement = tempDiv.querySelector(".pp-author-boxes-avatar img");
+      const avatarImgElement = tempDiv.querySelector(
+        ".pp-author-boxes-avatar img"
+      );
       if (avatarImgElement) {
         setAvatarImgSrc(avatarImgElement.getAttribute("src"));
       } else {

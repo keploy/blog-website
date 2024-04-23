@@ -164,7 +164,7 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
         <hr className=" border-gray-300 mt-10 mb-20" />
 
-        <h1 className="text-2xl font-medium text-gray-500">Authored By:</h1>
+        <h1 className="text-2xl font-medium">Authored By:</h1>
         <div className="my-5">
           <AuthorDescription
             authorData={content}
@@ -173,8 +173,8 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
           />
         </div>
         {!sameAuthor && (
-          <div className="my-5">
-            <h1 className="text-2xl font-medium text-gray-500">Reviewed By:</h1>
+          <div className=" my-20">
+            <h1 className="text-2xl font-medium">Reviewed By:</h1>
             <div>
                 <ReviewingAuthor
                   name={ReviewAuthorDetails.edges[0].node.name}
