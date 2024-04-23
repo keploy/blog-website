@@ -3,7 +3,8 @@ import Date from './date'
 import CoverImage from './cover-image'
 import PostTitle from './post-title'
 import Categories from './categories'
-
+import BrushStroke from "../public/images/backgroundStroke.png"
+import Image from 'next/image'
 export default function PostHeader({
   title,
   coverImage,
@@ -26,7 +27,12 @@ export default function PostHeader({
       </div>
       <div className="max-w-2xl mx-auto">
         <div className="block md:hidden mb-6">
-          <Avatar author={author} />
+          <div className="relative">
+            <Image src={BrushStroke} alt="Background" className="opacity-80" />
+            <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+              <p className="text-white text-md font-semibold">{author}</p>
+            </div>
+          </div>
         </div>
       </div>
     </>

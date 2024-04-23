@@ -195,3 +195,17 @@ pre {
 .footer-font{
   font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
 }
+
+/* Buttons */
+.btn,
+.btn-sm {
+    @apply font-medium inline-flex items-center justify-center border border-transparent rounded-sm leading-snug transition duration-150 ease-in-out;
+}
+
+.btn {
+    @apply px-8 py-3;
+}
+
+.btn-sm {
+    @apply px-4 py-2;
+}
