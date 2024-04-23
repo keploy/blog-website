@@ -7,7 +7,6 @@ import BrushStroke from "../public/images/backgroundStroke.png";
 import Image from "next/image";
 import PostHeaderAuthors from "./PostHeaderAuthors";
 import SharingComponent from "./SharingComponent";
-import { useRouter } from "next/router";
 export default function PostHeader({
   title,
   coverImage,

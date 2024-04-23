@@ -12,8 +12,7 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); // State to hold replaced content
   const [isList, setIsList] = useState(false);
-  var sameAuthor = authorName === ReviewAuthorDetails.edges[0].node.name
-
+  var sameAuthor = authorName === ReviewAuthorDetails.edges[0].node.name;
 
   useEffect(() => {
     const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
@@ -51,10 +50,11 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
         '<div id="author-description-placeholder"></div>' // Placeholder for AuthorDescription
       );
 
-    replacedContentWithAuthorDescription = replacedContentWithAuthorDescription.replace(
-      /<h2 class="widget-title box-header-title">[\s\S]*?<\/h2>/gm,
-      "" // Replace with an empty string to remove the content
-    );
+    replacedContentWithAuthorDescription =
+      replacedContentWithAuthorDescription.replace(
+        /<h2 class="widget-title box-header-title">[\s\S]*?<\/h2>/gm,
+        "" // Replace with an empty string to remove the content
+      );
     // Set the updated replaced content
     setReplacedContent(replacedContentWithAuthorDescription);
 
@@ -162,25 +162,28 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
       {/* Content */}
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`}>
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
-        <hr className=" border-gray-300 mt-10 mb-20"/>
-        <div className="hover:scale-101 duration-300 my-5">
+        <hr className=" border-gray-300 mt-10 mb-20" />
+
         <h1 className="text-2xl font-medium text-gray-500">Authored By:</h1>
+        <div className="my-5">
           <AuthorDescription
             authorData={content}
             AuthorName={authorName}
-            isPost={false}
+            isPost={true}
           />
         </div>
-        {!sameAuthor && <div className="my-5">
-          <h1 className="text-2xl font-medium text-gray-500">Reviewed By:</h1>
-          <div className="hover:scale-101 duration-300">
-            <ReviewingAuthor
-              name={ReviewAuthorDetails.edges[0].node.name}
-              avatar={ReviewAuthorDetails.edges[0].node.avatar.url}
-              description={ReviewAuthorDetails.edges[0].node.description}
-            />
+        {!sameAuthor && (
+          <div className="my-5">
+            <h1 className="text-2xl font-medium text-gray-500">Reviewed By:</h1>
+            <div>
+                <ReviewingAuthor
+                  name={ReviewAuthorDetails.edges[0].node.name}
+                  avatar={ReviewAuthorDetails.edges[0].node.avatar.url}
+                  description={ReviewAuthorDetails.edges[0].node.description}
+                />
+            </div>
           </div>
-        </div>}
+        )}
       </div>
       {/* Subscription */}
       <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20 ">

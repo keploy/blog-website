@@ -69,6 +69,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
   const { newAuthorDescription, length } = FormatDescription(authorDescription);
   // Render the extracted information
   return (
+    <>
     <div className="max-w-9xl mx-auto bg-slate-000 shadow-md rounded-lg overflow-hidden flex flex-col sm:flex-row md:flex-row lg:flex-row">
       <div className="w-3/5 self-center sm:w-1/4 p-8 flex justify-center items-center">
         {avatarImgSrc !== "n/a" && (
@@ -162,6 +163,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
         </div>
       </div>
     </div>
+  </>
   );
 };
 
