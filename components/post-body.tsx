@@ -12,7 +12,7 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); // State to hold replaced content
   const [isList, setIsList] = useState(false);
-  var sameAuthor = authorName === ReviewAuthorDetails.edges[0].node.name;
+  var sameAuthor = authorName.split(" ")[0].toLowerCase() === ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
 
   useEffect(() => {
     const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));

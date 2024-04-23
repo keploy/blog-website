@@ -43,9 +43,20 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const morePosts = posts?.edges;
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const time = 10 + calculateReadingTime(post.content);
-  const blogwriter = [{ name: post.ppmaAuthorName, ImageUrl: avatarImgSrc }];
+  const [blogWriterDescription, setBlogWriterDescription] = useState("");
+  const blogwriter = [
+    {
+      name: post.ppmaAuthorName,
+      ImageUrl: avatarImgSrc,
+      description: blogWriterDescription,
+    },
+  ];
   const blogreviewer = [
-    { name: post.author.node.name, ImageUrl: post.author.node.avatar.url },
+    {
+      name: post.author.node.name,
+      ImageUrl: post.author.node.avatar.url,
+      description: reviewAuthorDetails.edges[0].node.description,
+    },
   ];
 
   const postBodyRef = useRef<HTMLDivElement>();
@@ -77,6 +88,14 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         setAvatarImgSrc(avatarImgElement.getAttribute("src"));
       } else {
         setAvatarImgSrc("n/a");
+      }
+      const authorDescriptionElement = tempDiv.querySelector(
+        ".pp-author-boxes-description.multiple-authors-description"
+      );
+      if (authorDescriptionElement.textContent.trim().length > 0) {
+        setBlogWriterDescription(authorDescriptionElement.textContent.trim());
+      } else {
+        setBlogWriterDescription("n/a");
       }
     }
   }, [post]);
