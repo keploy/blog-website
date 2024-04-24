@@ -10,7 +10,7 @@ export default function HeroPost({
   excerpt,
   author,
   slug,
-  isCommunity = false,
+  isCommunity,
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
 
