@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import TOC from "./TableContents"; // Importing TOC component
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importing icons
 import styles from "./post-body.module.css";
-import AuthorDescription from "./author-description";
+  import dynamic from "next/dynamic";
+ 
+const AuthorDescription = dynamic(() => import("./author-description"), {
+  ssr: false,
+})
 import SubscribeNewsletter from "./subscribe-newsletter";
 import ReviewingAuthor from "./ReviewingAuthor";
 import Link from "next/link";
@@ -186,7 +190,7 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
         )}
       </div>
       {/* Subscription */}
-      <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20 ">
+      <div className="sticky flex flex-col justify-center w-full h-auto p-4 lg:w-1/5 lg:ml-10 lg:top-20 ">
         <SubscribeNewsletter isSmallScreen={isSmallScreen} />
       </div>
     </div>

@@ -3,7 +3,6 @@ import ErrorPage from "next/error";
 import Head from "next/head";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Container from "../../components/container";
-import PostBody from "../../components/post-body";
 import MoreStories from "../../components/more-stories";
 import Header from "../../components/header";
 import PostHeader from "../../components/post-header";
@@ -22,6 +21,11 @@ import { useRef, useState, useEffect } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
+import dynamic from "next/dynamic";
+
+
+const PostBody = dynamic(()=>import("../../components/post-body"),{ssr:false}) ;
+
 const postBody = ({ content, post }) => {
   // Define the regular expression pattern to match the entire URL structure
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
