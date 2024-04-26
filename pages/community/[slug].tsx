@@ -123,7 +123,7 @@ export const getStaticProps: GetStaticProps = async ({
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { communityMoreStories } = await getMoreStoriesForSlugs();
   return {
-    props: {
+    props: {  
       preview,
       post: data.post,
       posts: communityMoreStories,
@@ -141,6 +141,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
   .map(({ node }) => `/community/${node.slug}`) || [];
   return {
     paths: communtiyPosts,
-    fallback: false,
+    fallback: true,
   };
 };
