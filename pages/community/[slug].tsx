@@ -179,7 +179,7 @@ export const getStaticProps: GetStaticProps = async ({
     data.post.author.node.name
   );
   return {
-    props: {
+    props: {  
       preview,
       post: data.post,
       posts: communityMoreStories,
@@ -199,6 +199,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
       .map(({ node }) => `/community/${node.slug}`) || [];
   return {
     paths: communtiyPosts,
-    fallback: false,
+    fallback: true,
   };
 };
