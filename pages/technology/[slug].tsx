@@ -144,6 +144,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
   .map(({ node }) => `/technology/${node.slug}`) || [];
   return {
     paths: technologyPosts,
-    fallback: false,
+    fallback: true,
   };
 };
