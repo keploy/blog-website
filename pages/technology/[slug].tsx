@@ -10,11 +10,7 @@ import SectionSeparator from "../../components/section-separator";
 import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
 import Tags from "../../components/tag";
-import {
-  getAllPostsWithSlug,
-  getMoreStoriesForSlugs,
-  getPostAndMorePosts,
-} from "../../lib/api";
+import { getAllPostsWithSlug, getMoreStoriesForSlugs, getPostAndMorePosts } from "../../lib/api";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
 import { useRef, useState, useEffect } from "react";
@@ -34,42 +30,40 @@ const postBody = ({ content, post }) => {
   // Replace the URL in the content with the desired one using the regular expression
   const replacedContent = content.replace(
     urlPattern,
-    `/blog/authors/${post.ppmaAuthorName}/`
+    `/blog/authors/${post?.ppmaAuthorName || "Unknown Author"}/`
   );
 
   return replacedContent;
 };
+
 export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
-  const time = 10 + calculateReadingTime(post?.content);
+  const time = 10 + calculateReadingTime(post?.content || "");
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const [blogWriterDescription, setBlogWriterDescription] = useState("");
   const blogwriter = [
     {
-      name: post.ppmaAuthorName,
+      name: post?.ppmaAuthorName || "Unknown Author",
       ImageUrl: avatarImgSrc,
       description: blogWriterDescription,
     },
   ];
   const blogreviewer = [
     {
-      name: post.author.node.name,
-      ImageUrl: post.author.node.avatar.url,
-      description: reviewAuthorDetails.edges[0].node.description,
+      name: post?.author?.node?.name || "Unknown Reviewer",
+      ImageUrl: post?.author?.node?.avatar?.url || "",
+      description: reviewAuthorDetails?.edges[0]?.node?.description || "No description",
     },
   ];
   const postBodyRef = useRef<HTMLDivElement>();
   const readProgress = useSpringValue(0);
   useScroll({
     onChange(v) {
-      const topOffset = postBodyRef.current.offsetTop;
-      const clientHeight = postBodyRef.current.clientHeight;
+      const topOffset = postBodyRef.current?.offsetTop || 0;
+      const clientHeight = postBodyRef.current?.clientHeight || 0;
       if (v.value.scrollY < topOffset) v.value.scrollY = 0;
-      else if (
-        v.value.scrollY > topOffset &&
-        v.value.scrollY < clientHeight + topOffset
-      ) {
+      else if (v.value.scrollY > topOffset && v.value.scrollY < clientHeight + topOffset) {
         v.value.scrollY = ((v.value.scrollY - topOffset) / clientHeight) * 100;
       } else {
         v.value.scrollY = 100;
@@ -81,19 +75,14 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     if (post && post?.content) {
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = post?.content;
-      const avatarImgElement = tempDiv.querySelector(
-        ".pp-author-boxes-avatar img"
-      );
+      const avatarImgElement = tempDiv.querySelector(".pp-author-boxes-avatar img");
       if (avatarImgElement) {
-        setAvatarImgSrc(avatarImgElement.getAttribute("src"));
+        setAvatarImgSrc(avatarImgElement.getAttribute("src") || "");
       } else {
         setAvatarImgSrc("n/a");
       }
-
-      const authorDescriptionElement = tempDiv.querySelector(
-        ".pp-author-boxes-description.multiple-authors-description"
-      );
-      if (authorDescriptionElement.textContent.trim().length > 0) {
+      const authorDescriptionElement = tempDiv.querySelector(".pp-author-boxes-description.multiple-authors-description");
+      if (authorDescriptionElement?.textContent?.trim().length > 0) {
         setBlogWriterDescription(authorDescriptionElement.textContent.trim());
       } else {
         setBlogWriterDescription("n/a");
@@ -106,12 +95,13 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       router.push("/404"); // Redirect to 404 page if slug is not available
     }
   }, [router, router.isFallback, post]);
+
   return (
     <Layout
       preview={preview}
-      featuredImage={post?.featuredImage?.node.sourceUrl}
-      Title={post?.title}
-      Description={`Blog About ${post?.title}`}
+      featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
+      Title={post?.title || "Loading..."}
+      Description={`Blog About ${post?.title || "the Article"}`}
     >
       <Header readProgress={readProgress} />
       <Container>
@@ -122,14 +112,14 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
             <PrismLoader /> {/* Load Prism.js here */}
             <article>
               <Head>
-                <title>{`${post.title} | Keploy Blog`}</title>
+                <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
               </Head>
               <PostHeader
-                title={post.title}
-                coverImage={post.featuredImage}
-                date={post.date}
-                author={post.ppmaAuthorName}
-                categories={post.categories}
+                title={post?.title || "Loading..."}
+                coverImage={post?.featuredImage}
+                date={post?.date || ""}
+                author={post?.ppmaAuthorName || ""}
+                categories={post?.categories || []}
                 BlogWriter={blogwriter}
                 BlogReviewer={blogreviewer}
                 TimeToRead={time}
@@ -142,8 +132,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         {/* PostBody component placed outside the Container */}
         <div ref={postBodyRef}>
           <PostBody
-            content={post.content && postBody({ content: post?.content, post })}
-            authorName={post.ppmaAuthorName}
+            content={post?.content && postBody({ content: post?.content, post })}
+            authorName={post?.ppmaAuthorName || ""}
             ReviewAuthorDetails={reviewAuthorDetails}
           />
         </div>
@@ -151,10 +141,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       <Container>
         <article>
           <footer>
-            {post.tags.edges.length > 0 && <Tags tags={post.tags} />}
+            {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />}
           </footer>
           <SectionSeparator />
-          {morePosts.length > 0 && (
+          {morePosts?.length > 0 && (
             <MoreStories posts={morePosts} isCommunity={false} />
           )}
         </article>
@@ -170,15 +160,13 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { techMoreStories } = await getMoreStoriesForSlugs();
-  const authorDetails = await getReviewAuthorDetails(
-    data.post.author.node.name
-  );
+  const authorDetails = await getReviewAuthorDetails(data?.post?.author?.node?.name || "");
   return {
     props: {
       preview,
-      post: data.post,
-      posts: techMoreStories,
-      reviewAuthorDetails: authorDetails,
+      post: data?.post || {},
+      posts: techMoreStories || [],
+      reviewAuthorDetails: authorDetails || {},
     },
     revalidate: 10,
   };
@@ -186,14 +174,11 @@ export const getStaticProps: GetStaticProps = async ({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug();
-  const technologyPosts =
-    allPosts.edges
-      .filter(({ node }) =>
-        node.categories.edges.some(({ node }) => node.name === "technology")
-      )
-      .map(({ node }) => `/technology/${node.slug}`) || [];
+  const technologyPosts = allPosts?.edges
+    ?.filter(({ node }) => node?.categories?.edges?.some(({ node }) => node?.name === "technology"))
+    ?.map(({ node }) => `/technology/${node?.slug}`) || [];
   return {
-    paths: technologyPosts,
+    paths: technologyPosts || [],
     fallback: true,
   };
 };

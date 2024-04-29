@@ -1,5 +1,9 @@
 // Function to calculate estimated time needed to read content
 export function calculateReadingTime(content) {
+
+    if(!content){
+      return 0;
+    }
     // Average reading speed in words per minute
     const wordsPerMinute = 250;
   

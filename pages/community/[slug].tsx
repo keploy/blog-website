@@ -1,4 +1,3 @@
-// slug.tsx
 import { useRouter } from "next/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
@@ -24,7 +23,10 @@ import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
 
-const PostBody = dynamic(()=>import("../../components/post-body"),{ssr:false}) ;
+const PostBody = dynamic(() => import("../../components/post-body"), {
+  ssr: false,
+});
+
 // Define formatAuthor function before the Post component
 const postBody = ({ content, post }) => {
   // Define the regular expression pattern to match the entire URL structure
@@ -47,16 +49,17 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const [blogWriterDescription, setBlogWriterDescription] = useState("");
   const blogwriter = [
     {
-      name: post.ppmaAuthorName,
+      name: post?.ppmaAuthorName || "Unknown Author",
       ImageUrl: avatarImgSrc,
       description: blogWriterDescription,
     },
   ];
   const blogreviewer = [
     {
-      name: post.author.node.name,
-      ImageUrl: post.author.node.avatar.url,
-      description: reviewAuthorDetails.edges[0].node.description,
+      name: post?.author?.node?.name || "Unknown Reviewer",
+      ImageUrl: post?.author?.node?.avatar?.url || "",
+      description:
+        reviewAuthorDetails?.edges[0]?.node?.description || "No description",
     },
   ];
 
@@ -64,8 +67,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const readProgress = useSpringValue(0);
   useScroll({
     onChange(v) {
-      const topOffset = postBodyRef.current.offsetTop;
-      const clientHeight = postBodyRef.current.clientHeight;
+      const topOffset = postBodyRef.current?.offsetTop || 0;
+      const clientHeight = postBodyRef.current?.clientHeight || 0;
       if (v.value.scrollY < topOffset) v.value.scrollY = 0;
       else if (
         v.value.scrollY > topOffset &&
@@ -86,14 +89,14 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         ".pp-author-boxes-avatar img"
       );
       if (avatarImgElement) {
-        setAvatarImgSrc(avatarImgElement.getAttribute("src"));
+        setAvatarImgSrc(avatarImgElement.getAttribute("src") || "");
       } else {
         setAvatarImgSrc("n/a");
       }
       const authorDescriptionElement = tempDiv.querySelector(
         ".pp-author-boxes-description.multiple-authors-description"
       );
-      if (authorDescriptionElement.textContent.trim().length > 0) {
+      if (authorDescriptionElement?.textContent?.trim().length > 0) {
         setBlogWriterDescription(authorDescriptionElement.textContent.trim());
       } else {
         setBlogWriterDescription("n/a");
@@ -110,8 +113,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   return (
     <Layout
       preview={preview}
-      featuredImage={post?.featuredImage?.node.sourceUrl}
-      Title={post?.title}
+      featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
+      Title={post?.title || "Loading..."}
       Description={`Blog About ${post?.title}`}
     >
       <Header readProgress={readProgress} />
@@ -123,14 +126,14 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
             <PrismLoader /> {/* Load Prism.js here */}
             <article>
               <Head>
-                <title>{`${post.title} | Keploy Blog`}</title>
+                <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
               </Head>
               <PostHeader
-                title={post.title}
-                coverImage={post.featuredImage}
-                date={post.date}
-                author={post.ppmaAuthorName}
-                categories={post.categories}
+                title={post?.title || "Loading..."}
+                coverImage={post?.featuredImage}
+                date={post?.date || ""}
+                author={post?.ppmaAuthorName || ""}
+                categories={post?.categories || []}
                 BlogWriter={blogwriter}
                 BlogReviewer={blogreviewer}
                 TimeToRead={time}
@@ -143,8 +146,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         {/* PostBody component placed outside the Container */}
         <div ref={postBodyRef}>
           <PostBody
-            content={post.content && postBody({ content: post?.content, post })}
-            authorName={post.ppmaAuthorName}
+            content={
+              post?.content && postBody({ content: post?.content, post })
+            }
+            authorName={post?.ppmaAuthorName || ""}
             ReviewAuthorDetails={reviewAuthorDetails}
           />
         </div>
@@ -152,10 +157,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       <Container>
         <article>
           <footer>
-            {post.tags.edges.length > 0 && <Tag tags={post.tags} />}
+            {post?.tags?.edges?.length > 0 && <Tag tags={post?.tags} />}
           </footer>
           <SectionSeparator />
-          {morePosts.length > 0 && (
+          {morePosts?.length > 0 && (
             <MoreStories posts={morePosts} isCommunity={true} />
           )}
         </article>
@@ -172,14 +177,14 @@ export const getStaticProps: GetStaticProps = async ({
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { communityMoreStories } = await getMoreStoriesForSlugs();
   const authorDetails = await getReviewAuthorDetails(
-    data.post.author.node.name
+    data?.post?.author?.node?.name || ""
   );
   return {
     props: {
       preview,
-      post: data.post,
-      posts: communityMoreStories,
-      reviewAuthorDetails: authorDetails,
+      post: data?.post || {},
+      posts: communityMoreStories || [],
+      reviewAuthorDetails: authorDetails || {},
     },
     revalidate: 10,
   };
@@ -188,13 +193,13 @@ export const getStaticProps: GetStaticProps = async ({
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug();
   const communtiyPosts =
-    allPosts.edges
+    allPosts?.edges
       .filter(({ node }) =>
-        node.categories.edges.some(({ node }) => node.name === "community")
+        node?.categories?.edges?.some(({ node }) => node?.name === "community")
       )
-      .map(({ node }) => `/community/${node.slug}`) || [];
+      .map(({ node }) => `/community/${node?.slug}`) || [];
   return {
-    paths: communtiyPosts,
+    paths: communtiyPosts || [],
     fallback: true,
   };
 };
