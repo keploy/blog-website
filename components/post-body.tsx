@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import TOC from "./TableContents"; // Importing TOC component
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importing icons
 import styles from "./post-body.module.css";
-  import dynamic from "next/dynamic";
- 
+import dynamic from "next/dynamic";
+
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
-})
+});
 import SubscribeNewsletter from "./subscribe-newsletter";
 import ReviewingAuthor from "./ReviewingAuthor";
 import Link from "next/link";
@@ -16,7 +16,9 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); // State to hold replaced content
   const [isList, setIsList] = useState(false);
-  var sameAuthor = authorName.split(" ")[0].toLowerCase() === ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
+  var sameAuthor =
+    authorName.split(" ")[0].toLowerCase() ===
+    ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
 
   useEffect(() => {
     const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
@@ -180,11 +182,11 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
           <div className=" my-20">
             <h1 className="text-2xl font-medium">Reviewed By:</h1>
             <div>
-                <ReviewingAuthor
-                  name={ReviewAuthorDetails.edges[0].node.name}
-                  avatar={ReviewAuthorDetails.edges[0].node.avatar.url}
-                  description={ReviewAuthorDetails.edges[0].node.description}
-                />
+              <ReviewingAuthor
+                name={ReviewAuthorDetails.edges[0].node.name}
+                avatar={ReviewAuthorDetails.edges[0].node.avatar.url}
+                description={ReviewAuthorDetails.edges[0].node.description}
+              />
             </div>
           </div>
         )}

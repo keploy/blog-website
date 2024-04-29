@@ -26,10 +26,6 @@ import dynamic from "next/dynamic";
 
 const PostBody = dynamic(()=>import("../../components/post-body"),{ssr:false}) ;
 // Define formatAuthor function before the Post component
-
-
-
-
 const postBody = ({ content, post }) => {
   // Define the regular expression pattern to match the entire URL structure
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
@@ -47,7 +43,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
   const morePosts = posts?.edges;
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
-  const time = 10 + calculateReadingTime(post.content);
+  const time = 10 + calculateReadingTime(post?.content);
   const [blogWriterDescription, setBlogWriterDescription] = useState("");
   const blogwriter = [
     {
@@ -83,9 +79,9 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     },
   });
   useEffect(() => {
-    if (post && post.content) {
+    if (post && post?.content) {
       const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = post.content;
+      tempDiv.innerHTML = post?.content;
       const avatarImgElement = tempDiv.querySelector(
         ".pp-author-boxes-avatar img"
       );
@@ -147,7 +143,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         {/* PostBody component placed outside the Container */}
         <div ref={postBodyRef}>
           <PostBody
-            content={postBody({ content: post.content, post })}
+            content={post.content && postBody({ content: post?.content, post })}
             authorName={post.ppmaAuthorName}
             ReviewAuthorDetails={reviewAuthorDetails}
           />
@@ -179,7 +175,7 @@ export const getStaticProps: GetStaticProps = async ({
     data.post.author.node.name
   );
   return {
-    props: {  
+    props: {
       preview,
       post: data.post,
       posts: communityMoreStories,
@@ -199,6 +195,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
       .map(({ node }) => `/community/${node.slug}`) || [];
   return {
     paths: communtiyPosts,
-    fallback: true,
+    fallback: false,
   };
 };
