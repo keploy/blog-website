@@ -1,16 +1,10 @@
 import { Post } from "../types/post";
-import Alert from "./alert";
-import Footer from "./footer";
-import Meta from "./meta";
-import Script from "next/script";
-
-export default function Layout({
-  preview,
-  children,
-  featuredImage,
-  Title,
-  Description,
-}: {
+import Alert from './alert'
+import Footer from './footer'
+import Meta from './meta'
+import Script from 'next/script';
+import { motion } from "framer-motion";
+export default function Layout({ preview, children, featuredImage, Title, Description }:{
   preview: any;
   Description: any;
   featuredImage: Post["featuredImage"]["node"]["sourceUrl"];
@@ -19,21 +13,24 @@ export default function Layout({
 }) {
   return (
     <>
-      <Meta
-        featuredImage={featuredImage}
-        Title={Title}
-        Description={Description}
-      />
-      <div className="min-h-screen">
+      <Meta featuredImage={featuredImage} Title={Title} Description={Description} />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 20,
+        }}
+        className="min-h-screen"
+      >
         {/* <Alert preview={preview} /> */}
         <main>{children}</main>
-      </div>
+      </motion.div>
       <Footer />
 
-      <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS"
-      />
+      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS" />
       <Script
         id="google-ga"
         type="text/javascript"

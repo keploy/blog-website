@@ -4,7 +4,6 @@ import ErrorPage from "next/error";
 import Head from "next/head";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Container from "../../components/container";
-import PostBody from "../../components/post-body";
 import MoreStories from "../../components/more-stories";
 import Header from "../../components/header";
 import PostHeader from "../../components/post-header";
@@ -17,7 +16,13 @@ import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
 import { useRef } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
+import dynamic from "next/dynamic";
+
+const PostBody = dynamic(()=>import("../../components/post-body"),{ssr:false}) ;
 // Define formatAuthor function before the Post component
+
+
+
 
 const postBody = ({ content, post }) => {
   // Define the regular expression pattern to match the entire URL structure
@@ -118,7 +123,7 @@ export const getStaticProps: GetStaticProps = async ({
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { communityMoreStories } = await getMoreStoriesForSlugs();
   return {
-    props: {
+    props: {  
       preview,
       post: data.post,
       posts: communityMoreStories,
@@ -136,6 +141,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
   .map(({ node }) => `/community/${node.slug}`) || [];
   return {
     paths: communtiyPosts,
-    fallback: false,
+    fallback: true,
   };
 };
