@@ -70,6 +70,22 @@ export default function TOC({ headings, isList, setIsList }) {
     }
   };
 
+  // State to track screen width
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  // Function to check if screen width is small
+  const checkScreenSize = () => {
+    setIsSmallScreen(window.innerWidth < 1024); // Adjust breakpoint as needed
+  };
+
+  useEffect(() => {
+    checkScreenSize(); // Initial check
+    window.addEventListener("resize", checkScreenSize); // Event listener for screen resize
+    return () => {
+      window.removeEventListener("resize", checkScreenSize); // Cleanup on component unmount
+    };
+  }, []);
+
   // Render dropdown if on a small screen, otherwise render regular TOC
   return (
     <>
