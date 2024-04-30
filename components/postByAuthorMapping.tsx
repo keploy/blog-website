@@ -1,9 +1,13 @@
 import React from "react";
-import AuthorDescription from "./author-description";
 import Image from "next/image";
 import { Post } from "../types/post";
 import Link from "next/link";
 import { animated, useInView, easings } from "@react-spring/web";
+import dynamic from "next/dynamic";
+ 
+const AuthorDescription = dynamic(() => import("./author-description"), {
+  ssr: false,
+})
 
 function Node({ node }) {
   const [cardRef, cardSpringStyles] = useInView(
@@ -27,21 +31,21 @@ function Node({ node }) {
   return (
     <animated.li className="mb-8" ref={cardRef} style={cardSpringStyles}>
       <Link href={`/${node.categories.edges[0].node.name}/${node.slug}`}>
-        <div className="group rounded-lg border border-transparent px-5 py-4 transition duration-300 ease-in-out transform hover:scale-105 transition-colors hover:border-accent-2 hover:dark:bg-neutral-400/30">
+        <div className="px-5 py-4 transition transition-colors duration-300 ease-in-out transform border border-transparent rounded-lg group hover:scale-105 hover:border-accent-2 hover:dark:bg-neutral-400/30">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg sm:text-xl font-bold mb-2 text-slate-600 mr-4">
+            <h2 className="mb-2 mr-4 text-lg font-bold sm:text-xl text-slate-600">
               {node.title}
             </h2>
           </div>
           <Image
             src={node.featuredImage.node.sourceUrl}
             alt={node.title}
-            className="w-full h-32 object-cover mb-4 rounded-md"
+            className="object-cover w-full h-32 mb-4 rounded-md"
             height={200}
             width={200}
           />
-          <p className="text-gray-400 mb-2">Author: {node.ppmaAuthorName}</p>
-          <p className="text-gray-500 mb-4">
+          <p className="mb-2 text-gray-400">Author: {node.ppmaAuthorName}</p>
+          <p className="mb-4 text-gray-500">
             Category: {node.categories.edges[0].node.name}
           </p>
           {/* Additional details can be added based on your needs */}
@@ -71,7 +75,7 @@ const PostByAuthorMapping = ({
       <h1 className="text-xl sm:text-3xl lg:text-4xl mt-10 font-bold mb-8 text-slate-900 bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom font-bold tracking-tighter leading-tight w-max">
         Posts by {AuthorName}
       </h1>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredPosts.map(({ node }) => {
           return <Node node={node} key={node.slug} />;
         })}

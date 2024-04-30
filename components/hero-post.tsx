@@ -17,8 +17,8 @@ export default function HeroPost({
   excerpt,
   author,
   slug,
-  isCommunity = false,
-}: Props) {
+  isCommunity,
+}) {
   const basePath = isCommunity ? "/community" : "/technology";
 
   return (

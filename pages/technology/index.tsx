@@ -34,6 +34,7 @@ export default function Index({ allPosts: { edges }, preview }) {
             author={heroPost.ppmaAuthorName}
             slug={heroPost.slug}
             excerpt={excerpt}
+            isCommunity={false}
           />
         )}
         {morePosts.length > 0 && (
