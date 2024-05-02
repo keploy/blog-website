@@ -40,7 +40,7 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
     setCopySuccessList(Array(tocItems.length).fill(false));
 
     const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth <= 1100);
+      setIsSmallScreen(window.innerWidth < 1024);
     };
 
     // Remove the content inside the specified class
