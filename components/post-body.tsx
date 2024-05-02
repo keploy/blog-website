@@ -160,7 +160,7 @@ export default function PostBody({ content, authorName }) {
           />
         </div>
       </div>
-      {/* Subscription */}
+      {/* Waitlist */}
       <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20 ">
       <WaitlistBanner/>
       </div>
