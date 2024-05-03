@@ -10,7 +10,11 @@ import SectionSeparator from "../../components/section-separator";
 import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
 import Tags from "../../components/tag";
-import { getAllPostsWithSlug, getMoreStoriesForSlugs, getPostAndMorePosts } from "../../lib/api";
+import {
+  getAllPostsWithSlug,
+  getMoreStoriesForSlugs,
+  getPostAndMorePosts,
+} from "../../lib/api";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
 import { useRef, useState, useEffect } from "react";
@@ -42,6 +46,23 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const time = 10 + calculateReadingTime(post?.content || "");
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const [blogWriterDescription, setBlogWriterDescription] = useState("");
+  const [reviewAuthorName, setreviewAuthorName] = useState("");
+  const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
+  const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
+  const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
+  useEffect(() => {
+    if (reviewAuthorDetails && reviewAuthorDetails.length > 0) {
+      const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
+      const authorNode = reviewAuthorDetails[authorIndex]?.edges[0]?.node;
+      if (authorNode) {
+        setpostBodyReviewerAuthor(authorIndex);
+        setreviewAuthorName(authorNode.name);
+        setreviewAuthorImageUrl(authorNode.avatar.url);
+        setreviewAuthorDescription(authorNode.description);
+      }
+    }
+  }, [post, reviewAuthorDetails]);
+
   const blogwriter = [
     {
       name: post?.ppmaAuthorName || "Unknown Author",
@@ -51,9 +72,9 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   ];
   const blogreviewer = [
     {
-      name: post?.author?.node?.name || "Unknown Reviewer",
-      ImageUrl: post?.author?.node?.avatar?.url || "",
-      description: reviewAuthorDetails?.edges[0]?.node?.description || "No description",
+      name: reviewAuthorName,
+      ImageUrl: reviewAuthorImageUrl || "",
+      description: reviewAuthorDescription || "No description",
     },
   ];
   const postBodyRef = useRef<HTMLDivElement>();
@@ -63,7 +84,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       const topOffset = postBodyRef.current?.offsetTop || 0;
       const clientHeight = postBodyRef.current?.clientHeight || 0;
       if (v.value.scrollY < topOffset) v.value.scrollY = 0;
-      else if (v.value.scrollY > topOffset && v.value.scrollY < clientHeight + topOffset) {
+      else if (
+        v.value.scrollY > topOffset &&
+        v.value.scrollY < clientHeight + topOffset
+      ) {
         v.value.scrollY = ((v.value.scrollY - topOffset) / clientHeight) * 100;
       } else {
         v.value.scrollY = 100;
@@ -75,13 +99,17 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     if (post && post?.content) {
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = post?.content;
-      const avatarImgElement = tempDiv.querySelector(".pp-author-boxes-avatar img");
+      const avatarImgElement = tempDiv.querySelector(
+        ".pp-author-boxes-avatar img"
+      );
       if (avatarImgElement) {
         setAvatarImgSrc(avatarImgElement.getAttribute("src") || "");
       } else {
         setAvatarImgSrc("n/a");
       }
-      const authorDescriptionElement = tempDiv.querySelector(".pp-author-boxes-description.multiple-authors-description");
+      const authorDescriptionElement = tempDiv.querySelector(
+        ".pp-author-boxes-description.multiple-authors-description"
+      );
       if (authorDescriptionElement?.textContent?.trim().length > 0) {
         setBlogWriterDescription(authorDescriptionElement.textContent.trim());
       } else {
@@ -132,9 +160,15 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         {/* PostBody component placed outside the Container */}
         <div ref={postBodyRef}>
           <PostBody
-            content={post?.content && postBody({ content: post?.content, post })}
+            content={
+              post?.content && postBody({ content: post?.content, post })
+            }
             authorName={post?.ppmaAuthorName || ""}
-            ReviewAuthorDetails={reviewAuthorDetails}
+            ReviewAuthorDetails={
+              reviewAuthorDetails &&
+              reviewAuthorDetails.length > 0 &&
+              reviewAuthorDetails[postBodyReviewerAuthor]
+            }
           />
         </div>
       </ContainerSlug>
@@ -160,7 +194,9 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { techMoreStories } = await getMoreStoriesForSlugs();
-  const authorDetails = await getReviewAuthorDetails(data?.post?.author?.node?.name || "");
+  const authorDetails = [];
+  authorDetails.push(await getReviewAuthorDetails("neha"));
+  authorDetails.push(await getReviewAuthorDetails("Jain"));
   return {
     props: {
       preview,
@@ -174,9 +210,12 @@ export const getStaticProps: GetStaticProps = async ({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug();
-  const technologyPosts = allPosts?.edges
-    ?.filter(({ node }) => node?.categories?.edges?.some(({ node }) => node?.name === "technology"))
-    ?.map(({ node }) => `/technology/${node?.slug}`) || [];
+  const technologyPosts =
+    allPosts?.edges
+      ?.filter(({ node }) =>
+        node?.categories?.edges?.some(({ node }) => node?.name === "technology")
+      )
+      ?.map(({ node }) => `/technology/${node?.slug}`) || [];
   return {
     paths: technologyPosts || [],
     fallback: true,

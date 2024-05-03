@@ -47,6 +47,22 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const time = 10 + calculateReadingTime(post?.content);
   const [blogWriterDescription, setBlogWriterDescription] = useState("");
+  const [reviewAuthorName, setreviewAuthorName] = useState("");
+  const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
+  const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
+  const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
+  useEffect(() => {
+    if (reviewAuthorDetails && reviewAuthorDetails.length > 0) {
+      const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
+      const authorNode = reviewAuthorDetails[authorIndex]?.edges[0]?.node;
+      if (authorNode) {
+        setpostBodyReviewerAuthor(authorIndex);
+        setreviewAuthorName(authorNode.name);
+        setreviewAuthorImageUrl(authorNode.avatar.url);
+        setreviewAuthorDescription(authorNode.description);
+      }
+    }
+  }, [post, reviewAuthorDetails]);
   const blogwriter = [
     {
       name: post?.ppmaAuthorName || "Unknown Author",
@@ -56,10 +72,9 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   ];
   const blogreviewer = [
     {
-      name: post?.author?.node?.name || "Unknown Reviewer",
-      ImageUrl: post?.author?.node?.avatar?.url || "",
-      description:
-        reviewAuthorDetails?.edges[0]?.node?.description || "No description",
+      name: reviewAuthorName,
+      ImageUrl: reviewAuthorImageUrl || "",
+      description: reviewAuthorDescription || "No description",
     },
   ];
 
@@ -150,7 +165,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
               post?.content && postBody({ content: post?.content, post })
             }
             authorName={post?.ppmaAuthorName || ""}
-            ReviewAuthorDetails={reviewAuthorDetails}
+            ReviewAuthorDetails={
+              reviewAuthorDetails &&
+              reviewAuthorDetails.length > 0 &&
+              reviewAuthorDetails[postBodyReviewerAuthor]
+            }
           />
         </div>
       </ContainerSlug>
@@ -176,9 +195,9 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { communityMoreStories } = await getMoreStoriesForSlugs();
-  const authorDetails = await getReviewAuthorDetails(
-    data?.post?.author?.node?.name || ""
-  );
+  const authorDetails = [];
+  authorDetails.push(await getReviewAuthorDetails("neha"));
+  authorDetails.push(await getReviewAuthorDetails("Jain"));
   return {
     props: {
       preview,
