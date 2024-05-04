@@ -26,12 +26,9 @@ export default function PostHeader({
         </div>
         <PostTitle>{title}</PostTitle>
         {/* <Avatar author={author} /> */}
-        <div>
-        <PostHeaderAuthors blogreviewer={BlogReviewer} blogwriter={BlogWriter}/>
+        <div className=" w-full">
+        <PostHeaderAuthors blogreviewer={BlogReviewer} blogwriter={BlogWriter} timetoRead={TimeToRead}/>
         </div>
-      </div>
-      <div>
-      <SharingComponent timetoRead={TimeToRead} />
       </div>
       
       <div className="mb-8 md:mb-16 sm:mx-0 xl:w-2/3 md:w-4/5 w-full md:-translate-x-1/2 md:left-1/2 relative">

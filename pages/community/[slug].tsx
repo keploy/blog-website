@@ -51,6 +51,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
   const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
   const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
+  
   useEffect(() => {
     if (reviewAuthorDetails && reviewAuthorDetails.length > 0) {
       const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
