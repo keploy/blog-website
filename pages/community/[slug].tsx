@@ -51,7 +51,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
   const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
   const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
-  
+
   useEffect(() => {
     if (reviewAuthorDetails && reviewAuthorDetails.length > 0) {
       const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
@@ -98,22 +98,31 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     },
   });
   useEffect(() => {
-    if (post && post?.content) {
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = post?.content;
-      const avatarImgElement = tempDiv.querySelector(
-        ".pp-author-boxes-avatar img"
+    if (post && post.content) {
+      const content = post.content;
+
+      const avatarDivMatch = content.match(
+        /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
+
+
       );
-      if (avatarImgElement) {
-        setAvatarImgSrc(avatarImgElement.getAttribute("src") || "");
+      console.log(avatarDivMatch[1]);
+      if (avatarDivMatch && avatarDivMatch[1]) {
+        setAvatarImgSrc(avatarDivMatch[1]);
       } else {
-        setAvatarImgSrc("n/a");
+        setAvatarImgSrc("/blog/images/author.png");
       }
-      const authorDescriptionElement = tempDiv.querySelector(
-        ".pp-author-boxes-description.multiple-authors-description"
+
+      // Match the <p> with class pp-author-boxes-description and extract its content
+      const authorDescriptionMatch = content.match(
+        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/s
       );
-      if (authorDescriptionElement?.textContent?.trim().length > 0) {
-        setBlogWriterDescription(authorDescriptionElement.textContent.trim());
+
+      if (
+        authorDescriptionMatch &&
+        authorDescriptionMatch[1].trim().length > 0
+      ) {
+        setBlogWriterDescription(authorDescriptionMatch[1].trim());
       } else {
         setBlogWriterDescription("n/a");
       }
