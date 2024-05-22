@@ -11,21 +11,21 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
   const [hoverStateBlogWriter, sethoverStateBlogWriter] = useState(false);
   const [hoverStateBlogReviewer, sethoverStateBlogReviewer] = useState(false);
 
-  const onmouseenterBlogWriter = () => {
+  const onMouseEnterBlogWriter = () => {
     sethoverStateBlogWriter(true);
   };
 
-  const onmouseleaveBlogWriter = () => {
+  const onMouseLeaveBlogWriter = () => {
     setTimeout(() => {
       sethoverStateBlogWriter(false);
     }, 400);
   };
 
-  const onmouseenterBlogReviewer = () => {
+  const onMouseEnterBlogReviewer = () => {
     sethoverStateBlogReviewer(true);
   };
 
-  const onmouseleaveBlogReviewer = () => {
+  const onMouseLeaveBlogReviewer = () => {
     setTimeout(() => {
       sethoverStateBlogReviewer(false);
     }, 400);
@@ -44,8 +44,8 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
         <div className="flex flex-row gap-8">
           <div
             className="flex flex-row items-center gap-5 relative"
-            onMouseEnter={onmouseenterBlogWriter}
-            onMouseLeave={onmouseleaveBlogWriter}
+            onMouseEnter={onMouseEnterBlogWriter}
+            onMouseLeave={onMouseLeaveBlogWriter}
           >
             <Image
               src={blogwriter[0].ImageUrl}
@@ -83,8 +83,8 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
           {!sameAuthor && (
             <div
               className="flex flex-row items-center gap-5 relative"
-              onMouseEnter={onmouseenterBlogReviewer}
-              onMouseLeave={onmouseleaveBlogReviewer}
+              onMouseEnter={onMouseEnterBlogReviewer}
+              onMouseLeave={onMouseLeaveBlogReviewer}
             >
               <Image
                 src={blogreviewer[0].ImageUrl}

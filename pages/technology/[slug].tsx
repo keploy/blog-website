@@ -65,16 +65,16 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
   const blogwriter = [
     {
-      name: post?.ppmaAuthorName || "Unknown Author",
-      ImageUrl: avatarImgSrc,
-      description: blogWriterDescription,
+      name: post?.ppmaAuthorName || "Author",
+      ImageUrl: avatarImgSrc || "/blog/images/author.png",
+      description: blogWriterDescription || "An author for keploy's blog.",
     },
   ];
   const blogreviewer = [
     {
-      name: reviewAuthorName,
-      ImageUrl: reviewAuthorImageUrl || "",
-      description: reviewAuthorDescription || "No description",
+      name: reviewAuthorName || "Reviewer",
+      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.png",
+      description: reviewAuthorDescription || "A Reviewer for keploy's blog",
     },
   ];
   const postBodyRef = useRef<HTMLDivElement>();
