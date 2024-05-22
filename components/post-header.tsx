@@ -6,7 +6,6 @@ import Categories from "./categories";
 import BrushStroke from "../public/images/backgroundStroke.png";
 import Image from "next/image";
 import PostHeaderAuthors from "./PostHeaderAuthors";
-import SharingComponent from "./SharingComponent";
 export default function PostHeader({
   title,
   coverImage,
