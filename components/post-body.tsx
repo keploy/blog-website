@@ -8,7 +8,7 @@ const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
 })
 import SubscribeNewsletter from "./subscribe-newsletter";
-
+import WaitlistBanner from "./waitlistBanner"
 export default function PostBody({ content, authorName }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
@@ -160,9 +160,9 @@ export default function PostBody({ content, authorName }) {
           />
         </div>
       </div>
-      {/* Subscription */}
-      <div className="sticky flex flex-col justify-center w-full h-auto p-4 lg:w-1/5 lg:ml-10 lg:top-20 ">
-        <SubscribeNewsletter isSmallScreen={isSmallScreen} />
+      {/* Waitlist */}
+      <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20 ">
+      <WaitlistBanner/>
       </div>
     </div>
   );
