@@ -103,8 +103,6 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
       const avatarDivMatch = content.match(
         /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
-
-
       );
       console.log(avatarDivMatch[1]);
       if (avatarDivMatch && avatarDivMatch[1]) {
