@@ -1,27 +1,35 @@
-import Avatar from './avatar'
-import Date from './date'
-import CoverImage from './cover-image'
-import PostTitle from './post-title'
-import Categories from './categories'
-import BrushStroke from "../public/images/backgroundStroke.png"
-import Image from 'next/image'
+import Avatar from "./avatar";
+import Date from "./date";
+import CoverImage from "./cover-image";
+import PostTitle from "./post-title";
+import Categories from "./categories";
+import BrushStroke from "../public/images/backgroundStroke.png";
+import Image from "next/image";
+import PostHeaderAuthors from "./PostHeaderAuthors";
 export default function PostHeader({
   title,
   coverImage,
   date,
   author,
   categories,
+  BlogWriter,
+  BlogReviewer,
+  TimeToRead,
 }) {
   return (
     <>
-      <PostTitle>{title}</PostTitle>
-      <div className="hidden md:flex flex-col items-center justify-center md:mb-12">
-        {/* <Avatar author={author} /> */}
-        <div className="mb-6 text-lg">
+      <div className="hidden md:flex flex-col items-center justify-center md:mb-5">
+        <div className="mb-6 text-base">
           <Date dateString={date} />
           <Categories categories={categories} />
         </div>
+        <PostTitle>{title}</PostTitle>
+        {/* <Avatar author={author} /> */}
+        <div className=" w-full">
+        <PostHeaderAuthors blogreviewer={BlogReviewer} blogwriter={BlogWriter} timetoRead={TimeToRead}/>
+        </div>
       </div>
+      
       <div className="mb-8 md:mb-16 sm:mx-0 xl:w-2/3 md:w-4/5 w-full md:-translate-x-1/2 md:left-1/2 relative">
         <CoverImage title={title} coverImage={coverImage} />
       </div>
@@ -36,5 +44,5 @@ export default function PostHeader({
         </div>
       </div>
     </>
-  )
+  );
 }
