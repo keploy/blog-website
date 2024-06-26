@@ -7,7 +7,7 @@ import { SpringValue, animated } from "@react-spring/web";
 const menuItems = [
   { text: "Docs", link: "https://keploy.io/docs" },
   { text: "Tech Blogs", link: "/technology" },
-  { text: "Guest Posts", link: "/community" },
+  { text: "Community Articles", link: "/community" },
 ];
 
 const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
