@@ -19,6 +19,8 @@ module.exports = {
           300: "#ff914d",
           400: "#E67643",
           500: "#C95919",
+        'deep-orange': '#F6734A',
+        'yellow-orange': '#FDAC14'
         },
         // Backgrounds, borders, subtle accents
         secondary: {
@@ -46,6 +48,9 @@ module.exports = {
           500: "#e6e2d4",
           gradient: "linear-gradient(to right, #F5F5F5, #E35134, #FF914D, #BE2C1B, #6F0A0D)",
         },
+      },
+      backgroundImage: {
+        'hero-gradient': 'linear-gradient(to bottom, rgba(246, 115, 74, 0.75), rgba(253, 172, 20, 0.75))'
       },
       spacing: {
         28: '7rem',
