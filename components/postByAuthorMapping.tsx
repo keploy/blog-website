@@ -38,7 +38,7 @@ function Node({ node }) {
             </h2>
           </div>
           <Image
-            src={node.featuredImage.node.sourceUrl}
+            src={node.featuredImage?.node?.sourceUrl}
             alt={node.title}
             className="object-cover w-full h-32 mb-4 rounded-md"
             height={200}
