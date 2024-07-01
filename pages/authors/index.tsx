@@ -5,8 +5,19 @@ import Header from "../../components/header";
 import Container from "../../components/container";
 import AuthorMapping from "../../components/AuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
+import { Post } from "../../types/post";
 
-export default function Authors({ AllAuthors: { edges }, preview }) {
+export default function Authors({
+  AllAuthors: { edges },
+  preview,
+}: {
+  AllAuthors: {
+    edges: {
+      node: { author: Post["author"]; ppmaAuthorName: Post["ppmaAuthorName"] };
+    }[];
+  };
+  preview;
+}) {
   const authorArray = Array.from(new Set(edges.map((item) => item.node)));
 
   return (

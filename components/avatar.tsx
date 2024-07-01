@@ -1,4 +1,6 @@
-export default function Avatar({ author }) {
+import Image from "next/image";
+import { Post } from "../types/post";
+export default function Avatar({ author }: { author: Post["ppmaAuthorName"] }) {
   // const isAuthorHaveFullName = author?.node?.firstName && author?.node?.lastName
   // const name = isAuthorHaveFullName
   //   ? `${author.node.firstName} ${author.node.lastName}`
@@ -15,5 +17,5 @@ export default function Avatar({ author }) {
       </div> */}
       <div className="text-md font-medium heading1">{author}</div>
     </div>
-  )
+  );
 }

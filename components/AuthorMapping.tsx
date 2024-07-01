@@ -1,10 +1,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Post } from "../types/post";
 
 export default function AuthorMapping({
   AuthorArray,
   itemsPerPage = 8, // You can customize the number of items per page
+}:{
+  AuthorArray: Pick<Post, "author" | "ppmaAuthorName">[],
+  itemsPerPage?:number
 }) {
   const [currentPage, setCurrentPage] = useState(1);
 
