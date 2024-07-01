@@ -2,6 +2,7 @@ import Avatar from "./avatar";
 import Date from "./date";
 import CoverImage from "./cover-image";
 import Link from "next/link";
+import { Post } from "../types/post";
 
 export default function TagsPostPreview({
   title,
@@ -10,9 +11,23 @@ export default function TagsPostPreview({
   excerpt,
   author,
   slug,
-  isCommunity
+  isCommunity,
+}: {
+  title: Post["title"];
+  coverImage: Post["featuredImage"];
+  date: Post["date"];
+  excerpt: Post["excerpt"];
+  author: Post["ppmaAuthorName"];
+  slug: Post["slug"];
+  isCommunity: any;
 }) {
-    const basePath = isCommunity && isCommunity.edges && isCommunity.edges[0] && isCommunity.edges[0].node.name === "community" ? "/community" : "/technology";
+  const basePath =
+    isCommunity &&
+    isCommunity.edges &&
+    isCommunity.edges[0] &&
+    isCommunity.edges[0].node.name === "community"
+      ? "/community"
+      : "/technology";
 
   return (
     <div className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition">

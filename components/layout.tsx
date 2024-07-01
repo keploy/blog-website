@@ -1,9 +1,16 @@
+import { Post } from "../types/post";
 import Alert from './alert'
 import Footer from './footer'
 import Meta from './meta'
 import Script from 'next/script';
 import { motion } from "framer-motion";
-export default function Layout({ preview, children, featuredImage, Title, Description }) {
+export default function Layout({ preview, children, featuredImage, Title, Description }:{
+  preview: any;
+  Description: any;
+  featuredImage: Post["featuredImage"]["node"]["sourceUrl"];
+  Title: Post["title"];
+  children: React.ReactNode;
+}) {
   return (
     <>
       <Meta featuredImage={featuredImage} Title={Title} Description={Description} />
@@ -51,5 +58,5 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
         }}
       />
     </>
-  )
+  );
 }

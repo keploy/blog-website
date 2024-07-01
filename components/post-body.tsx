@@ -9,7 +9,15 @@ const AuthorDescription = dynamic(() => import("./author-description"), {
 })
 import SubscribeNewsletter from "./subscribe-newsletter";
 import WaitlistBanner from "./waitlistBanner"
-export default function PostBody({ content, authorName }) {
+import { Post } from "../types/post";
+
+export default function PostBody({
+  content,
+  authorName,
+}: {
+  content: Post["content"],
+  authorName: Post["ppmaAuthorName"],
+}) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);

@@ -2,6 +2,13 @@ import Avatar from "./avatar";
 import Date from "./date";
 import CoverImage from "./cover-image";
 import Link from "next/link";
+import { Post } from "../types/post";
+
+interface Props extends Pick<Post, "title" | "date" | "excerpt" | "slug"> {
+  coverImage: Post["featuredImage"];
+  author: Post["ppmaAuthorName"];
+  isCommunity?: boolean;
+}
 
 export default function HeroPost({
   title,

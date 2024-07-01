@@ -1,6 +1,12 @@
-import Link from 'next/link';
-
-export default function Tag({ tags }) {
+import Link from "next/link";
+import { Tag as TagInterface } from "../types/tag";
+export default function Tag({
+  tags,
+}: {
+  tags: {
+    edges: TagInterface[];
+  };
+}) {
   return (
     <div className="max-w-2xl mx-auto">
       <p className="mt-8 text-lg font-bold">Tagged</p>
