@@ -2,27 +2,35 @@ import { useState, useEffect } from "react";
 import TOC from "./TableContents"; // Importing TOC component
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importing icons
 import styles from "./post-body.module.css";
-  import dynamic from "next/dynamic";
- 
+import dynamic from "next/dynamic";
+
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
-})
+});
 import SubscribeNewsletter from "./subscribe-newsletter";
-import WaitlistBanner from "./waitlistBanner"
+import ReviewingAuthor from "./ReviewingAuthor";
+import Link from "next/link";
+import WaitlistBanner from "./waitlistBanner";
 import { Post } from "../types/post";
 
 export default function PostBody({
   content,
   authorName,
+  ReviewAuthorDetails,
 }: {
-  content: Post["content"],
-  authorName: Post["ppmaAuthorName"],
+  content: Post["content"];
+  authorName: Post["ppmaAuthorName"];
+  ReviewAuthorDetails: { edges: { node: { name: string; avatar: { url: string }; description: string } }[] };
 }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); // State to hold replaced content
   const [isList, setIsList] = useState(false);
+
+  const sameAuthor =
+    authorName.split(" ")[0].toLowerCase() ===
+    ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
 
   useEffect(() => {
     const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
@@ -48,7 +56,7 @@ export default function PostBody({
     };
 
     // Remove the content inside the specified class
-    var replacedContentWithAuthorDescription = replacedContent.replace(
+    let replacedContentWithAuthorDescription = replacedContent.replace(
       /<div class="post-toc-header">[\s\S]*?<\/div>/gm,
       "" // Replace with an empty string to remove the content
     );
@@ -60,6 +68,11 @@ export default function PostBody({
         '<div id="author-description-placeholder"></div>' // Placeholder for AuthorDescription
       );
 
+    replacedContentWithAuthorDescription =
+      replacedContentWithAuthorDescription.replace(
+        /<h2 class="widget-title box-header-title">[\s\S]*?<\/h2>/gm,
+        "" // Replace with an empty string to remove the content
+      );
     // Set the updated replaced content
     setReplacedContent(replacedContentWithAuthorDescription);
 
@@ -151,26 +164,48 @@ export default function PostBody({
   };
 
   return (
-    <div className={`flex flex-col  ${isList ? "items-center" : "items-center lg:items-start lg:flex-row"} `}>
-
+    <div
+      className={`flex flex-col ${
+        isList ? "items-center" : "items-center lg:items-start lg:flex-row"
+      } `}
+    >
       {/* Table of Contents */}
-      <div className={`flex items-center justify-center w-full mr-5 md:w-2/4 lg:w-1/4 top-20 lg:block ${isList ? "" : "lg:sticky"}`}>
+      <div
+        className={`flex items-center justify-center w-full mr-5 md:w-2/4 lg:w-1/4 top-20 lg:block ${
+          isList ? "" : "lg:sticky"
+        }`}
+      >
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
       {/* Content */}
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`}>
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
-        <div id="author-description">
+        <hr className="border-gray-300 mt-10 mb-20" />
+
+        <h1 className="text-2xl font-medium">Authored By:</h1>
+        <div className="my-5">
           <AuthorDescription
             authorData={content}
             AuthorName={authorName}
             isPost={true}
           />
         </div>
+        {!sameAuthor && (
+          <div className="my-20">
+            <h1 className="text-2xl font-medium">Reviewed By:</h1>
+            <div>
+              <ReviewingAuthor
+                name={ReviewAuthorDetails.edges[0].node.name}
+                avatar={ReviewAuthorDetails.edges[0].node.avatar.url}
+                description={ReviewAuthorDetails.edges[0].node.description}
+              />
+            </div>
+          </div>
+        )}
       </div>
       {/* Waitlist */}
-      <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20 ">
-      <WaitlistBanner/>
+      <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20">
+        <WaitlistBanner />
       </div>
     </div>
   );
