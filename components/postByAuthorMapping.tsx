@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { Post } from "../types/post";
 import Link from "next/link";
 import { animated, useInView, easings } from "@react-spring/web";
 import dynamic from "next/dynamic";
@@ -37,7 +38,7 @@ function Node({ node }) {
             </h2>
           </div>
           <Image
-            src={node.featuredImage.node.sourceUrl}
+            src={node.featuredImage?.node?.sourceUrl}
             alt={node.title}
             className="object-cover w-full h-32 mb-4 rounded-md"
             height={200}
@@ -54,7 +55,13 @@ function Node({ node }) {
   );
 }
 
-const PostByAuthorMapping = ({ filteredPosts, Content }) => {
+const PostByAuthorMapping = ({
+  filteredPosts,
+  Content,
+}: {
+  filteredPosts: { node: Post }[];
+  Content: string;
+}) => {
   const AuthorName = filteredPosts[0].node.ppmaAuthorName;
   return (
     <div className="container mx-auto mt-8">

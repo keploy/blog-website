@@ -10,14 +10,25 @@ const AuthorDescription = dynamic(() => import("./author-description"), {
 import SubscribeNewsletter from "./subscribe-newsletter";
 import ReviewingAuthor from "./ReviewingAuthor";
 import Link from "next/link";
-import WaitlistBanner from "./waitlistBanner"
-export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
+import WaitlistBanner from "./waitlistBanner";
+import { Post } from "../types/post";
+
+export default function PostBody({
+  content,
+  authorName,
+  ReviewAuthorDetails,
+}: {
+  content: Post["content"];
+  authorName: Post["ppmaAuthorName"];
+  ReviewAuthorDetails: { edges: { node: { name: string; avatar: { url: string }; description: string } }[] };
+}) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); // State to hold replaced content
   const [isList, setIsList] = useState(false);
-  var sameAuthor =
+
+  const sameAuthor =
     authorName.split(" ")[0].toLowerCase() ===
     ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
 
@@ -45,7 +56,7 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
     };
 
     // Remove the content inside the specified class
-    var replacedContentWithAuthorDescription = replacedContent.replace(
+    let replacedContentWithAuthorDescription = replacedContent.replace(
       /<div class="post-toc-header">[\s\S]*?<\/div>/gm,
       "" // Replace with an empty string to remove the content
     );
@@ -154,7 +165,7 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
 
   return (
     <div
-      className={`flex flex-col  ${
+      className={`flex flex-col ${
         isList ? "items-center" : "items-center lg:items-start lg:flex-row"
       } `}
     >
@@ -169,7 +180,7 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
       {/* Content */}
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`}>
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
-        <hr className=" border-gray-300 mt-10 mb-20" />
+        <hr className="border-gray-300 mt-10 mb-20" />
 
         <h1 className="text-2xl font-medium">Authored By:</h1>
         <div className="my-5">
@@ -180,7 +191,7 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
           />
         </div>
         {!sameAuthor && (
-          <div className=" my-20">
+          <div className="my-20">
             <h1 className="text-2xl font-medium">Reviewed By:</h1>
             <div>
               <ReviewingAuthor
@@ -193,8 +204,8 @@ export default function PostBody({ content, authorName, ReviewAuthorDetails }) {
         )}
       </div>
       {/* Waitlist */}
-      <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20 ">
-      <WaitlistBanner/>
+      <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20">
+        <WaitlistBanner />
       </div>
     </div>
   );
