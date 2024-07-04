@@ -31,8 +31,8 @@ export default function MoreStories({
       </h2>
       
       {isIndex && (
-        <div className="flex justify-center mb-8">
-          <div className="relative w-full max-w-md">
+        <div className="flex w-full mb-8">
+          <div className="relative w-full ">
             <input
               type="text"
               placeholder="Search posts..."
@@ -45,22 +45,26 @@ export default function MoreStories({
         </div>
       )}
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
-        {filteredPosts.map(({ node }) => (
-          <PostPreview
-            key={node.slug}
-            title={node.title}
-            coverImage={node.featuredImage}
-            date={node.date}
-            author={node.ppmaAuthorName}
-            slug={node.slug}
-            excerpt={getExcerpt(node.excerpt, 20)}
-            isCommunity={
-              node.categories.edges[0].node.name === "technology" ? false : true
-            }
-          />
-        ))}
-      </div>
+      {filteredPosts.length === 0 ? (
+        <p className="text-center text-gray-500">No posts found by the name "{searchTerm}"</p>
+      ) : (
+        <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
+          {filteredPosts.map(({ node }) => (
+            <PostPreview
+              key={node.slug}
+              title={node.title}
+              coverImage={node.featuredImage}
+              date={node.date}
+              author={node.ppmaAuthorName}
+              slug={node.slug}
+              excerpt={getExcerpt(node.excerpt, 20)}
+              isCommunity={
+                node.categories.edges[0].node.name === "technology" ? false : true
+              }
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
