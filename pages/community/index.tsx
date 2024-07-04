@@ -44,7 +44,7 @@ export default function Community({ allPosts: { edges }, preview }) {
           />
         )}
         {morePosts.length > 0 && (
-          <MoreStories posts={morePosts} isCommunity={true} />
+          <MoreStories isIndex={true} posts={morePosts} isCommunity={true} />
         )}
       </Container>
     </Layout>

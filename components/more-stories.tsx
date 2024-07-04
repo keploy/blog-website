@@ -2,13 +2,16 @@ import { useState } from "react";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostPreview from "./post-preview";
+import { FaSearch } from 'react-icons/fa';
 
 export default function MoreStories({
   posts,
   isCommunity,
+  isIndex,
 }: {
   posts: { node: Post }[];
   isCommunity: boolean;
+  isIndex: boolean;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -27,13 +30,20 @@ export default function MoreStories({
         More Stories
       </h2>
       
-      <input
-        type="text"
-        placeholder="Search posts"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        className="mb-8 p-2 border border-gray-300 rounded"
-      />
+      {isIndex && (
+        <div className="flex justify-center mb-8">
+          <div className="relative w-full max-w-md">
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
         {filteredPosts.map(({ node }) => (
