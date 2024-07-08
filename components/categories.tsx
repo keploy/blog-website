@@ -1,11 +1,15 @@
+import Link from "next/link";
+
 export default function Categories({ categories }) {
   return (
     <span className="ml-1">
-      under
+      .
       {categories.edges.length > 0 ? (
         categories.edges.map((category, index) => (
-          <span key={index} className="ml-1">
-            {category.node.name}
+          <span key={index} className="ml-1 hover:underline font-medium ">
+          <Link href={`/${category.node.name}`} >
+            {formatingString(category.node.name)}
+          </Link>
           </span>
         ))
       ) : (
@@ -13,4 +17,9 @@ export default function Categories({ categories }) {
       )}
     </span>
   )
+}
+
+const formatingString=(Category)=>{
+  var newCategory = Category[0].toUpperCase() + Category.slice(1);
+  return newCategory
 }
