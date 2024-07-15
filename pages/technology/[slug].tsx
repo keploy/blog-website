@@ -51,7 +51,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
   const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
   useEffect(() => {
-    if (reviewAuthorDetails && reviewAuthorDetails.length > 0) {
+    if (reviewAuthorDetails && reviewAuthorDetails?.length > 0) {
       const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
       const authorNode = reviewAuthorDetails[authorIndex]?.edges[0]?.node;
       if (authorNode) {
@@ -116,7 +116,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
       if (
         authorDescriptionMatch &&
-        authorDescriptionMatch[1].trim().length > 0
+        authorDescriptionMatch[1].trim()?.length > 0
       ) {
         setBlogWriterDescription(authorDescriptionMatch[1].trim());
       } else {
@@ -173,7 +173,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
             authorName={post?.ppmaAuthorName || ""}
             ReviewAuthorDetails={
               reviewAuthorDetails &&
-              reviewAuthorDetails.length > 0 &&
+              reviewAuthorDetails?.length > 0 &&
               reviewAuthorDetails[postBodyReviewerAuthor]
             }
           />
@@ -185,7 +185,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
             {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />}
           </footer>
           <SectionSeparator />
-          {morePosts.length > 0 && (
+          {morePosts?.length > 0 && (
             <MoreStories isIndex={false} posts={morePosts} isCommunity={false} />
           )}
         </article>
