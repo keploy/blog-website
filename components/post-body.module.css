@@ -74,3 +74,10 @@
 .content audio {
   @apply w-full;
 }
+
+
+.content h1,
+.content h2,
+.content h3 {
+  font-weight: bold;
+}

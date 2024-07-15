@@ -187,8 +187,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
             {post?.tags?.edges?.length > 0 && <Tag tags={post?.tags} />}
           </footer>
           <SectionSeparator />
-          {morePosts?.length > 0 && (
-            <MoreStories posts={morePosts} isCommunity={true} />
+          {morePosts.length > 0 && (
+            <MoreStories isIndex={false} posts={morePosts} isCommunity={true} />
           )}
         </article>
       </Container>

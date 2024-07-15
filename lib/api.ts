@@ -49,7 +49,8 @@ export async function getAllTags() {
   let allTags = [];
 
   while (hasNextPage) {
-    const data = await fetchAPI(`
+    const data = await fetchAPI(
+      `
       query AllTags($first: Int!, $after: String) {
         tags(first: $first, after: $after) {
           edges {
@@ -63,14 +64,16 @@ export async function getAllTags() {
           }
         }
       }
-    `, {
-      variables: {
-        first: 100, // Adjust as needed
-        after: endCursor
+    `,
+      {
+        variables: {
+          first: 100, // Adjust as needed
+          after: endCursor,
+        },
       }
-    });
+    );
 
-    const tags = data?.tags?.edges.map(edge => edge.node);
+    const tags = data?.tags?.edges.map((edge) => edge.node);
     allTags = allTags.concat(tags);
 
     hasNextPage = data?.tags?.pageInfo?.hasNextPage;
@@ -78,7 +81,6 @@ export async function getAllTags() {
   }
   return allTags;
 }
-
 
 export async function getAllPostsFromTags(tagName: String, preview) {
   const data = await fetchAPI(
@@ -169,48 +171,64 @@ export async function getContent(postId: number) {
 }
 
 export async function getAllPostsForHome(preview) {
-  const data = await fetchAPI(
-    `
-    query AllPosts {
-      posts(first: 100, where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
-        edges {
-          node {
-            title
-            excerpt
-            slug
-            date
-            featuredImage {
-              node {
-                sourceUrl
+  let allEdges = [];
+  let hasNextPage = true;
+  let endCursor = null;
+
+  while (hasNextPage) {
+    const data = await fetchAPI(
+      `
+      query AllPosts($after: String) {
+        posts(first: 200, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
+          edges {
+            node {
+              title
+              excerpt
+              slug
+              date
+              featuredImage {
+                node {
+                  sourceUrl
+                }
               }
-            }
-            author {
-              node {
-                name
-              }
-            }
-            ppmaAuthorName
-            categories {
-              edges {
+              author {
                 node {
                   name
                 }
               }
+              ppmaAuthorName
+              categories {
+                edges {
+                  node {
+                    name
+                  }
+                }
+              }
             }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
           }
         }
       }
-    }
-  `,
-    {
-      variables: {
-        onlyEnabled: !preview,
-        preview,
-      },
-    }
-  );
+      `,
+      {
+        variables: {
+          after: endCursor,
+          onlyEnabled: !preview,
+          preview,
+        },
+      }
+    );
 
-  return data?.posts;
+    const edges = data.posts.edges;
+    allEdges = [...allEdges, ...edges];
+    hasNextPage = data.posts.pageInfo.hasNextPage;
+    endCursor = data.posts.pageInfo.endCursor;
+  }
+
+  return { edges: allEdges };
 }
 
 //Fetching Reviewing author details
@@ -251,7 +269,7 @@ export async function getAllPostsForTechnology(preview) {
   const data = await fetchAPI(
     `
     query AllPostsForCategory{
-      posts(first: 20, where: { orderby: { field: DATE, order: DESC } categoryName: "technology" }) {
+      posts(first: 100, where: { orderby: { field: DATE, order: DESC } categoryName: "technology" }) {
         edges {
           node {
             title
@@ -426,8 +444,7 @@ export async function getMoreStoriesForSlugs() {
     }
     `,
     {
-      variables: {
-      },
+      variables: {},
     }
   );
 

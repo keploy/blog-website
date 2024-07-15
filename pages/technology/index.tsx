@@ -38,7 +38,7 @@ export default function Index({ allPosts: { edges }, preview }) {
           />
         )}
         {morePosts.length > 0 && (
-          <MoreStories posts={morePosts} isCommunity={false} />
+          <MoreStories isIndex={true} posts={morePosts} isCommunity={false} />
         )}
       </Container>
     </Layout>
