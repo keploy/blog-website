@@ -209,3 +209,9 @@ pre {
 .btn-sm {
     @apply px-4 py-2;
 }
+
+
+td{
+  border: solid 1px black;
+  padding: 5px;
+}
