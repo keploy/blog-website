@@ -81,6 +81,7 @@ export default function Footer() {
                 href="https://twitter.com/Keployio"
                 className="flex justify-center items-center text-secondary-300 hover:text-primary-300 bg-white hover:bg-white-100 rounded-full shadow transition duration-150 ease-in-out"
                 aria-label="Twitter"
+                target="_blank"
               >
                 <svg
                   className="w-8 h-8 fill-current"
@@ -102,6 +103,7 @@ export default function Footer() {
                 href="https://www.github.com/keploy/keploy"
                 className="flex justify-center items-center text-secondary-300 hover:text-primary-300 bg-white hover:bg-white-100 rounded-full shadow transition duration-150 ease-in-out"
                 aria-label="Github"
+                target="_blank"
               >
                 <svg
                   className="w-8 h-8 fill-current"
