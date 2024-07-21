@@ -45,7 +45,7 @@ export default function Footer() {
               key={index}
               className="sm:col-span-6 md:col-span-4 lg:col-span-3"
             >
-              <h6 className="text-[#ff914d] font-[500] mb-2 footer-font tracking-tighter mb-2">
+              <h6 className="text-[#ff914d] font-[500] mb-2 footer-font tracking-tighter">
                 {section?.title}
               </h6>
               <ul className="text-sm">
@@ -65,10 +65,10 @@ export default function Footer() {
 
           <div className="sm:col-span-6 md:col-span-4 lg:col-span-3">
             <h6 className="text-primary-300 font-medium mb-2">Find us on CNCF Landscape</h6>
-            <Link href="https://landscape.cncf.io/card-mode?selected=keploy">
+            <Link href="https://landscape.cncf.io/?item=app-definition-and-development--continuous-integration-delivery--keploy" target="_blank">
               <Image width={200} height={100} src={CNCF} alt="CNCF Landscape" className=" sm:w-9/12" />
             </Link>
-            <Link href="https://blog.google/intl/en-in/introducing-the-eighth-cohort-of-google-for-startups-accelerator-india/">
+            <Link href="https://blog.google/intl/en-in/introducing-the-eighth-cohort-of-google-for-startups-accelerator-india/" target="_blank">
               <Image width={200} height={100} src={GSA} alt="CNCF Landscape" className=" sm:w-9/12 py-2" />
             </Link>
           </div>
@@ -81,6 +81,7 @@ export default function Footer() {
                 href="https://twitter.com/Keployio"
                 className="flex justify-center items-center text-secondary-300 hover:text-primary-300 bg-white hover:bg-white-100 rounded-full shadow transition duration-150 ease-in-out"
                 aria-label="Twitter"
+                target="_blank"
               >
                 <svg
                   className="w-8 h-8 fill-current"
@@ -102,6 +103,7 @@ export default function Footer() {
                 href="https://www.github.com/keploy/keploy"
                 className="flex justify-center items-center text-secondary-300 hover:text-primary-300 bg-white hover:bg-white-100 rounded-full shadow transition duration-150 ease-in-out"
                 aria-label="Github"
+                target="_blank"
               >
                 <svg
                   className="w-8 h-8 fill-current"
