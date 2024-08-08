@@ -42,7 +42,7 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
 };
 
 const GithubBtn = () => {
-  const [stars, setStars] = useState("0");
+  const [stars, setStars] = useState("3900");
 
   useEffect(() => {
     const init = async () => {
