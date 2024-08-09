@@ -16,6 +16,16 @@
 
 /* Your own custom utilities */
 
+/* New rule for links */
+a {
+  color: #FF6600;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #FF8833;
+}
+
 .has-text-align-left {
   @apply text-left;
 }
@@ -133,13 +143,6 @@ body {
   background-color: #0F172A;
 }
 
-/* .title-link{
-  position: relative;
-  background-color: aqua;
-  background-position: 0 100%;
-  background-size: 0 10px;
-  transition: background .3s ease;
-} */
 .hamburger.active svg > :first-child {
   opacity: 0;
   y: 11;
@@ -213,7 +216,6 @@ pre {
 .btn-sm {
     @apply px-4 py-2;
 }
-
 
 td{
   border: solid 1px black;
