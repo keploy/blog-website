@@ -117,6 +117,10 @@
   @apply max-w-full;
 }
 
+.wp-caption {
+  @apply max-w-full;
+}
+
 /* Custom CSS */
 
 .baloo-2-600 {
