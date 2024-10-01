@@ -16,7 +16,7 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
             title={node.title}
             coverImage={node.featuredImage}
             date={node.date}
-            author={node.ppmaAuthorName}
+            author={node.postAuthor}
             slug={node.slug}
             excerpt={getExcerpt(node.excerpt, 20)}
             isCommunity={false}
@@ -43,7 +43,7 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
             title={node.title}
             coverImage={node.featuredImage}
             date={node.date}
-            author={node.ppmaAuthorName}
+            author={node.postAuthor}
             slug={node.slug}
             excerpt={getExcerpt(node.excerpt, 20)}
             isCommunity={true}

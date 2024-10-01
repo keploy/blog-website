@@ -6,7 +6,7 @@ import { Post } from "../types/post";
 
 interface Props extends Pick<Post, "title" | "date" | "excerpt" | "slug"> {
   coverImage: Post["featuredImage"];
-  author: Post["ppmaAuthorName"];
+  author: Post["postAuthor"];
   isCommunity?: boolean;
 }
 
