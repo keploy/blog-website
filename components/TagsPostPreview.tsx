@@ -17,7 +17,7 @@ export default function TagsPostPreview({
   coverImage: Post["featuredImage"];
   date: Post["date"];
   excerpt: Post["excerpt"];
-  author: Post["ppmaAuthorName"];
+  author: Post["postAuthor"];
   slug: Post["slug"];
   isCommunity: any;
 }) {
