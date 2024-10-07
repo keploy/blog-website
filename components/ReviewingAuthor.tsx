@@ -9,6 +9,12 @@ const ReviewingAuthor = ({ name, avatar, description }) => {
   };
 
   const FormatDescription = (description) => {
+    if (description==null) {
+      return {    
+        description: 'Writer at keploy publication.'
+      };
+    };
+    console.log(description);
     const des = description.split(". ");
     const len = des.length;
     return {
