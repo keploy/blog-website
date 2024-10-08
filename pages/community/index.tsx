@@ -37,7 +37,7 @@ export default function Community({ allPosts: { edges }, preview }) {
             title={heroPost.title}
             coverImage={heroPost.featuredImage}
             date={heroPost.date}
-            author={heroPost.postAuthor}
+            author={heroPost.ppmaAuthorName}
             slug={heroPost.slug}
             excerpt={excerpt}
             isCommunity={true}

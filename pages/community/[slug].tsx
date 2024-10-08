@@ -35,7 +35,7 @@ const postBody = ({ content, post }) => {
   // Replace the URL in the content with the desired one using the regular expression
   const replacedContent = content.replace(
     urlPattern,
-    `/blog/authors/${post.postAuthor}/`
+    `/blog/authors/${post.ppmaAuthorName}/`
   );
 
   return replacedContent;
@@ -54,7 +54,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
   useEffect(() => {
     if (reviewAuthorDetails && reviewAuthorDetails?.length > 0) {
-      const authorIndex = post.postAuthor === "Neha" ? 1 : 0;
+      const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
       const authorNode = reviewAuthorDetails[authorIndex]?.edges[0]?.node;
       if (authorNode) {
         setpostBodyReviewerAuthor(authorIndex);
@@ -66,7 +66,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   }, [post, reviewAuthorDetails]);
   const blogwriter = [
     {
-      name: post?.postAuthor || "Author",
+      name: post?.ppmaAuthorName || "Author",
       ImageUrl: avatarImgSrc || "/blog/images/author.png",
       description: blogWriterDescription || "An author for keploy's blog.",
     },
@@ -155,7 +155,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 title={post?.title || "Loading..."}
                 coverImage={post?.featuredImage}
                 date={post?.date || ""}
-                author={post?.postAuthor || ""}
+                author={post?.ppmaAuthorName || ""}
                 categories={post?.categories || []}
                 BlogWriter={blogwriter}
                 BlogReviewer={blogreviewer}
@@ -172,7 +172,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
             content={
               post?.content && postBody({ content: post?.content, post })
             }
-            authorName={post?.postAuthor || ""}
+            authorName={post?.ppmaAuthorName || ""}
             ReviewAuthorDetails={
               reviewAuthorDetails &&
               reviewAuthorDetails?.length > 0 &&
