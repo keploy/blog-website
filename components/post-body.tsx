@@ -19,7 +19,7 @@ export default function PostBody({
   ReviewAuthorDetails,
 }: {
   content: Post["content"];
-  authorName: Post["postAuthor"];
+  authorName: Post["ppmaAuthorName"];
   ReviewAuthorDetails: { edges: { node: { name: string; avatar: { url: string }; description: string } }[] };
 }) {
   const [tocItems, setTocItems] = useState([]);
