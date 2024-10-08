@@ -13,7 +13,7 @@ export default function Authors({
 }: {
   AllAuthors: {
     edges: {
-      node: { author: Post["author"]; ppmaAuthorName: Post["ppmaAuthorName"] };
+      node: { author: Post["author"]; postAuthor: Post["postAuthor"] };
     }[];
   };
   preview;

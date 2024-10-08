@@ -19,7 +19,7 @@ export default function AuthorPage({ preview, filteredPosts ,content }) {
     );
   }
 
-  const authorName  =  filteredPosts[0]?.node?.ppmaAuthorName;
+  const authorName  =  filteredPosts[0]?.node?.postAuthor;
 
   return (
     <div className="bg-accent-1">
@@ -45,7 +45,7 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
   const AllAuthors = await getAllAuthors();
   return {
     paths:
-      AllAuthors.edges.map(({ node }) => `/authors/${node.ppmaAuthorName}`) ||
+      AllAuthors.edges.map(({ node }) => `/authors/${node.postAuthor}`) ||
       [],
     fallback: true,
   };
@@ -58,7 +58,7 @@ export const getStaticProps: GetStaticProps = async ({
   const { slug } = params;
   const postsByAuthor = await getPostsByAuthor();
   const filteredPosts = postsByAuthor.edges.filter(
-    (item) => item.node.ppmaAuthorName === slug
+    (item) => item.node.postAuthor === slug
   );
   const postId = (filteredPosts[0].node.postId);
   const content = await getContent(postId);
