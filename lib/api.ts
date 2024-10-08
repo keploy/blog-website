@@ -103,7 +103,7 @@ export async function getAllPostsFromTags(tagName: String, preview) {
                 name
               }
             }
-            postAuthor
+            ppmaAuthorName
             categories {
               edges {
                 node {
@@ -196,7 +196,7 @@ export async function getAllPostsForHome(preview) {
                   name
                 }
               }
-              postAuthor
+              ppmaAuthorName
               categories {
                 edges {
                   node {
@@ -291,7 +291,7 @@ export async function getAllPostsForTechnology(preview) {
                 }
               }
             }
-            postAuthor
+            ppmaAuthorName
             categories {
               edges {
                 node {
@@ -320,7 +320,7 @@ export async function getAllAuthors() {
       posts(first:1000){
         edges{
           node{
-            postAuthor
+            ppmaAuthorName
             author {
               node {
                 name
@@ -348,7 +348,7 @@ export async function getPostsByAuthor() {
           node {
             postId
             title
-            postAuthor
+            ppmaAuthorName
             slug
             featuredImage {
               node {
@@ -397,7 +397,7 @@ export async function getMoreStoriesForSlugs() {
                 }
               }
             }
-            postAuthor
+            ppmaAuthorName
             categories {
               edges {
                 node {
@@ -430,7 +430,7 @@ export async function getMoreStoriesForSlugs() {
                 }
               }
             }
-            postAuthor
+            ppmaAuthorName
             categories {
               edges {
                 node {
@@ -493,7 +493,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       excerpt
       slug
       date
-      postAuthor
+      ppmaAuthorName
       featuredImage {
         node {
           sourceUrl
@@ -538,7 +538,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
                   ...AuthorFields
                 }
               }
-              postAuthor
+              ppmaAuthorName
             }
           }
         }

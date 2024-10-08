@@ -44,7 +44,7 @@ function Node({ node }) {
             height={200}
             width={200}
           />
-          <p className="mb-2 text-gray-400">Author: {node.postAuthor}</p>
+          <p className="mb-2 text-gray-400">Author: {node.ppmaAuthorName}</p>
           <p className="mb-4 text-gray-500">
             Category: {node.categories.edges[0].node.name}
           </p>
@@ -62,7 +62,7 @@ const PostByAuthorMapping = ({
   filteredPosts: { node: Post }[];
   Content: string;
 }) => {
-  const AuthorName = filteredPosts[0].node.postAuthor;
+  const AuthorName = filteredPosts[0].node.ppmaAuthorName;
   return (
     <div className="container mx-auto mt-8">
       <div className="mb-5">
