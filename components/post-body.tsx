@@ -3,6 +3,12 @@ import TOC from "./TableContents"; // Importing TOC component
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; // Importing icons
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import { markdown } from "@codemirror/lang-markdown";
+import { python } from "@codemirror/lang-python";
+import { go } from "@codemirror/lang-go";
+import { dracula } from "@uiw/codemirror-theme-dracula";
 
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
@@ -104,7 +110,7 @@ export default function PostBody({
 
   const renderCodeBlocks = () => {
     const codeBlocks = replacedContent.match(/<pre[\s\S]*?<\/pre>/gm);
-
+  
     if (!codeBlocks) {
       return (
         <div
@@ -115,22 +121,51 @@ export default function PostBody({
       );
     }
 
+    const decodeHtmlEntities = (str: string): string => {
+      const textarea = document.createElement("textarea");
+      textarea.innerHTML = str;
+      return textarea.value;
+    };
+  
     return replacedContent
       .split(/(<pre[\s\S]*?<\/pre>)/gm)
       .map((part, index) => {
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
           const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
-          const code = codeMatch ? codeMatch[1] : ""; // Extract code if available
+          const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : ""; // Extract code if available
           const language =
             codeMatch && codeMatch[0].includes("language-")
               ? codeMatch[0].split("language-")[1].split('"')[0]
               : "bash"; // Extract language if available, otherwise default to 'bash'
+          const getLanguageExtension = (language: string) => {
+            switch (language) {
+              case "javascript":
+              case "js":
+                return javascript();
+              case "python":
+                return python();
+              case "markdown":
+                return markdown();
+              case "go":
+                return go();
+              default:
+                return javascript(); // Default to JavaScript if language not recognized
+            }
+          };
           return (
             <div key={index} className="relative mx-auto mb-4">
-              <pre
-                dangerouslySetInnerHTML={{ __html: part }}
-                className={`language-${language}`}
-                suppressHydrationWarning
+              <CodeMirror
+                value={code}
+                extensions={[getLanguageExtension(language)]}
+                theme={dracula}
+                basicSetup={{
+                  lineNumbers:false,
+                  highlightActiveLine:true,
+                  tabSize:4
+                }}
+                editable={false}
+                readOnly={true}
+                indentWithTab={true}
               />
               <button
                 onClick={() => handleCopyClick(code, index)}
@@ -141,13 +176,6 @@ export default function PostBody({
                 ) : (
                   <IoCopyOutline />
                 )}
-              </button>
-              <button
-                disabled
-                className="absolute flex flex-col px-2 text-orange-400 capitalize border-2 border-b-0 border-gray-400 rounded rounded-b-none top-1 left-1 gap-y-1"
-              >
-                {language}
-                <span className="h-[1px] w-full border rounded-full border-gray-400"></span>
               </button>
             </div>
           );
