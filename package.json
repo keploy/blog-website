@@ -26,6 +26,7 @@
     "framer-motion": "^11.0.20",
     "gsap": "^3.12.5",
     "highlight.js": "^11.9.0",
+    "json-diff-kit": "^1.0.29",
     "next": "latest",
     "prismjs": "^1.29.0",
     "react": "^18.2.0",

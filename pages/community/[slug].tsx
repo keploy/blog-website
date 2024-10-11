@@ -17,6 +17,7 @@ import {
 } from "../../lib/api";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
+import JsonDiffViewer from "../../components/json-diff-viewer";
 import { useEffect, useRef, useState } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
@@ -43,6 +44,7 @@ const postBody = ({ content, post }) => {
 
 export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
+  const { slug }= router.query;
   const morePosts = posts?.edges;
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const time = 10 + calculateReadingTime(post?.content);
@@ -178,7 +180,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
               reviewAuthorDetails?.length > 0 &&
               reviewAuthorDetails[postBodyReviewerAuthor]
             }
-          />
+            />
+            {slug == 'how-to-compare-two-json-files' && <JsonDiffViewer />}
         </div>
       </ContainerSlug>
       <Container>

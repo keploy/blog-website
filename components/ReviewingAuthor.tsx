@@ -14,7 +14,6 @@ const ReviewingAuthor = ({ name, avatar, description }) => {
         description: 'Writer at keploy publication.'
       };
     };
-    console.log(description);
     const des = description.split(". ");
     const len = des.length;
     return {
