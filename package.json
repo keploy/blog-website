@@ -9,6 +9,7 @@
   "dependencies": {
     "@codemirror/lang-go": "^6.0.1",
     "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/lang-json": "^6.0.1",
     "@codemirror/lang-markdown": "^6.3.0",
     "@codemirror/lang-python": "^6.1.6",
     "@codemirror/view": "^6.34.1",

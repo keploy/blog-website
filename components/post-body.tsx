@@ -24,10 +24,12 @@ export default function PostBody({
   content,
   authorName,
   ReviewAuthorDetails,
+  slug
 }: {
   content: Post["content"];
   authorName: Post["ppmaAuthorName"];
   ReviewAuthorDetails: { edges: { node: { name: string; avatar: { url: string }; description: string } }[] };
+  slug: string | string[] | undefined;
 }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
@@ -224,6 +226,7 @@ export default function PostBody({
       {/* Content */}
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`}>
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
+        {slug === "how-to-compare-two-json-files" && <JsonDiffViewer/>}
         <hr className="border-gray-300 mt-10 mb-20" />
 
         <h1 className="text-2xl font-medium">Authored By:</h1>
@@ -246,8 +249,6 @@ export default function PostBody({
             </div>
           </div>
         )}
-        {/* {slug == "json-diff-viewer" && 
-        <JsonDiffViewer/>} */}
       </div>
       {/* Waitlist */}
       <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20">

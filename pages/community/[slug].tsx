@@ -17,7 +17,6 @@ import {
 } from "../../lib/api";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
-import JsonDiffViewer from "../../components/json-diff-viewer";
 import { useEffect, useRef, useState } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
@@ -180,8 +179,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
               reviewAuthorDetails?.length > 0 &&
               reviewAuthorDetails[postBodyReviewerAuthor]
             }
+            slug={slug}
             />
-            {slug == 'how-to-compare-two-json-files' && <JsonDiffViewer />}
         </div>
       </ContainerSlug>
       <Container>
