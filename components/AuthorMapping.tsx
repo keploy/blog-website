@@ -19,7 +19,7 @@ export default function AuthorMapping({
     const ppmaAuthorName = formatAuthorName(item.ppmaAuthorName);
     const avatarUrl = item.author.node.avatar.url;
     const slug = item.ppmaAuthorName;
-    const publishingAuthor = item.author.node.name;
+    const publishingAuthor = formatAuthorName(item.author.node.name);
     if (Array.isArray(ppmaAuthorName)) {
       return;
     }
