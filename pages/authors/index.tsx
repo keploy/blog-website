@@ -13,7 +13,7 @@ export default function Authors({
 }: {
   AllAuthors: {
     edges: {
-      node: { author: Post["author"]; ppmaAuthorName: Post["ppmaAuthorName"] };
+      node: { author: Post["author"]; ppmaAuthorName: Post["ppmaAuthorName"],ppmaAuthorImage: Post["ppmaAuthorImage"] };
     }[];
   };
   preview;
@@ -42,6 +42,7 @@ export default function Authors({
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   const AllAuthors = await getAllAuthors();
+  console.log(AllAuthors.edges);
   return {
     props: { AllAuthors, preview },
     revalidate: 10,
