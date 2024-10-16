@@ -3,12 +3,15 @@ import Header from "../../components/header";
 import Container from "../../components/container";
 import {
   getAllAuthors,
+  getAllPostsForCommunity,
+  getAllPostsForTechnology,
   getContent,
   getPostsByAuthor,
 } from "../../lib/api";
 import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
+import fs from 'fs';
 
 export default function AuthorPage({ preview, filteredPosts ,content }) {
   if (!filteredPosts || filteredPosts.length === 0) {
@@ -51,20 +54,41 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
   };
 };
 
+const logToFile = (message: string) => {
+  const logMessage = `${new Date().toISOString()} - ${message}\n`;
+  fs.appendFileSync('server-log.txt', logMessage, 'utf8');
+};
+
 export const getStaticProps: GetStaticProps = async ({
   preview = false,
   params,
 }) => {
-  const { slug } = params;
-  const postsByAuthor = await getPostsByAuthor();
-  const filteredPosts = postsByAuthor.edges.filter(
+  const { slug } = params as { slug: string };
+
+  // Fetch posts from both sources
+  const postsByTechnology = await getAllPostsForTechnology(preview);
+  const postsByCommunity = await getAllPostsForCommunity(preview);
+
+  // Log fetched posts for debugging
+  const logMessage = `Technology Posts: ${JSON.stringify(postsByTechnology.edges, null, 2)}\nCommunity Posts: ${JSON.stringify(postsByCommunity.edges, null, 2)}`;
+  logToFile(logMessage);
+
+  // Combine posts from both sources
+  const allPosts = [...postsByTechnology.edges, ...postsByCommunity.edges];
+
+  // Filter the combined posts by the given slug
+  const filteredPosts = allPosts.filter(
     (item) => item.node.ppmaAuthorName === slug
   );
-  const postId = (filteredPosts[0].node.postId);
-  const content = await getContent(postId);
+
+  // Extract postId from the first matching post (if any)
+  const postId = filteredPosts[0]?.node?.postId;
+
+  // Fetch content using postId (if available)
+  const content = postId ? await getContent(postId) : null;
 
   return {
-    props: { preview, filteredPosts , content},
-    revalidate: 10,
+    props: { preview, filteredPosts, content },
+    revalidate: 10, // ISR with 10 seconds revalidation
   };
 };
