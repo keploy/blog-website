@@ -6,6 +6,7 @@ export interface Post {
   excerpt: string;
   slug: string;
   date: string;
+  postId: Number;
   featuredImage: {
     node: {
       sourceUrl: string;
@@ -15,6 +16,7 @@ export interface Post {
     node: Author;
   };
   ppmaAuthorName: string;
+  ppmaAuthorImage: string;
   categories: {
     edges: {
       node: {
