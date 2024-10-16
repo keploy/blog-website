@@ -11,7 +11,6 @@ import {
 import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
-import fs from 'fs';
 
 export default function AuthorPage({ preview, filteredPosts ,content }) {
   if (!filteredPosts || filteredPosts.length === 0) {
@@ -54,11 +53,6 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
   };
 };
 
-const logToFile = (message: string) => {
-  const logMessage = `${new Date().toISOString()} - ${message}\n`;
-  fs.appendFileSync('server-log.txt', logMessage, 'utf8');
-};
-
 export const getStaticProps: GetStaticProps = async ({
   preview = false,
   params,
@@ -68,10 +62,6 @@ export const getStaticProps: GetStaticProps = async ({
   // Fetch posts from both sources
   const postsByTechnology = await getAllPostsForTechnology(preview);
   const postsByCommunity = await getAllPostsForCommunity(preview);
-
-  // Log fetched posts for debugging
-  const logMessage = `Technology Posts: ${JSON.stringify(postsByTechnology.edges, null, 2)}\nCommunity Posts: ${JSON.stringify(postsByCommunity.edges, null, 2)}`;
-  logToFile(logMessage);
 
   // Combine posts from both sources
   const allPosts = [...postsByTechnology.edges, ...postsByCommunity.edges];
