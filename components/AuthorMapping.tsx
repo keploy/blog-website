@@ -7,7 +7,7 @@ export default function AuthorMapping({
   AuthorArray,
   itemsPerPage = 8, // You can customize the number of items per page
 }:{
-  AuthorArray: Pick<Post, "author" | "ppmaAuthorName">[],
+  AuthorArray: Pick<Post, "author" | "ppmaAuthorName" | "ppmaAuthorImage">[],
   itemsPerPage?:number
 }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +17,7 @@ export default function AuthorMapping({
 
   AuthorArray.forEach((item) => {
     const ppmaAuthorName = formatAuthorName(item.ppmaAuthorName);
-    const avatarUrl = item.author.node.avatar.url;
+    const avatarUrl = item.ppmaAuthorImage;
     const slug = item.ppmaAuthorName;
     const publishingAuthor = formatAuthorName(item.author.node.name);
     if (Array.isArray(ppmaAuthorName)) {
@@ -66,8 +66,7 @@ export default function AuthorMapping({
           <Link href={`/authors/${author.slug}`} key={index}>
             <div className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between  border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30 hover:scale-105 cursor-pointer">
               <div className="flex items-center mb-3 sm:mb-0">
-                {author.publishingAuthor.split(" ")[0].toLowerCase().trim() ==
-                author.ppmaAuthorName.split(" ")[0].toLowerCase().trim() ? (
+                {author.avatarUrl != "imag1" &&  author.avatarUrl != "image" ? (
                   <Image
                     src={author.avatarUrl}
                     alt={`${author.ppmaAuthorName}'s Avatar`}

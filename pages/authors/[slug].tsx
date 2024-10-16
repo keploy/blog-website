@@ -3,6 +3,8 @@ import Header from "../../components/header";
 import Container from "../../components/container";
 import {
   getAllAuthors,
+  getAllPostsForCommunity,
+  getAllPostsForTechnology,
   getContent,
   getPostsByAuthor,
 } from "../../lib/api";
@@ -55,16 +57,28 @@ export const getStaticProps: GetStaticProps = async ({
   preview = false,
   params,
 }) => {
-  const { slug } = params;
-  const postsByAuthor = await getPostsByAuthor();
-  const filteredPosts = postsByAuthor.edges.filter(
+  const { slug } = params as { slug: string };
+
+  // Fetch posts from both sources
+  const postsByTechnology = await getAllPostsForTechnology(preview);
+  const postsByCommunity = await getAllPostsForCommunity(preview);
+
+  // Combine posts from both sources
+  const allPosts = [...postsByTechnology.edges, ...postsByCommunity.edges];
+
+  // Filter the combined posts by the given slug
+  const filteredPosts = allPosts.filter(
     (item) => item.node.ppmaAuthorName === slug
   );
-  const postId = (filteredPosts[0].node.postId);
-  const content = await getContent(postId);
+
+  // Extract postId from the first matching post (if any)
+  const postId = filteredPosts[0]?.node?.postId;
+
+  // Fetch content using postId (if available)
+  const content = postId ? await getContent(postId) : null;
 
   return {
-    props: { preview, filteredPosts , content},
-    revalidate: 10,
+    props: { preview, filteredPosts, content },
+    revalidate: 10, // ISR with 10 seconds revalidation
   };
 };
