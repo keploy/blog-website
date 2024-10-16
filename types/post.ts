@@ -16,6 +16,7 @@ export interface Post {
     node: Author;
   };
   ppmaAuthorName: string;
+  ppmaAuthorImage: string;
   categories: {
     edges: {
       node: {

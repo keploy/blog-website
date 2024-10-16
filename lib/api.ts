@@ -372,6 +372,7 @@ export async function getAllAuthors() {
         edges{
           node{
             ppmaAuthorName
+            ppmaAuthorImage
             author {
               node {
                 name
