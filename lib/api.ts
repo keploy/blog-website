@@ -276,6 +276,57 @@ export async function getAllPostsForTechnology(preview) {
             excerpt
             slug
             date
+            postId
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+            ppmaAuthorName
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `,
+    {
+      variables: {
+        preview,
+      },
+    }
+  );
+
+  return data?.posts;
+}
+
+export async function getAllPostsForCommunity(preview) {
+  const data = await fetchAPI(
+    `
+    query AllPostsForCategory{
+      posts(first: 100, where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            postId
             featuredImage {
               node {
                 sourceUrl
@@ -375,7 +426,7 @@ export async function getMoreStoriesForSlugs() {
   const data = await fetchAPI(
     `
     query AllPostsForCategory {
-      techPosts: posts(first: 10, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+      techPosts: posts(first: 100, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
         edges {
           node {
             title
@@ -408,7 +459,7 @@ export async function getMoreStoriesForSlugs() {
           }
         }
       }
-      communityPosts: posts(first: 10, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
+      communityPosts: posts(first: 100, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
         edges {
           node {
             title
