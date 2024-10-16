@@ -66,7 +66,7 @@ export default function AuthorMapping({
           <Link href={`/authors/${author.slug}`} key={index}>
             <div className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between  border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30 hover:scale-105 cursor-pointer">
               <div className="flex items-center mb-3 sm:mb-0">
-                {author.avatarUrl != "imag1" ? (
+                {author.avatarUrl != "imag1" &&  author.avatarUrl != "image" ? (
                   <Image
                     src={author.avatarUrl}
                     alt={`${author.ppmaAuthorName}'s Avatar`}
