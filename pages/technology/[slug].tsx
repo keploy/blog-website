@@ -42,6 +42,7 @@ const postBody = ({ content, post }) => {
 
 export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
+  const { slug } = router.query;
   const morePosts = posts?.edges;
   const time = 10 + calculateReadingTime(post?.content || "");
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
@@ -102,7 +103,6 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       const avatarDivMatch = content.match(
         /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
       );
-      console.log(avatarDivMatch[1]);
       if (avatarDivMatch && avatarDivMatch[1]) {
         setAvatarImgSrc(avatarDivMatch[1]);
       } else {
@@ -171,6 +171,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
               post?.content && postBody({ content: post?.content, post })
             }
             authorName={post?.ppmaAuthorName || ""}
+            slug={slug}
             ReviewAuthorDetails={
               reviewAuthorDetails &&
               reviewAuthorDetails?.length > 0 &&
