@@ -1,28 +1,30 @@
-name: Build and Deploy Next.js
+name: Build and Deploy Blog Website
 
 on:
   push:
     branches:
-      - main
+      - main  # Triggers on push to 'main'
   pull_request:
     branches:
-      - main
+      - main  # Triggers on PRs to 'main'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Install Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18 # Use the appropriate Node version
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-    - name: Install dependencies
-      run: npm install  # Use npm install if using npm
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build Next.js application
-      run: npm run build
+      - name: Build Next.js application
+        env: 
+          WORDPRESS_URL: https://wp.keploy.io/graphql
+        run: npm run build
