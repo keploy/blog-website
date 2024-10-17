@@ -26,5 +26,5 @@ jobs:
 
       - name: Build Next.js application
         env: 
-          WORDPRESS_URL: "https://wp.keploy.io/graphql"
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
         run: npm run build
