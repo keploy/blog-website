@@ -269,7 +269,7 @@ export async function getAllPostsForTechnology(preview) {
   const data = await fetchAPI(
     `
     query AllPostsForCategory{
-      posts(first: 100, where: { orderby: { field: DATE, order: DESC } categoryName: "technology" }) {
+      posts(first: 1000, where: { orderby: { field: DATE, order: DESC } categoryName: "technology" }) {
         edges {
           node {
             title
@@ -319,7 +319,7 @@ export async function getAllPostsForCommunity(preview) {
   const data = await fetchAPI(
     `
     query AllPostsForCategory{
-      posts(first: 100, where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
+      posts(first: 1000, where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
         edges {
           node {
             title

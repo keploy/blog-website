@@ -7,7 +7,7 @@ export default function AuthorMapping({
   AuthorArray,
   itemsPerPage = 8, // You can customize the number of items per page
 }:{
-  AuthorArray: Pick<Post, "author" | "ppmaAuthorName">[],
+  AuthorArray: Pick<Post, "author" | "ppmaAuthorName" | "ppmaAuthorImage">[],
   itemsPerPage?:number
 }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +18,7 @@ export default function AuthorMapping({
   AuthorArray.forEach((item) => {
     const ppmaAuthorName = formatAuthorName(item.ppmaAuthorName);
     const avatarUrl = item.author.node.avatar.url;
+    console.log(item.ppmaAuthorImage)
     const slug = item.ppmaAuthorName;
     const publishingAuthor = formatAuthorName(item.author.node.name);
     if (Array.isArray(ppmaAuthorName)) {
