@@ -40,8 +40,14 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
         NewName.charAt(0).toUpperCase() + NewName.slice(1).toLowerCase();
       setAuthorName(NewName);
     }
-    if (authorDescriptionElement.textContent.trim().length > 0) {
-      setAuthorDescription(authorDescriptionElement.textContent.trim());
+    if (authorDescriptionElement) {
+      if (authorDescriptionElement.textContent) {
+        if (authorDescriptionElement.textContent.trim() === "") {
+          setAuthorDescription("n/a");
+        }
+        setAuthorDescription(authorDescriptionElement.textContent.trim());
+      }
+     
     } else {
       setAuthorDescription("n/a");
     }
