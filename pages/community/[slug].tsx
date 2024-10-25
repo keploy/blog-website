@@ -102,6 +102,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   });
   useEffect(() => {
     if (post && post.content) {
+
       const content = post.content;
   
       const avatarDivMatch = content.match(
@@ -212,6 +213,7 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { communityMoreStories } = await getMoreStoriesForSlugs();
+  // console.log("here is the main post: ",data?.post);
   const authorDetails = [];
   authorDetails.push(await getReviewAuthorDetails("neha"));
   authorDetails.push(await getReviewAuthorDetails("Jain"));
