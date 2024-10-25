@@ -12,51 +12,75 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
   const AuthorNameNew =
     AuthorName[0].toUpperCase() + AuthorName.slice(1).toLowerCase();
 
-  useEffect(() => {
-    // Create a temporary div element to parse the HTML content
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = authorData;
-
-    // Extract classes and data related to pp-author-boxes-avatar
-    const avatarImgElement = tempDiv.querySelector(
-      ".pp-author-boxes-avatar img"
-    );
-    const authorNameElement = tempDiv.querySelector(".pp-author-boxes-name a");
-    const linkedinLink = tempDiv.querySelector(
-      '.pp-author-boxes-meta.multiple-authors-links a[aria-label="Website"]'
-    );
-    const authorDescriptionElement = tempDiv.querySelector(
-      ".pp-author-boxes-description.multiple-authors-description"
-    );
-
-    if (avatarImgElement) {
-      setAvatarImgSrc(avatarImgElement.getAttribute("src"));
-    } else {
-      setAvatarImgSrc("n/a");
-    }
-    if (authorNameElement) {
-      var NewName = authorNameElement.textContent;
-      NewName =
-        NewName.charAt(0).toUpperCase() + NewName.slice(1).toLowerCase();
-      setAuthorName(NewName);
-    }
-    if (authorDescriptionElement) {
-      if (authorDescriptionElement.textContent) {
-        if (authorDescriptionElement.textContent.trim() === "") {
-          setAuthorDescription("n/a");
-        }
-        setAuthorDescription(authorDescriptionElement.textContent.trim());
+    useEffect(() => {
+      // Create a temporary div element to parse the HTML content
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = authorData;
+    
+      // Extract elements
+      const avatarImgElement = tempDiv.querySelector(".pp-author-boxes-avatar img");
+      const authorNameElement = tempDiv.querySelector(".pp-author-boxes-name a");
+      const linkedinLink = tempDiv.querySelector(
+        '.pp-author-boxes-meta.multiple-authors-links a[aria-label="Website"]'
+      );
+      const authorDescriptionElement = tempDiv.querySelector(
+        ".pp-author-boxes-description.multiple-authors-description"
+      );
+    
+      // Switch case for avatarImgElement
+      switch (Boolean(avatarImgElement)) {
+        case true:
+          setAvatarImgSrc(avatarImgElement.getAttribute("src"));
+          break;
+        default:
+          setAvatarImgSrc("n/a");
+          break;
       }
-     
-    } else {
-      setAuthorDescription("n/a");
-    }
-    if (linkedinLink) {
-      setAuthorLinkedIn(linkedinLink.getAttribute("href"));
-    } else {
-      setAuthorLinkedIn("n/a");
-    }
-  }, [authorData]);
+    
+      // Switch case for authorNameElement
+      switch (Boolean(authorNameElement)) {
+        case true:
+          let NewName = authorNameElement.textContent;
+          NewName =
+            NewName.charAt(0).toUpperCase() + NewName.slice(1).toLowerCase();
+          setAuthorName(NewName);
+          break;
+        default:
+          // No action needed if authorNameElement is null
+          break;
+      }
+    
+      // Switch case for authorDescriptionElement
+      switch (Boolean(authorDescriptionElement)) {
+        case true:
+          if (authorDescriptionElement.textContent) {
+            switch (authorDescriptionElement.textContent.trim() === "") {
+              case true:
+                setAuthorDescription("n/a");
+                break;
+              default:
+                setAuthorDescription(authorDescriptionElement.textContent.trim());
+                break;
+            }
+          }
+          break;
+        default:
+          setAuthorDescription("n/a");
+          break;
+      }
+    
+      // Switch case for linkedinLink
+      switch (Boolean(linkedinLink)) {
+        case true:
+          setAuthorLinkedIn(linkedinLink.getAttribute("href"));
+          break;
+        default:
+          setAuthorLinkedIn("n/a");
+          break;
+      }
+    }, [authorData]);
+    
+    
 
   // Function to toggle show more
   const toggleShowMore = () => {
