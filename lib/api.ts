@@ -179,7 +179,7 @@ export async function getAllPostsForHome(preview) {
     const data = await fetchAPI(
       `
       query AllPosts($after: String) {
-        posts(first: 200, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
+        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
           edges {
             node {
               title
