@@ -323,8 +323,8 @@ export async function getAllPostsForCommunity(preview) {
   while (hasNextPage) {
     const data = await fetchAPI(
       `
-    query AllPostsForCategory{
-      posts(first: 50, where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
+    query AllPostsForCategory($after: String){
+      posts(first: 50, after: $after ,where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
         edges {
           node {
             title
@@ -367,6 +367,7 @@ export async function getAllPostsForCommunity(preview) {
       {
         variables: {
           preview,
+          after: endCursor,
         },
       }
     );
