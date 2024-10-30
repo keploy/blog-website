@@ -24,7 +24,7 @@
     "classnames": "^2.3.1",
     "codemirror": "^6.0.1",
     "date-fns": "^2.28.0",
-    "framer-motion": "^11.0.20",
+    "framer-motion": "^11.11.10",
     "gsap": "^3.12.5",
     "highlight.js": "^11.9.0",
     "json-diff-kit": "^1.0.29",
