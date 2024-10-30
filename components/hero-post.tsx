@@ -30,7 +30,7 @@ export default function HeroPost({
             <h3 className="heading1 text-center text-4xl lg:text-6xl  font-bold leading-none text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500 transition-all duration-500">
               <Link
                 href={`${basePath}/${slug}`}
-                className="hero-title-link title-link  bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
+                className="hero-title-link title-link  bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px] leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: title }}
               ></Link>
             </h3>
