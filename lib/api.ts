@@ -179,7 +179,7 @@ export async function getAllPostsForHome(preview) {
     const data = await fetchAPI(
       `
       query AllPosts($after: String) {
-        posts(first: 200, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
+        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
           edges {
             node {
               title
@@ -316,10 +316,15 @@ export async function getAllPostsForTechnology(preview) {
 }
 
 export async function getAllPostsForCommunity(preview) {
-  const data = await fetchAPI(
-    `
-    query AllPostsForCategory{
-      posts(first: 1000, where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
+  let allEdges = [];
+  let hasNextPage = true;
+  let endCursor = null;
+
+  while (hasNextPage) {
+    const data = await fetchAPI(
+      `
+    query AllPostsForCategory($after: String){
+      posts(first: 50, after: $after ,where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
         edges {
           node {
             title
@@ -352,17 +357,27 @@ export async function getAllPostsForCommunity(preview) {
             }
           }
         }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
       }
     }
   `,
-    {
-      variables: {
-        preview,
-      },
-    }
-  );
+      {
+        variables: {
+          preview,
+          after: endCursor,
+        },
+      }
+    );
+    const edges = data.posts.edges;
+    allEdges = [...allEdges, ...edges];
+    hasNextPage = data.posts.pageInfo.hasNextPage;
+    endCursor = data.posts.pageInfo.endCursor;
 
-  return data?.posts;
+  }
+  return { edges: allEdges };
 }
 
 export async function getAllAuthors() {
