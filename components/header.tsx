@@ -10,7 +10,7 @@ const menuItems = [
   { text: "Community Articles", link: "/community" },
 ];
 
-const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
+const WaitListBtn = ({ mobile, className }: { mobile?: Boolean, className?: string }) => {
   if (mobile) {
     return (
       <Link
@@ -41,7 +41,7 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   );
 };
 
-const GithubBtn = () => {
+const GithubBtn = (className) => {
   const [stars, setStars] = useState("3900");
 
   useEffect(() => {
@@ -114,12 +114,12 @@ export default function Header({
   };
 
   return (
-    <div className="h-32 md:h-40">
-      <header className="fixed w-full z-30 bg-neutral-100 md:bg-opacity-90 transition duration-300 ease-in-out ">
+    <div className="h-32 md:h-40 pt-5">
+      <header className="fixed min-w-full z-30 rounded-3xl bg-white shadow-md md:bg-opacity-90 transition duration-300 ease-in-out">
         <div className="max-w-6xl mx-auto px-5 sm:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="shrink-0 mr-4 flex-grow-0 w-2/12">
-              <Link href={"https://keploy.io/"}>
+              <Link href="https://keploy.io/">
                 <Image
                   src={sideBySideSvg}
                   alt="Keploy Logo"
@@ -127,65 +127,60 @@ export default function Header({
                 />
               </Link>
             </div>
-            <nav className="hidden lg:flex flex-grow-0 w-6/12 ">
-              <ul className="flex grow justify-end flex-wrap items-center">
-                {menuItems.map((item, index) => {
-                  return (
-                    <li key={index}>
-                      <Link
-                        href={item.link}
-                        className="font-medium text-gray-600 hover:text-primary-300 px-5 py-3 flex flex-grow-0 lg:flex items-center transition duration-150 ease-in-out"
-                      >
-                        {item.text}
-                      </Link>
-                    </li>
-                  );
-                })}
+            <nav className="hidden lg:flex flex-grow w-6/12">
+              <ul className="flex grow justify-center space-x-8">
+                {menuItems.map((item, index) => (
+                  <li key={index}>
+                    <Link
+                      href={item.link}
+                      className="font-medium text-gray-600 hover:text-orange-500 px-3 py-2 transition duration-150 ease-in-out"
+                    >
+                      {item.text}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </nav>
-
-            <div className=" header-btn-container flex-1 justify-end hidden lg:flex">
-              <GithubBtn />
-              <WaitListBtn />
+            <div className="flex items-center space-x-4 hidden lg:flex">
+              <GithubBtn className="border border-orange-500 text-orange-500 rounded-full px-4 py-2 hover:bg-orange-100 transition duration-200" />
+              <WaitListBtn className="bg-blue-900 text-white font-semibold rounded-full px-5 py-2 hover:bg-blue-800 transition duration-200" />
             </div>
             <div className="flex lg:hidden">
               <button
                 onClick={toggleMenuHandler}
-                className={toggleMenu ? "hamburger active" : "hamburger "}
+                className={toggleMenu ? "hamburger active" : "hamburger"}
               >
                 <span className="sr-only">Menu</span>
                 <MenuBtn />
-                {/* <img src="/blog/images/Menu.svg" className="w-6 h-6"></img> */}
+                {/* <img src="/blog/images/Menu.svg" className="w-6 h-6" /> */}
               </button>
-              <div>
-                {toggleMenu ? (
-                  <nav className="absolute top-full h-screen pb-16 z-20 flex-grow-0 left-0 w-full overflow-scroll bg-white opacity-100 translate-y-0">
-                    <ul className="px-5 py-2">
-                      <li>
-                        <GithubBtn />
-                      </li>
-                      {menuItems.map((item, index) => {
-                        return (
-                          <li key={index}>
-                            <Link
-                              href={item.link}
-                              className="font-medium text-gray-600  hover:text-primary-300 px-5 py-3 flex items-center transition duration-150 ease-in-out"
-                            >
-                              {item.text}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                      <li>
-                        <WaitListBtn mobile={true} />
-                      </li>
-                    </ul>
-                  </nav>
-                ) : null}
-              </div>
             </div>
           </div>
         </div>
+
+        {toggleMenu && (
+          <nav className="absolute top-full h-screen z-20 left-0 w-full bg-white shadow-md lg:hidden">
+            <ul className="px-5 py-2">
+              <li>
+                <GithubBtn className="border border-orange-500 text-orange-500 rounded-full px-4 py-2 w-full text-center mt-3" />
+              </li>
+              {menuItems.map((item, index) => (
+                <li key={index} className="w-full text-center">
+                  <Link
+                    href={item.link}
+                    className="font-medium text-gray-600 hover:text-orange-500 px-5 py-3 block transition duration-150 ease-in-out"
+                  >
+                    {item.text}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <WaitListBtn mobile={true} className="bg-blue-900 text-white font-semibold rounded-full px-5 py-2 w-full text-center mt-3" />
+              </li>
+            </ul>
+          </nav>
+        )}
+
         {readProgress && (
           <div className="relative h-1">
             <animated.div
@@ -193,8 +188,7 @@ export default function Header({
               style={{
                 width: readProgress.to((v) => v + "%"),
               }}
-            >
-            </animated.div>
+            ></animated.div>
             <div className="h-full absolute top-0 w-full bg-gray-300 -z-10"></div>
           </div>
         )}
