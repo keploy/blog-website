@@ -12,6 +12,7 @@ import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
+    
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
