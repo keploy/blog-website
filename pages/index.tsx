@@ -22,62 +22,48 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       </Head>
       <Header />
       <Container>
-      <div className="relative bg-gradient-to-br from-white to-orange-50 py-16 md:py-24">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex flex-col-reverse lg:flex-row items-center justify-between space-y-8 lg:space-y-0 lg:space-x-12">
-          {/* Content Section */}
-          <div className="w-full lg:w-1/2 text-center lg:text-left">
-            <h1 className="text-4xl md:text-5xl 2xl:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              <span className="text-orange-500">Keploy</span> Blog
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-xl mx-auto lg:mx-0">
-              Empowering developers with cutting-edge insights, practical guides, and innovative tech perspectives
-            </p>
-            
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-              <a 
-                href="/technology" 
-                className="group relative px-6 py-3 overflow-hidden border-2 border-orange-500 text-orange-500 rounded-xl transition-all duration-300 hover:text-white"
-              >
-                <span className="absolute inset-0 bg-orange-500 transform -skew-x-12 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 z-0"></span>
-                <span className="relative z-10">Technology</span>
-              </a>
-              <a 
-                href="/community" 
-                className="group relative px-6 py-3 overflow-hidden border-2 border-gray-800 text-gray-800 rounded-xl transition-all duration-300 hover:text-white"
-              >
-                <span className="absolute inset-0 bg-gray-800 transform -skew-x-12 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 z-0"></span>
-                <span className="relative z-10">Community</span>
-              </a>
-            </div>
-          </div>
-          
-          {/* Hero Image */}
-          <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
-            <div className="relative">
-              <img 
-                src="/blog/images/blog-bunny.png" 
-                alt="Keploy Blog Mascot" 
-                className="w-[500px] h-[500px] transform transition-transform duration-300 hover:scale-105"
-              />
-              <div className="absolute -bottom-12 -right-12 md:-bottom-16 md:-right-16 opacity-30">
-                <img 
-                  src="/blog/images/open-source-vector.png" 
-                  alt="Open Source Vector" 
-                  className="w-[200px] h-[200px] animate-spin-slow"
-                />
+        <div className="">
+          <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
+            <div className="content ">
+              <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
+                Keploy Blog
+              </h2>
+              <p className="content-body body 2xl:text-2xl text-lg mt-6">
+                Empowering your tech journey with expert advice and analysis
+              </p>
+              <div className="btn-wrapper flex flex-wrap gap-4 mt-6 ">
+                <Link
+                  href="/technology"
+                  className="relative px-4 py-1 overflow-hidden transition-all border border-black md:text-xl 2xl:text-2xl md:px-8 md:py-2 hover:border-orange-400 before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-orange-400 before:transition-all before:duration-250 rounded-xl hover:text-white hover:before:left-0 hover:before:w-full"
+                >
+                  <span className="relative z-10">Technology</span>
+                </Link>
+                <Link
+                  href="/community"
+                  className="relative px-4 py-1 overflow-hidden transition-all border border-black active:scale-95 md:text-xl 2xl:text-2xl md:px-8 md:py-2 hover:border-orange-400 before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-orange-400 before:transition-all before:duration-250 rounded-xl hover:text-white hover:before:left-0 hover:before:w-full"
+                >
+                  <span className="relative z-10">Community</span>
+                </Link>
               </div>
             </div>
+
+            <div className="blog-hero-img">
+              <Image
+                src="/blog/images/blog-bunny.png"
+                alt="hero image"
+                width={600}
+                height={600}
+              />
+            </div>
+          </div>
+          <div className="open-source-vector-container bottom-9 mb-12 flex md:justify-start justify-center">
+            <Image
+              src={OpenSourceVectorPng}
+              alt="vector"
+              className="spin-anim"
+            />
           </div>
         </div>
-      </div>
-      
-      {/* Subtle Background Effect */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-orange-100 rounded-full blur-3xl"></div>
-      </div>
-    </div>
         <TopBlogs
           communityPosts={communityPosts}
           technologyPosts={technologyPosts}
