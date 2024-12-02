@@ -10,6 +10,7 @@ import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
+import Newsletter from "../components/news-letter";
 export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
     <Layout
@@ -69,6 +70,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
           technologyPosts={technologyPosts}
         />
         <Testimonials />
+        <Newsletter/>
       </Container>
     </Layout>
   );
