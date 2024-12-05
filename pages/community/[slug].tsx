@@ -211,7 +211,8 @@ export const getStaticProps: GetStaticProps = async ({
   previewData,
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
-  const { communityMoreStories } = await getMoreStoriesForSlugs();
+  const { communityMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug);
+
   // console.log("here is the main post: ",data?.post);
   const authorDetails = [];
   authorDetails.push(await getReviewAuthorDetails("neha"));
