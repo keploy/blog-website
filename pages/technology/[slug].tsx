@@ -135,8 +135,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     <Layout
       preview={preview}
       featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
-      Title={post?.title || "Loading..."}
-      Description={`Blog About ${post?.title || "the Article"}`}
+      Title={post?.seo.title || "Loading..."}
+      Description={`${post?.seo.metaDesc || "Blog About Keploy"}`}
     >
       <Header readProgress={readProgress} />
       <Container>
