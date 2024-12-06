@@ -76,24 +76,31 @@ export default function PostBody({
   // }, [content]); // Log content load for debugging
 
   useEffect(() => {
-    const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
-    const tocItems = headings.map((heading, index) => {
-      const id = `heading-${index}`;
-      heading.setAttribute("id", id);
-      return {
-        id,
-        title: heading.textContent,
-        type: heading.tagName.toLowerCase(),
-      };
-    });
-    tocItems.shift();
-    const index = tocItems.findIndex((item) => item.title === "More Stories");
-    if (index !== -1) {
-      tocItems.splice(index + 1);
-    }
-    setTocItems(tocItems);
-    setCopySuccessList(Array(tocItems.length).fill(false));
-  }, []);
+    const timeout = setTimeout(() => {
+      const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
+      const tocItems = headings.map((heading, index) => {
+        const id = `heading-${index}`;
+        heading.setAttribute("id", id);
+        console.log("Here are the heading: ", heading.textContent);
+        return {
+          id,
+          title: heading.textContent,
+          type: heading.tagName.toLowerCase(),
+        };
+      });
+  
+      tocItems.shift();
+      const index = tocItems.findIndex((item) => item.title === "More Stories");
+      if (index !== -1) {
+        tocItems.splice(index + 1);
+      }
+      setTocItems(tocItems);
+      setCopySuccessList(Array(tocItems.length).fill(false));
+    }, 500); // Adjust delay in milliseconds as needed
+  
+    return () => clearTimeout(timeout); // Cleanup timeout on component unmount or before running the effect again
+  }, [content]);
+  
 
   const handleCopyClick = (code, index) => {
     navigator.clipboard
