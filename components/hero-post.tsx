@@ -21,9 +21,19 @@ export default function HeroPost({
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
 
+  const cleanExcerpt = excerpt.replace("Table of Contents", "");
+
+  console.log("cleanExcerpt", cleanExcerpt);
+
   return (
     <section>
-      <div className="bg-gray-100 border px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center  lg:hover:shadow-md transition">
+      <div className="relative bg-gray-100 border border-gray-300 px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center lg:group transition-all duration-500 hover:border-orange-500 hover:shadow-[0_0_10px_2px_rgba(255,165,0,0.6)]">
+        {/* Banner */}
+        <div className="absolute top-0 left-0 bg-orange-200 text-orange-800 text-xs font-bold py-1 px-3 rounded-br-md shadow-md">
+          Latest Blog
+        </div>
+
+        {/* Content */}
         <div className="mb-8 lg:mb-0 ">
           {coverImage && (
             <CoverImage
@@ -36,10 +46,10 @@ export default function HeroPost({
         </div>
         <div className="">
           <div>
-            <h3 className="heading1  text-4xl lg:text-6xl font-bold leading-none">
+            <h3 className="heading1 text-4xl lg:text-6xl font-bold leading-none">
               <Link
                 href={`${basePath}/${slug}`}
-                className="hero-title-link title-link  bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
+                className="hero-title-link title-link bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
                 dangerouslySetInnerHTML={{ __html: title }}
               ></Link>
             </h3>
@@ -54,7 +64,7 @@ export default function HeroPost({
           <div>
             <div
               className="body xl:text-md text-md leading-relaxed mb-4 text-slate-600"
-              dangerouslySetInnerHTML={{ __html: excerpt }}
+              dangerouslySetInnerHTML={{ __html: cleanExcerpt }}
             />
           </div>
         </div>
