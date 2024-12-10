@@ -104,7 +104,6 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     if (post && post.content) {
 
       const content = post.content;
-  
       const avatarDivMatch = content.match(
         /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
       );
@@ -117,7 +116,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   
       // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
-        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/s
+        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/
       );
   
       // Apply table responsive wrapper
@@ -146,8 +145,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     <Layout
       preview={preview}
       featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
-      Title={post?.title || "Loading..."}
-      Description={`Blog About ${post?.title}`}
+      Title={post?.seo.title || "Loading..."}
+      Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
     >
       <Header readProgress={readProgress} />
       <Container>
