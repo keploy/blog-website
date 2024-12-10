@@ -3,10 +3,8 @@ import Header from "../../components/header";
 import Container from "../../components/container";
 import {
   getAllAuthors,
-  getAllPostsForCommunity,
-  getAllPostsForTechnology,
   getContent,
-  getPostsByAuthor,
+  getPostsByAuthorName,
 } from "../../lib/api";
 import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
@@ -59,26 +57,32 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const { slug } = params as { slug: string };
 
-  // Fetch posts from both sources
-  const postsByTechnology = await getAllPostsForTechnology(preview);
-  const postsByCommunity = await getAllPostsForCommunity(preview);
+  // these are users mapped by first name on the username 
+  const usersMappedByFirstName = ["Animesh Pathak","Shubham Jain","Yash Khare"]
 
-  // Combine posts from both sources
-  const allPosts = [...postsByTechnology.edges, ...postsByCommunity.edges];
+  // if slug is in above array then take only first name and pass it to getPostsByAuthorName
+  // else pass the slug as it is to getPostsByAuthorName
+  let userName =slug
+  if(usersMappedByFirstName.includes(slug)){
+    userName = slug.split(" ")[0]
+  }
 
-  // Filter the combined posts by the given slug
-  const filteredPosts = allPosts.filter(
-    (item) => item.node.ppmaAuthorName === slug
-  );
+  const posts = await getPostsByAuthorName(userName)
+
+  const allPosts = posts.edges
 
   // Extract postId from the first matching post (if any)
-  const postId = filteredPosts[0]?.node?.postId;
+  const postId = allPosts[0].node?.postId;
 
   // Fetch content using postId (if available)
   const content = postId ? await getContent(postId) : null;
 
   return {
-    props: { preview, filteredPosts, content },
+    props: { 
+      preview, 
+      filteredPosts: allPosts, 
+      content 
+    },
     revalidate: 10, // ISR with 10 seconds revalidation
   };
 };
