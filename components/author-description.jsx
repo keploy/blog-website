@@ -21,7 +21,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
       const avatarImgElement = tempDiv.querySelector(".pp-author-boxes-avatar img");
       const authorNameElement = tempDiv.querySelector(".pp-author-boxes-name a");
       const linkedinLink = tempDiv.querySelector(
-        '.pp-author-boxes-meta.multiple-authors-links a[aria-label="Website"]'
+        '.pp-author-boxes-avatar-details a[aria-label="Website"]'
       );
       const authorDescriptionElement = tempDiv.querySelector(
         ".pp-author-boxes-description.multiple-authors-description"
