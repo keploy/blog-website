@@ -300,6 +300,10 @@ export async function getAllPostsForTechnology(preview) {
                 }
               }
             }
+            seo {
+              metaDesc
+              title
+            }
           }
         }
       }
@@ -354,6 +358,10 @@ export async function getAllPostsForCommunity(preview) {
                   name
                 }
               }
+            }
+            seo {
+              metaDesc
+              title
             }
           }
         }
@@ -560,6 +568,10 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
           }
         }
       }
+      seo{
+        metaDesc
+        title
+      }  
     }
 
     query PostBySlug($id: ID!, $idType: PostIdType!) {
