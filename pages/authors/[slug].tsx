@@ -57,31 +57,32 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const { slug } = params as { slug: string };
 
-  // these are users mapped by first name on the username 
-  const usersMappedByFirstName = ["Animesh Pathak","Shubham Jain","Yash Khare"]
+  // Users mapped by first name
+  const usersMappedByFirstName = ["Animesh Pathak", "Shubham Jain", "Yash Khare"];
 
-  // if slug is in above array then take only first name and pass it to getPostsByAuthorName
-  // else pass the slug as it is to getPostsByAuthorName
-  let userName =slug
-  if(usersMappedByFirstName.includes(slug)){
-    userName = slug.split(" ")[0]
+  // Determine the userName based on the slug
+  let userName = slug;
+  if (usersMappedByFirstName.includes(slug)) {
+    userName = slug.split(" ")[0];
   }
 
-  const posts = await getPostsByAuthorName(userName)
+  // Fetch posts by author name
+  const posts = await getPostsByAuthorName(userName);
 
-  const allPosts = posts.edges
+  // Safely extract edges from posts
+  const allPosts = posts?.edges || [];
 
   // Extract postId from the first matching post (if any)
-  const postId = allPosts[0].node?.postId;
+  const postId = allPosts.length > 0 ? allPosts[0]?.node?.postId : null;
 
   // Fetch content using postId (if available)
   const content = postId ? await getContent(postId) : null;
 
   return {
-    props: { 
-      preview, 
-      filteredPosts: allPosts, 
-      content 
+    props: {
+      preview,
+      filteredPosts: allPosts, // Ensure filteredPosts is always an array
+      content,
     },
     revalidate: 10, // ISR with 10 seconds revalidation
   };
