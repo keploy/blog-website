@@ -515,7 +515,54 @@ export async function getMoreStoriesForSlugs(tags, slug) {
   };
 }
 
-
+export async function getPostsByAuthorName(authorName) {
+  let allEdges = [];
+  const data = await fetchAPI(
+    `query MyQuery3 {
+      posts(where: {authorName: "${authorName}"}) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            postId
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+            ppmaAuthorName
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+            seo {
+              metaDesc
+              title
+            }
+          }
+        }
+      }
+    }`
+  );
+  const edges = data.posts.edges;
+  allEdges = [...allEdges, ...edges];
+  return { edges: allEdges };
+}
 
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
