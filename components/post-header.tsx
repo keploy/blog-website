@@ -15,6 +15,7 @@ export default function PostHeader({
   BlogWriter,
   BlogReviewer,
   TimeToRead,
+  content,
 }) {
   return (
     <>
@@ -26,10 +27,16 @@ export default function PostHeader({
         <PostTitle>{title}</PostTitle>
         {/* <Avatar author={author} /> */}
         <div className=" w-full">
-        <PostHeaderAuthors blogreviewer={BlogReviewer} blogwriter={BlogWriter} timetoRead={TimeToRead}/>
+          <PostHeaderAuthors
+            blogreviewer={BlogReviewer}
+            blogwriter={BlogWriter}
+            timetoRead={TimeToRead}
+            content={content}
+            title={title}
+          />
         </div>
       </div>
-      
+
       <div className="mb-8 md:mb-16 sm:mx-0 xl:w-2/3 md:w-4/5 w-full md:-translate-x-1/2 md:left-1/2 relative">
         <CoverImage title={title} coverImage={coverImage} />
       </div>

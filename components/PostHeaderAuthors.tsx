@@ -3,8 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FaTwitter, FaLinkedin } from "react-icons/fa";
+import BlogReader from "./read-blog";
+import PostComment from "./comment";
+import PostLike from "./like";
 
-const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
+const PostHeaderAuthors = ({
+  blogwriter,
+  blogreviewer,
+  timetoRead,
+  content,
+  title,
+}) => {
   var sameAuthor =
     blogwriter[0].name.split(" ")[0].toLowerCase() ===
     blogreviewer[0].name.toLowerCase();
@@ -34,13 +43,18 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
   const currentURL = encodeURIComponent(
     `keploy.io/${router.basePath + router.asPath}`
   );
+
   const twitterShareUrl = `https://twitter.com/share?url=${currentURL}`;
   const linkedinShareUrl = `https://www.linkedin.com/shareArticle?url=${currentURL}`;
 
   return (
     <>
-      <div className="flex flex-row mt-7  items-center justify-around  item z-0">
-        <p className="text-gray-500 justify-self-start text-sm">{timetoRead} min read</p>
+      <div className="flex flex-row mt-7  items-center justify-around item z-0">
+        <div className="flex flex-row gap-10 ">
+          <PostLike />
+          <PostComment />
+        </div>
+        <BlogReader timetoRead={timetoRead} content={content} title={title} />
         <div className="flex flex-row gap-8">
           <div
             className="flex flex-row items-center gap-5 relative"
