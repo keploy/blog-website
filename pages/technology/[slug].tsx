@@ -158,6 +158,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 BlogWriter={blogwriter}
                 BlogReviewer={blogreviewer}
                 TimeToRead={time}
+                content={post.content}
               />
             </article>
           </>
@@ -187,7 +188,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           </footer>
           <SectionSeparator />
           {morePosts?.length > 0 && (
-            <MoreStories isIndex={false} posts={morePosts} isCommunity={false} />
+            <MoreStories
+              isIndex={false}
+              posts={morePosts}
+              isCommunity={false}
+            />
           )}
         </article>
       </Container>
@@ -201,7 +206,10 @@ export const getStaticProps: GetStaticProps = async ({
   previewData,
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
-  const { techMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug);
+  const { techMoreStories } = await getMoreStoriesForSlugs(
+    data?.post?.tags,
+    data?.post?.slug
+  );
   const authorDetails = [];
   authorDetails.push(await getReviewAuthorDetails("neha"));
   authorDetails.push(await getReviewAuthorDetails("Jain"));
@@ -220,8 +228,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug();
   const technologyPosts =
     allPosts?.edges
-      ?.filter(({ node }) =>
-        node?.categories?.edges?.some(({ node }) => node?.name === "technology")
+      ?.filter(
+        ({ node }) =>
+          node?.categories?.edges?.some(
+            ({ node }) => node?.name === "technology"
+          )
       )
       ?.map(({ node }) => `/technology/${node?.slug}`) || [];
   return {
