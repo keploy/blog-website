@@ -43,6 +43,7 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
         `,
         }}
       />
+      
 
       <Script
         id="msclarity"
@@ -55,6 +56,28 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           })(window,document,"clarity","script","jymj0ktwcp");
         `,
+        }}
+      />
+
+      {/* Apollo Tracking Script */}
+      <Script
+        id="apollo-tracker"
+        type="text/javascript"
+        dangerouslySetInnerHTML={{
+          __html: `
+            function initApollo() {
+              var n = Math.random().toString(36).substring(7);
+              var o = document.createElement("script");
+              o.src = "https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=" + n;
+              o.async = true;
+              o.defer = true;
+              o.onload = function() {
+                window.trackingFunctions.onLoad({ appId: "6644a0d6a54b5b0438c841cc" });
+              };
+              document.head.appendChild(o);
+            }
+            initApollo();
+          `,
         }}
       />
     </>
