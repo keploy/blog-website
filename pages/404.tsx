@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import NotFoundPage from "../components/NotFoundPage";
 
-const Custom404 = () => {
+export default function Custom404() {
   const router = useRouter();
   const asPath = router.asPath;
 
@@ -16,9 +16,8 @@ const Custom404 = () => {
       } else {
         router.replace("/");
       }
-    }, 5000); // 5000 milliseconds = 5 seconds
+    }, 5000); 
 
-    // Cleanup the timeout if the component unmounts
     return () => clearTimeout(redirectTimeout);
   }, [asPath, router]);
 
@@ -34,5 +33,3 @@ const Custom404 = () => {
     </>
   );
 };
-
-export default Custom404;

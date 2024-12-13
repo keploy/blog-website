@@ -33,44 +33,42 @@ interface PostProps {
   reviewAuthorDetails: any;
 }
 
-const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
+export default function Post ({ post, posts, reviewAuthorDetails, preview }: PostProps){
   const router = useRouter();
   const { slug } = router.query;
   const morePosts = posts?.edges;
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const time = 10 + calculateReadingTime(post?.content);
   const [blogWriterDescription, setBlogWriterDescription] = useState("");
-  const [reviewAuthorName, setReviewAuthorName] = useState("");
-  const [reviewAuthorImageUrl, setReviewAuthorImageUrl] = useState("");
-  const [reviewAuthorDescription, setReviewAuthorDescription] = useState("");
-  const [postBodyReviewerAuthor, setPostBodyReviewerAuthor] = useState(0);
+  const [reviewAuthorName, setreviewAuthorName] = useState("");
+  const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
+  const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
+  const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
   const [updatedContent, setUpdatedContent] = useState("");
 
   const postBodyRef = useRef<HTMLDivElement>(null);
   const readProgress = useSpringValue(0);
 
   useEffect(() => {
-    if (reviewAuthorDetails && reviewAuthorDetails.length > 0) {
+    if (reviewAuthorDetails && reviewAuthorDetails?.length > 0) {
       const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
       const authorNode = reviewAuthorDetails[authorIndex]?.edges?.[0]?.node;
       if (authorNode) {
-        setPostBodyReviewerAuthor(authorIndex);
-        setReviewAuthorName(authorNode.name);
-        setReviewAuthorImageUrl(authorNode.avatar.url);
-        setReviewAuthorDescription(authorNode.description);
+        setpostBodyReviewerAuthor(authorIndex);
+        setreviewAuthorName(authorNode.name);
+        setreviewAuthorDescription(authorNode.avatar.url);
+        setreviewAuthorDescription(authorNode.description);
       }
     }
   }, [post, reviewAuthorDetails]);
-
-  const blogWriter = [
+  const blogwriter = [
     {
       name: post?.ppmaAuthorName || "Author",
       ImageUrl: avatarImgSrc || "/blog/images/author.png",
       description: blogWriterDescription || "An author for Keploy's blog.",
     },
   ];
-
-  const blogReviewer = [
+  const blogreviewer = [
     {
       name: reviewAuthorName || "Reviewer",
       ImageUrl: reviewAuthorImageUrl || "/blog/images/author.png",
@@ -82,17 +80,16 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
     onChange(v) {
       const topOffset = postBodyRef.current?.offsetTop || 0;
       const clientHeight = postBodyRef.current?.clientHeight || 0;
-      let scrollY = v.value.scrollY;
 
-      if (scrollY < topOffset) {
-        scrollY = 0;
-      } else if (scrollY > topOffset && scrollY < clientHeight + topOffset) {
-        scrollY = ((scrollY - topOffset) / clientHeight) * 100;
+      if (v.value.scrollY < topOffset) {
+        v.value.scrollY = 0;
+      } else if (v.value.scrollY > topOffset && v.value.scrollY < clientHeight + topOffset) {
+        v.value.scrollY = ((v.value.scrollY - topOffset) / clientHeight) * 100;
       } else {
-        scrollY = 100;
+        v.value.scrollY = 100;
       }
 
-      readProgress.set(scrollY);
+      readProgress.set(v.value.scrollY);
     },
   });
 
@@ -101,7 +98,7 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
       const content = post.content;
 
       const avatarDivMatch = content.match(
-        /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src=['"]([^'"]*)['"][^>]*\/?>/
+        /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
       );
       console.log(avatarDivMatch ? avatarDivMatch[1] : "No avatar match");
       if (avatarDivMatch && avatarDivMatch[1]) {
@@ -110,17 +107,17 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
         setAvatarImgSrc("/blog/images/author.png");
       }
 
+      // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
         /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/
       );
 
+      // Apply table responsive wrapper
       const newContent = content.replace(
         /<table[^>]*>[\s\S]*?<\/table>/gm,
         (table) => `<div class="overflow-x-auto">${table}</div>`
       );
-
       setUpdatedContent(newContent);
-
       if (authorDescriptionMatch && authorDescriptionMatch[1].trim()?.length > 0) {
         setBlogWriterDescription(authorDescriptionMatch[1].trim());
       } else {
@@ -153,8 +150,8 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
                 date={post?.date || ""}
                 author={post?.ppmaAuthorName || ""}
                 categories={post?.categories || []}
-                BlogWriter={blogWriter}
-                BlogReviewer={blogReviewer}
+                BlogWriter={blogwriter}
+                BlogReviewer={blogreviewer}
                 TimeToRead={time}
               />
             </article>
@@ -192,7 +189,6 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
   );
 };
 
-export default Post;
 
 
 export const getStaticProps: GetStaticProps = async ({

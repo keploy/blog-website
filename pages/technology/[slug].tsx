@@ -8,7 +8,7 @@ import PostHeader from "../../components/post-header";
 import SectionSeparator from "../../components/section-separator";
 import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
-import Tag from "../../components/tag";
+import Tags from "../../components/tag";
 import {
   getAllPostsWithSlug,
   getMoreStoriesForSlugs,
@@ -17,7 +17,7 @@ import {
 } from "../../lib/api";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
@@ -33,17 +33,17 @@ interface PostProps {
   reviewAuthorDetails: any;
 }
 
-const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
+export default function Post({ post, posts, reviewAuthorDetails, preview }: PostProps){
   const router = useRouter();
   const { slug } = router.query;
   const morePosts = posts?.edges;
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const time = 10 + calculateReadingTime(post?.content);
   const [blogWriterDescription, setBlogWriterDescription] = useState("");
-  const [reviewAuthorName, setReviewAuthorName] = useState("");
-  const [reviewAuthorImageUrl, setReviewAuthorImageUrl] = useState("");
-  const [reviewAuthorDescription, setReviewAuthorDescription] = useState("");
-  const [postBodyReviewerAuthor, setPostBodyReviewerAuthor] = useState(0);
+  const [reviewAuthorName, setreviewAuthorName] = useState("");
+  const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
+  const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
+  const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
   const [updatedContent, setUpdatedContent] = useState("");
 
   const postBodyRef = useRef<HTMLDivElement>(null);
@@ -54,10 +54,10 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
       const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
       const authorNode = reviewAuthorDetails[authorIndex]?.edges?.[0]?.node;
       if (authorNode) {
-        setPostBodyReviewerAuthor(authorIndex);
-        setReviewAuthorName(authorNode.name);
-        setReviewAuthorImageUrl(authorNode.avatar.url);
-        setReviewAuthorDescription(authorNode.description);
+        setpostBodyReviewerAuthor(authorIndex);
+        setreviewAuthorName(authorNode.name);
+        setreviewAuthorImageUrl(authorNode.avatar.url);
+        setreviewAuthorDescription(authorNode.description);
       }
     }
   }, [post, reviewAuthorDetails]);
@@ -82,17 +82,16 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
     onChange(v) {
       const topOffset = postBodyRef.current?.offsetTop || 0;
       const clientHeight = postBodyRef.current?.clientHeight || 0;
-      let scrollY = v.value.scrollY;
 
-      if (scrollY < topOffset) {
-        scrollY = 0;
-      } else if (scrollY > topOffset && scrollY < clientHeight + topOffset) {
-        scrollY = ((scrollY - topOffset) / clientHeight) * 100;
+      if (v.value.scrollY < topOffset) {
+        v.value.scrollY = 0;
+      } else if (v.value.scrollY > topOffset && v.value.scrollY < clientHeight + topOffset) {
+        v.value.scrollY = ((v.value.scrollY - topOffset) / clientHeight) * 100;
       } else {
-        scrollY = 100;
+        v.value.scrollY = 100;
       }
 
-      readProgress.set(scrollY);
+      readProgress.set(v.value.scrollY);
     },
   });
 
@@ -101,7 +100,7 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
       const content = post.content;
 
       const avatarDivMatch = content.match(
-        /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src=['"]([^'"]*)['"][^>]*\/?>/
+        /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
       );
       console.log(avatarDivMatch ? avatarDivMatch[1] : "No avatar match");
       if (avatarDivMatch && avatarDivMatch[1]) {
@@ -110,6 +109,7 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
         setAvatarImgSrc("/blog/images/author.png");
       }
 
+      // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
         /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/
       );
@@ -181,7 +181,7 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
       <Container>
         <article>
           <footer>
-            {post?.tags?.edges?.length > 0 && <Tag tags={post?.tags} />}
+            {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />}
           </footer>
           <SectionSeparator />
           {morePosts?.length > 0 && (
@@ -192,9 +192,6 @@ const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
     </Layout>
   );
 };
-
-export default Post;
-
 
 export const getStaticProps: GetStaticProps = async ({
   params,
