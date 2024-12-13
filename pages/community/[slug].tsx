@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import ErrorPage from "next/error";
 import Head from "next/head";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Container from "../../components/container";
@@ -14,98 +13,95 @@ import {
   getAllPostsWithSlug,
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
+  getReviewAuthorDetails,
 } from "../../lib/api";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
 import { useEffect, useRef, useState } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
-import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
-import "./styles.module.css"
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
 });
 
-// Define formatAuthor function before the Post component
-const postBody = ({ content, post }) => {
-  // Define the regular expression pattern to match the entire URL structure
-  const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
+interface PostProps {
+  preview: boolean;
+  post: any;
+  posts: any;
+  reviewAuthorDetails: any;
+}
 
-  // Replace the URL in the content with the desired one using the regular expression
-  const replacedContent = content.replace(
-    urlPattern,
-    `/blog/authors/${post.ppmaAuthorName}/`
-  );
-
-  return replacedContent;
-};
-
-export default function Post({ post, posts, reviewAuthorDetails, preview }) {
+const Post = ({ post, posts, reviewAuthorDetails, preview }: PostProps) => {
   const router = useRouter();
-  const { slug }= router.query;
+  const { slug } = router.query;
   const morePosts = posts?.edges;
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const time = 10 + calculateReadingTime(post?.content);
   const [blogWriterDescription, setBlogWriterDescription] = useState("");
-  const [reviewAuthorName, setreviewAuthorName] = useState("");
-  const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
-  const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
-  const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
+  const [reviewAuthorName, setReviewAuthorName] = useState("");
+  const [reviewAuthorImageUrl, setReviewAuthorImageUrl] = useState("");
+  const [reviewAuthorDescription, setReviewAuthorDescription] = useState("");
+  const [postBodyReviewerAuthor, setPostBodyReviewerAuthor] = useState(0);
   const [updatedContent, setUpdatedContent] = useState("");
 
+  const postBodyRef = useRef<HTMLDivElement>(null);
+  const readProgress = useSpringValue(0);
+
   useEffect(() => {
-    if (reviewAuthorDetails && reviewAuthorDetails?.length > 0) {
+    if (reviewAuthorDetails && reviewAuthorDetails.length > 0) {
       const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
-      const authorNode = reviewAuthorDetails[authorIndex]?.edges[0]?.node;
+      const authorNode = reviewAuthorDetails[authorIndex]?.edges?.[0]?.node;
       if (authorNode) {
-        setpostBodyReviewerAuthor(authorIndex);
-        setreviewAuthorName(authorNode.name);
-        setreviewAuthorImageUrl(authorNode.avatar.url);
-        setreviewAuthorDescription(authorNode.description);
+        setPostBodyReviewerAuthor(authorIndex);
+        setReviewAuthorName(authorNode.name);
+        setReviewAuthorImageUrl(authorNode.avatar.url);
+        setReviewAuthorDescription(authorNode.description);
       }
     }
   }, [post, reviewAuthorDetails]);
-  const blogwriter = [
+
+  const blogWriter = [
     {
       name: post?.ppmaAuthorName || "Author",
       ImageUrl: avatarImgSrc || "/blog/images/author.png",
-      description: blogWriterDescription || "An author for keploy's blog.",
-    },
-  ];
-  const blogreviewer = [
-    {
-      name: reviewAuthorName || "Reviewer",
-      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.png",
-      description: reviewAuthorDescription || "A Reviewer for keploy's blog",
+      description: blogWriterDescription || "An author for Keploy's blog.",
     },
   ];
 
-  const postBodyRef = useRef<HTMLDivElement>();
-  const readProgress = useSpringValue(0);
+  const blogReviewer = [
+    {
+      name: reviewAuthorName || "Reviewer",
+      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.png",
+      description: reviewAuthorDescription || "A Reviewer for Keploy's blog",
+    },
+  ];
+
   useScroll({
     onChange(v) {
       const topOffset = postBodyRef.current?.offsetTop || 0;
       const clientHeight = postBodyRef.current?.clientHeight || 0;
-      if (v.value.scrollY < topOffset) v.value.scrollY = 0;
-      else if (
-        v.value.scrollY > topOffset &&
-        v.value.scrollY < clientHeight + topOffset
-      ) {
-        v.value.scrollY = ((v.value.scrollY - topOffset) / clientHeight) * 100;
+      let scrollY = v.value.scrollY;
+
+      if (scrollY < topOffset) {
+        scrollY = 0;
+      } else if (scrollY > topOffset && scrollY < clientHeight + topOffset) {
+        scrollY = ((scrollY - topOffset) / clientHeight) * 100;
       } else {
-        v.value.scrollY = 100;
+        scrollY = 100;
       }
-      readProgress.set(v.value.scrollY);
+
+      readProgress.set(scrollY);
     },
   });
+
   useEffect(() => {
     if (post && post.content) {
-
       const content = post.content;
+
       const avatarDivMatch = content.match(
-        /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
+        /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src=['"]([^'"]*)['"][^>]*\/?>/
       );
       console.log(avatarDivMatch ? avatarDivMatch[1] : "No avatar match");
       if (avatarDivMatch && avatarDivMatch[1]) {
@@ -113,20 +109,18 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       } else {
         setAvatarImgSrc("/blog/images/author.png");
       }
-  
-      // Match the <p> with class pp-author-boxes-description and extract its content
+
       const authorDescriptionMatch = content.match(
         /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/
       );
-  
-      // Apply table responsive wrapper
+
       const newContent = content.replace(
         /<table[^>]*>[\s\S]*?<\/table>/gm,
         (table) => `<div class="overflow-x-auto">${table}</div>`
       );
-  
+
       setUpdatedContent(newContent);
-  
+
       if (authorDescriptionMatch && authorDescriptionMatch[1].trim()?.length > 0) {
         setBlogWriterDescription(authorDescriptionMatch[1].trim());
       } else {
@@ -134,12 +128,6 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       }
     }
   }, [post]);
-
-  useEffect(() => {
-    if (!router.isFallback && !post?.slug) {
-      router.push("/404"); // Redirect to 404 page if slug is not available
-    }
-  }, [router, router.isFallback, post]);
 
   return (
     <Layout
@@ -165,8 +153,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 date={post?.date || ""}
                 author={post?.ppmaAuthorName || ""}
                 categories={post?.categories || []}
-                BlogWriter={blogwriter}
-                BlogReviewer={blogreviewer}
+                BlogWriter={blogWriter}
+                BlogReviewer={blogReviewer}
                 TimeToRead={time}
               />
             </article>
@@ -174,20 +162,19 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         )}
       </Container>
       <ContainerSlug>
-        {/* PostBody component placed outside the Container */}
         <div ref={postBodyRef}>
-          <PostBody
-            content={
-              updatedContent // Use the updated content with responsive tables
-            }
-            authorName={post?.ppmaAuthorName || ""}
-            ReviewAuthorDetails={
-              reviewAuthorDetails &&
-              reviewAuthorDetails?.length > 0 &&
-              reviewAuthorDetails[postBodyReviewerAuthor]
-            }
-            slug={slug}
-          />
+          {!router.isFallback && post ? (
+            <PostBody
+              content={updatedContent} 
+              authorName={post?.ppmaAuthorName || ""}
+              ReviewAuthorDetails={
+                reviewAuthorDetails &&
+                reviewAuthorDetails.length > 0 &&
+                reviewAuthorDetails[postBodyReviewerAuthor]
+              }
+              slug={slug as string}
+            />
+          ) : null}
         </div>
       </ContainerSlug>
       <Container>
@@ -203,41 +190,76 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       </Container>
     </Layout>
   );
-}
+};
+
+export default Post;
+
 
 export const getStaticProps: GetStaticProps = async ({
   params,
   preview = false,
   previewData,
 }) => {
-  const data = await getPostAndMorePosts(params?.slug, preview, previewData);
-  const { communityMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug);
+  const slug = params?.slug as string;
 
-  // console.log("here is the main post: ",data?.post);
-  const authorDetails = [];
-  authorDetails.push(await getReviewAuthorDetails("neha"));
-  authorDetails.push(await getReviewAuthorDetails("Jain"));
-  return {
-    props: {
-      preview,
-      post: data?.post || {},
-      posts: communityMoreStories || [],
-      reviewAuthorDetails: authorDetails || {},
-    },
-    revalidate: 10,
-  };
+  try {
+    const data = await getPostAndMorePosts(slug, preview, previewData);
+
+    if (!data?.post) {
+      return {
+        notFound: true, 
+      };
+    }
+
+    const { communityMoreStories } = await getMoreStoriesForSlugs(
+      data.post.tags,
+      data.post.slug
+    );
+
+    const authorDetails = await Promise.all([
+      getReviewAuthorDetails("neha"),
+      getReviewAuthorDetails("Jain"),
+    ]);
+
+    return {
+      props: {
+        preview,
+        post: data.post,
+        posts: communityMoreStories || [],
+        reviewAuthorDetails: authorDetails || [],
+      },
+      revalidate: 10, // Revalidate every 10 seconds
+    };
+  } catch (error) {
+    console.error("Error in getStaticProps:", error);
+    return {
+      notFound: true, // Redirect to 404 on error
+    };
+  }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allPosts = await getAllPostsWithSlug();
-  const communtiyPosts =
-    allPosts?.edges
-      .filter(({ node }) =>
-        node?.categories?.edges?.some(({ node }) => node?.name === "community")
-      )
-      .map(({ node }) => `/community/${node?.slug}`) || [];
-  return {
-    paths: communtiyPosts || [],
-    fallback: true,
-  };
+  try {
+    const allPosts = await getAllPostsWithSlug();
+
+    const communityPosts =
+      allPosts?.edges
+        ?.filter(({ node }) =>
+          node?.categories?.edges?.some(({ node }) => node?.name === "community")
+        )
+        ?.map(({ node }) => ({
+          params: { slug: node?.slug },
+        })) || [];
+
+    return {
+      paths: communityPosts,
+      fallback: true,
+    };
+  } catch (error) {
+    console.error("Error fetching posts for static paths:", error);
+    return {
+      paths: [],
+      fallback: true, 
+    };
+  }
 };
