@@ -21,7 +21,7 @@ const BlogReader = ({ content, timetoRead, title }) => {
 
     const plainTextContent = stripHTML(content);
     const filteredContent = plainTextContent.replace(
-      /Table of Contents.*?(?=\n|$)/s,
+      /Table of Contents.*?(?=\n|$)/,
       ""
     ); // Remove Table of Contents section
     const speechText = `${title}. ${filteredContent}`;

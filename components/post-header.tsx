@@ -15,7 +15,7 @@ export default function PostHeader({
   BlogWriter,
   BlogReviewer,
   TimeToRead,
-  content,
+  content = "",
 }) {
   return (
     <>
