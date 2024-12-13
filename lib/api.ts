@@ -327,6 +327,10 @@ export async function getAllPostsForTechnology(preview) {
                 }
               }
             }
+            seo {
+              metaDesc
+              title
+            }
           }
           pageInfo {
             hasNextPage
@@ -391,6 +395,10 @@ export async function getAllPostsForCommunity(preview) {
                   name
                 }
               }
+            }
+            seo {
+              metaDesc
+              title
             }
           }
         }
@@ -512,103 +520,124 @@ export async function getPostsByAuthor() {
   return { edges: allPosts };
 }
 
-export async function getMoreStoriesForSlugs() {
-  const data = await fetchAPI(
-    `
-    query AllPostsForCategory {
-      techPosts: posts(first: 100, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+export async function getMoreStoriesForSlugs(tags, slug) {
+  const tagFilter = tags?.edges?.length > 0;
+  const variables = tagFilter ? { tags: tags.edges.map((edge) => edge.node.name) } : undefined;
+  let stories = [];
+  let data;
+
+  const queryWithTags = `
+    query Posts($tags: [String!]) {
+      posts(
+        first: 7,
+        where: { orderby: { field: DATE, order: DESC }, ${tagFilter ? "tagSlugIn: $tags" : ""} }
+      ) {
         edges {
           node {
             title
             excerpt
             slug
             date
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            author {
-              node {
-                name
-                firstName
-                lastName
-                avatar {
-                  url
-                }
-              }
-            }
+            featuredImage { node { sourceUrl } }
+            author { node { name firstName lastName avatar { url } } }
             ppmaAuthorName
-            categories {
-              edges {
-                node {
-                  name
-                }
-              }
-            }
+            categories { edges { node { name } } }
           }
         }
       }
-      communityPosts: posts(first: 100, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
+    }
+  `;
+
+  const fallbackQuery = `
+    query PostsWithoutTags {
+      posts(first: 7, where: { orderby: { field: DATE, order: DESC } }) {
         edges {
           node {
             title
             excerpt
             slug
             date
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            author {
-              node {
-                name
-                firstName
-                lastName
-                avatar {
-                  url
-                }
-              }
-            }
+            featuredImage { node { sourceUrl } }
+            author { node { name firstName lastName avatar { url } } }
             ppmaAuthorName
-            categories {
-              edges {
-                node {
-                  name
-                }
-              }
-            }
+            categories { edges { node { name } } }
           }
         }
       }
     }
-    `,
-    {
-      variables: {},
-    }
-  );
+  `;
 
-  const techPosts = data?.techPosts?.edges.map(({ node }) => node) || [];
-  const communityPosts =
-    data?.communityPosts?.edges.map(({ node }) => node) || [];
+  // Fetch posts with tags if applicable
+  if (tagFilter) {
+    data = await fetchAPI(queryWithTags, { variables });
+    stories = data?.posts?.edges.map(({ node }) => node) || [];
+    stories = stories.filter((story) => story.slug !== slug);
+  }
 
-  const newTechPosts = [...techPosts, ...communityPosts];
-  const newCommunityPosts = [...communityPosts, ...techPosts];
+  // If no posts are found, fetch without tag filter
+  if (!stories.length) {
+    data = await fetchAPI(fallbackQuery);
+    stories = data?.posts?.edges.map(({ node }) => node) || [];
+    stories = stories.filter((story) => story.slug !== slug);
 
-  const techMoreStories = {
-    edges: newTechPosts.map((node) => ({ node })),
-  };
+  }
 
-  const communityMoreStories = {
-    edges: newCommunityPosts.map((node) => ({ node })),
-  };
-
+  // Remove posts with the same slug
   return {
-    techMoreStories,
-    communityMoreStories,
+    techMoreStories: { edges: stories.map((node) => ({ node })) },
+    communityMoreStories: { edges: stories.map((node) => ({ node })) },
   };
 }
+
+export async function getPostsByAuthorName(authorName) {
+  let allEdges = [];
+  const data = await fetchAPI(
+    `query MyQuery3 {
+      posts(where: {authorName: "${authorName}"}) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            postId
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+            ppmaAuthorName
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+            seo {
+              metaDesc
+              title
+            }
+          }
+        }
+      }
+    }`
+  );
+  const edges = data.posts.edges;
+  allEdges = [...allEdges, ...edges];
+  return { edges: allEdges };
+}
+
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post;
@@ -629,6 +658,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
         url
       }
     }
+
     fragment PostFields on Post {
       title
       excerpt
@@ -659,7 +689,12 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
           }
         }
       }
+      seo{
+        metaDesc
+        title
+      }  
     }
+
     query PostBySlug($id: ID!, $idType: PostIdType!) {
       post(id: $id, idType: $idType) {
         ...PostFields
