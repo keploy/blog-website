@@ -326,10 +326,10 @@ export async function getAllPostsForTechnology(preview) {
                   }
                 }
               }
-            }
-            seo {
-              metaDesc
-              title
+              seo {
+                metaDesc
+                title
+              }
             }
           }
           pageInfo {
@@ -338,7 +338,7 @@ export async function getAllPostsForTechnology(preview) {
           }
         }
       }
-    `,
+      `,
       {
         variables: {
           preview,
@@ -347,10 +347,11 @@ export async function getAllPostsForTechnology(preview) {
       }
     );
 
-    const edges = data.posts.edges;
+    // Append edges and update pagination info
+    const edges = data?.posts?.edges || [];
     allEdges = [...allEdges, ...edges];
-    hasNextPage = data.posts.pageInfo.hasNextPage;
-    endCursor = data.posts.pageInfo.endCursor;
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    endCursor = data?.posts?.pageInfo?.endCursor;
   }
 
   return { edges: allEdges };
@@ -416,10 +417,10 @@ export async function getAllPostsForCommunity(preview) {
         },
       }
     );
-    const edges = data.posts.edges;
+    const edges = data?.posts?.edges || [];
     allEdges = [...allEdges, ...edges];
-    hasNextPage = data.posts.pageInfo.hasNextPage;
-    endCursor = data.posts.pageInfo.endCursor;
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    endCursor = data?.posts?.pageInfo?.endCursor;
   }
   return { edges: allEdges };
 }
