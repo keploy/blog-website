@@ -129,25 +129,46 @@ export async function getAllPostsFromTags(tagName: String, preview) {
 }
 
 export async function getAllPostsWithSlug() {
-  const data = await fetchAPI(`
-    {
-      posts(first: 10000) {
-        edges {
-          node {
-            slug
-            categories {
-              edges {
-                node {
-                  name
+  let allEdges = [];
+  let hasNextPage = true;
+  let endCursor = null;
+
+  while (hasNextPage) {
+    const data = await fetchAPI(
+      `
+      query AllPosts($after: String) {
+        posts(first: 50, after: $after) {
+          edges {
+            node {
+              slug
+              categories {
+                edges {
+                  node {
+                    name
+                  }
                 }
               }
             }
           }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }
-    }
-  `);
-  return data?.posts;
+    `,
+      {
+        variables: { after: endCursor },
+      }
+    );
+
+    const edges = data?.posts?.edges;
+    allEdges = [...allEdges, ...edges];
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    endCursor = data?.posts?.pageInfo?.endCursor;
+  }
+
+  return { edges: allEdges };
 }
 
 export async function getContent(postId: number) {
@@ -266,57 +287,74 @@ export async function getReviewAuthorDetails(authorName) {
 // Fnction for fetching post with technology category
 
 export async function getAllPostsForTechnology(preview) {
-  const data = await fetchAPI(
-    `
-    query AllPostsForCategory{
-      posts(first: 1000, where: { orderby: { field: DATE, order: DESC } categoryName: "technology" }) {
-        edges {
-          node {
-            title
-            excerpt
-            slug
-            date
-            postId
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            author {
-              node {
-                name
-                firstName
-                lastName
-                avatar {
-                  url
+  let allEdges = [];
+  let hasNextPage = true;
+  let endCursor = null;
+
+  while (hasNextPage) {
+    const data = await fetchAPI(
+      `
+      query AllPostsForCategory($after: String) {
+        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+          edges {
+            node {
+              title
+              excerpt
+              slug
+              date
+              postId
+              featuredImage {
+                node {
+                  sourceUrl
                 }
               }
-            }
-            ppmaAuthorName
-            categories {
-              edges {
+              author {
                 node {
                   name
+                  firstName
+                  lastName
+                  avatar {
+                    url
+                  }
                 }
               }
+              ppmaAuthorName
+              categories {
+                edges {
+                  node {
+                    name
+                  }
+                }
+              }
+              seo {
+                metaDesc
+                title
+              }
             }
-            seo {
-              metaDesc
-              title
-            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
           }
         }
       }
-    }
-  `,
-    {
-      variables: {
-        preview,
-      },
-    }
-  );
+      `,
+      {
+        variables: {
+          preview,
+          after: endCursor,
+        },
+      }
+    );
 
-  return data?.posts;
+    // Append edges and update pagination info
+    const edges = data?.posts?.edges || [];
+    allEdges = [...allEdges, ...edges];
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    endCursor = data?.posts?.pageInfo?.endCursor;
+  }
+
+  return { edges: allEdges };
 }
 
 export async function getAllPostsForCommunity(preview) {
@@ -379,71 +417,108 @@ export async function getAllPostsForCommunity(preview) {
         },
       }
     );
-    const edges = data.posts.edges;
+    const edges = data?.posts?.edges || [];
     allEdges = [...allEdges, ...edges];
-    hasNextPage = data.posts.pageInfo.hasNextPage;
-    endCursor = data.posts.pageInfo.endCursor;
-
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    endCursor = data?.posts?.pageInfo?.endCursor;
   }
   return { edges: allEdges };
 }
 
 export async function getAllAuthors() {
-  const data = await fetchAPI(
-    `query getAllAuthors{
-      posts(first:1000){
-        edges{
-          node{
-            ppmaAuthorName
-            ppmaAuthorImage
-            author {
-              node {
-                name
-                firstName
-                lastName
-                avatar {
-                  url
+  let allAuthors = [];
+  let hasNextPage = true;
+  let endCursor = null;
+
+  while (hasNextPage) {
+    const data = await fetchAPI(
+      `
+      query getAllAuthors($after: String) {
+        posts(first: 50, after: $after) {
+          edges {
+            node {
+              ppmaAuthorName
+              ppmaAuthorImage
+              author {
+                node {
+                  name
+                  firstName
+                  lastName
+                  avatar {
+                    url
+                  }
                 }
               }
             }
           }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }
-    }`
-  );
+    `,
+      {
+        variables: { after: endCursor },
+      }
+    );
 
-  return data?.posts;
+    const edges = data?.posts?.edges;
+    allAuthors = [...allAuthors, ...edges];
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    endCursor = data?.posts?.pageInfo?.endCursor;
+  }
+  return { edges: allAuthors };
 }
 
 export async function getPostsByAuthor() {
-  const data = await fetchAPI(
-    `query getPostsByAuthor{
-      posts(first: 1000) {
-        edges {
-          node {
-            postId
-            title
-            ppmaAuthorName
-            slug
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            categories {
-              edges {
+  let allPosts = [];
+  let hasNextPage = true;
+  let endCursor = null;
+
+  while (hasNextPage) {
+    const data = await fetchAPI(
+      `
+      query getPostsByAuthor($after: String) {
+        posts(first: 50, after: $after) {
+          edges {
+            node {
+              postId
+              title
+              ppmaAuthorName
+              slug
+              featuredImage {
                 node {
-                  name
+                  sourceUrl
+                }
+              }
+              categories {
+                edges {
+                  node {
+                    name
+                  }
                 }
               }
             }
           }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }
-    }`
-  );
+    `,
+      {
+        variables: { after: endCursor },
+      }
+    );
 
-  return data?.posts;
+    const edges = data?.posts?.edges;
+    allPosts = [...allPosts, ...edges];
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    endCursor = data?.posts?.pageInfo?.endCursor;
+  }
+  return { edges: allPosts };
 }
 
 export async function getMoreStoriesForSlugs(tags, slug) {
