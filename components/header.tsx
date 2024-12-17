@@ -14,10 +14,10 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   if (mobile) {
     return (
       <Link
-        href="https://docs.google.com/forms/d/e/1FAIpQLSdj9q7dyRh3D7ZzRExHLWRRkNPOnLnFfrbKqSwqH3Ur4HzP4g/viewform"
+        href="https://www.app.keploy.io/signin"
         className="inline-flex items-center py-2 px-4 rounded  text-gray-200 bg-[#00163d]  font-semibold ml-3"
       >
-        <span>Join Waitlist</span>
+        <span>Sign In</span>
         <svg
           className="w-3 h-3 fill-current hover:text-primary-300 shrink-0 ml-2 -mr-1"
           viewBox="0 0 12 12"
@@ -33,10 +33,10 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   }
   return (
     <Link
-      href="https://docs.google.com/forms/d/e/1FAIpQLSdj9q7dyRh3D7ZzRExHLWRRkNPOnLnFfrbKqSwqH3Ur4HzP4g/viewform"
+      href="https://www.app.keploy.io/signin"
       className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d]  hover:text-primary-300 ml-3"
     >
-      <span>Join Waitlist</span>
+      <span>Sign In</span>
     </Link>
   );
 };

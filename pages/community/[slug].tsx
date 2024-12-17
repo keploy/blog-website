@@ -47,7 +47,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const { slug }= router.query;
   const morePosts = posts?.edges;
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
-  const time = 10 + calculateReadingTime(post?.content);
+  const time = 5 + calculateReadingTime(post?.content);
   const [blogWriterDescription, setBlogWriterDescription] = useState("");
   const [reviewAuthorName, setreviewAuthorName] = useState("");
   const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
@@ -116,9 +116,9 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   
       // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
-        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/
+        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/s
       );
-  
+      
       // Apply table responsive wrapper
       const newContent = content.replace(
         /<table[^>]*>[\s\S]*?<\/table>/gm,
@@ -126,7 +126,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       );
   
       setUpdatedContent(newContent);
-  
+
       if (authorDescriptionMatch && authorDescriptionMatch[1].trim()?.length > 0) {
         setBlogWriterDescription(authorDescriptionMatch[1].trim());
       } else {

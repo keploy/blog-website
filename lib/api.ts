@@ -191,66 +191,66 @@ export async function getContent(postId: number) {
   return data.postBy.content;
 }
 
-export async function getAllPostsForHome(preview) {
-  let allEdges = [];
-  let hasNextPage = true;
-  let endCursor = null;
+// export async function getAllPostsForHome(preview) {
+//   let allEdges = [];
+//   let hasNextPage = true;
+//   let endCursor = null;
 
-  while (hasNextPage) {
-    const data = await fetchAPI(
-      `
-      query AllPosts($after: String) {
-        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
-          edges {
-            node {
-              title
-              excerpt
-              slug
-              date
-              featuredImage {
-                node {
-                  sourceUrl
-                }
-              }
-              author {
-                node {
-                  name
-                }
-              }
-              ppmaAuthorName
-              categories {
-                edges {
-                  node {
-                    name
-                  }
-                }
-              }
-            }
-          }
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-        }
-      }
-      `,
-      {
-        variables: {
-          after: endCursor,
-          onlyEnabled: !preview,
-          preview,
-        },
-      }
-    );
+//   while (hasNextPage) {
+//     const data = await fetchAPI(
+//       `
+//       query AllPosts($after: String) {
+//         posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
+//           edges {
+//             node {
+//               title
+//               excerpt
+//               slug
+//               date
+//               featuredImage {
+//                 node {
+//                   sourceUrl
+//                 }
+//               }
+//               author {
+//                 node {
+//                   name
+//                 }
+//               }
+//               ppmaAuthorName
+//               categories {
+//                 edges {
+//                   node {
+//                     name
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//           pageInfo {
+//             hasNextPage
+//             endCursor
+//           }
+//         }
+//       }
+//       `,
+//       {
+//         variables: {
+//           after: endCursor,
+//           onlyEnabled: !preview,
+//           preview,
+//         },
+//       }
+//     );
 
-    const edges = data.posts.edges;
-    allEdges = [...allEdges, ...edges];
-    hasNextPage = data.posts.pageInfo.hasNextPage;
-    endCursor = data.posts.pageInfo.endCursor;
-  }
+//     const edges = data.posts.edges;
+//     allEdges = [...allEdges, ...edges];
+//     hasNextPage = data.posts.pageInfo.hasNextPage;
+//     endCursor = data.posts.pageInfo.endCursor;
+//   }
 
-  return { edges: allEdges };
-}
+//   return { edges: allEdges };
+// }
 
 //Fetching Reviewing author details
 

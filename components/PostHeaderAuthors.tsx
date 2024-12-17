@@ -74,7 +74,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
                       />
                       <p className="text-lg">{blogwriter[0].name}</p>
                     </div>
-                    <p className=" mt-2">{blogwriter[0].description}</p>
+                    {blogwriter[0].description !== "n/a" && <p className=" mt-2">{blogwriter[0].description}</p>}
                   </Link>
                 </div>
               </>

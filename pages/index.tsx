@@ -2,7 +2,7 @@ import Head from "next/head";
 import { GetStaticProps } from "next";
 import Container from "../components/container";
 import Layout from "../components/layout";
-import { getAllPostsForHome, getAllPostsForTechnology } from "../lib/api";
+import { getAllPostsForCommunity, getAllPostsForTechnology } from "../lib/api";
 import Header from "../components/header";
 import Link from "next/link";
 import { HOME_OG_IMAGE_URL } from "../lib/constants";
@@ -75,7 +75,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const allCommunityPosts = await getAllPostsForHome(preview);
+  const allCommunityPosts = await getAllPostsForCommunity(preview);
   const allTehcnologyPosts = await getAllPostsForTechnology(preview);
 
   return {
