@@ -43,10 +43,10 @@ export default function Index({ communityPosts, technologyPosts, mostRecentPost,
                 <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400 text-center lg:text-left">
                   Keploy Blog
                 </h2>
-                <p className="content-body body 2xl:text-2xl text-lg mt-6 text-center lg:text-left">
+                <p className="content-body body 2xl:text-2xl text-lg mt-4 text-center lg:text-left">
                   Empowering your tech journey with expert advice and analysis
                 </p>
-                <div className="btn-wrapper flex flex-wrap gap-4 mt-6 justify-center lg:justify-start">
+                <div className="btn-wrapper flex flex-wrap gap-4 mt-4 justify-center lg:justify-start">
                   <Link
                     href="/technology"
                     className="relative px-4 py-1 overflow-hidden transition-all border border-black md:text-xl 2xl:text-2xl md:px-8 md:py-2 hover:border-orange-400 before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-orange-400 before:transition-all before:duration-250 rounded-xl hover:text-white hover:before:left-0 hover:before:w-full"
