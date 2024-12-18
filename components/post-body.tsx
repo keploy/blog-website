@@ -69,7 +69,7 @@ export default function PostBody({
     return () => {
       window.removeEventListener("resize", checkScreenSize);
     };
-  }, [content]); // Only depends on initial content load
+  }, [content]); 
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -92,10 +92,10 @@ export default function PostBody({
       }
       setTocItems(tocItems);
       setCopySuccessList(Array(tocItems.length).fill(false));
-      setHeadingCopySuccessList(Array(tocItems.length).fill(false)); // Initialize copy status for headings
-    }, 500); // Adjust delay as needed
+      setHeadingCopySuccessList(Array(tocItems.length).fill(false)); 
+    }, 500); 
 
-    return () => clearTimeout(timeout); // Cleanup timeout on component unmount or before running the effect again
+    return () => clearTimeout(timeout); 
   }, [content]);
 
   const handleCopyClick = (code, index) => {
@@ -150,14 +150,8 @@ export default function PostBody({
       button.style.padding = "0";
       button.style.fontSize = "1rem";
       button.style.color = "#555"; 
-
-      // Set initial icon based on copy status
-      button.textContent = headingCopySuccessList[index] ? '✔️' : '📋';
-
-      // Add click event listener
+      button.textContent = headingCopySuccessList[index] ? '✔️' : '🔗';
       button.addEventListener("click", () => handleHeadingCopyClick(heading.innerHTML, index));
-
-      // Append button to the heading
       heading.appendChild(button);
     });
   }, [tocItems, headingCopySuccessList]);
@@ -167,7 +161,7 @@ export default function PostBody({
     headings.forEach((heading, index) => {
       const button = heading.querySelector(".copy-url-button") as HTMLButtonElement;
       if (button) {
-        button.textContent = headingCopySuccessList[index] ? '✔️' : '📋';
+        button.textContent = headingCopySuccessList[index] ? '✔️' : '🔗';
         button.style.color = headingCopySuccessList[index] ? "#28a745" : "#555"; 
       }
     });

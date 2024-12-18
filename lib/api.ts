@@ -128,6 +128,59 @@ export async function getAllPostsFromTags(tagName: String, preview) {
   return data?.posts;
 }
 
+export async function getAllPosts() {
+  let allEdges = [];
+  let hasNextPage = true;
+  let endCursor = null;
+
+  while (hasNextPage) {
+    const data = await fetchAPI(
+      `
+      query AllPosts($after: String) {
+        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
+          edges {
+            node {
+              title
+              excerpt
+              slug
+              date
+              featuredImage {
+                node {
+                  sourceUrl
+                }
+              }
+              author {
+                node {
+                  name
+                }
+              }
+              ppmaAuthorName
+              categories {
+                edges {
+                  node {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+      {
+        variables: { after: endCursor },
+      }
+    );
+
+    const edges = data?.posts?.edges;
+    allEdges = [...allEdges, ...edges];
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    endCursor = data?.posts?.pageInfo?.endCursor;
+  }
+
+  return { edges: allEdges };
+}
+
 export async function getAllPostsWithSlug() {
   let allEdges = [];
   let hasNextPage = true;
