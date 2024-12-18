@@ -13,12 +13,11 @@ import { dracula } from "@uiw/codemirror-theme-dracula";
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
 });
-import SubscribeNewsletter from "./subscribe-newsletter";
 import ReviewingAuthor from "./ReviewingAuthor";
-import Link from "next/link";
 import WaitlistBanner from "./waitlistBanner";
 import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
+import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 
 export default function PostBody({
   content,
@@ -33,6 +32,7 @@ export default function PostBody({
 }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
+  const [headingCopySuccessList, setHeadingCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); 
   const [isList, setIsList] = useState(false);
@@ -71,13 +71,9 @@ export default function PostBody({
     };
   }, [content]); // Only depends on initial content load
 
-  // useEffect(() => {
-  //   // console.log("Content received in PostBody:", content);
-  // }, [content]); // Log content load for debugging
-
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4"));
+      const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
       const tocItems = headings.map((heading, index) => {
         const id = `heading-${index}`;
         heading.setAttribute("id", id);
@@ -88,7 +84,7 @@ export default function PostBody({
           type: heading.tagName.toLowerCase(),
         };
       });
-  
+
       tocItems.shift();
       const index = tocItems.findIndex((item) => item.title === "More Stories");
       if (index !== -1) {
@@ -96,11 +92,11 @@ export default function PostBody({
       }
       setTocItems(tocItems);
       setCopySuccessList(Array(tocItems.length).fill(false));
-    }, 500); // Adjust delay in milliseconds as needed
-  
+      setHeadingCopySuccessList(Array(tocItems.length).fill(false)); // Initialize copy status for headings
+    }, 500); // Adjust delay as needed
+
     return () => clearTimeout(timeout); // Cleanup timeout on component unmount or before running the effect again
   }, [content]);
-  
 
   const handleCopyClick = (code, index) => {
     navigator.clipboard
@@ -120,6 +116,62 @@ export default function PostBody({
         setCopySuccessList(updatedList);
       });
   };
+
+  const handleHeadingCopyClick = (id: string, index: number) => {
+    const url = sanitizeStringForURL(id,true);
+    const copyUrl = `${window.location.origin}${window.location.pathname}#${url}`;
+    navigator.clipboard
+      .writeText(copyUrl)
+      .then(() => {
+        const updatedList = [...headingCopySuccessList];
+        updatedList[index] = true;
+        setHeadingCopySuccessList(updatedList);
+        setTimeout(() => {
+          updatedList[index] = false;
+          setHeadingCopySuccessList([...updatedList]);
+        }, 2000); 
+      })
+      .catch(() => {
+        console.error("Failed to copy the URL.");
+      });
+  };
+
+  useEffect(() => {
+    const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
+    headings.forEach((heading, index) => {
+      if (heading.querySelector(".copy-url-button")) return;
+
+      const button = document.createElement("button");
+      button.className = "copy-url-button";
+      button.style.marginLeft = "8px"; 
+      button.style.cursor = "pointer";
+      button.style.border = "none";
+      button.style.background = "none";
+      button.style.padding = "0";
+      button.style.fontSize = "1rem";
+      button.style.color = "#555"; 
+
+      // Set initial icon based on copy status
+      button.textContent = headingCopySuccessList[index] ? '✔️' : '📋';
+
+      // Add click event listener
+      button.addEventListener("click", () => handleHeadingCopyClick(heading.innerHTML, index));
+
+      // Append button to the heading
+      heading.appendChild(button);
+    });
+  }, [tocItems, headingCopySuccessList]);
+
+  useEffect(() => {
+    const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
+    headings.forEach((heading, index) => {
+      const button = heading.querySelector(".copy-url-button") as HTMLButtonElement;
+      if (button) {
+        button.textContent = headingCopySuccessList[index] ? '✔️' : '📋';
+        button.style.color = headingCopySuccessList[index] ? "#28a745" : "#555"; 
+      }
+    });
+  }, [headingCopySuccessList]);
 
   const renderCodeBlocks = () => {
     const codeBlocks = replacedContent.match(/<pre[\s\S]*?<\/pre>/gm);
@@ -233,7 +285,7 @@ export default function PostBody({
       >
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
-      <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`}>
+      <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`} id="post-body-check">
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
         <hr className="border-gray-300 mt-10 mb-20" />
