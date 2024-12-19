@@ -181,49 +181,6 @@ export async function getAllPosts() {
   return { edges: allEdges };
 }
 
-export async function getAllPostsWithSlug() {
-  let allEdges = [];
-  let hasNextPage = true;
-  let endCursor = null;
-
-  while (hasNextPage) {
-    const data = await fetchAPI(
-      `
-      query AllPosts($after: String) {
-        posts(first: 50, after: $after) {
-          edges {
-            node {
-              slug
-              categories {
-                edges {
-                  node {
-                    name
-                  }
-                }
-              }
-            }
-          }
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-        }
-      }
-    `,
-      {
-        variables: { after: endCursor },
-      }
-    );
-
-    const edges = data?.posts?.edges;
-    allEdges = [...allEdges, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
-    endCursor = data?.posts?.pageInfo?.endCursor;
-  }
-
-  return { edges: allEdges };
-}
-
 export async function getContent(postId: number) {
   const data = await fetchAPI(
     `

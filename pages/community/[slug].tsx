@@ -11,7 +11,7 @@ import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
 import Tag from "../../components/tag";
 import {
-  getAllPostsWithSlug,
+  getAllPostsForCommunity,
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
@@ -28,12 +28,9 @@ const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
 });
 
-// Define formatAuthor function before the Post component
 const postBody = ({ content, post }) => {
-  // Define the regular expression pattern to match the entire URL structure
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
 
-  // Replace the URL in the content with the desired one using the regular expression
   const replacedContent = content.replace(
     urlPattern,
     `/blog/authors/${post.ppmaAuthorName}/`
@@ -178,7 +175,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         <div ref={postBodyRef}>
           <PostBody
             content={
-              updatedContent // Use the updated content with responsive tables
+              post?.content && postBody({ content: post?.content, post })
             }
             authorName={post?.ppmaAuthorName || ""}
             ReviewAuthorDetails={
@@ -213,7 +210,6 @@ export const getStaticProps: GetStaticProps = async ({
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   const { communityMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug);
 
-  // console.log("here is the main post: ",data?.post);
   const authorDetails = [];
   authorDetails.push(await getReviewAuthorDetails("neha"));
   authorDetails.push(await getReviewAuthorDetails("Jain"));
@@ -229,12 +225,9 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allPosts = await getAllPostsWithSlug();
+  const allPosts = await getAllPostsForCommunity(false);
   const communtiyPosts =
     allPosts?.edges
-      .filter(({ node }) =>
-        node?.categories?.edges?.some(({ node }) => node?.name === "community")
-      )
       .map(({ node }) => `/community/${node?.slug}`) || [];
   return {
     paths: communtiyPosts || [],
