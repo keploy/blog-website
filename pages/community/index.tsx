@@ -4,7 +4,7 @@ import Container from "../../components/container";
 import MoreStories from "../../components/more-stories";
 import HeroPost from "../../components/hero-post";
 import Layout from "../../components/layout";
-import { getAllPostsForHome } from "../../lib/api";
+import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
 
 export default function Community({ allPosts: { edges }, preview }) {
@@ -52,7 +52,7 @@ export default function Community({ allPosts: { edges }, preview }) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const allPosts = await getAllPostsForHome(preview);
+  const allPosts = await getAllPostsForCommunity(preview);
  
   return {
     props: { allPosts, preview },

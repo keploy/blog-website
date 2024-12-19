@@ -128,7 +128,7 @@ export async function getAllPostsFromTags(tagName: String, preview) {
   return data?.posts;
 }
 
-export async function getAllPostsWithSlug() {
+export async function getAllPosts() {
   let allEdges = [];
   let hasNextPage = true;
   let endCursor = null;
@@ -137,10 +137,24 @@ export async function getAllPostsWithSlug() {
     const data = await fetchAPI(
       `
       query AllPosts($after: String) {
-        posts(first: 50, after: $after) {
+        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
           edges {
             node {
+              title
+              excerpt
               slug
+              date
+              featuredImage {
+                node {
+                  sourceUrl
+                }
+              }
+              author {
+                node {
+                  name
+                }
+              }
+              ppmaAuthorName
               categories {
                 edges {
                   node {
@@ -149,10 +163,6 @@ export async function getAllPostsWithSlug() {
                 }
               }
             }
-          }
-          pageInfo {
-            hasNextPage
-            endCursor
           }
         }
       }
@@ -189,67 +199,6 @@ export async function getContent(postId: number) {
 
   // Extract and return the content
   return data.postBy.content;
-}
-
-export async function getAllPostsForHome(preview) {
-  let allEdges = [];
-  let hasNextPage = true;
-  let endCursor = null;
-
-  while (hasNextPage) {
-    const data = await fetchAPI(
-      `
-      query AllPosts($after: String) {
-        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
-          edges {
-            node {
-              title
-              excerpt
-              slug
-              date
-              featuredImage {
-                node {
-                  sourceUrl
-                }
-              }
-              author {
-                node {
-                  name
-                }
-              }
-              ppmaAuthorName
-              categories {
-                edges {
-                  node {
-                    name
-                  }
-                }
-              }
-            }
-          }
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-        }
-      }
-      `,
-      {
-        variables: {
-          after: endCursor,
-          onlyEnabled: !preview,
-          preview,
-        },
-      }
-    );
-
-    const edges = data.posts.edges;
-    allEdges = [...allEdges, ...edges];
-    hasNextPage = data.posts.pageInfo.hasNextPage;
-    endCursor = data.posts.pageInfo.endCursor;
-  }
-
-  return { edges: allEdges };
 }
 
 //Fetching Reviewing author details
