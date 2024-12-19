@@ -13,6 +13,7 @@
     "@codemirror/lang-markdown": "^6.3.0",
     "@codemirror/lang-python": "^6.1.6",
     "@codemirror/view": "^6.34.1",
+    "@devnomic/marquee": "^1.0.2",
     "@gsap/react": "^2.1.0",
     "@lottiefiles/react-lottie-player": "^3.5.3",
     "@react-spring/web": "^9.7.3",
