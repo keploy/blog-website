@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 
 function TOCItem({
   id,
@@ -65,18 +66,21 @@ export default function TOC({ headings, isList, setIsList }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  
+
   const handleItemClick = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      // Calculate the scroll position to scroll a little earlier
-      const offset = 80; // Adjust this value as needed
+      const offset = 80; 
       const offsetPosition = element.offsetTop - offset;
-
-      // Scroll to the adjusted position
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
+
+      const urlChange = sanitizeStringForURL(element.innerHTML,true)
+
+      window.history.replaceState(null, null, `#${urlChange}`);
     }
   };
 

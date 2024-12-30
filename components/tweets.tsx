@@ -4,36 +4,37 @@ import Link from "next/link";
 
 const Tweets = ({ avatar, name, id, post, content }) => {
   return (
-    <>
-      <Link
-        className="bg-gray-100 border p-6 rounded-md lg:hover:shadow-md transition m-1"
-        href={post}
-        target="_blank"
-      >
-        <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row gap-2 items-center">
-            <Image
-              src={avatar}
-              alt="profile_image"
-              width={"100"}
-              height={"100"}
-              className="rounded-full h-12 w-auto aspect-square"
-            />
-            <div className="flex flex-col justify-center">
-              <div className="font-bold">{name}</div>
-              <div className="">@{id}</div>
-            </div>
-          </div>
+    <Link
+      href={post}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-white border border-gray-200 p-6 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 m-2 block"
+      aria-label={`View tweet by ${name}`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
           <Image
-            src="blog/favicon/x-twitter.svg"
-            width={20}
-            height={20}
-            alt="twitter icon"
+            src={avatar}
+            alt={`${name}'s avatar`}
+            width={48}
+            height={48}
+            className="rounded-full"
           />
+          <div>
+            <p className="font-semibold text-lg text-gray-800">{name}</p>
+            <p className="text-gray-500 text-sm">@{id}</p>
+          </div>
         </div>
-        <div className="pt-2">{content}</div>
-      </Link>
-    </>
+        <Image
+          src="/blog/favicon/x-twitter.svg" 
+          width={20}
+          height={20}
+          alt="Twitter Icon"
+        />
+      </div>
+
+      <p className="mt-4 text-gray-700">{content}</p>
+    </Link>
   );
 };
 

@@ -134,35 +134,33 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
             {authorName.length > 0 ? authorName : AuthorNameNew}
           </div>
           <div>
-            <span className="font-semibold">Author Description:</span>{" "}
-            {length > 0 ? (
-              newAuthorDescription.map((item, index) => (
-                <li
-                  key={index}
-                  className={!showMore && index >= 1 ? " ml-5 hidden" : "ml-5"}
+          {authorDescription !== "n/a" && (
+            <div>
+              <span className="font-semibold">Author Description:</span>{" "}
+              {length > 0 ? (
+                <ul className="list-disc ml-5">
+                  {newAuthorDescription.map((item, index) => (
+                    <li
+                      key={index}
+                      className={!showMore && index >= 1 ? "hidden" : ""}
+                    >
+                      {item}.
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <span className="text-gray-600">n/a</span>
+              )}
+              {length > 2 && newAuthorDescription.length > 2 && (
+                <button
+                  onClick={toggleShowMore}
+                  className="text-slate-500 hover:underline mt-1"
                 >
-                  {item}
-                </li>
-              ))
-            ) : (
-              <span className="text-gray-600">n/a</span>
-            )}
-            {!showMore && length > 2 && newAuthorDescription.length && (
-              <button
-                onClick={toggleShowMore}
-                className=" text-slate-500 hover:underline mt-1"
-              >
-                Show more
-              </button>
-            )}
-            {showMore && (
-              <button
-                onClick={toggleShowMore}
-                className="text-slate-400 focus:outline-none hover:underline  mt-1"
-              >
-                Show less
-              </button>
-            )}
+                  {showMore ? "Show less" : "Show more"}
+                </button>
+              )}
+            </div>
+          )}
           </div>
           {authorLinkedIn !== "n/a" && (
             <div className="mt-2">
@@ -173,12 +171,6 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
               >
                 LinkedIn
               </Link>
-            </div>
-          )}
-          {authorLinkedIn === "n/a" && (
-            <div className="mt-2">
-              <IoLogoLinkedin className="h-5 w-5 inline mr-2" />
-              <span className="text-gray-600">n/a</span>
             </div>
           )}
           {isPost && (
