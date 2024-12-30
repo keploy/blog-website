@@ -102,7 +102,6 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }: Post
       const avatarDivMatch = content.match(
         /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
       );
-      console.log(avatarDivMatch ? avatarDivMatch[1] : "No avatar match");
       if (avatarDivMatch && avatarDivMatch[1]) {
         setAvatarImgSrc(avatarDivMatch[1]);
       } else {
@@ -185,7 +184,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }: Post
           </footer>
           <SectionSeparator />
           {morePosts?.length > 0 && (
-            <MoreStories isIndex={false} posts={morePosts} isCommunity={true} />
+            <MoreStories isIndex={false} posts={morePosts} isCommunity={false} />
           )}
         </article>
       </Container>
@@ -209,7 +208,7 @@ export const getStaticProps: GetStaticProps = async ({
       };
     }
 
-    const { communityMoreStories } = await getMoreStoriesForSlugs(
+    const { techMoreStories } = await getMoreStoriesForSlugs(
       data.post.tags,
       data.post.slug
     );
@@ -223,7 +222,7 @@ export const getStaticProps: GetStaticProps = async ({
       props: {
         preview,
         post: data.post,
-        posts: communityMoreStories || [],
+        posts: techMoreStories || [],
         reviewAuthorDetails: authorDetails || [],
       },
       revalidate: 10, // Revalidate every 10 seconds
@@ -240,7 +239,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   try {
     const allPosts = await getAllPostsWithSlug();
 
-    const communityPosts =
+    const technologyPosts =
       allPosts?.edges
         ?.filter(({ node }) =>
           node?.categories?.edges?.some(({ node }) => node?.name === "technology")
@@ -250,7 +249,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
         })) || [];
 
     return {
-      paths: communityPosts,
+      paths: technologyPosts,
       fallback: true, 
     };
   } catch (error) {
