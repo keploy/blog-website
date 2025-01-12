@@ -10,7 +10,7 @@ const Tweets = ({ avatar, name, id, post, content }) => {
         href={post}
         target="_blank"
       >
-        <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-row items-center justify-between ">
           <div className="flex flex-row gap-2 items-center">
             <Image
               src={avatar}
