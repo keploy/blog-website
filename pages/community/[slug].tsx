@@ -121,7 +121,7 @@ export default function Post ({ post, posts, reviewAuthorDetails, preview }: Pos
       if (authorDescriptionMatch && authorDescriptionMatch[1].trim()?.length > 0) {
         setBlogWriterDescription(authorDescriptionMatch[1].trim());
       } else {
-        setBlogWriterDescription("n/a");
+        setBlogWriterDescription("An author for Keploy's blog.");
       }
     }
   }, [post]);
