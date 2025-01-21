@@ -18,7 +18,7 @@ export default function PostHeader({
 }) {
   return (
     <>
-      <div className="hidden md:flex flex-col items-center justify-center md:mb-5">
+      <div className="flex flex-col items-center justify-center md:mb-5">
         <div className="mb-6 text-base">
           <Date dateString={date} />
           <Categories categories={categories} />
