@@ -20,7 +20,7 @@ const Tweets = [
   
     {
       avatar:
-        "https://pbs.twimg.com/profile_images/1763255658777120770/7SsuKwlS_400x400.jpg",
+        "https://pbs.twimg.com/profile_images/1860933223108452352/7AvlUHlk_400x400.jpg",
       name: "Akash Singh",
       id: "Kind_Of_Akash",
       post: "https://x.com/Kind_Of_Akash/status/1754207010470736165?s=20",
