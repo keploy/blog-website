@@ -2,32 +2,34 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FaTwitter, FaLinkedin } from "react-icons/fa";
+import { FaLinkedin, FaTwitter, FaLink } from "react-icons/fa"; 
 
 const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
-  var sameAuthor =
+  const sameAuthor =
     blogwriter[0].name.split(" ")[0].toLowerCase() ===
     blogreviewer[0].name.toLowerCase();
-  const [hoverStateBlogWriter, sethoverStateBlogWriter] = useState(false);
-  const [hoverStateBlogReviewer, sethoverStateBlogReviewer] = useState(false);
+
+  const [hoverStateBlogWriter, setHoverStateBlogWriter] = useState(false);
+  const [hoverStateBlogReviewer, setHoverStateBlogReviewer] = useState(false);
+  const [copied, setCopied] = useState(false); 
 
   const onMouseEnterBlogWriter = () => {
-    sethoverStateBlogWriter(true);
+    setHoverStateBlogWriter(true);
   };
 
   const onMouseLeaveBlogWriter = () => {
     setTimeout(() => {
-      sethoverStateBlogWriter(false);
+      setHoverStateBlogWriter(false);
     }, 400);
   };
 
   const onMouseEnterBlogReviewer = () => {
-    sethoverStateBlogReviewer(true);
+    setHoverStateBlogReviewer(true);
   };
 
   const onMouseLeaveBlogReviewer = () => {
     setTimeout(() => {
-      sethoverStateBlogReviewer(false);
+      setHoverStateBlogReviewer(false);
     }, 400);
   };
   const router = useRouter();
@@ -36,6 +38,16 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
   );
   const twitterShareUrl = `https://twitter.com/share?url=${currentURL}`;
   const linkedinShareUrl = `https://www.linkedin.com/shareArticle?url=${currentURL}`;
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(`https://keploy.io/blog${router.asPath}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); 
+    } catch (err) {
+      console.error("Failed to copy!", err);
+    }
+  };
 
   return (
     <>
@@ -59,9 +71,9 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
             />
             <div className="relative">
               <p>
-                <span className=" text-gray-500"> Written By:</span>{" "}
-                <span className=" font-base">{blogwriter[0].name}</span>
-              </p>{" "}
+                <span className="text-gray-500">Written By:</span>{" "}
+                <span className="font-base">{blogwriter[0].name}</span>
+              </p>
             </div>
 
             {hoverStateBlogWriter && (
@@ -126,29 +138,35 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
               )}
             </div>
           )}
-          <div className="flex flex-row items-center gap-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
-            <div>
-              <p className="text-gray-500 text-sm">Share this</p>
-            </div>
-            <div className="flex gap-4">
-              <Link
-                href={twitterShareUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="twitter-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
-              >
-                <FaTwitter className="icon" />
-              </Link>
-              <Link
-                href={linkedinShareUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="linkedin-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
-              >
-                <FaLinkedin className="icon" />
-              </Link>
-            </div>
-          </div>
+        </div>
+        <div className="flex flex-row gap-5 items-center gap-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
+          <p className="text-gray-500 text-sm">Share this</p>
+          <Link
+            href={twitterShareUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="twitter-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
+          >
+            <FaTwitter className="icon" />
+          </Link>
+          <Link
+            href={linkedinShareUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="linkedin-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
+          >
+            <FaLinkedin className="icon" />
+          </Link>
+          <button
+            onClick={copyToClipboard}
+            className="link-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500 focus:outline-none"
+            aria-label="Copy URL to clipboard"
+          >
+            <FaLink className="icon" />
+          </button>
+          {copied && (
+            <span className="ml-2 text-orange-500 text-sm">Copied!</span>
+          )}
         </div>
       </div>
 
