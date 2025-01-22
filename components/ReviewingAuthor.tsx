@@ -71,7 +71,7 @@ const ReviewingAuthor = ({ name, avatar, description }) => {
                   </li>
                 ))
               ) : (
-                <span className="text-gray-600">n/a</span>
+                <span className="text-gray-600">A reviewer for Keploy</span>
               )}
               {!showMore && length > 2 && newAuthorDescription.length && (
                 <button
