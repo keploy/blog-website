@@ -117,7 +117,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       ) {
         setBlogWriterDescription(authorDescriptionMatch[1].trim());
       } else {
-        setBlogWriterDescription("n/a");
+        setBlogWriterDescription("An author for Keploy's blog.");
       }
     }
   }, [post]);
