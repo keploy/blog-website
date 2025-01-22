@@ -22,7 +22,7 @@ export default function LatestPost({
   isCommunity,
 }: Props) {
   const basePath = isCommunity ? "/community" : "/technology";
-
+  excerpt = excerpt.replace("Table of Contents", "");
   return (
     <section>
       <div className="bg-gray-100 border px-8 py-8 rounded-md flex flex-col lg:gap-x-8 mb-20 md:mb-28 relative lg:hover:shadow-md transition">

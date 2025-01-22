@@ -137,7 +137,7 @@ export default function PostBody({
   };
 
   useEffect(() => {
-    const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
+    const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2"));
     headings.forEach((heading, index) => {
       if (heading.querySelector(".copy-url-button")) return;
 
@@ -150,7 +150,7 @@ export default function PostBody({
       button.style.padding = "0";
       button.style.fontSize = "1rem";
       button.style.color = "#555"; 
-      button.textContent = headingCopySuccessList[index] ? '✔️' : '🔗';
+      // button.textContent = headingCopySuccessList[index] ? '✔️' : '🔗'; // // Copy Button
       button.addEventListener("click", () => handleHeadingCopyClick(heading.innerHTML, index));
       heading.appendChild(button);
     });
@@ -161,7 +161,7 @@ export default function PostBody({
     headings.forEach((heading, index) => {
       const button = heading.querySelector(".copy-url-button") as HTMLButtonElement;
       if (button) {
-        button.textContent = headingCopySuccessList[index] ? '✔️' : '🔗';
+        // button.textContent = headingCopySuccessList[index] ? '✔️' : '🔗'; // // Copy Button
         button.style.color = headingCopySuccessList[index] ? "#28a745" : "#555"; 
       }
     });
