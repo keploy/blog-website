@@ -21,6 +21,7 @@ export default function TagsPostPreview({
   slug: Post["slug"];
   isCommunity: any;
 }) {
+  excerpt = excerpt.replace("Table of Contents", "");
   const basePath =
     isCommunity &&
     isCommunity.edges &&

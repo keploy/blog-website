@@ -65,5 +65,3 @@ const TwitterTestimonials = () => {
 };
 
 export default TwitterTestimonials;
-
-

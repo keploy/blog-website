@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import ErrorPage from "next/error";
 import Head from "next/head";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Container from "../../components/container";
@@ -11,7 +10,7 @@ import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
 import Tags from "../../components/tag";
 import {
-  getAllPostsWithSlug,
+  getAllPostsForTechnology,
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
@@ -28,10 +27,8 @@ const PostBody = dynamic(() => import("../../components/post-body"), {
 });
 
 const postBody = ({ content, post }) => {
-  // Define the regular expression pattern to match the entire URL structure
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
 
-  // Replace the URL in the content with the desired one using the regular expression
   const replacedContent = content.replace(
     urlPattern,
     `/blog/authors/${post?.ppmaAuthorName || "Unknown Author"}/`
@@ -44,7 +41,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
   const { slug } = router.query;
   const morePosts = posts?.edges;
-  const time = 10 + calculateReadingTime(post?.content || "");
+  const time = 5 + calculateReadingTime(post?.content || "");
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const [blogWriterDescription, setBlogWriterDescription] = useState("");
   const [reviewAuthorName, setreviewAuthorName] = useState("");
@@ -111,7 +108,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
       // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
-        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/
+        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/s
       );
 
       if (
@@ -120,14 +117,14 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       ) {
         setBlogWriterDescription(authorDescriptionMatch[1].trim());
       } else {
-        setBlogWriterDescription("n/a");
+        setBlogWriterDescription("An author for Keploy's blog.");
       }
     }
   }, [post]);
 
   useEffect(() => {
     if (!router.isFallback && !post?.slug) {
-      router.push("/404"); // Redirect to 404 page if slug is not available
+      router.push("/404"); 
     }
   }, [router, router.isFallback, post]);
 
@@ -164,7 +161,6 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         )}
       </Container>
       <ContainerSlug>
-        {/* PostBody component placed outside the Container */}
         <div ref={postBodyRef}>
           <PostBody
             content={
@@ -217,12 +213,9 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allPosts = await getAllPostsWithSlug();
+  const allPosts = await getAllPostsForTechnology(false);
   const technologyPosts =
     allPosts?.edges
-      ?.filter(({ node }) =>
-        node?.categories?.edges?.some(({ node }) => node?.name === "technology")
-      )
       ?.map(({ node }) => `/technology/${node?.slug}`) || [];
   return {
     paths: technologyPosts || [],

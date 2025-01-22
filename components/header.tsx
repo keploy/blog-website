@@ -10,16 +10,22 @@ const menuItems = [
   { text: "Community Articles", link: "/community" },
 ];
 
+const formatStars = (num: number) =>
+    Intl.NumberFormat('en-US', {
+      notation: "compact",
+      maximumFractionDigits: 1,
+    }).format(num);
+
 const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   if (mobile) {
     return (
       <Link
-        href="https://docs.google.com/forms/d/e/1FAIpQLSdj9q7dyRh3D7ZzRExHLWRRkNPOnLnFfrbKqSwqH3Ur4HzP4g/viewform"
+        href="https://www.app.keploy.io/signin"
         className="inline-flex items-center py-2 px-4 rounded  text-gray-200 bg-[#00163d]  font-semibold ml-3"
       >
-        <span>Join Waitlist</span>
+        <span>Sign In</span>
         <svg
-          className="w-3 h-3 fill-current hover:text-primary-300 shrink-0 ml-2 -mr-1"
+          className="w-3 h-3 ml-2 -mr-1 fill-current hover:text-primary-300 shrink-0"
           viewBox="0 0 12 12"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -33,16 +39,16 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   }
   return (
     <Link
-      href="https://docs.google.com/forms/d/e/1FAIpQLSdj9q7dyRh3D7ZzRExHLWRRkNPOnLnFfrbKqSwqH3Ur4HzP4g/viewform"
+      href="https://www.app.keploy.io/signin"
       className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d]  hover:text-primary-300 ml-3"
     >
-      <span>Join Waitlist</span>
+      <span>Sign In</span>
     </Link>
   );
 };
 
 const GithubBtn = () => {
-  const [stars, setStars] = useState("3900");
+  const [stars, setStars] = useState<number>(5412);
 
   useEffect(() => {
     const init = async () => {
@@ -60,13 +66,13 @@ const GithubBtn = () => {
   }, []);
 
   return (
-    <button className="border border-orange-500 rounded overflow-hidden p-2 w-full lg:w-auto border-opacity-25 sm:border-opacity-100">
+    <button className="w-full p-2 overflow-hidden border border-orange-500 border-opacity-25 rounded lg:w-auto sm:border-opacity-100">
       <Link
-        className="flex items-center ml-4 lg:ml-0 gap-2 text-sm text-orange-500 font-extrabold transition-colors hover:text-primary-300"
+        className="flex items-center gap-2 ml-4 text-sm font-extrabold text-orange-500 transition-colors lg:ml-0 hover:text-primary-300"
         href="https://github.com/keploy/keploy"
       >
         <svg
-          className="h-5 w-5"
+          className="w-5 h-5"
           viewBox="0 0 16 16"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -80,8 +86,8 @@ const GithubBtn = () => {
         <span className="text-gradient-500 opacity-30 hover:text-orange-500">
           |
         </span>
-        <span className="text-base flex gap-1">
-          ⭐️ <p>{stars}</p>
+        <span className="flex gap-1 text-base">
+          ⭐️ <p>{formatStars(stars)}</p>
         </span>
       </Link>
     </button>
@@ -91,7 +97,7 @@ const GithubBtn = () => {
 const MenuBtn = () => {
   return (
     <svg
-      className="w-6 h-6 fill-current text-gray-900"
+      className="w-6 h-6 text-gray-900 fill-current"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -115,10 +121,10 @@ export default function Header({
 
   return (
     <div className="h-32 md:h-40">
-      <header className="fixed w-full z-30 bg-neutral-100 md:bg-opacity-90 transition duration-300 ease-in-out ">
-        <div className="max-w-6xl mx-auto px-5 sm:px-6">
+      <header className="fixed z-30 w-full transition duration-300 ease-in-out bg-neutral-100 md:bg-opacity-90 ">
+        <div className="max-w-6xl px-5 mx-auto sm:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
-            <div className="shrink-0 mr-4 flex-grow-0 w-2/12">
+            <div className="flex-grow-0 w-2/12 mr-4 shrink-0">
               <Link href={"https://keploy.io/"}>
                 <Image
                   src={sideBySideSvg}
@@ -127,14 +133,14 @@ export default function Header({
                 />
               </Link>
             </div>
-            <nav className="hidden lg:flex flex-grow-0 w-6/12 ">
-              <ul className="flex grow justify-end flex-wrap items-center">
+            <nav className="flex-grow-0 hidden w-6/12 lg:flex ">
+              <ul className="flex flex-wrap items-center justify-end grow">
                 {menuItems.map((item, index) => {
                   return (
                     <li key={index}>
                       <Link
                         href={item.link}
-                        className="font-medium text-gray-600 hover:text-primary-300 px-5 py-3 flex flex-grow-0 lg:flex items-center transition duration-150 ease-in-out"
+                        className="flex items-center flex-grow-0 px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300 lg:flex"
                       >
                         {item.text}
                       </Link>
@@ -144,7 +150,7 @@ export default function Header({
               </ul>
             </nav>
 
-            <div className=" header-btn-container flex-1 justify-end hidden lg:flex">
+            <div className="justify-end flex-1 hidden header-btn-container lg:flex">
               <GithubBtn />
               <WaitListBtn />
             </div>
@@ -159,7 +165,7 @@ export default function Header({
               </button>
               <div>
                 {toggleMenu ? (
-                  <nav className="absolute top-full h-screen pb-16 z-20 flex-grow-0 left-0 w-full overflow-scroll bg-white opacity-100 translate-y-0">
+                  <nav className="absolute left-0 z-20 flex-grow-0 w-full h-screen pb-16 overflow-scroll translate-y-0 bg-white opacity-100 top-full">
                     <ul className="px-5 py-2">
                       <li>
                         <GithubBtn />
@@ -169,7 +175,7 @@ export default function Header({
                           <li key={index}>
                             <Link
                               href={item.link}
-                              className="font-medium text-gray-600  hover:text-primary-300 px-5 py-3 flex items-center transition duration-150 ease-in-out"
+                              className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300"
                             >
                               {item.text}
                             </Link>
@@ -189,13 +195,13 @@ export default function Header({
         {readProgress && (
           <div className="relative h-1">
             <animated.div
-              className="h-full bg-gradient-to-r from-orange-500 to-yellow-500 rounded-r-full"
+              className="h-full rounded-r-full bg-gradient-to-r from-orange-500 to-yellow-500"
               style={{
                 width: readProgress.to((v) => v + "%"),
               }}
             >
             </animated.div>
-            <div className="h-full absolute top-0 w-full bg-gray-300 -z-10"></div>
+            <div className="absolute top-0 w-full h-full bg-gray-300 -z-10"></div>
           </div>
         )}
       </header>
