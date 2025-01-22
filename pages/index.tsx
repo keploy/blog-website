@@ -2,7 +2,7 @@ import Head from "next/head";
 import { GetStaticProps } from "next";
 import Container from "../components/container";
 import Layout from "../components/layout";
-import { getAllPostsForHome, getAllPostsForTechnology } from "../lib/api";
+import { getAllPostsForCommunity, getAllPostsForTechnology } from "../lib/api";
 import Header from "../components/header";
 import Link from "next/link";
 import { HOME_OG_IMAGE_URL } from "../lib/constants";
@@ -24,7 +24,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       <Container>
         <div className="">
           <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
-            <div className="content ">
+            <div className="content">
               <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
                 Keploy Blog
               </h2>
@@ -56,13 +56,6 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
               />
             </div>
           </div>
-          <div className="open-source-vector-container bottom-9 mb-12 flex md:justify-start justify-center">
-            <Image
-              src={OpenSourceVectorPng}
-              alt="vector"
-              className="spin-anim"
-            />
-          </div>
         </div>
         <TopBlogs
           communityPosts={communityPosts}
@@ -75,7 +68,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const allCommunityPosts = await getAllPostsForHome(preview);
+  const allCommunityPosts = await getAllPostsForCommunity(preview);
   const allTehcnologyPosts = await getAllPostsForTechnology(preview);
 
   return {
