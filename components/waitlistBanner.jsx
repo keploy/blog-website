@@ -11,11 +11,11 @@ const waitlistBanner = () => {
         </span>
         <Link
           className="border border-black w-fit bg-white text-black text-base p-2 font-semibold rounded-md shadow-md hover:shadow-none shadow-neutral-950  mt-4"
-          href="https://docs.google.com/forms/d/e/1FAIpQLSdj9q7dyRh3D7ZzRExHLWRRkNPOnLnFfrbKqSwqH3Ur4HzP4g/viewform"
+          href="https://www.app.keploy.io/signin"
           target="_blank"
         >
           {" "}
-          Join the Waitlist
+          Sign In
         </Link>
       </div>
       <div className="pl-6 w-full">

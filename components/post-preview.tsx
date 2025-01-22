@@ -23,6 +23,7 @@ export default function PostPreview({
   isCommunity?: boolean;
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
+  excerpt = excerpt.replace("Table of Contents", "");
   const [ref, springStyles] = useInView(
     () => ({
       from: {
