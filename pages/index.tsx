@@ -12,13 +12,15 @@ import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
+
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`Keploy Tech Blog`}
-      Description={" Empowering your tech journey with expert advice and analysis"}>
+      Title={`Blog - Keploy`}
+      Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}>
       <Head>
-        <title>{`Keploy Blog`}</title>
+        <title>{`Engineering | Keploy Blog`}</title>
+        <meta name="google-adsense-account" content="ca-pub-3485005084287002"></meta>
       </Head>
       <Header />
       <Container>
