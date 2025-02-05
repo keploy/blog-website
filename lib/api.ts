@@ -1,3 +1,6 @@
+export const maxDuration = 60; // This can run for a maximum of 65 seconds
+export const dynamic = 'force-dynamic';
+
 const API_URL = process.env.WORDPRESS_API_URL;
 
 async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
