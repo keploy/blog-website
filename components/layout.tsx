@@ -44,6 +44,10 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
         }}
       />
       
+      <Script async 
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3485005084287002"
+      crossOrigin="anonymous"
+      />
 
       <Script
         id="msclarity"

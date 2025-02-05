@@ -150,7 +150,7 @@ export default function PostBody({
       button.style.padding = "0";
       button.style.fontSize = "1rem";
       button.style.color = "#555"; 
-      // button.textContent = headingCopySuccessList[index] ? '✔️' : '🔗'; // // Copy Button
+      button.textContent = headingCopySuccessList[index] ? '✔️' : '#'; // // Copy Button
       button.addEventListener("click", () => handleHeadingCopyClick(heading.innerHTML, index));
       heading.appendChild(button);
     });

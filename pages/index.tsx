@@ -20,7 +20,6 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}>
       <Head>
         <title>{`Engineering | Keploy Blog`}</title>
-        <meta name="google-adsense-account" content="ca-pub-3485005084287002"></meta>
       </Head>
       <Header />
       <Container>
