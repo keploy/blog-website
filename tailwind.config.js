@@ -87,6 +87,12 @@ module.exports = {
       },
       scale : {
         '101':"1.01",
+      },
+      fontFamily: {
+        fonts: ['"Big Shoulders"', 'sans-serif'],
+      },
+      fontWeight: {
+        size: ['8000px'],
       }
     },
   },
