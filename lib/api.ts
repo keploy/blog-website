@@ -1,4 +1,4 @@
-export const maxDuration = 60; // This can run for a maximum of 65 seconds
+export const maxDuration = 300; // This can run Vercel Functions for a maximum of 300 seconds
 export const dynamic = 'force-dynamic';
 
 const API_URL = process.env.WORDPRESS_API_URL;
