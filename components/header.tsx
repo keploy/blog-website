@@ -68,7 +68,7 @@ const GithubBtn = () => {
   return (
     <button className="w-auto p-2 overflow-hidden border-opacity-25 rounded-3xl ring-2 ring-orange-400 hover:bg-primary-300 shadow-xl shadow-primary-300 lg:w-auto sm:border-opacity-100">
       <Link
-        className="flex items-center gap-2 p-1 text-sm font-extrabold text-orange-500 transition-colors lg:ml-0 hover:text-primary-300"
+        className="flex items-center w-auto gap-2 p-1 text-sm font-extrabold text-orange-500 transition-colors lg:ml-0 hover:text-primary-300"
         href="https://github.com/keploy/keploy"
       >
         <svg
@@ -83,11 +83,8 @@ const GithubBtn = () => {
             fillRule="evenodd"
           />
         </svg>
-        <span className="text-gradient-500 opacity-30 hover:text-orange-500">
-          |
-        </span>
         <span className="flex gap-1 text-base">
-          ⭐️ <p className="text-black">{formatStars(stars)}</p>
+           <p className="text-black">{formatStars(stars)}</p>
         </span>
       </Link>
     </button>
@@ -133,14 +130,14 @@ export default function Header({
                 />
               </Link>
             </div>
-            <nav className="flex-grow-0 hidden w-auto ml-12 lg:flex ">
+            <nav className=" w-auto ml-12 border-2 border-red-500 hidden lg:flex ">
               <ul className="flex flex-wrap items-center justify-end grow">
                 {menuItems.map((item, index) => {
                   return (
                     <li key={index}>
                       <Link
                         href={item.link}
-                        className="flex items-center flex-grow-0 px-5 py-3 font-semibold text-2xl text-gray-600 hover:underline hover:underline-primary-300 transition duration-500 ease-in-out hover:text-primary-300 lg:flex"
+                        className="flex items-center flex-grow-0 px-3 py-3 font-semibold text-xl text-gray-600 hover:underline hover:underline-primary-300 transition duration-500 ease-in-out hover:text-primary-300 "
                       >
                         {item.text}
                       </Link>
@@ -150,7 +147,7 @@ export default function Header({
               </ul>
             </nav>
 
-            <div className="flex-1 justify-end hidden header-btn-container lg:flex">
+            <div className="flex-1 border-2 border-red-600 justify-end hidden header-btn-container md:hidden lg:flex">
               <GithubBtn />
               <WaitListBtn />
             </div>
@@ -165,7 +162,7 @@ export default function Header({
               </button>
               <div>
                 {toggleMenu ? (
-                  <nav className="absolute left-0 z-20 w-full flex-grow-0  h-screen pb-16 overflow-scroll translate-y-0 bg-white opacity-100 top-full">
+                  <nav className="absolute left-0 z-20 w-full flex-grow-0  h-screen pb-16 overflow-scroll translate-y-0 bg-white opacity-100 top-full ">
                     <ul className="px-5 py-2">
                       <li>
                         <GithubBtn />
