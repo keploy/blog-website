@@ -130,7 +130,7 @@ export default function Header({
                 />
               </Link>
             </div>
-            <nav className=" w-auto ml-12 border-2 border-red-500 hidden lg:flex ">
+            <nav className=" w-auto ml-12 hidden lg:flex ">
               <ul className="flex flex-wrap items-center justify-end grow">
                 {menuItems.map((item, index) => {
                   return (
@@ -147,7 +147,7 @@ export default function Header({
               </ul>
             </nav>
 
-            <div className="flex-1 border-2 border-red-600 justify-end hidden header-btn-container md:hidden lg:flex">
+            <div className="flex-1 justify-end hidden header-btn-container md:hidden lg:flex">
               <GithubBtn />
               <WaitListBtn />
             </div>
