@@ -280,8 +280,8 @@ export default function PostBody({
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`} id="post-body-check">
-        <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
+        <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
         <hr className="border-gray-300 mt-10 mb-20" />
 
         <h1 className="text-2xl font-medium">Authored By:</h1>
