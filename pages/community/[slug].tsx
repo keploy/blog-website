@@ -208,11 +208,13 @@ export const getStaticProps: GetStaticProps = async ({
   previewData,
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
-  const { communityMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug);
+  // CHANGE: Limit related stories to 6 posts
+  const { communityMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug, 6);
 
   const authorDetails = [];
   authorDetails.push(await getReviewAuthorDetails("neha"));
   authorDetails.push(await getReviewAuthorDetails("Jain"));
+  
   return {
     props: {
       preview,
@@ -220,17 +222,24 @@ export const getStaticProps: GetStaticProps = async ({
       posts: communityMoreStories || [],
       reviewAuthorDetails: authorDetails || {},
     },
-    revalidate: 10,
+    // CHANGE: Reduced revalidation time
+    revalidate: 60, // Revalidate every minute
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allPosts = await getAllPostsForCommunity(false);
-  const communtiyPosts =
+  // CHANGE: Limit initial static paths to 12 posts
+  const allPosts = await getAllPostsForCommunity({
+    preview: false,
+    limit: 12
+  });
+  const communityPosts =
     allPosts?.edges
       .map(({ node }) => `/community/${node?.slug}`) || [];
+  
   return {
-    paths: communtiyPosts || [],
-    fallback: true,
+    paths: communityPosts || [],
+    // CHANGE: Updated fallback strategy
+    fallback: 'blocking', // Changed from true to 'blocking' for better SEO
   };
 };
