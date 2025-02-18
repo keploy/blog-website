@@ -209,7 +209,7 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
   // CHANGE: Limit related stories to 6 posts
-  const { communityMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug, 6);
+  const { communityMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug);
 
   const authorDetails = [];
   authorDetails.push(await getReviewAuthorDetails("neha"));

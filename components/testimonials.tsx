@@ -1,6 +1,7 @@
 import React from "react";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
+import Image from 'next/image';
 const firstRow = Tweets.slice(0, Tweets.length / 2);
 const secondRow = Tweets.slice(Tweets.length / 2);
 
@@ -21,12 +22,12 @@ const ReviewCard = ({
     <a href={post} target="_blank" className="lg:mx-2">
       <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
         <div className="flex flex-row items-center gap-2">
-          <img
-            className="rounded-full"
-            width="32"
-            height="32"
-            alt=""
+          <Image
             src={avatar}
+            alt={name}
+            width={32}
+            height={32}
+            className="rounded-full"
           />
           <div className="flex flex-col">
             <figcaption className="text-sm font-bold">{name}</figcaption>

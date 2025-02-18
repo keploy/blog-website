@@ -266,6 +266,23 @@ export default function PostBody({
     job: "Software Developer",
   };
 
+  useEffect(() => {
+    const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach((heading, index) => {
+      heading.addEventListener('click', (event) => {
+        handleHeadingCopyClick(heading.innerHTML, index);
+      });
+    });
+
+    return () => {
+      headings.forEach((heading, index) => {
+        heading.removeEventListener('click', (event) => {
+          handleHeadingCopyClick(heading.innerHTML, index);
+        });
+      });
+    };
+  }, [handleHeadingCopyClick]);
+
   return (
     <div
       className={`flex flex-col ${
