@@ -28,3 +28,15 @@ jobs:
         env: 
           WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
         run: npm run build
+
+      - name: Run Lighthouse Audit
+        run: |
+          npm install -g @lhci/cli@0.12.x
+          lhci autorun
+        continue-on-error: true  # Prevents workflow failure on audit issues
+
+      - name: Upload Lighthouse Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
