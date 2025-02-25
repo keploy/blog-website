@@ -1,0 +1,27 @@
+{
+    "ci": {
+      "collect": {
+        "startServerCommand": "npm run start",
+        "url": ["http://localhost:3000/"],
+        "numberOfRuns": 3,
+        "settings": {
+          "onlyCategories": ["performance"],
+          "throttlingMethod": "simulate",
+          "disableStorageReset": true
+        }
+      },
+      "assert": {
+        "preset": "lighthouse:recommended",
+        "assertions": {
+          "largest-contentful-paint": ["warn", { "maxNumericValue": 2500 }],
+          "first-contentful-paint": ["warn", { "maxNumericValue": 1800 }],
+          "total-blocking-time": ["warn", { "maxNumericValue": 200 }],
+          "speed-index": ["warn", { "maxNumericValue": 4300 }]
+        }
+      },
+      "upload": {
+        "target": "filesystem",  
+        "outputDir": ".lighthouseci"
+      }
+    }
+  }
