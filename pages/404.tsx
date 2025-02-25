@@ -3,16 +3,23 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import NotFoundPage from "../components/NotFoundPage";
 
-export default function Custom404({ redirectPath }) {
+export default function Custom404() {
   const router = useRouter();
+  const asPath = router.asPath;
 
   useEffect(() => {
     const redirectTimeout = setTimeout(() => {
-      router.replace(redirectPath || "/");
-    }, 3000);
+      if (asPath.startsWith("/community/")) {
+        router.replace("/community");
+      } else if (asPath.startsWith("/technology/")) {
+        router.replace("/technology");
+      } else {
+        router.replace("/");
+      }
+    }, 3000); 
 
     return () => clearTimeout(redirectTimeout);
-  }, [router, redirectPath]);
+  }, [asPath, router]);
 
   return (
     <>
@@ -25,19 +32,4 @@ export default function Custom404({ redirectPath }) {
       </div>
     </>
   );
-}
-
-export const getServerSideProps = ({ req, resolvedUrl }) => {
-  let redirectPath = "/";
-  if (resolvedUrl.startsWith("/community/")) {
-    redirectPath = "/community";
-  } else if (resolvedUrl.startsWith("/technology/")) {
-    redirectPath = "/technology";
-  }
-
-  return {
-    props: {
-      redirectPath,
-    },
-  };
 };
