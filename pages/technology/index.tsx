@@ -22,10 +22,21 @@ export default function Index({ allPosts: { edges }, preview }) {
     >
       <Head>
         <title>{`Keploy`}</title>
+        {heroPost?.featuredImage?.node.sourceUrl && (
+          <link
+            rel="preload"
+            href={heroPost.featuredImage.node.sourceUrl}
+            as="image"
+          />
+        )}
+
+        <style>{`
+          .hero-title { font-size: 2.5rem; font-weight: bold; }
+          @media (min-width: 768px) { .hero-title { font-size: 3rem; } }
+        `}</style>
       </Head>
       <Header />
       <Container>
-        {/* <Intro /> */}
         {heroPost && (
           <HeroPost
             title={heroPost.title}
@@ -50,6 +61,6 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
 
   return {
     props: { allPosts, preview },
-    revalidate: 10,
+    revalidate: 300,
   };
 };

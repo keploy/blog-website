@@ -6,20 +6,22 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Container from "../../components/container";
 import { getAllPostsFromTags, getAllTags } from "../../lib/api";
 import TagsStories from "../../components/TagsStories";
-import { useRouter } from "next/router";
-export default function PostByTags({ postsByTags,preview}) {
+
+export default function PostByTags({ postsByTags, preview }) {
   const posts = postsByTags?.edges || [];
-  const router = useRouter();
-  const {slug} = router.query;
   return (
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`${slug} posts`}
-      Description={`Posts by tag-${slug}`}
+      Title={`${postsByTags?.slug || "Tag"} posts`}
+      Description={`Posts by tag-${postsByTags?.slug || "unknown"}`}
     >
       <Head>
-        <title>{`${slug} posts`}</title>
+        <title>{`${postsByTags?.slug || "Tag"} posts`}</title>
+        <link rel="preload" href={HOME_OG_IMAGE_URL} as="image" />
+        <style>{`
+          .tags-stories { margin-top: 1rem; }
+        `}</style>
       </Head>
       <Header />
       <Container>
@@ -31,27 +33,23 @@ export default function PostByTags({ postsByTags,preview}) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const edgesAllTags = await getAllTags();
-  const paths = edgesAllTags.map((node) => `/tag/${node.name}`) || []; // Extract tag names from the nodes and create paths
+  const paths = edgesAllTags.map((node) => `/tag/${node.name}`) || [];
   return {
-    paths: paths,
-    fallback: true,
+    paths: paths.slice(0, 50),
+    fallback: "blocking", 
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({
-  preview=false,
-  params
-}) => {
+export const getStaticProps: GetStaticProps = async ({ preview = false, params }) => {
   let { slug } = params;
   if (Array.isArray(slug)) {
-    slug = slug.join('-');
+    slug = slug.join("-");
   } else {
-    // Replace spaces with dashes
-    slug = slug.replace(/\s+/g, '-');
+    slug = slug.replace(/\s+/g, "-");
   }
-  const postsByTags = await getAllPostsFromTags(slug.toString(),preview);
+  const postsByTags = await getAllPostsFromTags(slug.toString(), preview);
   return {
-    props: { postsByTags,preview},
-    revalidate: 10,
+    props: { postsByTags: { ...postsByTags, slug }, preview },
+    revalidate: 300,
   };
 };

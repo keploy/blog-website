@@ -17,14 +17,20 @@ export default function Tags({ edgesAllTags, preview }) {
     >
       <Head>
         <title>{`Tags`}</title>
+        <link rel="preload" href={HOME_OG_IMAGE_URL} as="image" />
+        <style>{`
+          .tag-title { font-size: 2.25rem; font-weight: 600; margin-bottom: 1rem; }
+          .tag-button { background-color: #e2e8f0; padding: 0.5rem 1rem; border-radius: 0.25rem; }
+          .tag-button:hover { background-color: #cbd5e1; }
+        `}</style>
       </Head>
       <Header />
       <Container>
-        <h1 className="text-4xl font-semibold mb-4">Tags</h1>
+        <h1 className="tag-title">Tags</h1>
         <div className="flex flex-wrap gap-2 mb-10">
-        {edgesAllTags.map(({ name }) => (
+          {edgesAllTags.map(({ name }) => (
             <Link href={`/tag/${name}`} key={name}>
-              <button className="bg-slate-200 hover:bg-slate-300 text-slate-500 font-bold py-2 px-4 rounded">
+              <button className="tag-button text-slate-500 font-bold">
                 {name}
               </button>
             </Link>
@@ -39,6 +45,6 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   const edgesAllTags = await getAllTags();
   return {
     props: { edgesAllTags, preview },
-    revalidate: 10,
+    revalidate: 3600,
   };
 };
