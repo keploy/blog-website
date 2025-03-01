@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostPreview from "./post-preview";
@@ -15,45 +15,81 @@ export default function MoreStories({
   isIndex: boolean;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [posts, setPosts] = useState(initialPosts);
+  const [allPosts, setAllPosts] = useState(initialPosts);
+  const [visibleCount, setVisibleCount] = useState(12);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-    setPage(1); // Reset pagination when searching
-    setPosts(initialPosts); // Reset to initial posts
-    setHasMore(true); // Reset hasMore flag
-  };
-
-  const loadMorePosts = async () => {
-    if (loading || !hasMore) return;
-    
-    setLoading(true);
-    try {
-      const morePosts = await getAllPostsForCommunity({
-        preview: false,
-        limit: 12,
-        offset: page * 12
-      });
-      if (morePosts?.edges?.length === 0) {
-        setHasMore(false);
-      } else {
-        setPosts(currentPosts => [...currentPosts, ...morePosts.edges]);
-        setPage(p => p + 1);
-      }
-    } catch (error) {
-      console.error('Error loading more posts:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filteredPosts = posts.filter(({ node }) => 
+  // Filter posts based on search term
+  const filteredPosts = allPosts.filter(({ node }) => 
     node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Determine which posts to display based on the current visible count
+  const displayedPosts = filteredPosts.slice(0, visibleCount);
+
+  // Update hasMore whenever filtered posts or visible count changes
+  useEffect(() => {
+    setHasMore(filteredPosts.length > visibleCount);
+  }, [filteredPosts, visibleCount]);
+
+  // Reset visible count when search term changes
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [searchTerm]);
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    setPage(1); // Reset pagination when searching
+  };
+
+  const loadMorePosts = async () => {
+    if (loading) return;
+    
+    if (searchTerm) {
+      // If searching, just show more of the already filtered posts
+      setLoading(true);
+      
+      setTimeout(() => {
+        setVisibleCount(prev => prev + 12);
+        setLoading(false);
+      }, 300);
+    } else {
+      // If not searching and need more posts from API
+      if (filteredPosts.length <= visibleCount && hasMore) {
+        // Need to fetch more posts from the API
+        setLoading(true);
+        try {
+          const morePosts = await getAllPostsForCommunity({
+            preview: false,
+            limit: 12,
+            offset: page * 12
+          });
+          
+          if (!morePosts?.edges?.length) {
+            setHasMore(false);
+          } else {
+            setAllPosts(currentPosts => [...currentPosts, ...morePosts.edges]);
+            setVisibleCount(prev => prev + 12);
+            setPage(p => p + 1);
+          }
+        } catch (error) {
+          console.error('Error loading more posts:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        // Already have enough posts loaded, just show more
+        setLoading(true);
+        setTimeout(() => {
+          setVisibleCount(prev => prev + 12);
+          setLoading(false);
+        }, 300);
+      }
+    }
+  };
 
   return (
     <section>
@@ -81,7 +117,7 @@ export default function MoreStories({
       ) : (
         <>
           <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
-            {filteredPosts.map(({ node }) => (
+            {displayedPosts.map(({ node }) => (
               <PostPreview
                 key={node.slug}
                 title={node.title}
@@ -91,14 +127,13 @@ export default function MoreStories({
                 slug={node.slug}
                 excerpt={getExcerpt(node.excerpt, 20)}
                 isCommunity={
-                  node.categories.edges[0].node.name === "technology" ? false : true
+                  node.categories.edges[0]?.node.name === "technology" ? false : true
                 }
               />
             ))}
           </div>
           
-          {/* CHANGE 6: Add Load More button */}
-          {isIndex && hasMore && !searchTerm && (
+          {isIndex && hasMore && (
             <div className="flex justify-center mb-8">
               <button
                 onClick={loadMorePosts}
