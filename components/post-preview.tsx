@@ -72,10 +72,11 @@ export default function PostPreview({
       <div className="flex items-center gap-4 mb-4">
         <Avatar author={author ? author : "Anonymous"} />
         <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
-        <div className="text-md pt-4">
+        <div className="text-md">
           <Date dateString={date} />
         </div>
       </div>
+
       <div
         className="text-sm leading-normal body text-slate-600 flex-grow overflow-hidden line-clamp-3"
         dangerouslySetInnerHTML={{ __html: excerpt }}
