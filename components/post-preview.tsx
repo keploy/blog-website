@@ -34,8 +34,8 @@ export default function PostPreview({
         opacity: 1,
       },
       config: {
-        duration: 100,
-        delay: 100  ,
+        duration: 500,
+        delay: 100,
         easing: easings.easeInCubic,
       },
     }),
@@ -46,13 +46,13 @@ export default function PostPreview({
 
   return (
     <animated.div
-      className="bg-gray-100 border p-6 rounded-md lg:hover:shadow-md transition group flex flex-col"
+      className="bg-gray-100 border p-6 rounded-md lg:hover:shadow-md transition group flex flex-col h-full"
       ref={ref}
       style={springStyles}
     >
-      <div className="mb-5 flex-grow">
+      <div className="mb-5">
         {coverImage && (
-          <div className="relative w-full h-48 mb-4 overflow-hidden rounded-md">
+          <div className="relative w-full h-44 mb-4 overflow-hidden rounded-md">
             <CoverImage
               title={title}
               coverImage={coverImage}
@@ -62,7 +62,7 @@ export default function PostPreview({
           </div>
         )}
       </div>
-      <h3 className="text-2xl leading-snug heading1 font-bold mb-2">
+      <h3 className="text-2xl leading-snug heading1 font-bold mb-2 h-16 overflow-hidden">
         <Link
           href={`${basePath}/${slug}`}
           className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
@@ -77,7 +77,7 @@ export default function PostPreview({
         </div>
       </div>
       <div
-        className="text-sm leading-normal body text-slate-600 flex-grow"
+        className="text-sm leading-normal body text-slate-600 flex-grow overflow-hidden line-clamp-3"
         dangerouslySetInnerHTML={{ __html: excerpt }}
       />
     </animated.div>
