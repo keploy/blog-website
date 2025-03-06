@@ -41,7 +41,7 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   return (
     <Link
       href="https://www.app.keploy.io/signin"
-      className="py-2.5 px-8 rounded-full leading-[1.375rem] text-white  bg-gradient-to-r from-primary-300 via-primary-deep-orange to-primary-deep-orange hover:bg-gradient-to-l hover:from-primary-300 hover:via-primary-deep-orange hover:to-primary-deep-orange "
+      className="gap-2 text-sm font-medium bg-gradient-to-r from-orange-500 to-red-500 hover:from-red-500 hover:to-orange-500 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out text-white px-8 py-2.5 flex items-center justify-center"
     >
       <span>Sign In</span>
     </Link>
