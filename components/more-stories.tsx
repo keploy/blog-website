@@ -51,11 +51,8 @@ export default function MoreStories({
     if (searchTerm) {
       // If searching, just show more of the already filtered posts
       setLoading(true);
-      
-      setTimeout(() => {
-        setVisibleCount(prev => prev + 12);
-        setLoading(false);
-      }, 300);
+      setVisibleCount(prev => prev + 12);
+      setLoading(false);
     } else {
       // If not searching and need more posts from API
       if (filteredPosts.length <= visibleCount && hasMore) {
@@ -83,10 +80,8 @@ export default function MoreStories({
       } else {
         // Already have enough posts loaded, just show more
         setLoading(true);
-        setTimeout(() => {
-          setVisibleCount(prev => prev + 12);
-          setLoading(false);
-        }, 300);
+        setVisibleCount(prev => prev + 12);
+        setLoading(false);
       }
     }
   };
