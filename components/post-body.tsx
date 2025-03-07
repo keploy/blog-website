@@ -169,7 +169,7 @@ export default function PostBody({
 
   const renderCodeBlocks = () => {
     const codeBlocks = replacedContent.match(/<pre[\s\S]*?<\/pre>/gm);
-
+  
     if (!codeBlocks) {
       return (
         <div
@@ -179,77 +179,93 @@ export default function PostBody({
         />
       );
     }
-
+  
     const decodeHtmlEntities = (str: string): string => {
       const textarea = document.createElement("textarea");
       textarea.innerHTML = str;
       return textarea.value;
     };
-
+  
     return replacedContent
-      .split(/(<pre[\s\S]*?<\/pre>)/gm)
-      .map((part, index) => {
-        if (/<pre[\s\S]*?<\/pre>/.test(part)) {
-          const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
-          const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : ""; 
-          const language =
-            codeMatch && codeMatch[0].includes("language-")
-              ? codeMatch[0].split("language-")[1].split('"')[0]
-              : "bash";
-          const getLanguageExtension = (language: string) => {
-            switch (language) {
-              case "javascript":
-              case "js":
-                return javascript();
-              case "python":
-                return python();
-              case "markdown":
-                return markdown();
-              case "go":
-                return go();
-              default:
-                return javascript();
-            }
-          };
-          return (
-            <div key={index} className="relative mx-auto mb-4">
-              <CodeMirror
-                value={code}
-                extensions={[getLanguageExtension(language)]}
-                theme={dracula}
-                basicSetup={{
-                  lineNumbers: false,
-                  highlightActiveLine: true,
-                  tabSize: 4,
-                }}
-                editable={false}
-                readOnly={true}
-                indentWithTab={true}
-              />
-              <button
-                onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
-              >
-                {copySuccessList[index] ? (
-                  <IoCheckmarkOutline />
-                ) : (
-                  <IoCopyOutline />
-                )}
-              </button>
-            </div>
-          );
+      .split(/(<h2[^>]*>Comparing JSON Files<\/h2>)/gm)
+      .flatMap((part, index) => {
+        if (/<h2[^>]*>Comparing JSON Files<\/h2>/.test(part)) {
+          return [
+            <div
+              key={`heading-${index}`}
+              dangerouslySetInnerHTML={{ __html: part }}
+              suppressHydrationWarning
+              className="text-3xl font-bold mt-6"
+            />, 
+
+            <JsonDiffViewer key="json-diff-viewer" />,
+          ];
+         
         }
-        // console.log("Data is receiving in renderCodeBlocks:", part);
-        return (
-          <div
-            key={index}
-            className={styles.content}
-            dangerouslySetInnerHTML={{ __html: part }}
-            suppressHydrationWarning
-          />
-        );
+    
+  
+        return part.split(/(<pre[\s\S]*?<\/pre>)/gm).map((subPart, subIndex) => {
+          if (/<pre[\s\S]*?<\/pre>/.test(subPart)) {
+            const codeMatch = subPart.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
+            const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : "";
+            const language =
+              codeMatch && codeMatch[0].includes("language-")
+                ? codeMatch[0].split("language-")[1].split('"')[0]
+                : "bash";
+  
+            const getLanguageExtension = (language: string) => {
+              switch (language) {
+                case "javascript":
+                case "js":
+                  return javascript();
+                case "python":
+                  return python();
+                case "markdown":
+                  return markdown();
+                case "go":
+                  return go();
+                default:
+                  return javascript();
+              }
+            };
+  
+            return (
+              <div key={`code-${index}-${subIndex}`} className="relative mx-auto mb-4">
+                <CodeMirror
+                  value={code}
+                  extensions={[getLanguageExtension(language)]}
+                  theme={dracula}
+                  basicSetup={{
+                    lineNumbers: false,
+                    highlightActiveLine: true,
+                    tabSize: 4,
+                  }}
+                  editable={false}
+                  readOnly={true}
+                  indentWithTab={true}
+                />
+                <button
+                  onClick={() => handleCopyClick(code, index)}
+                  className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
+                >
+                  {copySuccessList[index] ? <IoCheckmarkOutline /> : <IoCopyOutline />}
+                </button>
+              </div>
+            );
+          }
+  
+          return (
+            <div
+              key={`content-${index}-${subIndex}`}
+              className={styles.content}
+              dangerouslySetInnerHTML={{ __html: subPart }}
+              suppressHydrationWarning
+            />
+          );
+        });
       });
   };
+  
 
   const oldJson = {
     name: "John",
@@ -281,7 +297,7 @@ export default function PostBody({
       </div>
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`} id="post-body-check">
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
-        {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
+        {/* {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />} */}
         <hr className="border-gray-300 mt-10 mb-20" />
 
         <h1 className="text-2xl font-medium">Authored By:</h1>
