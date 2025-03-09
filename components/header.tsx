@@ -67,13 +67,16 @@ const GithubBtn = () => {
   }, []);
 
   return (
-    <button className="w-full p-2 overflow-hidden border-2 border-primary-50/0 hover:border-2  hover:border-orange-500 hover:text-primary-300 px-6 border-opacity-0 rounded-full lg:w-auto sm:border-opacity-100">
+    <button className="w-full p-2 overflow-hidden border-2 hover:bg-primary-200/20 border-primary-50/0 hover:border-2 hover:border-orange-500 hover:text-primary-300 px-6 border-opacity-0 rounded-full lg:w-auto sm:border-opacity-100 relative group/button">
+      {/* Sliding effect span */}
+      <span className="absolute left-0 -mt-12 h-32 w-12 -translate-x-36 rotate-12 bg-orange-500 opacity-10 transition-transform duration-700 ease-out group-hover/button:-translate-x-[-400%]" />
+      
       <Link
-        className="flex items-center gap-2 ml-4 text-sm font-extrabold  transition-colors lg:ml-0"
+        className="flex items-center gap-2 ml-4 text-sm font-extrabold transition-colors lg:ml-0"
         href="https://github.com/keploy/keploy"
       >
         <svg
-          className="w-5 h-5 text-black "
+          className="w-5 h-5 text-black"
           viewBox="0 0 16 16"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -84,12 +87,7 @@ const GithubBtn = () => {
             fillRule="evenodd"
           />
         </svg>
-        {/* <FaGithub className="h-6 w-6" /> */}
-        {/* <span className="text-gradient-500 opacity-30 hover:text-orange-500">
-          |
-        </span> */}
-        <span className="flex gap-1 text-base ">
-          {/* ⭐️  */}
+        <span className="flex gap-1 text-base">
           <p>{formatStars(stars)}</p>
         </span>
       </Link>
