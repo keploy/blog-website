@@ -85,7 +85,7 @@ return (
 
         <span className="text-base font-medium flex gap-1 group-hover:text-orange-500 transition-colors duration-500">
           <StarIcon className="size-4 text-yellow-300 transition-all duration-300 group-hover:filter group-hover:drop-shadow-[0_0_2px_#FFD700]" />
-          <CountingNumbers className="" />
+          <CountingNumbers className="" starsCount={stars} />
         </span>
       </Link>
     </div>
