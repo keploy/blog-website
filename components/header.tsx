@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import sideBySideSvg from "../public/images/sidebyside-transparent.svg"
 import { SpringValue, animated } from "@react-spring/web";
 import { StarIcon } from "@heroicons/react/24/solid";
-import CountingNumbers from "../utils/countingNumbers";
+import CountingNumbers from "./common/countingNumbers";
 const menuItems = [
   { text: "Docs", link: "https://keploy.io/docs" },
   { text: "Tech Blogs", link: "/technology" },
