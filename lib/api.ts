@@ -137,8 +137,7 @@ export async function getAllPosts() {
 
   while (hasNextPage) {
     const data = await fetchAPI(
-      `
-      query AllPosts($after: String) {
+      `query AllPosts($after: String) {
         posts(first: 6, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
           edges {
             node {
@@ -203,8 +202,6 @@ export async function getContent(postId: number) {
   return data.postBy.content;
 }
 
-//Fetching Reviewing author details
-
 export async function getReviewAuthorDetails(authorName) {
   const data = await fetchAPI(
     `
@@ -233,10 +230,6 @@ export async function getReviewAuthorDetails(authorName) {
   return data?.users;
 }
 
-
-
-// Fnction for fetching post with technology category
-
 export async function getAllPostsForTechnology(preview) {
   let allEdges = [];
   let hasNextPage = true;
@@ -244,9 +237,8 @@ export async function getAllPostsForTechnology(preview) {
 
   while (hasNextPage) {
     const data = await fetchAPI(
-      `
-      query AllPostsForCategory($after: String) {
-        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+      `query AllPostsForCategory($after: String) {
+        posts(first: 6, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
           edges {
             node {
               title
@@ -315,9 +307,8 @@ export async function getAllPostsForCommunity(preview) {
 
   while (hasNextPage) {
     const data = await fetchAPI(
-      `
-    query AllPostsForCategory($after: String){
-      posts(first: 50, after: $after ,where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
+      `query AllPostsForCategory($after: String){
+      posts(first: 6, after: $after ,where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
         edges {
           node {
             title
@@ -589,7 +580,6 @@ export async function getPostsByAuthorName(authorName) {
   allEdges = [...allEdges, ...edges];
   return { edges: allEdges };
 }
-
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post;
