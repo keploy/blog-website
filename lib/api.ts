@@ -88,7 +88,7 @@ export async function getAllPostsFromTags(tagName: String, preview) {
   const data = await fetchAPI(
     `
     query AllPosts($tagName: String!) {
-      posts(first: 100, where: { orderby: { field: DATE, order: DESC }, tag: $tagName }) {
+      posts(first: 6, where: { orderby: { field: DATE, order: DESC }, tag: $tagName }) {
         edges {
           node {
             title
@@ -139,7 +139,7 @@ export async function getAllPosts() {
     const data = await fetchAPI(
       `
       query AllPosts($after: String) {
-        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
+        posts(first: 6, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
           edges {
             node {
               title
