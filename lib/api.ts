@@ -1,4 +1,4 @@
-export const maxDuration = 300; // This can run Vercel Functions for a maximum of 300 seconds
+export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
 const API_URL = process.env.WORDPRESS_API_URL;
@@ -11,7 +11,6 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
       "Authorization"
     ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
   }
-  // WPGraphQL Plugin must be enabled
   const res = await fetch(API_URL, {
     headers,
     method: "POST",
@@ -386,7 +385,7 @@ export async function getAllAuthors() {
     const data = await fetchAPI(
       `
       query getAllAuthors($after: String) {
-        posts(first: 50, after: $after) {
+        posts(first: 6, after: $after) {
           edges {
             node {
               ppmaAuthorName
@@ -432,7 +431,7 @@ export async function getPostsByAuthor() {
     const data = await fetchAPI(
       `
       query getPostsByAuthor($after: String) {
-        posts(first: 50, after: $after) {
+        posts(first: 6, after: $after) {
           edges {
             node {
               postId
@@ -594,7 +593,7 @@ export async function getPostsByAuthorName(authorName) {
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post;
-  // The slug may be the id of an unpublished post
+
   const isId = Number.isInteger(Number(slug));
   const isSamePost = isId
     ? Number(slug) === postPreview.id
@@ -652,9 +651,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       post(id: $id, idType: $idType) {
         ...PostFields
         content
-        ${
-          // Only some of the fields of a revision are considered as there are some inconsistencies
-          isRevision
+        ${isRevision
             ? `
         revisions(first: 1, where: { orderby: { field: MODIFIED, order: DESC } }) {
           edges {
