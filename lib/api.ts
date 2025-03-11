@@ -69,7 +69,7 @@ export async function getAllTags() {
     `,
       {
         variables: {
-          first: 100, // Adjust as needed
+          first: 100,
           after: endCursor,
         },
       }
