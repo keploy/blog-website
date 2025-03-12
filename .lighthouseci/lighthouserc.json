@@ -2,7 +2,7 @@
     "ci": {
       "collect": {
         "startServerCommand": "npm run start",
-        "url": ["http://localhost:3000/"],
+        "url": ["http://localhost:3000/blog"],
         "numberOfRuns": 3,
         "settings": {
           "onlyCategories": ["performance"],
