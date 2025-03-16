@@ -3,7 +3,7 @@ import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostPreview from "./post-preview";
 import { FaSearch } from 'react-icons/fa';
-import { getAllPostsForCommunity } from "../lib/api";
+import { API_URL, getAllPostsForCommunity } from "../lib/api";
 
 export default function MoreStories({
   posts: initialPosts,
@@ -19,7 +19,7 @@ export default function MoreStories({
   const [visibleCount, setVisibleCount] = useState(12);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(1);
+  const [error, setError] = useState(null);
 
   // Filter posts based on search term
   const filteredPosts = allPosts.filter(({ node }) => 
@@ -27,22 +27,16 @@ export default function MoreStories({
     node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Determine which posts to display based on the current visible count
-  const displayedPosts = filteredPosts.slice(0, visibleCount);
-
-  // Update hasMore whenever filtered posts or visible count changes
-  useEffect(() => {
-    setHasMore(filteredPosts.length > visibleCount);
-  }, [filteredPosts, visibleCount]);
+  console.log("api url: ", API_URL)
 
   // Reset visible count when search term changes
   useEffect(() => {
     setVisibleCount(12);
+    setError(null);
   }, [searchTerm]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-    setPage(1); // Reset pagination when searching
   };
 
   const loadMorePosts = async () => {
@@ -54,33 +48,27 @@ export default function MoreStories({
       setVisibleCount(prev => prev + 12);
       setLoading(false);
     } else {
-      // If not searching and need more posts from API
-      if (filteredPosts.length <= visibleCount && hasMore) {
-        // Need to fetch more posts from the API
-        setLoading(true);
-        try {
-          const morePosts = await getAllPostsForCommunity({
-            preview: false,
-            limit: 12,
-            offset: page * 12
-          });
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await getAllPostsForCommunity(false);
+        
+        if (!result.edges.length || !result.pageInfo.hasNextPage) {
+          setHasMore(false);
+        } else {
+          // Add new posts to our state
+          setAllPosts(currentPosts => [...currentPosts, ...result.edges]);
           
-          if (!morePosts?.edges?.length) {
-            setHasMore(false);
-          } else {
-            setAllPosts(currentPosts => [...currentPosts, ...morePosts.edges]);
-            setVisibleCount(prev => prev + 12);
-            setPage(p => p + 1);
-          }
-        } catch (error) {
-          console.error('Error loading more posts:', error);
-        } finally {
-          setLoading(false);
+          // Update hasMore based on pageInfo
+          setHasMore(result.pageInfo.hasNextPage);
+          
+          // Increase visible count
+          setVisibleCount(prev => prev + 12);
         }
-      } else {
-        // Already have enough posts loaded, just show more
-        setLoading(true);
-        setVisibleCount(prev => prev + 12);
+      } catch (error) {
+        console.error('Error loading more posts:', error);
+        setError('Failed to load more posts. Please try again later.');
+      } finally {
         setLoading(false);
       }
     }
@@ -107,12 +95,18 @@ export default function MoreStories({
         </div>
       )}
 
+      {error && (
+        <div className="text-red-500 text-center mb-8 p-4 bg-red-50 rounded-lg">
+          {error}
+        </div>
+      )}
+
       {filteredPosts.length === 0 ? (
         <p className="text-center text-gray-500">No posts found by the name {`"${searchTerm}"`}</p>
       ) : (
         <>
           <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
-            {displayedPosts.map(({ node }) => (
+            {filteredPosts.slice(0, visibleCount).map(({ node }) => (
               <PostPreview
                 key={node.slug}
                 title={node.title}
@@ -133,10 +127,10 @@ export default function MoreStories({
               <button
                 onClick={loadMorePosts}
                 disabled={loading}
-                className="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
               >
                 {loading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mx-auto" />
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
                 ) : (
                   'Load More Posts'
                 )}

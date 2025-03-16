@@ -1,7 +1,7 @@
 export const maxDuration = 300; // This can run Vercel Functions for a maximum of 300 seconds
 export const dynamic = 'force-dynamic';
 
-const API_URL = process.env.WORDPRESS_API_URL;
+export const API_URL = process.env.WORDPRESS_API_URL;
 
 async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   const headers = { "Content-Type": "application/json" };
@@ -309,16 +309,22 @@ export async function getAllPostsForTechnology(preview) {
   return { edges: allEdges };
 }
 
-export async function getAllPostsForCommunity(preview) {
+export async function getAllPostsForCommunity(preview = false, after = null, page = 1) {
   let allEdges = [];
   let hasNextPage = true;
   let endCursor = null;
-
-  while (hasNextPage) {
-    const data = await fetchAPI(
-      `
-    query AllPostsForCategory($after: String){
-      posts(first: 50, after: $after ,where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
+  
+  const data = await fetchAPI(
+    `
+    query CommunityPosts($after: String) {
+      posts(
+        first: 21, 
+        after: $after, 
+        where: { 
+          orderby: { field: DATE, order: DESC },
+          categoryName: "community" 
+        }
+      ) {
         edges {
           node {
             title
@@ -355,26 +361,25 @@ export async function getAllPostsForCommunity(preview) {
             }
           }
         }
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
-  `,
-      {
-        variables: {
-          preview,
-          after: endCursor,
-        },
-      }
-    );
-    const edges = data?.posts?.edges || [];
-    allEdges = [...allEdges, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
-    endCursor = data?.posts?.pageInfo?.endCursor;
-  }
-  return { edges: allEdges };
+    `,
+    {
+      variables: {
+        preview,
+        after,
+      },
+    }
+  );
+  
+  return {
+    edges: data?.posts?.edges || [],
+    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+  };
 }
 
 export async function getAllAuthors() {

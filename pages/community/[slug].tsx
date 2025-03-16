@@ -227,18 +227,13 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // CHANGE: Limit initial static paths to 12 posts
-  const allPosts = await getAllPostsForCommunity({
-    preview: false,
-    limit: 12
-  });
+  const allPosts = await getAllPostsForCommunity(false);
   const communityPosts =
     allPosts?.edges
       .map(({ node }) => `/community/${node?.slug}`) || [];
   
   return {
     paths: communityPosts || [],
-    // CHANGE: Updated fallback strategy
-    fallback: 'blocking', // Changed from true to 'blocking' for better SEO
+    fallback: true, 
   };
 };

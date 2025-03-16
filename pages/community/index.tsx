@@ -55,7 +55,10 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   const allPosts = await getAllPostsForCommunity(preview);
  
   return {
-    props: { allPosts, preview },
+    props: { 
+      allPosts, 
+      preview
+    },
     revalidate: 10,
   };
 };
