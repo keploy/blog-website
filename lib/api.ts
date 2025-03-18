@@ -310,9 +310,6 @@ export async function getAllPostsForTechnology(preview) {
 }
 
 export async function getAllPostsForCommunity(preview = false, after = null, page = 1) {
-  let allEdges = [];
-  let hasNextPage = true;
-  let endCursor = null;
   
   const data = await fetchAPI(
     `

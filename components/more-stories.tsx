@@ -20,14 +20,13 @@ export default function MoreStories({
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
+  const [endCursor, setEndCursor] = useState(null);
 
   // Filter posts based on search term
   const filteredPosts = allPosts.filter(({ node }) => 
     node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  console.log("api url: ", API_URL)
 
   // Reset visible count when search term changes
   useEffect(() => {
@@ -51,13 +50,16 @@ export default function MoreStories({
       setLoading(true);
       setError(null);
       try {
-        const result = await getAllPostsForCommunity(false);
+        const result = await getAllPostsForCommunity(false, endCursor);
         
         if (!result.edges.length || !result.pageInfo.hasNextPage) {
           setHasMore(false);
         } else {
           // Add new posts to our state
           setAllPosts(currentPosts => [...currentPosts, ...result.edges]);
+          
+          // Update endCursor for next request
+          setEndCursor(result.pageInfo.endCursor);
           
           // Update hasMore based on pageInfo
           setHasMore(result.pageInfo.hasNextPage);
