@@ -50,8 +50,6 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
   };
 
 
-  console.log(blogreviewer , "blog reviewer")
-
   return (
     <>
       <div className="flex flex-col lg:flex-row lg:mt-7 items-start sm:items-center sm:justify-around gap-4 sm:gap-0  sm:px-0 lg:mx-28">
