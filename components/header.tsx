@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import sideBySideSvg from "../public/images/sidebyside-transparent.svg"
 import { SpringValue, animated } from "@react-spring/web";
+import { FaGithub } from "react-icons/fa";
 const menuItems = [
   { text: "Docs", link: "https://keploy.io/docs" },
   { text: "Tech Blogs", link: "/technology" },
@@ -21,7 +22,7 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
     return (
       <Link
         href="https://www.app.keploy.io/signin"
-        className="inline-flex items-center py-2 px-4 rounded  text-gray-200 bg-[#00163d]  font-semibold ml-3"
+        className="inline-flex items-center p-3 text-xl rounded-3xl text-white bg-primary-300 ring-2 ring-primary-300 font-semibold  hover:bg-orange-500"
       >
         <span>Sign In</span>
         <svg
@@ -40,7 +41,7 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   return (
     <Link
       href="https://www.app.keploy.io/signin"
-      className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d]  hover:text-primary-300 ml-3"
+      className="gap-2 text-sm font-medium bg-gradient-to-r from-orange-500 to-red-500 hover:from-red-500 hover:to-orange-500 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out text-white px-8 py-2.5 flex items-center justify-center"
     >
       <span>Sign In</span>
     </Link>
@@ -66,13 +67,16 @@ const GithubBtn = () => {
   }, []);
 
   return (
-    <button className="w-full p-2 overflow-hidden border border-orange-500 border-opacity-25 rounded lg:w-auto sm:border-opacity-100">
+    <button className="w-full p-2 overflow-hidden border-2 hover:bg-primary-200/20 border-primary-50/0 hover:border-2 hover:border-orange-500 hover:text-primary-300 px-6 border-opacity-0 rounded-full lg:w-auto sm:border-opacity-100 relative group/button">
+      {/* Sliding effect span */}
+      <span className="absolute left-0 -mt-12 h-32 w-12 -translate-x-36 rotate-12 bg-orange-500 opacity-10 transition-transform duration-700 ease-out group-hover/button:-translate-x-[-400%]" />
+      
       <Link
-        className="flex items-center gap-2 ml-4 text-sm font-extrabold text-orange-500 transition-colors lg:ml-0 hover:text-primary-300"
+        className="flex items-center gap-2 ml-4 text-sm font-extrabold transition-colors lg:ml-0"
         href="https://github.com/keploy/keploy"
       >
         <svg
-          className="w-5 h-5"
+          className="w-5 h-5 text-black"
           viewBox="0 0 16 16"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -83,11 +87,8 @@ const GithubBtn = () => {
             fillRule="evenodd"
           />
         </svg>
-        <span className="text-gradient-500 opacity-30 hover:text-orange-500">
-          |
-        </span>
         <span className="flex gap-1 text-base">
-          ⭐️ <p>{formatStars(stars)}</p>
+          <p>{formatStars(stars)}</p>
         </span>
       </Link>
     </button>
@@ -122,27 +123,27 @@ export default function Header({
   return (
     <div className="h-32 md:h-40">
       <header className="fixed z-30 w-full transition duration-300 ease-in-out bg-neutral-100 md:bg-opacity-90 ">
-        <div className="max-w-6xl px-5 mx-auto sm:px-6">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            <div className="flex-grow-0 w-2/12 mr-4 shrink-0">
+        <div className="max-w-6xl px-5  mx-auto sm:px-6">
+          <div className="flex  items-center h-16 md:h-20">
+            <div className="w-2/12 ">
               <Link href={"https://keploy.io/"}>
                 <Image
                   src={sideBySideSvg}
                   alt="Keploy Logo"
                   className="w-auto h-10"
-                />
+                /> 
               </Link>
             </div>
-            <nav className="flex-grow-0 hidden w-6/12 lg:flex ">
-              <ul className="flex flex-wrap items-center justify-end grow">
+            <nav className=" hidden w-6/12 lg:flex -translate-x-10 ">
+              <ul className="flex flex-wrap items-center justify-start grow">
                 {menuItems.map((item, index) => {
                   return (
                     <li key={index}>
                       <Link
                         href={item.link}
-                        className="flex items-center flex-grow-0 px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300 lg:flex"
+                        className="flex items-center flex-grow-0 px-5 pt-3.5 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300 lg:flex"
                       >
-                        {item.text}
+                        {item.text} 
                       </Link>
                     </li>
                   );
@@ -150,7 +151,7 @@ export default function Header({
               </ul>
             </nav>
 
-            <div className="justify-end flex-1 hidden header-btn-container lg:flex">
+            <div className="justify-end flex-1 hidden header-btn-container lg:gap-2 lg:flex pt-3.5 ">
               <GithubBtn />
               <WaitListBtn />
             </div>
