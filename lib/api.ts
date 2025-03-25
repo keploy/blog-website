@@ -1,7 +1,7 @@
 export const maxDuration = 300; // This can run Vercel Functions for a maximum of 300 seconds
 export const dynamic = 'force-dynamic';
 
-export const API_URL = process.env.WORDPRESS_API_URL;
+const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL
 
 async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   const headers = { "Content-Type": "application/json" };
@@ -238,12 +238,8 @@ export async function getReviewAuthorDetails(authorName) {
 
 // Fnction for fetching post with technology category
 
-export async function getAllPostsForTechnology(preview) {
-  let allEdges = [];
-  let hasNextPage = true;
-  let endCursor = null;
-
-  while (hasNextPage) {
+export async function getAllPostsForTechnology(preview = false, after = null) {
+  try {
     const data = await fetchAPI(
       `
       query AllPostsForCategory($after: String) {
@@ -294,89 +290,101 @@ export async function getAllPostsForTechnology(preview) {
       {
         variables: {
           preview,
-          after: endCursor,
+          after,
         },
       }
     );
 
-    // Append edges and update pagination info
-    const edges = data?.posts?.edges || [];
-    allEdges = [...allEdges, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
-    endCursor = data?.posts?.pageInfo?.endCursor;
+    // Change the return to match PostsResponse type
+    return {
+      edges: data?.posts?.edges || [],
+      pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+    };
+  } catch (error) {
+    console.error('Error in getAllPostsForTechnology:', error);
+    return {
+      edges: [],
+      pageInfo: { hasNextPage: false, endCursor: null }
+    };
   }
-
-  return { edges: allEdges };
 }
 
-export async function getAllPostsForCommunity(preview = false, after = null, page = 1) {
-  
-  const data = await fetchAPI(
-    `
-    query CommunityPosts($after: String) {
-      posts(
-        first: 21, 
-        after: $after, 
-        where: { 
-          orderby: { field: DATE, order: DESC },
-          categoryName: "community" 
-        }
-      ) {
-        edges {
-          node {
-            title
-            excerpt
-            slug
-            date
-            postId
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            author {
-              node {
-                name
-                firstName
-                lastName
-                avatar {
-                  url
+
+export async function getAllPostsForCommunity(preview = false, after = null) {
+  try {
+    const data = await fetchAPI(
+      `
+      query CommunityPosts($after: String) {
+        posts(
+          first: 22,
+          after: $after, 
+          where: { 
+            orderby: { field: DATE, order: DESC },
+            categoryName: "community" 
+          }
+        ) {
+          edges {
+            node {
+              title
+              excerpt
+              slug
+              date
+              postId
+              featuredImage {
+                node {
+                  sourceUrl
                 }
               }
-            }
-            ppmaAuthorName
-            categories {
-              edges {
+              author {
                 node {
                   name
+                  firstName
+                  lastName
+                  avatar {
+                    url
+                  }
                 }
               }
-            }
-            seo {
-              metaDesc
-              title
+              ppmaAuthorName
+              categories {
+                edges {
+                  node {
+                    name
+                  }
+                }
+              }
+              seo {
+                metaDesc
+                title
+              }
             }
           }
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }
-    }
-    `,
-    {
-      variables: {
-        preview,
-        after,
-      },
-    }
-  );
-  
-  return {
-    edges: data?.posts?.edges || [],
-    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
-  };
+      `,
+      {
+        variables: {
+          preview,
+          after,
+        },
+      }
+    );
+
+    return {
+      edges: data?.posts?.edges || [],
+      pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+    };
+  } catch (error) {
+    console.error('Error in getAllPostsForCommunity:', error);
+    return {
+      edges: [],
+      pageInfo: { hasNextPage: false, endCursor: null }
+    };
+  }
 }
 
 export async function getAllAuthors() {
@@ -711,4 +719,80 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
   if (data.posts.edges.length > 2) data.posts.edges.pop();
 
   return data;
+}
+
+// function for fetching more posts for community or technology category
+export async function fetchMorePosts(
+  category: 'community' | 'technology',
+  after: string | null = null,
+  first: number = 22
+) {
+
+  const data = await fetchAPI(
+    `
+    query MorePosts($after: String, $first: Int!, $category: String!) {
+      posts(
+        first: $first,
+        after: $after,
+        where: {
+          orderby: { field: DATE, order: DESC },
+          categoryName: $category
+        }
+      ) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            postId
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+            ppmaAuthorName
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+            seo {
+              metaDesc
+              title
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+    `,
+    {
+      variables: {
+        after,
+        first,
+        category
+      },
+    }
+  );
+
+  return {
+    edges: data?.posts?.edges || [],
+    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+  };
 }
