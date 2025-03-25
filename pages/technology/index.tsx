@@ -8,7 +8,7 @@ import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
 
-export default function Index({ allPosts: { edges }, preview }) {
+export default function Index({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;
   const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
   const morePosts = edges.slice(1);
@@ -38,7 +38,7 @@ export default function Index({ allPosts: { edges }, preview }) {
           />
         )}
         {morePosts.length > 0 && (
-          <MoreStories isIndex={true} posts={morePosts} isCommunity={false} />
+          <MoreStories isIndex={true} posts={morePosts} isCommunity={false} initialPageInfo={pageInfo} />
         )}
       </Container>
     </Layout>
