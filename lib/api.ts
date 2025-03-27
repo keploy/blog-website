@@ -1,4 +1,4 @@
-export const maxDuration = 300; // This can run Vercel Functions for a maximum of 300 seconds
+export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
 const API_URL = process.env.WORDPRESS_API_URL;
@@ -11,7 +11,6 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
       "Authorization"
     ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
   }
-  // WPGraphQL Plugin must be enabled
   const res = await fetch(API_URL, {
     headers,
     method: "POST",
@@ -70,7 +69,7 @@ export async function getAllTags() {
     `,
       {
         variables: {
-          first: 100, // Adjust as needed
+          first: 100,
           after: endCursor,
         },
       }
@@ -89,7 +88,7 @@ export async function getAllPostsFromTags(tagName: String, preview) {
   const data = await fetchAPI(
     `
     query AllPosts($tagName: String!) {
-      posts(first: 100, where: { orderby: { field: DATE, order: DESC }, tag: $tagName }) {
+      posts(first: 6, where: { orderby: { field: DATE, order: DESC }, tag: $tagName }) {
         edges {
           node {
             title
@@ -138,9 +137,8 @@ export async function getAllPosts() {
 
   while (hasNextPage) {
     const data = await fetchAPI(
-      `
-      query AllPosts($after: String) {
-        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
+      `query AllPosts($after: String) {
+        posts(first: 6, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
           edges {
             node {
               title
@@ -204,8 +202,6 @@ export async function getContent(postId: number) {
   return data.postBy.content;
 }
 
-//Fetching Reviewing author details
-
 export async function getReviewAuthorDetails(authorName) {
   const data = await fetchAPI(
     `
@@ -234,10 +230,6 @@ export async function getReviewAuthorDetails(authorName) {
   return data?.users;
 }
 
-
-
-// Fnction for fetching post with technology category
-
 export async function getAllPostsForTechnology(preview) {
   let allEdges = [];
   let hasNextPage = true;
@@ -245,9 +237,8 @@ export async function getAllPostsForTechnology(preview) {
 
   while (hasNextPage) {
     const data = await fetchAPI(
-      `
-      query AllPostsForCategory($after: String) {
-        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+      `query AllPostsForCategory($after: String) {
+        posts(first: 6, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
           edges {
             node {
               title
@@ -316,9 +307,8 @@ export async function getAllPostsForCommunity(preview) {
 
   while (hasNextPage) {
     const data = await fetchAPI(
-      `
-    query AllPostsForCategory($after: String){
-      posts(first: 50, after: $after ,where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
+      `query AllPostsForCategory($after: String){
+      posts(first: 6, after: $after ,where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
         edges {
           node {
             title
@@ -386,7 +376,7 @@ export async function getAllAuthors() {
     const data = await fetchAPI(
       `
       query getAllAuthors($after: String) {
-        posts(first: 50, after: $after) {
+        posts(first: 6, after: $after) {
           edges {
             node {
               ppmaAuthorName
@@ -432,7 +422,7 @@ export async function getPostsByAuthor() {
     const data = await fetchAPI(
       `
       query getPostsByAuthor($after: String) {
-        posts(first: 50, after: $after) {
+        posts(first: 6, after: $after) {
           edges {
             node {
               postId
@@ -591,10 +581,9 @@ export async function getPostsByAuthorName(authorName) {
   return { edges: allEdges };
 }
 
-
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post;
-  // The slug may be the id of an unpublished post
+
   const isId = Number.isInteger(Number(slug));
   const isSamePost = isId
     ? Number(slug) === postPreview.id
@@ -652,9 +641,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       post(id: $id, idType: $idType) {
         ...PostFields
         content
-        ${
-          // Only some of the fields of a revision are considered as there are some inconsistencies
-          isRevision
+        ${isRevision
             ? `
         revisions(first: 1, where: { orderby: { field: MODIFIED, order: DESC } }) {
           edges {
