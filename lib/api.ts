@@ -3,22 +3,26 @@ export const dynamic = 'force-dynamic';
 
 const API_URL = process.env.WORDPRESS_API_URL;
 
+// In-memory cache 
+const cache = new Map();
+
 async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   const headers = { "Content-Type": "application/json" };
 
   if (process.env.WORDPRESS_AUTH_REFRESH_TOKEN) {
-    headers[
-      "Authorization"
-    ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
+    headers["Authorization"] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
   }
-  // WPGraphQL Plugin must be enabled
+
+  // Generate a unique cache key
+  const cacheKey = JSON.stringify({ query, variables });
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey);
+  }
+
   const res = await fetch(API_URL, {
     headers,
     method: "POST",
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
+    body: JSON.stringify({ query, variables }),
   });
 
   const json = await res.json();
@@ -26,6 +30,11 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
     console.error(json.errors);
     throw new Error("Failed to fetch API");
   }
+
+  // Cache for 5 minutes (300,000 ms)
+  cache.set(cacheKey, json.data);
+  setTimeout(() => cache.delete(cacheKey), 300000);
+
   return json.data;
 }
 
@@ -39,9 +48,7 @@ export async function getPreviewPost(id, idType = "DATABASE_ID") {
         status
       }
     }`,
-    {
-      variables: { id, idType },
-    }
+    { variables: { id, idType } }
   );
   return data.post;
 }
@@ -50,8 +57,9 @@ export async function getAllTags() {
   let hasNextPage = true;
   let endCursor = null;
   let allTags = [];
+  const maxTags = 500; // Reasonable limit to prevent over-fetching
 
-  while (hasNextPage) {
+  while (hasNextPage && allTags.length < maxTags) {
     const data = await fetchAPI(
       `
       query AllTags($first: Int!, $after: String) {
@@ -70,16 +78,15 @@ export async function getAllTags() {
     `,
       {
         variables: {
-          first: 100, // Adjust as needed
+          first: 50, 
           after: endCursor,
         },
       }
     );
 
-    const tags = data?.tags?.edges.map((edge) => edge.node);
+    const tags = data?.tags?.edges.map((edge) => edge.node) || [];
     allTags = allTags.concat(tags);
-
-    hasNextPage = data?.tags?.pageInfo?.hasNextPage;
+    hasNextPage = data?.tags?.pageInfo?.hasNextPage && allTags.length < maxTags;
     endCursor = data?.tags?.pageInfo?.endCursor;
   }
   return allTags;
@@ -89,7 +96,7 @@ export async function getAllPostsFromTags(tagName: String, preview) {
   const data = await fetchAPI(
     `
     query AllPosts($tagName: String!) {
-      posts(first: 100, where: { orderby: { field: DATE, order: DESC }, tag: $tagName }) {
+      posts(first: 20, where: { orderby: { field: DATE, order: DESC }, tag: $tagName }) {
         edges {
           node {
             title
@@ -120,27 +127,23 @@ export async function getAllPostsFromTags(tagName: String, preview) {
     }
     `,
     {
-      variables: {
-        tagName,
-        onlyEnabled: !preview,
-        preview,
-      },
+      variables: { tagName, onlyEnabled: !preview, preview },
     }
   );
-
-  return data?.posts;
+  return data?.posts || { edges: [] };
 }
 
 export async function getAllPosts() {
   let allEdges = [];
   let hasNextPage = true;
   let endCursor = null;
+  const maxPosts = 100;
 
-  while (hasNextPage) {
+  while (hasNextPage && allEdges.length < maxPosts) {
     const data = await fetchAPI(
       `
       query AllPosts($after: String) {
-        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
+        posts(first: 20, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
           edges {
             node {
               title
@@ -167,20 +170,21 @@ export async function getAllPosts() {
               }
             }
           }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }
     `,
-      {
-        variables: { after: endCursor },
-      }
+      { variables: { after: endCursor } }
     );
 
-    const edges = data?.posts?.edges;
+    const edges = data?.posts?.edges || [];
     allEdges = [...allEdges, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage && allEdges.length < maxPosts;
     endCursor = data?.posts?.pageInfo?.endCursor;
   }
-
   return { edges: allEdges };
 }
 
@@ -193,18 +197,10 @@ export async function getContent(postId: number) {
       }
     }
     `,
-    {
-      variables: {
-        postId,
-      },
-    }
+    { variables: { postId } }
   );
-
-  // Extract and return the content
   return data.postBy.content;
 }
-
-//Fetching Reviewing author details
 
 export async function getReviewAuthorDetails(authorName) {
   const data = await fetchAPI(
@@ -224,30 +220,22 @@ export async function getReviewAuthorDetails(authorName) {
       }
     }
     `,
-    {
-      variables: {
-        authorName,
-      },
-    }
+    { variables: { authorName } }
   );
-
-  return data?.users;
+  return data?.users || { edges: [] };
 }
-
-
-
-// Fnction for fetching post with technology category
 
 export async function getAllPostsForTechnology(preview) {
   let allEdges = [];
   let hasNextPage = true;
   let endCursor = null;
+  const maxPosts = 50; 
 
-  while (hasNextPage) {
+  while (hasNextPage && allEdges.length < maxPosts) {
     const data = await fetchAPI(
       `
       query AllPostsForCategory($after: String) {
-        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+        posts(first: 10, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
           edges {
             node {
               title
@@ -291,21 +279,14 @@ export async function getAllPostsForTechnology(preview) {
         }
       }
       `,
-      {
-        variables: {
-          preview,
-          after: endCursor,
-        },
-      }
+      { variables: { preview, after: endCursor } }
     );
 
-    // Append edges and update pagination info
     const edges = data?.posts?.edges || [];
     allEdges = [...allEdges, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage && allEdges.length < maxPosts;
     endCursor = data?.posts?.pageInfo?.endCursor;
   }
-
   return { edges: allEdges };
 }
 
@@ -313,65 +294,62 @@ export async function getAllPostsForCommunity(preview) {
   let allEdges = [];
   let hasNextPage = true;
   let endCursor = null;
+  const maxPosts = 50; 
 
-  while (hasNextPage) {
+  while (hasNextPage && allEdges.length < maxPosts) {
     const data = await fetchAPI(
       `
-    query AllPostsForCategory($after: String){
-      posts(first: 50, after: $after ,where: { orderby: { field: DATE, order: DESC } categoryName: "community" }) {
-        edges {
-          node {
-            title
-            excerpt
-            slug
-            date
-            postId
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            author {
-              node {
-                name
-                firstName
-                lastName
-                avatar {
-                  url
+      query AllPostsForCategory($after: String) {
+        posts(first: 10, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "community" }) {
+          edges {
+            node {
+              title
+              excerpt
+              slug
+              date
+              postId
+              featuredImage {
+                node {
+                  sourceUrl
                 }
               }
-            }
-            ppmaAuthorName
-            categories {
-              edges {
+              author {
                 node {
                   name
+                  firstName
+                  lastName
+                  avatar {
+                    url
+                  }
                 }
               }
-            }
-            seo {
-              metaDesc
-              title
+              ppmaAuthorName
+              categories {
+                edges {
+                  node {
+                    name
+                  }
+                }
+              }
+              seo {
+                metaDesc
+                title
+              }
             }
           }
-        }
           pageInfo {
             hasNextPage
             endCursor
           }
+        }
       }
-    }
-  `,
-      {
-        variables: {
-          preview,
-          after: endCursor,
-        },
-      }
+      `,
+      { variables: { preview, after: endCursor } }
     );
+
     const edges = data?.posts?.edges || [];
     allEdges = [...allEdges, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage && allEdges.length < maxPosts;
     endCursor = data?.posts?.pageInfo?.endCursor;
   }
   return { edges: allEdges };
@@ -381,12 +359,13 @@ export async function getAllAuthors() {
   let allAuthors = [];
   let hasNextPage = true;
   let endCursor = null;
+  const maxAuthors = 100;
 
-  while (hasNextPage) {
+  while (hasNextPage && allAuthors.length < maxAuthors) {
     const data = await fetchAPI(
       `
       query getAllAuthors($after: String) {
-        posts(first: 50, after: $after) {
+        posts(first: 20, after: $after) {
           edges {
             node {
               ppmaAuthorName
@@ -410,14 +389,12 @@ export async function getAllAuthors() {
         }
       }
     `,
-      {
-        variables: { after: endCursor },
-      }
+      { variables: { after: endCursor } }
     );
 
-    const edges = data?.posts?.edges;
+    const edges = data?.posts?.edges || [];
     allAuthors = [...allAuthors, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage && allAuthors.length < maxAuthors;
     endCursor = data?.posts?.pageInfo?.endCursor;
   }
   return { edges: allAuthors };
@@ -427,12 +404,13 @@ export async function getPostsByAuthor() {
   let allPosts = [];
   let hasNextPage = true;
   let endCursor = null;
+  const maxPosts = 100; 
 
-  while (hasNextPage) {
+  while (hasNextPage && allPosts.length < maxPosts) {
     const data = await fetchAPI(
       `
       query getPostsByAuthor($after: String) {
-        posts(first: 50, after: $after) {
+        posts(first: 20, after: $after) {
           edges {
             node {
               postId
@@ -460,14 +438,12 @@ export async function getPostsByAuthor() {
         }
       }
     `,
-      {
-        variables: { after: endCursor },
-      }
+      { variables: { after: endCursor } }
     );
 
-    const edges = data?.posts?.edges;
+    const edges = data?.posts?.edges || [];
     allPosts = [...allPosts, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+    hasNextPage = data?.posts?.pageInfo?.hasNextPage && allPosts.length < maxPosts;
     endCursor = data?.posts?.pageInfo?.endCursor;
   }
   return { edges: allPosts };
@@ -520,22 +496,18 @@ export async function getMoreStoriesForSlugs(tags, slug) {
     }
   `;
 
-  // Fetch posts with tags if applicable
   if (tagFilter) {
     data = await fetchAPI(queryWithTags, { variables });
     stories = data?.posts?.edges.map(({ node }) => node) || [];
     stories = stories.filter((story) => story.slug !== slug);
   }
 
-  // If no posts are found, fetch without tag filter
   if (!stories.length) {
     data = await fetchAPI(fallbackQuery);
     stories = data?.posts?.edges.map(({ node }) => node) || [];
     stories = stories.filter((story) => story.slug !== slug);
-
   }
 
-  // Remove posts with the same slug
   return {
     techMoreStories: { edges: stories.map((node) => ({ node })) },
     communityMoreStories: { edges: stories.map((node) => ({ node })) },
@@ -543,10 +515,9 @@ export async function getMoreStoriesForSlugs(tags, slug) {
 }
 
 export async function getPostsByAuthorName(authorName) {
-  let allEdges = [];
   const data = await fetchAPI(
     `query MyQuery3 {
-      posts(where: {authorName: "${authorName}"}) {
+      posts(first: 20, where: { authorName: "${authorName}" }) {
         edges {
           node {
             title
@@ -586,21 +557,16 @@ export async function getPostsByAuthorName(authorName) {
       }
     }`
   );
-  const edges = data.posts.edges;
-  allEdges = [...allEdges, ...edges];
-  return { edges: allEdges };
+  return { edges: data?.posts?.edges || [] };
 }
-
 
 export async function getPostAndMorePosts(slug, preview, previewData) {
   const postPreview = preview && previewData?.post;
-  // The slug may be the id of an unpublished post
   const isId = Number.isInteger(Number(slug));
-  const isSamePost = isId
-    ? Number(slug) === postPreview.id
-    : slug === postPreview.slug;
+  const isSamePost = isId ? Number(slug) === postPreview?.id : slug === postPreview?.slug;
   const isDraft = isSamePost && postPreview?.status === "draft";
   const isRevision = isSamePost && postPreview?.status === "publish";
+
   const data = await fetchAPI(
     `
     fragment AuthorFields on User {
@@ -611,7 +577,6 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
         url
       }
     }
-
     fragment PostFields on Post {
       title
       excerpt
@@ -642,18 +607,16 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
           }
         }
       }
-      seo{
+      seo {
         metaDesc
         title
-      }  
+      }
     }
-
     query PostBySlug($id: ID!, $idType: PostIdType!) {
       post(id: $id, idType: $idType) {
         ...PostFields
         content
         ${
-          // Only some of the fields of a revision are considered as there are some inconsistencies
           isRevision
             ? `
         revisions(first: 1, where: { orderby: { field: MODIFIED, order: DESC } }) {
@@ -679,7 +642,6 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
         edges {
           node {
             ...PostFields
-            
           }
         }
       }
@@ -693,19 +655,14 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
     }
   );
 
-  // Draft posts may not have an slug
   if (isDraft) data.post.slug = postPreview.id;
-  // Apply a revision (changes in a published post)
   if (isRevision && data.post.revisions) {
     const revision = data.post.revisions.edges[0]?.node;
-
     if (revision) Object.assign(data.post, revision);
     delete data.post.revisions;
   }
 
-  // Filter out the main post
   data.posts.edges = data.posts.edges.filter(({ node }) => node.slug !== slug);
-  // If there are still 3 posts, remove the last one
   if (data.posts.edges.length > 2) data.posts.edges.pop();
 
   return data;
