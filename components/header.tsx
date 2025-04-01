@@ -20,7 +20,7 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   if (mobile) {
     return (
       <Link
-        href="https://www.app.keploy.io/signin"
+        href="https://app.keploy.io/signin"
         className="inline-flex items-center py-2 px-4 rounded  text-gray-200 bg-[#00163d]  font-semibold ml-3"
       >
         <span>Sign In</span>
@@ -39,7 +39,7 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   }
   return (
     <Link
-      href="https://www.app.keploy.io/signin"
+      href="https://app.keploy.io/signin"
       className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d]  hover:text-primary-300 ml-3"
     >
       <span>Sign In</span>
