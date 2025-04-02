@@ -18,37 +18,38 @@ const formatStars = (num: number) =>
       maximumFractionDigits: 1,
     }).format(num);
 
-    const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
-      if (mobile) {
-        return (
-          <Link
-            href="https://app.keploy.io/signin"
-            target="_blank"
-            className="inline-flex items-center p-3 text-xl rounded-3xl text-white bg-primary-300 ring-2 ring-primary-300 font-semibold hover:bg-orange-500">
-            <span>Sign In </span>
-            <svg
-              className="w-3 h-3 ml-2 -mr-1 fill-current hover:text-primary-300 shrink-0"
-              viewBox="0 0 12 12"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.707 5.293L7 .586 5.586 2l3 3H0v2h8.586l-3 3L7 11.414l4.707-4.707a1 1 0 000-1.414z"
-                fillRule="nonzero"
-              />
-            </svg>
-          </Link>
-        );
-      }
-      return (
-        <Link
-  href="https://app.keploy.io/signin"
-  target="_blank"
-  className="py-1.5 px-6 rounded-full text-white text-lg font-semibold bg-gradient-to-r from-orange-500 to-red-500 shadow-md transition-all duration-300 text-center flex items-center justify-center hover:bg-gradient-to-l"
->
-  <span>Sign In</span>
-</Link>
-      );
-    };
+const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
+  if (mobile) {
+    return (
+      <Link
+        href="https://app.keploy.io/signin"
+        className="inline-flex items-center py-2 px-4 rounded text-gray-200 bg-[#00163d] font-semibold ml-3"
+      >
+        <span>Sign In</span>
+        <svg
+          className="w-3 h-3 ml-2 -mr-1 fill-current hover:text-primary-300 shrink-0"
+          viewBox="0 0 12 12"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M11.707 5.293L7 .586 5.586 2l3 3H0v2h8.586l-3 3L7 11.414l4.707-4.707a1 1 0 000-1.414z"
+            fillRule="nonzero"
+          />
+        </svg>
+      </Link>
+    );
+  }
+  // Your improved desktop version
+  return (
+    <Link
+      href="https://app.keploy.io/signin"
+      target="_blank"
+      className="py-1.5 px-6 rounded-full text-white text-lg font-semibold bg-gradient-to-r from-orange-500 to-red-500 shadow-md transition-all duration-300 text-center flex items-center justify-center hover:bg-gradient-to-l"
+    >
+      <span>Sign In</span>
+    </Link>
+  );
+};
 const GithubBtn = () => {
   const [stars, setStars] = useState<number>(5412);
 
