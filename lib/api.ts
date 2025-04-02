@@ -236,77 +236,67 @@ export async function getReviewAuthorDetails(authorName) {
 
 
 
-// Fnction for fetching post with technology category
-
+// Function for fetching post with technology category
 export async function getAllPostsForTechnology(preview = false, after = null) {
-  try {
-    const data = await fetchAPI(
-      `
-      query AllPostsForCategory($after: String) {
-        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
-          edges {
-            node {
-              title
-              excerpt
-              slug
-              date
-              postId
-              featuredImage {
-                node {
-                  sourceUrl
-                }
-              }
-              author {
-                node {
-                  name
-                  firstName
-                  lastName
-                  avatar {
-                    url
-                  }
-                }
-              }
-              ppmaAuthorName
-              categories {
-                edges {
-                  node {
-                    name
-                  }
-                }
-              }
-              seo {
-                metaDesc
-                title
+  const data = await fetchAPI(
+    `
+    query AllPostsForCategory($after: String) {
+      posts(first: 22, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            postId
+            featuredImage {
+              node {
+                sourceUrl
               }
             }
-          }
-          pageInfo {
-            hasNextPage
-            endCursor
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+            ppmaAuthorName
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+            seo {
+              metaDesc
+              title
+            }
           }
         }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
-      `,
-      {
-        variables: {
-          preview,
-          after,
-        },
-      }
-    );
+    }
+    `,
+    {
+      variables: {
+        preview,
+        after,
+      },
+    }
+  );
 
-    // Change the return to match PostsResponse type
-    return {
-      edges: data?.posts?.edges || [],
-      pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
-    };
-  } catch (error) {
-    console.error('Error in getAllPostsForTechnology:', error);
-    return {
-      edges: [],
-      pageInfo: { hasNextPage: false, endCursor: null }
-    };
-  }
+  return {
+    edges: data?.posts?.edges || [],
+    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+  };
 }
 
 

@@ -17,13 +17,25 @@ export default function MoreStories({
   initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
 }) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [allPosts, setAllPosts] = useState(initialPosts);
+  // Initialize with 21 posts (22 - 1 hero post)
+  const [allPosts, setAllPosts] = useState(initialPosts.slice(0, 21));
   const [visibleCount, setVisibleCount] = useState(12);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialPageInfo?.hasNextPage ?? true);
   const [error, setError] = useState(null);
   const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
+
+  // Set up initial buffer with remaining posts
+  useEffect(() => {
+    if (initialPosts.length > 21) {
+      setBuffer(initialPosts.slice(21));
+    }
+    // Start background fetch if we have less than 9 posts in buffer
+    if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
+      loadMoreInBackground();
+    }
+  }, [initialPosts]);
 
   // Filter posts based on search term
   const filteredPosts = allPosts.filter(({ node }) => 
@@ -60,57 +72,56 @@ export default function MoreStories({
     }
   };
 
-  // Initial buffer load
-  useEffect(() => {
-    if (isIndex && initialPageInfo?.hasNextPage) {
-      loadMoreInBackground();
-    }
-  }, [isIndex, initialPageInfo]);
-
   const loadMorePosts = async () => {
     if (loading) return;
     
     if (searchTerm) {
       setVisibleCount(prev => prev + 9);
-    } else {
-      setLoading(true);
-      
-      try {
-        // Show posts from buffer immediately
-        if (buffer.length >= 9) {
-          const postsToAdd = buffer.slice(0, 9);
-          const remainingBuffer = buffer.slice(9);
-          
-          setAllPosts(currentPosts => [...currentPosts, ...postsToAdd]);
-          setBuffer(remainingBuffer);
-          setVisibleCount(prev => prev + 9);
-          
-          // If buffer is getting low, fetch more in background
-          if (remainingBuffer.length < 9 && hasMore) {
-            loadMoreInBackground();
-          }
-        } else if (buffer.length > 0) {
-          // Use remaining buffer
-          setAllPosts(currentPosts => [...currentPosts, ...buffer]);
-          setBuffer([]);
-          setVisibleCount(prev => prev + buffer.length);
-          
-          // Fetch more if available
-          if (hasMore) {
-            loadMoreInBackground();
-          }
-        }
-      } catch (error) {
-        console.error('Error loading more posts:', error);
-        setError('Failed to load more posts. Please try again later.');
-      } finally {
-        setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // First, show more posts from allPosts if available
+      if (visibleCount < allPosts.length) {
+        setVisibleCount(prev => Math.min(prev + 9, allPosts.length));
+      } 
+      // Then, add posts from buffer if needed
+      else if (buffer.length > 0) {
+        const postsToAdd = buffer.slice(0, 9);
+        setAllPosts(prev => [...prev, ...postsToAdd]);
+        setBuffer(prev => prev.slice(9));
+        setVisibleCount(prev => prev + postsToAdd.length);
       }
+
+      // If buffer is getting low, fetch more posts
+      if (buffer.length < 9 && hasMore) {
+        const category = isCommunity ? 'community' : 'technology';
+        const result = await fetchMorePosts(category, endCursor);
+        
+        if (result.edges.length > 0) {
+          setBuffer(prev => [...prev, ...result.edges]);
+          setEndCursor(result.pageInfo.endCursor);
+          setHasMore(result.pageInfo.hasNextPage);
+        } else {
+          setHasMore(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading more posts:', error);
+      setError('Failed to load more posts. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Show load more button only if we have buffered posts or more posts can be fetched
-  const showLoadMore = (buffer.length > 0 || hasMore) && isIndex;
+  // Show load more button if there are more posts to show from allPosts,
+  // or if there are posts in buffer, or if we can fetch more
+  const showLoadMore = (
+    visibleCount < allPosts.length || 
+    buffer.length > 0 || 
+    hasMore
+  ) && !loading && !error && isIndex;
 
   return (
     <section>
@@ -133,11 +144,7 @@ export default function MoreStories({
         </div>
       )}
 
-      {error ? (
-        <div className="text-red-500 text-center mb-8 p-4 bg-red-50 rounded-lg">
-          {error}
-        </div>
-      ) : filteredPosts.length === 0 ? (
+      {filteredPosts.length === 0 ? (
         <p className="text-center text-gray-500">No posts found by the name {`"${searchTerm}"`}</p>
       ) : (
         <>
@@ -158,8 +165,14 @@ export default function MoreStories({
             ))}
           </div>
 
-          {showLoadMore && (
-            <div className="flex justify-center mb-8">
+          <div className="flex flex-col items-center gap-4 mb-8">
+            {error && (
+              <div className="text-red-500 text-center p-4 bg-red-50 rounded-lg w-full max-w-md">
+                {error}
+              </div>
+            )}
+
+            {showLoadMore && (
               <button
                 onClick={loadMorePosts}
                 disabled={loading}
@@ -171,8 +184,8 @@ export default function MoreStories({
                   'Load More Posts'
                 )}
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </>
       )}
     </section>
