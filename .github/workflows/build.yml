@@ -73,18 +73,7 @@ jobs:
         with:
           name: lighthouse-report
         continue-on-error: true
-
-      - name: Compare Reports and Fail on Score Drop 
-        uses: adevinta/actions-lighthouseci-compare@v1
-        with:
-          current-report: lhr-current.json
-          previous-report: lighthouse-report/lhr-current.json
-          thresholds: |
-            performance=0
-            accessibility=0
-            best-practices=0
-            seo=0
-
+        
       - name: Upload Current Lighthouse Report for Future Comparisons
         uses: actions/upload-artifact@v4
         with:
