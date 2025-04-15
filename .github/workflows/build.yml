@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir -p .lighthouseci
           lhci autorun \
-            --collect.url="https://www.keploy.io/blog" 
+            --collect.url="https://keploy.io/blog" 
 
   lighthouse-pr:
     name: Lighthouse on PR branch
