@@ -9,7 +9,7 @@ First, you need a WordPress site. There are many solutions for WordPress hosting
 Once the site is ready, you'll need to install the [WPGraphQL](https://www.wpgraphql.com/) plugin. It will add GraphQL API to your WordPress site which we'll use to query the posts. Follow these steps to install it:
 
 - Download the [WPGraphQL repo](https://github.com/wp-graphql/wp-graphql) as a ZIP archive.
-- Inside your WordPress admin, go to **Plugins** and then click **Add New**.
+- Inside your wordPress admin, go to **Plugins** and then click **Add New**.
 - Click the **Upload Plugin** button at the top of the page and upload the WPGraphQL plugin.
 - Once the plugin has been added, activate it from either the **Activate Plugin** button displayed after uploading or from the **Plugins** page.
 
