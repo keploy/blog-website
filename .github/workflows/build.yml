@@ -34,7 +34,7 @@ jobs:
             --upload.reportFilename=main.report.json
 
       - name: Upload main Lighthouse report as artifact
-        uses: actions/upload-artifact@v4.2.1
+        uses: actions/upload-artifact@v4
         with:
           name: main-report
           path: .lighthouseci/main.report.json
@@ -83,7 +83,7 @@ jobs:
             --upload.reportFilename=pr.report.json
 
       - name: Upload PR Lighthouse report as artifact
-        uses: actions/upload-artifact@v4.2.1
+        uses: actions/upload-artifact@v4
         with:
           name: pr-report
           path: .lighthouseci/pr.report.json
@@ -95,13 +95,13 @@ jobs:
 
     steps:
       - name: Download main Lighthouse report
-        uses: actions/download-artifact@v4.2.1
+        uses: actions/download-artifact@v4
         with:
           name: main-report
           path: .lighthouseci
 
       - name: Download PR Lighthouse report
-        uses: actions/download-artifact@v4.2.1
+        uses: actions/download-artifact@v4
         with:
           name: pr-report
           path: .lighthouseci
