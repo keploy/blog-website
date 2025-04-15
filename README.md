@@ -4,7 +4,7 @@
 
 ### Step 1. Prepare your WordPress site
 
-First, you need a WordPress site. There are many solutions for WordPress hosting or you could use a Local by flywheel for setting up WordPress locally.
+First, you need a WordPress site. There are many solutions for WordPress hosting or you could use a Local by flywheel for setting up WordPress locally
 
 Once the site is ready, you'll need to install the [WPGraphQL](https://www.wpgraphql.com/) plugin. It will add GraphQL API to your WordPress site, which we'll use to query the posts. Follow these steps to install it:
 
@@ -55,7 +55,7 @@ Copy the .env.local.example file in this directory to .env.local (which will be 
 cp .env.local.example .env.local
 ```
 
-Then open .env.local and set WORDPRESS_API_URL to be the URL to your GraphQL endpoint in WordPress. For example: https://Testapp.com/graphql.
+Then open .env.local and set WORDPRESS_API_URL to be the URL to your GraphQL endpoint in WordPress. For example: https://Testapp.com/graphql
 
 Your .env.local file should look like this:
 
@@ -71,4 +71,4 @@ npm run dev
 
 yarn dev
 ```
-Your blog should be up and running on http://localhost:3000! If it doesn't work, post on GitHub discussions.
+Your blog should be up and running on http://localhost:3000! If it doesn't work, post on GitHub discussions
