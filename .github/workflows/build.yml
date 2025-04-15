@@ -19,16 +19,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next.js application
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: npm run build
+
+      - name: Start Next.js app (SSR)
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: |
+          npm run start &
+          sleep 10
 
       - name: Install Lighthouse CLI
-        run: npm i @lhci/cli
-
-      - name: Start server (main)
-        run: |
-          npm install
-          npm run build
-          npm start &  
-          sleep 10    
+        run: npm install -g @lhci/cli
 
       - name: Run Lighthouse on main
         run: |
@@ -52,15 +61,22 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Lighthouse CLI
-        run: npm i @lhci/cli
+      - name: Build Next.js application
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: npm run build
 
-      - name: Start server (PR)
+      - name: Start Next.js app (SSR)
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
         run: |
-          npm install
-          npm run build
-          npm start &  # adjust as per your start script
+          npm run start &
           sleep 10
+
+      - name: Install Lighthouse CLI
+        run: npm install -g @lhci/cli
 
       - name: Run Lighthouse on PR
         run: |
