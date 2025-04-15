@@ -3,7 +3,7 @@ name: Lighthouse PR Comparison
 on:
   pull_request:
     branches:
-      - main
+    - "**"
 
 jobs:
   lighthouse-main:
