@@ -71,5 +71,5 @@ jobs:
             --config=lighthouserc.json \
             --collect.url="http://localhost:3000/blog" \
             --upload.outputDir="./lhci-reports/pr"
-
+          
           node compare-lhci-reports.js
