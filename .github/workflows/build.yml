@@ -31,13 +31,13 @@ jobs:
             --collect.url="https://www.keploy.io/blog" \
             --upload.target=filesystem \
             --upload.outputDir=.lighthouseci \
-            --upload.reportFilename=main.report.json  # Specify report filename
+            --upload.reportFilenamePattern="main-report-%%DATE%%-%%RANDOM%%.json"
 
       - name: Upload main Lighthouse report as artifact
         uses: actions/upload-artifact@v4
         with:
           name: main-report
-          path: .lighthouseci/*.report.json  # Using wildcard to ensure correct file is picked up
+          path: .lighthouseci/main-report-*.json
 
   lighthouse-pr:
     name: Lighthouse on PR branch
@@ -80,13 +80,13 @@ jobs:
             --collect.url="http://localhost:3000/blog" \
             --upload.target=filesystem \
             --upload.outputDir=.lighthouseci \
-            --upload.reportFilename=pr.report.json  # Specify report filename
+            --upload.reportFilenamePattern="pr-report-%%DATE%%-%%RANDOM%%.json"
 
       - name: Upload PR Lighthouse report as artifact
         uses: actions/upload-artifact@v4
         with:
           name: pr-report
-          path: .lighthouseci/*.report.json  # Ensure correct file is picked up
+          path: .lighthouseci/pr-report-*.json
 
   lighthouse-compare:
     name: Compare Lighthouse scores
@@ -107,16 +107,31 @@ jobs:
           path: .lighthouseci
 
       - name: Compare Lighthouse performance scores
+        id: compare
         run: |
-          MAIN_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/*.report.json)
-          PR_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/*.report.json)
+          # Find the latest main report
+          MAIN_REPORT=$(ls .lighthouseci/main-report-*.json | head -1)
+          # Find the latest PR report
+          PR_REPORT=$(ls .lighthouseci/pr-report-*.json | head -1)
+          
+          MAIN_SCORE=$(jq '.categories.performance.score * 100' "$MAIN_REPORT")
+          PR_SCORE=$(jq '.categories.performance.score * 100' "$PR_REPORT")
 
           echo "Main branch performance score: $MAIN_SCORE"
           echo "PR branch performance score: $PR_SCORE"
+          
+          # Store scores as job outputs
+          echo "MAIN_SCORE=$MAIN_SCORE" >> $GITHUB_OUTPUT
+          echo "PR_SCORE=$PR_SCORE" >> $GITHUB_OUTPUT
 
       - name: Fail if performance regressed
         run: |
-          if (( $(echo "$PR_SCORE < $MAIN_SCORE" | bc -l) )); then
+          # Get the scores from previous step
+          MAIN_SCORE=${{ steps.compare.outputs.MAIN_SCORE }}
+          PR_SCORE=${{ steps.compare.outputs.PR_SCORE }}
+          
+          # Add a small buffer (0.5) to account for natural variance
+          if (( $(echo "$PR_SCORE < ($MAIN_SCORE - 0.5)" | bc -l) )); then
             echo "❌ Performance score dropped in PR ($PR_SCORE < $MAIN_SCORE)"
             exit 1
           else
