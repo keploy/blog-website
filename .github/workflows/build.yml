@@ -33,7 +33,11 @@ jobs:
             --upload.outputDir=.lighthouseci \
             --upload.reportFilename=main.report.json
 
-          echo "MAIN_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/main.report.json)" >> $GITHUB_ENV
+      - name: Upload main Lighthouse report as artifact
+        uses: actions/upload-artifact@v4.2.1
+        with:
+          name: main-report
+          path: .lighthouseci/main.report.json
 
   lighthouse-pr:
     name: Lighthouse on PR branch
@@ -78,10 +82,35 @@ jobs:
             --upload.outputDir=.lighthouseci \
             --upload.reportFilename=pr.report.json
 
-          echo "PR_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/pr.report.json)" >> $GITHUB_ENV
+      - name: Upload PR Lighthouse report as artifact
+        uses: actions/upload-artifact@v4.2.1
+        with:
+          name: pr-report
+          path: .lighthouseci/pr.report.json
 
-      - name: Print both scores
+  lighthouse-compare:
+    name: Compare Lighthouse scores
+    runs-on: ubuntu-latest
+    needs: [lighthouse-main, lighthouse-pr]
+
+    steps:
+      - name: Download main Lighthouse report
+        uses: actions/download-artifact@v4.2.1
+        with:
+          name: main-report
+          path: .lighthouseci
+
+      - name: Download PR Lighthouse report
+        uses: actions/download-artifact@v4.2.1
+        with:
+          name: pr-report
+          path: .lighthouseci
+
+      - name: Compare Lighthouse performance scores
         run: |
+          MAIN_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/main.report.json)
+          PR_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/pr.report.json)
+
           echo "Main branch performance score: $MAIN_SCORE"
           echo "PR branch performance score: $PR_SCORE"
 
