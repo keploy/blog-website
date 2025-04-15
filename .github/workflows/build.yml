@@ -31,13 +31,13 @@ jobs:
             --collect.url="https://www.keploy.io/blog" \
             --upload.target=filesystem \
             --upload.outputDir=.lighthouseci \
-            --upload.reportFilename=main.report.json
+            --upload.reportFilename=main.report.json  # Specify report filename
 
       - name: Upload main Lighthouse report as artifact
         uses: actions/upload-artifact@v4
         with:
           name: main-report
-          path: .lighthouseci/main.report.json
+          path: .lighthouseci/*.report.json  # Using wildcard to ensure correct file is picked up
 
   lighthouse-pr:
     name: Lighthouse on PR branch
@@ -80,13 +80,13 @@ jobs:
             --collect.url="http://localhost:3000/blog" \
             --upload.target=filesystem \
             --upload.outputDir=.lighthouseci \
-            --upload.reportFilename=pr.report.json
+            --upload.reportFilename=pr.report.json  # Specify report filename
 
       - name: Upload PR Lighthouse report as artifact
         uses: actions/upload-artifact@v4
         with:
           name: pr-report
-          path: .lighthouseci/pr.report.json
+          path: .lighthouseci/*.report.json  # Ensure correct file is picked up
 
   lighthouse-compare:
     name: Compare Lighthouse scores
@@ -108,8 +108,8 @@ jobs:
 
       - name: Compare Lighthouse performance scores
         run: |
-          MAIN_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/main.report.json)
-          PR_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/pr.report.json)
+          MAIN_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/*.report.json)
+          PR_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/*.report.json)
 
           echo "Main branch performance score: $MAIN_SCORE"
           echo "PR branch performance score: $PR_SCORE"
