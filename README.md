@@ -48,7 +48,7 @@ npm install
 yarn install
 ```
 
-### Step 5. Set up environment variables
+### Step 5. Set up environment variable
 Copy the .env.local.example file in this directory to .env.local (which will be ignored by Git):
 
 ```bash
