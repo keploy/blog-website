@@ -41,7 +41,7 @@ jobs:
 
       - name: Run Lighthouse on main
         run: |
-          lhci collect --url=https://keploy.io/blogs > lighthouse-main.json
+          lhci collect --url=https://keploy.io/blog > lighthouse-main.json
 
       - name: Save main score
         id: main_score
