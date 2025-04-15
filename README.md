@@ -11,7 +11,7 @@ Once the site is ready, you'll need to install the [WPGraphQL](https://www.wpgra
 - Download the [WPGraphQL repo](https://github.com/wp-graphql/wp-graphql) as a ZIP archive.
 - Inside your wordPress admin, go to **Plugins** and then click **Add New**.
 - Click the **Upload Plugin** button at the top of the page and upload the WPGraphQL plugin.
-- Once the plugin has been added, activate it from either the **Activate Plugin** button displayed after uploading or from the **Plugins** page.
+- Once the plugin has been added, activate it from either the **Activate Plugin** button displayed after uploading or from the **Plugins** pages.
 
 #### GraphQL
 
