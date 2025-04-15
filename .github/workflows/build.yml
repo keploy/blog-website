@@ -69,7 +69,7 @@ jobs:
           cp .lighthouseci/*.report.json ./lhr-current.json
 
       - name: Download Previous Lighthouse Report
-        uses: actions/download-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lighthouse-report
         continue-on-error: true
@@ -86,7 +86,7 @@ jobs:
             seo=0
 
       - name: Upload Current Lighthouse Report for Future Comparisons
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lighthouse-report
           path: lhr-current.json
