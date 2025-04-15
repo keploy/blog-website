@@ -33,11 +33,11 @@ jobs:
             --upload.outputDir=.lighthouseci \
             --upload.reportFilenamePattern="main-report-%%DATE%%-%%RANDOM%%.json"
 
-      - name: Upload main Lighthouse report as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: main-report
-          path: .lighthouseci/main-report-*.json
+      - name: Display Main Lighthouse score
+        run: |
+          MAIN_REPORT=$(ls .lighthouseci/main-report-*.json | head -1)
+          MAIN_SCORE=$(jq '.categories.performance.score * 100' "$MAIN_REPORT")
+          echo "Main branch performance score: $MAIN_SCORE"
 
   lighthouse-pr:
     name: Lighthouse on PR branch
@@ -82,11 +82,11 @@ jobs:
             --upload.outputDir=.lighthouseci \
             --upload.reportFilenamePattern="pr-report-%%DATE%%-%%RANDOM%%.json"
 
-      - name: Upload PR Lighthouse report as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr-report
-          path: .lighthouseci/pr-report-*.json
+      - name: Display PR Lighthouse score
+        run: |
+          PR_REPORT=$(ls .lighthouseci/pr-report-*.json | head -1)
+          PR_SCORE=$(jq '.categories.performance.score * 100' "$PR_REPORT")
+          echo "PR branch performance score: $PR_SCORE"
 
   lighthouse-compare:
     name: Compare Lighthouse scores
@@ -94,20 +94,7 @@ jobs:
     needs: [lighthouse-main, lighthouse-pr]
 
     steps:
-      - name: Download main Lighthouse report
-        uses: actions/download-artifact@v4
-        with:
-          name: main-report
-          path: .lighthouseci
-
-      - name: Download PR Lighthouse report
-        uses: actions/download-artifact@v4
-        with:
-          name: pr-report
-          path: .lighthouseci
-
       - name: Compare Lighthouse performance scores
-        id: compare
         run: |
           # Find the latest main report
           MAIN_REPORT=$(ls .lighthouseci/main-report-*.json | head -1)
@@ -119,14 +106,9 @@ jobs:
 
           echo "Main branch performance score: $MAIN_SCORE"
           echo "PR branch performance score: $PR_SCORE"
-          
-          # Store scores as job outputs
-          echo "MAIN_SCORE=$MAIN_SCORE" >> $GITHUB_OUTPUT
-          echo "PR_SCORE=$PR_SCORE" >> $GITHUB_OUTPUT
 
       - name: Fail if performance regressed
         run: |
-          # Get the scores from previous step
           MAIN_SCORE=${{ steps.compare.outputs.MAIN_SCORE }}
           PR_SCORE=${{ steps.compare.outputs.PR_SCORE }}
           
