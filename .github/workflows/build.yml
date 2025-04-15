@@ -21,14 +21,16 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install LHCI
+      - name: Install LHCI CLI
         run: npm install -g @lhci/cli
 
       - name: Run LHCI on production site
         run: |
+          mkdir -p .lighthouseci
           lhci autorun \
-            --collect.url="https://keploy.io/blog" \
-            --upload.target=temporary-public-storage \
+            --collect.url="https://www.keploy.io/blog" \
+            --upload.target=filesystem \
+            --upload.outputDir=.lighthouseci \
             --upload.reportFilename=main.report.json
 
           echo "MAIN_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/main.report.json)" >> $GITHUB_ENV
@@ -64,14 +66,16 @@ jobs:
           npm run start &
           sleep 10
 
-      - name: Install LHCI
+      - name: Install LHCI CLI
         run: npm install -g @lhci/cli
 
-      - name: Run LHCI on PR and save score
+      - name: Run LHCI on PR branch
         run: |
+          mkdir -p .lighthouseci
           lhci autorun \
             --collect.url="http://localhost:3000/blog" \
-            --upload.target=temporary-public-storage \
+            --upload.target=filesystem \
+            --upload.outputDir=.lighthouseci \
             --upload.reportFilename=pr.report.json
 
           echo "PR_SCORE=$(jq '.categories.performance.score * 100' .lighthouseci/pr.report.json)" >> $GITHUB_ENV
@@ -80,3 +84,12 @@ jobs:
         run: |
           echo "Main branch performance score: $MAIN_SCORE"
           echo "PR branch performance score: $PR_SCORE"
+
+      - name: Fail if performance regressed
+        run: |
+          if (( $(echo "$PR_SCORE < $MAIN_SCORE" | bc -l) )); then
+            echo "❌ Performance score dropped in PR ($PR_SCORE < $MAIN_SCORE)"
+            exit 1
+          else
+            echo "✅ PR performance score is good!"
+          fi
