@@ -67,7 +67,7 @@ WORDPRESS_API_URL=...
 ```bash
 npm run dev
 
-# or
+#or
 
 yarn dev
 ```
