@@ -67,11 +67,10 @@ jobs:
 
       - name: Run LHCI on PR branch
         run: |
-          lhci autorun \
-            --config=lighthouserc.json \
-            --collect.url="http://localhost:3000/blog" \
-            --upload.outputDir="./lhci-reports/pr"
+         lhci autorun \
+          --config=lighthouserc.json \
+          --collect.url="http://localhost:3000/blog" \
+          --upload.outputDir="./lhci-reports/pr"
 
-      - name: Compare Lighthouse Reports
-        run: |
-          node compare-lhci-reports.js
+         node compare-lhci-reports.js
+
