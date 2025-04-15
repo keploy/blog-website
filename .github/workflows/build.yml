@@ -21,30 +21,15 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install LHCI
+        run: npm install -g @lhci/cli
 
-      - name: Build Next.js application
-        env:
-          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
-          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
-        run: npm run build
-
-      - name: Start Next.js app (SSR)
-        env:
-          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
-          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+      - name: Run LHCI on production site
         run: |
-          npm run start &
-          sleep 10
+          mkdir -p lhci-reports/keploy.io
+          lhci autorun --collect.url="https://www.keploy.io/blog" --upload.outputDir="./lhci-reports/keploy.io"
+          echo "MAIN_SCORE=$(jq '.categories.performance.score * 100' ./lhci-reports/keploy.io/*.report.json)" >> $GITHUB_ENV
 
-      - name: Install Lighthouse CLI
-        run: npm install -g lighthouse
-
-      - name: Run Lighthouse on main and save score
-        run: |
-          npx lighthouse https://keploy.io/blog --output json --output-path=main.report.json --quiet
-          echo "MAIN_SCORE=$(jq '.categories.performance.score * 100' main.report.json)" >> $GITHUB_ENV
 
   lighthouse-pr:
     name: Lighthouse on PR branch
@@ -77,13 +62,14 @@ jobs:
           npm run start &
           sleep 10
 
-      - name: Install Lighthouse CLI
-        run: npm install -g lighthouse
+      - name: Install LHCI
+        run: npm install -g @lhci/cli
 
-      - name: Run Lighthouse on PR and save score
+      - name: Run LHCI on PR branch
         run: |
-          npx lighthouse http://localhost:3000 --output json --output-path=pr.report.json --quiet
-          echo "PR_SCORE=$(jq '.categories.performance.score * 100' pr.report.json)" >> $GITHUB_ENV
+          mkdir -p lhci-reports/pr
+          lhci autorun --collect.url="http://localhost:3000" --upload.outputDir="./lhci-reports/pr"
+          echo "PR_SCORE=$(jq '.categories.performance.score * 100' ./lhci-reports/pr/*.report.json)" >> $GITHUB_ENV
 
       - name: Print both scores
         run: |
