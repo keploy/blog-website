@@ -1,81 +1,77 @@
-name: Build and Deploy Blog Website
+name: Lighthouse PR Comparison
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
 
 jobs:
-  build:
+  lighthouse-main:
+    name: Lighthouse on main branch
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 18
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build Next.js application
-        env:
-          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
-          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
-        run: npm run build
-
-  lighthouse:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'pull_request'  
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build Next.js application
-        env:
-          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
-          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
-        run: npm run build
-
-      - name: Start Next.js app (SSR)
-        env:
-          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
-          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
-        run: |
-          npm run start &
-          sleep 10
 
       - name: Install Lighthouse CLI
-        run: npm install -g @lhci/cli
+        run: npm i @lhci/cli
 
-      - name: Run Lighthouse and Save Report
+      - name: Start server (main)
         run: |
-          lhci collect --url=http://localhost:3000 --numberOfRuns=1
-          cp .lighthouseci/*.report.json ./lhr-current.json
+          npm install
+          npm run build
+          npm start &  
+          sleep 10    
 
-      - name: Download Previous Lighthouse Report
-        uses: actions/upload-artifact@v4
+      - name: Run Lighthouse on main
+        run: |
+          lhci collect --url=https://keploy.io/blogs > lighthouse-main.json
+
+      - name: Save main score
+        id: main_score
+        run: |
+          echo "MAIN_SCORE=$(jq '.summary["performance"]' lighthouse-main.json)" >> $GITHUB_ENV
+
+  lighthouse-pr:
+    name: Lighthouse on PR branch
+    runs-on: ubuntu-latest
+    needs: lighthouse-main
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          name: lighthouse-report
-        continue-on-error: true
-        
-      - name: Upload Current Lighthouse Report for Future Comparisons
-        uses: actions/upload-artifact@v4
-        with:
-          name: lighthouse-report
-          path: lhr-current.json
+          node-version: 18
+
+      - name: Install Lighthouse CLI
+        run: npm i @lhci/cli
+
+      - name: Start server (PR)
+        run: |
+          npm install
+          npm run build
+          npm start &  # adjust as per your start script
+          sleep 10
+
+      - name: Run Lighthouse on PR
+        run: |
+          lhci collect --url=http://localhost:3000 > lighthouse-pr.json
+
+      - name: Save PR score
+        id: pr_score 
+        run: |
+          echo "PR_SCORE=$(jq '.summary["performance"]' lighthouse-pr.json)" >> $GITHUB_ENV
+
+      - name: Print both scores
+        run: |
+          echo "Main branch performance score: $MAIN_SCORE"
+          echo "PR branch performance score: $PR_SCORE"
