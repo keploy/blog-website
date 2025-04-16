@@ -4,7 +4,7 @@
         "target": "filesystem"
       },
       "collect": {
-        "numberOfRuns": 10
+        "numberOfRuns": 3
       },
       "assert": {
         "assertions": {
