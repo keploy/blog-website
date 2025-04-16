@@ -32,6 +32,11 @@ jobs:
             --collect.url="https://keploy.io/blog" \
             --upload.outputDir="./lhci-reports/app"
 
+      - name: Upload main branch LHCI report
+        uses: actions/upload-artifact@v4
+        with:
+          name: lhci-main-report
+          path: ./lhci-reports/app
 
   lighthouse-pr:
     name: Lighthouse on PR branch
