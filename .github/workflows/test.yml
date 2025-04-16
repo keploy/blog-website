@@ -1,0 +1,85 @@
+name: Lighthouse Pull request Comparison
+
+on: 
+  pull_request: 
+    branches: 
+      - "**"
+
+jobs:
+  lighthouse-main:
+    name: Lighthouse on main branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install LHCI CLI
+        run: npm install -g @lhci/cli
+
+      - name: Run LHCI on production site
+        run: |
+          mkdir -p ./lhci-reports/app
+          lhci autorun \
+            --config=lighthouserc.json \
+            --collect.url="https://keploy.io/blog" \
+            --upload.outputDir="./lhci-reports/app"
+
+
+  lighthouse-pr:
+    name: Lighthouse on PR branch
+    runs-on: ubuntu-latest
+    needs: lighthouse-main
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next.js application
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: npm run build
+
+      - name: Start Next.js app
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: |
+          npm run start &
+          sleep 10
+
+      - name: Install LHCI CLI
+        run: npm install -g @lhci/cli
+
+      - name: Run LHCI on PR branch
+        run: |
+          lhci autorun \
+            --config=lighthouserc.json \
+            --collect.url="http://localhost:3000/blog" \
+            --upload.outputDir="./lhci-reports/pr"
+
+      - name: Download main branch LHCI report
+        uses: actions/download-artifact@v4
+        with:
+          name: lhci-main-report
+          path: ./lhci-reports/app
+
+      - name: Compare LHCI reports
+        run: |
+          node compare-lhci-reports.js
