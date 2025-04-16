@@ -29,7 +29,7 @@ jobs:
           mkdir -p ./lhci-reports/app
           lhci autorun \
             --config=lighthouserc.json \
-            --collect.url="https://keploy.io/blog" \
+            --collect.url="http://localhost:4000/blog" \
             --upload.outputDir="./lhci-reports/app"
 
       - name: Upload main branch LHCI report
