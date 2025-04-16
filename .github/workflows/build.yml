@@ -1,36 +1,3 @@
-name: Lighthouse PR Comparison
-
-on: 
-  pull_request: 
-    branches: 
-      - "**"
-
-jobs:
-  lighthouse-main:
-    name: Lighthouse on main branch
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout main branch
-        uses: actions/checkout@v4
-        with:
-          ref: main
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install LHCI CLI
-        run: npm install -g @lhci/cli
-
-      - name: Run LHCI on production site
-        run: |
-          lhci autorun \
-            --config=lighthouserc.json \
-            --collect.url="https://keploy.io/blog" \
-            --upload.outputDir="./lhci-reports/app"
-
   lighthouse-pr:
     name: Lighthouse on PR branch
     runs-on: ubuntu-latest
@@ -65,11 +32,19 @@ jobs:
       - name: Install LHCI CLI
         run: npm install -g @lhci/cli
 
-      - name: Run LHCI on PR branch and compare
+      - name: Run LHCI on PR branch
         run: |
           lhci autorun \
             --config=lighthouserc.json \
             --collect.url="http://localhost:3000/blog" \
             --upload.outputDir="./lhci-reports/pr"
 
+      - name: Download main branch LHCI report
+        uses: actions/download-artifact@v4
+        with:
+          name: lhci-main-report
+          path: ./lhci-reports/app
+
+      - name: Compare LHCI reports
+        run: |
           node compare-lhci-reports.js
