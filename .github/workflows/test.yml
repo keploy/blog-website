@@ -32,12 +32,12 @@ jobs:
           WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
           NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
         run: |
-          npm run start  &
+          nohup npm run start -- -p 3000 > app.log 2>&1 &
           sleep 20
 
-      - name: Lighthouse
-      - uses: actions/checkout@main
-      - name: Lighthouse
-        uses: foo-software/lighthouse-check-action@main
+      - name: Run Lighthouse audit
+        uses: foo-software/lighthouse-check-action@master
         with:
-        urls: 'http://localhost:3000/blog'
+          urls: 'http://localhost:3000/blog'
+          outputDirectory: './lighthouse-results'
+          uploadArtifacts: true
