@@ -55,7 +55,17 @@ jobs:
           nohup npm run start -- -p 3000 > main.log 2>&1 &
           sleep 20
 
-      - name: Run Lighthouse audit for both
+      - name: Create output directory for Lighthouse
+        run: mkdir -p ${{ github.workspace }}/tmp/artifacts
+
+      - name: Run Lighthouse audit for both PR and Main
         uses: foo-software/lighthouse-check-action@master
         with:
+          gitAuthor: ${{ github.actor }}
+          gitBranch: ${{ github.head_ref }}
+          gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
+          outputDirectory: ${{ github.workspace }}/tmp/artifacts
           urls: 'http://localhost:3000/blog,http://localhost:3001/blog'
+          sha: ${{ github.sha }}
+
+
