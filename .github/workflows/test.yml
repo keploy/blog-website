@@ -34,12 +34,8 @@ jobs:
         run: |
           nohup npm run start -- -p 3000 > app.log 2>&1 &
           sleep 20
-
-      - name: Create lighthouse results directory
-        run: mkdir -p lighthouse-results
-
+          
       - name: Run Lighthouse audit
         uses: foo-software/lighthouse-check-action@master
         with:
           urls: 'http://localhost:3000/blog'
-          outputDirectory: 'lighthouse-results'
