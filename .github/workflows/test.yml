@@ -36,15 +36,15 @@ jobs:
           WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
           NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
         run: |
-          npm run start -- -p 3000 &
-          sleep 10
+          nohup npm run start -- -p 3000 > pr.log 2>&1 &
+          sleep 20
 
       - name: Checkout main branch into subfolder
         run: |
           git worktree add ../main-worktree main
         shell: bash
 
-      - name: Build and Start main branch (port 4000)
+      - name: Build and Start main branch on port 4000
         working-directory: ../main-worktree
         env:
           WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
@@ -52,8 +52,8 @@ jobs:
         run: |
           npm install
           npm run build
-          npm run start -- -p 4000 &
-          sleep 10
+          nohup npm run start -- -p 4000 > main.log 2>&1 &
+          sleep 20
 
       - name: Run Lighthouse Comparison
         uses: foo-software/lighthouse-check-action@master
