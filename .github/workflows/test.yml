@@ -1,17 +1,17 @@
-name: Lighthouse Pull request Comparison
+name: Lighthouse PR Comparison
 
-on: 
-  pull_request: 
-    branches: 
+on:
+  pull_request:
+    branches:
       - "**"
 
 jobs:
   build-and-compare:
-    name: Build both branches and compare
+    name: Build and Compare PR vs Main
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout PR branch (default)
+      - name: Checkout PR branch
         uses: actions/checkout@v4
 
       - name: Fetch main branch
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: Install dependencies (PR)
         run: npm install
 
       - name: Build PR branch
@@ -39,12 +39,10 @@ jobs:
           nohup npm run start -- -p 3000 > pr.log 2>&1 &
           sleep 20
 
-      - name: Checkout main branch into subfolder
-        run: |
-          git worktree add ../main-worktree main
-        shell: bash
+      - name: Checkout main branch to separate folder
+        run: git worktree add ../main-worktree main
 
-      - name: Build and Start main branch on port 4000
+      - name: Build and start Main branch on port 4000
         working-directory: ../main-worktree
         env:
           WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
@@ -55,7 +53,22 @@ jobs:
           nohup npm run start -- -p 4000 > main.log 2>&1 &
           sleep 20
 
-      - name: Run Lighthouse Comparison
-        uses: foo-software/lighthouse-check-action@master
+      - name: Audit PR branch (localhost:3000)
+        uses: treosh/lighthouse-ci-action@v12
         with:
-          urls: 'http://localhost:3000/blog,http://localhost:4000/blog'
+          urls: |
+            http://localhost:3000/
+            http://localhost:3000/blog
+          uploadArtifacts: true
+          temporaryPublicStorage: false
+          configPath: './lighthouserc.json'
+
+      - name: Audit Main branch (localhost:4000)
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:4000/
+            http://localhost:4000/blog
+          uploadArtifacts: true
+          temporaryPublicStorage: false
+          configPath: './lighthouserc.json'
