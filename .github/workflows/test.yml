@@ -1,12 +1,43 @@
-name: Lighthouse
-on: [pull_request]
+name: Lighthouse Audit - Main Branch
+
+on:
+  push:
+    branches:
+      - "**"
 
 jobs:
-  lighthouse:
+  lighthouse-main:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@master
-    - name: Lighthouse
-      uses: foo-software/lighthouse-check-action@master
-      with:
-        urls: 'https://www.foo.software,https://www.google.com'
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: npm run build
+
+      - name: Start app 
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: |
+          npm run start  &
+          sleep 20
+
+      - name: Lighthouse
+      - uses: actions/checkout@main
+      - name: Lighthouse
+        uses: foo-software/lighthouse-check-action@main
+        with:
+        urls: 'http://localhost:3000/blog'
