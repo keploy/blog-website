@@ -121,7 +121,7 @@ export default function MoreStories({
     visibleCount < allPosts.length || 
     buffer.length > 0 || 
     hasMore
-  ) && !loading && !error && isIndex;
+  ) && isIndex;
 
   return (
     <section>
@@ -179,7 +179,9 @@ export default function MoreStories({
                 className="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
               >
                 {loading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                  <>
+                    <span>Loading...</span>
+                  </>
                 ) : (
                   'Load More Posts'
                 )}
