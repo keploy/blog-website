@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostPreview from "./post-preview";
@@ -25,36 +25,19 @@ export default function MoreStories({
   const [error, setError] = useState(null);
   const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
+  const loadMoreButtonRef = useRef<HTMLButtonElement>(null);
+  const prefetchingRef = useRef(false);
 
-  // Set up initial buffer with remaining posts
-  useEffect(() => {
-    if (initialPosts.length > 21) {
-      setBuffer(initialPosts.slice(21));
+  // Prefetch posts if needed
+  const prefetchPosts = useCallback(async () => {
+    // Prevent multiple simultaneous prefetch calls
+    if (prefetchingRef.current || loading || !hasMore || buffer.length >= 9) {
+      return;
     }
-    // Start background fetch if we have less than 9 posts in buffer
-    if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
-      loadMoreInBackground();
-    }
-  }, [initialPosts]);
 
-  // Filter posts based on search term
-  const filteredPosts = allPosts.filter(({ node }) => 
-    node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    prefetchingRef.current = true;
+    console.log("prefetching...")
 
-  // Reset visible count when search term changes
-  useEffect(() => {
-    setVisibleCount(12);
-    setError(null);
-  }, [searchTerm]);
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  // Fetch more posts in background
-  const loadMoreInBackground = async () => {
     try {
       const category = isCommunity ? 'community' : 'technology';
       const result = await fetchMorePosts(category, endCursor);
@@ -67,10 +50,38 @@ export default function MoreStories({
         setHasMore(false);
       }
     } catch (error) {
-      console.error('Error fetching more posts:', error);
-      setError('Failed to load more posts. Please try again later.');
+      console.error('Error prefetching posts:', error);
+    } finally {
+      prefetchingRef.current = false;
     }
-  };
+  }, [endCursor, isCommunity, loading, hasMore, buffer.length]);
+
+  // Set up intersection observer for the Load More button
+  useEffect(() => {
+    if (!loadMoreButtonRef.current || !isIndex) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          prefetchPosts();
+        }
+      },
+      {
+        rootMargin: '200px', // Start loading when user is 200px from button
+      }
+    );
+
+    observer.observe(loadMoreButtonRef.current);
+    return () => observer.disconnect();
+  }, [isIndex, prefetchPosts]);
+
+  // Initial prefetch
+  useEffect(() => {
+    if (isIndex && initialPageInfo?.hasNextPage) {
+      prefetchPosts();
+    }
+  }, [isIndex, initialPageInfo?.hasNextPage]);
 
   const loadMorePosts = async () => {
     if (loading) return;
@@ -96,16 +107,7 @@ export default function MoreStories({
 
       // If buffer is getting low, fetch more posts
       if (buffer.length < 9 && hasMore) {
-        const category = isCommunity ? 'community' : 'technology';
-        const result = await fetchMorePosts(category, endCursor);
-        
-        if (result.edges.length > 0) {
-          setBuffer(prev => [...prev, ...result.edges]);
-          setEndCursor(result.pageInfo.endCursor);
-          setHasMore(result.pageInfo.hasNextPage);
-        } else {
-          setHasMore(false);
-        }
+        prefetchPosts();
       }
     } catch (error) {
       console.error('Error loading more posts:', error);
@@ -115,13 +117,18 @@ export default function MoreStories({
     }
   };
 
-  // Show load more button if there are more posts to show from allPosts,
-  // or if there are posts in buffer, or if we can fetch more
+  // Show load more button if there are more posts to show
   const showLoadMore = (
     visibleCount < allPosts.length || 
     buffer.length > 0 || 
     hasMore
   ) && isIndex;
+
+  // Filter posts based on search term
+  const filteredPosts = allPosts.filter(({ node }) => 
+    node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <section>
@@ -136,7 +143,7 @@ export default function MoreStories({
               type="text"
               placeholder="Search posts..."
               value={searchTerm}
-              onChange={handleSearchChange}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
@@ -174,6 +181,7 @@ export default function MoreStories({
 
             {showLoadMore && (
               <button
+                ref={loadMoreButtonRef}
                 onClick={loadMorePosts}
                 disabled={loading}
                 className="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
