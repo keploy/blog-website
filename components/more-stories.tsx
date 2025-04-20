@@ -124,6 +124,10 @@ export default function MoreStories({
     hasMore
   ) && isIndex;
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   // Filter posts based on search term
   const filteredPosts = allPosts.filter(({ node }) => 
     node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -143,7 +147,7 @@ export default function MoreStories({
               type="text"
               placeholder="Search posts..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearchChange}
               className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
