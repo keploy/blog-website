@@ -44,11 +44,11 @@ export default function PostPreview({
   );
   return (
     <animated.div
-      className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition group"
+      className="bg-gray-100 border p-6 rounded-md lg:hover:shadow-[0_4px_12px_rgba(249,115,22,0.25)] lg:hover:border-orange-400 transition group flex flex-col h-full"
       ref={ref}
       style={springStyles}
     >
-      <div className="mb-5">
+      <div className="mb-5 h-48 overflow-hidden">
         {coverImage && (
           <CoverImage
             title={title}
@@ -58,24 +58,31 @@ export default function PostPreview({
           />
         )}
       </div>
-      <h3 className="text-2xl leading-snug leading-none heading1 font-bold">
-        <Link
-          href={`${basePath}/${slug}`}
-          className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
-          dangerouslySetInnerHTML={{ __html: title }}
-        ></Link>
-      </h3>
-      <div className="flex items-center gap-4">
-        <Avatar author={author ? author : "Anonymous"} />
-        <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
-        <div className="text-md mb-4 pt-4">
-          <Date dateString={date} />
+      <div className="flex flex-col flex-grow">
+        <h3 className="text-2xl leading-snug leading-none heading1 font-bold mb-4">
+          <Link
+            href={`${basePath}/${slug}`}
+            className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
+            dangerouslySetInnerHTML={{ __html: title }}
+          ></Link>
+        </h3>
+        <div className="flex items-center gap-4 mb-4">
+          <Avatar author={author ? author : "Anonymous"} />
+          <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
+          <div className="text-md">
+            <Date dateString={date} />
+          </div>
         </div>
+        <div
+          className="text-sm leading-normal mt-auto text-slate-600 overflow-hidden flex-grow"
+          style={{ 
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: title.length > 60 ? 2 : title.length > 30 ? 4 : 6,
+          }}
+          dangerouslySetInnerHTML={{ __html: excerpt }}
+        />
       </div>
-      <div
-        className="text-sm leading-normal mb-4 body text-slate-600"
-        dangerouslySetInnerHTML={{ __html: excerpt }}
-      />
     </animated.div>
   );
 }
