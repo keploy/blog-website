@@ -55,9 +55,9 @@ jobs:
           nohup npm run start -- -p 3000 >/dev/null 2>&1 &
           sleep 20
       
-          - name: Run Lighthouse audits
-          uses: treosh/lighthouse-ci-action@v12
-          with:
+      - name: Run Lighthouse audits
+        uses: treosh/lighthouse-ci-action@v12
+        with:
               urls: |
                 http://localhost:3001/
                 http://localhost:3000/
