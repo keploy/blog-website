@@ -1,0 +1,76 @@
+name: Lighthouse score
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  lighthouse-compare:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build PR branch
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: npm run build
+
+      - name: Start PR branch on port 3001
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: |
+          nohup npm run start -- -p 3001 > pr.log 2>&1 &
+          sleep 20
+
+      - name: Checkout main branch to separate folder
+        run: |
+          git fetch origin main
+          git worktree add main-branch origin/main
+
+      - name: Install & build main branch
+        working-directory: ./main-branch
+        run: |
+          npm install
+          WORDPRESS_API_URL="https://wp.keploy.io/graphql" NEXT_PUBLIC_WORDPRESS_API_URL="https://wp.keploy.io/graphql" npm run build
+
+      - name: Start main branch on port 3000
+        working-directory: ./main-branch
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: |
+          nohup npm run start -- -p 3000 > main.log 2>&1 &
+          sleep 20
+      
+          - name: Run Lighthouse audits
+          uses: treosh/lighthouse-ci-action@v12
+          with:
+              urls: |
+                http://localhost:3001/
+                http://localhost:3000/
+              uploadArtifacts: true
+              temporaryPublicStorage: true
+    
+      - name: Parse reports and generate comment
+        run: node .github/scripts/lighthouse-report.js
+    
+      - name: Comment on PR with Lighthouse scores
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+              token: ${{ secrets.GITHUB_TOKEN }}
+              issue-number: ${{ github.event.pull_request.number }}
+              body-path: lighthouse-comment.md
+  
