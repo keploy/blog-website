@@ -37,61 +37,34 @@ const md = `
 
 <table>
   <tr>
-    <td>
-      <strong>⚡ PR Branch (http://localhost:3001)</strong>
-      <table>
-        <tr>
-          <th>Metric</th>
-          <th>Score</th>
-        </tr>
-        <tr>
-          <td>Performance</td>
-          <td>${pr.performance}</td>
-        </tr>
-        <tr>
-          <td>Accessibility</td>
-          <td>${pr.accessibility}</td>
-        </tr>
-        <tr>
-          <td>Best Practices</td>
-          <td>${pr.bestPractices}</td>
-        </tr>
-        <tr>
-          <td>SEO</td>
-          <td>${pr.seo}</td>
-        </tr>
-      </table>
-    </td>
-    <td style="padding-left: 20px;">
-      <strong>📦 Main Branch (http://localhost:3000)</strong>
-      <table>
-        <tr>
-          <th>Metric</th>
-          <th>Score</th>
-        </tr>
-        <tr>
-          <td>Performance</td>
-          <td>${main.performance}</td>
-        </tr>
-        <tr>
-          <td>Accessibility</td>
-          <td>${main.accessibility}</td>
-        </tr>
-        <tr>
-          <td>Best Practices</td>
-          <td>${main.bestPractices}</td>
-        </tr>
-        <tr>
-          <td>SEO</td>
-          <td>${main.seo}</td>
-        </tr>
-      </table>
-    </td>
+    <th>Metric</th>
+    <th>⚡ PR Branch</th>
+    <th>📦 Main Branch</th>
+  </tr>
+  <tr>
+    <td>Performance</td>
+    <td>${pr.performance}</td>
+    <td>${main.performance}</td>
+  </tr>
+  <tr>
+    <td>Accessibility</td>
+    <td>${pr.accessibility}</td>
+    <td>${main.accessibility}</td>
+  </tr>
+  <tr>
+    <td>Best Practices</td>
+    <td>${pr.bestPractices}</td>
+    <td>${main.bestPractices}</td>
+  </tr>
+  <tr>
+    <td>SEO</td>
+    <td>${pr.seo}</td>
+    <td>${main.seo}</td>
   </tr>
 </table>
 `;
 
+
 fs.writeFileSync('lighthouse-comment.md', md);
 console.log('✅ Comment written to lighthouse-comment.md');
-
-
+ 
