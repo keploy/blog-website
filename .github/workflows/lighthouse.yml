@@ -32,7 +32,7 @@ jobs:
           WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
           NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
         run: |
-          nohup npm run start -- -p 3001 > pr.log 2>&1 &
+          nohup npm run start -- -p 3001 >/dev/null 2>&1 &
           sleep 20
 
       - name: Checkout main branch to separate folder
@@ -52,7 +52,7 @@ jobs:
           WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
           NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
         run: |
-          nohup npm run start -- -p 3000 > main.log 2>&1 &
+          nohup npm run start -- -p 3000 >/dev/null 2>&1 &
           sleep 20
       
           - name: Run Lighthouse audits
