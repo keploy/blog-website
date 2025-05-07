@@ -1,4 +1,4 @@
-name: Lighthouse Audit Compare PR vs Main
+name: Lighthouse score
 
 on:
   pull_request:
@@ -55,27 +55,22 @@ jobs:
           nohup npm run start -- -p 3000 > main.log 2>&1 &
           sleep 20
       
-      - name: Debug Branch Info
-        run: |
-          echo "🔍 GitHub Context Branch Info"
-          echo "github.ref: ${{ github.ref }}"
-          echo "github.head_ref: ${{ github.head_ref }}"
-          echo "github.base_ref: ${{ github.base_ref }}"
-          echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
-          echo "GITHUB_SHA: ${{ github.sha }}"
-
-
-      - name: Create output directory for Lighthouse
-        run: mkdir -p ${{ github.workspace }}/tmp/artifacts
-
-      - name: Run Lighthouse audit for both PR and Main
-        uses: foo-software/lighthouse-check-action@master
+          - name: Run Lighthouse audits
+          uses: treosh/lighthouse-ci-action@v12
+          with:
+              urls: |
+                http://localhost:3001/
+                http://localhost:3000/
+              uploadArtifacts: true
+              temporaryPublicStorage: true
+    
+      - name: Parse reports and generate comment
+        run: node .github/scripts/lighthouse-report.js
+    
+      - name: Comment on PR with Lighthouse scores
+        uses: peter-evans/create-or-update-comment@v4
         with:
-          gitAuthor: ${{ github.actor }}
-          gitBranch: ${{ github.head_ref }}
-          gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
-          outputDirectory: ${{ github.workspace }}/tmp/artifacts
-          urls: 'http://localhost:3000/blog,http://localhost:3001/blog'
-          sha: ${{ github.sha }}
-
-
+              token: ${{ secrets.GITHUB_TOKEN }}
+              issue-number: ${{ github.event.pull_request.number }}
+              body-path: lighthouse-comment.md
+  
