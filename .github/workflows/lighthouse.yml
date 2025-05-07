@@ -62,8 +62,8 @@ jobs:
         uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
-            http://localhost:3001/
-            http://localhost:3000/
+            http://localhost:3001/blog
+            http://localhost:3000/blog
           uploadArtifacts: true
           temporaryPublicStorage: true
     
