@@ -66,5 +66,5 @@ const md = `
 
 
 fs.writeFileSync('lighthouse-comment.md', md);
-console.log('✅ Comment written to lighthouse-comment.md');
+console.log('✅ Comments written to lighthouse-comment.md');
  
