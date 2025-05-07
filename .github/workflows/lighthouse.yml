@@ -32,7 +32,7 @@ jobs:
           WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
           NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
         run: |
-          nohup npm run start -p 3001 >/dev/null 2>&1 &
+          nohup npm run start -- -p 3001 >/dev/null 2>&1 &
           sleep 20
 
       - name: Checkout main branch to separate folder
@@ -42,9 +42,12 @@ jobs:
 
       - name: Install & build main branch
         working-directory: ./main-branch
+        env:
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
         run: |
           npm install
-          WORDPRESS_API_URL="https://wp.keploy.io/graphql" NEXT_PUBLIC_WORDPRESS_API_URL="https://wp.keploy.io/graphql" npm run build
+          npm run build
 
       - name: Start main branch on port 3000
         working-directory: ./main-branch
@@ -58,11 +61,11 @@ jobs:
       - name: Run Lighthouse audits
         uses: treosh/lighthouse-ci-action@v12
         with:
-              urls: |
-                http://localhost:3001/
-                http://localhost:3000/
-              uploadArtifacts: true
-              temporaryPublicStorage: true
+          urls: |
+            http://localhost:3001/
+            http://localhost:3000/
+          uploadArtifacts: true
+          temporaryPublicStorage: true
     
       - name: Parse reports and generate comment
         run: node .github/scripts/lighthouse-report.js
@@ -70,7 +73,6 @@ jobs:
       - name: Comment on PR with Lighthouse scores
         uses: peter-evans/create-or-update-comment@v4
         with:
-              token: ${{ secrets.GITHUB_TOKEN }}
-              issue-number: ${{ github.event.pull_request.number }}
-              body-path: lighthouse-comment.md
-  
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: lighthouse-comment.md
