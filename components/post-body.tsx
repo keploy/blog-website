@@ -9,7 +9,6 @@ import { markdown } from "@codemirror/lang-markdown";
 import { python } from "@codemirror/lang-python";
 import { go } from "@codemirror/lang-go";
 import { dracula } from "@uiw/codemirror-theme-dracula";
-
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
 });
@@ -18,6 +17,7 @@ import WaitlistBanner from "./waitlistBanner";
 import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
+import AdBanner from "./Adbanner";
 
 export default function PostBody({
   content,
@@ -283,6 +283,13 @@ export default function PostBody({
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
         <hr className="border-gray-300 mt-10 mb-20" />
+        <div>
+      <AdBanner
+       data-ad-slot="3356716061"
+       data-ad-format="auto"
+       data-full-width-responsive="true"
+      />
+</div>
 
         <h1 className="text-2xl font-medium">Authored By:</h1>
         <div className="my-5">
