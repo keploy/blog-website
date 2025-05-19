@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useCallback} from "react";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostPreview from "./post-preview";
@@ -26,6 +26,26 @@ export default function MoreStories({
   const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
 
+  // Fetch more posts in background
+  const loadMoreInBackground = useCallback(async () => {
+    try {
+      const category = isCommunity ? 'community' : 'technology';
+      const result = await fetchMorePosts(category, endCursor);
+
+      if (result.edges.length) {
+        setBuffer(currentBuffer => [...currentBuffer, ...result.edges]);
+        setEndCursor(result.pageInfo.endCursor);
+        setHasMore(result.pageInfo.hasNextPage);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error fetching more posts:', error);
+      setError('Failed to load more posts. Please try again later.');
+    }
+  }, [isCommunity, endCursor]);
+
+
   // Set up initial buffer with remaining posts
   useEffect(() => {
     if (initialPosts.length > 21) {
@@ -35,7 +55,7 @@ export default function MoreStories({
     if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
       loadMoreInBackground();
     }
-  }, [initialPosts]);
+  }, [initialPosts, isIndex, initialPageInfo?.hasNextPage, buffer.length, loadMoreInBackground]);
 
   // Filter posts based on search term
   const filteredPosts = allPosts.filter(({ node }) => 
@@ -51,25 +71,6 @@ export default function MoreStories({
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-  };
-
-  // Fetch more posts in background
-  const loadMoreInBackground = async () => {
-    try {
-      const category = isCommunity ? 'community' : 'technology';
-      const result = await fetchMorePosts(category, endCursor);
-      
-      if (result.edges.length) {
-        setBuffer(currentBuffer => [...currentBuffer, ...result.edges]);
-        setEndCursor(result.pageInfo.endCursor);
-        setHasMore(result.pageInfo.hasNextPage);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error('Error fetching more posts:', error);
-      setError('Failed to load more posts. Please try again later.');
-    }
   };
 
   const loadMorePosts = async () => {
@@ -159,7 +160,7 @@ export default function MoreStories({
                 slug={node.slug}
                 excerpt={getExcerpt(node.excerpt, 20)}
                 isCommunity={
-                  node.categories.edges[0]?.node.name === "technology" ? false : true
+                  node.categories.edges[0]?.node.name !== "technology"
                 }
               />
             ))}

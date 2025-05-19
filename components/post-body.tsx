@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useCallback} from "react";
 import TOC from "./TableContents"; 
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; 
 import styles from "./post-body.module.css";
@@ -117,8 +117,8 @@ export default function PostBody({
       });
   };
 
-  const handleHeadingCopyClick = (id: string, index: number) => {
-    const url = sanitizeStringForURL(id,true);
+  const handleHeadingCopyClick = useCallback((id: string, index: number) => {
+    const url = sanitizeStringForURL(id, true);
     const copyUrl = `${window.location.origin}${window.location.pathname}#${url}`;
     navigator.clipboard
       .writeText(copyUrl)
@@ -134,7 +134,7 @@ export default function PostBody({
       .catch(() => {
         console.error("Failed to copy the URL.");
       });
-  };
+  }, [headingCopySuccessList]);
 
   useEffect(() => {
     const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2"));
@@ -154,7 +154,7 @@ export default function PostBody({
       button.addEventListener("click", () => handleHeadingCopyClick(heading.innerHTML, index));
       heading.appendChild(button);
     });
-  }, [tocItems, headingCopySuccessList]);
+  }, [tocItems, headingCopySuccessList, handleHeadingCopyClick]);
 
   useEffect(() => {
     const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
@@ -288,7 +288,7 @@ export default function PostBody({
        data-ad-slot="3356716061"
        data-ad-format="auto"
        data-full-width-responsive="true"
-      />
+       adSlot="3356716061"/>
 </div>
 
         <h1 className="text-2xl font-medium">Authored By:</h1>

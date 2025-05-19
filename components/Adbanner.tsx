@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 declare global {
   interface Window {
@@ -19,7 +19,10 @@ const AdBanner = ({
   useEffect(() => {
     const loadAd = () => {
       try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        (window.adsbygoogle = window.adsbygoogle || []).push({
+          push(params: unknown): void {
+          }
+        });
       } catch (err) {
         console.error("AdSense error:", err);
       }
@@ -40,7 +43,7 @@ const AdBanner = ({
 
   return (
     <div className="w-full my-4">
-      <ins
+      <div
         className="adsbygoogle"
         style={{ 
           display: 'block',
@@ -52,8 +55,7 @@ const AdBanner = ({
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
         data-full-width-responsive="true"
-        {...props}
-      />
+        {...props}/>
     </div>
   );
 };

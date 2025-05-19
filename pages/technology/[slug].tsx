@@ -1,6 +1,6 @@
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 import Head from "next/head";
-import { GetStaticPaths, GetStaticProps } from "next";
+import {GetStaticPaths, GetStaticProps} from "next";
 import Container from "../../components/container";
 import MoreStories from "../../components/more-stories";
 import Header from "../../components/header";
@@ -13,13 +13,13 @@ import {
   getAllPostsForTechnology,
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
+  getReviewAuthorDetails,
 } from "../../lib/api";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
-import { useRef, useState, useEffect } from "react";
-import { useScroll, useSpringValue } from "@react-spring/web";
-import { getReviewAuthorDetails } from "../../lib/api";
-import { calculateReadingTime } from "../../utils/calculateReadingTime";
+import {useEffect, useRef, useState} from "react";
+import {useScroll, useSpringValue} from "@react-spring/web";
+import {calculateReadingTime} from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
@@ -29,12 +29,10 @@ const PostBody = dynamic(() => import("../../components/post-body"), {
 const postBody = ({ content, post }) => {
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
 
-  const replacedContent = content.replace(
-    urlPattern,
-    `/blog/authors/${post?.ppmaAuthorName || "Unknown Author"}/`
+  return content.replace(
+      urlPattern,
+      `/blog/authors/${post?.ppmaAuthorName || "Unknown Author"}/`
   );
-
-  return replacedContent;
 };
 
 export default function Post({ post, posts, reviewAuthorDetails, preview }) {
