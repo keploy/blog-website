@@ -289,6 +289,7 @@ export default function PostBody({
        data-ad-format="auto"
        data-full-width-responsive="true"
       />
+
 </div>
 
         <h1 className="text-2xl font-medium">Authored By:</h1>
