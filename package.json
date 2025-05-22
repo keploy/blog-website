@@ -38,6 +38,8 @@
   },
   "devDependencies": {
     "@types/prismjs": "^1.26.3",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "autoprefixer": "10.4.7",
     "eslint": "8.56.0",
     "eslint-config-next": "14.1.0",
