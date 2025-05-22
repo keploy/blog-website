@@ -17,8 +17,7 @@ import WaitlistBanner from "./waitlistBanner";
 import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
-import AdBanner from "./Adbanner";
-
+import AdSlot from "./Adsolt";
 export default function PostBody({
   content,
   authorName,
@@ -284,11 +283,6 @@ export default function PostBody({
         <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
         <hr className="border-gray-300 mt-10 mb-20" />
         <div>
-      <AdBanner
-       data-ad-slot="3356716061"
-       data-ad-format="auto"
-       data-full-width-responsive="true"
-      />
 
 </div>
 
@@ -313,9 +307,23 @@ export default function PostBody({
           </div>
         )}
       </div>
-      <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20">
-        <WaitlistBanner />
-      </div>
+
+  <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
+        
+  {/* 1. Waitlist banner (always shown) */}
+  <div className="flex justify-center">
+    <WaitlistBanner />
+  </div>
+
+  {/* 2. Ad slot (hidden on <lg) */}
+  <div className="hidden lg:flex justify-center rounded-xl p-4">
+    <AdSlot
+      slotId="3356716061"
+      className="w-full h-60"
+    />
+  </div>
+</aside>
+
     </div>
   );
 }
