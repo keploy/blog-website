@@ -25,7 +25,6 @@ export default function AdSlot({ slotId, className = '' }: Props) {
 
   return (
     <div className={`relative w-full h-full ${className}`}>
-      {/* skeleton */}
       {!loaded && (
         <div className="absolute inset-0 rounded-lg skeleton-shimmer" />
       )}
