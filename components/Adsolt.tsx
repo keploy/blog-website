@@ -13,9 +13,7 @@ export default function AdSlot({ slotId, className = '' }: Props) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    // Kick AdSense
     try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (_) {}
