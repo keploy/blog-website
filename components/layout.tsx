@@ -62,8 +62,16 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
         `,
         }}
       />
+{/*Google adsense script */}
+<Script
+  id="adsense-loader"
+  strategy="afterInteractive"
+  async
+  data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
+  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+/>
 
-      {/* Apollo Tracking Script */}
+  {/* Apollo Tracking Script */}
       <Script
         id="apollo-tracker"
         type="text/javascript"
