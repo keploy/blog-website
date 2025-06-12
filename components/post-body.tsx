@@ -17,7 +17,7 @@ import WaitlistBanner from "./waitlistBanner";
 import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
-import AdSlot from "./Adsolt";
+import AdSlot from "./Adslot";
 export default function PostBody({
   content,
   authorName,
