@@ -43,11 +43,8 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
         `,
         }}
       />
+
       
-      <Script async 
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3485005084287002"
-      crossOrigin="anonymous"
-      />
 
       <Script
         id="msclarity"
@@ -62,14 +59,31 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
         `,
         }}
       />
-{/*Google adsense script */}
-<Script
-  id="adsense-loader"
-  strategy="afterInteractive"
-  async
-  data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
-  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-/>
+
+      {/* publisher Script */}
+
+      <Script async type="application/javascript"
+          id="swg-basic"
+            src="https://news.google.com/swg/js/v1/swg-basic.js">
+          </Script>
+
+          <Script
+          id="publisher"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
+                  basicSubscriptions.init({
+                    type: "NewsArticle",
+                    isPartOfType: ["Product"],
+                    isPartOfProductId: "CAowz4a6DA:openaccess",
+                    clientOptions: { theme: "light", lang: "en" },
+                  });
+                });
+            `,
+          }}
+        />
+
 
   {/* Apollo Tracking Script */}
       <Script
