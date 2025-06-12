@@ -223,3 +223,22 @@ td{
   border: solid 1px black;
   padding: 5px;
 }
+
+.post-content-wrapper table {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .post-content-wrapper table {
+    width: 100%;
+    max-width: 100%;
+  }
+  .post-content-wrapper th,
+  .post-content-wrapper td {
+    white-space: normal;
+  }
+}
