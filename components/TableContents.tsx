@@ -14,25 +14,26 @@ function TOCItem({
 }) {
   const itemClasses = "mb-1 text-slate-600 space-y-1";
 
-  // Calculate margin left based on heading type
+  
   let marginLeft;
   switch (type) {
     case "h1":
       marginLeft = 0;
       break;
     case "h2":
-      marginLeft = "1rem"; // Adjust as needed
+      marginLeft = "1rem";
       break;
     case "h3":
-      marginLeft = "1.5rem"; // Adjust as needed
+      marginLeft = "1.5rem";
       break;
     case "h4":
-      marginLeft = "2rem"; // Adjust as needed
+      marginLeft = "2rem";
       break;
     default:
-      marginLeft = "2rem"; // Default to h4 margin
+      marginLeft = "2rem";
   }
 
+  
   return (
     <li className={itemClasses} style={{ marginLeft }}>
       <button
@@ -46,8 +47,12 @@ function TOCItem({
 }
 
 export default function TOC({ headings, isList, setIsList }) {
-
   const tocRef = useRef(null);
+
+  const cleanedHeadings = headings.map(heading => ({
+    ...heading,
+    title: heading.title.replace(/#\s*$/, '').trim()
+  }));
 
   useEffect(() => {
     if (!tocRef.current) return;
@@ -62,11 +67,7 @@ export default function TOC({ headings, isList, setIsList }) {
     window.addEventListener("resize", resizeHandler)
 
     return () => { window.removeEventListener("resize", resizeHandler) }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  
 
   const handleItemClick = (id) => {
     const element = document.getElementById(id);
@@ -78,29 +79,29 @@ export default function TOC({ headings, isList, setIsList }) {
         behavior: "smooth",
       });
 
-      const urlChange = sanitizeStringForURL(element.innerHTML,true)
-
+      let textContent = element.textContent || element.innerText || '';
+      textContent = textContent.replace(/#\s*$/, '').trim();
+      
+      const urlChange = sanitizeStringForURL(textContent, true);
       window.history.replaceState(null, null, `#${urlChange}`);
     }
   };
 
-  // State to track screen width
+
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
-  // Function to check if screen width is small
   const checkScreenSize = () => {
-    setIsSmallScreen(window.innerWidth < 1024); // Adjust breakpoint as needed
+    setIsSmallScreen(window.innerWidth < 1024);
   };
 
   useEffect(() => {
-    checkScreenSize(); // Initial check
-    window.addEventListener("resize", checkScreenSize); // Event listener for screen resize
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
     return () => {
-      window.removeEventListener("resize", checkScreenSize); // Cleanup on component unmount
+      window.removeEventListener("resize", checkScreenSize);
     };
   }, []);
 
-  // Render dropdown if on a small screen, otherwise render regular TOC
   return (
     <>
       <div className="left-0 inline-block p-4 lg:hidden top-20">
@@ -109,21 +110,21 @@ export default function TOC({ headings, isList, setIsList }) {
           className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
           onChange={(e) => handleItemClick(e.target.value)}
         >
-          {headings.map((item, index) => (
+          {cleanedHeadings.map((item, index) => (
             <option key={index} value={item.id}>
               {item.title}
             </option>
           ))}
         </select>
       </div>
-      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
+      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky">
         <div className="mb-2 text-lg font-semibold">Table of Contents</div>
         {isList ?
           <select
             className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
             onChange={(e) => handleItemClick(e.target.value)}
           >
-            {headings.map((item, index) => (
+            {cleanedHeadings.map((item, index) => (
               <option key={index} value={item.id}>
                 {item.title}
               </option>
@@ -132,7 +133,7 @@ export default function TOC({ headings, isList, setIsList }) {
           :
           <nav ref={tocRef}>
             <ul className="pl-0 leading-5">
-              {headings.map((item, index) => (
+              {cleanedHeadings.map((item, index) => (
                 <TOCItem
                   key={index}
                   id={item.id}
