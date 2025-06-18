@@ -10,7 +10,6 @@ import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useSpring, animated } from "@react-spring/web";
 import { useState, useEffect } from "react";
 import { FiArrowRight, FiTrendingUp, FiUsers, FiBookOpen, FiStar } from "react-icons/fi";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
