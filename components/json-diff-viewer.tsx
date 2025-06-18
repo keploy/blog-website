@@ -5,7 +5,7 @@ import "json-diff-kit/dist/viewer.css";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { dracula } from "@uiw/codemirror-theme-dracula";
-import styles from "./json-diff-viewer.module.css"
+import styles from "./json-diff-viewer.module.css";
 
 const defaultOldJson = {
   name: "John",
@@ -22,13 +22,17 @@ const defaultNewJson = {
   job: "Software Developer",
 };
 
-const JsonDiffViewer: React.FC = () => {
+const JsonDiffViewer: React.FC = (): JSX.Element => {
   const [oldJson, setOldJson] = useState<object>(defaultOldJson);
   const [newJson, setNewJson] = useState<object>(defaultNewJson);
   const [diff, setDiff] = useState<readonly [DiffResult[], DiffResult[]] | null>(null);
   const [error, setError] = useState<string>("");
-  const [oldJsonInput, setOldJsonInput] = useState(JSON.stringify(defaultOldJson, null, 2));
-  const [newJsonInput, setNewJsonInput] = useState(JSON.stringify(defaultNewJson, null, 2));
+  const [oldJsonInput, setOldJsonInput] = useState<string>(
+    JSON.stringify(defaultOldJson, null, 2)
+  );
+  const [newJsonInput, setNewJsonInput] = useState<string>(
+    JSON.stringify(defaultNewJson, null, 2)
+  );
 
   const differ = useMemo(
     () =>
@@ -41,7 +45,7 @@ const JsonDiffViewer: React.FC = () => {
     []
   );
 
-  const handleJsonChange = (value: string, type: "old" | "new") => {
+  const handleJsonChange = (value: string, type: "old" | "new"): void => {
     try {
       const parsedValue = JSON.parse(value);
       setError("");
@@ -67,7 +71,7 @@ const JsonDiffViewer: React.FC = () => {
     try {
       const computedDiff = differ.diff(oldJson, newJson);
       setDiff(computedDiff);
-    } catch (err) {
+    } catch {
       setDiff(null);
     }
   }, [oldJson, newJson, differ]);
@@ -120,7 +124,9 @@ const JsonDiffViewer: React.FC = () => {
           />
         </div>
       ) : (
-        <p className={styles.noDiff}>No difference to show. Please enter valid JSON objects.</p>
+        <p className={styles.noDiff}>
+          No difference to show. Please enter valid JSON objects.
+        </p>
       )}
     </div>
   );

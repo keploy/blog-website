@@ -1,6 +1,14 @@
-import { parseISO, format } from 'date-fns'
+import { parseISO, format } from "date-fns";
 
-export default function Date({ dateString }) {
-  const date = parseISO(dateString)
-  return <time dateTime={dateString} className=' text-gray-500'>{format(date, 'd LLL, yyyy')}</time>
+interface DateProps {
+  dateString: string;
+}
+
+export default function Date({ dateString }: DateProps): JSX.Element {
+  const date = parseISO(dateString);
+  return (
+    <time dateTime={dateString} className="text-gray-500">
+      {format(date, "d LLL, yyyy")}
+    </time>
+  );
 }

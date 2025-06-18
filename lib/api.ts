@@ -1,9 +1,27 @@
+import { Post } from "../types/post";
+import {
+  TagNode,
+  PageInfo,
+  PostEdge,
+  PostsConnection,
+  PreviewPost,
+  ReviewAuthorResult,
+  AuthorEdge,
+  AuthorConnection,
+  PostAndMorePostsResponse,
+} from "../types/OtherApiTypes";
+
+
+
 export const maxDuration = 300; // This can run Vercel Functions for a maximum of 300 seconds
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL
+const API_URL =
+  process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
 
-async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
+
+
+ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   const headers = { "Content-Type": "application/json" };
 
   if (process.env.WORDPRESS_AUTH_REFRESH_TOKEN) {
@@ -29,7 +47,7 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   return json.data;
 }
 
-export async function getPreviewPost(id, idType = "DATABASE_ID") {
+export async function getPreviewPost(id: string | number, idType = "DATABASE_ID"): Promise<PreviewPost> {
   const data = await fetchAPI(
     `
     query PreviewPost($id: ID!, $idType: PostIdType!) {
@@ -46,10 +64,11 @@ export async function getPreviewPost(id, idType = "DATABASE_ID") {
   return data.post;
 }
 
-export async function getAllTags() {
+
+export async function getAllTags(): Promise<TagNode[]> {
   let hasNextPage = true;
-  let endCursor = null;
-  let allTags = [];
+  let endCursor: string | null = null;
+  const allTags: TagNode[] = [];
 
   while (hasNextPage) {
     const data = await fetchAPI(
@@ -70,22 +89,27 @@ export async function getAllTags() {
     `,
       {
         variables: {
-          first: 100, // Adjust as needed
+          first: 100,
           after: endCursor,
         },
       }
     );
 
-    const tags = data?.tags?.edges.map((edge) => edge.node);
-    allTags = allTags.concat(tags);
+    const tags = data?.tags?.edges.map((edge: { node: TagNode }) => edge.node);
+    allTags.push(...tags);
 
     hasNextPage = data?.tags?.pageInfo?.hasNextPage;
     endCursor = data?.tags?.pageInfo?.endCursor;
   }
+
   return allTags;
 }
 
-export async function getAllPostsFromTags(tagName: String, preview) {
+
+export async function getAllPostsFromTags(
+  tagName: string,
+  preview: boolean
+): Promise<PostsConnection | undefined> {
   const data = await fetchAPI(
     `
     query AllPosts($tagName: String!) {
@@ -128,13 +152,14 @@ export async function getAllPostsFromTags(tagName: String, preview) {
     }
   );
 
-  return data?.posts;
+  return data?.posts as PostsConnection;
 }
 
-export async function getAllPosts() {
-  let allEdges = [];
+
+export async function getAllPosts(): Promise<{ edges: PostEdge[] }> {
+  let allEdges: PostEdge[] = [];
   let hasNextPage = true;
-  let endCursor = null;
+  let endCursor: string | null = null;
 
   while (hasNextPage) {
     const data = await fetchAPI(
@@ -167,6 +192,10 @@ export async function getAllPosts() {
               }
             }
           }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }
     `,
@@ -175,8 +204,8 @@ export async function getAllPosts() {
       }
     );
 
-    const edges = data?.posts?.edges;
-    allEdges = [...allEdges, ...edges];
+    const edges: PostEdge[] = data?.posts?.edges || [];
+    allEdges.push(...edges);
     hasNextPage = data?.posts?.pageInfo?.hasNextPage;
     endCursor = data?.posts?.pageInfo?.endCursor;
   }
@@ -184,7 +213,7 @@ export async function getAllPosts() {
   return { edges: allEdges };
 }
 
-export async function getContent(postId: number) {
+export async function getContent(postId: number): Promise<string> {
   const data = await fetchAPI(
     `
     query getContent($postId: Int!) {
@@ -200,13 +229,16 @@ export async function getContent(postId: number) {
     }
   );
 
-  // Extract and return the content
-  return data.postBy.content;
+  return data.postBy.content as string;
 }
+
 
 //Fetching Reviewing author details
 
-export async function getReviewAuthorDetails(authorName) {
+
+export async function getReviewAuthorDetails(
+  authorName: string
+): Promise<ReviewAuthorResult | undefined> {
   const data = await fetchAPI(
     `
     query AuthorDetailsByName($authorName: String!) {
@@ -231,17 +263,25 @@ export async function getReviewAuthorDetails(authorName) {
     }
   );
 
-  return data?.users;
+  return data?.users as ReviewAuthorResult;
 }
 
-
-
 // Function for fetching post with technology category
-export async function getAllPostsForTechnology(preview = false, after = null) {
+export async function getAllPostsForTechnology(
+  preview: boolean = false,
+  after: string | null = null
+): Promise<PostsConnection> {
   const data = await fetchAPI(
     `
     query AllPostsForCategory($after: String) {
-      posts(first: 22, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+      posts(
+        first: 22,
+        after: $after,
+        where: {
+          orderby: { field: DATE, order: DESC },
+          categoryName: "technology"
+        }
+      ) {
         edges {
           node {
             title
@@ -294,13 +334,18 @@ export async function getAllPostsForTechnology(preview = false, after = null) {
   );
 
   return {
-    edges: data?.posts?.edges || [],
-    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+    edges: (data?.posts?.edges || []) as PostEdge[],
+    pageInfo: (data?.posts?.pageInfo || {
+      hasNextPage: false,
+      endCursor: null,
+    }) as PageInfo,
   };
 }
 
-
-export async function getAllPostsForCommunity(preview = false, after = null) {
+export async function getAllPostsForCommunity(
+  preview: boolean = false,
+  after: string | null = null
+): Promise<PostsConnection> {
   try {
     const data = await fetchAPI(
       `
@@ -365,22 +410,28 @@ export async function getAllPostsForCommunity(preview = false, after = null) {
     );
 
     return {
-      edges: data?.posts?.edges || [],
-      pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+      edges: (data?.posts?.edges || []) as PostEdge[],
+      pageInfo: (data?.posts?.pageInfo || {
+        hasNextPage: false,
+        endCursor: null,
+      }) as PageInfo,
     };
   } catch (error) {
-    console.error('Error in getAllPostsForCommunity:', error);
+    console.error("Error in getAllPostsForCommunity:", error);
     return {
       edges: [],
-      pageInfo: { hasNextPage: false, endCursor: null }
+      pageInfo: {
+        hasNextPage: false,
+        endCursor: null,
+      },
     };
   }
 }
 
-export async function getAllAuthors() {
-  let allAuthors = [];
+export async function getAllAuthors(): Promise<AuthorConnection> {
+  let allAuthors: AuthorEdge[] = [];
   let hasNextPage = true;
-  let endCursor = null;
+  let endCursor: string | null = null;
 
   while (hasNextPage) {
     const data = await fetchAPI(
@@ -409,24 +460,25 @@ export async function getAllAuthors() {
           }
         }
       }
-    `,
+      `,
       {
         variables: { after: endCursor },
       }
     );
 
-    const edges = data?.posts?.edges;
-    allAuthors = [...allAuthors, ...edges];
+    const edges: AuthorEdge[] = data?.posts?.edges || [];
+    allAuthors.push(...edges);
     hasNextPage = data?.posts?.pageInfo?.hasNextPage;
     endCursor = data?.posts?.pageInfo?.endCursor;
   }
+
   return { edges: allAuthors };
 }
 
-export async function getPostsByAuthor() {
-  let allPosts = [];
+export async function getPostsByAuthor(): Promise<PostsConnection> {
+  let allPosts: PostEdge[] = [];
   let hasNextPage = true;
-  let endCursor = null;
+  let endCursor: string | null = null;
 
   while (hasNextPage) {
     const data = await fetchAPI(
@@ -459,31 +511,44 @@ export async function getPostsByAuthor() {
           }
         }
       }
-    `,
+      `,
       {
         variables: { after: endCursor },
       }
     );
 
-    const edges = data?.posts?.edges;
-    allPosts = [...allPosts, ...edges];
+    const edges: PostEdge[] = data?.posts?.edges || [];
+    allPosts.push(...edges);
     hasNextPage = data?.posts?.pageInfo?.hasNextPage;
     endCursor = data?.posts?.pageInfo?.endCursor;
   }
+
   return { edges: allPosts };
 }
 
-export async function getMoreStoriesForSlugs(tags, slug) {
+
+export async function getMoreStoriesForSlugs(
+  tags: { edges: { node: { name: string } }[] },
+  slug: string
+): Promise<{
+  techMoreStories: PostsConnection;
+  communityMoreStories: PostsConnection;
+}> {
   const tagFilter = tags?.edges?.length > 0;
-  const variables = tagFilter ? { tags: tags.edges.map((edge) => edge.node.name) } : undefined;
-  let stories = [];
+  const variables = tagFilter
+    ? { tags: tags.edges.map((edge) => edge.node.name) }
+    : undefined;
+
+  let stories: Post[] = [];
   let data;
 
   const queryWithTags = `
     query Posts($tags: [String!]) {
       posts(
         first: 7,
-        where: { orderby: { field: DATE, order: DESC }, ${tagFilter ? "tagSlugIn: $tags" : ""} }
+        where: { orderby: { field: DATE, order: DESC }, ${
+          tagFilter ? "tagSlugIn: $tags" : ""
+        } }
       ) {
         edges {
           node {
@@ -523,27 +588,27 @@ export async function getMoreStoriesForSlugs(tags, slug) {
   // Fetch posts with tags if applicable
   if (tagFilter) {
     data = await fetchAPI(queryWithTags, { variables });
-    stories = data?.posts?.edges.map(({ node }) => node) || [];
+    stories = data?.posts?.edges.map(({ node }: { node: Post }) => node) || [];
     stories = stories.filter((story) => story.slug !== slug);
   }
 
   // If no posts are found, fetch without tag filter
   if (!stories.length) {
     data = await fetchAPI(fallbackQuery);
-    stories = data?.posts?.edges.map(({ node }) => node) || [];
+    stories = data?.posts?.edges.map(({ node }: { node: Post }) => node) || [];
     stories = stories.filter((story) => story.slug !== slug);
-
   }
 
-  // Remove posts with the same slug
   return {
     techMoreStories: { edges: stories.map((node) => ({ node })) },
     communityMoreStories: { edges: stories.map((node) => ({ node })) },
   };
 }
 
-export async function getPostsByAuthorName(authorName) {
-  let allEdges = [];
+
+export async function getPostsByAuthorName(
+  authorName: string
+): Promise<PostsConnection> {
   const data = await fetchAPI(
     `query MyQuery3 {
       posts(where: {authorName: "${authorName}"}) {
@@ -586,21 +651,26 @@ export async function getPostsByAuthorName(authorName) {
       }
     }`
   );
-  const edges = data.posts.edges;
-  allEdges = [...allEdges, ...edges];
-  return { edges: allEdges };
+
+  const edges: PostEdge[] = data.posts.edges || [];
+  return { edges };
 }
 
-
-export async function getPostAndMorePosts(slug, preview, previewData) {
+export async function getPostAndMorePosts(
+  slug: string,
+  preview: boolean,
+  previewData: { post?: PreviewPost }
+): Promise<PostAndMorePostsResponse> {
   const postPreview = preview && previewData?.post;
-  // The slug may be the id of an unpublished post
+
   const isId = Number.isInteger(Number(slug));
   const isSamePost = isId
-    ? Number(slug) === postPreview.id
-    : slug === postPreview.slug;
+    ? Number(slug) === postPreview?.id
+    : slug === postPreview?.slug;
+
   const isDraft = isSamePost && postPreview?.status === "draft";
   const isRevision = isSamePost && postPreview?.status === "publish";
+
   const data = await fetchAPI(
     `
     fragment AuthorFields on User {
@@ -642,10 +712,10 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
           }
         }
       }
-      seo{
+      seo {
         metaDesc
         title
-      }  
+      }
     }
 
     query PostBySlug($id: ID!, $idType: PostIdType!) {
@@ -653,7 +723,6 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
         ...PostFields
         content
         ${
-          // Only some of the fields of a revision are considered as there are some inconsistencies
           isRevision
             ? `
         revisions(first: 1, where: { orderby: { field: MODIFIED, order: DESC } }) {
@@ -679,7 +748,6 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
         edges {
           node {
             ...PostFields
-            
           }
         }
       }
@@ -693,31 +761,31 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
     }
   );
 
-  // Draft posts may not have an slug
   if (isDraft) data.post.slug = postPreview.id;
-  // Apply a revision (changes in a published post)
+
   if (isRevision && data.post.revisions) {
     const revision = data.post.revisions.edges[0]?.node;
-
     if (revision) Object.assign(data.post, revision);
     delete data.post.revisions;
   }
 
-  // Filter out the main post
-  data.posts.edges = data.posts.edges.filter(({ node }) => node.slug !== slug);
-  // If there are still 3 posts, remove the last one
-  if (data.posts.edges.length > 2) data.posts.edges.pop();
+  data.posts.edges = data.posts.edges.filter(
+    ({ node }: { node: Post }) => node.slug !== slug
+  );
 
-  return data;
+  if (data.posts.edges.length > 2) {
+    data.posts.edges.pop();
+  }
+
+  return data as PostAndMorePostsResponse;
 }
 
 // function for fetching more posts for community or technology category
 export async function fetchMorePosts(
-  category: 'community' | 'technology',
+  category: "community" | "technology",
   after: string | null = null,
   first: number = 22
-) {
-
+): Promise<PostsConnection> {
   const data = await fetchAPI(
     `
     query MorePosts($after: String, $first: Int!, $category: String!) {
@@ -776,13 +844,16 @@ export async function fetchMorePosts(
       variables: {
         after,
         first,
-        category
+        category,
       },
     }
   );
 
   return {
-    edges: data?.posts?.edges || [],
-    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+    edges: (data?.posts?.edges || []) as PostEdge[],
+    pageInfo: (data?.posts?.pageInfo || {
+      hasNextPage: false,
+      endCursor: null,
+    }) as PageInfo,
   };
 }

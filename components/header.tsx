@@ -1,28 +1,46 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import sideBySideSvg from "../public/images/sidebyside-transparent.svg"
 import { SpringValue, animated } from "@react-spring/web";
-const menuItems = [
+import sideBySideSvg from "../public/images/sidebyside-transparent.svg";
+
+// ----- TYPES -----
+
+type MenuItem = {
+  text: string;
+  link: string;
+};
+
+interface HeaderProps {
+  readProgress?: SpringValue<number>;
+}
+
+// ----- CONSTANTS -----
+
+const menuItems: MenuItem[] = [
   { text: "Docs", link: "https://keploy.io/docs" },
   { text: "Tech Blogs", link: "/technology" },
   { text: "Community Articles", link: "/community" },
 ];
 
-const formatStars = (num: number) =>
-    Intl.NumberFormat('en-US', {
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(num);
+// ----- HELPERS -----
 
-const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
+const formatStars = (num: number): string =>
+  Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(num);
+
+// ----- COMPONENTS -----
+
+const WaitListBtn = ({ mobile }: { mobile?: boolean }): JSX.Element => {
+  const baseClass =
+    "inline-flex items-center py-2 px-4 rounded text-gray-200 bg-[#00163d] font-semibold ml-3";
   if (mobile) {
     return (
-      <Link
-        href="https://app.keploy.io/signin"
-        className="inline-flex items-center py-2 px-4 rounded  text-gray-200 bg-[#00163d]  font-semibold ml-3"
-      >
+      <Link href="https://app.keploy.io/signin" className={baseClass}>
         <span>Sign In</span>
         <svg
           className="w-3 h-3 ml-2 -mr-1 fill-current hover:text-primary-300 shrink-0"
@@ -37,17 +55,18 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
       </Link>
     );
   }
+
   return (
     <Link
       href="https://app.keploy.io/signin"
-      className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d]  hover:text-primary-300 ml-3"
+      className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d] hover:text-primary-300 ml-3"
     >
       <span>Sign In</span>
     </Link>
   );
 };
 
-const GithubBtn = () => {
+const GithubBtn = (): JSX.Element => {
   const [stars, setStars] = useState<number>(5412);
 
   useEffect(() => {
@@ -70,6 +89,7 @@ const GithubBtn = () => {
       <Link
         className="flex items-center gap-2 ml-4 text-sm font-extrabold text-orange-500 transition-colors lg:ml-0 hover:text-primary-300"
         href="https://github.com/keploy/keploy"
+        target="_blank"
       >
         <svg
           className="w-5 h-5"
@@ -94,28 +114,24 @@ const GithubBtn = () => {
   );
 };
 
-const MenuBtn = () => {
-  return (
-    <svg
-      className="w-6 h-6 text-gray-900 fill-current"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect y="4" width="24" height="2" />
-      <rect y="11" width="24" height="2" />
-      <rect y="18" width="24" height="2" />
-    </svg>
-  );
-};
+const MenuBtn = (): JSX.Element => (
+  <svg
+    className="w-6 h-6 text-gray-900 fill-current"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect y="4" width="24" height="2" />
+    <rect y="11" width="24" height="2" />
+    <rect y="18" width="24" height="2" />
+  </svg>
+);
 
-export default function Header({
-  readProgress,
-}: {
-  readProgress?: SpringValue<number>;
-}) {
-  const [toggleMenu, setToggleMenu] = useState(false);
+// ----- MAIN HEADER COMPONENT -----
 
-  const toggleMenuHandler = () => {
+export default function Header({ readProgress }: HeaderProps): JSX.Element {
+  const [toggleMenu, setToggleMenu] = useState<boolean>(false);
+
+  const toggleMenuHandler = (): void => {
     setToggleMenu((prev) => !prev);
   };
 
@@ -125,7 +141,7 @@ export default function Header({
         <div className="max-w-6xl px-5 mx-auto sm:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="flex-grow-0 w-2/12 mr-4 shrink-0">
-              <Link href={"https://keploy.io/"}>
+              <Link href="https://keploy.io/">
                 <Image
                   src={sideBySideSvg}
                   alt="Keploy Logo"
@@ -135,21 +151,18 @@ export default function Header({
             </div>
             <nav className="flex-grow-0 hidden w-6/12 lg:flex ">
               <ul className="flex flex-wrap items-center justify-end grow">
-                {menuItems.map((item, index) => {
-                  return (
-                    <li key={index}>
-                      <Link
-                        href={item.link}
-                        className="flex items-center flex-grow-0 px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300 lg:flex"
-                      >
-                        {item.text}
-                      </Link>
-                    </li>
-                  );
-                })}
+                {menuItems.map((item, index) => (
+                  <li key={index}>
+                    <Link
+                      href={item.link}
+                      className="flex items-center flex-grow-0 px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300 lg:flex"
+                    >
+                      {item.text}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </nav>
-
             <div className="justify-end flex-1 hidden header-btn-container lg:flex">
               <GithubBtn />
               <WaitListBtn />
@@ -157,37 +170,34 @@ export default function Header({
             <div className="flex lg:hidden">
               <button
                 onClick={toggleMenuHandler}
-                className={toggleMenu ? "hamburger active" : "hamburger "}
+                className={toggleMenu ? "hamburger active" : "hamburger"}
               >
                 <span className="sr-only">Menu</span>
                 <MenuBtn />
-                {/* <img src="/blog/images/Menu.svg" className="w-6 h-6"></img> */}
               </button>
               <div>
-                {toggleMenu ? (
+                {toggleMenu && (
                   <nav className="absolute left-0 z-20 flex-grow-0 w-full h-screen pb-16 overflow-scroll translate-y-0 bg-white opacity-100 top-full">
                     <ul className="px-5 py-2">
                       <li>
                         <GithubBtn />
                       </li>
-                      {menuItems.map((item, index) => {
-                        return (
-                          <li key={index}>
-                            <Link
-                              href={item.link}
-                              className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300"
-                            >
-                              {item.text}
-                            </Link>
-                          </li>
-                        );
-                      })}
+                      {menuItems.map((item, index) => (
+                        <li key={index}>
+                          <Link
+                            href={item.link}
+                            className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300"
+                          >
+                            {item.text}
+                          </Link>
+                        </li>
+                      ))}
                       <li>
                         <WaitListBtn mobile={true} />
                       </li>
                     </ul>
                   </nav>
-                ) : null}
+                )}
               </div>
             </div>
           </div>
@@ -197,11 +207,10 @@ export default function Header({
             <animated.div
               className="h-full rounded-r-full bg-gradient-to-r from-orange-500 to-yellow-500"
               style={{
-                width: readProgress.to((v) => v + "%"),
+                width: readProgress.to((v) => `${v}%`),
               }}
-            >
-            </animated.div>
-            <div className="absolute top-0 w-full h-full bg-gray-300 -z-10"></div>
+            />
+            <div className="absolute top-0 w-full h-full bg-gray-300 -z-10" />
           </div>
         )}
       </header>

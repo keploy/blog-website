@@ -1,13 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, FormEvent } from "react";
 import styles from "./subscribe-newsletter.module.css";
-import { newsLetterSubscriptionUrl } from '../services/constants'
-import newsletterBunny from "../public/images/newsletterBunny.png"
+import { newsLetterSubscriptionUrl } from '../services/constants';
+import newsletterBunny from "../public/images/newsletterBunny.png";
 import Image from "next/image";
 import { gsap } from "gsap";
 
-export const subscribeMutation = (formData: { fullName: string, email: string, companyName: string, message: string }) => {
+interface FormData {
+  fullName: string;
+  email: string;
+  companyName: string;
+  message: string;
+}
 
-  if (newsLetterSubscriptionUrl){
+export const subscribeMutation = (formData: FormData) => {
+  if (newsLetterSubscriptionUrl) {
     return fetch(newsLetterSubscriptionUrl, {
       method: 'POST',
       headers: {
@@ -25,44 +31,49 @@ export const subscribeMutation = (formData: { fullName: string, email: string, c
           }
         }
       }),
-    }).then(async (response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    }).catch((error) => {
-      console.error("Error during subscription:", error);
-      throw error;
-    });
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        console.error("Error during subscription:", error);
+        throw error;
+      });
   }
-
 };
 
+interface SubscribeNewsletterProps {
+  isSmallScreen: boolean;
+}
 
-export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
+export default function SubscribeNewsletter({ isSmallScreen }: SubscribeNewsletterProps) {
   const myComponent = useRef<HTMLDivElement>(null);
+  const bunnyRef = useRef<HTMLDivElement>(null);
+
   const [isVisible, setVisible] = useState<boolean>(true);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [emailError, setEmailError] = useState('');
-  const message = "NEWSLETTER"
-  const isValidEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-  const handleSubscribe = async (payload) => {
+  const message = "NEWSLETTER";
+
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleSubscribe = async (payload: FormData) => {
     try {
       const response = await subscribeMutation(payload);
-      if (response.data.subscription) {
+      if (response?.data?.subscription) {
         setSubscribed(true);
-        setFullName('')
-        setEmail('')
-        setCompanyName('')
+        setFullName('');
+        setEmail('');
+        setCompanyName('');
         setTimeout(() => {
-
           setSubscribed(false);
-        }, 3000)
+        }, 3000);
       } else {
         console.error('Subscribe request failed.');
       }
@@ -70,64 +81,61 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
       console.error('Error sending subscribe request:', error);
     }
   };
-  const submitHandler = (e) => {
+
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-      if (!isValidEmail(email)) {
-    setEmailError("Please enter a valid email address."); 
+    if (!isValidEmail(email)) {
+      setEmailError("Please enter a valid email address.");
+      setTimeout(() => setEmailError(""), 2000);
+      return;
+    }
 
-    setTimeout(() => {
-      return setEmailError("");
-    }, 2000);
-    return 
-  }
-
-    const payload = {
+    const payload: FormData = {
       fullName,
       email,
       companyName,
       message
     };
 
-    handleSubscribe(payload)
+    handleSubscribe(payload);
   };
-  const isSubscribeDisabled = ()=>{
-    return Boolean(!email || !fullName || !companyName)    
-  }
-  const bunnyRef = useRef(null);
+
+  const isSubscribeDisabled = () => !email || !fullName || !companyName;
 
   useEffect(() => {
     const currentBunnyRef = bunnyRef.current;
-    
+
     const timer = setTimeout(() => {
-      if (!props.isSmallScreen) {
+      if (!isSmallScreen) {
         gsap.to(currentBunnyRef, { y: -180, duration: 1, yoyo: true, repeat: 1 })
           .then(() => {
-            gsap.to(currentBunnyRef, { y: 140, duration: 0.4 }); 
+            gsap.to(currentBunnyRef, { y: 140, duration: 0.4 });
           });
       } else {
         gsap.to(currentBunnyRef, { y: 0 });
       }
     }, 1000);
-    
+
     return () => {
       clearTimeout(timer);
       if (currentBunnyRef) {
         gsap.killTweensOf(currentBunnyRef);
       }
     };
-}, [props.isSmallScreen]);
+  }, [isSmallScreen]);
+
   return (
     <div className="flex flex-col" ref={bunnyRef}>
-      <div className="hidden lg:block ">
+      <div className="hidden lg:block">
         <Image src={newsletterBunny} alt="Image" />
       </div>
-      <div className="overflow-x-hidden mt-2 lg:-mt-7 shadow-md border-b-primary-300 border-b-2 py-6 px-4 sticky ml-0 sm:ml-10 md:ml-0  w-full" ref={myComponent}>
-        <div
-          className={`${isVisible ? styles["slide-in"] : "translate-x-full opacity-0"
-            }`}
-        >
-          <div className={"flex flex-col gap-y-2"}>
+      <div
+        className="overflow-x-hidden mt-2 lg:-mt-7 shadow-md border-b-primary-300 border-b-2 py-6 px-4 sticky ml-0 sm:ml-10 md:ml-0 w-full"
+        ref={myComponent}
+      >
+        <div className={`${isVisible ? styles["slide-in"] : "translate-x-full opacity-0"}`}>
+          <div className="flex flex-col gap-y-2">
             <p className="text-sm text-black pb-2 text-center">
               To get the latest blogs and updates straight to your inbox.
             </p>
@@ -137,34 +145,33 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
                 className="rounded px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                style={{ animation: "autowrite 2s steps(30) infinite" }}
                 placeholder="Full Name"
+                style={{ animation: "autowrite 2s steps(30) infinite" }}
               />
               <input
                 type="email"
                 className="rounded px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{ animation: "autowrite 20s steps(30) infinite" }}
                 placeholder="Email"
+                style={{ animation: "autowrite 20s steps(30) infinite" }}
               />
               <input
                 type="text"
                 className="rounded px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
-                style={{ animation: "autowrite 2s steps(30) infinite" }}
                 placeholder="Company Name"
+                style={{ animation: "autowrite 2s steps(30) infinite" }}
               />
               <div>
                 <button
-                  className={`btn text-secondary-300 bg-primary-300 w-full mb-4 sm:mb-0 px-2 py-1 rounded font-bold border-1 border-transparent text-white shadow mt-2 ${isSubscribeDisabled() ? "opacity-50 cursor-not-allowed" : "hover:text-white"}`}
                   type="submit"
+                  className={`btn text-secondary-300 bg-primary-300 w-full mb-4 sm:mb-0 px-2 py-1 rounded font-bold border-1 border-transparent text-white shadow mt-2 ${isSubscribeDisabled() ? "opacity-50 cursor-not-allowed" : "hover:text-white"}`}
                   disabled={isSubscribeDisabled()}
                 >
                   Subscribe
                 </button>
-
               </div>
             </form>
             <span className="text-xs mt-2 border-none mb-2 text-center block">
@@ -176,6 +183,5 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
         </div>
       </div>
     </div>
-
   );
 }

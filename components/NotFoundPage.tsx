@@ -3,18 +3,14 @@ import Header from "./header";
 import Container from "./container";
 import error from "../public/images/error404.png";
 import Image from "next/image";
-const NotFoundPage = () => {
+
+const NotFoundPage = (): JSX.Element => {
   return (
     <>
       <Header />
       <Container>
         <div className="flex flex-col items-center justify-center">
-          <Image
-          src={error}
-          width={500}
-          height={500}
-          alt="error"
-          />
+          <Image src={error} width={500} height={500} alt="error" />
           <h1 className="text-4xl font-bold text-gray-800 mb-4">🐰Oops!🐰</h1>
           <p className="text-lg text-gray-600 mb-8">404 - Page not Found</p>
 

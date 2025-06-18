@@ -6,6 +6,19 @@ import Categories from "./categories";
 import BrushStroke from "../public/images/backgroundStroke.png";
 import Image from "next/image";
 import PostHeaderAuthors from "./PostHeaderAuthors";
+import { Post } from "../types/post";
+
+interface PostHeaderProps {
+  title: string;
+  coverImage: string;
+  date: string;
+  author: string;
+  categories: Post["categories"];
+  BlogWriter: string;
+  BlogReviewer: string;
+  TimeToRead: string;
+}
+
 export default function PostHeader({
   title,
   coverImage,
@@ -15,7 +28,7 @@ export default function PostHeader({
   BlogWriter,
   BlogReviewer,
   TimeToRead,
-}) {
+}: PostHeaderProps) {
   return (
     <>
       <div className="flex flex-col items-start sm:items-center justify-center md:mb-5">
@@ -26,10 +39,14 @@ export default function PostHeader({
         <PostTitle>{title}</PostTitle>
         {/* <Avatar author={author} /> */}
         <div className=" w-full">
-        <PostHeaderAuthors blogreviewer={BlogReviewer} blogwriter={BlogWriter} timetoRead={TimeToRead}/>
+          <PostHeaderAuthors
+            blogreviewer={BlogReviewer}
+            blogwriter={BlogWriter}
+            timetoRead={TimeToRead}
+          />
         </div>
       </div>
-      
+
       <div className="mb-8 md:mb-16 sm:mx-0 xl:w-2/3 md:w-4/5 w-full md:-translate-x-1/2 md:left-1/2 relative">
         <CoverImage title={title} coverImage={coverImage} />
       </div>

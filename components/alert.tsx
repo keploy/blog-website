@@ -1,9 +1,13 @@
-import Container from './container'
-import cn from 'classnames'
-import { EXAMPLE_PATH } from '../lib/constants'
-import Link from "next/link";
+import Container from './container';
+import cn from 'classnames';
+import { EXAMPLE_PATH } from '../lib/constants';
+import Link from 'next/link';
 
-export default function Alert({ preview }) {
+interface AlertProps {
+  preview: boolean;
+}
+
+export default function Alert({ preview }: AlertProps): JSX.Element {
   return (
     <div
       className={cn('border-b', {
@@ -39,5 +43,5 @@ export default function Alert({ preview }) {
         </div>
       </Container>
     </div>
-  )
+  );
 }

@@ -1,9 +1,18 @@
 import { getExcerpt } from "../utils/excerpt";
 import TagsPostPreview from "./TagsPostPreview";
 import { useRouter } from "next/router";
-export default function TagsStories({ posts}) {
-    const router = useRouter();
+import { Post } from "../types/post";
+
+interface TagsStoriesProps {
+  posts: {
+    node: Post;
+  }[];
+}
+
+export default function TagsStories({ posts }: TagsStoriesProps) {
+  const router = useRouter();
   const { slug } = router.query;
+
   return (
     <section>
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">

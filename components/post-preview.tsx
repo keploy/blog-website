@@ -5,6 +5,16 @@ import Link from "next/link";
 import { Post } from "../types/post";
 import { animated, easings, useInView } from "@react-spring/web";
 
+interface PostPreviewProps {
+  title: Post["title"];
+  coverImage: Post["featuredImage"];
+  date: Post["date"];
+  excerpt: Post["excerpt"];
+  author: Post["ppmaAuthorName"];
+  slug: Post["slug"];
+  isCommunity?: boolean;
+}
+
 export default function PostPreview({
   title,
   coverImage,
@@ -13,35 +23,23 @@ export default function PostPreview({
   author,
   slug,
   isCommunity = false,
-}: {
-  title: Post["title"];
-  coverImage: Post["featuredImage"];
-  date: Post["date"];
-  excerpt: Post["excerpt"];
-  author: Post["ppmaAuthorName"];
-  slug: Post["slug"];
-  isCommunity?: boolean;
-}) {
+}: PostPreviewProps) {
   const basePath = isCommunity ? "/community" : "/technology";
   excerpt = excerpt.replace("Table of Contents", "");
+
   const [ref, springStyles] = useInView(
     () => ({
-      from: {
-        opacity: 0,
-      },
-      to: {
-        opacity: 100,
-      },
+      from: { opacity: 0 },
+      to: { opacity: 100 },
       config: {
         duration: 500,
         delay: 100,
         easing: easings.easeInCubic,
       },
     }),
-    {
-      rootMargin: "-200px 0px",
-    }
+    { rootMargin: "-200px 0px" }
   );
+
   return (
     <animated.div
       className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition group"
