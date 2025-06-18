@@ -20,6 +20,23 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}>
       <Head>
         <title>{`Engineering | Keploy Blog`}</title>
+        <meta name="description" content="Explore insightful developer blogs, tutorials, and case studies on software testing, productivity, and API automation with Keploy." />
+        <meta name="keywords" content="Keploy, blog, developer tools, API testing, automation, software testing, case studies" />
+        <meta name="author" content="Keploy Team" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://keploy.io/blog/" />
+        <meta property="og:title" content="Engineering | Keploy Blog" />
+        <meta property="og:description" content="Explore insightful developer blogs, tutorials, and case studies on software testing, productivity, and API automation with Keploy." />
+        <meta property="og:image" content="https://keploy.io/images/blog-thumbnail.png" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://keploy.io/blog/" />
+        <meta property="twitter:title" content="Engineering | Keploy Blog" />
+        <meta property="twitter:description" content="Explore insightful developer blogs, tutorials, and case studies on software testing, productivity, and API automation with Keploy." />
+        <meta property="twitter:image" content="https://keploy.io/images/blog-thumbnail.png" />
       </Head>
       <Header />
       <Container>
