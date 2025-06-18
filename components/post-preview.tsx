@@ -32,7 +32,7 @@ export default function PostPreview({
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       {/* Gradient overlay on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-blue-50/0 group-hover:from-orange-50/30 group-hover:to-blue-50/30 transition-all duration-500 rounded-2xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-blue-50/0 group-hover:from-orange-50/30 group-hover:to-blue-50/30 transition-all duration-500 rounded-2xl pointer-events-none" />
       
       <div className="relative z-10">
         <div className="mb-5 overflow-hidden rounded-xl">

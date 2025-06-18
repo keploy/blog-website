@@ -230,6 +230,9 @@ td{
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
+  /* Fallback for browsers that don't support webkit-line-clamp */
+  max-height: 1.2em;
+  line-height: 1.2;
 }
 
 .line-clamp-2 {
@@ -237,6 +240,9 @@ td{
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  /* Fallback for browsers that don't support webkit-line-clamp */
+  max-height: 2.4em;
+  line-height: 1.2;
 }
 
 .line-clamp-3 {
@@ -244,6 +250,9 @@ td{
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  /* Fallback for browsers that don't support webkit-line-clamp */
+  max-height: 3.6em;
+  line-height: 1.2;
 }
 
 /* Enhanced glassmorphism effects */
