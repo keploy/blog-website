@@ -38,7 +38,7 @@ export default function MoreStories({
   }, [initialPosts]);
 
   // Filter posts based on search term
-  const filteredPosts = allPosts.filter(({ node }) => 
+  const filteredPosts = allPosts.filter(({ node }) =>
     node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -58,7 +58,7 @@ export default function MoreStories({
     try {
       const category = isCommunity ? 'community' : 'technology';
       const result = await fetchMorePosts(category, endCursor);
-      
+
       if (result.edges.length) {
         setBuffer(currentBuffer => [...currentBuffer, ...result.edges]);
         setEndCursor(result.pageInfo.endCursor);
@@ -74,7 +74,7 @@ export default function MoreStories({
 
   const loadMorePosts = async () => {
     if (loading) return;
-    
+
     if (searchTerm) {
       setVisibleCount(prev => prev + 9);
       return;
@@ -85,7 +85,7 @@ export default function MoreStories({
       // First, show more posts from allPosts if available
       if (visibleCount < allPosts.length) {
         setVisibleCount(prev => Math.min(prev + 9, allPosts.length));
-      } 
+      }
       // Then, add posts from buffer if needed
       else if (buffer.length > 0) {
         const postsToAdd = buffer.slice(0, 9);
@@ -98,7 +98,7 @@ export default function MoreStories({
       if (buffer.length < 9 && hasMore) {
         const category = isCommunity ? 'community' : 'technology';
         const result = await fetchMorePosts(category, endCursor);
-        
+
         if (result.edges.length > 0) {
           setBuffer(prev => [...prev, ...result.edges]);
           setEndCursor(result.pageInfo.endCursor);
@@ -118,17 +118,17 @@ export default function MoreStories({
   // Show load more button if there are more posts to show from allPosts,
   // or if there are posts in buffer, or if we can fetch more
   const showLoadMore = (
-    visibleCount < allPosts.length || 
-    buffer.length > 0 || 
+    visibleCount < allPosts.length ||
+    buffer.length > 0 ||
     hasMore
-  ) && !loading && !error && isIndex;
+  ) && isIndex;
 
   return (
     <section>
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
         More Stories
       </h2>
-      
+
       {isIndex && (
         <div className="flex w-full mb-8">
           <div className="relative w-full">
@@ -176,15 +176,20 @@ export default function MoreStories({
               <button
                 onClick={loadMorePosts}
                 disabled={loading}
-                className="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
+                className={`px-6 py-2 rounded-full flex items-center justify-center min-w-[180px] transition-all duration-200
+      ${loading ? 'bg-orange-400 cursor-wait' : 'bg-orange-500 hover:bg-orange-600'} text-white`}
               >
                 {loading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                    Loading...
+                  </>
                 ) : (
                   'Load More Posts'
                 )}
               </button>
             )}
+
           </div>
         </>
       )}
