@@ -786,3 +786,4 @@ export async function fetchMorePosts(
     pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
   };
 }
+

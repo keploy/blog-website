@@ -1,119 +1,120 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
 
+
+:root {
+  --bg: #f8fafc;
+  --text: #18181b;
+  --card: #ffffff;
+  --card-text: #18181b;
+  --secondary-text: #6b7280;
+  --accent: #ff8800;
+  --border: #e5e7eb;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  --bg: #0f172a; 
+  --text: #e0e0e0;
+  --card: var(--bg); 
+  --card-text: #f0f0f0;
+  --secondary-text: #b0b0b0;
+  --accent: #ffb366;
+  --border: transparent; 
+  --shadow: none; 
+}
+
+
 @tailwind base;
-
-/* Write your own custom base styles here */
-
-/* Start purging... */
 @tailwind components;
-/* Stop purging. */
-
-/* Write you own custom component styles here */
-
-/* Start purging... */
 @tailwind utilities;
-/* Stop purging. */
 
-/* Your own custom utilities */
-
-.has-text-align-left {
-  @apply text-left;
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Baloo 2", sans-serif;
+  transition: background 0.3s, color 0.3s;
 }
 
-.has-text-align-center {
-  @apply text-center;
+.card,
+.container,
+.blog-card,
+.hero-card {
+  background: var(--card);
+  color: var(--card-text);
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 10px var(--shadow);
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, border 0.3s;
 }
 
-.has-text-align-right {
-  @apply text-right;
+.dark .card,
+.dark .container,
+.dark .blog-card,
+.dark .hero-card {
+  border: none;
+  box-shadow: none;
 }
 
-.has-large-font-size {
-  @apply text-4xl;
+.secondary-text {
+  color: var(--secondary-text);
 }
 
+a,
+.accent {
+  color: var(--accent);
+  transition: color 0.3s;
+}
+
+.navbar {
+  background: var(--card);
+  color: var(--card-text);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s, color 0.3s;
+}
+
+.has-text-align-left { @apply text-left; }
+.has-text-align-center { @apply text-center; }
+.has-text-align-right { @apply text-right; }
+.has-large-font-size { @apply text-4xl; }
 .alignfull {
   @apply w-screen relative;
-
   left: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
   max-width: 100vw;
   right: 50%;
 }
-
-.wp-block-image img {
-  @apply max-w-full mt-2;
-}
-.wp-block-image.aligncenter {
-  @apply text-center;
-}
+.wp-block-image img { @apply max-w-full mt-2; }
+.wp-block-image.aligncenter { @apply text-center; }
 .wp-block-image.alignfull img,
-.wp-block-image.alignwide img {
-  @apply w-full;
-}
+.wp-block-image.alignwide img { @apply w-full; }
 .wp-block-image .alignleft,
 .wp-block-image .alignright,
 .wp-block-image .aligncenter,
-.wp-block-image.is-resized {
-  @apply table ml-0 mr-0;
-}
+.wp-block-image.is-resized { @apply table ml-0 mr-0; }
 .wp-block-image .alignleft > figcaption,
 .wp-block-image .alignright > figcaption,
 .wp-block-image .aligncenter > figcaption,
 .wp-block-image.is-resized > figcaption {
   @apply table-caption;
-
   caption-side: bottom;
 }
-
-.wp-block-image .alignleft {
-  @apply float-left mr-4;
-}
-.wp-block-image .alignright {
-  @apply float-right ml-4;
-}
-.wp-block-image .aligncenter {
-  @apply m-auto;
-}
-
+.wp-block-image .alignleft { @apply float-left mr-4; }
+.wp-block-image .alignright { @apply float-right ml-4; }
+.wp-block-image .aligncenter { @apply m-auto; }
 .wp-block-button a,
-.wp-block-file a.wp-block-file__button {
-  @apply bg-blue-500 text-white no-underline py-2 px-4;
-}
-
+.wp-block-file a.wp-block-file__button { @apply bg-blue-500 text-white no-underline py-2 px-4; }
 .wp-block-button a:hover,
-.wp-block-file a.wp-block-file__button:hover {
-  @apply bg-blue-400 cursor-pointer;
-}
-
-.wp-block-file a:first-of-type {
-  @apply mr-4;
-}
-
+.wp-block-file a.wp-block-file__button:hover { @apply bg-blue-400 cursor-pointer; }
+.wp-block-file a:first-of-type { @apply mr-4; }
 .wp-block-cover {
   @apply flex flex-wrap justify-center items-center bg-cover bg-center overflow-hidden;
-
   min-height: 430px;
 }
-
-.wp-block-verse {
-  @apply font-sans;
-}
-
-.wp-block-media-text {
-  @apply grid grid-cols-2 gap-4;
-}
-
-.wp-video {
-  @apply max-w-full;
-}
-
-.wp-caption {
-  @apply max-w-full;
-}
-
-/* Custom CSS */
+.wp-block-verse { @apply font-sans; }
+.wp-block-media-text { @apply grid grid-cols-2 gap-4; }
+.wp-video { @apply max-w-full; }
+.wp-caption { @apply max-w-full; }
 
 .baloo-2-600 {
   font-family: "Baloo 2", sans-serif;
@@ -121,7 +122,6 @@
   font-weight: 600;
   font-style: normal;
 }
-
 .heading1 {
   font-family: "Baloo 2", "bold", sans-serif;
 }
@@ -129,21 +129,6 @@
   font-family: "Baloo 2", sans-serif;
 }
 
-body {
-  background: #fbfcff;
-  color: #222222;
-}
-.authormapping{
-  background-color: #0F172A;
-}
-
-/* .title-link{
-  position: relative;
-  background-color: aqua;
-  background-position: 0 100%;
-  background-size: 0 10px;
-  transition: background .3s ease;
-} */
 .hamburger.active svg > :first-child {
   opacity: 0;
   y: 11;
@@ -170,7 +155,6 @@ body {
     transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s,
     width 0.1s ease-out;
 }
-
 .hamburger svg > :nth-child(3) {
   transition: y 0.1s ease-in 0.25s,
     transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19),
@@ -187,39 +171,35 @@ body {
   animation: 5s linear infinite spin;
 }
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 pre {
-  background-color: #222222 !important;
-  color: antiquewhite;
+  background-color: #23232b !important;
+  color: #ffe9c7;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
 }
 
-.footer-font{
-  font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
+.footer-font {
+  font-family: "__Inter_aaf875", "__Inter_Fallback_aaf875", sans-serif;
 }
 
-/* Buttons */
 .btn,
 .btn-sm {
-    @apply font-medium inline-flex items-center justify-center border border-transparent rounded-sm leading-snug transition duration-150 ease-in-out;
+  @apply font-medium inline-flex items-center justify-center border border-transparent rounded-sm leading-snug transition duration-150 ease-in-out;
 }
+.btn { @apply px-8 py-3; }
+.btn-sm { @apply px-4 py-2; }
 
-.btn {
-    @apply px-8 py-3;
-}
-
-.btn-sm {
-    @apply px-4 py-2;
-}
-
-
-td{
-  border: solid 1px black;
+td {
+  border: solid 1px var(--border);
   padding: 5px;
+}
+
+.authormapping {
+  background-color: #0F172A;
 }

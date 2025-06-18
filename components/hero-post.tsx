@@ -26,7 +26,7 @@ export default function HeroPost({
 
   return (
 <section>
-  <div className="relative bg-gray-100 border border-gray-300 px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center lg:group transition-all duration-500 hover:border-orange-500 hover:shadow-[0_0_10px_2px_rgba(255,165,0,0.6)] overflow-hidden">
+  <div className="relative bg-gray-100 border border-gray-300 px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center lg:group transition-all duration-500 hover:border-orange-500 hover:shadow-[0_0_10px_2px_rgba(255,165,0,0.6)] overflow-hidden card">
     {/* Banner */}
 <div className="absolute top-0 right-0 transform rotate-45 translate-x-[25%] translate-y-[90%] bg-orange-200 text-orange-800 text-[10px] font-bold py-0.5 w-[100px] flex justify-center items-center shadow-md">
   Latest Blog
