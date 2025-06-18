@@ -7,12 +7,14 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   const headers = { "Content-Type": "application/json" };
 
   if (process.env.WORDPRESS_AUTH_REFRESH_TOKEN) {
-    headers[
-      "Authorization"
-    ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
+    headers["Authorization"] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
   }
-  // WPGraphQL Plugin must be enabled
-  const res = await fetch(API_URL, {
+
+  console.log("Sending request to:", process.env.WORDPRESS_API_URL);
+  console.log("Query:", query);
+  console.log("Variables:", variables);
+
+  const res = await fetch(process.env.WORDPRESS_API_URL!, {
     headers,
     method: "POST",
     body: JSON.stringify({
@@ -21,14 +23,16 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
     }),
   });
 
+  console.log("Response status:", res.status);
   const json = await res.json();
+  console.log("Response data:", json);
+
   if (json.errors) {
-    console.error(json.errors);
+    console.error("GraphQL Errors:", json.errors);
     throw new Error("Failed to fetch API");
   }
   return json.data;
 }
-
 export async function getPreviewPost(id, idType = "DATABASE_ID") {
   const data = await fetchAPI(
     `
