@@ -143,7 +143,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }: PostHeaderA
                   </div>
                )}
             </div>
-            <div className="flex flex-row gap-5 items-center gap-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
+            <div className="flex flex-row gap-3 items-center sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
                <p className="text-gray-500 text-sm">Share this</p>
                <Link
                   href={twitterShareUrl}
