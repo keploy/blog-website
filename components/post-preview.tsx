@@ -44,7 +44,7 @@ export default function PostPreview({
   );
   return (
     <animated.div
-      className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition group"
+      className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition group card"
       ref={ref}
       style={springStyles}
     >

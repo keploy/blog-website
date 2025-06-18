@@ -2,8 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import sideBySideSvg from "../public/images/sidebyside-transparent.svg"
+import sideBySideSvg from "../public/images/sidebyside-transparent.svg";
 import { SpringValue, animated } from "@react-spring/web";
+import DarkModeToggle from "./DarkModeToggle";
+
 const menuItems = [
   { text: "Docs", link: "https://keploy.io/docs" },
   { text: "Tech Blogs", link: "/technology" },
@@ -11,17 +13,17 @@ const menuItems = [
 ];
 
 const formatStars = (num: number) =>
-    Intl.NumberFormat('en-US', {
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(num);
+  Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(num);
 
 const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   if (mobile) {
     return (
       <Link
         href="https://app.keploy.io/signin"
-        className="inline-flex items-center py-2 px-4 rounded  text-gray-200 bg-[#00163d]  font-semibold ml-3"
+        className="inline-flex items-center py-2 px-4 rounded text-gray-200 bg-[#00163d] font-semibold ml-3"
       >
         <span>Sign In</span>
         <svg
@@ -40,7 +42,7 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   return (
     <Link
       href="https://app.keploy.io/signin"
-      className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d]  hover:text-primary-300 ml-3"
+      className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d] hover:text-primary-300 ml-3"
     >
       <span>Sign In</span>
     </Link>
@@ -97,7 +99,7 @@ const GithubBtn = () => {
 const MenuBtn = () => {
   return (
     <svg
-      className="w-6 h-6 text-gray-900 fill-current"
+      className="w-6 h-6 text-gray-900 fill-current dark:text-white"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -114,97 +116,105 @@ export default function Header({
   readProgress?: SpringValue<number>;
 }) {
   const [toggleMenu, setToggleMenu] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const toggleMenuHandler = () => {
     setToggleMenu((prev) => !prev);
   };
 
-  return (
-    <div className="h-32 md:h-40">
-      <header className="fixed z-30 w-full transition duration-300 ease-in-out bg-neutral-100 md:bg-opacity-90 ">
-        <div className="max-w-6xl px-5 mx-auto sm:px-6">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            <div className="flex-grow-0 w-2/12 mr-4 shrink-0">
-              <Link href={"https://keploy.io/"}>
-                <Image
-                  src={sideBySideSvg}
-                  alt="Keploy Logo"
-                  className="w-auto h-10"
-                />
-              </Link>
-            </div>
-            <nav className="flex-grow-0 hidden w-6/12 lg:flex ">
-              <ul className="flex flex-wrap items-center justify-end grow">
-                {menuItems.map((item, index) => {
-                  return (
-                    <li key={index}>
-                      <Link
-                        href={item.link}
-                        className="flex items-center flex-grow-0 px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300 lg:flex"
-                      >
-                        {item.text}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-            <div className="justify-end flex-1 hidden header-btn-container lg:flex">
-              <GithubBtn />
-              <WaitListBtn />
-            </div>
-            <div className="flex lg:hidden">
-              <button
-                onClick={toggleMenuHandler}
-                className={toggleMenu ? "hamburger active" : "hamburger "}
-              >
-                <span className="sr-only">Menu</span>
-                <MenuBtn />
-                {/* <img src="/blog/images/Menu.svg" className="w-6 h-6"></img> */}
-              </button>
-              <div>
-                {toggleMenu ? (
-                  <nav className="absolute left-0 z-20 flex-grow-0 w-full h-screen pb-16 overflow-scroll translate-y-0 bg-white opacity-100 top-full">
-                    <ul className="px-5 py-2">
-                      <li>
-                        <GithubBtn />
-                      </li>
-                      {menuItems.map((item, index) => {
-                        return (
-                          <li key={index}>
-                            <Link
-                              href={item.link}
-                              className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300"
-                            >
-                              {item.text}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                      <li>
-                        <WaitListBtn mobile={true} />
-                      </li>
-                    </ul>
-                  </nav>
-                ) : null}
-              </div>
-            </div>
+  return (
+    <header className="fixed top-0 z-30 w-full bg-white shadow-md dark:bg-gray-900 dark:border-b dark:border-gray-700">
+      <div className="max-w-6xl px-5 mx-auto sm:px-6">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex-grow-0 w-2/12 mr-4 shrink-0">
+            <Link href={"https://keploy.io/"}>
+              <Image
+                src={sideBySideSvg}
+                alt="Keploy Logo"
+                className="w-auto h-10"
+              />
+            </Link>
+          </div>
+
+          <nav className="flex-grow-0 hidden w-6/12 lg:flex">
+            <ul className="flex flex-wrap items-center justify-end grow">
+              {menuItems.map((item, index) => (
+                <li key={index}>
+                  <Link
+                    href={item.link}
+                    className="flex items-center flex-grow-0 px-5 py-3 font-medium transition duration-150 ease-in-out text-gray-600 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
+                  >
+                    {item.text}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="justify-end flex-1 hidden header-btn-container lg:flex items-center space-x-4">
+            <GithubBtn />
+            <WaitListBtn />
+            <DarkModeToggle />
+          </div>
+
+          <div className="flex lg:hidden">
+            <button
+              onClick={toggleMenuHandler}
+              className={`hamburger ml-4 ${toggleMenu ? "active" : ""}`}
+            >
+              <span className="sr-only">Menu</span>
+              <MenuBtn />
+            </button>
           </div>
         </div>
-        {readProgress && (
-          <div className="relative h-1">
-            <animated.div
-              className="h-full rounded-r-full bg-gradient-to-r from-orange-500 to-yellow-500"
-              style={{
-                width: readProgress.to((v) => v + "%"),
-              }}
-            >
-            </animated.div>
-            <div className="absolute top-0 w-full h-full bg-gray-300 -z-10"></div>
-          </div>
-        )}
-      </header>
-    </div>
+      </div>
+
+      {toggleMenu && (
+        <nav className="absolute left-0 z-20 w-full pb-4 bg-white shadow-lg dark:bg-gray-900 top-full">
+          <ul className="px-5 py-2 space-y-4">
+            <li>
+              <GithubBtn />
+            </li>
+            {menuItems.map((item, index) => (
+              <li key={index}>
+                <Link
+                  href={item.link}
+                  className="flex items-center px-5 py-3 font-medium transition duration-150 ease-in-out text-gray-600 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
+                >
+                  {item.text}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <WaitListBtn mobile={true} />
+            </li>
+            <li className="px-5">
+              <DarkModeToggle />
+            </li>
+          </ul>
+        </nav>
+      )}
+
+      {readProgress && (
+        <div className="relative h-1">
+          <animated.div
+            className="h-full rounded-r-full bg-gradient-to-r from-orange-500 to-yellow-500"
+            style={{
+              width: readProgress.to((v) => v + "%"),
+            }}
+          ></animated.div>
+          <div className="absolute top-0 w-full h-full bg-gray-300 -z-10"></div>
+        </div>
+      )}
+    </header>
   );
 }
+
