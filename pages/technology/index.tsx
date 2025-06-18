@@ -1,18 +1,30 @@
 import Head from "next/head";
 import { GetStaticProps } from "next";
 import Container from "../../components/container";
-import MoreStories from "../../components/more-stories";
 import HeroPost from "../../components/hero-post";
 import Layout from "../../components/layout";
 import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
+import BlogPagination from "../../components/BlogPagination";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
-  console.log("tech posts: ", edges.length)
+  console.log("tech posts: ", edges.length);
   const heroPost = edges[0]?.node;
   const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
   const morePosts = edges.slice(1);
+
+  // Transform the posts data to match BlogPagination interface
+  const transformedPosts = morePosts.map(({ node }) => ({
+    id: node.id || node.slug,
+    title: node.title,
+    excerpt: getExcerpt(node.excerpt, 100), // Adjust excerpt length as needed
+    date: node.date,
+    author: node.ppmaAuthorName,
+    slug: node.slug,
+    categories: node.categories?.edges?.map(({ node: cat }) => ({ name: cat.name })) || [],
+    featuredImage: node.featuredImage
+  }));
 
   return (
     <Layout
@@ -26,7 +38,7 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       </Head>
       <Header />
       <Container>
-        {/* <Intro /> */}
+        {/* Hero Post Section */}
         {heroPost && (
           <HeroPost
             title={heroPost.title}
@@ -38,8 +50,16 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
             isCommunity={false}
           />
         )}
-        {morePosts.length > 0 && (
-          <MoreStories isIndex={true} posts={morePosts} isCommunity={false} initialPageInfo={pageInfo} />
+        
+        {/* Paginated Posts Section */}
+        {transformedPosts.length > 0 && (
+          <div style={{ marginTop: '3rem' }}>
+            <BlogPagination 
+              posts={transformedPosts} 
+              postsPerPage={6}
+              category="technology"
+            />
+          </div>
         )}
       </Container>
     </Layout>
