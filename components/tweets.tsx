@@ -2,7 +2,15 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const Tweets = ({ avatar, name, id, post, content }) => {
+interface TweetProps {
+  avatar: string;
+  name: string;
+  id: string;
+  post: string;
+  content: string;
+}
+
+const Tweets = ({ avatar, name, id, post, content }: TweetProps) => {
   return (
     <Link
       href={post}
@@ -26,7 +34,7 @@ const Tweets = ({ avatar, name, id, post, content }) => {
           </div>
         </div>
         <Image
-          src="/blog/favicon/x-twitter.svg" 
+          src="/blog/favicon/x-twitter.svg"
           width={20}
           height={20}
           alt="Twitter Icon"

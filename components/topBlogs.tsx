@@ -1,8 +1,14 @@
 import PostPreview from "./post-preview";
 import { getExcerpt } from "../utils/excerpt";
 import Link from "next/link";
+import { Post } from "../types/post";
 
-const TopBlogs = ({ communityPosts, technologyPosts }) => {
+interface TopBlogsProps {
+  communityPosts: { node: Post }[];
+  technologyPosts: { node: Post }[];
+}
+
+const TopBlogs = ({ communityPosts, technologyPosts }: TopBlogsProps) => {
   return (
     <section className="py-12 px-4 md:px-8 lg:px-16 ">
       <div className="mb-16">

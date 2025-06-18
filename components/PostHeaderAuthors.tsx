@@ -2,36 +2,37 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FaLinkedin, FaTwitter, FaLink } from "react-icons/fa"; 
+import { FaLinkedin, FaTwitter, FaLink } from "react-icons/fa";
 
-const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
+interface Author {
+  name: string;
+  description: string;
+  ImageUrl: string;
+}
+
+interface Props {
+  blogwriter: Author[];
+  blogreviewer: Author[];
+  timetoRead: number;
+}
+
+const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }: Props) => {
   const sameAuthor =
     blogwriter[0].name.split(" ")[0].toLowerCase() ===
     blogreviewer[0].name.toLowerCase();
 
   const [hoverStateBlogWriter, setHoverStateBlogWriter] = useState(false);
   const [hoverStateBlogReviewer, setHoverStateBlogReviewer] = useState(false);
-  const [copied, setCopied] = useState(false); 
+  const [copied, setCopied] = useState(false);
 
-  const onMouseEnterBlogWriter = () => {
-    setHoverStateBlogWriter(true);
-  };
+  const onMouseEnterBlogWriter = () => setHoverStateBlogWriter(true);
+  const onMouseLeaveBlogWriter = () =>
+    setTimeout(() => setHoverStateBlogWriter(false), 400);
 
-  const onMouseLeaveBlogWriter = () => {
-    setTimeout(() => {
-      setHoverStateBlogWriter(false);
-    }, 400);
-  };
+  const onMouseEnterBlogReviewer = () => setHoverStateBlogReviewer(true);
+  const onMouseLeaveBlogReviewer = () =>
+    setTimeout(() => setHoverStateBlogReviewer(false), 400);
 
-  const onMouseEnterBlogReviewer = () => {
-    setHoverStateBlogReviewer(true);
-  };
-
-  const onMouseLeaveBlogReviewer = () => {
-    setTimeout(() => {
-      setHoverStateBlogReviewer(false);
-    }, 400);
-  };
   const router = useRouter();
   const currentURL = encodeURIComponent(
     `keploy.io/${router.basePath + router.asPath}`
@@ -43,7 +44,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
     try {
       await navigator.clipboard.writeText(`https://keploy.io/blog${router.asPath}`);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); 
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy!", err);
     }
@@ -51,12 +52,13 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row lg:mt-7 items-start sm:items-center sm:justify-around gap-4 sm:gap-0  sm:px-0 lg:mx-28">
+      <div className="flex flex-col lg:flex-row lg:mt-7 items-start sm:items-center sm:justify-around gap-4 sm:gap-0 sm:px-0 lg:mx-28">
         <p className="text-gray-500 text-sm order-1 sm:order-none mr-1 sm:my-2 md:my-4 lg:my-0">
           {timetoRead} min read
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 order-3 sm:order-none w-full sm:w-auto">
+          {/* Writer Section */}
           <div
             className="flex flex-row items-center gap-3 sm:gap-5 relative"
             onMouseEnter={onMouseEnterBlogWriter}
@@ -67,7 +69,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
               alt="blog-writer"
               height={40}
               width={40}
-              className={`rounded-full`}
+              className="rounded-full"
             />
             <div className="relative">
               <p>
@@ -95,6 +97,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
             )}
           </div>
 
+          {/* Reviewer Section */}
           {!sameAuthor && (
             <div
               className="flex flex-row items-center gap-3 sm:gap-5 relative"
@@ -126,19 +129,17 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
                         width={40}
                         className="rounded-full"
                       />
-                      <p className="text-base sm:text-lg">
-                        {blogreviewer[0].name}
-                      </p>
+                      <p className="text-base sm:text-lg">{blogreviewer[0].name}</p>
                     </div>
-                    <p className="mt-2 text-sm">
-                      {blogreviewer[0].description}
-                    </p>
+                    <p className="mt-2 text-sm">{blogreviewer[0].description}</p>
                   </Link>
                 </div>
               )}
             </div>
           )}
         </div>
+
+        {/* Share Buttons */}
         <div className="flex flex-row gap-5 items-center gap-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
           <p className="text-gray-500 text-sm">Share this</p>
           <Link

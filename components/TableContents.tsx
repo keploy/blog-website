@@ -1,36 +1,32 @@
 import React, { useState, useEffect, useRef } from "react";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 
-function TOCItem({
-  id,
-  title,
-  type,
-  onClick,
-}: {
+interface TOCItemProps {
   id: string;
   title: string;
   type: string;
   onClick: (id: string) => void;
-}) {
+}
+
+function TOCItem({ id, title, type, onClick }: TOCItemProps) {
   const itemClasses = "mb-1 text-slate-600 space-y-1";
 
-  // Calculate margin left based on heading type
-  let marginLeft;
+  let marginLeft: string | number;
   switch (type) {
     case "h1":
       marginLeft = 0;
       break;
     case "h2":
-      marginLeft = "1rem"; // Adjust as needed
+      marginLeft = "1rem";
       break;
     case "h3":
-      marginLeft = "1.5rem"; // Adjust as needed
+      marginLeft = "1.5rem";
       break;
     case "h4":
-      marginLeft = "2rem"; // Adjust as needed
+      marginLeft = "2rem";
       break;
     default:
-      marginLeft = "2rem"; // Default to h4 margin
+      marginLeft = "2rem";
   }
 
   return (
@@ -45,62 +41,66 @@ function TOCItem({
   );
 }
 
-export default function TOC({ headings, isList, setIsList }) {
+interface Heading {
+  id: string;
+  title: string;
+  type: string;
+}
 
-  const tocRef = useRef(null);
+interface TOCProps {
+  headings: Heading[];
+  isList: boolean;
+  setIsList: (value: boolean) => void;
+}
+
+export default function TOC({ headings, isList, setIsList }: TOCProps) {
+  const tocRef = useRef<HTMLDivElement>(null);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   useEffect(() => {
-    if (!tocRef.current) return;
-
     const container = tocRef.current;
+    if (!container) return;
 
-    function resizeHandler() {
+    const resizeHandler = () => {
       setIsList(container.clientHeight > window.innerHeight * 0.8);
-    }
+    };
 
-    resizeHandler()
-    window.addEventListener("resize", resizeHandler)
+    resizeHandler();
+    window.addEventListener("resize", resizeHandler);
 
-    return () => { window.removeEventListener("resize", resizeHandler) }
+    return () => {
+      window.removeEventListener("resize", resizeHandler);
+    };
+  }, [setIsList]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  
-
-  const handleItemClick = (id) => {
+  const handleItemClick = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80; 
+      const offset = 80;
       const offsetPosition = element.offsetTop - offset;
+
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
 
-      const urlChange = sanitizeStringForURL(element.innerHTML,true)
-
-      window.history.replaceState(null, null, `#${urlChange}`);
+      const urlChange = sanitizeStringForURL(element.innerHTML, true);
+      window.history.replaceState(null, "", `#${urlChange}`);
     }
   };
 
-  // State to track screen width
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
-
-  // Function to check if screen width is small
   const checkScreenSize = () => {
-    setIsSmallScreen(window.innerWidth < 1024); // Adjust breakpoint as needed
+    setIsSmallScreen(window.innerWidth < 1024);
   };
 
   useEffect(() => {
-    checkScreenSize(); // Initial check
-    window.addEventListener("resize", checkScreenSize); // Event listener for screen resize
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
     return () => {
-      window.removeEventListener("resize", checkScreenSize); // Cleanup on component unmount
+      window.removeEventListener("resize", checkScreenSize);
     };
   }, []);
 
-  // Render dropdown if on a small screen, otherwise render regular TOC
   return (
     <>
       <div className="left-0 inline-block p-4 lg:hidden top-20">
@@ -116,9 +116,11 @@ export default function TOC({ headings, isList, setIsList }) {
           ))}
         </select>
       </div>
-      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
+
+      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky">
         <div className="mb-2 text-lg font-semibold">Table of Contents</div>
-        {isList ?
+
+        {isList ? (
           <select
             className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
             onChange={(e) => handleItemClick(e.target.value)}
@@ -129,7 +131,7 @@ export default function TOC({ headings, isList, setIsList }) {
               </option>
             ))}
           </select>
-          :
+        ) : (
           <nav ref={tocRef}>
             <ul className="pl-0 leading-5">
               {headings.map((item, index) => (
@@ -142,7 +144,8 @@ export default function TOC({ headings, isList, setIsList }) {
                 />
               ))}
             </ul>
-          </nav>}
+          </nav>
+        )}
       </div>
     </>
   );
