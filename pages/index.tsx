@@ -31,6 +31,8 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
               </h2>
               <p className="content-body body 2xl:text-2xl text-lg mt-6">
                 Empowering your tech journey with expert advice and analysis
+                <br />
+                on software testing, automation, and quality assurance.
               </p>
               <div className="btn-wrapper flex flex-wrap gap-4 mt-6 ">
                 <Link
