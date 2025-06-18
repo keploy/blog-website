@@ -172,7 +172,7 @@ export default function MoreStories({
               </div>
             )}
 
-            {showLoadMore && (
+            {(showLoadMore || loading)&& (
               <button
                 onClick={loadMorePosts}
                 disabled={loading}
