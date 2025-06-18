@@ -176,12 +176,31 @@ export default function MoreStories({
               <button
                 onClick={loadMorePosts}
                 disabled={loading}
-                className={`px-6 py-2 rounded-full flex items-center justify-center min-w-[180px] transition-all duration-200
+                className={`px-6 py-2 rounded-full flex items-center justify-center gap-2 min-w-[180px] transition-all duration-200
       ${loading ? 'bg-orange-400 cursor-wait' : 'bg-orange-500 hover:bg-orange-600'} text-white`}
               >
                 {loading ? (
                   <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8z"
+                      ></path>
+                    </svg>
                     Loading...
                   </>
                 ) : (
@@ -189,6 +208,7 @@ export default function MoreStories({
                 )}
               </button>
             )}
+
 
           </div>
         </>
