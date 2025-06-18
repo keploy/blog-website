@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Tag as TagInterface } from "../types/tag";
-import AdSlot from "./Adsolt";
+import AdSlot from "./Adslot";
 
 export default function Tag({
   tags,
@@ -22,7 +22,7 @@ export default function Tag({
         ))}
 <div className="w-full flex justify-center my-8 -mb-20">
   <AdSlot
-    slotId="3356716061"
+    slotId="3587179144"
     className="w-full max-w-[728px] h-[90px]"
   />
 </div>
