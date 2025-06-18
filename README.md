@@ -1,5 +1,15 @@
 # Keploy's blog with Next.js and WordPress
 
+## Prerequisites
+
+Before you begin, ensure you have the following installed on your local machine:
+
+- [Node.js](https://nodejs.org/en/download/) (v14 or above)
+- npm or yarn
+- Git
+- A WordPress site (local or hosted) with admin access
+
+
 ## Configuration
 
 ### Step 1. Prepare your WordPress site
@@ -55,7 +65,8 @@ Copy the .env.local.example file in this directory to .env.local (which will be 
 cp .env.local.example .env.local
 ```
 
-Then open .env.local and set WORDPRESS_API_URL to be the URL to your GraphQL endpoint in WordPress. For example: https://Testapp.com/graphql.
+Then open .env.local and set WORDPRESS_API_URL to be the URL to your GraphQL endpoint in WordPress. For example: WORDPRESS_API_URL=https://your-wordpress-site.com/graphql
+
 
 Your .env.local file should look like this:
 
@@ -72,6 +83,19 @@ npm run dev
 yarn dev
 ```
 Your blog should be up and running on http://localhost:3000! If it doesn't work, post on GitHub discussions.
+
+### Testing the Setup
+After running npm run dev, open http://localhost:3000 in your browser.
+
+- You should see the list of posts fetched from your WordPress site.
+
+- If you encounter errors, verify the following:
+
+* Your WordPress site is running.
+
+* The WPGraphQL plugin is activated.
+
+* The WORDPRESS_API_URL in .env.local is set correctly and reachable.
 
 
 For CSS files being rendered at vercel and not on keploy enpoint - we set generic redirection /blogs/* on cloudfront. 
