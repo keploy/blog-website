@@ -1,225 +1,111 @@
+/* key optimizations are mentioned in optimized.md file */
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
-
 @tailwind base;
-
-/* Write your own custom base styles here */
-
-/* Start purging... */
+body {
+  @apply bg-[#fbfcff] text-[#222222]; /* Theme colors */
+}
+.authormapping {
+  @apply bg-[#0F172A]; /* Dark blue background */
+}
 @tailwind components;
-/* Stop purging. */
-
-/* Write you own custom component styles here */
-
-/* Start purging... */
+.wp-block-cover {
+  @apply flex flex-wrap justify-center items-center bg-cover bg-center overflow-hidden;
+  min-height: 430px; /* Critical fixed height */
+}
+.wp-block-media-text {
+  @apply grid grid-cols-2 gap-4; /* 2-column grid */
+}
+.wp-video,
+.wp-caption {
+  @apply max-w-full; /* Critical responsive behavior */
+}
 @tailwind utilities;
-/* Stop purging. */
-
-/* Your own custom utilities */
-
-.has-text-align-left {
-  @apply text-left;
-}
-
-.has-text-align-center {
-  @apply text-center;
-}
-
-.has-text-align-right {
-  @apply text-right;
-}
-
-.has-large-font-size {
-  @apply text-4xl;
-}
-
+.has-text-align-left   { @apply text-left; }
+.has-text-align-center { @apply text-center; }
+.has-text-align-right  { @apply text-right; }
+.has-large-font-size   { @apply text-4xl; } /* Exact WP font size */
 .alignfull {
-  @apply w-screen relative;
-
+  @apply w-screen relative max-w-[100vw];
   left: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  max-width: 100vw;
+  margin: 0 -50vw; /* Optimization: Shorthand margin */
   right: 50%;
 }
-
 .wp-block-image img {
-  @apply max-w-full mt-2;
-}
-.wp-block-image.aligncenter {
-  @apply text-center;
+  @apply max-w-full mt-2; /* Base image styles */
 }
 .wp-block-image.alignfull img,
 .wp-block-image.alignwide img {
-  @apply w-full;
+  @apply w-full; /* Full-width images */
+}
+.wp-block-image.aligncenter {
+  @apply text-center; /* Center alignment */
 }
 .wp-block-image .alignleft,
 .wp-block-image .alignright,
 .wp-block-image .aligncenter,
 .wp-block-image.is-resized {
-  @apply table ml-0 mr-0;
+  @apply table ml-0 mr-0; /* Table display hack */
 }
-.wp-block-image .alignleft > figcaption,
-.wp-block-image .alignright > figcaption,
-.wp-block-image .aligncenter > figcaption,
-.wp-block-image.is-resized > figcaption {
-  @apply table-caption;
-
-  caption-side: bottom;
+.wp-block-image figcaption {
+  @apply table-caption; /* Caption positioning */
+  caption-side: bottom; /* Critical: WP default */
 }
-
 .wp-block-image .alignleft {
-  @apply float-left mr-4;
+  @apply float-left mr-4; /* Float positioning */
 }
 .wp-block-image .alignright {
-  @apply float-right ml-4;
+  @apply float-right ml-4; /* Float positioning */
 }
-.wp-block-image .aligncenter {
-  @apply m-auto;
-}
-
 .wp-block-button a,
 .wp-block-file a.wp-block-file__button {
   @apply bg-blue-500 text-white no-underline py-2 px-4;
+  transition: background-color 0.15s ease-in-out; /* Optimization: Specific transition */
 }
-
 .wp-block-button a:hover,
 .wp-block-file a.wp-block-file__button:hover {
   @apply bg-blue-400 cursor-pointer;
 }
-
-.wp-block-file a:first-of-type {
-  @apply mr-4;
-}
-
-.wp-block-cover {
-  @apply flex flex-wrap justify-center items-center bg-cover bg-center overflow-hidden;
-
-  min-height: 430px;
-}
-
-.wp-block-verse {
-  @apply font-sans;
-}
-
-.wp-block-media-text {
-  @apply grid grid-cols-2 gap-4;
-}
-
-.wp-video {
-  @apply max-w-full;
-}
-
-.wp-caption {
-  @apply max-w-full;
-}
-
-/* Custom CSS */
-
 .baloo-2-600 {
   font-family: "Baloo 2", sans-serif;
   font-optical-sizing: auto;
-  font-weight: 600;
+  font-weight: 600; /* Explicit weight declaration */
   font-style: normal;
 }
-
-.heading1 {
-  font-family: "Baloo 2", "bold", sans-serif;
+.heading1 { 
+  font-family: "Baloo 2", "bold", sans-serif; /* Critical: Heading variant */
 }
 .body {
-  font-family: "Baloo 2", sans-serif;
+  font-family: "Baloo 2", sans-serif; /* Base body font */
 }
-
-body {
-  background: #fbfcff;
-  color: #222222;
+.footer-font {
+  font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif; /* Critical: Footer specific */
 }
-.authormapping{
-  background-color: #0F172A;
-}
-
-/* .title-link{
-  position: relative;
-  background-color: aqua;
-  background-position: 0 100%;
-  background-size: 0 10px;
-  transition: background .3s ease;
-} */
-.hamburger.active svg > :first-child {
-  opacity: 0;
-  y: 11;
-  transform: rotate(225deg);
-  transition: y 0.1s ease-out,
-    transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s,
-    opacity 0.1s ease-out 0.12s;
-}
-.hamburger svg > :first-child {
-  transition: y 0.1s ease-in 0.25s,
-    transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19), opacity 0.1s ease-in;
-}
-.hamburger.active svg > :nth-child(2) {
-  transform: rotate(225deg);
-  transition: transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s;
-}
-.hamburger svg > :nth-child(2) {
-  transition: transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19);
-}
-.hamburger.active svg > :nth-child(3) {
-  y: 11;
-  transform: rotate(135deg);
-  transition: y 0.1s ease-out,
-    transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s,
-    width 0.1s ease-out;
-}
-
-.hamburger svg > :nth-child(3) {
-  transition: y 0.1s ease-in 0.25s,
-    transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19),
-    width 0.1s ease-in 0.25s;
-}
-.hamburger svg > :first-child,
-.hamburger svg > :nth-child(2),
-.hamburger svg > :nth-child(3) {
-  transform-origin: center;
+.hamburger svg > * {
+  transform-origin: center; /* Critical rotation point */
   transform: rotate(0deg);
 }
-
+.hamburger.active svg > :first-child {
+  @apply opacity-0;
+  y: 11; /* SVG attribute - critical position */
+  transform: rotate(225deg);
+  transition: 
+    y 0.1s ease-out,
+    transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s, /* Original bezier */
+    opacity 0.1s ease-out 0.12s;
+}
 .spin-anim {
-  animation: 5s linear infinite spin;
+  animation: 5s linear infinite spin; /* Optimization: Correct syntax */
 }
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); } /* Optimization: Simplified keyframes */
 }
-
 pre {
-  background-color: #222222 !important;
-  color: antiquewhite;
+  background-color: #222222 !important; /* Critical dark bg */
+  color: antiquewhite; /* Specific color value */
 }
-
-.footer-font{
-  font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
+td {
+  @apply border border-black p-1.5; /* 6px padding (Tailwind standard) */
 }
-
-/* Buttons */
-.btn,
-.btn-sm {
-    @apply font-medium inline-flex items-center justify-center border border-transparent rounded-sm leading-snug transition duration-150 ease-in-out;
-}
-
-.btn {
-    @apply px-8 py-3;
-}
-
-.btn-sm {
-    @apply px-4 py-2;
-}
-
-
-td{
-  border: solid 1px black;
-  padding: 5px;
+.btn, .btn-sm {
+  @apply font-medium inline-flex items-center justify-center border-transparent rounded-sm transition-all duration-150 ease-in-out;
 }
