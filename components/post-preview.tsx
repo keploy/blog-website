@@ -42,9 +42,9 @@ export default function PostPreview({
       rootMargin: "-200px 0px",
     }
   );
-  return (
+ return (
     <animated.div
-      className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition group"
+      className="bg-gray-100 dark:bg-gray-800 border p-6 rounded-md lg:hover:shadow-md transition group border-gray-200 dark:border-gray-700"
       ref={ref}
       style={springStyles}
     >
@@ -58,22 +58,22 @@ export default function PostPreview({
           />
         )}
       </div>
-      <h3 className="text-2xl leading-snug leading-none heading1 font-bold">
+      <h3 className="text-2xl leading-snug leading-none heading1 font-bold text-gray-900 dark:text-gray-100">
         <Link
           href={`${basePath}/${slug}`}
-          className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
+          className="bg-gradient-to-r from-orange-200 to-orange-100 dark:from-orange-900 dark:to-orange-800 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
           dangerouslySetInnerHTML={{ __html: title }}
         ></Link>
       </h3>
       <div className="flex items-center gap-4">
         <Avatar author={author ? author : "Anonymous"} />
-        <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
-        <div className="text-md mb-4 pt-4">
+        <div className="divider bg-orange-700 dark:bg-orange-400 h-1 w-1 rounded-full"></div>
+        <div className="text-md mb-4 pt-4 text-gray-600 dark:text-gray-400">
           <Date dateString={date} />
         </div>
       </div>
       <div
-        className="text-sm leading-normal mb-4 body text-slate-600"
+        className="text-sm leading-normal mb-4 body text-slate-600 dark:text-gray-300"
         dangerouslySetInnerHTML={{ __html: excerpt }}
       />
     </animated.div>

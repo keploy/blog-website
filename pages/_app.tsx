@@ -1,7 +1,7 @@
 import { AppProps } from 'next/app';
 import '../styles/index.css';
 import Router from "next/router";
-
+import { DarkModeProvider } from "../components/DarkModeContext";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
@@ -32,9 +32,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <DarkModeProvider>
       <AnimatePresence>
         {loading ? <PageLoader /> : <Component {...pageProps} />}
       </AnimatePresence>
+      </DarkModeProvider>
     </>
   );
 }
