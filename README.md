@@ -73,5 +73,7 @@ yarn dev
 ```
 Your blog should be up and running on http://localhost:3000! If it doesn't work, post on GitHub discussions.
 
+We can enhance the security and compatibility of this website.
+
 
 For CSS files being rendered at vercel and not on keploy enpoint - we set generic redirection /blogs/* on cloudfront. 
