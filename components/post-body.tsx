@@ -234,7 +234,7 @@ export default function PostBody({
               />
               <button
                 onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
+                className="absolute top-0 right-0 px-2 py-1 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
               >
                 {copySuccessList[index] ? (
                   <IoCheckmarkOutline />
