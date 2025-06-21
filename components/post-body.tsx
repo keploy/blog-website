@@ -74,7 +74,7 @@ export default function PostBody({
     const timeout = setTimeout(() => {
       const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
       const tocItems = headings.map((heading, index) => {
-        const id = `heading-${index}`;
+        const id = `${heading.textContent}`;
         heading.setAttribute("id", id);
 
         return {
@@ -150,7 +150,14 @@ export default function PostBody({
       button.style.fontSize = "1rem";
       button.style.color = "#555"; 
       button.textContent = headingCopySuccessList[index] ? '✔️' : '#'; // // Copy Button
-      button.addEventListener("click", () => handleHeadingCopyClick(heading.innerHTML, index));
+      button.addEventListener("click", () => {
+        handleHeadingCopyClick(heading.innerHTML, index);
+
+        document.getElementById(heading.id).scrollIntoView({
+          behavior: "smooth",
+        });
+        window.history.replaceState(null, "", `#${heading.id}`);
+      });
       heading.appendChild(button);
     });
   }, [tocItems, headingCopySuccessList]);
