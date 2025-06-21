@@ -46,8 +46,8 @@ function TOCItem({
 }
 
 export default function TOC({ headings, isList, setIsList }) {
-
   const tocRef = useRef(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (!tocRef.current) return;
@@ -65,8 +65,6 @@ export default function TOC({ headings, isList, setIsList }) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  
 
   const handleItemClick = (id) => {
     const element = document.getElementById(id);
@@ -103,46 +101,71 @@ export default function TOC({ headings, isList, setIsList }) {
   // Render dropdown if on a small screen, otherwise render regular TOC
   return (
     <>
-      <div className="left-0 inline-block p-4 lg:hidden top-20">
-        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
-        <select
-          className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
-          onChange={(e) => handleItemClick(e.target.value)}
-        >
-          {headings.map((item, index) => (
-            <option key={index} value={item.id}>
-              {item.title}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
-        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
-        {isList ?
-          <select
-            className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
-            onChange={(e) => handleItemClick(e.target.value)}
+      <div className="left-0 inline-block p-4 top-20 w-full">
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-semibold">Table of Contents</span>
+          <button
+            onClick={() => setIsDropdownOpen((prev) => !prev)}
+            className="ml-2 text-gray-700 focus:outline-none"
           >
-            {headings.map((item, index) => (
-              <option key={index} value={item.id}>
-                {item.title}
-              </option>
-            ))}
-          </select>
-          :
-          <nav ref={tocRef}>
-            <ul className="pl-0 leading-5">
-              {headings.map((item, index) => (
-                <TOCItem
-                  key={index}
-                  id={item.id}
-                  title={item.title}
-                  type={item.type}
-                  onClick={handleItemClick}
-                />
-              ))}
+            {isDropdownOpen ? "▲" : "▼"}
+          </button>
+        </div>
+
+        {isDropdownOpen && (
+          <div className="mt-2 max-h-[300px] overflow-y-auto border rounded-md shadow-md p-2 bg-white">
+            <ul className="space-y-1">
+              {headings.map((item, index) => {
+                let indent = "";
+                switch (item.type) {
+                  case "h1":
+                    indent = "ml-0";
+                    break;
+                  case "h2":
+                    indent = "ml-4";
+                    break;
+                  case "h3":
+                    indent = "ml-8";
+                    break;
+                  case "h4":
+                    indent = "ml-12";
+                    break;
+                  default:
+                    indent = "ml-0";
+                }
+
+                return (
+                  <li
+                    key={index}
+                    className={`text-sm text-gray-700 hover:text-orange-500 ${indent}`}
+                  >
+                    <button
+                      onClick={() => {
+                        const el = document.getElementById(item.id);
+                        if (el) {
+                          const offset = 80;
+                          window.scrollTo({
+                            top: el.offsetTop - offset,
+                            behavior: "smooth",
+                          });
+                          window.history.replaceState(
+                            null,
+                            null,
+                            `#${item.id}`
+                          );
+                          setIsDropdownOpen(false);
+                        }
+                      }}
+                      className="w-full text-left"
+                    >
+                      {item.title}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
-          </nav>}
+          </div>
+        )}
       </div>
     </>
   );
