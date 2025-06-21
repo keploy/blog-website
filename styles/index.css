@@ -235,7 +235,6 @@ td{
 @media (max-width: 1024px) {
   .post-content-wrapper table {
     width: 100%;
-    max-width: 100%;
   }
   .post-content-wrapper th,
   .post-content-wrapper td {
