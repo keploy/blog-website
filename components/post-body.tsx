@@ -74,7 +74,7 @@ export default function PostBody({
     const timeout = setTimeout(() => {
       const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
       const tocItems = headings.map((heading, index) => {
-        const id = `heading-${index}`;
+        const id = `${heading.textContent}`;
         heading.setAttribute("id", id);
         console.log("Here are the heading: ", heading.textContent);
         return {
@@ -150,7 +150,14 @@ export default function PostBody({
       button.style.fontSize = "1rem";
       button.style.color = "#555"; 
       button.textContent = headingCopySuccessList[index] ? '✔️' : '#'; // // Copy Button
-      button.addEventListener("click", () => handleHeadingCopyClick(heading.innerHTML, index));
+      button.addEventListener("click", () => {
+        handleHeadingCopyClick(heading.innerHTML, index);
+
+        document.getElementById(heading.id).scrollIntoView({
+          behavior: "smooth",
+        });
+        window.history.replaceState(null, "", `#${heading.id}`);
+      });
       heading.appendChild(button);
     });
   }, [tocItems, headingCopySuccessList]);
@@ -227,7 +234,7 @@ export default function PostBody({
               />
               <button
                 onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
+                className="absolute top-0 right-0 px-2 py-1 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
               >
                 {copySuccessList[index] ? (
                   <IoCheckmarkOutline />
