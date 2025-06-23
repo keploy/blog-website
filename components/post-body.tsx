@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TOC from "./TableContents"; 
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; 
 import styles from "./post-body.module.css";
@@ -35,6 +35,7 @@ export default function PostBody({
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); 
   const [isList, setIsList] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const sameAuthor =
     authorName.split(" ")[0].toLowerCase() ===
     ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
@@ -73,10 +74,10 @@ export default function PostBody({
   useEffect(() => {
     const timeout = setTimeout(() => {
       const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
-      const tocItems = headings.map((heading, index) => {
+      const tocItems = headings.map((heading) => {
         const id = `${heading.textContent}`;
         heading.setAttribute("id", id);
-        console.log("Here are the heading: ", heading.textContent);
+
         return {
           id,
           title: heading.textContent,
@@ -96,6 +97,32 @@ export default function PostBody({
 
     return () => clearTimeout(timeout); 
   }, [content]);
+
+  useEffect(() => {
+    const scrollObserverOptions = {
+    root: null,
+    rootMargin: "0px 0px -70% 0px",
+    threshold: 0,
+  };
+
+    const scrollObserver = new IntersectionObserver(([entry]) => {
+      if(entry.isIntersecting) {
+        const id = entry.target.getAttribute("id");
+
+        if(id) {
+          window.history.replaceState(null, "", `#${id}`);
+        }
+      }
+    }, scrollObserverOptions);
+
+    tocItems.forEach(({ id }) => {
+      const ele = document.getElementById(id);
+      if(ele) {
+        scrollObserver.observe(ele);
+      }
+    })
+    return () => scrollObserver.disconnect();
+  }, [tocItems]);
 
   const handleCopyClick = (code, index) => {
     navigator.clipboard
@@ -277,6 +304,7 @@ export default function PostBody({
       className={`flex flex-col ${
         isList ? "items-center" : "items-center lg:items-start lg:flex-row"
       } `}
+      ref={scrollRef}
     >
       <div
         className={`flex items-center justify-center w-full mr-5 md:w-2/4 lg:w-1/4 top-20 lg:block ${
