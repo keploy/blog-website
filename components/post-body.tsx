@@ -35,6 +35,7 @@ export default function PostBody({
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); 
   const [isList, setIsList] = useState(false);
+  const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const sameAuthor =
     authorName.split(" ")[0].toLowerCase() ===
@@ -76,7 +77,8 @@ export default function PostBody({
       const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
       const tocItems = headings.map((heading) => {
         const id = `${heading.textContent}`;
-        heading.setAttribute("id", id);
+        heading.setAttribute("id", sanitizeStringForURL(id, true));
+        console.log("Heading ID set:", sanitizeStringForURL(id, true));
 
         return {
           id,
@@ -85,7 +87,7 @@ export default function PostBody({
         };
       });
 
-      tocItems.shift();
+      // tocItems.shift();
       const index = tocItems.findIndex((item) => item.title === "More Stories");
       if (index !== -1) {
         tocItems.splice(index + 1);
@@ -99,29 +101,49 @@ export default function PostBody({
   }, [content]);
 
   useEffect(() => {
+    if(tocItems.length === 0) return;
+
+    const timeout = setTimeout(() => {
+      const hash = window.location.hash;
+      if (hash) {
+        const targetId = decodeURIComponent(hash.slice(1));
+        const el = document.getElementById(targetId);
+        if (el) {
+          setIsUserEnteredURL(true);
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }, 2000);
+
+    return  () => clearTimeout(timeout);
+  }, [tocItems]);
+
+  useEffect(() => {
     const scrollObserverOptions = {
-    root: null,
-    rootMargin: "0px 0px -70% 0px",
-    threshold: 0,
-  };
+      root: null,
+      rootMargin: "-10% 0px -100% 0px",
+      threshold: 0,
+    };
 
     const scrollObserver = new IntersectionObserver(([entry]) => {
-      if(entry.isIntersecting) {
+      if (entry.isIntersecting) {
         const id = entry.target.getAttribute("id");
 
-        if(id) {
+        if (id) {
           window.history.replaceState(null, "", `#${id}`);
         }
       }
     }, scrollObserverOptions);
 
-    tocItems.forEach(({ id }) => {
-      const ele = document.getElementById(id);
-      if(ele) {
-        scrollObserver.observe(ele);
-      }
-    })
-    return () => scrollObserver.disconnect();
+    if (!isUserEnteredURL) {
+      tocItems.forEach(({ id }) => {
+        const ele = document.getElementById(sanitizeStringForURL(id, true));
+        if (ele) {
+          scrollObserver.observe(ele);
+        }
+      });
+      return () => scrollObserver.disconnect();
+    }
   }, [tocItems]);
 
   const handleCopyClick = (code, index) => {
