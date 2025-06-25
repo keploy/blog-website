@@ -232,6 +232,16 @@ td{
   box-sizing: border-box;
 }
 
+.post-content-wrapper thead tr {
+  padding-bottom: 12px;
+  display: table-row;
+}
+
+.post-content-wrapper th {
+  padding: 12px;
+  text-align: left;
+}
+
 @media (max-width: 1024px) {
   .post-content-wrapper table {
     width: 100%;
