@@ -113,7 +113,7 @@ export default function PostBody({
           el.scrollIntoView({ behavior: "smooth" });
         }
       }
-    }, 2000);
+    }, 1000);
 
     return  () => clearTimeout(timeout);
   }, [tocItems]);
@@ -121,7 +121,7 @@ export default function PostBody({
   useEffect(() => {
     const scrollObserverOptions = {
       root: null,
-      rootMargin: "-10% 0px -100% 0px",
+      rootMargin: "0px 0px -100% 0px",
       threshold: 0,
     };
 
