@@ -101,27 +101,29 @@ export default function PostBody({
   }, [content]);
 
   useEffect(() => {
-    if(tocItems.length === 0) return;
+  const timeout = setTimeout(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const targetId = decodeURIComponent(hash.slice(1));
+      const el = document.getElementById(targetId);
+      if (el) {
+        setIsUserEnteredURL(true);
 
-    const timeout = setTimeout(() => {
-      const hash = window.location.hash;
-      if (hash) {
-        const targetId = decodeURIComponent(hash.slice(1));
-        const el = document.getElementById(targetId);
-        if (el) {
-          setIsUserEnteredURL(true);
-          el.scrollIntoView({ behavior: "smooth" });
-        }
+        const yOffset = -80;
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({ top: y, behavior: "smooth" });
       }
-    }, 1000);
+    }
+  }, 1000);
 
-    return  () => clearTimeout(timeout);
-  }, [tocItems]);
+  return () => clearTimeout(timeout);
+}, [tocItems]);
 
   useEffect(() => {
     const scrollObserverOptions = {
       root: null,
-      rootMargin: "0px 0px -100% 0px",
+      rootMargin: "0px 0px -80% 0px",
       threshold: 0,
     };
 
