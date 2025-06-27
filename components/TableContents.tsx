@@ -100,6 +100,7 @@ export default function TOC({ headings, isList, setIsList }) {
 
   // Render dropdown if on a small screen, otherwise render regular TOC
   return (
+    isSmallScreen ? (
     <>
       <div className="left-0 inline-block p-4 top-20 w-full">
         <div className="flex items-center justify-between">
@@ -168,5 +169,50 @@ export default function TOC({ headings, isList, setIsList }) {
         )}
       </div>
     </>
+    ) : (
+      <>
+      <div className="left-0 inline-block p-4 lg:hidden top-20">
+        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
+        <select
+          className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
+          onChange={(e) => handleItemClick(e.target.value)}
+        >
+          {headings.map((item, index) => (
+            <option key={index} value={item.id}>
+              {item.title}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
+        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
+        {isList ?
+          <select
+            className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
+            onChange={(e) => handleItemClick(e.target.value)}
+          >
+            {headings.map((item, index) => (
+              <option key={index} value={item.id}>
+                {item.title}
+              </option>
+            ))}
+          </select>
+          :
+          <nav ref={tocRef}>
+            <ul className="pl-0 leading-5">
+              {headings.map((item, index) => (
+                <TOCItem
+                  key={index}
+                  id={item.id}
+                  title={item.title}
+                  type={item.type}
+                  onClick={handleItemClick}
+                />
+              ))}
+            </ul>
+          </nav>}
+      </div>
+    </>
+    )
   );
 }
