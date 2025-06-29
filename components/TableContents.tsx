@@ -104,11 +104,11 @@ export default function TOC({ headings, isList, setIsList }) {
     <>
       <div className="left-0 inline-block p-4 top-20 w-full">
         <div className="flex items-center justify-between">
-          <span className="text-lg font-semibold">Table of Contents</span>
           <button
             onClick={() => setIsDropdownOpen((prev) => !prev)}
-            className="ml-2 text-gray-700 focus:outline-none"
+            className="text-gray-700 focus:outline-none flex items-center justify-center w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:shadow-outline gap-2"
           >
+            <span className="text-lg font-semibold text-center">Table of Contents</span>
             {isDropdownOpen ? "▲" : "▼"}
           </button>
         </div>
