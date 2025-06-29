@@ -1,9 +1,15 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import sideBySideSvg from "../public/images/sidebyside-transparent.svg"
+import sideBySideSvg from "../public/images/sidebyside-transparent.svg";
 import { SpringValue, animated } from "@react-spring/web";
+import { MainNav } from "../components/navbar/main-nav";
+import { GitHubStars } from "./navbar/github-stars";
+import { Vscode } from "./navbar/vscode-number";
+import { Button } from "./navbar/Button";
+
 const menuItems = [
   { text: "Docs", link: "https://keploy.io/docs" },
   { text: "Tech Blogs", link: "/technology" },
@@ -11,10 +17,10 @@ const menuItems = [
 ];
 
 const formatStars = (num: number) =>
-    Intl.NumberFormat('en-US', {
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(num);
+  Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(num);
 
 const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   if (mobile) {
@@ -37,14 +43,6 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
       </Link>
     );
   }
-  return (
-    <Link
-      href="https://app.keploy.io/signin"
-      className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d]  hover:text-primary-300 ml-3"
-    >
-      <span>Sign In</span>
-    </Link>
-  );
 };
 
 const GithubBtn = () => {
@@ -115,17 +113,13 @@ export default function Header({
 }) {
   const [toggleMenu, setToggleMenu] = useState(false);
 
-  const toggleMenuHandler = () => {
-    setToggleMenu((prev) => !prev);
-  };
-
   return (
     <div className="h-32 md:h-40">
-      <header className="fixed z-30 w-full transition duration-300 ease-in-out bg-neutral-100 md:bg-opacity-90 ">
+      <header className="fixed z-30 w-full transition duration-300 ease-in-out bg-neutral-100 md:bg-opacity-90">
         <div className="max-w-6xl px-5 mx-auto sm:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="flex-grow-0 w-2/12 mr-4 shrink-0">
-              <Link href={"https://keploy.io/"}>
+              <Link href="https://keploy.io/">
                 <Image
                   src={sideBySideSvg}
                   alt="Keploy Logo"
@@ -133,62 +127,49 @@ export default function Header({
                 />
               </Link>
             </div>
-            <nav className="flex-grow-0 hidden w-6/12 lg:flex ">
-              <ul className="flex flex-wrap items-center justify-end grow">
-                {menuItems.map((item, index) => {
-                  return (
-                    <li key={index}>
-                      <Link
-                        href={item.link}
-                        className="flex items-center flex-grow-0 px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300 lg:flex"
-                      >
-                        {item.text}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex flex-grow justify-start mr-4">
+              <MainNav />
+            </div>
 
             <div className="justify-end flex-1 hidden header-btn-container lg:flex">
-              <GithubBtn />
-              <WaitListBtn />
+              <GitHubStars />
+              <Vscode />
+              <Button>Sign in</Button>
             </div>
+
+            {/* Mobile Navigation */}
             <div className="flex lg:hidden">
               <button
-                onClick={toggleMenuHandler}
-                className={toggleMenu ? "hamburger active" : "hamburger "}
+                onClick={() => setToggleMenu(!toggleMenu)}
+                className={toggleMenu ? "hamburger active" : "hamburger"}
               >
                 <span className="sr-only">Menu</span>
                 <MenuBtn />
-                {/* <img src="/blog/images/Menu.svg" className="w-6 h-6"></img> */}
               </button>
-              <div>
-                {toggleMenu ? (
-                  <nav className="absolute left-0 z-20 flex-grow-0 w-full h-screen pb-16 overflow-scroll translate-y-0 bg-white opacity-100 top-full">
-                    <ul className="px-5 py-2">
-                      <li>
-                        <GithubBtn />
+              {toggleMenu && (
+                <nav className="absolute left-0 z-20 flex-grow-0 w-full h-screen pb-16 overflow-scroll bg-white opacity-100 top-full">
+                  <ul className="px-5 py-2">
+                    <li>
+                      <GithubBtn />
+                    </li>
+                    {menuItems.map((item, index) => (
+                      <li key={index}>
+                        <Link
+                          href={item.link}
+                          className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300"
+                        >
+                          {item.text}
+                        </Link>
                       </li>
-                      {menuItems.map((item, index) => {
-                        return (
-                          <li key={index}>
-                            <Link
-                              href={item.link}
-                              className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300"
-                            >
-                              {item.text}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                      <li>
-                        <WaitListBtn mobile={true} />
-                      </li>
-                    </ul>
-                  </nav>
-                ) : null}
-              </div>
+                    ))}
+                    <li>
+                      <WaitListBtn mobile={true} />
+                    </li>
+                  </ul>
+                </nav>
+              )}
             </div>
           </div>
         </div>
@@ -196,12 +177,9 @@ export default function Header({
           <div className="relative h-1">
             <animated.div
               className="h-full rounded-r-full bg-gradient-to-r from-orange-500 to-yellow-500"
-              style={{
-                width: readProgress.to((v) => v + "%"),
-              }}
-            >
-            </animated.div>
-            <div className="absolute top-0 w-full h-full bg-gray-300 -z-10"></div>
+              style={{ width: readProgress.to((v) => v + "%") }}
+            />
+            <div className="absolute top-0 w-full h-full bg-gray-300 -z-10" />
           </div>
         )}
       </header>
