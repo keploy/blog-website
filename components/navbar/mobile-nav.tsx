@@ -3,7 +3,7 @@ import {
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "../../components/navbar/Sheet";
 import { Menu } from "lucide-react";
 import { Button } from "../../components/navbar/Button";
 import {
@@ -11,7 +11,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "../../components/navbar/Accordion";
 import Link from "next/link";
 import { cn } from "../../lib/utils/utils";
 import {
@@ -116,7 +116,7 @@ export function MobileNav() {
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-full max-w-[300px] p-0 pt-2">
+      <SheetContent side="left" className="w-full max-w-[300px] p-0 pt-2 bg-white">
         <SheetTitle className="px-6 pt-4 text-black/85 font-semi">
           Menu
         </SheetTitle>

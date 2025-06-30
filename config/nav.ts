@@ -40,6 +40,9 @@ import Events from "../public/images/events.svg";
 import PartnerWithUs from "../public/images/partner-with-us.svg";
 import ContactUs from "../public/images/resource-1.svg";
 import CommunityBg from "../public/images/resource-2.svg";
+import circleArrow from "../public/images/circle-arrow.svg";
+import heart from "../public/images/heart.svg";
+import books from "../public/images/book.svg";
 
 export const productsNav = {
   mainColumns: [
@@ -416,14 +419,14 @@ export const developersNav = {
       title: "Community Stories",
       subtitle: "Insights and Stories",
       href: "https://www.g2.com/products/keploy/reviews",
-      icon: "/images/heart.svg",
+      icon: heart,
       badge: "Badge",
     },
     {
       title: "Tutorials",
       subtitle: "Learning by Doing",
       href: "https://www.youtube.com/playlist?list=PLuImHQnqnB_b3MbF1_873XeMhXkaZPpwV",
-      icon: "/images/book.svg",
+      icon: books,
       badge: "Badge",
     },
     {
@@ -569,7 +572,7 @@ export const resourcesNav = {
       title: "Contact Us",
       subtitle: "",
       href: "https://calendar.app.google/cXVaj6hbMUjvmrnt9",
-      icon: "/images/circle-arrow.svg",
+      icon: circleArrow,
       backgroundImage: ContactUs,
       // badge: "Optional Badge",
     },
@@ -577,7 +580,7 @@ export const resourcesNav = {
       title: "Community Forum",
       subtitle: "",
       href: "https://github.com/keploy",
-      icon: "/images/circle-arrow.svg",
+      icon: circleArrow,
       backgroundImage: CommunityBg,
       // badge: "Optional Badge",
     },

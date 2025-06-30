@@ -173,7 +173,7 @@ export function MainNav() {
       <NavigationMenuList className="space-x-1">
         {/* Product */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 text-sm">
+          <NavigationMenuTrigger className="h-9 text-sm rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
             Products
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">
@@ -197,7 +197,7 @@ export function MainNav() {
         </NavigationMenuItem>
         {/* Solutions */}
         <NavigationMenuItem value="solutions">
-          <NavigationMenuTrigger className="h-9 text-sm">
+          <NavigationMenuTrigger className="h-9 text-sm rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
             Solutions
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">
@@ -227,7 +227,7 @@ export function MainNav() {
         </NavigationMenuItem>
         {/* Developers */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 text-sm">
+          <NavigationMenuTrigger className="h-9 text-sm rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
             Developers
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">
@@ -267,7 +267,7 @@ export function MainNav() {
         </NavigationMenuItem>
         {/* Resources */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 text-sm">
+          <NavigationMenuTrigger className="h-9 text-sm rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
             Resources
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">

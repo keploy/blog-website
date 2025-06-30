@@ -36,7 +36,7 @@ export function InfoCardBlock({
         />
       )}
       <div className="gradient-border h-full w-full group-hover:scale-[1.01] transition-all overflow-hidden">
-        <Card className="h-full px-4 py-4 flex flex-col justify-between bg-muted/10 rounded-2xl overflow-hidden">
+        <Card className="relative z-10 h-full px-4 py-4 flex flex-col justify-between bg-muted/10 overflow-hidden rounded-[calc(0.75rem-3px)]">
           {" "}
           <div className="space-y-1">
             {badge && (
