@@ -99,17 +99,18 @@ export default function TOC({ headings, isList, setIsList }) {
   }, []);
 
   // Render dropdown if on a small screen, otherwise render regular TOC
-  return (
-    isSmallScreen ? (
+  return isSmallScreen ? (
     <>
       <div className="left-0 inline-block p-4 top-20 w-full">
         <div className="flex items-center justify-between">
           <button
             onClick={() => setIsDropdownOpen((prev) => !prev)}
-            className="text-gray-700 focus:outline-none flex items-center justify-center w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:shadow-outline gap-2"
+            className="text-gray-700 focus:outline-none flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:shadow-outline gap-2"
           >
-            <span className="text-lg font-semibold text-center">Table of Contents</span>
-            {isDropdownOpen ? "▲" : "▼"}
+            <span className="text-lg font-semibold text-left flex-grow">
+              Table of Contents
+            </span>
+            <span className="text-sm">{isDropdownOpen ? "▲" : "▼"}</span>
           </button>
         </div>
 
@@ -169,8 +170,8 @@ export default function TOC({ headings, isList, setIsList }) {
         )}
       </div>
     </>
-    ) : (
-      <>
+  ) : (
+    <>
       <div className="left-0 inline-block p-4 lg:hidden top-20">
         <div className="mb-2 text-lg font-semibold">Table of Contents</div>
         <select
@@ -186,7 +187,7 @@ export default function TOC({ headings, isList, setIsList }) {
       </div>
       <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
         <div className="mb-2 text-lg font-semibold">Table of Contents</div>
-        {isList ?
+        {isList ? (
           <select
             className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
             onChange={(e) => handleItemClick(e.target.value)}
@@ -197,7 +198,7 @@ export default function TOC({ headings, isList, setIsList }) {
               </option>
             ))}
           </select>
-          :
+        ) : (
           <nav ref={tocRef}>
             <ul className="pl-0 leading-5">
               {headings.map((item, index) => (
@@ -210,9 +211,9 @@ export default function TOC({ headings, isList, setIsList }) {
                 />
               ))}
             </ul>
-          </nav>}
+          </nav>
+        )}
       </div>
     </>
-    )
   );
 }
