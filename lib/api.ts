@@ -299,6 +299,67 @@ export async function getAllPostsForTechnology(preview = false, after = null) {
   };
 }
 
+export async function getFirstTwoPostsForTechnology(preview = false, after = null) {
+  const data = await fetchAPI(
+    `
+    query AllPostsForCategory($after: String) {
+      posts(first: 2, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            postId
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+            ppmaAuthorName
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+            seo {
+              metaDesc
+              title
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+    `,
+    {
+      variables: {
+        preview,
+        after,
+      },
+    }
+  );
+
+  return {
+    edges: data?.posts?.edges || [],
+    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+  };
+}
 
 export async function getAllPostsForCommunity(preview = false, after = null) {
   try {
@@ -307,6 +368,83 @@ export async function getAllPostsForCommunity(preview = false, after = null) {
       query CommunityPosts($after: String) {
         posts(
           first: 22,
+          after: $after, 
+          where: { 
+            orderby: { field: DATE, order: DESC },
+            categoryName: "community" 
+          }
+        ) {
+          edges {
+            node {
+              title
+              excerpt
+              slug
+              date
+              postId
+              featuredImage {
+                node {
+                  sourceUrl
+                }
+              }
+              author {
+                node {
+                  name
+                  firstName
+                  lastName
+                  avatar {
+                    url
+                  }
+                }
+              }
+              ppmaAuthorName
+              categories {
+                edges {
+                  node {
+                    name
+                  }
+                }
+              }
+              seo {
+                metaDesc
+                title
+              }
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+      `,
+      {
+        variables: {
+          preview,
+          after,
+        },
+      }
+    );
+
+    return {
+      edges: data?.posts?.edges || [],
+      pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+    };
+  } catch (error) {
+    console.error('Error in getAllPostsForCommunity:', error);
+    return {
+      edges: [],
+      pageInfo: { hasNextPage: false, endCursor: null }
+    };
+  }
+}
+
+export async function getFirstTwoPostsForCommunity(preview = false, after = null) {
+  try {
+    const data = await fetchAPI(
+      `
+      query CommunityPosts($after: String) {
+        posts(
+          first: 2,
           after: $after, 
           where: { 
             orderby: { field: DATE, order: DESC },
