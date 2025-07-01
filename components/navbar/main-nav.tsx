@@ -86,7 +86,7 @@ const ResponsiveBlock = ({
               {item.title}
             </h3>
             {item.description && (
-              <p className="text-[.75em] text-muted-foreground">
+              <p className="text-[.75em] text-[#737373]">
                 {item.description}
               </p>
             )}
@@ -128,7 +128,7 @@ const FeaturedCard = ({ content }: { content: FeaturedCardContent }) => (
           </p>
           {/* Subtitle (conditionally rendered) */}
           {content.subtitle && (
-            <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
+            <p className="text-[10px] text-[#737373] leading-snug mt-0.5">
               {" "}
               {/* Subtitle styling */}
               {content.subtitle}
@@ -149,7 +149,7 @@ const QuickLinks = ({
 }) => (
   <div className="space-y-2">
     {title && (
-      <h4 className="text-sm font-medium text-muted-foreground">{title}</h4>
+      <h4 className="text-sm font-medium text-[#737373]">{title}</h4>
     )}
     <div className="grid gap-1">
       {links.map((link, index) => (
@@ -173,7 +173,7 @@ export function MainNav() {
       <NavigationMenuList className="space-x-1">
         {/* Product */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 text-sm rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
+          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
             Products
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">
@@ -197,7 +197,7 @@ export function MainNav() {
         </NavigationMenuItem>
         {/* Solutions */}
         <NavigationMenuItem value="solutions">
-          <NavigationMenuTrigger className="h-9 text-sm rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
+          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
             Solutions
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">
@@ -209,7 +209,7 @@ export function MainNav() {
               </div>
 
               <div className="space-y-3 py-2 lg:col-span-1 border-l border-zinc-200 pl-4">
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-sm font-medium text-[#737373]">
                   {solutionsNav.featuredContent.title}
                 </p>
 
@@ -227,7 +227,7 @@ export function MainNav() {
         </NavigationMenuItem>
         {/* Developers */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 text-sm rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
+          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
             Developers
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">
@@ -260,14 +260,14 @@ export function MainNav() {
         <NavigationMenuItem>
           <Link
             href="/pricing"
-            className="inline-flex items-center text-black/80 justify-center rounded-xl text-sm font-medium transition-colors hover:text-primary h-9 px-4 py-2 hover:underline"
+            className="inline-flex items-center text-black/80 justify-center rounded-xl text-sm font-medium transition-colors hover:text-primary h-9 px-4 py-2 hover:underline text-md"
           >
             Pricing
           </Link>
         </NavigationMenuItem>
         {/* Resources */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 text-sm rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
+          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
             Resources
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">

@@ -32,7 +32,7 @@ const MobileNavSection = ({
 }) => {
   return (
     <AccordionItem value={title}>
-      <AccordionTrigger className="text-sm text-black/90">
+      <AccordionTrigger className="text-base text-black/90 font-semibold">
         {title}
       </AccordionTrigger>
       <AccordionContent>
@@ -43,12 +43,12 @@ const MobileNavSection = ({
                 {column.isClickable ? (
                   <Link
                     href={column.href}
-                    className="text-sm font-medium text-muted-foreground hover:text-primary"
+                    className="text-sm font-medium text-[#737373] hover:text-primary"
                   >
                     {column.title}
                   </Link>
                 ) : (
-                  <p className="text-sm font-medium text-muted-foreground">
+                  <p className="text-sm font-medium text-[#737373]">
                     {" "}
                     {column.title}
                   </p>
@@ -116,8 +116,8 @@ export function MobileNav() {
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-full max-w-[300px] p-0 pt-2 bg-white">
-        <SheetTitle className="px-6 pt-4 text-black/85 font-semi">
+      <SheetContent side="left" className="w-full max-w-[300px] p-0 pt-2 bg-[#F7F7F7]">
+        <SheetTitle className="px-6 pt-4 text-black/85 font-bold">
           Menu
         </SheetTitle>
         <div className="px-6 overflow-y-auto h-full">

@@ -39,19 +39,22 @@ export default function Header({
       >
         <div className="max-w-6xl px-5 mx-auto sm:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
-            <div className="flex-grow-0 w-2/12 mr-4 shrink-0">
-              <Link href="https://keploy.io/">
-                <Image
-                  src={sideBySideSvg}
-                  alt="Keploy Logo"
-                  className="w-auto h-10"
-                />
-              </Link>
-            </div>
+            <div className="flex items-center flex-1">
+              <div className="mr-4 shrink-0">
+                <Link href="https://keploy.io/">
+                  <Image
+                    src={sideBySideSvg}
+                    alt="Keploy Logo"
+                    width={85}
+                    height={85}
+                  />
+                </Link>
+              </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex flex-grow justify-start mr-4">
-              <MainNav />
+              {/* Desktop Navigation */}
+              <div className="hidden lg:flex flex-grow justify-start mr-4">
+                <MainNav />
+              </div>
             </div>
 
             <div className="justify-end flex-1 hidden header-btn-container lg:flex gap-2">
@@ -61,7 +64,8 @@ export default function Header({
             </div>
 
             {/* Mobile Navigation */}
-            <div className="flex lg:hidden">
+            <div className="flex items-center gap-2 lg:hidden">
+              <GitHubStars />
               <MobileNav />
             </div>
           </div>

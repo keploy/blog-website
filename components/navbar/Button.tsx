@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "w-full text-white px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-red-500 hover:to-orange-500 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out items-center justify-center relative overflow-hidden",
+        default: "w-[90px] text-white px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-red-500 hover:to-orange-500 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out items-center justify-center relative overflow-hidden",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
