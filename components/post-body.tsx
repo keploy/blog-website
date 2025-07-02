@@ -272,7 +272,7 @@ export default function PostBody({
       } `}
     >
       <div
-        className={`flex items-center justify-center w-full mr-5 md:w-2/4 lg:w-1/4 top-20 lg:block ${
+        className={`flex items-center justify-center w-full md:w-2/4 lg:w-1/4 top-20 lg:block ${
           isList ? "" : "lg:sticky"
         }`}
       >

@@ -101,8 +101,8 @@ export default function TOC({ headings, isList, setIsList }) {
   // Render dropdown if on a small screen, otherwise render regular TOC
   return isSmallScreen ? (
     <>
-      <div className="inline-block p-4 top-20 w-full">
-        <div className="flex items-center justify-center text-center pl-3">
+      <div className="w-full p-4 top-20 md:max-w-[90vw] md:mx-auto md:px-6">
+        <div className="flex items-center justify-center text-center md:w-[150%] md:translate-x-[-20%]">
           <button
             onClick={() => setIsDropdownOpen((prev) => !prev)}
             className="text-gray-700 focus:outline-none flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:shadow-outline gap-2 text-center"
@@ -115,7 +115,7 @@ export default function TOC({ headings, isList, setIsList }) {
         </div>
 
         {isDropdownOpen && (
-          <div className="mt-2 max-h-[300px] overflow-y-auto border rounded-md shadow-md p-2 bg-white">
+          <div className="mt-2 max-h-[300px] overflow-y-auto border rounded-md shadow-md p-2 bg-white md:w-[150%] md:translate-x-[-20%]">
             <ul className="space-y-1">
               {headings.map((item, index) => {
                 let indent = "";
