@@ -1,22 +1,20 @@
 import React from "react";
 import Header from "./header";
 import Container from "./container";
-import error from "../public/images/error404.png";
-import Image from "next/image";
+
 const NotFoundPage = () => {
   return (
     <>
       <Header />
       <Container>
-        <div className="flex flex-col items-center justify-center">
-          <Image
-          src={error}
-          width={500}
-          height={500}
-          alt="error"
-          />
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">🐰Oops!🐰</h1>
-          <p className="text-lg text-gray-600 mb-8">404 - Page not Found</p>
+        <div className="flex flex-col items-center justify-center gap-2">
+          <h1 className="text-[#F45D2B] text-[100px] font-bold">404</h1>
+          <h3 className="text-[#312E81] text-[40px] font-bold">
+            Page Not Found
+          </h3>
+          <p className="text-[#5E6672] text-[18px]">
+            Oops! The page you are looking for does not exist or has been moved.
+          </p>
 
           <div className="flex items-center justify-center">
             <span className="mr-1">Redirecting</span>
