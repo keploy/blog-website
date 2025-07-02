@@ -75,6 +75,7 @@ export default function PostBody({
   useEffect(() => {
     const timeout = setTimeout(() => {
       const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
+
       const tocItems = headings.map((heading) => {
         const id = `${heading.textContent}`;
         heading.setAttribute("id", sanitizeStringForURL(id, true));
@@ -296,7 +297,7 @@ export default function PostBody({
             </div>
           );
         }
-        // console.log("Data is receiving in renderCodeBlocks:", part);
+
         return (
           <div
             key={index}
@@ -339,7 +340,7 @@ export default function PostBody({
       </div>
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`} id="post-body-check">
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
-        <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
+        <div className="prose lg:prose-xl post-content-wrapper">{renderCodeBlocks()}</div>
         <hr className="border-gray-300 mt-10 mb-20" />
         <div>
 
