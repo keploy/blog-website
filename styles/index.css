@@ -223,3 +223,30 @@ td{
   border: solid 1px black;
   padding: 5px;
 }
+
+.post-content-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  box-sizing: border-box;
+  display: block;
+  overflow-x: auto;
+}
+
+.post-content-wrapper th,
+.post-content-wrapper td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.post-content-wrapper thead th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+@media (max-width: 1024px) {
+  .post-content-wrapper th,
+  .post-content-wrapper td {
+    white-space: normal;
+  }
+}
