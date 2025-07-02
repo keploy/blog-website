@@ -79,7 +79,6 @@ export default function PostBody({
       const tocItems = headings.map((heading) => {
         const id = `${heading.textContent}`;
         heading.setAttribute("id", sanitizeStringForURL(id, true));
-        console.log("Heading ID set:", sanitizeStringForURL(id, true));
 
         return {
           id,
@@ -88,7 +87,6 @@ export default function PostBody({
         };
       });
 
-      // tocItems.shift();
       const index = tocItems.findIndex((item) => item.title === "More Stories");
       if (index !== -1) {
         tocItems.splice(index + 1);
@@ -116,7 +114,7 @@ export default function PostBody({
         window.scrollTo({ top: y, behavior: "smooth" });
       }
     }
-  }, 1000);
+  }, 100);
 
   return () => clearTimeout(timeout);
 }, [tocItems]);
@@ -205,7 +203,11 @@ export default function PostBody({
       button.addEventListener("click", () => {
         handleHeadingCopyClick(heading.innerHTML, index);
 
-        document.getElementById(heading.id).scrollIntoView({
+        const yOffset = -80;
+        const y = document.getElementById(heading.id).getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({
+          top: y,
           behavior: "smooth",
         });
         window.history.replaceState(null, "", `#${heading.id}`);
