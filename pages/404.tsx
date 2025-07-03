@@ -8,6 +8,7 @@ import {
 } from "../lib/api";
 import PostPreview from "../components/post-preview";
 import { getExcerpt } from "../utils/excerpt";
+import { Button } from "../components/Button";
 
 export default function Custom404() {
   const router = useRouter();
@@ -18,26 +19,25 @@ export default function Custom404() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const tech = await getFirstTwoPostsForTechnology();
-      setTopTechnologyPosts(tech.edges || []);
       const community = await getFirstTwoPostsForCommunity();
+      const tech = await getFirstTwoPostsForTechnology();
+
+      setTopTechnologyPosts(tech.edges || []);
       setTopCommunityPosts(community.edges || []);
     };
 
     fetchPosts();
-
-    const redirectTimeout = setTimeout(() => {
-      if (asPath.startsWith("/community")) {
-        router.replace("/community");
-      } else if (asPath.startsWith("/technology")) {
-        router.replace("/technology");
-      } else {
-        router.replace("/");
-      }
-    }, 5000);
-
-    return () => clearTimeout(redirectTimeout);
   }, [asPath, router]);
+
+  const redirect = () => {
+    if (asPath.startsWith("/community")) {
+      router.replace("/community");
+    } else if (asPath.startsWith("/technology")) {
+      router.replace("/technology");
+    } else {
+      router.replace("/");
+    }
+  };
 
   return (
     <>
@@ -48,9 +48,9 @@ export default function Custom404() {
       <div className="text-center">
         <NotFoundPage />
 
-        <div className="text-center mt-6 text-gray-700">
-          <p>You will be redirected in 5 seconds...</p>
-        </div>
+        <Button onClick={() => redirect()} className="mt-4">
+          Back to home page
+        </Button>
 
         {topCommunityPosts.length > 0 && (
           <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">

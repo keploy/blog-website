@@ -15,15 +15,6 @@ const NotFoundPage = () => {
           <p className="text-[#5E6672] text-[18px]">
             Oops! The page you are looking for does not exist or has been moved.
           </p>
-
-          <div className="flex items-center justify-center">
-            <span className="mr-1">Redirecting</span>
-            <div className="flex space-x-1">
-              <span className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></span>
-              <span className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></span>
-              <span className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></span>
-            </div>
-          </div>
         </div>
       </Container>
     </>
