@@ -45,8 +45,7 @@ export default function Header({
                   <Image
                     src={sideBySideSvg}
                     alt="Keploy Logo"
-                    width={85}
-                    height={85}
+                    className="h-[50px] w-[100px]"
                   />
                 </Link>
               </div>
