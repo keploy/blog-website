@@ -43,6 +43,7 @@ import CommunityBg from "../public/images/resource-2.svg";
 import circleArrow from "../public/images/circle-arrow.svg";
 import heart from "../public/images/heart.svg";
 import books from "../public/images/book.svg";
+import MigrationGuide from "../public/images/user-manual.svg"
 
 export const productsNav = {
   mainColumns: [
@@ -433,7 +434,7 @@ export const developersNav = {
       title: "Migration Guide",
       subtitle: "Upgrade With Confidence",
       href: "https://keploy.io/blog/technology/migration-guide-from-restassured-to-keploy",
-      icon: "/images/user-manual.svg",
+      icon: MigrationGuide,
       badge: "Badge",
     },
   ],
