@@ -207,7 +207,7 @@ export default function PostBody({
             }
           };
           return (
-            <div key={index} className="relative mx-auto mb-4 overflow-x-hidden">
+            <div key={index} className="relative mx-auto mb-4">
               <CodeBlockPage lang={getLanguage(language)} code={code} />
               <button
                 onClick={() => handleCopyClick(code, index)}

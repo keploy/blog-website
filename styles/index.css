@@ -245,6 +245,10 @@ td{
   overflow-x: auto;
 }
 
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 
 @media (max-width: 1024px) {
   .post-content-wrapper th,
