@@ -3,12 +3,7 @@ import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; 
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
-import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
-import { markdown } from "@codemirror/lang-markdown";
-import { python } from "@codemirror/lang-python";
-import { go } from "@codemirror/lang-go";
-import { dracula } from "@uiw/codemirror-theme-dracula";
+
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
 });
@@ -18,6 +13,7 @@ import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import AdSlot from "./Adslot";
+import CodeBlockPage from "./CodeBlock";
 export default function PostBody({
   content,
   authorName,
@@ -195,39 +191,27 @@ export default function PostBody({
             codeMatch && codeMatch[0].includes("language-")
               ? codeMatch[0].split("language-")[1].split('"')[0]
               : "bash";
-          const getLanguageExtension = (language: string) => {
+          const getLanguage = (language: string) => {
             switch (language) {
               case "javascript":
               case "js":
-                return javascript();
+                return "javascript";
               case "python":
-                return python();
+                return "python";
               case "markdown":
-                return markdown();
+                return "markdown";
               case "go":
-                return go();
+                return "go";
               default:
-                return javascript();
+                return "javascript";
             }
           };
           return (
             <div key={index} className="relative mx-auto mb-4">
-              <CodeMirror
-                value={code}
-                extensions={[getLanguageExtension(language)]}
-                theme={dracula}
-                basicSetup={{
-                  lineNumbers: false,
-                  highlightActiveLine: true,
-                  tabSize: 4,
-                }}
-                editable={false}
-                readOnly={true}
-                indentWithTab={true}
-              />
+              <CodeBlockPage lang={getLanguage(language)} code={code} />
               <button
                 onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
+                className="absolute top-2 right-2 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
               >
                 {copySuccessList[index] ? (
                   <IoCheckmarkOutline />
