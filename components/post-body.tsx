@@ -3,7 +3,7 @@ import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; 
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
-import { codeToHtml, createHighlighter } from 'shiki';
+
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
 });
@@ -13,8 +13,7 @@ import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import AdSlot from "./Adslot";
-import { CodeBlock } from "./CodeBlock";
-
+import CodeBlockPage from "./CodeBlock";
 export default function PostBody({
   content,
   authorName,
@@ -163,38 +162,6 @@ export default function PostBody({
     });
   }, [headingCopySuccessList]);
 
-  /* function CodeBlock({ lang, children }: { lang: string; children: string }) {
-    const [html, setHtml] = useState<string>("");
-
-    useEffect(() => {
-      let isMounted = true;
-      (async () => {
-        const highlighter = await createHighlighter({
-          themes: ["vitesse-light", "vitesse-dark"],
-          langs: [lang],
-        });
-        const out = highlighter.codeToHtml(children, {
-          lang,
-          themes: { light: "vitesse-light"},
-          defaultColor: "light",
-        });
-        if (isMounted) setHtml(out);
-      })();
-      return () => {
-        isMounted = false;
-      };
-    }, [lang, children]);
-
-    return (
-      <div
-        className="shiki shiki-themes"
-        dangerouslySetInnerHTML={{
-          __html: html || "<pre><code>Loading...</code></pre>",
-      }}
-      />
-    );
-  } */
-
   const renderCodeBlocks = () => {
     const codeBlocks = replacedContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
@@ -224,7 +191,6 @@ export default function PostBody({
             codeMatch && codeMatch[0].includes("language-")
               ? codeMatch[0].split("language-")[1].split('"')[0]
               : "bash";
-
           const getLanguage = (language: string) => {
             switch (language) {
               case "javascript":
@@ -240,13 +206,12 @@ export default function PostBody({
                 return "javascript";
             }
           };
-
           return (
-            <div key={index} className="relative mx-auto mb-4">
-              <CodeBlock lang={getLanguage(language)} code={code} />
+            <div key={index} className="relative mx-auto mb-4 overflow-x-hidden">
+              <CodeBlockPage lang={getLanguage(language)} code={code} />
               <button
                 onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
+                className="absolute top-2 right-2 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
               >
                 {copySuccessList[index] ? (
                   <IoCheckmarkOutline />

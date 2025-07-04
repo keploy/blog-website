@@ -1,20 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getHtmlFromCode } from "../lib/shiki";
+import { codeToHtml } from "shiki";
+import type { BundledLanguage } from "shiki";
 
-export function CodeBlock({ code, lang }: { code: string; lang: string }) {
-  const [html, setHtml] = useState("<pre><code>Loading...</code></pre>");
+interface Props {
+  code: string;
+  lang: BundledLanguage;
+}
+
+export default function CodeBlockPage({ code, lang }: Props) {
+  const [html, setHtml] = useState("");
 
   useEffect(() => {
-    let mounted = true;
-    getHtmlFromCode(code, lang).then((result) => {
-      if (mounted) setHtml(result);
-    });
-    return () => {
-      mounted = false;
-    };
+    async function highlight() {
+      const out = await codeToHtml(code, {
+        lang,
+        theme: "vitesse-light",
+      });
+      setHtml(out);
+    }
+    highlight();
   }, [code, lang]);
 
-  return <div className="shiki" dangerouslySetInnerHTML={{ __html: html }} />;
+  return (
+    <div
+      className="shiki text-sm overflow-x-auto p-4 rounded-md"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
 }

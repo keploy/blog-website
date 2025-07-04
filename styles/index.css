@@ -195,11 +195,6 @@ body {
   }
 }
 
-pre {
-  background-color: #222222 !important;
-  color: antiquewhite;
-}
-
 .footer-font{
   font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
 }
@@ -243,6 +238,13 @@ td{
   background-color: #f5f5f5;
   font-weight: bold;
 }
+
+.post-content-wrapper pre {
+  padding: 1rem;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+}
+
 
 @media (max-width: 1024px) {
   .post-content-wrapper th,
