@@ -37,8 +37,7 @@ export default function HeroPost({
   }, [postId]);
 
   return (
-    <section>
-      <div className="relative bg-gray-100 border border-gray-300 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center lg:group transition-all duration-500 overflow-hidden">
+      <div className="relative bg-gray-100 border border-gray-300 rounded-2xl lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center lg:group transition-all duration-500 overflow-hidden">
         <div className="mb-8 lg:mb-0">
           {coverImage && (
             <CoverImage
@@ -90,6 +89,5 @@ export default function HeroPost({
           </Link>
         </div>
       </div>
-    </section>
   );
 }
