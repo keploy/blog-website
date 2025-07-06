@@ -43,11 +43,7 @@ export default function PostPreview({
     }
   );
   return (
-    <animated.div
-      className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition group"
-      ref={ref}
-      style={springStyles}
-    >
+    <div className="bg-[#F3F4F6] rounded-2xl" ref={ref}>
       <div className="mb-5">
         {coverImage && (
           <CoverImage
@@ -55,27 +51,31 @@ export default function PostPreview({
             coverImage={coverImage}
             slug={slug}
             isCommunity={isCommunity}
+            classNames="rounded-tr-2xl rounded-tl-2xl"
           />
         )}
       </div>
-      <h3 className="text-2xl leading-snug leading-none heading1 font-bold">
-        <Link
-          href={`${basePath}/${slug}`}
-          className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
-          dangerouslySetInnerHTML={{ __html: title }}
-        ></Link>
-      </h3>
-      <div className="flex items-center gap-4">
-        <Avatar author={author ? author : "Anonymous"} />
-        <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
-        <div className="text-md mb-4 pt-4">
-          <Date dateString={date} />
+
+      <div className="p-4">
+        <h3 className="text-xl leading-snug heading1 font-semibold">
+          <Link
+            href={`${basePath}/${slug}`}
+            className="bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px] hover:underline"
+            dangerouslySetInnerHTML={{ __html: title }}
+          ></Link>
+        </h3>
+        <div className="flex items-center gap-4">
+          <Avatar author={author ? author : "Anonymous"} />
+          <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
+          <div className="text-md mb-4 pt-4">
+            <Date dateString={date} />
+          </div>
         </div>
+        <div
+          className="text-sm leading-normal mb-4 body text-slate-600"
+          dangerouslySetInnerHTML={{ __html: excerpt }}
+        />
       </div>
-      <div
-        className="text-sm leading-normal mb-4 body text-slate-600"
-        dangerouslySetInnerHTML={{ __html: excerpt }}
-      />
-    </animated.div>
+    </div>
   );
 }

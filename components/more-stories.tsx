@@ -125,10 +125,6 @@ export default function MoreStories({
 
   return (
     <section>
-      <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
-        More Stories
-      </h2>
-      
       {isIndex && (
         <div className="flex w-full mb-8">
           <div className="relative w-full">
