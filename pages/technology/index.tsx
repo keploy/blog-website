@@ -8,7 +8,6 @@ import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
-  console.log("tech posts: ", edges.length)
   const heroPost = edges[0]?.node;
   const morePosts = edges.slice(1);
 
@@ -33,6 +32,7 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
             author={heroPost.ppmaAuthorName}
             slug={heroPost.slug}
             isCommunity={false}
+            postId={heroPost.postId}
           />
         )}
         {morePosts.length > 0 && (

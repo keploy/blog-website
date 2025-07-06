@@ -27,6 +27,7 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
             author={heroPost.ppmaAuthorName}
             slug={heroPost.slug}
             isCommunity={true}
+            postId={heroPost.postId}
           />
         )}
         {morePosts.length > 0 && (
