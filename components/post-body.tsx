@@ -186,7 +186,8 @@ export default function PostBody({
       .map((part, index) => {
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
           const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
-          const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : ""; 
+          const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : "";
+          const updatedCode = code.slice(code.indexOf('\n') + 1);
           const language =
             codeMatch && codeMatch[0].includes("language-")
               ? codeMatch[0].split("language-")[1].split('"')[0]
@@ -208,9 +209,9 @@ export default function PostBody({
           };
           return (
             <div key={index} className="relative mx-auto mb-4">
-              <CodeBlockPage lang={getLanguage(language)} code={code} />
+              <CodeBlockPage lang={getLanguage(language)} code={updatedCode} />
               <button
-                onClick={() => handleCopyClick(code, index)}
+                onClick={() => handleCopyClick(updatedCode, index)}
                 className="absolute top-2 right-2 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
               >
                 {copySuccessList[index] ? (
