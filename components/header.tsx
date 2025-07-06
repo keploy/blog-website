@@ -57,9 +57,9 @@ export default function Header({
             </div>
 
             <div className="justify-end flex-1 hidden header-btn-container lg:flex gap-2">
-              <GitHubStars />
               <Vscode />
-              <Button>Sign in</Button>
+              <GitHubStars />
+              <Button className="ml-[8px]">Sign In</Button>
             </div>
 
             {/* Mobile Navigation */}
