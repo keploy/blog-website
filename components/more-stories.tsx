@@ -3,7 +3,7 @@ import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostPreview from "./post-preview";
 import { FaSearch } from "react-icons/fa";
-import { fetchMorePosts } from "../lib/api";
+import { fetchMorePosts, getAllPostsFromTags, getAllTags } from "../lib/api";
 import { IoClose } from "react-icons/io5";
 
 export default function MoreStories({
@@ -29,6 +29,12 @@ export default function MoreStories({
     initialPageInfo?.endCursor ?? null
   );
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [tagFilteredPosts, setTagFilteredPosts] = useState<
+    { node: Post }[] | null
+  >(null);
+  const [tagLoading, setTagLoading] = useState(false);
+  const [allTags, setAllTags] = useState([]);
 
   // Set up initial buffer with remaining posts
   useEffect(() => {
@@ -44,6 +50,35 @@ export default function MoreStories({
       loadMoreInBackground();
     }
   }, [initialPosts]);
+
+  useEffect(() => {
+    const fetchAllTags = async () => {
+      const allTags = await getAllTags();
+      setAllTags(allTags);
+    };
+
+    fetchAllTags();
+  }, []);
+
+  const handleTagClick = async (tagName: string) => {
+    if (tagName === selectedTag) {
+      setSelectedTag(null);
+      setTagFilteredPosts(null);
+      return;
+    }
+
+    setSelectedTag(tagName);
+    setTagLoading(true);
+    try {
+      const result = await getAllPostsFromTags(tagName, false);
+      setTagFilteredPosts(result.edges || []);
+    } catch (err) {
+      console.error("Failed to fetch posts for tag", tagName, err);
+      setTagFilteredPosts([]);
+    } finally {
+      setTagLoading(false);
+    }
+  };
 
   // Filter posts based on search term
   const filteredOverlayPosts = allPosts.filter(
@@ -83,7 +118,7 @@ export default function MoreStories({
       // First, show more posts from allPosts if available
       if (visibleCount < allPosts.length) {
         setVisibleCount((prev) => Math.min(prev + 9, allPosts.length));
-      } 
+      }
       // Then, add posts from buffer if needed
       else if (buffer.length > 0) {
         const postsToAdd = buffer.slice(0, 9);
@@ -131,6 +166,27 @@ export default function MoreStories({
             <FaSearch />
             Search Posts
           </button>
+
+          <div className="mt-4 max-h-40 overflow-y-auto rounded-xl border border-gray-200 p-3">
+            <div className="flex flex-wrap gap-2">
+              {allTags.map((tag) => (
+                <span
+                  key={tag.name}
+                  onClick={async () => {
+                    const formattedTag = tag.name.replace(/\s+/g, "-");
+                    await handleTagClick(formattedTag);
+                  }}
+                  className={`text-xs px-3 py-1 rounded-full cursor-pointer transition ${
+                    selectedTag === tag.name.replace(/\s+/g, "-")
+                      ? "bg-orange-100 text-orange-700 font-semibold"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {tag.name}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -142,26 +198,76 @@ export default function MoreStories({
           <FaSearch />
           <span className="font-medium">Search Posts</span>
         </button>
+
+        <div className="mt-4 max-h-40 overflow-y-auto rounded-xl border border-gray-200 p-3">
+          <div className="flex flex-wrap gap-2">
+            {allTags.map((tag) => (
+              <span
+                key={tag.name}
+                onClick={async () => {
+                  const formattedTag = tag.name.replace(/\s+/g, "-");
+                  await handleTagClick(formattedTag);
+                }}
+                className={`text-xs px-3 py-1 rounded-full cursor-pointer transition ${
+                  selectedTag === tag.name.replace(/\s+/g, "-")
+                    ? "bg-orange-100 text-orange-700 font-semibold"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="flex-1">
         <div className="grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
-          {allPosts.slice(0, visibleCount).map(({ node }) => (
-            <PostPreview
-              key={node.slug}
-              title={node.title}
-              coverImage={node.featuredImage}
-              date={node.date}
-              author={node.ppmaAuthorName}
-              slug={node.slug}
-              excerpt={getExcerpt(node.excerpt, 20)}
-              isCommunity={
-                node.categories.edges[0]?.node.name === "technology"
-                  ? false
-                  : true
-              }
-            />
-          ))}
+          {tagLoading ? (
+            <p className="text-center text-gray-500">Loading posts...</p>
+          ) : tagFilteredPosts ? (
+            tagFilteredPosts.length > 0 ? (
+              tagFilteredPosts.map(({ node }) => (
+                <PostPreview
+                  key={node.slug}
+                  title={node.title}
+                  coverImage={node.featuredImage}
+                  date={node.date}
+                  author={node.ppmaAuthorName}
+                  slug={node.slug}
+                  excerpt={getExcerpt(node.excerpt, 20)}
+                  isCommunity={
+                    node.categories.edges[0]?.node.name === "technology"
+                      ? false
+                      : true
+                  }
+                />
+              ))
+            ) : (
+              <p className="text-center text-gray-500">
+                No posts found for this tag.
+              </p>
+            )
+          ) : (
+            allPosts
+              .slice(0, visibleCount)
+              .map(({ node }) => (
+                <PostPreview
+                  key={node.slug}
+                  title={node.title}
+                  coverImage={node.featuredImage}
+                  date={node.date}
+                  author={node.ppmaAuthorName}
+                  slug={node.slug}
+                  excerpt={getExcerpt(node.excerpt, 20)}
+                  isCommunity={
+                    node.categories.edges[0]?.node.name === "technology"
+                      ? false
+                      : true
+                  }
+                />
+              ))
+          )}
         </div>
 
         <div className="flex flex-col items-center gap-4 mb-8">
