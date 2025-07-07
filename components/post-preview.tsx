@@ -3,7 +3,7 @@ import Date from "./date";
 import CoverImage from "./cover-image";
 import Link from "next/link";
 import { Post } from "../types/post";
-import { animated, easings, useInView } from "@react-spring/web";
+import { easings, useInView } from "@react-spring/web";
 
 export default function PostPreview({
   title,
