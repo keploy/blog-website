@@ -26,7 +26,6 @@ export default function Tag({
     className="w-full max-w-[728px] h-[90px]"
   />
 </div>
-
       </div>
     </div>
   );
