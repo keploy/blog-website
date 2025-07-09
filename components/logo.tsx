@@ -1,22 +1,38 @@
-import Link from 'next/link'
+import Link from "next/link";
 
-export default function Logo() {
-
+export default function Logo(): JSX.Element {
   return (
-      <Link href="/" className="block" aria-label="Keploy">
-          <svg width="280" height="50" viewBox="0 0 1256 181" xmlns="http://www.w3.org/2000/svg">
-              <title>Keploy Logo</title>
-              <defs>
-                  <linearGradient id="linearGradient-1" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#FAD961" />
-                      <stop offset="100%" stopColor="#F76B1C" />
-                  </linearGradient>
-                  <linearGradient id="linearGradient-2" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#FAD961" />
-                      <stop offset="100%" stopColor="#F76B1C" />
-                  </linearGradient>
-              </defs>
-              <g id="Material-Design-Stickersheet" fill="none" fillRule="evenodd">
+    <Link href="/" className="block" aria-label="Keploy">
+      <svg
+        width="280"
+        height="50"
+        viewBox="0 0 1256 181"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <title>Keploy Logo</title>
+        <defs>
+          <linearGradient
+            id="linearGradient-1"
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+          >
+            <stop offset="0%" stopColor="#FAD961" />
+            <stop offset="100%" stopColor="#F76B1C" />
+          </linearGradient>
+          <linearGradient
+            id="linearGradient-2"
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+          >
+            <stop offset="0%" stopColor="#FAD961" />
+            <stop offset="100%" stopColor="#F76B1C" />
+          </linearGradient>
+        </defs>
+         <g id="Material-Design-Stickersheet" fill="none" fillRule="evenodd">
                   <g id="Group-42" fillRule="nonzero">
                       <g id="Group">
                           <g transform="translate(69.445132, 31.465016) scale(-1, 1) rotate(-180) translate(-69.445132, -31.465016) translate(29.753349, 0)">
@@ -33,7 +49,7 @@ export default function Logo() {
                       </g>
                   </g>
               </g>
-          </svg>
-      </Link>
-  )
+      </svg>
+    </Link>
+  );
 }

@@ -1,10 +1,16 @@
 import Image from "next/image";
 import { Post } from "../types/post";
-export default function Avatar({ author }: { author: Post["ppmaAuthorName"] }) {
+
+interface AvatarProps {
+  author: Post["ppmaAuthorName"];
+}
+
+export default function Avatar({ author }: AvatarProps): JSX.Element {
   // const isAuthorHaveFullName = author?.node?.firstName && author?.node?.lastName
   // const name = isAuthorHaveFullName
   //   ? `${author.node.firstName} ${author.node.lastName}`
   //   : author.node.name || null
+
   return (
     <div className="flex items-center">
       {/* <div className="w-8 h-8 relative mr-4">
