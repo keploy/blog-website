@@ -36,7 +36,6 @@ export default function PostBody({
   const [replacedContent, setReplacedContent] = useState(content); 
   const [isList, setIsList] = useState(false);
   const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const sameAuthor =
     authorName.split(" ")[0].toLowerCase() ===
     ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
@@ -331,7 +330,6 @@ export default function PostBody({
       className={`flex flex-col ${
         isList ? "items-center" : "items-center lg:items-start lg:flex-row"
       } `}
-      ref={scrollRef}
     >
       <div
         className={`flex items-center justify-center w-full mr-5 md:w-2/4 lg:w-1/4 top-20 lg:block ${
