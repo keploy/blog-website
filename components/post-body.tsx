@@ -17,7 +17,7 @@ import WaitlistBanner from "./waitlistBanner";
 import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
-import AdSlot from "./Adsolt";
+import AdSlot from "./Adslot";
 export default function PostBody({
   content,
   authorName,
@@ -76,7 +76,7 @@ export default function PostBody({
       const tocItems = headings.map((heading, index) => {
         const id = `heading-${index}`;
         heading.setAttribute("id", id);
-        console.log("Here are the heading: ", heading.textContent);
+
         return {
           id,
           title: heading.textContent,
@@ -238,7 +238,7 @@ export default function PostBody({
             </div>
           );
         }
-        // console.log("Data is receiving in renderCodeBlocks:", part);
+
         return (
           <div
             key={index}
@@ -280,7 +280,7 @@ export default function PostBody({
       </div>
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`} id="post-body-check">
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
-        <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
+        <div className="prose lg:prose-xl post-content-wrapper">{renderCodeBlocks()}</div>
         <hr className="border-gray-300 mt-10 mb-20" />
         <div>
 

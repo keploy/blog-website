@@ -57,7 +57,29 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
         `,
         }}
       />
+      {/* publisher Script */}
 
+      <Script async type="application/javascript"
+          id="swg-basic"
+            src="https://news.google.com/swg/js/v1/swg-basic.js">
+          </Script>
+
+          <Script
+          id="publisher"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
+                  basicSubscriptions.init({
+                    type: "NewsArticle",
+                    isPartOfType: ["Product"],
+                    isPartOfProductId: "CAowz4a6DA:openaccess",
+                    clientOptions: { theme: "light", lang: "en" },
+                  });
+                });
+            `,
+          }}
+        />
 
   {/* Apollo Tracking Script */}
       <Script

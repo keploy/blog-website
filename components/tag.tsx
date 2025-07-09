@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Tag as TagInterface } from "../types/tag";
-import AdSlot from "./Adsolt";
+import AdSlot from "./Adslot";
 
 export default function Tag({
   tags,
@@ -26,6 +26,7 @@ export default function Tag({
     className="w-full max-w-[728px] h-[90px]"
   />
 </div>
+
       </div>
     </div>
   );
