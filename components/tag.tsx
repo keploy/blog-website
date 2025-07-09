@@ -22,7 +22,7 @@ export default function Tag({
         ))}
 <div className="w-full flex justify-center my-8 -mb-20">
   <AdSlot
-    slotId="3356716061"
+    slotId="6785117735"
     className="w-full max-w-[728px] h-[90px]"
   />
 </div>
