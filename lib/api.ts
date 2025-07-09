@@ -300,7 +300,8 @@ export async function getAllPostsForTechnology(preview = false, after = null) {
 }
 
 export async function getFirstTwoPostsForTechnology(preview = false, after = null) {
-  const data = await fetchAPI(
+  try {
+   const data = await fetchAPI(
     `
     query AllPostsForCategory($after: String) {
       posts(first: 2, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
@@ -358,6 +359,14 @@ export async function getFirstTwoPostsForTechnology(preview = false, after = nul
   return {
     edges: data?.posts?.edges || [],
     pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+  };
+ 
+  } catch (error) {
+    console.error("Error in getFirstTwoPostsForTechnology: ", error);
+    return {
+      edges: [],
+      pageInfo: {hasNextPage: false, endCursor: null}
+    }
   };
 }
 
@@ -507,7 +516,7 @@ export async function getFirstTwoPostsForCommunity(preview = false, after = null
       pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
     };
   } catch (error) {
-    console.error('Error in getAllPostsForCommunity:', error);
+    console.error('Error in getFirstTwoPostsForCommunity:', error);
     return {
       edges: [],
       pageInfo: { hasNextPage: false, endCursor: null }

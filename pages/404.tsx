@@ -8,7 +8,6 @@ import {
 } from "../lib/api";
 import PostPreview from "../components/post-preview";
 import { getExcerpt } from "../utils/excerpt";
-import { Button } from "../components/Button";
 
 export default function Custom404() {
   const router = useRouter();
@@ -30,7 +29,7 @@ export default function Custom404() {
   }, [asPath, router]);
 
   const redirect = () => {
-    if (asPath.startsWith("/community")) {
+    if (asPath.startsWith("/community/")) {
       router.replace("/community");
     } else if (asPath.startsWith("/technology")) {
       router.replace("/technology");
@@ -42,21 +41,21 @@ export default function Custom404() {
   return (
     <>
       <Head>
-        <title>404 - Page Not Found | Keploy Blog</title>
+        <title>Keploy Blog</title>
       </Head>
 
-      <div className="text-center">
+      <div className="text-center flex flex-col gap-1">
         <NotFoundPage />
 
-        <Button onClick={() => redirect()} className="mt-4">
-          Back to home page
-        </Button>
+        <button
+          onClick={() => redirect()}
+          className="underline"
+        >
+          Home
+        </button>
 
         {topCommunityPosts.length > 0 && (
           <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-            <h2 className="text-2xl font-semibold text-center mb-6 text-orange-600">
-              Community Posts
-            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
               {topCommunityPosts.map(({ node }: any) => (
                 <PostPreview
@@ -75,9 +74,6 @@ export default function Custom404() {
 
         {topTechnologyPosts.length > 0 && (
           <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 mb-16">
-            <h2 className="text-2xl font-semibold text-center mb-6 text-orange-600">
-              Technology Posts
-            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
               {topTechnologyPosts.map(({ node }: any) => (
                 <PostPreview
