@@ -93,23 +93,28 @@ export default function PostBody({
     return () => clearTimeout(timeout); 
   }, [content]);
 
-  const handleCopyClick = (code, index) => {
-    navigator.clipboard
-      .writeText(code)
-      .then(() => {
-        const updatedList = [...copySuccessList];
-        updatedList[index] = true;
-        setCopySuccessList(updatedList);
-        setTimeout(() => {
-          updatedList[index] = false;
-          setCopySuccessList(updatedList);
-        }, 2000); 
-      })
-      .catch(() => {
-        const updatedList = [...copySuccessList];
-        updatedList[index] = false;
-        setCopySuccessList(updatedList);
-      });
+  const handleCopyClick = (code: string, index: number) => {
+    navigator.clipboard.writeText(code).then(() => {
+      const resetList = Array(copySuccessList.length).fill(false);
+      resetList[index] = true;
+      setCopySuccessList(resetList);
+
+      const clearTick = () => {
+        const clearedList = Array(copySuccessList.length).fill(false);
+        setCopySuccessList(clearedList);
+        document.removeEventListener("click", handleClickOutside);
+      };
+
+      const handleClickOutside = () => {
+        clearTick();
+      };
+
+      document.addEventListener("click", handleClickOutside);
+
+      setTimeout(() => {
+        clearTick();
+      }, 2000);
+    });
   };
 
   const handleHeadingCopyClick = (id: string, index: number) => {
@@ -212,7 +217,7 @@ export default function PostBody({
               <CodeBlockPage lang={getLanguage(language)} code={updatedCode} />
               <button
                 onClick={() => handleCopyClick(updatedCode, index)}
-                className="absolute top-2 right-2 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
+                className="absolute top-1 right-1 sm:top-2 sm:right-2 px-1.5 py-0.5 sm:px-2 sm:py-1 text-white bg-gray-700 rounded hover:bg-gray-600 sm:text-base z-10"
               >
                 {copySuccessList[index] ? (
                   <IoCheckmarkOutline />

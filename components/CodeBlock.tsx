@@ -16,7 +16,7 @@ export default function CodeBlockPage({ code, lang }: Props) {
     async function highlight() {
       const out = await codeToHtml(code, {
         lang,
-        theme: "vitesse-light",
+        theme: "dark-plus",
       });
       setHtml(out);
     }
@@ -25,7 +25,7 @@ export default function CodeBlockPage({ code, lang }: Props) {
 
   return (
     <div
-      className="shiki text-sm overflow-x-auto p-4 rounded-md"
+      className="shiki text-sm overflow-x-auto rounded-md"
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
