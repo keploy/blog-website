@@ -44,8 +44,6 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
         }}
       />
 
-      
-
       <Script
         id="msclarity"
         type="text/javascript"
@@ -59,7 +57,6 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
         `,
         }}
       />
-
       {/* publisher Script */}
 
       <Script async type="application/javascript"
@@ -83,7 +80,6 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
             `,
           }}
         />
-
 
   {/* Apollo Tracking Script */}
       <Script
