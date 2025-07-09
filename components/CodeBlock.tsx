@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { codeToHtml } from "shiki";
 import type { BundledLanguage } from "shiki";
 
 interface Props {
@@ -14,12 +13,15 @@ export default function CodeBlockPage({ code, lang }: Props) {
 
   useEffect(() => {
     async function highlight() {
+      const { codeToHtml } = await import("shiki");
+
       const out = await codeToHtml(code, {
         lang,
         theme: "dark-plus",
       });
       setHtml(out);
     }
+
     highlight();
   }, [code, lang]);
 
