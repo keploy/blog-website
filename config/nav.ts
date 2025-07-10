@@ -519,7 +519,7 @@ export const resourcesNav = {
     isClickable: true,
     href: "https://keploy.io/blog/technology/migration-guide-from-restassured-to-keploy",
     featuredCard: {
-      title: "Mirgating from RestAssured to Keploy",
+      title: "Migrating from RestAssured to Keploy",
       logo: FeaturedCardIcons.client02,
       href: "https://keploy.io/blog/technology/migration-guide-from-restassured-to-keploy",
       logoBg: "bg-gray-50",
@@ -592,7 +592,7 @@ export const footerLinks = {
   solutions: [
     { title: "Test Generation", href: "/test-case-generation" },
     { title: "API Testing", href: "/api-testing" },
-    { title: "Mock Generation", href: "/test-data-generation" },
+    { title: "Mock Generation", href: "/test-data-generator" },
     { title: "CI/CD Integration", href: "/docs/ci-cd/github" },
   ],
   support: [

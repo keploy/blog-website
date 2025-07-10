@@ -29,7 +29,6 @@ interface FeaturedCardContent {
 interface QuickLink {
   title: string;
   href: string;
-  icon: any;
   iconColor: string;
   sectionTitle?: string;
 }
@@ -158,6 +157,7 @@ const QuickLinks = ({
           href={link.href}
           className="group flex items-center text-sm hover:text-primary p-1"
           target="_blank"
+          rel="noopener noreferrer"
         >
           <span className="truncate text-[13px]">{link.title}</span>
           <ChevronRight className="h-3 w-3 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />

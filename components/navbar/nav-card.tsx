@@ -6,7 +6,7 @@ interface DevResourceCardProps {
   title: string;
   subtitle?: string;
   href: string;
-  icon?: string;
+  icon?: StaticImageData;
   badge?: string;
   backgroundImage?: string | StaticImageData;
 }
