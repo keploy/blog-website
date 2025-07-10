@@ -152,7 +152,7 @@ export default function TOC({ headings, isList, setIsList }) {
                             top: el.offsetTop - offset,
                             behavior: "smooth",
                           });
-                          const sanitizedId = sanitizeStringForURL(item.id);
+                          const sanitizedId = sanitizeStringForURL(item.title, true);
                           window.history.replaceState(
                             null,
                             null,
