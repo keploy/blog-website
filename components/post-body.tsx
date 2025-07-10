@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import TOC from "./TableContents"; 
-import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; 
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
 
@@ -93,30 +92,6 @@ export default function PostBody({
     return () => clearTimeout(timeout); 
   }, [content]);
 
-  const handleCopyClick = (code: string, index: number) => {
-    navigator.clipboard.writeText(code).then(() => {
-      const resetList = Array(copySuccessList.length).fill(false);
-      resetList[index] = true;
-      setCopySuccessList(resetList);
-
-      const clearTick = () => {
-        const clearedList = Array(copySuccessList.length).fill(false);
-        setCopySuccessList(clearedList);
-        document.removeEventListener("click", handleClickOutside);
-      };
-
-      const handleClickOutside = () => {
-        clearTick();
-      };
-
-      document.addEventListener("click", handleClickOutside);
-
-      setTimeout(() => {
-        clearTick();
-      }, 2000);
-    });
-  };
-
   const handleHeadingCopyClick = (id: string, index: number) => {
     const url = sanitizeStringForURL(id,true);
     const copyUrl = `${window.location.origin}${window.location.pathname}#${url}`;
@@ -192,11 +167,8 @@ export default function PostBody({
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
           const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
           const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : "";
+          const language = code.split("\n")[0];
           const updatedCode = code.slice(code.indexOf('\n') + 1);
-          const language =
-            codeMatch && codeMatch[0].includes("language-")
-              ? codeMatch[0].split("language-")[1].split('"')[0]
-              : "bash";
           const getLanguage = (language: string) => {
             switch (language) {
               case "javascript":
@@ -208,6 +180,10 @@ export default function PostBody({
                 return "markdown";
               case "go":
                 return "go";
+              case "bash":
+                return "bash";
+              case "yaml":
+                return "yaml";
               default:
                 return "javascript";
             }
@@ -215,16 +191,6 @@ export default function PostBody({
           return (
             <div key={index} className="relative mx-auto mb-4">
               <CodeBlockPage lang={getLanguage(language)} code={updatedCode} />
-              <button
-                onClick={() => handleCopyClick(updatedCode, index)}
-                className="absolute top-1 right-1 sm:top-2 sm:right-2 px-1.5 py-0.5 sm:px-2 sm:py-1 text-white bg-gray-700 rounded hover:bg-gray-600 sm:text-base z-10"
-              >
-                {copySuccessList[index] ? (
-                  <IoCheckmarkOutline />
-                ) : (
-                  <IoCopyOutline />
-                )}
-              </button>
             </div>
           );
         }
