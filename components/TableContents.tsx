@@ -106,6 +106,8 @@ export default function TOC({ headings, isList, setIsList }) {
           <button
             onClick={() => setIsDropdownOpen((prev) => !prev)}
             className="text-gray-700 focus:outline-none flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:shadow-outline gap-2 text-center"
+            aria-expanded={isDropdownOpen}
+            aria-controls="toc-dropdown"
           >
             <span className="text-lg font-semibold text-left flex-grow">
               Table of Contents
@@ -138,7 +140,7 @@ export default function TOC({ headings, isList, setIsList }) {
 
                 return (
                   <li
-                    key={index}
+                    key={item.id}
                     className={`text-sm text-gray-700 hover:text-orange-500 ${indent}`}
                   >
                     <button
@@ -150,10 +152,11 @@ export default function TOC({ headings, isList, setIsList }) {
                             top: el.offsetTop - offset,
                             behavior: "smooth",
                           });
+                          const sanitizedId = sanitizeStringForURL(item.id);
                           window.history.replaceState(
                             null,
                             null,
-                            `#${item.id}`
+                            `#${sanitizedId}`
                           );
                           setIsDropdownOpen(false);
                         }
