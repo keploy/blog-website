@@ -1,14 +1,8 @@
 import { useState, useEffect } from "react";
 import TOC from "./TableContents"; 
-import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; 
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
-import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
-import { markdown } from "@codemirror/lang-markdown";
-import { python } from "@codemirror/lang-python";
-import { go } from "@codemirror/lang-go";
-import { dracula } from "@uiw/codemirror-theme-dracula";
+
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
 });
@@ -18,6 +12,7 @@ import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import AdSlot from "./Adslot";
+import CodeBlockPage from "./CodeBlock";
 export default function PostBody({
   content,
   authorName,
@@ -97,25 +92,6 @@ export default function PostBody({
     return () => clearTimeout(timeout); 
   }, [content]);
 
-  const handleCopyClick = (code, index) => {
-    navigator.clipboard
-      .writeText(code)
-      .then(() => {
-        const updatedList = [...copySuccessList];
-        updatedList[index] = true;
-        setCopySuccessList(updatedList);
-        setTimeout(() => {
-          updatedList[index] = false;
-          setCopySuccessList(updatedList);
-        }, 2000); 
-      })
-      .catch(() => {
-        const updatedList = [...copySuccessList];
-        updatedList[index] = false;
-        setCopySuccessList(updatedList);
-      });
-  };
-
   const handleHeadingCopyClick = (id: string, index: number) => {
     const url = sanitizeStringForURL(id,true);
     const copyUrl = `${window.location.origin}${window.location.pathname}#${url}`;
@@ -190,51 +166,31 @@ export default function PostBody({
       .map((part, index) => {
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
           const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
-          const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : ""; 
-          const language =
-            codeMatch && codeMatch[0].includes("language-")
-              ? codeMatch[0].split("language-")[1].split('"')[0]
-              : "bash";
-          const getLanguageExtension = (language: string) => {
+          const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : "";
+          const language = code.split("\n")[0];
+          const updatedCode = code.slice(code.indexOf('\n') + 1);
+          const getLanguage = (language: string) => {
             switch (language) {
               case "javascript":
               case "js":
-                return javascript();
+                return "javascript";
               case "python":
-                return python();
+                return "python";
               case "markdown":
-                return markdown();
+                return "markdown";
               case "go":
-                return go();
+                return "go";
+              case "bash":
+                return "bash";
+              case "yaml":
+                return "yaml";
               default:
-                return javascript();
+                return "javascript";
             }
           };
           return (
             <div key={index} className="relative mx-auto mb-4">
-              <CodeMirror
-                value={code}
-                extensions={[getLanguageExtension(language)]}
-                theme={dracula}
-                basicSetup={{
-                  lineNumbers: false,
-                  highlightActiveLine: true,
-                  tabSize: 4,
-                }}
-                editable={false}
-                readOnly={true}
-                indentWithTab={true}
-              />
-              <button
-                onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
-              >
-                {copySuccessList[index] ? (
-                  <IoCheckmarkOutline />
-                ) : (
-                  <IoCopyOutline />
-                )}
-              </button>
+              <CodeBlockPage lang={getLanguage(language)} code={updatedCode} />
             </div>
           );
         }
