@@ -47,18 +47,16 @@ export default function CodeBlockPage({ code, lang }: Props) {
   }, [copied]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(code).then(() => {
-      setCopied(true);
-    });
+    navigator.clipboard.writeText(code).then(() => setCopied(true));
   };
 
   return (
     <div className="mb-6">
-      <div className="flex items-center justify-between bg-[#18181B] text-[#d4d4d4] px-4 py-2 rounded-t-xl text-sm font-mono">
+      <div className="flex items-center justify-between bg-[#18181B] text-[#d4d4d4] py-2 rounded-t-xl text-sm font-mono px-[1.5rem]">
         <span className="capitalize">{lang}</span>
         <button
           onClick={handleCopy}
-          className="hover:bg-[#424141] px-2 py-2 rounded text-base text-gray-300 transition-all duration-200 focus:outline-none outline-none"
+          className="hover:bg-[#27272A] transition-colors duration-200 p-1.5 rounded-xl"
         >
           <AnimatePresence mode="wait" initial={false}>
             {copied ? (
