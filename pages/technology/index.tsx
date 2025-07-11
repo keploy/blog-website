@@ -6,9 +6,11 @@ import HeroPost from "../../components/hero-post";
 import Layout from "../../components/layout";
 import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
+import { getExcerpt } from "../../utils/excerpt";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;
+  const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
   const morePosts = edges.slice(1);
 
   return (
@@ -31,7 +33,9 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
             date={heroPost.date}
             author={heroPost.ppmaAuthorName}
             slug={heroPost.slug}
+            excerpt={excerpt}
             isCommunity={false}
+            authorImage={heroPost.author.node.avatar.url}
             postId={heroPost.postId}
           />
         )}

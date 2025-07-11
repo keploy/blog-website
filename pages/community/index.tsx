@@ -9,7 +9,20 @@ import Header from "../../components/header";
 
 export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;
+  const excerpt = getExcerpt(edges[0]?.node.excerpt);
   const morePosts = edges.slice(1);
+  function getExcerpt(content) {
+    const maxWords = 50;
+    // Split the content into an array of words
+    const words = content.split(" ");
+
+    // Ensure the excerpt does not exceed the maximum number of words
+    if (words.length > maxWords) {
+      return words.slice(0, maxWords).join(" ") + "...";
+    }
+
+    return content;
+  }
 
   return (
     <Layout preview={preview} featuredImage={heroPost?.featuredImage?.node.sourceUrl} Title={heroPost?.title} Description={`Blog from the Technology Page`}>
@@ -26,7 +39,9 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
             date={heroPost.date}
             author={heroPost.ppmaAuthorName}
             slug={heroPost.slug}
+            excerpt={excerpt}
             isCommunity={true}
+            authorImage={heroPost.author.node.avatar.url}
             postId={heroPost.postId}
           />
         )}
