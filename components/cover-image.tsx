@@ -21,7 +21,7 @@ export default function CoverImage({
       height={1000}
       alt={`Cover Image for ${title}`}
       src={coverImage?.node.sourceUrl}
-      className={cn("rounded-md transition-border duration-300", {
+      className={cn("transition-border duration-300", {
         "  transition-scale duration-300": slug,
       })}
       priority

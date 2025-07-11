@@ -3,6 +3,9 @@ import Date from "./date";
 import CoverImage from "./cover-image";
 import Link from "next/link";
 import { Post } from "../types/post";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { getTagsByPostId } from "../lib/api";
 
 interface Props extends Pick<Post, "title" | "date" | "excerpt" | "slug"> {
   coverImage: Post["featuredImage"];
@@ -18,57 +21,74 @@ export default function HeroPost({
   author,
   slug,
   isCommunity,
+  authorImage,
+  postId,
 }) {
-
   const basePath = isCommunity ? "/community" : "/technology";
   excerpt = excerpt.replace("Table of Contents", "");
+  const [tag, setTag] = useState([]);
 
+  useEffect(() => {
+    const fetchPostTag = async () => {
+      const tags = await getTagsByPostId(postId);
+      setTag(tags);
+    };
+
+    fetchPostTag();
+  }, [postId]);
 
   return (
-<section>
-  <div className="relative bg-gray-100 border border-gray-300 px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center lg:group transition-all duration-500 hover:border-orange-500 hover:shadow-[0_0_10px_2px_rgba(255,165,0,0.6)] overflow-hidden">
-    {/* Banner */}
-<div className="absolute top-0 right-0 transform rotate-45 translate-x-[25%] translate-y-[90%] bg-orange-200 text-orange-800 text-[10px] font-bold py-0.5 w-[100px] flex justify-center items-center shadow-md">
-  Latest Blog
-</div>
+    <section>
+      <div className="relative px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center lg:group overflow-hidden">
+        {/* Content */}
+        <div className="mb-8 lg:mb-0">
+          {coverImage && (
+            <CoverImage
+              title={title}
+              coverImage={coverImage}
+              slug={slug}
+              isCommunity={isCommunity}
+            />
+          )}
+        </div>
+        <div className="">
+          <span className="text-md px-3 py-1 rounded-full font-semibold bg-orange-100 text-orange-700 text-center">
+            {tag[0]}
+          </span>
+          <div>
+            <h3 className="heading1 text-4xl lg:text-6xl font-extrabold leading-none hover:underline pt-4">
+              <Link
+                href={`${basePath}/${slug}`}
+                className="hero-title-link title-link"
+                dangerouslySetInnerHTML={{ __html: title }}
+              ></Link>
+            </h3>
+          </div>
 
-    {/* Content */}
-    <div className="mb-8 lg:mb-0 ">
-      {coverImage && (
-        <CoverImage
-          title={title}
-          coverImage={coverImage}
-          slug={slug}
-          isCommunity={isCommunity}
-        />
-      )}
-    </div>
-    <div className="">
-      <div>
-        <h3 className="heading1 text-4xl lg:text-6xl font-bold leading-none">
-          <Link
-            href={`${basePath}/${slug}`}
-            className="hero-title-link title-link bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></Link>
-        </h3>
-      </div>
-      <div className="flex items-center gap-4">
-        <Avatar author={author ? author : "Anonymous"} />
-        <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
-        <div className="text-md mb-4 pt-4">
-          <Date dateString={date} />
+          <div>
+            <div
+              className="body xl:text-md text-md leading-relaxed mb-4 text-slate-600 mt-6"
+              dangerouslySetInnerHTML={{ __html: excerpt }}
+            ></div>
+          </div>
+
+          <div className="flex items-center gap-4 mt-6">
+            <Image
+              src={authorImage}
+              alt="author-image"
+              height={40}
+              width={40}
+              className="rounded-3xl"
+            />
+            <div className="flex flex-col">
+              <Avatar author={author ? author : "Anonymous"} />
+              <div className="text-md mb-0">
+                <Date dateString={date} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div>
-        <div
-          className="body xl:text-md text-md leading-relaxed mb-4 text-slate-600"
-          dangerouslySetInnerHTML={{ __html: excerpt }}
-        />
-      </div>
-    </div>
-  </div>
-</section>
-
+    </section>
   );
 }

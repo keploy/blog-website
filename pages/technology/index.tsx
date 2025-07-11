@@ -9,7 +9,6 @@ import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
-  console.log("tech posts: ", edges.length)
   const heroPost = edges[0]?.node;
   const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
   const morePosts = edges.slice(1);
@@ -36,6 +35,8 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
             slug={heroPost.slug}
             excerpt={excerpt}
             isCommunity={false}
+            authorImage={heroPost.author.node.avatar.url}
+            postId={heroPost.postId}
           />
         )}
         {morePosts.length > 0 && (

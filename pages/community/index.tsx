@@ -41,6 +41,8 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
             slug={heroPost.slug}
             excerpt={excerpt}
             isCommunity={true}
+            authorImage={heroPost.author.node.avatar.url}
+            postId={heroPost.postId}
           />
         )}
         {morePosts.length > 0 && (
