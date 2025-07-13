@@ -51,8 +51,8 @@ export default function HeroPost({
             />
           )}
         </div>
-        <div className="">
-          <span className="text-md px-3 py-1 rounded-full font-semibold bg-orange-100 text-orange-700 text-center">
+        <div className="mt-2 pb-2">
+          <span className="text-sm px-4 py-1 rounded-full font-semibold bg-orange-100 text-orange-700 text-center">
             {tag[0]}
           </span>
           <div>
