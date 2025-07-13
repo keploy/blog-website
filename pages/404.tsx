@@ -49,7 +49,7 @@ export default function Custom404() {
 
         <button
           onClick={() => redirect()}
-          className="underline"
+          className="underline mx-auto w-32 py-2"
         >
           Home
         </button>
