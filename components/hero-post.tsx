@@ -56,7 +56,7 @@ export default function HeroPost({
             {tag[0]}
           </span>
           <div>
-            <h3 className="heading1 text-4xl lg:text-6xl font-extrabold leading-none hover:underline pt-4">
+            <h3 className="heading1 lg:text-[32px] xl:text-[44px] xl:leading-[48px] lg:leading-[45px] font-extrabold hover:underline pt-4 leading-[32px] text-[32px]">
               <Link
                 href={`${basePath}/${slug}`}
                 className="hero-title-link title-link"
@@ -67,7 +67,7 @@ export default function HeroPost({
 
           <div>
             <div
-              className="body xl:text-md text-md leading-relaxed mb-4 text-slate-600 mt-6"
+              className="body lg:text-[18px] leading-relaxed mb-4 text-slate-600 mt-6 text-[14px] sm:text-[16px]"
               dangerouslySetInnerHTML={{ __html: excerpt }}
             ></div>
           </div>

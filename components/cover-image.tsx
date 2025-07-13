@@ -21,14 +21,13 @@ export default function CoverImage({
       height={1000}
       alt={`Cover Image for ${title}`}
       src={coverImage?.node.sourceUrl}
-      className={cn("transition-border duration-300", {
-        "  transition-scale duration-300": slug,
+      className={cn("transition-border duration-300 rounded-xl w-full h-auto lg:h-[450px] xl:w-auto sm:w-full sm:h-[300px]", {
+        "transition-scale duration-300": slug,
       })}
       priority
     />
   );
   return (
-    
     <div className="sm:mx-0 ">
       {slug ? (
         <Link href={`${basePath}${slug}`} aria-label={title}>
