@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostPreview from "./post-preview";
-import { FaSearch } from "react-icons/fa";
 import { fetchMorePosts, getAllPostsFromTags, getAllTags } from "../lib/api";
 import { IoClose } from "react-icons/io5";
+import { CiSearch } from "react-icons/ci";
 
 export default function MoreStories({
   posts: initialPosts,
@@ -157,29 +157,31 @@ export default function MoreStories({
 
   return (
     <section className="flex flex-col md:flex-row w-full gap-8">
-      <div className="hidden md:block w-[260px]">
+      <div className="hidden md:block w-[286px]">
         <div className="sticky top-[6rem] z-10">
           <button
             onClick={() => setSearchOverlayOpen(true)}
-            className="w-full border rounded-3xl text-center flex items-center justify-center hover:border-orange-600 cursor-pointer duration-200 transition-all p-2 gap-2 font-medium"
+            className="w-full border rounded-3xl text-center flex items-center justify-center border-gray-300 hover:border-orange-600 cursor-pointer duration-300 transition-all p-1 gap-2 font-medium text-[#5E5772]"
           >
-            <FaSearch />
-            Search Posts
+            <CiSearch />
+            Search
           </button>
 
-          <div className="mt-4 max-h-40 overflow-y-auto rounded-xl border border-gray-200 p-3">
-            <div className="flex flex-wrap gap-2">
-              {allTags.map((tag) => (
+          <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#FBFBFB]">
+            <div className="flex flex-col gap-2">
+              {allTags.map((tag, index) => (
                 <span
                   key={tag.name}
                   onClick={async () => {
                     const formattedTag = tag.name.replace(/\s+/g, "-");
                     await handleTagClick(formattedTag);
                   }}
-                  className={`text-xs px-3 py-1 rounded-full cursor-pointer transition ${
+                  className={`px-[32px] py-1 cursor-pointer transition text-[18px] ${
                     selectedTag === tag.name.replace(/\s+/g, "-")
-                      ? "bg-orange-100 text-orange-700 font-semibold"
-                      : "bg-gray-100 text-gray-700"
+                      ? "bg-gradient-to-r from-orange-100 to-transparent border-l-2 border-orange-600"
+                      : "text-gray-700"
+                  } ${index == 0 ? "mt-4" : ""} ${
+                    index == allTags.length - 1 ? "mb-4" : ""
                   }`}
                 >
                   {tag.name}
@@ -195,8 +197,8 @@ export default function MoreStories({
           onClick={() => setSearchOverlayOpen(true)}
           className="w-full flex items-center justify-center gap-2 p-3 border rounded-full hover:border-orange-500 transition"
         >
-          <FaSearch />
-          <span className="font-medium">Search Posts</span>
+          <CiSearch />
+          <span className="font-normal">Search</span>
         </button>
 
         <div className="mt-4 max-h-40 overflow-y-auto rounded-xl border border-gray-200 p-3">
@@ -241,6 +243,8 @@ export default function MoreStories({
                       ? false
                       : true
                   }
+                  authorImage={node.author?.node?.avatar?.url ?? null}
+                  tags={node.tags?.edges?.[0]?.node?.name ?? null}
                 />
               ))
             ) : (
@@ -265,6 +269,8 @@ export default function MoreStories({
                       ? false
                       : true
                   }
+                  authorImage={node.author.node.avatar.url ?? null}
+                  tags={node.tags?.edges?.[0]?.node?.name ?? null}
                 />
               ))
           )}
@@ -294,10 +300,10 @@ export default function MoreStories({
       </div>
 
       {searchOverlayOpen && (
-        <div className="fixed inset-0 z-50 bg-white/80 backdrop-blur-xl px-4 py-8 overflow-y-auto">
-          <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-2xl p-12 relative transition-all duration-300">
+        <div className="fixed inset-0 z-50 backdrop-blur-xl p-[16px] overflow-y-auto">
+        <div className="bg-[#EFF3FA] rounded-xl shadow-2xl p-12 relative transition-all duration-300 max-w-7xl mx-auto h-auto">
             <button
-              className="absolute top-6 right-6 text-gray-500 hover:text-gray-800 text-xl"
+              className="absolute top-6 right-6 text-black text-xl bg-[#F9FAFD] rounded-full p-[6px]"
               onClick={() => {
                 setSearchOverlayOpen(false);
                 setSearchTerm("");
@@ -306,16 +312,16 @@ export default function MoreStories({
               <IoClose />
             </button>
 
-            <div className="relative mb-6">
+            <div className="relative mb-6 mt-[20px]">
               <input
                 type="text"
                 placeholder="Search posts..."
                 value={searchTerm}
                 onChange={handleSearchChange}
                 autoFocus
-                className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-[12px] pl-10 rounded-md border border-black focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
               />
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+              <CiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
             </div>
 
             {searchTerm.length === 0 ? (
@@ -338,6 +344,8 @@ export default function MoreStories({
                         ? false
                         : true
                     }
+                    authorImage={node.author.node.avatar.url ?? null}
+                    tags=""
                   />
                 ))}
               </div>
