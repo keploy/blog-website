@@ -28,8 +28,8 @@ import {
 import IntegrationTest from "../public/images/nav/integration-test.webp";
 import UnitTest from "../public/images/nav/unit-test.webp";
 import APITest from "../public/images/nav/api-test.webp";
-import DocsImg from "../public/images/nav/doc.webp";
-import BlogImg from "../public/images/nav/blogs.webp";
+import DocsImg from "../public/images/nav/doc.svg";
+import BlogImg from "../public/images/nav/blogs.svg";
 import CodeCoverage from "../public/images/nav/code-coverages.webp";
 import DeveloperProductivity from "../public/images/nav/developer-productivity.webp";
 import Cicd from "../public/images/nav/ci-cd.webp";

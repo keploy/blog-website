@@ -51,12 +51,12 @@ export default function Header({
               </div>
 
               {/* Desktop Navigation */}
-              <div className="hidden lg:flex flex-grow justify-start mr-4">
+              <div className="hidden xl:flex flex-grow justify-start mr-4">
                 <MainNav />
               </div>
             </div>
 
-            <div className="justify-end flex-1 hidden header-btn-container lg:flex gap-2">
+            <div className="justify-end flex-1 hidden header-btn-container xl:flex gap-2">
               <Vscode />
               <GitHubStars />
               <Button className="ml-[8px]">
@@ -71,8 +71,17 @@ export default function Header({
             </div>
 
             {/* Mobile Navigation */}
-            <div className="flex items-center gap-2 lg:hidden">
+            <div className="flex items-center gap-2 xl:hidden">
               <GitHubStars />
+              <Button className="ml-[8px] hidden md:flex">
+                <a
+                  href="https://app.keploy.io/signin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Sign In
+                </a>
+              </Button>
               <MobileNav />
             </div>
           </div>

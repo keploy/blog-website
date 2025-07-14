@@ -29,7 +29,6 @@ interface FeaturedCardContent {
 interface QuickLink {
   title: string;
   href: string;
-  iconColor: string;
   sectionTitle?: string;
 }
 
