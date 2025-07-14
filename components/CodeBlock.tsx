@@ -35,13 +35,13 @@ export default function CodeBlockPage({ code, lang }: Props) {
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between bg-[#18181B] text-[#d4d4d4] py-2 rounded-t-xl text-sm font-mono px-[1rem]">
-        <span className="capitalize">{lang}</span>
+        <span className="capitalize pl-1">{lang}</span>
         <motion.button
           onClick={() => {
             handleCopy();
             setTimeout(() => setHasCopied(false), 500);
           }}
-          className={`transition-colors duration-200 rounded-xl ${
+          className={`transition-colors duration-200 rounded-xl pr-1 ${
             hasCopied ? "bg-[#27272A] p-1.5" : "hover:bg-[#27272A] p-1.5"
           }`}
           aria-label="Copy command"
