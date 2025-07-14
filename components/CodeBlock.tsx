@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { BundledLanguage } from "shiki";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import type { BundledLanguage } from "shiki";
 
 interface Props {
   code: string;
@@ -11,8 +11,12 @@ interface Props {
 }
 
 export default function CodeBlockPage({ code, lang }: Props) {
+  const [hasCopied, setHasCopied] = useState(false);
   const [html, setHtml] = useState("");
-  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code).then(() => setHasCopied(true));
+  };
 
   useEffect(() => {
     async function highlight() {
@@ -28,60 +32,44 @@ export default function CodeBlockPage({ code, lang }: Props) {
     highlight();
   }, [code, lang]);
 
-  useEffect(() => {
-    if (!copied) return;
-
-    const handleClickOutside = () => {
-      setCopied(false);
-      document.removeEventListener("click", handleClickOutside);
-    };
-
-    setTimeout(() => {
-      setCopied(false);
-      document.removeEventListener("click", handleClickOutside);
-    }, 900);
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [copied]);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code).then(() => setCopied(true));
-  };
-
   return (
     <div className="mb-6">
-      <div className="flex items-center justify-between bg-[#18181B] text-[#d4d4d4] py-2 rounded-t-xl text-sm font-mono px-[1.5rem]">
+      <div className="flex items-center justify-between bg-[#18181B] text-[#d4d4d4] py-2 rounded-t-xl text-sm font-mono px-[1rem]">
         <span className="capitalize">{lang}</span>
-        <button
-          onClick={handleCopy}
-          className="hover:bg-[#27272A] transition-colors duration-200 p-1.5 rounded-xl"
+        <motion.button
+          onClick={() => {
+            handleCopy();
+            setTimeout(() => setHasCopied(false), 500);
+          }}
+          className={`transition-colors duration-200 rounded-xl ${
+            hasCopied ? "bg-[#27272A] p-1.5" : "hover:bg-[#27272A] p-1.5"
+          }`}
+          aria-label="Copy command"
         >
           <AnimatePresence mode="wait" initial={false}>
-            {copied ? (
-              <motion.span
+            {hasCopied ? (
+              <motion.div
                 key="check"
-                initial={{ opacity: 0, scale: 0.8, rotate: -90 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                exit={{ opacity: 0, scale: 0.8, rotate: 90 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.15 }}
               >
-                <IoCheckmarkOutline size={18} />
-              </motion.span>
+                <IoCheckmarkOutline className="h-4 w-4" />
+              </motion.div>
             ) : (
-              <motion.span
+              <motion.div
                 key="copy"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.15 }}
               >
-                <IoCopyOutline size={18} />
-              </motion.span>
+                <IoCopyOutline className="h-4 w-4" />
+              </motion.div>
             )}
           </AnimatePresence>
-        </button>
+        </motion.button>
       </div>
 
       <div
