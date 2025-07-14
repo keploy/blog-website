@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TOC from "./TableContents"; 
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
@@ -30,6 +30,7 @@ export default function PostBody({
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); 
   const [isList, setIsList] = useState(false);
+  const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
   const sameAuthor =
     authorName.split(" ")[0].toLowerCase() ===
     ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
@@ -68,9 +69,10 @@ export default function PostBody({
   useEffect(() => {
     const timeout = setTimeout(() => {
       const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
-      const tocItems = headings.map((heading, index) => {
-        const id = `heading-${index}`;
-        heading.setAttribute("id", id);
+
+      const tocItems = headings.map((heading) => {
+        const id = `${heading.textContent}`;
+        heading.setAttribute("id", sanitizeStringForURL(id, true));
 
         return {
           id,
@@ -79,7 +81,6 @@ export default function PostBody({
         };
       });
 
-      tocItems.shift();
       const index = tocItems.findIndex((item) => item.title === "More Stories");
       if (index !== -1) {
         tocItems.splice(index + 1);
@@ -91,6 +92,73 @@ export default function PostBody({
 
     return () => clearTimeout(timeout); 
   }, [content]);
+
+  useEffect(() => {
+  const timeout = setTimeout(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const targetId = decodeURIComponent(hash.slice(1));
+      const el = document.getElementById(targetId);
+      if (el) {
+        setIsUserEnteredURL(true);
+
+        const yOffset = -80;
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }
+  }, 100);
+
+  return () => clearTimeout(timeout);
+}, [tocItems]);
+
+  useEffect(() => {
+    const scrollObserverOptions = {
+      root: null,
+      rootMargin: "0px 0px -80% 0px",
+      threshold: 0,
+    };
+
+    const scrollObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute("id");
+
+        if (id) {
+          window.history.replaceState(null, "", `#${id}`);
+        }
+      }
+    }, scrollObserverOptions);
+
+    if (!isUserEnteredURL) {
+      tocItems.forEach(({ id }) => {
+        const ele = document.getElementById(sanitizeStringForURL(id, true));
+        if (ele) {
+          scrollObserver.observe(ele);
+        }
+      });
+      return () => scrollObserver.disconnect();
+    }
+  }, [tocItems]);
+
+  const handleCopyClick = (code, index) => {
+    navigator.clipboard
+      .writeText(code)
+      .then(() => {
+        const updatedList = [...copySuccessList];
+        updatedList[index] = true;
+        setCopySuccessList(updatedList);
+        setTimeout(() => {
+          updatedList[index] = false;
+          setCopySuccessList(updatedList);
+        }, 2000); 
+      })
+      .catch(() => {
+        const updatedList = [...copySuccessList];
+        updatedList[index] = false;
+        setCopySuccessList(updatedList);
+      });
+  };
 
   const handleHeadingCopyClick = (id: string, index: number) => {
     const url = sanitizeStringForURL(id,true);
@@ -126,7 +194,18 @@ export default function PostBody({
       button.style.fontSize = "1rem";
       button.style.color = "#555"; 
       button.textContent = headingCopySuccessList[index] ? '✔️' : '#'; // // Copy Button
-      button.addEventListener("click", () => handleHeadingCopyClick(heading.innerHTML, index));
+      button.addEventListener("click", () => {
+        handleHeadingCopyClick(heading.innerHTML, index);
+
+        const yOffset = -80;
+        const y = document.getElementById(heading.id).getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({
+          top: y,
+          behavior: "smooth",
+        });
+        window.history.replaceState(null, "", `#${heading.id}`);
+      });
       heading.appendChild(button);
     });
   }, [tocItems, headingCopySuccessList]);
