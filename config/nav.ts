@@ -23,27 +23,25 @@ import {
   PlayCircle,
   Library,
   GitFork,
-  Coffee,
-  Target,
 } from "lucide-react";
 
-import IntegrationTest from "../public/images/integration-test.svg";
-import UnitTest from "../public/images/unit-test.svg";
-import APITest from "../public/images/api-test.svg";
-import DocsImg from "../public/images/doc.svg";
-import BlogImg from "../public/images/blogs.svg";
-import CodeCoverage from "../public/images/code-coverages.svg";
-import DeveloperProductivity from "../public/images/developer-productivity.svg";
-import Cicd from "../public/images/ci-cd.svg";
-import AboutUs from "../public/images/about-us.svg";
-import Events from "../public/images/events.svg";
-import PartnerWithUs from "../public/images/partner-with-us.svg";
-import ContactUs from "../public/images/resource-1.svg";
-import CommunityBg from "../public/images/resource-2.svg";
-import circleArrow from "../public/images/circle-arrow.svg";
-import heart from "../public/images/heart.svg";
-import books from "../public/images/book.svg";
-import MigrationGuide from "../public/images/user-manual.svg"
+import IntegrationTest from "../public/images/nav/integration-test.webp";
+import UnitTest from "../public/images/nav/unit-test.webp";
+import APITest from "../public/images/nav/api-test.webp";
+import DocsImg from "../public/images/nav/doc.webp";
+import BlogImg from "../public/images/nav/blogs.webp";
+import CodeCoverage from "../public/images/nav/code-coverages.webp";
+import DeveloperProductivity from "../public/images/nav/developer-productivity.webp";
+import Cicd from "../public/images/nav/ci-cd.webp";
+import AboutUs from "../public/images/nav/about-us.webp";
+import Events from "../public/images/nav/events.webp";
+import PartnerWithUs from "../public/images/nav/partner-with-us.webp";
+import ContactUs from "../public/images/nav/resource-1.webp";
+import CommunityBg from "../public/images/nav/resource-2.webp";
+import circleArrow from "../public/images/nav/circle-arrow.webp";
+import heart from "../public/images/nav/heart.webp";
+import books from "../public/images/nav/book.webp";
+import MigrationGuide from "../public/images/nav/user-manual.webp"
 
 export const productsNav = {
   mainColumns: [
