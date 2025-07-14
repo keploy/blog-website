@@ -48,6 +48,7 @@ export default function HeroPost({
               coverImage={coverImage}
               slug={slug}
               isCommunity={isCommunity}
+              classNames="rounded-xl w-full h-auto lg:h-[450px] xl:w-auto sm:w-full sm:h-[300px]"
             />
           )}
         </div>
