@@ -10,8 +10,8 @@ module.exports = {
   		animation: {
   			marquee: 'marquee var(--duration) linear infinite',
   			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
-  			'accordion-down': 'accordion-down 300ms ease-out',
-  			'accordion-up': 'accordion-up 300ms ease-out'
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
   		},
   		keyframes: {
   			marquee: {

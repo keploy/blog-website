@@ -7,7 +7,7 @@ import { SpringValue, animated } from "@react-spring/web";
 import { MainNav } from "../components/navbar/main-nav";
 import { GitHubStars } from "./navbar/github-stars";
 import { Vscode } from "./navbar/vscode-number";
-import { Button } from "./navbar/Button";
+import { Button } from "../components/ui/button";
 import { MobileNav } from "../components/navbar/mobile-nav";
 import { useState, useEffect } from "react";
 import { cn } from "../lib/utils/utils";

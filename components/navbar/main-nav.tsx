@@ -7,14 +7,14 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "../../components/navbar/navigation-menu";
+} from "../../components/ui/navigation-menu";
 import {
   resourcesNav,
   solutionsNav,
   productsNav,
   developersNav,
 } from "../../config/nav";
-import { Card, CardContent } from "../../components/navbar/card";
+import { Card, CardContent } from "../../components/ui/card";
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import { InfoCardBlock } from "../../components/navbar/nav-card";

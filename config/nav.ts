@@ -34,7 +34,7 @@ import CodeCoverage from "../public/images/nav/code-coverages.webp";
 import DeveloperProductivity from "../public/images/nav/developer-productivity.webp";
 import Cicd from "../public/images/nav/ci-cd.webp";
 import AboutUs from "../public/images/nav/about-us.webp";
-import Events from "../public/images/nav/events.webp";
+import Events from "../public/images/nav/events.svg";
 import PartnerWithUs from "../public/images/nav/partner-with-us.webp";
 import ContactUs from "../public/images/nav/resource-1.webp";
 import CommunityBg from "../public/images/nav/resource-2.webp";

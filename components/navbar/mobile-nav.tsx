@@ -3,15 +3,15 @@ import {
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from "../../components/navbar/Sheet";
+} from "../../components/ui/sheet";
 import { Menu } from "lucide-react";
-import { Button } from "../../components/navbar/Button";
+import { Button } from "../../components/ui/button";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../../components/navbar/Accordion";
+} from "../../components/ui/accordion";
 import Link from "next/link";
 import { cn } from "../../lib/utils/utils";
 import {

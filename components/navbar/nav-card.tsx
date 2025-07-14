@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card } from "./card";
+import { Card } from "../ui/card";
 import Image, { StaticImageData } from "next/image";
 
 interface DevResourceCardProps {
