@@ -45,7 +45,7 @@ export default function Header({
                   <Image
                     src={sideBySideSvg}
                     alt="Keploy Logo"
-                    className="h-[50px] w-[100px]"
+                    className="h-[50px] w-[100px] mb-2"
                   />
                 </Link>
               </div>
@@ -59,7 +59,15 @@ export default function Header({
             <div className="justify-end flex-1 hidden header-btn-container lg:flex gap-2">
               <Vscode />
               <GitHubStars />
-              <Button className="ml-[8px]">Sign In</Button>
+              <Button className="ml-[8px]">
+                <a
+                  href="https://app.keploy.io/signin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Sign In
+                </a>
+              </Button>
             </div>
 
             {/* Mobile Navigation */}

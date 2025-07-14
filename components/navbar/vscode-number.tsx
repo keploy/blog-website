@@ -2,24 +2,29 @@
 
 import Link from "next/link";
 import { useVSCodeInstalls } from "../../hooks/useVSCodeInstalls";
+import { useState, useEffect } from "react";
 
 export function Vscode({ className = "" }) {
   const vscodeInstalls = useVSCodeInstalls();
+  const [href, setHref] = useState("https://app.keploy.io");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setHref(
+        window.innerWidth < 1024
+          ? "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio"
+          : "https://app.keploy.io"
+      );
+    }
+  }, []);
 
   return (
     <div className="relative group">
       <Link
-        href="#"
+        href={href}
         target="_blank"
         rel="noopener noreferrer"
         className="relative overflow-hidden px-4 py-1 flex items-center gap-2 transition-all duration-200 border-2 border-transparent hover:border-orange-400/80 rounded-full hover:bg-orange-400/10 hover:text-orange-500 text-lg group/link"
-        onClick={() => {
-          // linkX for screens smaller than md, linkY for md and above
-          window.location.href =
-            window.innerWidth < 1024
-              ? "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio"
-              : "https://app.keploy.io";
-        }}
       >
         <VscodeIcon />
         <span className="tracking-wider font-medium text-[1rem]">

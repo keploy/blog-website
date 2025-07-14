@@ -53,8 +53,9 @@ const ResponsiveBlock = ({
 }: BlockProps & { className?: string }) => (
   <Link
     href={item.href}
-    target={item.target || "_self"}
+    target={item.target || "_blank"}
     className={`group block w-full h-full ${className}`}
+    rel="noopener noreferrer"
   >
     <div className="relative h-full w-full rounded-xl p-[1.5px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all duration-200 group-hover:scale-[1.01]">
       {" "}
@@ -105,6 +106,7 @@ const FeaturedCard = ({ content }: { content: FeaturedCardContent }) => (
       href={content.href}
       className="group relative block w-full overflow-hidden rounded-[calc(0.5rem-1.5px)] p-2 transition-all duration-200 bg-[#FFFCFA]" // Inner background
       target="_blank" // Assuming it opens in a new tab based on config
+      rel="noopener noreferrer"
     >
       <div className="flex items-center gap-3">
         {" "}
@@ -260,7 +262,9 @@ export function MainNav() {
         <NavigationMenuItem>
           <Link
             href="/pricing"
-            className="inline-flex items-center text-black/80 justify-center rounded-xl text-sm font-medium transition-colors hover:text-primary h-9 px-4 py-2 hover:underline text-md"
+            className="inline-flex items-center text-black/80 justify-center rounded-md font-medium transition-colors hover:text-primary h-9 px-3 py-1.5 hover:underline text-[16px]"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             Pricing
           </Link>
