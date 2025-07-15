@@ -66,13 +66,21 @@ export default function PostPreview({
         </h3>
         <div className="flex items-center gap-4">
           <div className="flex flex-row mt-4 justify-center items-center">
-            {authorImage && (
+            {authorImage && authorImage != "imag1" && authorImage != "image" ? (
               <Image
                 src={authorImage}
-                width={40}
+                alt={`${authorImage}'s Avatar`}
+                className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
                 height={40}
-                alt="author-image"
-                className="rounded-full h-10 w-10 mr-4"
+                width={40}
+              />
+            ) : (
+              <Image
+                src={`/blog/images/author.png`}
+                alt={`${authorImage}'s Avatar`}
+                className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
+                height={40}
+                width={40}
               />
             )}
             <div>

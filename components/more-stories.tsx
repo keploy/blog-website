@@ -252,7 +252,7 @@ export default function MoreStories({
                       ? false
                       : true
                   }
-                  authorImage={node.author?.node?.avatar?.url ?? null}
+                  authorImage={node.ppmaAuthorImage ?? null}
                   tags={node.tags?.edges?.[0]?.node?.name ?? null}
                 />
               ))
@@ -278,7 +278,7 @@ export default function MoreStories({
                       ? false
                       : true
                   }
-                  authorImage={node.author.node.avatar.url ?? null}
+                  authorImage={node.ppmaAuthorImage ?? null}
                   tags={node.tags?.edges?.[0]?.node?.name ?? null}
                 />
               ))
@@ -375,8 +375,8 @@ export default function MoreStories({
                         isCommunity={
                           node.categories.edges[0]?.node.name !== "technology"
                         }
-                        authorImage={node.author.node.avatar.url ?? null}
                         tags={node.tags?.edges?.[0]?.node?.name ?? null}
+                        authorImage={node.ppmaAuthorImage ?? null}
                       />
                     ))}
                   </div>

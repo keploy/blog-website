@@ -286,6 +286,7 @@ export async function getAllPostsForTechnology(preview = false, after = null) {
                 }
               }
             }
+            ppmaAuthorImage
             ppmaAuthorName
             categories {
               edges {
