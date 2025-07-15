@@ -156,6 +156,7 @@ export default function MoreStories({
     (visibleCount < allPosts.length || buffer.length > 0 || hasMore) &&
     !loading &&
     !error &&
+    !selectedTag
     isIndex;
 
   return (
