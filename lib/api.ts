@@ -372,6 +372,13 @@ export async function getAllPostsForCommunity(preview = false, after = null) {
                   }
                 }
               }
+              tags {
+                edges {
+                  node {
+                    name
+                  }
+                }
+              }
               seo {
                 metaDesc
                 title

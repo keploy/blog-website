@@ -5,6 +5,7 @@ import PostPreview from "./post-preview";
 import { fetchMorePosts, getAllPostsFromTags, getAllTags } from "../lib/api";
 import { IoClose } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function MoreStories({
   posts: initialPosts,
@@ -57,8 +58,10 @@ export default function MoreStories({
       setAllTags(allTags);
     };
 
-    fetchAllTags();
-  }, []);
+    if (isIndex) {
+      fetchAllTags();
+    }
+  }, [isIndex]);
 
   const handleTagClick = async (tagName: string) => {
     if (tagName === selectedTag) {
@@ -157,8 +160,45 @@ export default function MoreStories({
 
   return (
     <section className="flex flex-col md:flex-row w-full gap-8">
-      <div className="hidden md:block w-[286px]">
-        <div className="sticky top-[6rem] z-10">
+      {isIndex && (
+        <div className="hidden md:block w-[286px]">
+          <div className="sticky top-[6rem] z-10">
+            <button
+              onClick={() => setSearchOverlayOpen(true)}
+              className="w-full border rounded-3xl text-center flex items-center justify-center border-gray-300 hover:border-orange-600 cursor-pointer duration-300 transition-all p-1 gap-2 font-medium text-[#5E5772]"
+            >
+              <CiSearch />
+              Search
+            </button>
+
+            <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#FBFBFB]">
+              <div className="flex flex-col gap-2">
+                {allTags.map((tag, index) => (
+                  <span
+                    key={tag.name}
+                    onClick={async () => {
+                      const formattedTag = tag.name.replace(/\s+/g, "-");
+                      await handleTagClick(formattedTag);
+                    }}
+                    className={`px-[32px] py-1 cursor-pointer transition text-[18px] ${
+                      selectedTag === tag.name.replace(/\s+/g, "-")
+                        ? "bg-gradient-to-r from-orange-100 to-transparent border-l-2 border-orange-600"
+                        : "text-gray-700"
+                    } ${index == 0 ? "mt-4" : ""} ${
+                      index == allTags.length - 1 ? "mb-4" : ""
+                    }`}
+                  >
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isIndex && (
+        <div className="md:hidden w-full mb-6">
           <button
             onClick={() => setSearchOverlayOpen(true)}
             className="w-full border rounded-3xl text-center flex items-center justify-center border-gray-300 hover:border-orange-600 cursor-pointer duration-300 transition-all p-1 gap-2 font-medium text-[#5E5772]"
@@ -190,38 +230,7 @@ export default function MoreStories({
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="md:hidden w-full mb-6">
-        <button
-          onClick={() => setSearchOverlayOpen(true)}
-          className="w-full flex items-center justify-center gap-2 p-3 border rounded-full hover:border-orange-500 transition"
-        >
-          <CiSearch />
-          <span className="font-normal">Search</span>
-        </button>
-
-        <div className="mt-4 max-h-40 overflow-y-auto rounded-xl border border-gray-200 p-3">
-          <div className="flex flex-wrap gap-2">
-            {allTags.map((tag) => (
-              <span
-                key={tag.name}
-                onClick={async () => {
-                  const formattedTag = tag.name.replace(/\s+/g, "-");
-                  await handleTagClick(formattedTag);
-                }}
-                className={`text-xs px-3 py-1 rounded-full cursor-pointer transition ${
-                  selectedTag === tag.name.replace(/\s+/g, "-")
-                    ? "bg-orange-100 text-orange-700 font-semibold"
-                    : "bg-gray-100 text-gray-700"
-                }`}
-              >
-                {tag.name}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
 
       <div className="flex-1">
         <div className="grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
@@ -299,62 +308,88 @@ export default function MoreStories({
         </div>
       </div>
 
-      {searchOverlayOpen && (
-        <div className="fixed inset-0 z-50 backdrop-blur-xl p-[16px] overflow-y-auto">
-        <div className="bg-[#EFF3FA] rounded-xl shadow-2xl p-12 relative transition-all duration-300 max-w-7xl mx-auto h-auto">
-            <button
-              className="absolute top-6 right-6 text-black text-xl bg-[#F9FAFD] rounded-full p-[6px]"
-              onClick={() => {
-                setSearchOverlayOpen(false);
-                setSearchTerm("");
-              }}
+      <AnimatePresence mode="wait">
+        {searchOverlayOpen && (
+          <motion.div
+            key="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xl"
+            onClick={() => {
+              setSearchOverlayOpen(false);
+              setSearchTerm("");
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+              className="bg-[#EFF3FA] rounded-xl shadow-2xl w-full max-w-7xl relative flex flex-col h-[80vh]"
+              onClick={(e) => e.stopPropagation()}
             >
-              <IoClose />
-            </button>
-
-            <div className="relative mb-6 mt-[20px]">
-              <input
-                type="text"
-                placeholder="Search posts..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                autoFocus
-                className="w-full p-[12px] pl-10 rounded-md border border-black focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-              />
-              <CiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-            </div>
-
-            {searchTerm.length === 0 ? (
-              <div className="h-[400px] flex items-center justify-center text-gray-400">
-                Start typing to search posts...
+              <div className="sticky top-0 z-10 bg-[#EFF3FA] pt-10 pb-4 px-6 md:px-12">
+                <div className="flex items-center justify-between">
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      placeholder="Search posts…"
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      autoFocus
+                      className="w-full p-3 pl-10 rounded-md border border-black focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+                  </div>
+                  <button
+                    className="ml-4 text-xl bg-[#F9FAFD] rounded-full p-2 shrink-0"
+                    aria-label="Close search overlay"
+                    onClick={() => {
+                      setSearchOverlayOpen(false);
+                      setSearchTerm("");
+                    }}
+                  >
+                    <IoClose />
+                  </button>
+                </div>
               </div>
-            ) : filteredOverlayPosts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredOverlayPosts.map(({ node }) => (
-                  <PostPreview
-                    key={node.slug}
-                    title={node.title}
-                    coverImage={node.featuredImage}
-                    date={node.date}
-                    author={node.ppmaAuthorName}
-                    slug={node.slug}
-                    excerpt={getExcerpt(node.excerpt, 20)}
-                    isCommunity={
-                      node.categories.edges[0]?.node.name === "technology"
-                        ? false
-                        : true
-                    }
-                    authorImage={node.author.node.avatar.url ?? null}
-                    tags=""
-                  />
-                ))}
+
+              <div className="flex-1 overflow-y-auto px-6 md:px-12 pb-10">
+                {searchTerm.length === 0 ? (
+                  <div className="h-full flex items-center justify-center text-gray-400">
+                    Start typing to search posts…
+                  </div>
+                ) : filteredOverlayPosts.length ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {filteredOverlayPosts.map(({ node }) => (
+                      <PostPreview
+                        key={node.slug}
+                        title={node.title}
+                        coverImage={node.featuredImage}
+                        date={node.date}
+                        author={node.ppmaAuthorName}
+                        slug={node.slug}
+                        excerpt={getExcerpt(node.excerpt, 20)}
+                        isCommunity={
+                          node.categories.edges[0]?.node.name !== "technology"
+                        }
+                        authorImage={node.author.node.avatar.url ?? null}
+                        tags={node.tags?.edges?.[0]?.node?.name ?? null}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center mt-10">
+                    No posts found.
+                  </p>
+                )}
               </div>
-            ) : (
-              <p className="text-gray-500 text-center">No posts found.</p>
-            )}
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
