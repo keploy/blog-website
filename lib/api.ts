@@ -531,6 +531,14 @@ export async function getMoreStoriesForSlugs(tags, slug) {
             featuredImage { node { sourceUrl } }
             author { node { name firstName lastName avatar { url } } }
             ppmaAuthorName
+            ppmaAuthorImage
+            tags {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
             categories { edges { node { name } } }
           }
         }

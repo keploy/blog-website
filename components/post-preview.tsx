@@ -38,25 +38,24 @@ export default function PostPreview({
     { rootMargin: "-200px 0px" }
   );
   return (
-    <div className="bg-[#F6F8FD] rounded-2xl" ref={ref}>
-      <div>
-        {coverImage && (
-          <CoverImage
-            title={title}
-            coverImage={coverImage}
-            slug={slug}
-            isCommunity={isCommunity}
-            classNames="rounded-tr-2xl rounded-tl-2xl"
-          />
-        )}
-      </div>
+    <div className="bg-[#F5F6F7] rounded-2xl h-full flex flex-col" ref={ref}>
+      {coverImage && (
+        <CoverImage
+          title={title}
+          coverImage={coverImage}
+          slug={slug}
+          isCommunity={isCommunity}
+          classNames="rounded-tr-2xl rounded-tl-2xl"
+        />
+      )}
 
-      <div className="p-[24px]">
+      <div className="p-[24px] flex flex-col flex-1">
         {tags && (
-          <span className="text-sm px-4 py-1 rounded-full font-semibold bg-orange-100 text-orange-700 text-center">
+          <span className="inline-block w-fit text-sm font-semibold bg-orange-100 text-orange-700 px-2 rounded-full py-1">
             {tags}
           </span>
         )}
+
         <h3 className="text-[22px] heading1 font-medium leading-[30px] mt-[8px]">
           <Link
             href={`${basePath}/${slug}`}
@@ -64,37 +63,38 @@ export default function PostPreview({
             dangerouslySetInnerHTML={{ __html: title }}
           ></Link>
         </h3>
-        <div className="flex items-center gap-4">
-          <div className="flex flex-row mt-4 justify-center items-center">
-            {authorImage && authorImage != "imag1" && authorImage != "image" ? (
-              <Image
-                src={authorImage}
-                alt={`${authorImage}'s Avatar`}
-                className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
-                height={40}
-                width={40}
-              />
-            ) : (
-              <Image
-                src={`/blog/images/author.png`}
-                alt={`${authorImage}'s Avatar`}
-                className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
-                height={40}
-                width={40}
-              />
-            )}
-            <div>
-              <Avatar author={author ? author : "Anonymous"} />
-              <div className="text-md mb-0">
-                <Date dateString={date} />
+
+        <div className="mt-auto pt-4">
+          <div className="flex items-center gap-4">
+            <div className="flex flex-row justify-center items-center">
+              {authorImage &&
+              authorImage !== "imag1" &&
+              authorImage !== "image" ? (
+                <Image
+                  src={authorImage}
+                  alt={`${authorImage}'s Avatar`}
+                  className="w-12 h-12 rounded-full mr-3 sm:mr-2"
+                  height={40}
+                  width={40}
+                />
+              ) : (
+                <Image
+                  src={`/blog/images/author.png`}
+                  alt={`${authorImage}'s Avatar`}
+                  className="w-12 h-12 rounded-full mr-3 sm:mr-2"
+                  height={40}
+                  width={40}
+                />
+              )}
+              <div>
+                <Avatar author={author ? author : "Anonymous"} />
+                <div className="text-md mb-0">
+                  <Date dateString={date} />
+                </div>
               </div>
             </div>
           </div>
         </div>
-        {/* <div
-          className="text-sm leading-normal mb-4 body text-slate-600"
-          dangerouslySetInnerHTML={{ __html: excerpt }}
-        /> */}
       </div>
     </div>
   );

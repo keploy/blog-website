@@ -6,6 +6,7 @@ import { fetchMorePosts, getAllPostsFromTags, getAllTags } from "../lib/api";
 import { IoClose } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 
 export default function MoreStories({
   posts: initialPosts,
@@ -156,7 +157,7 @@ export default function MoreStories({
     (visibleCount < allPosts.length || buffer.length > 0 || hasMore) &&
     !loading &&
     !error &&
-    !selectedTag
+    !selectedTag &&
     isIndex;
 
   return (
@@ -172,7 +173,7 @@ export default function MoreStories({
               Search
             </button>
 
-            <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#FBFBFB]">
+            <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#F3F4F6]">
               <div className="flex flex-col gap-2">
                 {allTags.map((tag, index) => (
                   <span
@@ -208,7 +209,7 @@ export default function MoreStories({
             Search
           </button>
 
-          <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#FBFBFB]">
+          <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#F3F4F6]">
             <div className="flex flex-col gap-2">
               {allTags.map((tag, index) => (
                 <span
@@ -345,7 +346,7 @@ export default function MoreStories({
                     <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   </div>
                   <button
-                    className="ml-4 text-xl bg-[#F9FAFD] rounded-full p-2 shrink-0"
+                    className="ml-4 text-lg bg-[#F9FAFD] rounded-full p-1 shrink-0 absolute top-3 right-3"
                     aria-label="Close search overlay"
                     onClick={() => {
                       setSearchOverlayOpen(false);
@@ -363,23 +364,44 @@ export default function MoreStories({
                     Start typing to search posts…
                   </div>
                 ) : filteredOverlayPosts.length ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {filteredOverlayPosts.map(({ node }) => (
-                      <PostPreview
-                        key={node.slug}
-                        title={node.title}
-                        coverImage={node.featuredImage}
-                        date={node.date}
-                        author={node.ppmaAuthorName}
-                        slug={node.slug}
-                        excerpt={getExcerpt(node.excerpt, 20)}
-                        isCommunity={
-                          node.categories.edges[0]?.node.name !== "technology"
-                        }
-                        tags={node.tags?.edges?.[0]?.node?.name ?? null}
-                        authorImage={node.ppmaAuthorImage ?? null}
-                      />
-                    ))}
+                  <div className="flex justify-center">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-[75vw] items-stretch">
+                      {filteredOverlayPosts.map(({ node }) => (
+                        <motion.div
+                          key={node.slug}
+                          className="bg-[#F8F9FB] group p-4 rounded-xl shadow-sm border-b-2 border-transparent hover:border-b-orange-500 transition-all duration-300 h-full flex flex-col"
+                          style={{ minHeight: 240 }}
+                        >
+                          <Link
+                            href={`/${
+                              isCommunity ? "community" : "technology"
+                            }/${node.slug}`}
+                            className="flex flex-col h-full"
+                          >
+                            <h3 className="text-base font-semibold text-[#3B1F42] group-hover:text-orange-500 transition-colors">
+                              {node.title}
+                            </h3>
+                            <div className="text-sm text-gray-500 font-medium mt-1 flex gap-2 items-center">
+                              {node.tags?.edges?.[0]?.node?.name && (
+                                <div className="bg-[#EDEEF8] px-2 py-[2px] rounded-lg text-center">
+                                  {node.tags?.edges?.[0]?.node?.name ?? null}
+                                </div>
+                              )}
+                              {new Date(node.date).toLocaleDateString()}
+                            </div>
+                            <div
+                              className="mt-3 text-sm text-black flex-1"
+                              dangerouslySetInnerHTML={{
+                                __html: getExcerpt(node.excerpt, 20).replace(
+                                  "Table of Contents",
+                                  ""
+                                ),
+                              }}
+                            />
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <p className="text-gray-500 text-center mt-10">
