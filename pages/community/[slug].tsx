@@ -213,7 +213,13 @@ export const getStaticProps: GetStaticProps = async ({
   const authorDetails = [];
   authorDetails.push(await getReviewAuthorDetails("neha"));
   authorDetails.push(await getReviewAuthorDetails("Jain"));
-  
+
+  if (!data?.post) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       preview,
@@ -221,8 +227,7 @@ export const getStaticProps: GetStaticProps = async ({
       posts: communityMoreStories || [],
       reviewAuthorDetails: authorDetails || {},
     },
-    // CHANGE: Reduced revalidation time
-    revalidate: 60, // Revalidate every minute
+    revalidate: 60,
   };
 };
 
@@ -231,9 +236,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const communityPosts =
     allPosts?.edges
       .map(({ node }) => `/community/${node?.slug}`) || [];
-  
+
   return {
     paths: communityPosts || [],
-    fallback: true, 
+    fallback: false,
   };
 };
