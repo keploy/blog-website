@@ -173,7 +173,7 @@ export default function MoreStories({
               Search
             </button>
 
-            <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#F3F4F6]">
+            <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#FCFCFC]">
               <div className="flex flex-col gap-2">
                 {allTags.map((tag, index) => (
                   <span
@@ -209,7 +209,7 @@ export default function MoreStories({
             Search
           </button>
 
-          <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#F3F4F6]">
+          <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#FCFCFC]">
             <div className="flex flex-col gap-2">
               {allTags.map((tag, index) => (
                 <span
@@ -369,7 +369,7 @@ export default function MoreStories({
                       {filteredOverlayPosts.map(({ node }) => (
                         <motion.div
                           key={node.slug}
-                          className="bg-[#F8F9FB] group p-4 rounded-xl shadow-sm border-b-2 border-transparent hover:border-b-orange-500 transition-all duration-300 h-full flex flex-col"
+                          className="group p-4 border-b border-gray-200 transition-all duration-300 relative h-full flex flex-col after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-orange-500 after:transition-all after:duration-300 hover:after:w-full hover:bg-[#a2411905]"
                           style={{ minHeight: 240 }}
                         >
                           <Link
@@ -378,7 +378,7 @@ export default function MoreStories({
                             }/${node.slug}`}
                             className="flex flex-col h-full"
                           >
-                            <h3 className="text-base font-semibold text-[#3B1F42] group-hover:text-orange-500 transition-colors">
+                            <h3 className="text-base font-bold text-[#3B1F42] group-hover:text-orange-500 transition-colors">
                               {node.title}
                             </h3>
                             <div className="text-sm text-gray-500 font-medium mt-1 flex gap-2 items-center">

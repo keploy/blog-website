@@ -128,8 +128,16 @@ export async function getAllPostsFromTags(tagName: String, preview) {
                 name
               }
             }
+            ppmaAuthorImage
             ppmaAuthorName
             categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+            tags {
               edges {
                 node {
                   name

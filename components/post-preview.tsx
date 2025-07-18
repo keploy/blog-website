@@ -38,7 +38,7 @@ export default function PostPreview({
     { rootMargin: "-200px 0px" }
   );
   return (
-    <div className="bg-[#F5F6F7] rounded-2xl h-full flex flex-col" ref={ref}>
+    <div className="group relative h-full overflow-hidden rounded-2xl border border-zinc-100 bg-white transition duration-200 hover:shadow-xl flex flex-col" ref={ref}>
       {coverImage && (
         <CoverImage
           title={title}
@@ -49,22 +49,24 @@ export default function PostPreview({
         />
       )}
 
-      <div className="p-[24px] flex flex-col flex-1">
-        {tags && (
-          <span className="inline-block w-fit text-sm font-semibold bg-orange-100 text-orange-700 px-2 rounded-full py-1">
-            {tags}
-          </span>
-        )}
+      <div className="p-[24px] flex flex-col justify-between flex-1">
+        <div>
+          {tags && (
+            <span className="inline-block w-fit text-sm font-semibold bg-orange-100 text-orange-700 px-2 rounded-full py-1">
+              {tags}
+            </span>
+          )}
 
-        <h3 className="text-[22px] heading1 font-medium leading-[30px] mt-[8px]">
-          <Link
-            href={`${basePath}/${slug}`}
-            className="bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px] hover:underline"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></Link>
-        </h3>
+          <h3 className="text-[22px] heading1 font-medium leading-[30px] mt-[8px]">
+            <Link
+              href={`${basePath}/${slug}`}
+              className="bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px] hover:underline"
+              dangerouslySetInnerHTML={{ __html: title }}
+            ></Link>
+          </h3>
+        </div>
 
-        <div className="mt-auto pt-4">
+        <div className="pt-4">
           <div className="flex items-center gap-4">
             <div className="flex flex-row justify-center items-center">
               {authorImage &&
@@ -88,7 +90,7 @@ export default function PostPreview({
               )}
               <div>
                 <Avatar author={author ? author : "Anonymous"} />
-                <div className="text-md mb-0">
+                <div className="text-md mb-0 -mt-1">
                   <Date dateString={date} />
                 </div>
               </div>
