@@ -373,6 +373,7 @@ export async function getAllPostsForCommunity(preview = false, after = null) {
                   }
                 }
               }
+              ppmaAuthorImage
               ppmaAuthorName
               categories {
                 edges {

@@ -173,7 +173,7 @@ export default function MoreStories({
               Search
             </button>
 
-            <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#FCFCFC]">
+            <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#F4F6F8] tags-scrollbar">
               <div className="flex flex-col gap-2">
                 {allTags.map((tag, index) => (
                   <span
@@ -209,7 +209,7 @@ export default function MoreStories({
             Search
           </button>
 
-          <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#FCFCFC]">
+          <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#F4F6F8]">
             <div className="flex flex-col gap-2">
               {allTags.map((tag, index) => (
                 <span
@@ -378,7 +378,7 @@ export default function MoreStories({
                             }/${node.slug}`}
                             className="flex flex-col h-full"
                           >
-                            <h3 className="text-base font-bold text-[#3B1F42] group-hover:text-orange-500 transition-colors">
+                            <h3 className="text-lg font-bold text-[#3B1F42] group-hover:text-orange-500 transition-colors">
                               {node.title}
                             </h3>
                             <div className="text-sm text-gray-500 font-medium mt-1 flex gap-2 items-center">
