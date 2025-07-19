@@ -22,6 +22,8 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
               slug={node.slug}
               excerpt={getExcerpt(node.excerpt, 20)}
               isCommunity={false}
+              authorImage={node.ppmaAuthorImage ?? null}
+              tags={node.tags?.edges?.[0]?.node?.name ?? null}
             />
           ))}
         </div>
@@ -64,6 +66,8 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
               slug={node.slug}
               excerpt={getExcerpt(node.excerpt, 20)}
               isCommunity={true}
+              authorImage={node.ppmaAuthorImage ?? null}
+              tags={node.tags?.edges?.[0]?.node?.name ?? null}
             />
           ))}
         </div>
