@@ -39,7 +39,7 @@ export default function HeroPost({
 
   return (
     <section>
-      <div className="relative px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center lg:group overflow-hidden">
+      <div className="relative px-6 py-6 rounded-md xl:grid xl:grid-cols-2 xl:gap-x-8 mb-20 md:mb-28 content-center xl:group overflow-hidden">
         {/* Content */}
         <div className="mb-8 lg:mb-0">
           {coverImage && (
@@ -48,19 +48,22 @@ export default function HeroPost({
               coverImage={coverImage}
               slug={slug}
               isCommunity={isCommunity}
-              classNames="rounded-xl w-full h-auto lg:h-[450px] xl:w-auto sm:w-full sm:h-[300px]"
+              classNames="rounded-xl w-full h-auto"
             />
           )}
         </div>
         <div className="mt-2 pb-2">
-          <span className="text-sm px-4 py-1 rounded-full font-semibold bg-orange-100 text-orange-700 text-center">
-            {tag[0]}
-          </span>
+          {tag[0] && (
+            <span className="text-sm px-4 py-1 rounded-full font-semibold bg-orange-100 text-orange-700 text-center">
+              {tag[0]}
+            </span>
+          )}
           <div>
-            <h3 className="heading1 lg:text-[32px] xl:text-[44px] xl:leading-[48px] lg:leading-[45px] font-extrabold hover:underline pt-4 leading-[32px] text-[32px]">
+            <h3
+            className="heading1 text-4xl lg:text-6xl font-bold leading-none hover:underline pt-4"
+            >
               <Link
                 href={`${basePath}/${slug}`}
-                className="hero-title-link title-link"
                 dangerouslySetInnerHTML={{ __html: title }}
               ></Link>
             </h3>
@@ -68,22 +71,32 @@ export default function HeroPost({
 
           <div>
             <div
-              className="body lg:text-[18px] leading-relaxed mb-4 text-slate-600 mt-6 text-[14px] sm:text-[16px]"
+              className="body leading-relaxed text-slate-600 mt-4 mb-4 break-words break-keep"
               dangerouslySetInnerHTML={{ __html: excerpt }}
             ></div>
           </div>
 
-          <div className="flex items-center gap-4 mt-6">
-            <Image
-              src={authorImage}
-              alt="author-image"
-              height={40}
-              width={40}
-              className="rounded-3xl"
-            />
+          <div className="flex items-center gap-1 mt-6">
+            {authorImage != "imag1" && authorImage != "image" ? (
+              <Image
+                src={authorImage}
+                alt={`${author.ppmaAuthorName}'s Avatar`}
+                className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
+                height={40}
+                width={40}
+              />
+            ) : (
+              <Image
+                src={`/blog/images/author.png`}
+                alt={`${author.ppmaAuthorName}'s Avatar`}
+                className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
+                height={40}
+                width={40}
+              />
+            )}
             <div className="flex flex-col">
               <Avatar author={author ? author : "Anonymous"} />
-              <div className="text-md mb-0">
+              <div className="text-sm mb-0">
                 <Date dateString={date} />
               </div>
             </div>
