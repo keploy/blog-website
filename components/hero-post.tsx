@@ -6,6 +6,7 @@ import { Post } from "../types/post";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getTagsByPostId } from "../lib/api";
+import { WavyBackground } from "./wavy-background";
 
 interface Props extends Pick<Post, "title" | "date" | "excerpt" | "slug"> {
   coverImage: Post["featuredImage"];
@@ -39,7 +40,7 @@ export default function HeroPost({
 
   return (
     <section>
-      <div className="relative px-6 py-6 rounded-md xl:grid xl:grid-cols-2 xl:gap-x-8 mb-20 md:mb-28 content-center xl:group overflow-hidden">
+      <div className="relative px-6 py-6 rounded-md xl:grid xl:grid-cols-2 xl:gap-x-8 mb-20 md:mb-28 content-center xl:group overflow-hidden z-10 shadow-2xl bg-[#FBFCFF]">
         {/* Content */}
         <div className="mb-8 lg:mb-0">
           {coverImage && (
@@ -59,9 +60,7 @@ export default function HeroPost({
             </span>
           )}
           <div>
-            <h3
-            className="heading1 text-4xl lg:text-6xl font-bold leading-none hover:underline pt-4"
-            >
+            <h3 className="heading1 text-4xl lg:text-6xl font-bold leading-none hover:underline pt-4">
               <Link
                 href={`${basePath}/${slug}`}
                 dangerouslySetInnerHTML={{ __html: title }}

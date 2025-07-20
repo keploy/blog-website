@@ -7,6 +7,7 @@ import Layout from "../../components/layout";
 import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
+import { WavyBackground } from "../../components/wavy-background";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;
@@ -23,24 +24,36 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       <Head>
         <title>{`Keploy`}</title>
       </Head>
+
       <Header />
+
+      <div className="relative h-auto overflow-hidden">
+        <WavyBackground />
+        <Container>
+          {heroPost && (
+            <HeroPost
+              title={heroPost.title}
+              coverImage={heroPost.featuredImage}
+              date={heroPost.date}
+              author={heroPost.ppmaAuthorName}
+              slug={heroPost.slug}
+              excerpt={excerpt}
+              isCommunity={false}
+              authorImage={heroPost.author.node.avatar.url}
+              postId={heroPost.postId}
+            />
+          )}
+        </Container>
+      </div>
+
       <Container>
-        {/* <Intro /> */}
-        {heroPost && (
-          <HeroPost
-            title={heroPost.title}
-            coverImage={heroPost.featuredImage}
-            date={heroPost.date}
-            author={heroPost.ppmaAuthorName}
-            slug={heroPost.slug}
-            excerpt={excerpt}
-            isCommunity={false}
-            authorImage={heroPost.author.node.avatar.url}
-            postId={heroPost.postId}
-          />
-        )}
         {morePosts.length > 0 && (
-          <MoreStories isIndex={true} posts={morePosts} isCommunity={false} initialPageInfo={pageInfo} />
+          <MoreStories
+            isIndex={true}
+            posts={morePosts}
+            isCommunity={false}
+            initialPageInfo={pageInfo}
+          />
         )}
       </Container>
     </Layout>
