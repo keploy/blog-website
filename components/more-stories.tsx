@@ -7,6 +7,7 @@ import { IoClose } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import PostSkeleton from "./post-skeleton";
 
 export default function MoreStories({
   posts: initialPosts,
@@ -237,7 +238,9 @@ export default function MoreStories({
       <div className="flex-1">
         <div className="grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
           {tagLoading ? (
-            <p className="text-center text-gray-500">Loading posts...</p>
+            Array.from({ length: 4 }).map((_, idx) => (
+              <PostSkeleton key={idx} />
+            ))
           ) : tagFilteredPosts ? (
             tagFilteredPosts.length > 0 ? (
               tagFilteredPosts.map(({ node }) => (
@@ -259,9 +262,11 @@ export default function MoreStories({
                 />
               ))
             ) : (
-              <p className="text-center text-gray-500">
-                No posts found for this tag.
-              </p>
+              <div className="col-span-full flex items-center justify-center min-h-[300px]">
+                <p className="text-gray-500 text-center">
+                  No posts found for this tag.
+                </p>
+              </div>
             )
           ) : (
             allPosts
@@ -334,7 +339,7 @@ export default function MoreStories({
             >
               <div className="sticky top-0 z-10 bg-[#EFF3FA] pt-10 pb-4 px-6 md:px-12">
                 <div className="flex items-center justify-between">
-                  <div className="relative w-full">
+                  <div className="relative w-full mt-2 sm:mt-0">
                     <input
                       type="text"
                       placeholder="Search posts…"
