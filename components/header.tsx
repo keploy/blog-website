@@ -120,7 +120,7 @@ export default function Header({
   };
 
   return (
-    <div className="h-32 md:h-40">
+    <div className="">
       <header className="fixed z-30 w-full transition duration-300 ease-in-out bg-neutral-100 md:bg-opacity-90 ">
         <div className="max-w-6xl px-5 mx-auto sm:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
