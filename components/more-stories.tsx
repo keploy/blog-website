@@ -334,12 +334,12 @@ export default function MoreStories({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-              className="bg-[#EFF3FA] rounded-xl shadow-2xl w-full max-w-7xl relative flex flex-col h-[80vh]"
+              className="bg-[#EFF3FA] rounded-xl shadow-2xl w-full max-w-7xl h-[90vh] overflow-y-auto flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="sticky top-0 z-10 bg-[#EFF3FA] pt-10 pb-4 px-6 md:px-12">
-                <div className="flex items-center justify-between">
-                  <div className="relative w-full mt-2 sm:mt-0">
+              <div className="z-10 bg-[#EFF3FA] pt-12 pb-4 px-6 md:px-12">
+                <div className="flex items-center justify-between relative">
+                  <div className="relative w-full sm:mt-0">
                     <input
                       type="text"
                       placeholder="Search posts…"
@@ -351,7 +351,7 @@ export default function MoreStories({
                     <CiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   </div>
                   <button
-                    className="ml-4 text-lg bg-[#F9FAFD] rounded-full p-1 shrink-0 absolute top-3 right-3"
+                    className="ml-4 text-lg bg-[#F9FAFD] rounded-full p-1 shrink-0 absolute xl:right-[-3%] top-[-35px] right-[-4%] md:right-[-4%] sm:right-[-1%]"
                     aria-label="Close search overlay"
                     onClick={() => {
                       setSearchOverlayOpen(false);
@@ -363,50 +363,50 @@ export default function MoreStories({
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-6 md:px-12 pb-10">
+              <div className="flex-1 px-6 md:px-12 pb-10">
                 {searchTerm.length === 0 ? (
-                  <div className="h-full flex items-center justify-center text-gray-400">
+                  <div className="h-full flex items-center justify-center text-black text-base font-medium">
                     Start typing to search posts…
                   </div>
                 ) : filteredOverlayPosts.length ? (
-                  <div className="flex justify-center">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-[75vw] items-stretch">
-                      {filteredOverlayPosts.map(({ node }) => (
-                        <motion.div
-                          key={node.slug}
-                          className="group p-4 border-b border-gray-200 transition-all duration-300 relative h-full flex flex-col after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-orange-500 after:transition-all after:duration-300 hover:after:w-full hover:bg-[#a2411905]"
-                          style={{ minHeight: 240 }}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6 w-full items-stretch">
+                    {filteredOverlayPosts.map(({ node }) => (
+                      <motion.div
+                        key={node.slug}
+                        className="group p-4 border-b border-gray-200 transition-all duration-300 relative h-full flex flex-col after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[.75px] after:w-0 after:bg-orange-500 after:transition-all after:duration-300 hover:after:w-full hover:bg-[#a2411905]"
+                        style={{ minHeight: 160 }}
+                      >
+                        <Link
+                          href={`/${isCommunity ? "community" : "technology"}/${
+                            node.slug
+                          }`}
+                          className="flex flex-col h-full justify-between"
                         >
-                          <Link
-                            href={`/${
-                              isCommunity ? "community" : "technology"
-                            }/${node.slug}`}
-                            className="flex flex-col h-full"
-                          >
-                            <h3 className="text-lg font-bold text-[#3B1F42] group-hover:text-orange-500 transition-colors">
+                          <div>
+                            <h3 className="text-xl font-bold text-[#3B1F42] group-hover:text-orange-500 transition-colors line-clamp-2">
                               {node.title}
                             </h3>
-                            <div className="text-sm text-gray-500 font-medium mt-1 flex gap-2 items-center">
+                            <div className="text-sm text-[#5E5772] font-normal mt-2 flex gap-2 items-center">
                               {node.tags?.edges?.[0]?.node?.name && (
-                                <div className="bg-[#EDEEF8] px-2 py-[2px] rounded-lg text-center">
+                                <div className="bg-[#F9FAFD] px-2 py-[2px] rounded-lg text-center">
                                   {node.tags?.edges?.[0]?.node?.name ?? null}
                                 </div>
                               )}
                               {new Date(node.date).toLocaleDateString()}
                             </div>
-                            <div
-                              className="mt-3 text-sm text-black flex-1"
-                              dangerouslySetInnerHTML={{
-                                __html: getExcerpt(node.excerpt, 20).replace(
-                                  "Table of Contents",
-                                  ""
-                                ),
-                              }}
-                            />
-                          </Link>
-                        </motion.div>
-                      ))}
-                    </div>
+                          </div>
+                          <div
+                            className="mt-3 text-base text-black line-clamp-3"
+                            dangerouslySetInnerHTML={{
+                              __html: getExcerpt(node.excerpt, 20).replace(
+                                "Table of Contents",
+                                ""
+                              ),
+                            }}
+                          />
+                        </Link>
+                      </motion.div>
+                    ))}
                   </div>
                 ) : (
                   <p className="text-gray-500 text-center mt-10">
