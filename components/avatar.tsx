@@ -6,7 +6,7 @@ export default function Avatar({ author }: { author: Post["ppmaAuthorName"] }) {
   //   ? `${author.node.firstName} ${author.node.lastName}`
   //   : author.node.name || null
   return (
-    <div className="flex items-center">
+    <div className="flex items-center text-[#190F36]">
       {/* <div className="w-8 h-8 relative mr-4">
         <Image
           src={author.node.avatar.url}
