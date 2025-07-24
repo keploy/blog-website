@@ -174,27 +174,28 @@ export default function MoreStories({
               Search
             </button>
 
-            <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#F4F6F8] tags-scrollbar">
-              <div className="flex flex-col gap-2">
-                {allTags.map((tag, index) => (
-                  <span
-                    key={tag.name}
-                    onClick={async () => {
-                      const formattedTag = tag.name.replace(/\s+/g, "-");
-                      await handleTagClick(formattedTag);
-                    }}
-                    className={`px-[32px] py-1 cursor-pointer transition text-[18px] ${
-                      selectedTag === tag.name.replace(/\s+/g, "-")
-                        ? "bg-gradient-to-r from-orange-100 to-transparent border-l-2 border-orange-600"
-                        : "text-gray-700"
-                    } ${index == 0 ? "mt-4" : ""} ${
-                      index == allTags.length - 1 ? "mb-4" : ""
-                    }`}
-                  >
-                    {tag.name}
-                  </span>
-                ))}
-              </div>
+            <div className="mt-4 text-[#191919] text-sm font-medium tracking-[.15rem] uppercase flex flex-col">
+              <span className="mb-[8px]">Tags</span>
+              <span className="h-[1px] w-full bg-[#C5C5C5]"></span>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {allTags.map((tag) => (
+                <span
+                  key={tag.name}
+                  onClick={async () => {
+                    const formattedTag = tag.name.replace(/\s+/g, "-");
+                    await handleTagClick(formattedTag);
+                  }}
+                  className={`px-3 py-1 text-sm cursor-pointer hover:underline ${
+                    selectedTag === tag.name.replace(/\s+/g, "-")
+                      ? ""
+                      : "text-gray-700"
+                  }`}
+                >
+                  #{tag.name}
+                </span>
+              ))}
             </div>
           </div>
         </div>
