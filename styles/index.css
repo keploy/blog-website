@@ -261,11 +261,11 @@ td{
 }
 
 .tags-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #C4C4C4;
-  border-radius: 10px;
-  transition: background 0.3s;
+  background: linear-gradient(to bottom, #e0e0e0, #bfbfbf);
+  border-radius: 8px;
+  transition: background 0.3s ease-in-out;
 }
 
 .tags-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #a0a0a0;
+  background: linear-gradient(to bottom, #c2c2c2, #999999);
 }

@@ -1,6 +1,6 @@
 import { parseISO, format } from 'date-fns'
 
-export default function Date({ dateString, overrideClassName = false }) {
+export default function Date({ dateString }) {
   const date = parseISO(dateString)
-  return <time dateTime={dateString} className={`${overrideClassName ? "" : "text-[#190F36]"}`}>{format(date, 'd LLL, yyyy')}</time>
+  return <time dateTime={dateString} className=' text-[#190F36]'>{format(date, 'd LLL, yyyy')}</time>
 }

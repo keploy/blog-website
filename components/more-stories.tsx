@@ -8,6 +8,7 @@ import { CiSearch } from "react-icons/ci";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import PostSkeleton from "./post-skeleton";
+import { Search } from "lucide-react";
 
 export default function MoreStories({
   posts: initialPosts,
@@ -162,75 +163,40 @@ export default function MoreStories({
     isIndex;
 
   return (
-    <section className="flex flex-col md:flex-row w-full gap-8">
+    <section className="flex flex-col md:flex-row w-full gap-8 pb-20">
       {isIndex && (
-        <div className="hidden md:block w-[286px]">
-          <div className="sticky top-[6rem] z-10">
+        <div className="w-full md:w-[286px] mb-6 md:mb-0">
+          <div className="sticky top-[6rem] max-h-[calc(100vh-6rem)] overflow-y-auto">
             <button
               onClick={() => setSearchOverlayOpen(true)}
-              className="w-full border rounded-3xl text-center flex items-center justify-center border-gray-300 hover:border-orange-600 cursor-pointer duration-300 transition-all p-1 gap-2 font-medium text-[#5E5772]"
+              // className="w-full border border-gray-300 rounded-3xl bg-gradient-to-r from-[#fdfbfb] to-[#ebedee] text-center flex items-center justify-center hover:border-orange-500 hover:shadow-md active:scale-[0.98] active:bg-orange-100 transition-all duration-200 ease-in-out p-2 gap-2 font-medium text-[#444]"
+              className="w-full border border-gray-300 rounded-3xl text-center flex items-center justify-center hover:border-orange-500 transition-all duration-200 ease-in-out p-2 gap-2 font-medium text-[#444]"
             >
-              <CiSearch />
-              Search
+              <Search className="w-4 h-4 stroke-[2]" />
+              <span className="text-sm">Search</span>
             </button>
 
-            <div className="mt-4 text-[#191919] text-sm font-medium tracking-[.15rem] uppercase flex flex-col">
-              <span className="mb-[8px]">Tags</span>
-              <span className="h-[1px] w-full bg-[#C5C5C5]"></span>
-            </div>
-
-            <div className="mt-4 flex flex-wrap gap-2">
-              {allTags.map((tag) => (
-                <span
-                  key={tag.name}
-                  onClick={async () => {
-                    const formattedTag = tag.name.replace(/\s+/g, "-");
-                    await handleTagClick(formattedTag);
-                  }}
-                  className={`px-3 py-1 text-sm cursor-pointer hover:underline ${
-                    selectedTag === tag.name.replace(/\s+/g, "-")
-                      ? ""
-                      : "text-gray-700"
-                  }`}
-                >
-                  #{tag.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {isIndex && (
-        <div className="md:hidden w-full mb-6">
-          <button
-            onClick={() => setSearchOverlayOpen(true)}
-            className="w-full border rounded-3xl text-center flex items-center justify-center border-gray-300 hover:border-orange-600 cursor-pointer duration-300 transition-all p-1 gap-2 font-medium text-[#5E5772]"
-          >
-            <CiSearch />
-            Search
-          </button>
-
-          <div className="mt-4 h-[356px] overflow-y-auto rounded-xl bg-[#F4F6F8]">
-            <div className="flex flex-col gap-2">
-              {allTags.map((tag, index) => (
-                <span
-                  key={tag.name}
-                  onClick={async () => {
-                    const formattedTag = tag.name.replace(/\s+/g, "-");
-                    await handleTagClick(formattedTag);
-                  }}
-                  className={`px-[32px] py-1 cursor-pointer transition text-[18px] ${
-                    selectedTag === tag.name.replace(/\s+/g, "-")
-                      ? "bg-gradient-to-r from-orange-100 to-transparent border-l-2 border-orange-600"
-                      : "text-gray-700"
-                  } ${index == 0 ? "mt-4" : ""} ${
-                    index == allTags.length - 1 ? "mb-4" : ""
-                  }`}
-                >
-                  {tag.name}
-                </span>
-              ))}
+            <div className="mt-6 h-[356px] overflow-y-auto rounded-xl bg-white border border-[#e3e3e3] shadow-[0_2px_6px_rgba(0,0,0,0.05)] tags-scrollbar px-2 py-4">
+              <div className="flex flex-col gap-1">
+                {allTags.map((tag, index) => (
+                  <span
+                    key={tag.name}
+                    onClick={async () => {
+                      const formattedTag = tag.name.replace(/\s+/g, "-");
+                      await handleTagClick(formattedTag);
+                    }}
+                    className={`px-5 py-[10px] text-[15px] rounded-lg cursor-pointer transition-all duration-200 ease-in-out hover:text-orange-500 hover:underline active:bg-orange-100 ${
+                      selectedTag === tag.name.replace(/\s+/g, "-")
+                        ? "bg-gradient-to-r from-orange-100 to-orange-50 border-orange-500 font-semibold text-[#3b1f42] shadow-sm ring-1 ring-orange-200"
+                        : "text-gray-600"
+                    } ${index === 0 ? "mt-1" : ""} ${
+                      index === allTags.length - 1 ? "mb-1" : ""
+                    }`}
+                  >
+                    #{tag.name}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
