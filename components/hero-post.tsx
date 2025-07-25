@@ -6,7 +6,6 @@ import { Post } from "../types/post";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getTagsByPostId } from "../lib/api";
-import { WavyBackground } from "./wavy-background";
 
 interface Props extends Pick<Post, "title" | "date" | "excerpt" | "slug"> {
   coverImage: Post["featuredImage"];
@@ -40,9 +39,8 @@ export default function HeroPost({
 
   return (
     <section>
-      <div className="relative px-6 py-6 rounded-md xl:grid xl:grid-cols-2 xl:gap-x-8 mb-20 md:mb-28 content-center xl:group overflow-hidden z-10 shadow-2xl bg-[#FBFCFF]">
-        {/* Content */}
-        <div className="mb-8 lg:mb-0">
+      <div className="relative px-6 py-6 rounded-md xl:grid xl:grid-cols-2 xl:gap-x-8 mb-20 md:mb-28 content-center xl:group overflow-hidden">
+        <div className="mb-8 lg:mb-0 relative z-10">
           {coverImage && (
             <CoverImage
               title={title}
@@ -55,7 +53,7 @@ export default function HeroPost({
         </div>
         <div className="mt-2 pb-2">
           {tag[0] && (
-            <span className="text-sm px-4 py-1 rounded-full font-semibold bg-orange-100 text-orange-700 text-center">
+            <span className="text-sm px-4 py-1 rounded-full font-semibold bg-white/60 backdrop-blur-sm text-orange-700 ring-1 ring-orange-200 shadow-sm">
               {tag[0]}
             </span>
           )}
