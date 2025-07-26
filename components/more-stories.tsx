@@ -169,8 +169,7 @@ export default function MoreStories({
           <div className="sticky top-[6rem] max-h-[calc(100vh-6rem)] overflow-y-auto">
             <button
               onClick={() => setSearchOverlayOpen(true)}
-              // className="w-full border border-gray-300 rounded-3xl bg-gradient-to-r from-[#fdfbfb] to-[#ebedee] text-center flex items-center justify-center hover:border-orange-500 hover:shadow-md active:scale-[0.98] active:bg-orange-100 transition-all duration-200 ease-in-out p-2 gap-2 font-medium text-[#444]"
-              className="w-full border border-gray-300 rounded-3xl text-center flex items-center justify-center hover:border-orange-500 transition-all duration-200 ease-in-out p-2 gap-2 font-medium text-[#444]"
+              className="w-full border border-gray-300 rounded-3xl text-center flex items-center justify-center hover:border-orange-500 transition-all duration-200 ease-in-out p-1.5 gap-2 font-medium text-[#444]"
             >
               <Search className="w-4 h-4 stroke-[2]" />
               <span className="text-sm">Search</span>
@@ -350,10 +349,10 @@ export default function MoreStories({
                           className="flex flex-col h-full justify-between"
                         >
                           <div>
-                            <h3 className="text-xl font-bold text-[#3B1F42] group-hover:text-orange-500 transition-colors line-clamp-2">
+                            <h3 className="text-lg font-bold text-[#3B1F42] group-hover:text-orange-500 transition-colors line-clamp-2">
                               {node.title}
                             </h3>
-                            <div className="text-sm text-[#5E5772] font-normal mt-2 flex gap-2 items-center">
+                            <div className="text-xs text-[#5E5772] font-normal mt-2 flex gap-2 items-center">
                               {node.tags?.edges?.[0]?.node?.name && (
                                 <div className="bg-[#F9FAFD] px-2 py-[2px] rounded-lg text-center">
                                   {node.tags?.edges?.[0]?.node?.name ?? null}
@@ -363,7 +362,7 @@ export default function MoreStories({
                             </div>
                           </div>
                           <div
-                            className="mt-3 text-base text-black line-clamp-3"
+                            className="mt-3 text-sm text-black line-clamp-3"
                             dangerouslySetInnerHTML={{
                               __html: getExcerpt(node.excerpt, 20).replace(
                                 "Table of Contents",
