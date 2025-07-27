@@ -1,0 +1,62 @@
+name: 🐛 Bug Report
+description: Report a reproducible issue or unexpected behavior in the Keploy Blog
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill out the form below clearly and thoroughly.
+
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Browser, OS, Device type, etc.
+      placeholder: Chrome 126 on Windows 11
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: "Something isn’t working as expected (e.g., posts not visible, broken layout, buttons unresponsive)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: List the steps to reproduce the issue.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen.
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or Logs
+      description: If applicable, add screenshots or paste logs to help explain your problem.
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Checklist
+      options:
+        - label: I’ve searched the existing issues to avoid duplicates.
+          required: true
+        - label: I’ve provided enough information to reproduce the issue.
+          required: true

@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 🔐 Report a Security Vulnerability
+    url: https://github.com/keploy/keploy/security/policy
+    about: Please report sensitive bugs or vulnerabilities here.

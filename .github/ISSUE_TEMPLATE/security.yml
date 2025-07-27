@@ -1,0 +1,13 @@
+name: 🔐 Report a Security Vulnerability
+description: Report a security issue privately and responsibly.
+title: "[Security]: "
+labels: [security]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **Please do not disclose security vulnerabilities publicly.**
+
+        To report a potential vulnerability, please visit our **[Security Policy page](https://github.com/keploy/keploy/security/policy)** and follow the instructions there.
+
+        Thank you for helping keep Keploy secure!
