@@ -1,0 +1,21 @@
+{
+  "name": "Keploy",
+  "short_name": "Keploy",
+  "start_url": "/blog",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#fb923c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/blog/icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/blog/icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
