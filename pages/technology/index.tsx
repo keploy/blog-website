@@ -7,12 +7,7 @@ import Layout from "../../components/layout";
 import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
-import { ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from "../../lib/utils";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;

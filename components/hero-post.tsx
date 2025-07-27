@@ -39,7 +39,7 @@ export default function HeroPost({
 
   return (
     <section>
-      <div className="relative px-6 py-6 rounded-md xl:grid xl:grid-cols-2 xl:gap-x-8 mb-20 md:mb-28 content-center xl:group overflow-hidden">
+      <div className="relative px-6 py-6 rounded-md xl:grid xl:grid-cols-2 xl:gap-x-8 mb-20 md:mb-28 content-center xl:group overflow-hidden bg-white">
         <div className="mb-8 lg:mb-0 relative z-10">
           {coverImage && (
             <CoverImage
