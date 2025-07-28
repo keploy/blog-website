@@ -5,21 +5,21 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Google AdSense Script */}
         <link rel="manifest" href="/blog/manifest.json" />
         <link
           rel="icon"
           type="image/png"
           sizes="192x192"
-          href="/blog/icons/icon-192x192.png"
+          href="/blog/icons/web-app-manifest-192x192.png"
         />
         <link
           rel="apple-touch-icon"
           sizes="512x512"
-          href="/blog/icons/icon-512x512.png"
+          href="/blog/icons/web-app-manifest-512x512.png"
         />
-
         <meta name="theme-color" content="#fb923c" />
+        
+        {/* Google AdSense Script */}
         <Script
           id="adsbygoogle-init"
           strategy="afterInteractive"

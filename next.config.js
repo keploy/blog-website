@@ -9,25 +9,39 @@ const { protocol, hostname, port, pathname } = new URL(
   process.env.WORDPRESS_API_URL
 )
 
+const withPWA = require("next-pwa")({
+  dest: "public",
+  register: true,
+  scope: "/blog/",
+  sw: "sw.js",
+  disable: process.env.NODE_ENV === "development",
+});
+
 /** @type {import('next').NextConfig} */
-module.exports = {
-  basePath: '/blog',
+module.exports = withPWA({
+  reactStrictMode: true,
+  basePath: "/blog",
   assetPrefix: "/blog",
   images: {
-    domains: ['secure.gravatar.com', 'wp.keploy.io' ,'keploy.io', 'pbs.twimg.com'],
+    domains: [
+      "secure.gravatar.com",
+      "wp.keploy.io",
+      "keploy.io",
+      "pbs.twimg.com",
+    ],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'keploy.io',
+        protocol: "https",
+        hostname: "keploy.io",
         port,
-        pathname: '/**',
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'wp.keploy.io',
+        protocol: "https",
+        hostname: "wp.keploy.io",
         port,
-        pathname: '/**',
-      },  
+        pathname: "/**",
+      },
     ],
   },
-}
+});

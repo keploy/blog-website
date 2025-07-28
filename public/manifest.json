@@ -8,12 +8,12 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/blog/icons/icon-192x192.png",
+      "src": "/blog/icons/web-app-manifest-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/blog/icons/icon-512x512.png",
+      "src": "/blog/icons/web-app-manifest-512x512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
