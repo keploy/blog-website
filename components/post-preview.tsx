@@ -41,59 +41,55 @@ export default function PostPreview({
 
   return (
     <div
-      className="group relative h-full overflow-hidden rounded-2xl border-[1px] border-[#C5C5C5] bg-[#FBFBFB] transition duration-500 hover:shadow-xl flex flex-col hover:bg-[#F1F1F1] shadow-lg shadow-[rgba(25,25,25,0.08)] cursor-pointer"
+      className="group relative h-full overflow-hidden rounded-2xl border-[1px] border-[#EAEBEF] bg-[#F7F8FA] transition duration-500 flex flex-col cursor-pointer"
       ref={ref}
     >
-      {coverImage && (
-        <CoverImage
-          title={title}
-          coverImage={coverImage}
-          slug={slug}
-          isCommunity={isCommunity}
-          classNames="rounded-tr-2xl rounded-tl-2xl h-[200px] w-full transition-all duration-500 ease-in-out"
-        />
-      )}
-
-      <div className="p-[24px] flex flex-col justify-between flex-1">
-        <div>
-          {tags && (
-            <span className="inline-block w-fit text-sm font-semibold bg-orange-100 text-orange-700 px-4 rounded-full py-1 mb-[8px]">
-              {tags}
-            </span>
-          )}
-
-          <h3 className="leading-tight font-medium text-lg 2xl:text-xl block group-hover:underline">
-            <Link
-              href={`${basePath}/${slug}`}
-              className="bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px] hover:underline"
-              dangerouslySetInnerHTML={{ __html: title }}
-            ></Link>
-          </h3>
-        </div>
+      <div className="p-4 pt-4">
+        {coverImage && (
+          <div className="overflow-hidden rounded-2xl">
+            <CoverImage
+              title={title}
+              coverImage={coverImage}
+              slug={slug}
+              isCommunity={isCommunity}
+              classNames="h-[200px] w-full transition-transform duration-500 ease-in-out group-hover:scale-105"
+            />
+          </div>
+        )}
       </div>
 
-      <div className="p-[1rem] pt-0 xl:p-[1.5rem] xl:pt-0">
+      <div className="px-[24px] pb-[24px] flex flex-col justify-between flex-1">
+        {tags && (
+          <span className="inline-block w-fit text-sm font-semibold bg-orange-100 text-orange-700 px-4 rounded-full py-1 mb-[8px]">
+            {tags}
+          </span>
+        )}
+
+        <h3 className="leading-tight font-medium text-lg 2xl:text-xl block">
+          <Link
+            href={`${basePath}/${slug}`}
+            className="bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
+            dangerouslySetInnerHTML={{ __html: title }}
+          ></Link>
+        </h3>
+      </div>
+
+      <div className="px-[1.5rem] pt-0 pb-[1rem] xl:pb-[1.5rem]">
         <div className="flex items-center gap-4">
           <div className="flex flex-row justify-center items-center">
-            {authorImage &&
-            authorImage !== "imag1" &&
-            authorImage !== "image" ? (
-              <Image
-                src={authorImage}
-                alt={`${authorImage}'s Avatar`}
-                className="w-10 h-10 rounded-full mr-3 sm:mr-2"
-                height={40}
-                width={40}
-              />
-            ) : (
-              <Image
-                src={`/blog/images/author.png`}
-                alt={`${authorImage}'s Avatar`}
-                className="w-10 h-10 rounded-full mr-3 sm:mr-2"
-                height={40}
-                width={40}
-              />
-            )}
+            <Image
+              src={
+                authorImage &&
+                authorImage !== "imag1" &&
+                authorImage !== "image"
+                  ? authorImage
+                  : `/blog/images/author.png`
+              }
+              alt={`${authorImage}'s Avatar`}
+              className="w-10 h-10 rounded-full mr-3 sm:mr-2"
+              height={40}
+              width={40}
+            />
             <div>
               <Avatar author={author ? author : "Anonymous"} />
               <div className="text-[12px] mb-0 -mt-1">
