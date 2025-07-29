@@ -6,13 +6,12 @@ import { Post } from "../types/post";
 import { easings, useInView } from "@react-spring/web";
 import Image from "next/image";
 import { Tag } from "../types/tag";
-import { FaArrowRight } from "react-icons/fa"; // Make sure this is imported if you want the arrow icon
 
 export default function PostPreview({
   title,
   coverImage,
   date,
-  excerpt, // Excerpt parameter is still here but won't be displayed
+  excerpt,
   author,
   slug,
   isCommunity = false,
@@ -30,6 +29,7 @@ export default function PostPreview({
   tags: Tag["node"]["name"];
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
+  excerpt = excerpt.replace("Table of Contents", "");
   const [ref] = useInView(
     () => ({
       from: { opacity: 0 },
@@ -44,6 +44,10 @@ export default function PostPreview({
       className="group relative h-full overflow-hidden rounded-2xl border-[1px] border-gray-300 bg-[#F7F8FA] transition duration-500 flex flex-col cursor-pointer hover:border-orange-400"
       ref={ref}
     >
+      <div className="pointer-events-none absolute inset-0 before:absolute before:inset-0 before:bg-[linear-gradient(120deg,rgba(255,255,255,0)_40%,rgba(255,255,255,0.2)_50%,rgba(255,255,255,0)_60%)] before:opacity-0 before:transition-opacity before:duration-500 before:content-['']" />
+
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_0%,rgba(249,115,22,0.15)_0%,rgba(168,85,247,0)_70%)] opacity-0 group-hover:opacity-100 transition duration-500" />
+
       <div className="p-4 pt-4 relative">
         {coverImage && (
           <div className="overflow-hidden rounded-2xl">
@@ -54,17 +58,6 @@ export default function PostPreview({
               isCommunity={isCommunity}
               classNames="h-[200px] w-full transition-transform duration-500 ease-in-out group-hover:scale-105"
             />
-            <Link
-              href={`${basePath}/${slug}`}
-              className="absolute bottom-4 right-4 inline-flex items-center justify-center"
-            >
-              <span
-                className="inline-flex items-center gap-2 bg-white/30 backdrop-blur-md text-gray-900 px-5 py-2 rounded-2xl border border-white/20 font-semibold text-base shadow-lg transition-colors duration-300 group-hover:bg-white/50"
-              >
-                Read More
-                <FaArrowRight className="ml-1" />
-              </span>
-            </Link>
           </div>
         )}
       </div>

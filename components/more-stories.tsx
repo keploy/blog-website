@@ -169,10 +169,10 @@ export default function MoreStories({
           <div className="sticky top-[6rem] max-h-[calc(100vh-6rem)] overflow-y-auto">
             <button
               onClick={() => setSearchOverlayOpen(true)}
-              className="w-full border border-gray-300 rounded-3xl text-center flex items-center justify-center hover:border-orange-500 transition-all duration-200 ease-in-out p-1.5 gap-2 font-medium text-[#444]"
+              className="w-full border border-gray-300 rounded-3xl text-center flex items-center justify-center hover:border-orange-500 transition-all duration-200 ease-in-out px-4 py-1.5 gap-2 font-medium text-[#444]"
             >
-              <Search className="w-4 h-4 stroke-[2]" />
-              <span className="text-sm">Search</span>
+              <Search className="w-[17px] h-[17px] stroke-[2]" />
+              <span className="text-sm leading-none">Search</span>
             </button>
 
             <div className="mt-6 h-[356px] overflow-y-auto rounded-xl bg-white border border-[#e3e3e3] shadow-[0_2px_6px_rgba(0,0,0,0.05)] tags-scrollbar px-2 py-4">
