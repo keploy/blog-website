@@ -169,28 +169,28 @@ export const solutionsNav = {
       items: [
         {
           title: "Test Data Generation",
-          href: "/test-data-generator",
+          href: "https://keploy.io/test-data-generator",
           description: "Generate realistic test data",
           icon: Database,
           iconColor: "text-blue-600",
         },
         {
           title: "Test Case Generation",
-          href: "/test-case-generator",
+          href: "https://keploy.io/test-case-generator",
           description: "Auto-generate test cases",
           icon: FileCode2,
           iconColor: "text-purple-600",
         },
         {
           title: "Unit Testing",
-          href: "/unit-test-generator",
+          href: "https://keploy.io/unit-test-generator",
           description: "Automated unit tests",
           icon: Code,
           iconColor: "text-green-600",
         },
         {
           title: "Code Coverage",
-          href: "/code-coverage",
+          href: "https://keploy.io/code-coverage",
           description: "Comprehensive coverage analysis",
           icon: Server,
           iconColor: "text-indigo-600",
@@ -204,28 +204,28 @@ export const solutionsNav = {
       items: [
         {
           title: "CI Testing",
-          href: "/continuous-integration-testing",
+          href: "https://keploy.io/continuous-integration-testing",
           description: "Continuous integration testing",
           icon: RefreshCcw,
           iconColor: "text-cyan-600",
         },
         {
           title: "Regression Testing",
-          href: "/regression-testing",
+          href: "https://keploy.io/regression-testing",
           description: "Automated regression tests",
           icon: GitBranch,
           iconColor: "text-orange-600",
         },
         {
           title: "API Testing",
-          href: "/api-testing",
+          href: "https://keploy.io/api-testing",
           description: "End-to-end API testing",
           icon: Webhook,
           iconColor: "text-pink-600",
         },
         {
           title: "Contract Testing",
-          href: "/contract-testing",
+          href: "https://keploy.io/contract-testing",
           description: "API contract validation",
           icon: FileCode2,
           iconColor: "text-yellow-600",
@@ -250,7 +250,7 @@ export const solutionsNav = {
     links: [
       {
         title: "View All Integrations",
-        href: "/docs/ci-cd/github/",
+        href: "https://keploy.io/docs/ci-cd/github/",
         icon: Puzzle,
         iconColor: "text-violet-600",
       },
@@ -276,7 +276,7 @@ export const solutionsNav = {
     },
     {
       title: "Developer Productivity",
-      href: "/developer-productivity",
+      href: "https://keploy.io/developer-productivity",
       image: DeveloperProductivity,
     },
     {
@@ -292,18 +292,18 @@ export const developersNav = {
     {
       title: "Documentation",
       isClickable: true,
-      href: "/docs",
+      href: "https://keploy.io/docs/",
       items: [
         {
           title: "Getting Started",
-          href: "/docs",
+          href: "https://keploy.io/docs/",
           description: "Quick setup guide",
           icon: Zap,
           iconColor: "text-yellow-600",
         },
         {
           title: "API Reference",
-          href: "/docs/running-keploy/cli-commands/",
+          href: "https://keploy.io/docs/running-keploy/cli-commands/",
           description: "Detailed API documentation",
           icon: Code,
           iconColor: "text-purple-600",
@@ -317,7 +317,7 @@ export const developersNav = {
         },
         {
           title: "FAQs",
-          href: "/docs/keploy-explained/faq/",
+          href: "https://keploy.io/docs/keploy-explained/faq",
           description: "Testing guidelines",
           icon: Trophy,
           iconColor: "text-green-600",
@@ -338,7 +338,7 @@ export const developersNav = {
         // },
         {
           title: "Community Articles",
-          href: "/blog/community",
+          href: "/community",
           description: "Developer stories",
           icon: Newspaper,
           iconColor: "text-orange-600",
@@ -408,7 +408,7 @@ export const developersNav = {
     },
     {
       title: "Technical Blog",
-      href: "https://keploy.io/blog",
+      href: "https://keploy.io/blog/technology",
       image: BlogImg,
       minHeight: "min-h-[180px]",
     },
@@ -447,7 +447,7 @@ export const resourcesNav = {
       items: [
         {
           title: "About Us",
-          href: "/about",
+          href: "https://keploy.io/about",
           description: "Our story and mission",
           icon: Users,
           iconColor: "text-blue-600",
@@ -461,7 +461,7 @@ export const resourcesNav = {
         // },
         {
           title: "Careers",
-          href: "/about/#careers",
+          href: "https://keploy.io/about#careers",
           description: "Join our team",
           icon: Building,
           iconColor: "text-purple-600",

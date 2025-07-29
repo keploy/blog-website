@@ -260,7 +260,7 @@ export function MainNav() {
         {/* Pricing */}
         <NavigationMenuItem>
           <Link
-            href="/pricing"
+            href="https://keploy.io/pricing"
             className="inline-flex items-center text-black/80 justify-center rounded-md font-medium transition-colors hover:text-primary h-9 px-3 py-1.5 hover:underline text-[16px]"
             target="_blank"
             rel="noopener noreferrer"

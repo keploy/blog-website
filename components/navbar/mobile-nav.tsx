@@ -43,12 +43,12 @@ const MobileNavSection = ({
                 {column.isClickable ? (
                   <Link
                     href={column.href}
-                    className="text-sm font-medium text-[#737373] hover:text-primary"
+                    className="text-base font-medium text-[#737373] hover:text-primary"
                   >
                     {column.title}
                   </Link>
                 ) : (
-                  <p className="text-sm font-medium text-[#737373]">
+                  <p className="text-base font-medium text-[#737373]">
                     {" "}
                     {column.title}
                   </p>
@@ -59,7 +59,7 @@ const MobileNavSection = ({
                   <Link
                     key={itemIdx}
                     href={item.href}
-                    className="group flex items-center gap-2 rounded-lg p-2 text-sm hover:bg-accent"
+                    className="group flex items-center gap-2 rounded-lg p-2 text-base hover:bg-accent"
                   >
                     <span
                       className={cn(
@@ -145,7 +145,7 @@ export function MobileNav() {
 
             <div className="py-4 border-t">
               <Link
-                href="/pricing"
+                href="https://keploy.io/pricing"
                 className="flex w-full items-center justify-between py-2 font-medium hover:underline"
               >
                 Pricing
