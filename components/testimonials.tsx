@@ -82,6 +82,7 @@ const ReviewCard = ({
 
 const TwitterTestimonials = () => {
   return (
+    <div className="bg-gradient-to-br from-orange-100/20 via-rose-50 to-purple-100/30">
     <section className="relative overflow-hidden bg-white">
       <div className="flex flex-col justify-center items-center relative w-full bg-gradient-to-br from-orange-200/20 via-rose-50 to-purple-200/20 bg-orange-50/30">
         <h3 className="w-max mb-4 md:text-3xl tracking-tight leading-tight bg-gradient-to-r from-orange-500 to-purple-800 bg-clip-text text-transparent p-4 text-2xl sm:text-4xl md:text-5xl font-bold text-center">
@@ -122,6 +123,7 @@ const TwitterTestimonials = () => {
         </div>
       </div>
     </section>
+    </div>
   );
 };
 
