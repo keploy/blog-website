@@ -12,7 +12,7 @@ import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import AdSlot from "./Adslot";
-import CodeBlockPage from "./CodeBlock";
+import CodeBlock from "./CodeBlock";
 export default function PostBody({
   content,
   authorName,
@@ -269,7 +269,7 @@ export default function PostBody({
           };
           return (
             <div key={index} className="relative mx-auto mb-4">
-              <CodeBlockPage lang={getLanguage(language)} code={updatedCode} />
+              <CodeBlock lang={getLanguage(language)} code={updatedCode} />
             </div>
           );
         }
