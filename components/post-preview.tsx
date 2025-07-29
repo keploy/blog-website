@@ -6,12 +6,13 @@ import { Post } from "../types/post";
 import { easings, useInView } from "@react-spring/web";
 import Image from "next/image";
 import { Tag } from "../types/tag";
+import { FaArrowRight } from "react-icons/fa"; // Make sure this is imported if you want the arrow icon
 
 export default function PostPreview({
   title,
   coverImage,
   date,
-  excerpt,
+  excerpt, // Excerpt parameter is still here but won't be displayed
   author,
   slug,
   isCommunity = false,
@@ -29,7 +30,6 @@ export default function PostPreview({
   tags: Tag["node"]["name"];
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
-  excerpt = excerpt.replace("Table of Contents", "");
   const [ref] = useInView(
     () => ({
       from: { opacity: 0 },
@@ -41,10 +41,10 @@ export default function PostPreview({
 
   return (
     <div
-      className="group relative h-full overflow-hidden rounded-2xl border-[1px] border-[#EAEBEF] bg-[#F7F8FA] transition duration-500 flex flex-col cursor-pointer"
+      className="group relative h-full overflow-hidden rounded-2xl border-[1px] border-gray-300 bg-[#F7F8FA] transition duration-500 flex flex-col cursor-pointer hover:border-orange-400"
       ref={ref}
     >
-      <div className="p-4 pt-4">
+      <div className="p-4 pt-4 relative">
         {coverImage && (
           <div className="overflow-hidden rounded-2xl">
             <CoverImage
@@ -54,6 +54,17 @@ export default function PostPreview({
               isCommunity={isCommunity}
               classNames="h-[200px] w-full transition-transform duration-500 ease-in-out group-hover:scale-105"
             />
+            <Link
+              href={`${basePath}/${slug}`}
+              className="absolute bottom-4 right-4 inline-flex items-center justify-center"
+            >
+              <span
+                className="inline-flex items-center gap-2 bg-white/30 backdrop-blur-md text-gray-900 px-5 py-2 rounded-2xl border border-white/20 font-semibold text-base shadow-lg transition-colors duration-300 group-hover:bg-white/50"
+              >
+                Read More
+                <FaArrowRight className="ml-1" />
+              </span>
+            </Link>
           </div>
         )}
       </div>
@@ -72,11 +83,6 @@ export default function PostPreview({
             dangerouslySetInnerHTML={{ __html: title }}
           ></Link>
         </h3>
-
-        <div
-        className="text-sm leading-normal text-[#9A9A9A] line-clamp-3 mt-2 mb-4"
-        dangerouslySetInnerHTML={{ __html: excerpt }}
-      />
       </div>
 
       <div className="px-[1.5rem] pt-0 pb-[1rem] xl:pb-[1.5rem]">
@@ -90,7 +96,7 @@ export default function PostPreview({
                   ? authorImage
                   : `/blog/images/author.png`
               }
-              alt={`${authorImage}'s Avatar`}
+              alt={`${author}'s Avatar`}
               className="w-10 h-10 rounded-full mr-3 sm:mr-2"
               height={40}
               width={40}
