@@ -1,5 +1,5 @@
 import Image from "next/image";
-import waitlistBannerImage from "../public/images/waitlistedBanner-1.svg";
+import waitlistBannerImage from "../public/images/waitlistedBanner-1.png";
 import Link from "next/link";
 const waitlistBanner = () => {
   return (
