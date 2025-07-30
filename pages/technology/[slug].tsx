@@ -197,13 +197,22 @@ export const getStaticProps: GetStaticProps = async ({
   previewData,
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
-  const { techMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug);
+  const { techMoreStories } = await getMoreStoriesForSlugs(
+    data?.post?.tags,
+    data?.post?.slug
+  );
   const authorDetails = [];
   authorDetails.push(await getReviewAuthorDetails("neha"));
   authorDetails.push(await getReviewAuthorDetails("Jain"));
+
+  if (!data?.post) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
-      preview,
       post: data?.post || {},
       posts: techMoreStories || [],
       reviewAuthorDetails: authorDetails || {},
@@ -213,12 +222,15 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allPosts = await getAllPostsForTechnology(false);
-  const technologyPosts =
-    allPosts?.edges
-      ?.map(({ node }) => `/technology/${node?.slug}`) || [];
+  const allPosts = await getAllPostsForTechnology();
+
+  const paths =
+    allPosts?.edges?.map(({ node }) => ({
+      params: { slug: node.slug },
+    })) || [];
+
   return {
-    paths: technologyPosts || [],
-    fallback: true,
+    paths,
+    fallback: false,
   };
 };
