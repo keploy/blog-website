@@ -29,6 +29,28 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   return json.data;
 }
 
+export async function getTagsByPostId(postId: number) {
+  const data = await fetchAPI(
+    `
+    query GetTags($postId: Int!) {
+      postBy(postId: $postId) {
+        tags {
+          edges {
+            node {
+              name
+            }
+          }
+        }
+      }
+    }
+    `,
+    {
+      variables: { postId },
+    }
+  );
+  return data?.postBy?.tags?.edges.map(edge => edge.node.name) || [];
+}
+
 export async function getPreviewPost(id, idType = "DATABASE_ID") {
   const data = await fetchAPI(
     `
@@ -106,8 +128,16 @@ export async function getAllPostsFromTags(tagName: String, preview) {
                 name
               }
             }
+            ppmaAuthorImage
             ppmaAuthorName
             categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+            tags {
               edges {
                 node {
                   name
@@ -264,8 +294,16 @@ export async function getAllPostsForTechnology(preview = false, after = null) {
                 }
               }
             }
+            ppmaAuthorImage
             ppmaAuthorName
             categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+            tags {
               edges {
                 node {
                   name
@@ -335,8 +373,16 @@ export async function getAllPostsForCommunity(preview = false, after = null) {
                   }
                 }
               }
+              ppmaAuthorImage
               ppmaAuthorName
               categories {
+                edges {
+                  node {
+                    name
+                  }
+                }
+              }
+              tags {
                 edges {
                   node {
                     name
@@ -494,6 +540,14 @@ export async function getMoreStoriesForSlugs(tags, slug) {
             featuredImage { node { sourceUrl } }
             author { node { name firstName lastName avatar { url } } }
             ppmaAuthorName
+            ppmaAuthorImage
+            tags {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
             categories { edges { node { name } } }
           }
         }
@@ -753,6 +807,13 @@ export async function fetchMorePosts(
             }
             ppmaAuthorName
             categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+            tags {
               edges {
                 node {
                   name
