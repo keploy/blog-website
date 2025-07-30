@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import PostSkeleton from "./post-skeleton";
 import { Search } from "lucide-react";
+import classNames from "classnames";
 
 export default function MoreStories({
   posts: initialPosts,
@@ -185,9 +186,7 @@ export default function MoreStories({
                     <div
                       key={tag.name}
                       className={`relative flex items-center group px-4 ${
-                        isSelected
-                          ? "border-l-[2px] border-l-[#FF7800]"
-                          : ""
+                        isSelected ? "border-l-[2px] border-l-[#FF7800]" : ""
                       }`}
                     >
                       <span
@@ -219,7 +218,17 @@ export default function MoreStories({
       )}
 
       <div className="flex-1">
-        <div className="grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
+        <div
+          className={classNames(
+            `grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16`,
+            {
+              "md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 md:gap-x-8 lg:gap-x-8":
+                isIndex,
+              "md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 md:gap-x-8 lg:gap-x-8":
+                !isIndex,
+            }
+          )}
+        >
           {tagLoading ? (
             Array.from({ length: 4 }).map((_, idx) => (
               <PostSkeleton key={idx} />

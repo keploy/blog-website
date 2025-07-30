@@ -2,27 +2,24 @@ import { AppProps } from "next/app";
 import "../styles/index.css";
 import { AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
-
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 
-const PageLoadingSkeleton = dynamic(
-  () => import("../components/blog-page-loading-state"),
-  { ssr: false }
-);
-const HeroOnlySkeleton = dynamic(
-  () => import("../components/category-page-loading-skeleton"),
-  { ssr: false }
-);
+// Dynamically import skeletons with fallback
+const PageLoadingSkeleton = dynamic(() => import("../components/blog-page-loading-state"), {
+  ssr: false,
+  loading: () => <div className="h-screen w-full bg-white" />,
+});
+
+const HeroOnlySkeleton = dynamic(() => import("../components/category-page-loading-skeleton"), {
+  ssr: false,
+  loading: () => <div className="h-screen w-full bg-white" />,
+});
 
 function SkeletonWrapper({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [skeletonType, setSkeletonType] = useState<"post" | "category" | null>(
-    null
-  );
+  const [skeletonType, setSkeletonType] = useState<"post" | "category" | null>(null);
 
   useEffect(() => {
     const handleStart = (url: string) => {
@@ -39,8 +36,10 @@ function SkeletonWrapper({ children }: { children: React.ReactNode }) {
     };
 
     const handleStop = () => {
-      setLoading(false);
-      setSkeletonType(null);
+      setTimeout(() => {
+        setLoading(false);
+        setSkeletonType(null);
+      }, 400);
     };
 
     router.events.on("routeChangeStart", handleStart);
