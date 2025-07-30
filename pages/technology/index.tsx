@@ -9,10 +9,9 @@ import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
-  console.log("tech posts: ", edges.length)
+  console.log("tech posts: ", edges.length);
   const heroPost = edges[0]?.node;
-  const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
-  const morePosts = edges.slice(1);
+  const excerpt = heroPost ? getExcerpt(heroPost.excerpt, 50) : null;
 
   return (
     <Layout
@@ -26,7 +25,6 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       </Head>
       <Header />
       <Container>
-        {/* <Intro /> */}
         {heroPost && (
           <HeroPost
             title={heroPost.title}
@@ -38,8 +36,13 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
             isCommunity={false}
           />
         )}
-        {morePosts.length > 0 && (
-          <MoreStories isIndex={true} posts={morePosts} isCommunity={false} initialPageInfo={pageInfo} />
+        {edges.length > 1 && (
+          <MoreStories
+            isIndex={true}
+            posts={edges.slice(1)} 
+            isCommunity={false}
+            initialPageInfo={pageInfo}
+          />
         )}
       </Container>
     </Layout>
@@ -47,10 +50,13 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const allPosts = await getAllPostsForTechnology(preview);
-
-  return {
-    props: { allPosts, preview },
-    revalidate: 10,
-  };
+  try {
+    const allPosts = await getAllPostsForTechnology(preview);
+    return { props: { allPosts, preview }, revalidate: 10 };
+  } catch (error) {
+    return {
+      props: { allPosts: { edges: [], pageInfo: { hasNextPage: false, endCursor: null } }, preview },
+      revalidate: 10,
+    };
+  }
 };

@@ -237,11 +237,18 @@ export async function getReviewAuthorDetails(authorName) {
 
 
 // Function for fetching post with technology category
-export async function getAllPostsForTechnology(preview = false, after = null) {
+export async function getAllPostsForTechnology(preview = false, after: string | null = null) {
   const data = await fetchAPI(
     `
     query AllPostsForCategory($after: String) {
-      posts(first: 22, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+      posts(
+        first: 22
+        after: $after
+        where: {
+          orderby: { field: DATE, order: DESC }
+          categoryName: "technology"
+        }
+      ) {
         edges {
           node {
             title
@@ -287,17 +294,17 @@ export async function getAllPostsForTechnology(preview = false, after = null) {
     `,
     {
       variables: {
-        preview,
-        after,
+        after: after ?? null,
       },
     }
   );
 
   return {
     edges: data?.posts?.edges || [],
-    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null },
   };
 }
+
 
 
 export async function getAllPostsForCommunity(preview = false, after = null) {
