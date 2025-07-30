@@ -243,7 +243,6 @@ export default function MoreStories({
                   date={node.date}
                   author={node.ppmaAuthorName}
                   slug={node.slug}
-                  excerpt={getExcerpt(node.excerpt, 20)}
                   isCommunity={
                     node.categories.edges[0]?.node.name === "technology"
                       ? false
@@ -271,7 +270,6 @@ export default function MoreStories({
                   date={node.date}
                   author={node.ppmaAuthorName}
                   slug={node.slug}
-                  excerpt={getExcerpt(node.excerpt, 20)}
                   isCommunity={
                     node.categories.edges[0]?.node.name === "technology"
                       ? false

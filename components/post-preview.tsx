@@ -11,7 +11,6 @@ export default function PostPreview({
   title,
   coverImage,
   date,
-  excerpt,
   author,
   slug,
   isCommunity = false,
@@ -21,7 +20,6 @@ export default function PostPreview({
   title: Post["title"];
   coverImage: Post["featuredImage"];
   date: Post["date"];
-  excerpt: Post["excerpt"];
   author: Post["ppmaAuthorName"];
   slug: Post["slug"];
   isCommunity?: boolean;
@@ -29,7 +27,6 @@ export default function PostPreview({
   tags: Tag["node"]["name"];
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
-  excerpt = excerpt.replace("Table of Contents", "");
   const [ref] = useInView(
     () => ({
       from: { opacity: 0 },
@@ -41,22 +38,18 @@ export default function PostPreview({
 
   return (
     <div
-      className="group relative h-full overflow-hidden rounded-2xl border-[1px] border-gray-300 bg-[#FFFFFF] transition duration-500 flex flex-col cursor-pointer hover:border-orange-400"
+      className="group relative h-full overflow-hidden rounded-2xl bg-[#FFFFFF] transition duration-500 flex flex-col cursor-pointer hover:border-orange-400 shadow-2xl"
       ref={ref}
     >
-      <div className="pointer-events-none absolute inset-0 before:absolute before:inset-0 before:bg-[linear-gradient(120deg,rgba(255,255,255,0)_40%,rgba(255,255,255,0.2)_50%,rgba(255,255,255,0)_60%)] before:opacity-0 before:transition-opacity before:duration-500 before:content-['']" />
-
-      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_0%,rgba(249,115,22,0.15)_0%,rgba(168,85,247,0)_70%)] opacity-0 group-hover:opacity-100 transition duration-500" />
-
-      <div className="p-2 relative mb-2">
+      <div className="relative mb-2 pb-3">
         {coverImage && (
-          <div className="overflow-hidden rounded-lg">
+          <div className="overflow-hidden rounded-lg rounded-b-2xl">
             <CoverImage
               title={title}
               coverImage={coverImage}
               slug={slug}
               isCommunity={isCommunity}
-              classNames="h-[200px] w-full transition-transform duration-500 ease-in-out group-hover:scale-105"
+              classNames="h-[200px] w-full transition-transform duration-500 ease-in-out"
             />
           </div>
         )}
@@ -69,20 +62,13 @@ export default function PostPreview({
           </span>
         )}
 
-        <h3 className="leading-tight font-medium text-lg 2xl:text-xl block">
+        <h3 className="leading-tight font-medium text-lg 2xl:text-xl block group-hover:underline">
           <Link
             href={`${basePath}/${slug}`}
             className="bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
             dangerouslySetInnerHTML={{ __html: title }}
           ></Link>
         </h3>
-
-        {excerpt && (
-          <div
-            dangerouslySetInnerHTML={{ __html: excerpt }}
-            className="text-sm text-gray-500 mt-2 line-clamp-2"
-          />
-        )}
       </div>
 
       <div className="px-[1.5rem] pt-0 pb-[1rem] xl:pb-[1.5rem]">
