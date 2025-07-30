@@ -175,26 +175,43 @@ export default function MoreStories({
               <span className="text-sm leading-none">Search</span>
             </button>
 
-            <div className="mt-6 h-[356px] overflow-y-auto rounded-xl bg-white border border-[#e3e3e3] shadow-[0_2px_6px_rgba(0,0,0,0.05)] tags-scrollbar px-2 py-4">
-              <div className="flex flex-col gap-1">
-                {allTags.map((tag, index) => (
-                  <span
-                    key={tag.name}
-                    onClick={async () => {
-                      const formattedTag = tag.name.replace(/\s+/g, "-");
-                      await handleTagClick(formattedTag);
-                    }}
-                    className={`px-5 py-[10px] text-[15px] rounded-lg cursor-pointer transition-all duration-200 ease-in-out hover:text-orange-500 hover:underline active:bg-orange-100 ${
-                      selectedTag === tag.name.replace(/\s+/g, "-")
-                        ? "bg-gradient-to-r from-orange-100 to-orange-50 border-orange-500 font-semibold text-[#3b1f42] shadow-sm ring-1 ring-orange-200"
-                        : "text-gray-600"
-                    } ${index === 0 ? "mt-1" : ""} ${
-                      index === allTags.length - 1 ? "mb-1" : ""
-                    }`}
-                  >
-                    #{tag.name}
-                  </span>
-                ))}
+            <div className="mt-6 h-[356px] overflow-y-auto rounded-xl border border-[#e3e3e3] tags-scrollbar py-3 bg-white/60 backdrop-blur-md">
+              <div className="flex flex-col gap-1.5">
+                {allTags.map((tag) => {
+                  const isSelected =
+                    selectedTag === tag.name.replace(/\s+/g, "-");
+
+                  return (
+                    <div
+                      key={tag.name}
+                      className={`relative flex items-center group px-4 ${
+                        isSelected
+                          ? "border-l-[2px] border-l-[#FF7800]"
+                          : ""
+                      }`}
+                    >
+                      <span
+                        onClick={async () => {
+                          const formattedTag = tag.name.replace(/\s+/g, "-");
+                          await handleTagClick(formattedTag);
+                        }}
+                        className="relative z-10 w-full px-3 py-[10px] text-[15px] rounded-md transition duration-300 ease-in-out cursor-pointer font-semibold"
+                      >
+                        {tag.name}
+                      </span>
+
+                      {isSelected && (
+                        <div
+                          className="absolute left-0 top-0 z-0 h-full w-full rounded-md transition duration-700"
+                          style={{
+                            background:
+                              "linear-gradient(90deg, rgba(255,138,76,0.12) 0%, rgba(255,138,76,0) 90%)",
+                          }}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

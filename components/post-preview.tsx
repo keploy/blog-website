@@ -41,16 +41,16 @@ export default function PostPreview({
 
   return (
     <div
-      className="group relative h-full overflow-hidden rounded-2xl border-[1px] border-gray-300 bg-[#F7F8FA] transition duration-500 flex flex-col cursor-pointer hover:border-orange-400"
+      className="group relative h-full overflow-hidden rounded-2xl border-[1px] border-gray-300 bg-[#FFFFFF] transition duration-500 flex flex-col cursor-pointer hover:border-orange-400"
       ref={ref}
     >
       <div className="pointer-events-none absolute inset-0 before:absolute before:inset-0 before:bg-[linear-gradient(120deg,rgba(255,255,255,0)_40%,rgba(255,255,255,0.2)_50%,rgba(255,255,255,0)_60%)] before:opacity-0 before:transition-opacity before:duration-500 before:content-['']" />
 
       <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_0%,rgba(249,115,22,0.15)_0%,rgba(168,85,247,0)_70%)] opacity-0 group-hover:opacity-100 transition duration-500" />
 
-      <div className="p-4 pt-4 relative">
+      <div className="p-2 relative mb-2">
         {coverImage && (
-          <div className="overflow-hidden rounded-2xl">
+          <div className="overflow-hidden rounded-lg">
             <CoverImage
               title={title}
               coverImage={coverImage}
@@ -76,6 +76,13 @@ export default function PostPreview({
             dangerouslySetInnerHTML={{ __html: title }}
           ></Link>
         </h3>
+
+        {excerpt && (
+          <div
+            dangerouslySetInnerHTML={{ __html: excerpt }}
+            className="text-sm text-gray-500 mt-2 line-clamp-2"
+          />
+        )}
       </div>
 
       <div className="px-[1.5rem] pt-0 pb-[1rem] xl:pb-[1.5rem]">
@@ -96,7 +103,7 @@ export default function PostPreview({
             />
             <div>
               <Avatar author={author ? author : "Anonymous"} />
-              <div className="text-[12px] mb-0 -mt-1">
+              <div className="text-[12px] mb-0 -mt-1 text-gray-500">
                 <Date dateString={date} />
               </div>
             </div>
