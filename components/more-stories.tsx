@@ -172,8 +172,8 @@ export default function MoreStories({
               onClick={() => setSearchOverlayOpen(true)}
               className="w-full border border-gray-300 rounded-3xl text-center flex items-center justify-center hover:border-orange-500 transition-all duration-200 ease-in-out px-4 py-1.5 gap-2 font-medium text-[#444]"
             >
-              <Search className="w-[17px] h-[17px] stroke-[2]" />
-              <span className="text-sm leading-none">Search</span>
+              <Search className="w-[16px] h-[16px] stroke-[2] self-center" />
+              <span className="text-sm leading-none mb-[2px]">Search</span>
             </button>
 
             <div className="mt-6 h-[356px] overflow-y-auto rounded-xl border border-[#e3e3e3] tags-scrollbar py-3 bg-white/60 backdrop-blur-md">
