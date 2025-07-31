@@ -7,7 +7,7 @@ import Layout from "../../components/layout";
 import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
-import { cn } from "../../lib/utils";
+import HeroBackground from "../../components/hero-background";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;
@@ -24,20 +24,8 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       <Head>
         <title>{`Keploy`}</title>
       </Head>
-
-      <div className="relative isolate h-auto overflow-hidden">
-        <div
-          className={cn(
-            "absolute inset-0 z-0",
-            "[background-size:40px_40px]",
-            "[background-image:linear-gradient(to_right,#a1a1aa_1px,transparent_1px),linear-gradient(to_bottom,#a1a1aa_1px,transparent_1px)]"
-          )}
-        />
-
-        <div className="absolute inset-0 z-10 bg-gradient-to-b from-orange-100/70 via-orange-50/80 to-white" />
-
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#FBFCFF] z-20" />
-
+      <div className="relative min-h-[70vh] overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+        <HeroBackground />
         <div className="relative z-30">
           <Header />
 
@@ -57,6 +45,7 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
             )}
           </Container>
         </div>
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent z-40"></div>
       </div>
       <Container>
         {morePosts.length > 0 && (
