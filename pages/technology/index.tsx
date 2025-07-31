@@ -7,9 +7,9 @@ import Layout from "../../components/layout";
 import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
+import HeroBackground from "../../components/hero-background";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
-  console.log("tech posts: ", edges.length)
   const heroPost = edges[0]?.node;
   const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
   const morePosts = edges.slice(1);
@@ -24,22 +24,37 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       <Head>
         <title>{`Keploy`}</title>
       </Head>
-      <Header />
+      <div className="relative min-h-[70vh] overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+        <HeroBackground />
+        <div className="relative z-30">
+          <Header />
+
+          <Container>
+            {heroPost && (
+              <HeroPost
+                title={heroPost.title}
+                coverImage={heroPost.featuredImage}
+                date={heroPost.date}
+                author={heroPost.ppmaAuthorName}
+                slug={heroPost.slug}
+                excerpt={excerpt}
+                isCommunity={false}
+                authorImage={heroPost.author.node.avatar.url}
+                postId={heroPost.postId}
+              />
+            )}
+          </Container>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent z-40"></div>
+      </div>
       <Container>
-        {/* <Intro /> */}
-        {heroPost && (
-          <HeroPost
-            title={heroPost.title}
-            coverImage={heroPost.featuredImage}
-            date={heroPost.date}
-            author={heroPost.ppmaAuthorName}
-            slug={heroPost.slug}
-            excerpt={excerpt}
-            isCommunity={false}
-          />
-        )}
         {morePosts.length > 0 && (
-          <MoreStories isIndex={true} posts={morePosts} isCommunity={false} initialPageInfo={pageInfo} />
+          <MoreStories
+            isIndex={true}
+            posts={morePosts}
+            isCommunity={false}
+            initialPageInfo={pageInfo}
+          />
         )}
       </Container>
     </Layout>

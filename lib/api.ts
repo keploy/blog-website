@@ -85,6 +85,28 @@ export async function getAllTags() {
   return allTags;
 }
 
+export async function getTagsByPostId(postId: number) {
+  const data = await fetchAPI(
+    `
+    query GetTags($postId: Int!) {
+      postBy(postId: $postId) {
+        tags {
+          edges {
+            node {
+              name
+            }
+          }
+        }
+      }
+    }
+    `,
+    {
+      variables: { postId },
+    }
+  );
+  return data?.postBy?.tags?.edges.map(edge => edge.node.name) || [];
+}
+
 export async function getAllPostsFromTags(tagName: String, preview) {
   const data = await fetchAPI(
     `
