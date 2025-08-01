@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { CMS_NAME, HOME_OG_IMAGE_URL } from "../lib/constants";
+import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import { Post } from "../types/post";
 
 export default function Meta({
@@ -30,7 +30,6 @@ export default function Meta({
         sizes="16x16"
         href="/blog/favicon/Group.png"
       />
-      <link rel="manifest" href="blog/favicon/site.webmanifest" />
       <link rel="mask-icon" href="blog/favicon/Group.svg" color="#000000" />
       <link rel="shortcut icon" href="blog/favicon/Group" />
 
