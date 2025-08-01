@@ -38,12 +38,12 @@ export default function PostPreview({
 
   return (
     <div
-      className="group relative h-full overflow-hidden rounded-2xl bg-[#FFFFFF] transition duration-500 flex flex-col cursor-pointer hover:border-orange-400 shadow-2xl"
+      className="group relative h-full rounded-2xl bg-[#FFFFFF] transition duration-500 flex flex-col cursor-pointer hover:border-orange-400 shadow-2xl"
       ref={ref}
     >
-      <div className="relative mb-2 pb-3">
+      <div className="relative pb-1 flex justify-center -translate-y-6">
         {coverImage && (
-          <div className="overflow-hidden rounded-lg rounded-b-2xl">
+          <div className="overflow-hidden rounded-lg rounded-b-2xl h-[192px] w-[calc(100%_-_32px)] shadow-lg">
             <CoverImage
               title={title}
               coverImage={coverImage}
