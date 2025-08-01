@@ -2,8 +2,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import sideBySideSvg from "../public/images/sidebyside-transparent.svg"
+import sideBySideSvg from "../public/images/sidebyside-transparent.svg";
 import { SpringValue, animated } from "@react-spring/web";
+
 const menuItems = [
   { text: "Docs", link: "https://keploy.io/docs" },
   { text: "Tech Blogs", link: "/technology" },
@@ -11,17 +12,17 @@ const menuItems = [
 ];
 
 const formatStars = (num: number) =>
-    Intl.NumberFormat('en-US', {
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(num);
+  Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(num);
 
-const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
+const WaitListBtn = ({ mobile }: { mobile?: boolean }) => {
   if (mobile) {
     return (
       <Link
         href="https://app.keploy.io/signin"
-        className="inline-flex items-center py-2 px-4 rounded  text-gray-200 bg-[#00163d]  font-semibold ml-3"
+        className="inline-flex items-center py-2 px-4 rounded text-gray-200 bg-[#00163d] font-semibold ml-3 dark:bg-gray-900 dark:text-gray-200 hover:text-primary-300 dark:hover:text-primary-300"
       >
         <span>Sign In</span>
         <svg
@@ -40,7 +41,7 @@ const WaitListBtn = ({ mobile }: { mobile?: Boolean }) => {
   return (
     <Link
       href="https://app.keploy.io/signin"
-      className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d]  hover:text-primary-300 ml-3"
+      className="inline-flex py-2 px-4 rounded leading-[1.375rem] text-gray-200 bg-[#00163d] hover:text-primary-300 ml-3 dark:bg-gray-900 dark:text-gray-200 dark:hover:text-primary-300"
     >
       <span>Sign In</span>
     </Link>
@@ -53,9 +54,7 @@ const GithubBtn = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const response = await fetch(
-          "https://api.github.com/repos/keploy/keploy"
-        );
+        const response = await fetch("https://api.github.com/repos/keploy/keploy");
         const data = await response.json();
         setStars(data.stargazers_count);
       } catch (err) {
@@ -66,9 +65,9 @@ const GithubBtn = () => {
   }, []);
 
   return (
-    <button className="w-full p-2 overflow-hidden border border-orange-500 border-opacity-25 rounded lg:w-auto sm:border-opacity-100">
+    <button className="w-full p-2 overflow-hidden border border-orange-500 border-opacity-25 rounded lg:w-auto sm:border-opacity-100 dark:border-orange-400/40">
       <Link
-        className="flex items-center gap-2 ml-4 text-sm font-extrabold text-orange-500 transition-colors lg:ml-0 hover:text-primary-300"
+        className="flex items-center gap-2 ml-4 text-sm font-extrabold text-orange-500 transition-colors lg:ml-0 hover:text-primary-300 dark:text-orange-400 dark:hover:text-primary-300"
         href="https://github.com/keploy/keploy"
       >
         <svg
@@ -83,7 +82,7 @@ const GithubBtn = () => {
             fillRule="evenodd"
           />
         </svg>
-        <span className="text-gradient-500 opacity-30 hover:text-orange-500">
+        <span className="text-gradient-500 opacity-30 hover:text-orange-500 dark:opacity-40 dark:hover:text-orange-400">
           |
         </span>
         <span className="flex gap-1 text-base">
@@ -97,9 +96,11 @@ const GithubBtn = () => {
 const MenuBtn = () => {
   return (
     <svg
-      className="w-6 h-6 text-gray-900 fill-current"
+      className="w-6 h-6 text-gray-900 dark:text-gray-200 fill-current"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
     >
       <rect y="4" width="24" height="2" />
       <rect y="11" width="24" height="2" />
@@ -121,7 +122,7 @@ export default function Header({
 
   return (
     <div className="h-32 md:h-40">
-      <header className="fixed z-30 w-full transition duration-300 ease-in-out bg-neutral-100 md:bg-opacity-90 ">
+      <header className="fixed z-30 w-full transition duration-300 ease-in-out bg-neutral-100 dark:bg-[#121212] md:bg-opacity-90 dark:md:bg-opacity-95">
         <div className="max-w-6xl px-5 mx-auto sm:px-6">
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="flex-grow-0 w-2/12 mr-4 shrink-0">
@@ -133,14 +134,14 @@ export default function Header({
                 />
               </Link>
             </div>
-            <nav className="flex-grow-0 hidden w-6/12 lg:flex ">
+            <nav className="flex-grow-0 hidden w-6/12 lg:flex">
               <ul className="flex flex-wrap items-center justify-end grow">
                 {menuItems.map((item, index) => {
                   return (
                     <li key={index}>
                       <Link
                         href={item.link}
-                        className="flex items-center flex-grow-0 px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300 lg:flex"
+                        className="flex items-center flex-grow-0 px-5 py-3 font-medium text-gray-600 dark:text-gray-300 transition duration-150 ease-in-out hover:text-primary-300 dark:hover:text-primary-300 lg:flex"
                       >
                         {item.text}
                       </Link>
@@ -157,7 +158,7 @@ export default function Header({
             <div className="flex lg:hidden">
               <button
                 onClick={toggleMenuHandler}
-                className={toggleMenu ? "hamburger active" : "hamburger "}
+                className={toggleMenu ? "hamburger active" : "hamburger"}
               >
                 <span className="sr-only">Menu</span>
                 <MenuBtn />
@@ -165,7 +166,7 @@ export default function Header({
               </button>
               <div>
                 {toggleMenu ? (
-                  <nav className="absolute left-0 z-20 flex-grow-0 w-full h-screen pb-16 overflow-scroll translate-y-0 bg-white opacity-100 top-full">
+                  <nav className="absolute left-0 z-20 flex-grow-0 w-full h-screen pb-16 overflow-scroll translate-y-0 bg-white dark:bg-gray-900 opacity-100 top-full">
                     <ul className="px-5 py-2">
                       <li>
                         <GithubBtn />
@@ -175,7 +176,7 @@ export default function Header({
                           <li key={index}>
                             <Link
                               href={item.link}
-                              className="flex items-center px-5 py-3 font-medium text-gray-600 transition duration-150 ease-in-out hover:text-primary-300"
+                              className="flex items-center px-5 py-3 font-medium text-gray-600 dark:text-gray-300 transition duration-150 ease-in-out hover:text-primary-300 dark:hover:text-primary-300"
                             >
                               {item.text}
                             </Link>
@@ -201,7 +202,7 @@ export default function Header({
               }}
             >
             </animated.div>
-            <div className="absolute top-0 w-full h-full bg-gray-300 -z-10"></div>
+            <div className="absolute top-0 w-full h-full bg-gray-300 dark:bg-gray-700 -z-10"></div>
           </div>
         )}
       </header>

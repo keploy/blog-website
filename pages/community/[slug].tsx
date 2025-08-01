@@ -145,6 +145,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       Title={post?.seo.title || "Loading..."}
       Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
     >
+      <div className="bg-white dark:bg-[#121212] text-slate-900 dark:text-gray-100 overflow-x-hidden">
       <Header readProgress={readProgress} />
       <Container>
         {router.isFallback ? (
@@ -198,6 +199,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           )}
         </article>
       </Container>
+      </div>
     </Layout>
   );
 }
