@@ -3,79 +3,104 @@ import Date from "./date";
 import CoverImage from "./cover-image";
 import Link from "next/link";
 import { Post } from "../types/post";
-import { animated, easings, useInView } from "@react-spring/web";
+import { easings, useInView } from "@react-spring/web";
+import Image from "next/image";
+import { Tag } from "../types/tag";
 
 export default function PostPreview({
   title,
   coverImage,
   date,
-  excerpt,
   author,
   slug,
   isCommunity = false,
+  authorImage,
+  tags,
 }: {
   title: Post["title"];
   coverImage: Post["featuredImage"];
   date: Post["date"];
-  excerpt: Post["excerpt"];
   author: Post["ppmaAuthorName"];
   slug: Post["slug"];
   isCommunity?: boolean;
+  authorImage: Post["ppmaAuthorImage"];
+  tags: Tag["node"]["name"];
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
-  excerpt = excerpt.replace("Table of Contents", "");
-  const [ref, springStyles] = useInView(
+  const [ref] = useInView(
     () => ({
-      from: {
-        opacity: 0,
-      },
-      to: {
-        opacity: 100,
-      },
-      config: {
-        duration: 500,
-        delay: 100,
-        easing: easings.easeInCubic,
-      },
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+      config: { duration: 500, delay: 100, easing: easings.easeInCubic },
     }),
-    {
-      rootMargin: "-200px 0px",
-    }
+    { rootMargin: "-200px 0px" }
   );
+
   return (
-    <animated.div
-      className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition group"
+    <div
+      className="group relative h-full overflow-hidden rounded-2xl border-[2px] border-[#E2E4E9] bg-[#F9FAFE] transition duration-200 hover:shadow-xl flex flex-col"
       ref={ref}
-      style={springStyles}
     >
-      <div className="mb-5">
+      <Link href={`${basePath}/${slug}`}>
         {coverImage && (
           <CoverImage
             title={title}
             coverImage={coverImage}
             slug={slug}
             isCommunity={isCommunity}
+            classNames="rounded-tr-2xl rounded-tl-2xl h-[200px] w-full"
           />
         )}
-      </div>
-      <h3 className="text-2xl leading-snug leading-none heading1 font-bold">
-        <Link
-          href={`${basePath}/${slug}`}
-          className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
-          dangerouslySetInnerHTML={{ __html: title }}
-        ></Link>
-      </h3>
-      <div className="flex items-center gap-4">
-        <Avatar author={author ? author : "Anonymous"} />
-        <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
-        <div className="text-md mb-4 pt-4">
-          <Date dateString={date} />
+
+        <div className="p-[24px] flex flex-col justify-between flex-1">
+          <div>
+            {tags && (
+              <span className="inline-block w-fit text-sm font-semibold bg-orange-100 text-orange-700 px-4 rounded-full py-1 mb-[8px]">
+                {tags}
+              </span>
+            )}
+
+            <h3 className="leading-tight font-medium text-lg 2xl:text-xl block group-hover:underline">
+              <span
+                className="bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px] hover:underline"
+                dangerouslySetInnerHTML={{ __html: title }}
+              ></span>
+            </h3>
+          </div>
         </div>
-      </div>
-      <div
-        className="text-sm leading-normal mb-4 body text-slate-600"
-        dangerouslySetInnerHTML={{ __html: excerpt }}
-      />
-    </animated.div>
+
+        <div className="p-[1rem] pt-0 xl:p-[1.5rem] xl:pt-0">
+          <div className="flex items-center gap-4">
+            <div className="flex flex-row justify-center items-center">
+              {authorImage &&
+              authorImage !== "imag1" &&
+              authorImage !== "image" ? (
+                <Image
+                  src={authorImage}
+                  alt={`${authorImage}'s Avatar`}
+                  className="w-10 h-10 rounded-full mr-3 sm:mr-2"
+                  height={40}
+                  width={40}
+                />
+              ) : (
+                <Image
+                  src={`/blog/images/author.png`}
+                  alt={`${authorImage}'s Avatar`}
+                  className="w-10 h-10 rounded-full mr-3 sm:mr-2"
+                  height={40}
+                  width={40}
+                />
+              )}
+              <div>
+                <Avatar author={author ? author : "Anonymous"} />
+                <div className="text-[12px] mb-0 -mt-1 text-gray-500">
+                  <Date dateString={date} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Link>
+    </div>
   );
 }

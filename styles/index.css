@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap');
 
 @tailwind base;
 
@@ -249,4 +250,22 @@ td{
   .post-content-wrapper td {
     white-space: normal;
   }
+}
+
+.tags-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tags-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tags-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #e0e0e0, #bfbfbf);
+  border-radius: 8px;
+  transition: background 0.3s ease-in-out;
+}
+
+.tags-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #c2c2c2, #999999);
 }
