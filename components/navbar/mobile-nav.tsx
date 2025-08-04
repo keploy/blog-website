@@ -43,6 +43,8 @@ const MobileNavSection = ({
                 {column.isClickable ? (
                   <Link
                     href={column.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-base font-medium text-[#737373] hover:text-primary"
                   >
                     {column.title}
@@ -59,6 +61,8 @@ const MobileNavSection = ({
                   <Link
                     key={itemIdx}
                     href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="group flex items-center gap-2 rounded-lg p-2 text-base hover:bg-accent"
                   >
                     <span
@@ -84,6 +88,8 @@ const MobileNavSection = ({
               </p>
               <Link
                 href={featuredContent.featuredCard.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block rounded-lg border p-3 hover:bg-accent"
               >
                 <div className="flex items-center gap-3">
@@ -146,6 +152,8 @@ export function MobileNav() {
             <div className="py-4 border-t">
               <Link
                 href="https://keploy.io/pricing"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex w-full items-center justify-between py-2 font-medium hover:underline"
               >
                 Pricing
