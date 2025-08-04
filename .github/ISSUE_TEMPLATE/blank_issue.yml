@@ -1,0 +1,9 @@
+name: 📝 Blank Issue
+description: Open a general issue not covered by other templates.
+title: "[General]: "
+labels: [discussion]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for questions, discussions, or anything not categorized as a bug or feature request.
