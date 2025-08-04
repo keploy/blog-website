@@ -51,8 +51,8 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row lg:mt-7 items-start sm:items-center sm:justify-around gap-4 sm:gap-0 sm:px-0 lg:mx-28">
-        <p className="text-gray-500 dark:text-gray-400 text-sm order-1 sm:order-none mr-1 sm:my-2 md:my-4 lg:my-0">
+      <div className="flex flex-col lg:flex-row lg:mt-7 items-start sm:items-center sm:justify-around gap-4 sm:gap-0  sm:px-0 lg:mx-28">
+        <p className="text-gray-500 text-sm order-1 sm:order-none mr-1 sm:my-2 md:my-4 lg:my-0">
           {timetoRead} min read
         </p>
 
@@ -70,16 +70,15 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
               className="rounded-full"
             />
             <div className="relative">
-              <p className="text-black dark:text-gray-100">
-                <span className="text-gray-500 dark:text-gray-400">Written By:</span>{" "}
+              <p className="text-black">
+                <span className="text-gray-500">Written By:</span>{" "}
                 <span className="font-base">{blogwriter[0].name}</span>
               </p>
             </div>
 
             {hoverStateBlogWriter && (
-              <div className="absolute bg-[#121212] text-gray-200 p-4 rounded shadow-lg z-40 mt-2 top-12 w-80 border border-gray-700">
+              <div className="absolute bg-white p-4 text-sm rounded shadow-md z-40 mt-2 top-12 w-80">
                 <Link href={`/authors/${blogwriter[0].name}`}>
-                  <span className="block">
                     <div className="flex flex-row items-center gap-3 sm:gap-5">
                       <Image
                         src={blogwriter[0].ImageUrl}
@@ -91,7 +90,6 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
                       <p className="text-base sm:text-lg">{blogwriter[0].name}</p>
                     </div>
                     <p className="mt-2 text-sm">{blogwriter[0].description}</p>
-                  </span>
                 </Link>
               </div>
             )}
@@ -111,16 +109,15 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
                 className="rounded-full"
               />
               <div className="relative flex-1">
-                <p className="text-sm sm:text-base text-black dark:text-gray-100">
-                  <span className="text-gray-500 dark:text-gray-400">Reviewed By:</span>{" "}
+                <p className="text-sm sm:text-base">
+                  <span className="text-gray-500">Reviewed By:</span>{" "}
                   <span className="font-base">{blogreviewer[0].name}</span>
                 </p>
               </div>
 
               {hoverStateBlogReviewer && (
-                <div className="absolute bg-[#121212] text-gray-200 p-4 rounded shadow-lg z-40 mt-2 top-12 w-[calc(100vw-2rem)] sm:w-80 left-0 border border-gray-700">
+                <div className="absolute bg-white p-4 text-sm rounded shadow-md z-40 mt-2 top-12 w-[calc(100vw-2rem)] sm:w-80 left-0">
                   <Link href={`/authors/${blogreviewer[0].name}`}>
-                    <span className="block">
                       <div className="flex flex-row items-center gap-3 sm:gap-5">
                         <Image
                           src={blogreviewer[0].ImageUrl}
@@ -132,7 +129,6 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
                         <p className="text-base sm:text-lg">{blogreviewer[0].name}</p>
                       </div>
                       <p className="mt-2 text-sm">{blogreviewer[0].description}</p>
-                    </span>
                   </Link>
                 </div>
               )}
@@ -140,14 +136,14 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
           )}
         </div>
 
-        <div className="flex flex-row gap-5 items-center order-2 sm:order-none mt-2 md:mb-2">
-          <p className="text-gray-500 dark:text-gray-400 text-sm">Share this</p>
+        <div className="flex flex-row gap-5 items-center gap-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
+          <p className="text-gray-500 text-sm">Share this</p>
 
           <Link
             href={twitterShareUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="twitter-share-button text-xl text-black dark:text-white transition-colors duration-300 hover:text-blue-500"
+            className="twitter-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
             aria-label="Share on Twitter"
           >
             <FaTwitter className="icon" />
@@ -157,26 +153,26 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
             href={linkedinShareUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="linkedin-share-button text-xl text-black dark:text-white transition-colors duration-300 hover:text-blue-500"
+            className="linkedin-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
           >
             <FaLinkedin className="icon" />
           </Link>
 
           <button
             onClick={copyToClipboard}
-            className="link-share-button text-xl text-black dark:text-white transition-colors duration-300 hover:text-blue-500 focus:outline-none"
+            className="link-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500 focus:outline-none"
             aria-label="Copy URL to clipboard"
           >
             <FaLink className="icon" />
           </button>
 
           {copied && (
-            <span className="ml-2 text-orange-500 text-sm select-none">Copied!</span>
+            <span className="ml-2 text-orange-500 text-sm">Copied!</span>
           )}
         </div>
       </div>
 
-      <hr className="border-slate-300 dark:border-gray-700 mb-20 mt-5" />
+      <hr className="border-slate-300 mb-20 mt-5" />
     </>
   );
 };

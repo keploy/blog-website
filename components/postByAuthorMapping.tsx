@@ -31,7 +31,7 @@ function Node({ node }) {
   return (
     <animated.li className="mb-8" ref={cardRef} style={cardSpringStyles}>
       <Link href={`/${node.categories.edges[0].node.name}/${node.slug}`}>
-        <div className="px-5 py-4  transition-colors duration-300 ease-in-out transform border border-transparent rounded-lg group hover:scale-105 hover:border-accent-2 hover:dark:bg-neutral-400/30">
+        <div className="px-5 py-4  transition-colors duration-300 ease-in-out transform border border-transparent rounded-lg group hover:scale-105 hover:border-accent-2">
           <div className="flex items-center justify-between">
             <h2 className="mb-2 mr-4 text-lg font-bold sm:text-xl text-slate-600">
               {node.title}
