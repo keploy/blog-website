@@ -69,7 +69,7 @@ export default function TOC({ headings, isList, setIsList }) {
   const handleItemClick = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80; 
+      const offset = 80;
       const offsetPosition = element.offsetTop - offset;
       window.scrollTo({
         top: offsetPosition,

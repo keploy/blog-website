@@ -195,11 +195,6 @@ body {
   }
 }
 
-pre {
-  background-color: #222222 !important;
-  color: antiquewhite;
-}
-
 .footer-font{
   font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
 }
@@ -242,6 +237,13 @@ td{
 .post-content-wrapper thead th {
   background-color: #f5f5f5;
   font-weight: bold;
+}
+
+.post-content-wrapper pre {
+  padding: 1.5rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 @media (max-width: 1024px) {
@@ -312,55 +314,5 @@ td{
     --chart-5: 27 87% 67%;
 
     --radius: 0.5rem;
-  }
-  .dark {
-
-    --background: 0 0% 3.9%;
-
-    --foreground: 0 0% 98%;
-
-    --card: 0 0% 3.9%;
-
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 3.9%;
-
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 14.9%;
-
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 14.9%;
-
-    --muted-foreground: 0 0% 63.9%;
-
-    --accent: 0 0% 14.9%;
-
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 14.9%;
-
-    --input: 0 0% 14.9%;
-
-    --ring: 0 0% 83.1%;
-
-    --chart-1: 220 70% 50%;
-
-    --chart-2: 160 60% 45%;
-
-    --chart-3: 30 80% 55%;
-
-    --chart-4: 280 65% 60%;
-
-    --chart-5: 340 75% 55%;
   }
 }

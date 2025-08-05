@@ -11,6 +11,7 @@ import { Button } from "../components/ui/button";
 import { MobileNav } from "../components/navbar/mobile-nav";
 import { useState, useEffect } from "react";
 import { cn } from "../lib/utils/utils";
+import { ModeToggle } from "./dark-mode-toggle";
 
 export default function Header({
   readProgress,
@@ -68,6 +69,8 @@ export default function Header({
                   Sign In
                 </a>
               </Button>
+
+              <ModeToggle />
             </div>
 
             {/* Mobile Navigation */}

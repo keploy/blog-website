@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FaLinkedin, FaTwitter, FaLink } from "react-icons/fa"; 
+import { FaLinkedin, FaTwitter, FaLink } from "react-icons/fa";
 
 const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
   const sameAuthor =
@@ -11,7 +11,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
 
   const [hoverStateBlogWriter, setHoverStateBlogWriter] = useState(false);
   const [hoverStateBlogReviewer, setHoverStateBlogReviewer] = useState(false);
-  const [copied, setCopied] = useState(false); 
+  const [copied, setCopied] = useState(false);
 
   const onMouseEnterBlogWriter = () => {
     setHoverStateBlogWriter(true);
@@ -43,7 +43,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
     try {
       await navigator.clipboard.writeText(`https://keploy.io/blog${router.asPath}`);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); 
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy!", err);
     }
@@ -67,10 +67,10 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
               alt="blog-writer"
               height={40}
               width={40}
-              className={`rounded-full`}
+              className="rounded-full"
             />
             <div className="relative">
-              <p>
+              <p className="text-black">
                 <span className="text-gray-500">Written By:</span>{" "}
                 <span className="font-base">{blogwriter[0].name}</span>
               </p>
@@ -79,17 +79,17 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
             {hoverStateBlogWriter && (
               <div className="absolute bg-white p-4 text-sm rounded shadow-md z-40 mt-2 top-12 w-80">
                 <Link href={`/authors/${blogwriter[0].name}`}>
-                  <div className="flex flex-row items-center gap-3 sm:gap-5">
-                    <Image
-                      src={blogwriter[0].ImageUrl}
-                      alt="blog-writer"
-                      height={40}
-                      width={40}
-                      className="rounded-full"
-                    />
-                    <p className="text-base sm:text-lg">{blogwriter[0].name}</p>
-                  </div>
-                  <p className="mt-2 text-sm">{blogwriter[0].description}</p>
+                    <div className="flex flex-row items-center gap-3 sm:gap-5">
+                      <Image
+                        src={blogwriter[0].ImageUrl}
+                        alt="blog-writer"
+                        height={40}
+                        width={40}
+                        className="rounded-full"
+                      />
+                      <p className="text-base sm:text-lg">{blogwriter[0].name}</p>
+                    </div>
+                    <p className="mt-2 text-sm">{blogwriter[0].description}</p>
                 </Link>
               </div>
             )}
@@ -118,37 +118,37 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
               {hoverStateBlogReviewer && (
                 <div className="absolute bg-white p-4 text-sm rounded shadow-md z-40 mt-2 top-12 w-[calc(100vw-2rem)] sm:w-80 left-0">
                   <Link href={`/authors/${blogreviewer[0].name}`}>
-                    <div className="flex flex-row items-center gap-3 sm:gap-5">
-                      <Image
-                        src={blogreviewer[0].ImageUrl}
-                        alt="blog-reviewer"
-                        height={40}
-                        width={40}
-                        className="rounded-full"
-                      />
-                      <p className="text-base sm:text-lg">
-                        {blogreviewer[0].name}
-                      </p>
-                    </div>
-                    <p className="mt-2 text-sm">
-                      {blogreviewer[0].description}
-                    </p>
+                      <div className="flex flex-row items-center gap-3 sm:gap-5">
+                        <Image
+                          src={blogreviewer[0].ImageUrl}
+                          alt="blog-reviewer"
+                          height={40}
+                          width={40}
+                          className="rounded-full"
+                        />
+                        <p className="text-base sm:text-lg">{blogreviewer[0].name}</p>
+                      </div>
+                      <p className="mt-2 text-sm">{blogreviewer[0].description}</p>
                   </Link>
                 </div>
               )}
             </div>
           )}
         </div>
+
         <div className="flex flex-row gap-5 items-center gap-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
           <p className="text-gray-500 text-sm">Share this</p>
+
           <Link
             href={twitterShareUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="twitter-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
+            aria-label="Share on Twitter"
           >
             <FaTwitter className="icon" />
           </Link>
+
           <Link
             href={linkedinShareUrl}
             target="_blank"
@@ -157,6 +157,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
           >
             <FaLinkedin className="icon" />
           </Link>
+
           <button
             onClick={copyToClipboard}
             className="link-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500 focus:outline-none"
@@ -164,6 +165,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
           >
             <FaLink className="icon" />
           </button>
+
           {copied && (
             <span className="ml-2 text-orange-500 text-sm">Copied!</span>
           )}
