@@ -12,18 +12,20 @@ import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 export default function Index({ communityPosts, technologyPosts, preview }) {
   return (
-
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
       Title={`Blog - Keploy`}
-      Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}>
+      Description={
+        "The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."
+      }
+    >
       <Head>
         <title>{`Engineering | Keploy Blog`}</title>
       </Head>
       <Header />
-      <Container>
-        <div className="">
+      <div className="bg-[#FEF6F4]">
+        <div>
           <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
             <div className="content">
               <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
@@ -63,7 +65,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
           technologyPosts={technologyPosts}
         />
         <Testimonials />
-      </Container>
+      </div>
     </Layout>
   );
 }
