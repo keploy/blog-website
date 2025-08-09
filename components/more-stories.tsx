@@ -17,43 +17,49 @@ export default function MoreStories({
   initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
 }) {
   const [searchTerm, setSearchTerm] = useState("");
-  // Initialize with 21 posts (22 - 1 hero post)
   const [allPosts, setAllPosts] = useState(initialPosts.slice(0, 21));
   const [visibleCount, setVisibleCount] = useState(12);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialPageInfo?.hasNextPage ?? true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<null | string>(null);
   const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
 
-  // Set up initial buffer with remaining posts
   useEffect(() => {
     if (initialPosts.length > 21) {
       setBuffer(initialPosts.slice(21));
     }
-    // Start background fetch if we have less than 9 posts in buffer
     if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
       loadMoreInBackground();
     }
-  }, [initialPosts]);
 
-  // Filter posts based on search term
-  const filteredPosts = allPosts.filter(({ node }) => 
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200 &&
+        !loading &&
+        hasMore
+      ) {
+        loadMorePosts();
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [initialPosts, loading, hasMore, buffer.length, isIndex, initialPageInfo]);
+
+  const filteredPosts = allPosts.filter(({ node }) =>
     node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Reset visible count when search term changes
   useEffect(() => {
     setVisibleCount(12);
     setError(null);
   }, [searchTerm]);
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  // Fetch more posts in background
   const loadMoreInBackground = async () => {
     try {
       const category = isCommunity ? 'community' : 'technology';
@@ -82,19 +88,15 @@ export default function MoreStories({
 
     setLoading(true);
     try {
-      // First, show more posts from allPosts if available
       if (visibleCount < allPosts.length) {
         setVisibleCount(prev => Math.min(prev + 9, allPosts.length));
-      } 
-      // Then, add posts from buffer if needed
-      else if (buffer.length > 0) {
+      } else if (buffer.length > 0) {
         const postsToAdd = buffer.slice(0, 9);
         setAllPosts(prev => [...prev, ...postsToAdd]);
         setBuffer(prev => prev.slice(9));
         setVisibleCount(prev => prev + postsToAdd.length);
       }
 
-      // If buffer is getting low, fetch more posts
       if (buffer.length < 9 && hasMore) {
         const category = isCommunity ? 'community' : 'technology';
         const result = await fetchMorePosts(category, endCursor);
@@ -114,14 +116,6 @@ export default function MoreStories({
       setLoading(false);
     }
   };
-
-  // Show load more button if there are more posts to show from allPosts,
-  // or if there are posts in buffer, or if we can fetch more
-  const showLoadMore = (
-    visibleCount < allPosts.length || 
-    buffer.length > 0 || 
-    hasMore
-  ) && !loading && !error && isIndex;
 
   return (
     <section>
@@ -171,20 +165,17 @@ export default function MoreStories({
                 {error}
               </div>
             )}
-
-            {showLoadMore && (
-              <button
-                onClick={loadMorePosts}
-                disabled={loading}
-                className="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
-              >
-                {loading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                ) : (
-                  'Load More Posts'
-                )}
-              </button>
-            )}
+            <button
+              className="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 flex items-center justify-center min-w-[150px] transition-all duration-200"
+              onClick={loadMorePosts}
+              disabled={loading}
+              aria-label="Load more posts"
+            >
+              {loading && (
+                <div className="w-5 h-5 border-4 border-white border-t-orange-500 rounded-full animate-spin mr-2" />
+              )}
+              {loading ? 'Loading...' : hasMore ? 'Load More Posts' : 'No More Posts'}
+            </button>
           </div>
         </>
       )}
