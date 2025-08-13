@@ -4,7 +4,7 @@
 
 ### Step 1. Prepare your WordPress site
 
-First, you need a WordPress site. There are many solutions for WordPress hosting or you could use a Local by flywheel for setting up WordPress locally.
+First, you need a WordPress site. There are many solutions for WordPress hosting or you could use Local by Flywheel to set up WordPress locally.
 
 Once the site is ready, you'll need to install the [WPGraphQL](https://www.wpgraphql.com/) plugin. It will add GraphQL API to your WordPress site, which we'll use to query the posts. Follow these steps to install it:
 
@@ -59,8 +59,8 @@ Then open .env.local and set WORDPRESS_API_URL to be the URL to your GraphQL end
 
 Your .env.local file should look like this:
 
-```bash
-WORDPRESS_API_URL=...
+```env
+WORDPRESS_API_URL=https://yourwordpresssite.com/graphql
 ```
 
 ### Step 6. Run Next.js in development mode
@@ -74,4 +74,4 @@ yarn dev
 Your blog should be up and running on http://localhost:3000! If it doesn't work, post on GitHub discussions.
 
 
-For CSS files being rendered at vercel and not on keploy enpoint - we set generic redirection /blogs/* on cloudfront. 
+If CSS files are rendered correctly on Vercel but not on the Keploy endpoint, it's because we've set a generic CloudFront redirection rule for /blogs/*.  
