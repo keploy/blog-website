@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function useVSCodeInstalls(initialInstalls = "540K") {
+export function useVSCodeInstalls(initialInstalls = "695K") {
   const [installs, setInstalls] = useState(initialInstalls);
 
   useEffect(() => {
@@ -27,17 +27,28 @@ export function useVSCodeInstalls(initialInstalls = "540K") {
         }),
       }
     )
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         const count =
           data.results[0]?.extensions[0]?.statistics?.find(
             (stat: { statisticName: string }) =>
               stat.statisticName === "install"
           )?.value || 0;
-        const formattedCount = formatInstallCount(count);
-        setInstalls(formattedCount);
+        
+        if (count > 0) {
+          const formattedCount = formatInstallCount(count);
+          setInstalls(formattedCount);
+        }
       })
-      .catch(() => {});
+      .catch((error) => {
+        // Log error for debugging but keep fallback value
+        console.warn("Failed to fetch VS Code install count:", error);
+      });
   }, []);
   return installs;
 }
