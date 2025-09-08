@@ -27,9 +27,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const now = Date.now();
+
   try {
-    // Check server-side cache first
-    const now = Date.now();
     if (serverCache && (now - serverCache.timestamp) < SERVER_CACHE_DURATION) {
       return res.status(200).json({ 
         count: serverCache.count,
@@ -38,7 +38,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    // Fetch from VS Code Marketplace API
     const response = await fetch(
       'https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery',
       {
@@ -75,7 +74,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (count > 0) {
       const formattedCount = formatInstallCount(count);
       
-      // Update server cache
       serverCache = {
         count: formattedCount,
         timestamp: now
@@ -92,7 +90,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error) {
     console.error('VS Code install count API error:', error);
     
-    // If we have cached data, return it even if expired
     if (serverCache) {
       return res.status(200).json({ 
         count: serverCache.count,
@@ -102,7 +99,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    // Last resort fallback
     return res.status(200).json({ 
       count: '695K+',
       cached: false,

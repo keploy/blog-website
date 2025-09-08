@@ -1,36 +1,30 @@
 import { useEffect, useState } from "react";
 
-// Cache for storing the install count to avoid repeated API calls
 let cachedInstallCount: string | null = null;
 let cacheTimestamp: number = 0;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+const CACHE_DURATION = 5 * 60 * 1000;
 
 export function useVSCodeInstalls() {
   const [installs, setInstalls] = useState<string>("Loading...");
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // Ensure we're on the client side
     setIsClient(true);
   }, []);
 
   useEffect(() => {
-    // Only run on client side
     if (!isClient || typeof window === 'undefined') return;
 
     const fetchInstallCount = async () => {
       try {
-        // Check if we have a valid cached value
         const now = Date.now();
         if (cachedInstallCount && (now - cacheTimestamp) < CACHE_DURATION) {
           setInstalls(cachedInstallCount);
           return;
         }
 
-        // Show loading state
         setInstalls("Loading...");
 
-        // Try our API route first (server-side cached)
         try {
           const apiResponse = await fetch('/api/vscode-installs');
           if (apiResponse.ok) {
@@ -45,8 +39,6 @@ export function useVSCodeInstalls() {
         } catch (apiError) {
           console.warn("API route failed, trying direct VS Code API:", apiError);
         }
-
-        // Fallback to direct VS Code Marketplace API
         const response = await fetch(
           "https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery",
           {
@@ -84,7 +76,6 @@ export function useVSCodeInstalls() {
         
         if (count > 0) {
           const formattedCount = formatInstallCount(count);
-          // Cache the result
           cachedInstallCount = formattedCount;
           cacheTimestamp = now;
           setInstalls(formattedCount);
@@ -94,11 +85,9 @@ export function useVSCodeInstalls() {
       } catch (error) {
         console.warn("Failed to fetch VS Code install count:", error);
         
-        // If we have a cached value, use it even if expired
         if (cachedInstallCount) {
           setInstalls(cachedInstallCount);
         } else {
-          // Last resort: try to get a reasonable fallback
           setInstalls("695K+");
         }
       }
