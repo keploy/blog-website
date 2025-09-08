@@ -2,38 +2,48 @@ import { useEffect, useState } from "react";
 
 export function useVSCodeInstalls(initialInstalls = "695K") {
   const [installs, setInstalls] = useState(initialInstalls);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    fetch(
-      "https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json;api-version=7.1-preview.1",
-        },
-        body: JSON.stringify({
-          filters: [
-            {
-              criteria: [
+    // Ensure we're on the client side
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    // Only run on client side
+    if (!isClient || typeof window === 'undefined') return;
+
+    const fetchInstallCount = async () => {
+      try {
+        const response = await fetch(
+          "https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json;api-version=7.1-preview.1",
+            },
+            body: JSON.stringify({
+              filters: [
                 {
-                  filterType: 7,
-                  value: "Keploy.keployio", // Replace with actual extension ID
+                  criteria: [
+                    {
+                      filterType: 7,
+                      value: "Keploy.keployio",
+                    },
+                  ],
                 },
               ],
-            },
-          ],
-          flags: 914,
-        }),
-      }
-    )
-      .then((response) => {
+              flags: 914,
+            }),
+          }
+        );
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json();
-      })
-      .then((data) => {
+
+        const data = await response.json();
         const count =
           data.results[0]?.extensions[0]?.statistics?.find(
             (stat: { statisticName: string }) =>
@@ -44,12 +54,15 @@ export function useVSCodeInstalls(initialInstalls = "695K") {
           const formattedCount = formatInstallCount(count);
           setInstalls(formattedCount);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         // Log error for debugging but keep fallback value
         console.warn("Failed to fetch VS Code install count:", error);
-      });
-  }, []);
+      }
+    };
+
+    fetchInstallCount();
+  }, [isClient]);
+  
   return installs;
 }
 
