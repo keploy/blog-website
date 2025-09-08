@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 
-export function useVSCodeInstalls(initialInstalls = "695K") {
-  const [installs, setInstalls] = useState(initialInstalls);
+// Cache for storing the install count to avoid repeated API calls
+let cachedInstallCount: string | null = null;
+let cacheTimestamp: number = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+export function useVSCodeInstalls() {
+  const [installs, setInstalls] = useState<string>("Loading...");
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -15,6 +20,33 @@ export function useVSCodeInstalls(initialInstalls = "695K") {
 
     const fetchInstallCount = async () => {
       try {
+        // Check if we have a valid cached value
+        const now = Date.now();
+        if (cachedInstallCount && (now - cacheTimestamp) < CACHE_DURATION) {
+          setInstalls(cachedInstallCount);
+          return;
+        }
+
+        // Show loading state
+        setInstalls("Loading...");
+
+        // Try our API route first (server-side cached)
+        try {
+          const apiResponse = await fetch('/api/vscode-installs');
+          if (apiResponse.ok) {
+            const data = await apiResponse.json();
+            if (data.count) {
+              cachedInstallCount = data.count;
+              cacheTimestamp = now;
+              setInstalls(data.count);
+              return;
+            }
+          }
+        } catch (apiError) {
+          console.warn("API route failed, trying direct VS Code API:", apiError);
+        }
+
+        // Fallback to direct VS Code Marketplace API
         const response = await fetch(
           "https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery",
           {
@@ -52,11 +84,23 @@ export function useVSCodeInstalls(initialInstalls = "695K") {
         
         if (count > 0) {
           const formattedCount = formatInstallCount(count);
+          // Cache the result
+          cachedInstallCount = formattedCount;
+          cacheTimestamp = now;
           setInstalls(formattedCount);
+        } else {
+          throw new Error("No install count found in API response");
         }
       } catch (error) {
-        // Log error for debugging but keep fallback value
         console.warn("Failed to fetch VS Code install count:", error);
+        
+        // If we have a cached value, use it even if expired
+        if (cachedInstallCount) {
+          setInstalls(cachedInstallCount);
+        } else {
+          // Last resort: try to get a reasonable fallback
+          setInstalls("695K+");
+        }
       }
     };
 
