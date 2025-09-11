@@ -1,0 +1,4 @@
+warning: in the working copy of 'components/navbar/github-stars.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'hooks/useGithubStars.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it
+hooks/useGithubStars.tsx
