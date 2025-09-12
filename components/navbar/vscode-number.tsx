@@ -13,7 +13,7 @@ export function Vscode({ className = "" }) {
       setHref(
         window.innerWidth < 1024
           ? "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio"
-          : "https://app.keploy.io"
+          : "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio"
       );
     }
   }, []);
