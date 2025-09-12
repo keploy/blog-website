@@ -41,7 +41,7 @@ export default function Header({
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="flex items-center flex-1">
               <div className="mr-4 shrink-0">
-                <Link href="https://keploy.io/">
+                <Link href="https://marketplace.visualstudio.com/items?itemName=Keploy.keployio">
                   <Image
                     src={sideBySideSvg}
                     alt="Keploy Logo"
@@ -61,7 +61,7 @@ export default function Header({
               <GitHubStars />
               <Button className="ml-[8px]">
                 <a
-                  href="https://app.keploy.io/signin"
+                  href="https://marketplace.visualstudio.com/items?itemName=Keploy.keployio"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
