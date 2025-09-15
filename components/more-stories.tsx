@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostPreview from "./post-preview";
@@ -54,7 +54,7 @@ export default function MoreStories({
   };
 
   // Fetch more posts in background
-  const loadMoreInBackground = async () => {
+  const loadMoreInBackground = useCallback(async () => {
     try {
       const category = isCommunity ? 'community' : 'technology';
       const result = await fetchMorePosts(category, endCursor);
@@ -70,8 +70,25 @@ export default function MoreStories({
       console.error('Error fetching more posts:', error);
       setError('Failed to load more posts. Please try again later.');
     }
-  };
+  }, [isCommunity, endCursor]);
 
+
+  useEffect(() => {
+    if (!isIndex) return;
+    
+    const onScroll = () => {
+      const threshold = 500;
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - threshold 
+        && !loading &&
+        hasMore ) {
+          loadMoreInBackground();
+        }
+    }
+    window.addEventListener("scroll", onScroll)
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [loading, hasMore, loadMoreInBackground])
+  
   const loadMorePosts = async () => {
     if (loading) return;
     
@@ -121,7 +138,7 @@ export default function MoreStories({
     visibleCount < allPosts.length || 
     buffer.length > 0 || 
     hasMore
-  ) && !loading && !error && isIndex;
+  ) && !error && isIndex;
 
   return (
     <section>
