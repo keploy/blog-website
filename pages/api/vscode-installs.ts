@@ -11,13 +11,11 @@ function formatInstallCount(count: number): string {
       ? `${(Math.round(millions * 10) / 10).toString().replace(/\.0$/, '')}M`
       : `${Math.round(millions)}M`;
   }
-  if (count >= 100_000) {
-   return `${Math.round(count / 1_000)}K`;
-  }
   if (count >= 1_000) {
-   return `${(Math.round((count / 1_000) * 10) / 10)
-      .toString()
-      .replace(/\.0$/, '')}K`;
+    const thousands = count / 1_000;
+    return thousands < 100
+      ? `${(Math.round(thousands * 10) / 10).toString().replace(/\.0$/, '')}K`
+      : `${Math.round(thousands)}K`;
   }
   return count.toString();
 }
@@ -105,7 +103,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Final fallback
     return res.status(200).json({ 
-      count: '695K+',
+      count: '696K+',
       cached: false,
       timestamp: now,
       warning: 'Using fallback value due to API error'

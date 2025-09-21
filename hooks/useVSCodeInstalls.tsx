@@ -5,8 +5,8 @@ let cachedInstallCount: string | null = null;
 let cacheTimestamp: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-export function useVSCodeInstalls() {
-  const [installs, setInstalls] = useState<string>("Loading...");
+export function useVSCodeInstalls(initialInstalls = "540K") {
+  const [installs, setInstalls] = useState<string>(initialInstalls);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export function useVSCodeInstalls() {
           setInstalls(cachedInstallCount);
         } else {
           // Fallback to current known value
-          setInstalls("695K+");
+          setInstalls("696K+");
         }
       }
     };
@@ -112,13 +112,11 @@ function formatInstallCount(count: number): string {
       ? `${(Math.round(millions * 10) / 10).toString().replace(/\.0$/, "")}M`
       : `${Math.round(millions)}M`;
   }
-  if (count >= 100_000) {
-    return `${Math.round(count / 1_000)}K`;
-  }
   if (count >= 1_000) {
-    return `${(Math.round((count / 1_000) * 10) / 10)
-      .toString()
-      .replace(/\.0$/, "")}K`;
+    const thousands = count / 1_000;
+    return thousands < 100
+      ? `${(Math.round(thousands * 10) / 10).toString().replace(/\.0$/, "")}K`
+      : `${Math.round(thousands)}K`;
   }
   return count.toString();
 }
