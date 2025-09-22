@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TOC from "./TableContents"; 
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; 
 import styles from "./post-body.module.css";
@@ -9,7 +9,6 @@ import { markdown } from "@codemirror/lang-markdown";
 import { python } from "@codemirror/lang-python";
 import { go } from "@codemirror/lang-go";
 import { dracula } from "@uiw/codemirror-theme-dracula";
-
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
 });
@@ -18,7 +17,7 @@ import WaitlistBanner from "./waitlistBanner";
 import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
-
+import AdSlot from "./Adslot";
 export default function PostBody({
   content,
   authorName,
@@ -36,6 +35,7 @@ export default function PostBody({
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content); 
   const [isList, setIsList] = useState(false);
+  const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
   const sameAuthor =
     authorName.split(" ")[0].toLowerCase() ===
     ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
@@ -74,10 +74,11 @@ export default function PostBody({
   useEffect(() => {
     const timeout = setTimeout(() => {
       const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
-      const tocItems = headings.map((heading, index) => {
-        const id = `heading-${index}`;
-        heading.setAttribute("id", id);
-        console.log("Here are the heading: ", heading.textContent);
+
+      const tocItems = headings.map((heading) => {
+        const id = `${heading.textContent}`;
+        heading.setAttribute("id", sanitizeStringForURL(id, true));
+
         return {
           id,
           title: heading.textContent,
@@ -85,7 +86,6 @@ export default function PostBody({
         };
       });
 
-      tocItems.shift();
       const index = tocItems.findIndex((item) => item.title === "More Stories");
       if (index !== -1) {
         tocItems.splice(index + 1);
@@ -97,6 +97,54 @@ export default function PostBody({
 
     return () => clearTimeout(timeout); 
   }, [content]);
+
+  useEffect(() => {
+  const timeout = setTimeout(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const targetId = decodeURIComponent(hash.slice(1));
+      const el = document.getElementById(targetId);
+      if (el) {
+        setIsUserEnteredURL(true);
+
+        const yOffset = -80;
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }
+  }, 100);
+
+  return () => clearTimeout(timeout);
+}, [tocItems]);
+
+  useEffect(() => {
+    const scrollObserverOptions = {
+      root: null,
+      rootMargin: "0px 0px -80% 0px",
+      threshold: 0,
+    };
+
+    const scrollObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute("id");
+
+        if (id) {
+          window.history.replaceState(null, "", `#${id}`);
+        }
+      }
+    }, scrollObserverOptions);
+
+    if (!isUserEnteredURL) {
+      tocItems.forEach(({ id }) => {
+        const ele = document.getElementById(sanitizeStringForURL(id, true));
+        if (ele) {
+          scrollObserver.observe(ele);
+        }
+      });
+      return () => scrollObserver.disconnect();
+    }
+  }, [tocItems]);
 
   const handleCopyClick = (code, index) => {
     navigator.clipboard
@@ -151,7 +199,18 @@ export default function PostBody({
       button.style.fontSize = "1rem";
       button.style.color = "#555"; 
       button.textContent = headingCopySuccessList[index] ? '✔️' : '#'; // // Copy Button
-      button.addEventListener("click", () => handleHeadingCopyClick(heading.innerHTML, index));
+      button.addEventListener("click", () => {
+        handleHeadingCopyClick(heading.innerHTML, index);
+
+        const yOffset = -80;
+        const y = document.getElementById(heading.id).getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({
+          top: y,
+          behavior: "smooth",
+        });
+        window.history.replaceState(null, "", `#${heading.id}`);
+      });
       heading.appendChild(button);
     });
   }, [tocItems, headingCopySuccessList]);
@@ -228,7 +287,7 @@ export default function PostBody({
               />
               <button
                 onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
+                className="absolute top-0 right-0 px-2 py-1 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
               >
                 {copySuccessList[index] ? (
                   <IoCheckmarkOutline />
@@ -239,7 +298,7 @@ export default function PostBody({
             </div>
           );
         }
-        // console.log("Data is receiving in renderCodeBlocks:", part);
+
         return (
           <div
             key={index}
@@ -273,16 +332,19 @@ export default function PostBody({
       } `}
     >
       <div
-        className={`flex items-center justify-center w-full mr-5 md:w-2/4 lg:w-1/4 top-20 lg:block ${
+        className={`flex items-center justify-center w-full md:w-[80%] lg:w-1/4 top-20 lg:block ${
           isList ? "" : "lg:sticky"
         }`}
       >
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`} id="post-body-check">
-        <div className="prose lg:prose-xl">{renderCodeBlocks()}</div>
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
+        <div className="prose lg:prose-xl post-content-wrapper">{renderCodeBlocks()}</div>
         <hr className="border-gray-300 mt-10 mb-20" />
+        <div>
+
+</div>
 
         <h1 className="text-2xl font-medium">Authored By:</h1>
         <div className="my-5">
@@ -305,9 +367,23 @@ export default function PostBody({
           </div>
         )}
       </div>
-      <div className="w-full lg:w-1/5 lg:ml-10 p-4 h-auto flex flex-col justify-center sticky lg:top-20">
-        <WaitlistBanner />
-      </div>
+
+  <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
+        
+  {/* 1. Waitlist banner (always shown) */}
+  <div className="flex justify-center">
+    <WaitlistBanner />
+  </div>
+
+  {/* 2. Ad slot (hidden on <lg) */}
+  <div className="hidden lg:flex justify-center rounded-xl p-4">
+    <AdSlot
+      slotId="3356716061"
+      className="w-full h-60"
+    />
+  </div>
+</aside>
+
     </div>
   );
 }

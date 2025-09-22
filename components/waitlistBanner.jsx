@@ -1,30 +1,21 @@
 import Image from "next/image";
-import waitlistBannerImage from "../public/images/waitlistBannerImage.png";
+import waitlistBannerImage from "../public/images/waitlistedBanner-1.png";
 import Link from "next/link";
 const waitlistBanner = () => {
   return (
-    <div className="flex flex-col bg-hero-gradient rounded-xl">
-      <div className="overflow-x-hidden py-6 px-6 flex flex-col w-full">
-        <span className="text-black font-semibold  text-2xl">
-          Get to 90% coverage fast? <br className="hidden lg:block" />
-          Try record-replay testing!
-        </span>
+    <div className="flex md:items-center flex-col rounded-xl">
         <Link
-          className="border border-black w-fit bg-white text-black text-base p-2 font-semibold rounded-md shadow-md hover:shadow-none shadow-neutral-950  mt-4"
-          href="https://www.app.keploy.io/signin"
+          className="border border-black w-fit bg-white text-black text-base p-2 font-semibold rounded-md shadow-md sticky hover:shadow-none shadow-neutral-950  mt-4"
+          href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ"
           target="_blank"
         >
           {" "}
-          Sign In
-        </Link>
-      </div>
-      <div className="pl-6 w-full">
-        <Image
-          className="rounded-tl-xl w-full"
+          <Image
+          className="rounded-tl-xl w-full !h-[350px]"
           alt="Description of Image"
           src={waitlistBannerImage}
         />
-      </div>
+        </Link>
     </div>
   );
 };
