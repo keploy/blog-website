@@ -7,7 +7,7 @@ import Layout from "../../components/layout";
 import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
 
-export default function Community({ allPosts: { edges }, preview }) {
+export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;
   const excerpt = getExcerpt(edges[0]?.node.excerpt);
   const morePosts = edges.slice(1);
@@ -44,7 +44,7 @@ export default function Community({ allPosts: { edges }, preview }) {
           />
         )}
         {morePosts.length > 0 && (
-          <MoreStories isIndex={true} posts={morePosts} isCommunity={true} />
+          <MoreStories isIndex={true} posts={morePosts} isCommunity={true} initialPageInfo={pageInfo} />
         )}
       </Container>
     </Layout>
@@ -53,7 +53,7 @@ export default function Community({ allPosts: { edges }, preview }) {
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   const allPosts = await getAllPostsForCommunity(preview);
- 
+
   return {
     props: { allPosts, preview },
     revalidate: 10,
