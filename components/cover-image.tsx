@@ -33,7 +33,7 @@ export default function CoverImage({
   );
 
   return (
-    <div className={cn("sm:mx-0", className)}> {/* Apply className to the div */}
+    <div className="sm:mx-0 ">
       {slug ? (
         <Link href={`${basePath}${slug}`} aria-label={title}>
           {image}
