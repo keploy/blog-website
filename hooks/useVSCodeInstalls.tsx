@@ -5,7 +5,7 @@ let cachedInstallCount: string | null = null;
 let cacheTimestamp: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-export function useVSCodeInstalls(initialInstalls = "540K") {
+export function useVSCodeInstalls(initialInstalls = "700K") {
   const [installs, setInstalls] = useState<string>(initialInstalls);
   const [isClient, setIsClient] = useState(false);
 
