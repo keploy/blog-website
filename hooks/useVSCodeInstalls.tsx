@@ -1,44 +1,21 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export function useVSCodeInstalls(initialInstalls = "540K") {
   const [installs, setInstalls] = useState(initialInstalls);
+  const { basePath } = useRouter();
 
   useEffect(() => {
-    fetch(
-      "https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json;api-version=7.1-preview.1",
-        },
-        body: JSON.stringify({
-          filters: [
-            {
-              criteria: [
-                {
-                  filterType: 7,
-                  value: "Keploy.keployio", // Replace with actual extension ID
-                },
-              ],
-            },
-          ],
-          flags: 914,
-        }),
-      }
-    )
+    const url = `${basePath}/api/vscode-installs`;
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        const count =
-          data.results[0]?.extensions[0]?.statistics?.find(
-            (stat: { statisticName: string }) =>
-              stat.statisticName === "install"
-          )?.value || 0;
+        const count = data.installs || 0;
         const formattedCount = formatInstallCount(count);
         setInstalls(formattedCount);
       })
       .catch(() => {});
-  }, []);
+  }, [basePath]);
   return installs;
 }
 
