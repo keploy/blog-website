@@ -1,8 +1,10 @@
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
 const ReviewingAuthor = ({ name, avatar, description }) => {
+  const { basePath } = useRouter();
   const [showMore, setShowMore] = useState(false);
   const toggleShowMore = () => {
     setShowMore(!showMore);
@@ -29,7 +31,7 @@ const ReviewingAuthor = ({ name, avatar, description }) => {
         <div className="w-3/5 self-center sm:w-1/4 p-8 flex justify-center items-center">
           {avatar !== "n/a" && (
             <Image
-              src={avatar}
+              src={/^https?:\/\//i.test(avatar) ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}` : avatar}
               alt="Author Avatar"
               width={200}
               height={200}
