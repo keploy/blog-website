@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/router";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
 const firstRow = Tweets.slice(0, Tweets.length / 2);
@@ -17,6 +18,9 @@ const ReviewCard = ({
   id: string;
   content: string;
 }) => {
+  const { basePath } = useRouter();
+  const isExternal = typeof avatar === "string" && /^https?:\/\//i.test(avatar);
+  const proxiedAvatar = isExternal ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}` : avatar;
   return (
     <a href={post} target="_blank" className="lg:mx-2">
       <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
@@ -26,7 +30,7 @@ const ReviewCard = ({
             width="32"
             height="32"
             alt=""
-            src={avatar}
+            src={proxiedAvatar}
           />
           <div className="flex flex-col">
             <figcaption className="text-sm font-bold">{name}</figcaption>
