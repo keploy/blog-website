@@ -75,7 +75,7 @@ export default function Footer() {
         </div>
 
         <div className="md:flex md:items-center md:justify-between py-4 md:py-8 border-t border-gray-200">
-          <ul className="flex items-center mb-4 md:order-1 md:ml-4 md:mb-0">
+          <ul className="flex items-center mb-4 md:order-1 md:ml-4 md:mb-0 justify-center md:justify-start">
             <li>
               <Link
                 href="https://twitter.com/Keployio"
@@ -157,7 +157,7 @@ export default function Footer() {
               </Link>
             </li>
           </ul>
-          <div className="text-sm text-neutral-300 mr-4">
+          <div className="flex justify-center md:justify-start text-sm text-neutral-300 mr-4">
             © Keploy Inc {new Date().getFullYear()}. All rights reserved.
           </div>
         </div>
