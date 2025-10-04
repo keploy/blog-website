@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Fuse from "fuse.js";
 import { getAllPosts } from "../../lib/api"; // fetch all posts
-import { after } from "node:test";
 
 export function SearchNav() {
   const [query, setQuery] = useState("");
@@ -11,7 +10,6 @@ export function SearchNav() {
 
   const handleSearch = async () => {
     const data = await getAllPosts();
-    console.log(data);
     setPosts(data.edges.map((edge: any) => edge.node));
   };
 
@@ -20,7 +18,6 @@ export function SearchNav() {
       if (event.ctrlKey && event.key.toLowerCase() === "k") {
         event.preventDefault();
         setSearchBoxOpen((prev) => !prev);
-        console.log("You just pressed Control + K!");
       }
       if (event.key === "Escape") {
         setSearchBoxOpen(false);
