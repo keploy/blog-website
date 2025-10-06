@@ -1,10 +1,16 @@
 import { Post } from "../types/post";
-import Alert from './alert'
-import Footer from './footer'
-import Meta from './meta'
-import Script from 'next/script';
+import Alert from "./alert";
+import Footer from "./footer";
+import Meta from "./meta";
+import Script from "next/script";
 import { motion } from "framer-motion";
-export default function Layout({ preview, children, featuredImage, Title, Description }:{
+export default function Layout({
+  preview,
+  children,
+  featuredImage,
+  Title,
+  Description,
+}: {
   preview: any;
   Description: any;
   featuredImage: Post["featuredImage"]["node"]["sourceUrl"];
@@ -13,7 +19,11 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
 }) {
   return (
     <>
-      <Meta featuredImage={featuredImage} Title={Title} Description={Description} />
+      <Meta
+        featuredImage={featuredImage}
+        Title={Title}
+        Description={Description}
+      />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -23,14 +33,17 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
           stiffness: 260,
           damping: 20,
         }}
-        className="min-h-screen"
+        className="min-h-screen dark:bg-gray-950"
       >
         {/* <Alert preview={preview} /> */}
         <main>{children}</main>
       </motion.div>
       <Footer />
 
-      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS" />
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS"
+      />
       <Script
         id="google-ga"
         type="text/javascript"
@@ -43,8 +56,6 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
         `,
         }}
       />
-
-      
 
       <Script
         id="msclarity"
@@ -62,16 +73,18 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
 
       {/* publisher Script */}
 
-      <Script async type="application/javascript"
-          id="swg-basic"
-            src="https://news.google.com/swg/js/v1/swg-basic.js">
-          </Script>
+      <Script
+        async
+        type="application/javascript"
+        id="swg-basic"
+        src="https://news.google.com/swg/js/v1/swg-basic.js"
+      ></Script>
 
-          <Script
-          id="publisher"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
+      <Script
+        id="publisher"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
               (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
                   basicSubscriptions.init({
                     type: "NewsArticle",
@@ -81,11 +94,10 @@ export default function Layout({ preview, children, featuredImage, Title, Descri
                   });
                 });
             `,
-          }}
-        />
+        }}
+      />
 
-
-  {/* Apollo Tracking Script */}
+      {/* Apollo Tracking Script */}
       <Script
         id="apollo-tracker"
         type="text/javascript"

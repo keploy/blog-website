@@ -1,25 +1,21 @@
 import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Container from "../../components/container";
-import {
-  getAllAuthors,
-  getContent,
-  getPostsByAuthorName,
-} from "../../lib/api";
+import { getAllAuthors, getContent, getPostsByAuthorName } from "../../lib/api";
 import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 
-export default function AuthorPage({ preview, filteredPosts ,content }) {
+export default function AuthorPage({ preview, filteredPosts, content }) {
   if (!filteredPosts || filteredPosts.length === 0) {
     return (
-      <div>
+      <div className="dark:text-white">
         <p>No posts found for this author.</p>
       </div>
     );
   }
 
-  const authorName  =  filteredPosts[0]?.node?.ppmaAuthorName;
+  const authorName = filteredPosts[0]?.node?.ppmaAuthorName;
 
   return (
     <div className="bg-accent-1">
@@ -31,11 +27,14 @@ export default function AuthorPage({ preview, filteredPosts ,content }) {
       >
         <Header />
         <Container>
-          <h1 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-6xl sm:xl font-bold tracking-tighter leading-tight">
+          <h1 className="bg-gradient-to-r from-orange-200 to-orange-100 dark:from-orange-600 dark:to-orange-500 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-6xl sm:xl font-bold tracking-tighter leading-tight dark:text-white">
             Author Details
           </h1>
 
-          <PostByAuthorMapping filteredPosts={filteredPosts} Content={content}/>
+          <PostByAuthorMapping
+            filteredPosts={filteredPosts}
+            Content={content}
+          />
         </Container>
       </Layout>
     </div>
@@ -58,7 +57,11 @@ export const getStaticProps: GetStaticProps = async ({
   const { slug } = params as { slug: string };
 
   // Users mapped by first name
-  const usersMappedByFirstName = ["Animesh Pathak", "Shubham Jain", "Yash Khare"];
+  const usersMappedByFirstName = [
+    "Animesh Pathak",
+    "Shubham Jain",
+    "Yash Khare",
+  ];
 
   // Determine the userName based on the slug
   let userName = slug;

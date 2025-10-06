@@ -85,7 +85,7 @@ const ResponsiveBlock = ({
               {item.title}
             </h3>
             {item.description && (
-              <p className="text-[.75em] text-[#737373]">
+              <p className="text-[.75em] text-[#737373] dark:text-gray-400">
                 {item.description}
               </p>
             )}
@@ -121,14 +121,14 @@ const FeaturedCard = ({ content }: { content: FeaturedCardContent }) => (
         </div>
         {/* Text container */}
         <div className="flex flex-col">
-          <p className="text-[12px] font-medium leading-snug text-primary/90 group-hover:text-primary transition-colors">
+          <p className="text-[12px] font-medium leading-snug text-primary/90 group-hover:text-primary transition-colors dark:text-white">
             {" "}
             {/* Title */}
             {content.title}
           </p>
           {/* Subtitle (conditionally rendered) */}
           {content.subtitle && (
-            <p className="text-[10px] text-[#737373] leading-snug mt-0.5">
+            <p className="text-[10px] text-[#737373] dark:text-gray-400 leading-snug mt-0.5">
               {" "}
               {/* Subtitle styling */}
               {content.subtitle}
@@ -149,14 +149,16 @@ const QuickLinks = ({
 }) => (
   <div className="space-y-2">
     {title && (
-      <h4 className="text-sm font-medium text-[#737373]">{title}</h4>
+      <h4 className="text-sm font-medium text-[#737373] dark:text-gray-400">
+        {title}
+      </h4>
     )}
     <div className="grid gap-1">
       {links.map((link, index) => (
         <Link
           key={index}
           href={link.href}
-          className="group flex items-center text-sm hover:text-primary p-1"
+          className="group flex items-center text-sm hover:text-primary p-1 dark:text-white"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -174,7 +176,7 @@ export function MainNav() {
       <NavigationMenuList className="space-x-1">
         {/* Product */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
+          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-white">
             Products
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">
@@ -198,7 +200,7 @@ export function MainNav() {
         </NavigationMenuItem>
         {/* Solutions */}
         <NavigationMenuItem value="solutions">
-          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
+          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-white">
             Solutions
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">
@@ -210,7 +212,7 @@ export function MainNav() {
               </div>
 
               <div className="space-y-3 py-2 lg:col-span-1 border-l border-zinc-200 pl-4">
-                <p className="text-sm font-medium text-[#737373]">
+                <p className="text-sm font-medium text-[#737373] dark:text-gray-400">
                   {solutionsNav.featuredContent.title}
                 </p>
 
@@ -228,7 +230,7 @@ export function MainNav() {
         </NavigationMenuItem>
         {/* Developers */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
+          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-white">
             Developers
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">
@@ -261,7 +263,7 @@ export function MainNav() {
         <NavigationMenuItem>
           <Link
             href="https://keploy.io/pricing"
-            className="inline-flex items-center text-black/80 justify-center rounded-md font-medium transition-colors hover:text-primary h-9 px-3 py-1.5 hover:underline text-[16px]"
+            className="inline-flex items-center text-black/80 dark:text-white justify-center rounded-md font-medium transition-colors hover:text-primary h-9 px-3 py-1.5 hover:underline text-[16px]"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -270,7 +272,7 @@ export function MainNav() {
         </NavigationMenuItem>
         {/* Resources */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100">
+          <NavigationMenuTrigger className="h-9 text-md rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-white">
             Resources
           </NavigationMenuTrigger>
           <NavigationMenuContent className="w-auto min-w-[850px] max-w-[95vw] p-4">

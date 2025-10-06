@@ -12,7 +12,7 @@ function TOCItem({
   type: string;
   onClick: (id: string) => void;
 }) {
-  const itemClasses = "mb-1 text-slate-600 space-y-1";
+  const itemClasses = "mb-1 text-slate-600 dark:text-gray-300 space-y-1";
 
   // Calculate margin left based on heading type
   let marginLeft;
@@ -37,7 +37,7 @@ function TOCItem({
     <li className={itemClasses} style={{ marginLeft }}>
       <button
         onClick={() => onClick(id)}
-        className="block w-full py-1 text-sm text-left text-black transition-all duration-150 ease-in-out rounded-md opacity-75 hover:text-orange-500 hover:opacity-100"
+        className="block w-full py-1 text-sm text-left text-black dark:text-white transition-all duration-150 ease-in-out rounded-md opacity-75 hover:text-orange-500 hover:opacity-100"
       >
         {title}
       </button>
@@ -58,25 +58,27 @@ export default function TOC({ headings, isList, setIsList }) {
       setIsList(container.clientHeight > window.innerHeight * 0.8);
     }
 
-    resizeHandler()
-    window.addEventListener("resize", resizeHandler)
+    resizeHandler();
+    window.addEventListener("resize", resizeHandler);
 
-    return () => { window.removeEventListener("resize", resizeHandler) }
+    return () => {
+      window.removeEventListener("resize", resizeHandler);
+    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const handleItemClick = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80; 
+      const offset = 80;
       const offsetPosition = element.offsetTop - offset;
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
 
-      const urlChange = sanitizeStringForURL(element.innerHTML,true)
+      const urlChange = sanitizeStringForURL(element.innerHTML, true);
 
       window.history.replaceState(null, null, `#${urlChange}`);
     }
@@ -105,11 +107,11 @@ export default function TOC({ headings, isList, setIsList }) {
         <div className="flex items-center justify-center text-center w-full">
           <button
             onClick={() => setIsDropdownOpen((prev) => !prev)}
-            className="text-gray-700 focus:outline-none flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:shadow-outline gap-2 text-center"
+            className="text-gray-700 dark:text-gray-200 focus:outline-none flex items-center justify-between w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:border-gray-400 dark:hover:border-gray-500 focus:shadow-outline gap-2 text-center"
             aria-expanded={isDropdownOpen}
             aria-controls="toc-dropdown"
           >
-            <span className="text-lg font-semibold text-left flex-grow">
+            <span className="text-lg font-semibold text-left flex-grow dark:text-white">
               Table of Contents
             </span>
             <span className="text-sm">{isDropdownOpen ? "▲" : "▼"}</span>
@@ -117,7 +119,7 @@ export default function TOC({ headings, isList, setIsList }) {
         </div>
 
         {isDropdownOpen && (
-          <div className="mt-2 max-h-[300px] overflow-y-auto border rounded-md shadow-md p-2 bg-white w-full md:w-auto">
+          <div className="mt-2 max-h-[300px] overflow-y-auto border rounded-md shadow-md p-2 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 w-full md:w-auto">
             <ul className="space-y-1">
               {headings.map((item, index) => {
                 let indent = "";
@@ -141,7 +143,7 @@ export default function TOC({ headings, isList, setIsList }) {
                 return (
                   <li
                     key={item.id}
-                    className={`text-sm text-gray-700 hover:text-orange-500 ${indent}`}
+                    className={`text-sm text-gray-700 dark:text-gray-200 hover:text-orange-500 ${indent}`}
                   >
                     <button
                       onClick={() => {
@@ -152,7 +154,10 @@ export default function TOC({ headings, isList, setIsList }) {
                             top: el.offsetTop - offset,
                             behavior: "smooth",
                           });
-                          const sanitizedId = sanitizeStringForURL(item.title, true);
+                          const sanitizedId = sanitizeStringForURL(
+                            item.title,
+                            true
+                          );
                           window.history.replaceState(
                             null,
                             null,
@@ -161,7 +166,7 @@ export default function TOC({ headings, isList, setIsList }) {
                           setIsDropdownOpen(false);
                         }
                       }}
-                      className="w-full text-left"
+                      className="w-full text-left dark:text-gray-200 hover:text-orange-500"
                     >
                       {item.title}
                     </button>
@@ -176,9 +181,11 @@ export default function TOC({ headings, isList, setIsList }) {
   ) : (
     <>
       <div className="left-0 inline-block p-4 lg:hidden top-20">
-        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
+        <div className="mb-2 text-lg font-semibold dark:text-white">
+          Table of Contents
+        </div>
         <select
-          className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
+          className="block w-full px-4 py-2 text-sm leading-tight bg-white dark:bg-gray-800 dark:text-white border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:shadow-outline"
           onChange={(e) => handleItemClick(e.target.value)}
         >
           {headings.map((item, index) => (
@@ -189,10 +196,12 @@ export default function TOC({ headings, isList, setIsList }) {
         </select>
       </div>
       <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
-        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
+        <div className="mb-2 text-lg font-semibold dark:text-white">
+          Table of Contents
+        </div>
         {isList ? (
           <select
-            className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
+            className="block w-full px-4 py-2 text-sm leading-tight bg-white dark:bg-gray-800 dark:text-white border border-gray-300 dark:border-gray-600 rounded-md shadow-sm hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:shadow-outline"
             onChange={(e) => handleItemClick(e.target.value)}
           >
             {headings.map((item, index) => (

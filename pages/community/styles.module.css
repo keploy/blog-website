@@ -1,12 +1,32 @@
 .table-responsive::-webkit-scrollbar {
-    height: 15px;
+  height: 15px;
 }
 
 .table-responsive::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 10px;
+  background-color: #888;
+  border-radius: 10px;
 }
 
 .table-responsive::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
+}
+
+/* Dark mode scrollbar styles */
+@media (prefers-color-scheme: dark) {
+  .table-responsive::-webkit-scrollbar-thumb {
+    background-color: #555;
+  }
+
+  .table-responsive::-webkit-scrollbar-track {
+    background-color: #2a2a2a;
+  }
+}
+
+/* Dark mode class-based styles */
+.dark .table-responsive::-webkit-scrollbar-thumb {
+  background-color: #555;
+}
+
+.dark .table-responsive::-webkit-scrollbar-track {
+  background-color: #2a2a2a;
 }

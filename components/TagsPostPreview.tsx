@@ -31,7 +31,7 @@ export default function TagsPostPreview({
       : "/technology";
 
   return (
-    <div className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition">
+    <div className="bg-gray-100 dark:bg-gray-800 border dark:border-gray-600 p-6 rounded-md lg:hover:shadow-md transition">
       <div className="mb-5">
         {coverImage && (
           <CoverImage
@@ -42,7 +42,7 @@ export default function TagsPostPreview({
           />
         )}
       </div>
-      <h3 className="text-2xl leading-snug leading-none heading1 font-bold">
+      <h3 className="text-2xl leading-snug leading-none heading1 font-bold dark:text-white">
         <Link
           href={`${basePath}/${slug}`}
           className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
@@ -57,7 +57,7 @@ export default function TagsPostPreview({
         </div>
       </div>
       <div
-        className="text-sm leading-normal mb-4 body text-slate-600"
+        className="text-sm leading-normal mb-4 body text-slate-600 dark:text-gray-300"
         dangerouslySetInnerHTML={{ __html: excerpt }}
       />
     </div>

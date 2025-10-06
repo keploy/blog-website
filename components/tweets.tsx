@@ -21,19 +21,21 @@ const Tweets = ({ avatar, name, id, post, content }) => {
             className="rounded-full"
           />
           <div>
-            <p className="font-semibold text-lg text-gray-800">{name}</p>
-            <p className="text-gray-500 text-sm">@{id}</p>
+            <p className="font-semibold text-lg text-gray-800 dark:text-white">
+              {name}
+            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">@{id}</p>
           </div>
         </div>
         <Image
-          src="/blog/favicon/x-twitter.svg" 
+          src="/blog/favicon/x-twitter.svg"
           width={20}
           height={20}
           alt="Twitter Icon"
         />
       </div>
 
-      <p className="mt-4 text-gray-700">{content}</p>
+      <p className="mt-4 text-gray-700 dark:text-gray-300">{content}</p>
     </Link>
   );
 };
