@@ -13,7 +13,11 @@ export default function Authors({
 }: {
   AllAuthors: {
     edges: {
-      node: { author: Post["author"]; ppmaAuthorName: Post["ppmaAuthorName"],ppmaAuthorImage: Post["ppmaAuthorImage"] };
+      node: {
+        author: Post["author"];
+        ppmaAuthorName: Post["ppmaAuthorName"];
+        ppmaAuthorImage: Post["ppmaAuthorImage"];
+      };
     }[];
   };
   preview;
@@ -30,7 +34,7 @@ export default function Authors({
       >
         <Header />
         <Container>
-          <h1 className="bg-gradient-to-r ml-10 from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
+          <h1 className="bg-gradient-to-r ml-10 from-orange-200 to-orange-100 dark:from-orange-600 dark:to-orange-500 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight dark:text-white">
             AUTHORS
           </h1>
           <AuthorMapping AuthorArray={authorArray} />

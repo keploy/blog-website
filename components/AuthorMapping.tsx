@@ -6,9 +6,9 @@ import { Post } from "../types/post";
 export default function AuthorMapping({
   AuthorArray,
   itemsPerPage = 8, // You can customize the number of items per page
-}:{
-  AuthorArray: Pick<Post, "author" | "ppmaAuthorName" | "ppmaAuthorImage">[],
-  itemsPerPage?:number
+}: {
+  AuthorArray: Pick<Post, "author" | "ppmaAuthorName" | "ppmaAuthorImage">[];
+  itemsPerPage?: number;
 }) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -66,7 +66,7 @@ export default function AuthorMapping({
           <Link href={`/authors/${author.slug}`} key={index}>
             <div className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between  border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30 hover:scale-105 cursor-pointer">
               <div className="flex items-center mb-3 sm:mb-0">
-                {author.avatarUrl != "imag1" &&  author.avatarUrl != "image" ? (
+                {author.avatarUrl != "imag1" && author.avatarUrl != "image" ? (
                   <Image
                     src={author.avatarUrl}
                     alt={`${author.ppmaAuthorName}'s Avatar`}
@@ -83,7 +83,7 @@ export default function AuthorMapping({
                     width={48}
                   />
                 )}
-                <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-2xl heading1 md:text-xl font-bold tracking-tighter leading-tight">
+                <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 dark:from-orange-600 dark:to-orange-500 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-2xl heading1 md:text-xl font-bold tracking-tighter leading-tight dark:text-white">
                   {author.ppmaAuthorName}
                 </h2>
               </div>
@@ -98,8 +98,8 @@ export default function AuthorMapping({
         <button
           className={`mx-1 sm:mx-2 px-4 py-2 rounded-md ${
             currentPage <= 1
-              ? "bg-gray-300 text-gray-600"
-              : "bg-gray-300 text-gray-600 hover:bg-gray-300 hover:text-gray-800"
+              ? "bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+              : "bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-200 hover:bg-gray-300 hover:text-gray-800 dark:hover:bg-gray-600 dark:hover:text-white"
           }`}
           onClick={handlePrevPage}
           disabled={currentPage < 1}
@@ -113,8 +113,8 @@ export default function AuthorMapping({
               onClick={() => handlePageChange(pageNumber)}
               className={`mx-1 sm:mx-2 px-4 py-3 rounded-md text-sm ${
                 pageNumber === currentPage
-                  ? "bg-gray-300 text-white"
-                  : "bg-gray-300 text-gray-800"
+                  ? "bg-gray-300 dark:bg-gray-600 text-white"
+                  : "bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
               }`}
             >
               {pageNumber}
@@ -124,8 +124,8 @@ export default function AuthorMapping({
         <button
           className={`mx-1 sm:mx-1 px-4 py-2 rounded-md ${
             currentPage >= totalPages
-              ? "bg-gray-300 text-gray-600"
-              : "bg-gray-300 text-gray-600 hover:bg-gray-300 hover:text-gray-800"
+              ? "bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+              : "bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-200 hover:bg-gray-300 hover:text-gray-800 dark:hover:bg-gray-600 dark:hover:text-white"
           }`}
           onClick={handleNextPage}
           disabled={currentPage >= totalPages}

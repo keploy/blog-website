@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostPreview from "./post-preview";
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch } from "react-icons/fa";
 import { fetchMorePosts } from "../lib/api";
 
 export default function MoreStories({
@@ -23,7 +23,9 @@ export default function MoreStories({
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialPageInfo?.hasNextPage ?? true);
   const [error, setError] = useState(null);
-  const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
+  const [endCursor, setEndCursor] = useState(
+    initialPageInfo?.endCursor ?? null
+  );
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
 
   // Set up initial buffer with remaining posts
@@ -32,15 +34,20 @@ export default function MoreStories({
       setBuffer(initialPosts.slice(21));
     }
     // Start background fetch if we have less than 9 posts in buffer
-    if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
+    if (
+      isIndex &&
+      initialPageInfo?.hasNextPage &&
+      (!buffer.length || buffer.length < 9)
+    ) {
       loadMoreInBackground();
     }
   }, [initialPosts]);
 
   // Filter posts based on search term
-  const filteredPosts = allPosts.filter(({ node }) => 
-    node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPosts = allPosts.filter(
+    ({ node }) =>
+      node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Reset visible count when search term changes
@@ -56,27 +63,27 @@ export default function MoreStories({
   // Fetch more posts in background
   const loadMoreInBackground = async () => {
     try {
-      const category = isCommunity ? 'community' : 'technology';
+      const category = isCommunity ? "community" : "technology";
       const result = await fetchMorePosts(category, endCursor);
-      
+
       if (result.edges.length) {
-        setBuffer(currentBuffer => [...currentBuffer, ...result.edges]);
+        setBuffer((currentBuffer) => [...currentBuffer, ...result.edges]);
         setEndCursor(result.pageInfo.endCursor);
         setHasMore(result.pageInfo.hasNextPage);
       } else {
         setHasMore(false);
       }
     } catch (error) {
-      console.error('Error fetching more posts:', error);
-      setError('Failed to load more posts. Please try again later.');
+      console.error("Error fetching more posts:", error);
+      setError("Failed to load more posts. Please try again later.");
     }
   };
 
   const loadMorePosts = async () => {
     if (loading) return;
-    
+
     if (searchTerm) {
-      setVisibleCount(prev => prev + 9);
+      setVisibleCount((prev) => prev + 9);
       return;
     }
 
@@ -84,23 +91,23 @@ export default function MoreStories({
     try {
       // First, show more posts from allPosts if available
       if (visibleCount < allPosts.length) {
-        setVisibleCount(prev => Math.min(prev + 9, allPosts.length));
-      } 
+        setVisibleCount((prev) => Math.min(prev + 9, allPosts.length));
+      }
       // Then, add posts from buffer if needed
       else if (buffer.length > 0) {
         const postsToAdd = buffer.slice(0, 9);
-        setAllPosts(prev => [...prev, ...postsToAdd]);
-        setBuffer(prev => prev.slice(9));
-        setVisibleCount(prev => prev + postsToAdd.length);
+        setAllPosts((prev) => [...prev, ...postsToAdd]);
+        setBuffer((prev) => prev.slice(9));
+        setVisibleCount((prev) => prev + postsToAdd.length);
       }
 
       // If buffer is getting low, fetch more posts
       if (buffer.length < 9 && hasMore) {
-        const category = isCommunity ? 'community' : 'technology';
+        const category = isCommunity ? "community" : "technology";
         const result = await fetchMorePosts(category, endCursor);
-        
+
         if (result.edges.length > 0) {
-          setBuffer(prev => [...prev, ...result.edges]);
+          setBuffer((prev) => [...prev, ...result.edges]);
           setEndCursor(result.pageInfo.endCursor);
           setHasMore(result.pageInfo.hasNextPage);
         } else {
@@ -108,8 +115,8 @@ export default function MoreStories({
         }
       }
     } catch (error) {
-      console.error('Error loading more posts:', error);
-      setError('Failed to load more posts. Please try again later.');
+      console.error("Error loading more posts:", error);
+      setError("Failed to load more posts. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -117,18 +124,18 @@ export default function MoreStories({
 
   // Show load more button if there are more posts to show from allPosts,
   // or if there are posts in buffer, or if we can fetch more
-  const showLoadMore = (
-    visibleCount < allPosts.length || 
-    buffer.length > 0 || 
-    hasMore
-  ) && !loading && !error && isIndex;
+  const showLoadMore =
+    (visibleCount < allPosts.length || buffer.length > 0 || hasMore) &&
+    !loading &&
+    !error &&
+    isIndex;
 
   return (
     <section>
-      <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
+      <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 dark:from-orange-600 dark:to-orange-500 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight dark:text-white">
         More Stories
       </h2>
-      
+
       {isIndex && (
         <div className="flex w-full mb-8">
           <div className="relative w-full">
@@ -137,15 +144,17 @@ export default function MoreStories({
               placeholder="Search posts..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-4 pl-10 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400" />
           </div>
         </div>
       )}
 
       {filteredPosts.length === 0 ? (
-        <p className="text-center text-gray-500">No posts found by the name {`"${searchTerm}"`}</p>
+        <p className="text-center text-gray-500 dark:text-gray-400">
+          No posts found by the name {`"${searchTerm}"`}
+        </p>
       ) : (
         <>
           <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
@@ -159,7 +168,9 @@ export default function MoreStories({
                 slug={node.slug}
                 excerpt={getExcerpt(node.excerpt, 20)}
                 isCommunity={
-                  node.categories.edges[0]?.node.name === "technology" ? false : true
+                  node.categories.edges[0]?.node.name === "technology"
+                    ? false
+                    : true
                 }
               />
             ))}
@@ -181,7 +192,7 @@ export default function MoreStories({
                 {loading ? (
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
                 ) : (
-                  'Load More Posts'
+                  "Load More Posts"
                 )}
               </button>
             )}

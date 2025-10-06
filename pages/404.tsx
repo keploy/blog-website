@@ -16,7 +16,7 @@ export default function Custom404() {
       } else {
         router.replace("/");
       }
-    }, 3000); 
+    }, 3000);
 
     return () => clearTimeout(redirectTimeout);
   }, [asPath, router]);
@@ -27,9 +27,12 @@ export default function Custom404() {
         <title>404 - Page Not Found | Keploy Blog</title>
       </Head>
       <NotFoundPage />
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
+      <div
+        style={{ textAlign: "center", marginTop: "20px" }}
+        className="dark:text-white"
+      >
         <p>You will be redirected shortly...</p>
       </div>
     </>
   );
-};
+}

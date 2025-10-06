@@ -2,6 +2,11 @@
   @apply text-lg leading-relaxed;
 }
 
+/* Dark mode styles for content */
+:global(.dark) .content {
+  @apply text-white;
+}
+
 .content p,
 .content ul,
 .content ol,
@@ -9,8 +14,20 @@
   @apply my-6;
 }
 
+/* Dark mode for paragraphs, lists, and blockquotes */
+:global(.dark) .content p,
+:global(.dark) .content ul,
+:global(.dark) .content ol {
+  @apply text-gray-200;
+}
+
 .content a {
   @apply underline;
+}
+
+/* Dark mode for links */
+:global(.dark) .content a {
+  @apply text-blue-400 hover:text-blue-300;
 }
 
 .content ul,
@@ -39,28 +56,58 @@
   @apply text-3xl mt-12 mb-4 leading-snug;
 }
 
+/* Dark mode for headings */
+:global(.dark) .content h2 {
+  @apply text-white;
+}
+
 .content h3 {
   @apply text-2xl mt-8 mb-4 leading-snug;
+}
+
+:global(.dark) .content h3 {
+  @apply text-white;
 }
 
 .content h4 {
   @apply text-xl mt-6 mb-4 leading-snug;
 }
 
+:global(.dark) .content h4 {
+  @apply text-white;
+}
+
 .content pre {
   @apply whitespace-pre overflow-x-auto p-4 text-sm leading-tight border border-gray-400 bg-gray-100;
+}
+
+/* Dark mode for code blocks */
+:global(.dark) .content pre {
+  @apply border-gray-600 bg-gray-800 text-gray-200;
 }
 
 .content code {
   @apply text-sm;
 }
 
+:global(.dark) .content code {
+  @apply text-gray-200;
+}
+
 .content figcaption {
   @apply text-center text-sm;
 }
 
+:global(.dark) .content figcaption {
+  @apply text-gray-300;
+}
+
 .content blockquote {
   @apply border-l-4 border-gray-500 bg-gray-200 italic ml-0 py-4 px-6;
+}
+
+:global(.dark) .content blockquote {
+  @apply border-gray-400 bg-gray-700 text-gray-200;
 }
 
 .content blockquote p {
@@ -74,7 +121,6 @@
 .content audio {
   @apply w-full;
 }
-
 
 .content h1,
 .content h2,

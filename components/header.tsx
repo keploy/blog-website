@@ -11,6 +11,7 @@ import { Button } from "../components/ui/button";
 import { MobileNav } from "../components/navbar/mobile-nav";
 import { useState, useEffect } from "react";
 import { cn } from "../lib/utils/utils";
+import { ThemeToggle } from "./theme-toggle";
 
 export default function Header({
   readProgress,
@@ -33,8 +34,10 @@ export default function Header({
       <header
         className={cn(
           "fixed z-30 w-full transition duration-300 ease-in-out border-none md:bg-opacity-90",
-          scrolled ? "lg:bg-neutral-100 lg:shadow-none" : "lg:bg-transparent",
-          "bg-white"
+          scrolled
+            ? "lg:bg-neutral-100 lg:shadow-none dark:lg:bg-neutral-900"
+            : "lg:bg-transparent",
+          "bg-white dark:bg-gray-950"
         )}
       >
         <div className="max-w-6xl px-5 mx-auto sm:px-6">
@@ -59,6 +62,7 @@ export default function Header({
             <div className="justify-end flex-1 hidden header-btn-container xl:flex gap-2">
               <Vscode />
               <GitHubStars />
+              <ThemeToggle />
               <Button className="ml-[8px]">
                 <a
                   href="https://app.keploy.io/signin"
@@ -73,6 +77,7 @@ export default function Header({
             {/* Mobile Navigation */}
             <div className="flex items-center gap-2 xl:hidden">
               <GitHubStars />
+              <ThemeToggle />
               <Button className="ml-[8px] hidden md:flex">
                 <a
                   href="https://app.keploy.io/signin"

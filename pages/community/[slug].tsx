@@ -22,7 +22,7 @@ import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
-import "./styles.module.css"
+import "./styles.module.css";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -41,7 +41,7 @@ const postBody = ({ content, post }) => {
 
 export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
-  const { slug }= router.query;
+  const { slug } = router.query;
   const morePosts = posts?.edges;
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const time = 5 + calculateReadingTime(post?.content);
@@ -99,7 +99,6 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   });
   useEffect(() => {
     if (post && post.content) {
-
       const content = post.content;
       const avatarDivMatch = content.match(
         /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
@@ -110,21 +109,24 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       } else {
         setAvatarImgSrc("/blog/images/author.png");
       }
-  
+
       // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
-        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/s
+        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>([\s\S]*?)<\/p>/
       );
-      
+
       // Apply table responsive wrapper
       const newContent = content.replace(
         /<table[^>]*>[\s\S]*?<\/table>/gm,
-        (table) => `<div class="overflow-x-auto">${table}</div>`
+        (table) => `<div class="overflow-x-auto dark:text-white">${table}</div>`
       );
-  
+
       setUpdatedContent(newContent);
 
-      if (authorDescriptionMatch && authorDescriptionMatch[1].trim()?.length > 0) {
+      if (
+        authorDescriptionMatch &&
+        authorDescriptionMatch[1].trim()?.length > 0
+      ) {
         setBlogWriterDescription(authorDescriptionMatch[1].trim());
       } else {
         setBlogWriterDescription("An author for Keploy's blog.");
@@ -208,12 +210,15 @@ export const getStaticProps: GetStaticProps = async ({
   previewData,
 }) => {
   const data = await getPostAndMorePosts(params?.slug, preview, previewData);
-  const { communityMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug);
+  const { communityMoreStories } = await getMoreStoriesForSlugs(
+    data?.post?.tags,
+    data?.post?.slug
+  );
 
   const authorDetails = [];
   authorDetails.push(await getReviewAuthorDetails("neha"));
   authorDetails.push(await getReviewAuthorDetails("Jain"));
-  
+
   return {
     props: {
       preview,
@@ -229,11 +234,10 @@ export const getStaticProps: GetStaticProps = async ({
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsForCommunity(false);
   const communityPosts =
-    allPosts?.edges
-      .map(({ node }) => `/community/${node?.slug}`) || [];
-  
+    allPosts?.edges.map(({ node }) => `/community/${node?.slug}`) || [];
+
   return {
     paths: communityPosts || [],
-    fallback: true, 
+    fallback: true,
   };
 };

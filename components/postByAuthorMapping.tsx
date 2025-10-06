@@ -4,10 +4,10 @@ import { Post } from "../types/post";
 import Link from "next/link";
 import { animated, useInView, easings } from "@react-spring/web";
 import dynamic from "next/dynamic";
- 
+
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
-})
+});
 
 function Node({ node }) {
   const [cardRef, cardSpringStyles] = useInView(
@@ -31,9 +31,9 @@ function Node({ node }) {
   return (
     <animated.li className="mb-8" ref={cardRef} style={cardSpringStyles}>
       <Link href={`/${node.categories.edges[0].node.name}/${node.slug}`}>
-        <div className="px-5 py-4  transition-colors duration-300 ease-in-out transform border border-transparent rounded-lg group hover:scale-105 hover:border-accent-2 hover:dark:bg-neutral-400/30">
+        <div className="px-5 py-4 transition-colors duration-300 ease-in-out transform border border-transparent rounded-lg group hover:scale-105 hover:border-accent-2 hover:dark:bg-neutral-400/30 dark:border-gray-600">
           <div className="flex items-center justify-between">
-            <h2 className="mb-2 mr-4 text-lg font-bold sm:text-xl text-slate-600">
+            <h2 className="mb-2 mr-4 text-lg font-bold sm:text-xl text-slate-600 dark:text-white">
               {node.title}
             </h2>
           </div>
@@ -44,8 +44,10 @@ function Node({ node }) {
             height={200}
             width={200}
           />
-          <p className="mb-2 text-gray-400">Author: {node.ppmaAuthorName}</p>
-          <p className="mb-4 text-gray-500">
+          <p className="mb-2 text-gray-400 dark:text-gray-300">
+            Author: {node.ppmaAuthorName}
+          </p>
+          <p className="mb-4 text-gray-500 dark:text-gray-400">
             Category: {node.categories.edges[0].node.name}
           </p>
           {/* Additional details can be added based on your needs */}

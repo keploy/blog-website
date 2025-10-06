@@ -32,7 +32,7 @@ const MobileNavSection = ({
 }) => {
   return (
     <AccordionItem value={title}>
-      <AccordionTrigger className="text-base text-black/90 font-semibold">
+      <AccordionTrigger className="text-base text-black/90 dark:text-white font-semibold">
         {title}
       </AccordionTrigger>
       <AccordionContent>
@@ -45,12 +45,12 @@ const MobileNavSection = ({
                     href={column.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-base font-medium text-[#737373] hover:text-primary"
+                    className="text-base font-medium text-[#737373] dark:text-gray-300 hover:text-primary"
                   >
                     {column.title}
                   </Link>
                 ) : (
-                  <p className="text-base font-medium text-[#737373]">
+                  <p className="text-base font-medium text-[#737373] dark:text-gray-300">
                     {" "}
                     {column.title}
                   </p>
@@ -73,7 +73,7 @@ const MobileNavSection = ({
                     >
                       <item.icon className={cn("h-4 w-4", item.iconColor)} />
                     </span>
-                    <span className="font-medium text-black/90">
+                    <span className="font-medium text-black/90 dark:text-white">
                       {item.title}
                     </span>
                   </Link>
@@ -83,7 +83,7 @@ const MobileNavSection = ({
           ))}
           {featuredContent && (
             <div className="mt-4 space-y-2">
-              <p className="text-sm font-medium text-black/90 ">
+              <p className="text-sm font-medium text-black/90 dark:text-white">
                 {featuredContent.title}
               </p>
               <Link
@@ -101,7 +101,7 @@ const MobileNavSection = ({
                   >
                     <featuredContent.featuredCard.logo />
                   </div>
-                  <p className="text-sm">
+                  <p className="text-sm dark:text-gray-300">
                     {featuredContent.featuredCard.title}
                   </p>
                 </div>
@@ -118,12 +118,19 @@ export function MobileNav() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="xl:hidden">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="xl:hidden dark:text-white"
+        >
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-full max-w-[300px] p-0 pt-2 bg-[#F7F7F7]">
-        <SheetTitle className="px-6 pt-4 text-black/85 font-bold">
+      <SheetContent
+        side="left"
+        className="w-full max-w-[300px] p-0 pt-2 bg-[#F7F7F7] dark:bg-gray-900"
+      >
+        <SheetTitle className="px-6 pt-4 text-black/85 dark:text-white font-bold">
           Menu
         </SheetTitle>
         <div className="px-6 overflow-y-auto h-full">
