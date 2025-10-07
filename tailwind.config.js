@@ -150,10 +150,11 @@ module.exports = {
   			'7xl': '4.5rem',
   			'8xl': '6.25rem'
   		},
-  		boxShadow: {
-  			small: '0 5px 10px rgba(0, 0, 0, 0.12)',
-  			medium: '0 8px 30px rgba(0, 0, 0, 0.12)'
-  		},
+		boxShadow: {
+			small: '0 5px 10px rgba(0, 0, 0, 0.12)',
+			medium: '0 8px 30px rgba(0, 0, 0, 0.12)',
+			card: '0 6px 18px rgba(0, 0, 0, 0.08)'
+		},
   		scale: {
   			'101': '1.01'
   		},
