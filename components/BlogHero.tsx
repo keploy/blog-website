@@ -70,10 +70,10 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 			</div>
 
 			<div className="relative mx-auto max-w-4xl text-center mb-1 animate-fadeUp">
-				<h1 className="heading1 font-bold text-4xl md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-orange-400 to-pink-400">
+				<h1 className="heading1 font-bold text-6xl bg-clip-text text-transparent bg-gradient-to-r from-orange-600 via-orange-500 to-pink-500">
 					Keploy Blog
 				</h1>
-				<p className="content-body body text-base md:text-lg my-3 text-neutral-600/95 tracking-[0.01em] leading-relaxed">
+				<p className="content-body body text-base md:text-lg mb-3 text-neutral-600/95 tracking-[0.01em] leading-relaxed">
 					Empowering your tech journey with expert insights, tools, and stories.
 				</p>
 			</div>
@@ -88,66 +88,62 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 					<div className="absolute top-0 right-0 transform rotate-45 translate-x-[22%] translate-y-[85%] bg-orange-200 text-orange-800 text-[10px] font-bold py-0.5 w-[100px] flex justify-center items-center shadow-md z-10">
 						Latest Blog
 					</div>
-					{latestPost?.featuredImage?.node?.sourceUrl && (
-						<div className="relative h-36 w-full md:h-44 overflow-hidden">
-							<Image
-								src={latestPost.featuredImage.node.sourceUrl}
-								alt={latestPost.title}
-								fill
-							className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-								priority
-							/>
-						</div>
-					)}
-					<div className="p-4 md:p-5 min-h-[140px]">
-						<h3 className="text-lg md:text-xl font-semibold leading-snug group-hover:text-orange-500">
-							{latestPost?.title || "Explore community insights"}
-						</h3>
-						<div className="mt-2 flex items-center gap-2 text-sm text-neutral-600">
-							{latestPost?.ppmaAuthorName && <span>{latestPost.ppmaAuthorName}</span>}
-							{latestPost?.date && <>
-								<span className="text-neutral-300">•</span>
-								<span><Date dateString={latestPost.date} /></span>
-							</>}
-						</div>
-						{latestPost?.excerpt && (
-							<div
-								className="mt-3 text-neutral-700 line-clamp-4 leading-6 min-h-[6rem]"
-								dangerouslySetInnerHTML={{ __html: getExcerpt(latestPost.excerpt, 30) }}
-							/>
+						{latestPost?.featuredImage?.node?.sourceUrl && (
+							<div className="relative h-44 w-full md:h-52 overflow-hidden">
+								<Image
+									src={latestPost.featuredImage.node.sourceUrl}
+									alt={latestPost.title}
+									fill
+								className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+									priority
+								/>
+							</div>
 						)}
-						{latestPost?.slug && (
-							<Link href={`/community/${latestPost.slug}`} className="mt-2.5 inline-flex items-center text-orange-600 font-medium hover:text-orange-700">
-								Read More →
-							</Link>
-						)}
-					</div>
+						<div className="p-3 md:p-4 min-h-[90px]">
+							<h3 className="text-lg md:text-xl font-semibold leading-snug group-hover:text-orange-500">
+								{latestPost?.title || "Explore community insights"}
+							</h3>
+							<div className="mt-1.5 flex items-center gap-2 text-sm text-neutral-600">
+								{latestPost?.ppmaAuthorName && <span>{latestPost.ppmaAuthorName}</span>}
+								{latestPost?.date && <>
+									<span className="text-neutral-300">•</span>
+									<span><Date dateString={latestPost.date} /></span>
+								</>}
+							</div>
+							{latestPost?.excerpt && (
+								<div
+									className="mt-2 text-neutral-700 line-clamp-4 leading-6 min-h-[2.5rem]"
+									dangerouslySetInnerHTML={{ __html: getExcerpt(latestPost.excerpt, 30) }}
+								/>
+							)}
+						</div>
 				</Link>
 
 				<div className="grid gap-3">
-					<div className="rounded-xl border border-neutral-100 bg-white/90 backdrop-blur-sm filter ring-1 ring-black/5 p-4 md:p-5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] transition-all duration-300 ease-in-out">
-						<h4 className="mb-2 text-sm md:text-[0.95rem] font-semibold text-neutral-700">Popular Tags</h4>
-						<div className="flex flex-wrap gap-2">
-							{displayTags.map((tag, idx) => (
-								<Link key={`${tag}-${idx}`} href={`/tag/${encodeURIComponent(tag)}`} aria-label={`View posts tagged ${tag}`}>
-									<span className={`inline-flex items-center rounded-lg border px-3 py-1 text-sm transition-all hover:opacity-95 hover:bg-white/60 ${tagColors[idx % tagColors.length]} shadow-md hover:shadow-lg hover:shadow-orange-200/30`}>
-										{tag}
-									</span>
-								</Link>
-							))}
-						</div>
-					</div>
-					<div className="grid grid-cols-3 gap-3">
+								<div className="rounded-xl border border-neutral-100 bg-white/90 backdrop-blur-sm filter ring-1 ring-black/5 p-3 md:p-4 shadow-[0_6px_18px_rgba(0,0,0,0.10)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] transition-all duration-300 ease-in-out">
+									<h4 className="mb-2 text-sm md:text-base font-semibold text-neutral-700">Popular Tags</h4>
+									<div className="flex flex-wrap gap-1.5">
+										{displayTags.map((tag, idx) => (
+											<Link key={`${tag}-${idx}`} href={`/tag/${encodeURIComponent(tag)}`} aria-label={`View posts tagged ${tag}`}>
+												<span className={`inline-flex items-center rounded-lg border px-2.5 py-0.5 text-sm transition-all hover:opacity-95 hover:bg-white/60 ${tagColors[idx % tagColors.length]} shadow-md hover:shadow-lg hover:shadow-orange-200/30`}>
+													{tag}
+												</span>
+											</Link>
+										))}
+									</div>
+								</div>
+								<div className="grid grid-cols-3 gap-2.5">
 						<Link
 							href="/technology"
-						className="group col-span-2 relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10"
+						className="group col-span-2 relative overflow-hidden rounded-xl border border-orange-200/50 bg-gradient-to-br from-orange-50/30 to-white p-4 md:p-5 filter ring-1 ring-orange-100/50 shadow-[0_6px_18px_rgba(251,146,60,0.08)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(251,146,60,0.12)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-300/60 hover:bg-gradient-to-br hover:from-orange-50/40 hover:to-white hover:z-10"
 							aria-label="Technology Blogs"
 						>
-							<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
+							<div className="pointer-events-none absolute inset-0 opacity-20 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-orange-100/60 via-transparent to-orange-50/50" />
+							<div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-orange-400 rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
 							<div className="relative z-10">
-								<h5 className="text-[0.95rem] md:text-base font-semibold transition-colors duration-200 group-hover:text-orange-600">Technology</h5>
+								<h5 className="text-base md:text-lg font-semibold transition-colors duration-200 group-hover:text-orange-700">Technology</h5>
 								<p className="mt-1 text-xs text-neutral-600">Engineering deep-dives and best practices</p>
-								<div className="mt-2 h-px bg-neutral-200/70" />
+								<div className="mt-1.5 h-px bg-orange-200/50" />
 							</div>
 						</Link>
 						<a
@@ -157,12 +153,17 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 						className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10"
 							aria-label="Keploy on GitHub"
 						>
-							<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
-							<div className="relative z-10">
-								<h5 className="text-[0.95rem] md:text-base font-semibold transition-colors duration-200 group-hover:text-orange-600">GitHub</h5>
-								<p className="mt-1 text-xs text-neutral-600">Star our repo, report issues</p>
-								<div className="mt-2 h-px bg-neutral-200/70" />
-							</div>
+									<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
+									<div className="relative z-10">
+									<div className="flex items-center gap-2">
+										<svg className="w-7 h-7 text-neutral-600 group-hover:text-orange-500 transition-colors duration-200" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+											<path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+											</svg>
+											<h5 className="text-base md:text-lg font-semibold transition-colors duration-200 group-hover:text-orange-600">GitHub</h5>
+										</div>
+											<p className="mt-1 text-xs text-neutral-600">Star our repo and report issues</p>
+											<div className="mt-1.5 h-px bg-neutral-200/70" />
+										</div>
 						</a>
 						<a
 							href="https://keploy.io/slack"
@@ -171,23 +172,29 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 						className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10"
 							aria-label="Keploy on Slack"
 						>
-							<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
-							<div className="relative z-10">
-								<h5 className="text-[0.95rem] md:text-base font-semibold transition-colors duration-200 group-hover:text-orange-600">Slack</h5>
-								<p className="mt-1 text-xs text-neutral-600">Connect with community</p>
-								<div className="mt-2 h-px bg-neutral-200/70" />
-							</div>
+									<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
+									<div className="relative z-10">
+									<div className="flex items-center gap-2">
+										<svg className="w-5 h-5 text-neutral-600 group-hover:text-orange-500 transition-colors duration-200" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+											<path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/>
+											</svg>
+											<h5 className="text-base md:text-lg font-semibold transition-colors duration-200 group-hover:text-orange-600">Slack</h5>
+										</div>
+											<p className="mt-1 text-xs text-neutral-600">Connect with our community</p>
+											<div className="mt-1.5 h-px bg-neutral-200/70" />
+										</div>
 						</a>
 						<Link
 							href="/community"
-						className="group col-span-2 relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10"
+						className="group col-span-2 relative overflow-hidden rounded-xl border border-orange-200/50 bg-gradient-to-br from-orange-50/30 to-white p-4 md:p-5 filter ring-1 ring-orange-100/50 shadow-[0_6px_18px_rgba(251,146,60,0.08)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(251,146,60,0.12)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-300/60 hover:bg-gradient-to-br hover:from-orange-50/40 hover:to-white hover:z-10"
 							aria-label="Community Blogs"
 						>
-							<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
+							<div className="pointer-events-none absolute inset-0 opacity-20 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-orange-100/60 via-transparent to-orange-50/50" />
+							<div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-orange-400 rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
 							<div className="relative z-10">
-								<h5 className="text-[0.95rem] md:text-base font-semibold transition-colors duration-200 group-hover:text-orange-600">Community</h5>
+								<h5 className="text-base md:text-lg font-semibold transition-colors duration-200 group-hover:text-orange-700">Community</h5>
 								<p className="mt-1 text-xs text-neutral-600">Open source, product updates, and stories</p>
-								<div className="mt-2 h-px bg-neutral-200/70" />
+								<div className="mt-1.5 h-px bg-orange-200/50" />
 							</div>
 						</Link>
 					</div>
