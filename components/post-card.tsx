@@ -46,7 +46,7 @@ export default function PostCard({
 
   return (
     <animated.div
-      className="bg-white rounded-xl shadow-md hover:shadow-xl hover:shadow-orange-200/20 border border-gray-200 transition-all duration-300 overflow-hidden group hover:border-orange-300 lg:hover:shadow-card hover:-translate-y-1"
+      className="bg-white rounded-xl shadow-[0_4px_14px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.14)] hover:drop-shadow-[0_8px_22px_rgba(249,115,22,0.18)] border border-gray-200 transition-all duration-300 overflow-hidden group hover:border-orange-300 hover:-translate-y-1"
       ref={ref}
       style={springStyles}
     >
