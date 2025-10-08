@@ -73,7 +73,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 				<h1 className="heading1 font-bold text-4xl md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-orange-400 to-pink-400">
 					Keploy Blog
 				</h1>
-				<p className="content-body body text-base md:text-lg mt-3 text-neutral-600/95 tracking-[0.01em] leading-relaxed">
+				<p className="content-body body text-base md:text-lg my-3 text-neutral-600/95 tracking-[0.01em] leading-relaxed">
 					Empowering your tech journey with expert insights, tools, and stories.
 				</p>
 			</div>
@@ -81,7 +81,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 			<div className="relative mt-2 mx-auto max-w-[56rem] grid gap-4 md:grid-cols-2 items-stretch">
 				<Link
 					href={latestPost?.slug ? `/community/${latestPost.slug}` : "/community"}
-					className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white backdrop-blur-sm shadow-md transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200/30 hover:border-orange-100 hover:bg-white hover:z-10 md:min-h-[280px]"
+					className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white backdrop-blur-sm filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10 md:min-h-[320px]"
 					aria-label={latestPost?.title ? `Latest Blog: ${latestPost.title}` : "Latest Blog"}
 				>
 					<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
@@ -99,7 +99,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 							/>
 						</div>
 					)}
-					<div className="p-4 md:p-5">
+					<div className="p-4 md:p-5 min-h-[140px]">
 						<h3 className="text-lg md:text-xl font-semibold leading-snug group-hover:text-orange-500">
 							{latestPost?.title || "Explore community insights"}
 						</h3>
@@ -112,7 +112,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 						</div>
 						{latestPost?.excerpt && (
 							<div
-								className="mt-3 text-neutral-700 line-clamp-3"
+								className="mt-3 text-neutral-700 line-clamp-4 leading-6 min-h-[6rem]"
 								dangerouslySetInnerHTML={{ __html: getExcerpt(latestPost.excerpt, 30) }}
 							/>
 						)}
@@ -125,7 +125,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 				</Link>
 
 				<div className="grid gap-3">
-					<div className="rounded-xl border border-neutral-100 bg-white/90 backdrop-blur-sm p-4 md:p-5 shadow-md hover:shadow-lg hover:shadow-orange-200/30 transition-all duration-300 ease-in-out">
+					<div className="rounded-xl border border-neutral-100 bg-white/90 backdrop-blur-sm filter ring-1 ring-black/5 p-4 md:p-5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] transition-all duration-300 ease-in-out">
 						<h4 className="mb-2 text-sm md:text-[0.95rem] font-semibold text-neutral-700">Popular Tags</h4>
 						<div className="flex flex-wrap gap-2">
 							{displayTags.map((tag, idx) => (
@@ -140,7 +140,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 					<div className="grid grid-cols-3 gap-3">
 						<Link
 							href="/technology"
-						className="group col-span-2 relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 shadow-md transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200/30 hover:border-orange-100 hover:bg-white hover:z-10"
+						className="group col-span-2 relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10"
 							aria-label="Technology Blogs"
 						>
 							<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
@@ -154,7 +154,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 							href="https://github.com/keploy/keploy"
 							target="_blank"
 							rel="noopener noreferrer"
-						className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 shadow-md transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200/30 hover:border-orange-100 hover:bg-white hover:z-10"
+						className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10"
 							aria-label="Keploy on GitHub"
 						>
 							<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
@@ -168,7 +168,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 							href="https://keploy.io/slack"
 							target="_blank"
 							rel="noopener noreferrer"
-						className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 shadow-md transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200/30 hover:border-orange-100 hover:bg-white hover:z-10"
+						className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10"
 							aria-label="Keploy on Slack"
 						>
 							<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
@@ -180,7 +180,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 						</a>
 						<Link
 							href="/community"
-						className="group col-span-2 relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 shadow-md transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200/30 hover:border-orange-100 hover:bg-white hover:z-10"
+						className="group col-span-2 relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 md:p-5 filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10"
 							aria-label="Community Blogs"
 						>
 							<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
