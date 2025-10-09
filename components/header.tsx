@@ -14,8 +14,12 @@ import { cn } from "../lib/utils/utils";
 
 export default function Header({
   readProgress,
+  compact,
+  transparentOnTop,
 }: {
   readProgress?: SpringValue<number>;
+  compact?: boolean;
+  transparentOnTop?: boolean;
 }) {
   const [scrolled, setScrolled] = useState(false);
 
@@ -28,24 +32,27 @@ export default function Header({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const backgroundClass = transparentOnTop
+    ? (scrolled ? "bg-white" : "bg-transparent")
+    : "bg-white";
+
   return (
-    <div className="h-32 md:h-40">
+    <div className={compact ? "h-16 md:h-20" : "h-32 md:h-40"}>
       <header
         className={cn(
-          "fixed z-30 w-full transition duration-300 ease-in-out border-none md:bg-opacity-90",
-          scrolled ? "lg:bg-neutral-100 lg:shadow-none" : "lg:bg-transparent",
-          "bg-white"
+          "fixed z-30 w-full transition duration-300 ease-in-out border-none",
+          backgroundClass
         )}
       >
         <div className="max-w-6xl px-5 mx-auto sm:px-6">
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className={compact ? "flex items-center justify-between h-12 md:h-16" : "flex items-center justify-between h-16 md:h-20"}>
             <div className="flex items-center flex-1">
               <div className="mr-4 shrink-0">
                 <Link href="https://keploy.io/">
                   <Image
                     src={sideBySideSvg}
                     alt="Keploy Logo"
-                    className="h-[50px] w-[100px] mb-2"
+                    className={compact ? "h-[36px] w-[90px]" : "h-[50px] w-[100px] mb-2"}
                   />
                 </Link>
               </div>
