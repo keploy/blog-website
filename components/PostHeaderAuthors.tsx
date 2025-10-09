@@ -116,7 +116,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
               </div>
 
               {hoverStateBlogReviewer && (
-                <div className="absolute bg-white p-4 text-sm rounded shadow-md z-40 mt-2 top-12 w-[calc(100vw-2rem)] sm:w-80 left-0">
+                <div className="absolute bg-white p-4 text-sm rounded shadow-md z-40 mt-2 top-12 w-[calc(100vw_-_2rem)] sm:w-80 left-0">
                   <Link href={`/authors/${blogreviewer[0].name}`}>
                     <div className="flex flex-row items-center gap-3 sm:gap-5">
                       <Image

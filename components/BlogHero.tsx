@@ -50,7 +50,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 	const displayTags = (filteredPreferred.length ? filteredPreferred : tags).slice(0, 10);
 
 		return (
-			<div className="relative overflow-hidden bg-transparent min-h-[calc(100vh-8rem)] md:min-h-[calc(100vh-10rem)] flex flex-col p-3 md:p-6">
+			<div className="relative overflow-hidden bg-transparent min-h-[calc(100vh_-_8rem)] md:min-h-[calc(100vh_-_10rem)] flex flex-col p-3 md:p-6">
 			<div aria-hidden className="absolute inset-0 -z-10 pointer-events-none">
 				{/* <div className="absolute inset-0 bg-gradient-to-br from-orange-50/80 via-white/0 to-pink-50/60" />
 				<div className="absolute inset-0 bg-[radial-gradient(70%_70%_at_50%_-8%,rgba(251,146,60,0.16),transparent_60%)]" />
@@ -58,10 +58,13 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 				<div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,237,213,0.25)_25%,rgba(255,237,213,0.25)_75%,transparent_100%)]" />
 				<div className="absolute inset-0 bg-[radial-gradient(80%_70%_at_50%_45%,rgba(251,146,60,0.12),rgba(255,182,193,0.06),transparent_80%)]" />
 				<div className="absolute inset-0 bg-[radial-gradient(60%_100%_at_0%_50%,rgba(255,228,200,0.15),transparent_70%),radial-gradient(60%_100%_at_100%_50%,rgba(255,228,200,0.15),transparent_70%)]" /> 
-				<div className="absolute inset-0 bg-[linear-gradient(to_br,rgba(255,240,230,0.25),rgba(255,245,240,0.15),transparent_80%)]" />
+				<div className="absolute inset-0 bg-[linear-gradient(to_bottom_right,rgba(255,240,230,0.25),rgba(255,245,240,0.15),transparent_80%)]" />
 				{/* --grid-- */}
-				<div className="absolute inset-0 [background-image:radial-gradient(circle_at_1px_1px,rgba(251,146,60,0.14)_1px,transparent_0)] [background-size:18px_18px] opacity-30 [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,1)_10%,rgba(0,0,0,1)_90%,transparent_100%)] [mask-size:100%_100%]" />
-				<div className="absolute inset-0 [background-image:linear-gradient(to_right,rgba(0,0,0,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.035)_1px,transparent_1px)] [background-size:28px_28px] opacity-35 [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,1)_10%,rgba(0,0,0,1)_90%,transparent_100%)] [mask-size:100%_100%]" />
+				<div className="absolute inset-0 [background-image:radial-gradient(circle_at_1px_1px,rgba(251,146,60,0.14)_1px,transparent_0)] [background-size:18px_18px] opacity-30" />
+				<div className="absolute inset-0 [background-image:linear-gradient(to_right,rgba(0,0,0,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.035)_1px,transparent_1px)] [background-size:28px_28px] opacity-35" />
+				{/* top/bottom fade overlays to soften grid at edges (avoid mask-image for build stability) */}
+				<div className="pointer-events-none absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-[#fbfcff] to-transparent" />
+				<div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[#fbfcff] to-transparent" />
 				<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(251,146,60,0.08),transparent_60%)]" />
 			</div>
 			<div aria-hidden className="pointer-events-none absolute inset-0">
