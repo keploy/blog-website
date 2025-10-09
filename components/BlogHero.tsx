@@ -17,14 +17,14 @@ type BlogHeroProps = {
 
 export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 	const tagColors = [
-		"bg-orange-50 text-orange-700 border-orange-200",
-		"bg-emerald-50 text-emerald-700 border-emerald-200",
-		"bg-sky-50 text-sky-700 border-sky-200",
-		"bg-violet-50 text-violet-700 border-violet-200",
-		"bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200",
-		"bg-rose-50 text-rose-700 border-rose-200",
-		"bg-amber-50 text-amber-700 border-amber-200",
-		"bg-cyan-50 text-cyan-700 border-cyan-200",
+		"text-orange-700 border-orange-200 hover:bg-orange-50",
+		"text-emerald-700 border-emerald-200 hover:bg-emerald-50",
+		"text-sky-700 border-sky-200 hover:bg-sky-50",
+		"text-violet-700 border-violet-200 hover:bg-violet-50",
+		"text-fuchsia-700 border-fuchsia-200 hover:bg-fuchsia-50",
+		"text-rose-700 border-rose-200 hover:bg-rose-50",
+		"text-amber-700 border-amber-200 hover:bg-amber-50",
+		"text-cyan-700 border-cyan-200 hover:bg-cyan-50",
 	];
 
 	// Prefer relevant tags if available
@@ -49,8 +49,8 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 	const filteredPreferred = preferredTags.filter((t) => tagsLower.has(t.toLowerCase()));
 	const displayTags = (filteredPreferred.length ? filteredPreferred : tags).slice(0, 10);
 
-	return (
-		<div className="relative overflow-hidden bg-transparent h-[calc(100vh-8rem)] md:h-[calc(100vh-10rem)] flex flex-col p-3 md:p-6">
+		return (
+			<div className="relative overflow-hidden bg-transparent min-h-[calc(100vh-8rem)] md:min-h-[calc(100vh-10rem)] flex flex-col p-3 md:p-6">
 			<div aria-hidden className="absolute inset-0 -z-10 pointer-events-none">
 				{/* <div className="absolute inset-0 bg-gradient-to-br from-orange-50/80 via-white/0 to-pink-50/60" />
 				<div className="absolute inset-0 bg-[radial-gradient(70%_70%_at_50%_-8%,rgba(251,146,60,0.16),transparent_60%)]" />
@@ -60,8 +60,8 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 				<div className="absolute inset-0 bg-[radial-gradient(60%_100%_at_0%_50%,rgba(255,228,200,0.15),transparent_70%),radial-gradient(60%_100%_at_100%_50%,rgba(255,228,200,0.15),transparent_70%)]" /> 
 				<div className="absolute inset-0 bg-[linear-gradient(to_br,rgba(255,240,230,0.25),rgba(255,245,240,0.15),transparent_80%)]" />
 				{/* --grid-- */}
-				<div className="absolute inset-0 [background-image:radial-gradient(circle_at_1px_1px,rgba(251,146,60,0.14)_1px,transparent_0)] [background-size:18px_18px] opacity-30" />
-				<div className="absolute inset-0 [background-image:linear-gradient(to_right,rgba(0,0,0,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.035)_1px,transparent_1px)] [background-size:28px_28px] opacity-35" />
+				<div className="absolute inset-0 [background-image:radial-gradient(circle_at_1px_1px,rgba(251,146,60,0.14)_1px,transparent_0)] [background-size:18px_18px] opacity-30 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] [mask-size:100%_100%]" />
+				<div className="absolute inset-0 [background-image:linear-gradient(to_right,rgba(0,0,0,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.035)_1px,transparent_1px)] [background-size:28px_28px] opacity-35 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] [mask-size:100%_100%]" />
 				<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(251,146,60,0.08),transparent_60%)]" />
 			</div>
 			<div aria-hidden className="pointer-events-none absolute inset-0">
@@ -78,15 +78,15 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 				{/* <h1 className="heading1 font-bold text-5xl bg-clip-text text-transparent bg-gradient-to-r from-orange-600 via-orange-500 to-pink-500">
 					Keploy Blog
 				</h1> */}
-				<h1 className="heading1 font-bold text-5xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-[#ff7a3d] via-[#ff9859] to-[#ffc97a] drop-shadow-[0_2px_6px_rgba(255,140,80,0.25)]">
+				<h1 className="hero-heading-font text-7xl py-1 md:text-7xl bg-clip-text text-transparent bg-[linear-gradient(90deg,#ff7a3d_0%,#ff9a57_48%,#ffbf80_100%)] drop-shadow-[0_2px_6px_rgba(255,140,80,0.22)]">
 					Keploy Blog
-					</h1>
-				<p className="content-body body text-base md:text-xl mb-3 text-neutral-600/95 tracking-[0.01em] leading-relaxed">
+				</h1>
+				<p className="content-body body text-base md:text-2xl py-1 mb-3 text-neutral-600/95 tracking-[0.01em] leading-relaxed">
 					Empowering your tech journey with expert insights, tools, and stories.
 				</p>
 			</div>
 
-			<div className="relative mx-auto max-w-[56rem] grid gap-4 md:grid-cols-2 items-stretch">
+			<div className="relative mx-auto max-w-4xl grid gap-4 md:grid-cols-2 items-stretch">
 				<Link
 					href={latestPost?.slug ? `/community/${latestPost.slug}` : "/community"}
 					className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white backdrop-blur-sm filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10 md:min-h-[320px]"
@@ -97,7 +97,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 						Latest Blog
 					</div>
 						{latestPost?.featuredImage?.node?.sourceUrl && (
-							<div className="relative h-44 w-full md:h-52 overflow-hidden">
+							<div className="relative h-44 w-full md:h-56 overflow-hidden">
 								<Image
 									src={latestPost.featuredImage.node.sourceUrl}
 									alt={latestPost.title}
@@ -107,7 +107,7 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 								/>
 							</div>
 						)}
-						<div className="p-3 md:p-4 min-h-[90px]">
+						<div className="p-4 md:p-5 min-h-[110px]">
 							<h3 className="text-lg md:text-xl font-semibold leading-snug group-hover:text-orange-500">
 								{latestPost?.title || "Explore community insights"}
 							</h3>
@@ -121,19 +121,19 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 							{latestPost?.excerpt && (
 								<div
 									className="mt-2 text-neutral-700 line-clamp-4 leading-6 min-h-[2.5rem]"
-									dangerouslySetInnerHTML={{ __html: getExcerpt(latestPost.excerpt, 30) }}
+									dangerouslySetInnerHTML={{ __html: getExcerpt(latestPost.excerpt, 36) }}
 								/>
 							)}
 						</div>
 				</Link>
 
 				<div className="grid gap-3">
-								<div className="rounded-xl border border-neutral-100 bg-white/90 backdrop-blur-sm filter ring-1 ring-black/5 p-3 md:p-4 shadow-[0_6px_18px_rgba(0,0,0,0.10)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] transition-all duration-300 ease-in-out">
-									<h4 className="mb-2 text-sm md:text-base font-semibold text-neutral-700">Popular Tags</h4>
+								<div className="rounded-xl border border-neutral-100 bg-white/90 backdrop-blur-sm filter ring-1 ring-black/5 p-4 md:p-5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out">
+									<h4 className="mb-2.5 text-base md:text-lg font-semibold text-neutral-700">Popular Tags</h4>
 									<div className="flex flex-wrap gap-1.5">
 										{displayTags.map((tag, idx) => (
 											<Link key={`${tag}-${idx}`} href={`/tag/${encodeURIComponent(tag)}`} aria-label={`View posts tagged ${tag}`}>
-												<span className={`inline-flex items-center rounded-lg border px-2.5 py-0.5 text-sm transition-all hover:opacity-95 hover:bg-white/60 ${tagColors[idx % tagColors.length]} shadow-md hover:shadow-lg hover:shadow-orange-200/30`}>
+											<span className={`inline-flex items-center rounded-lg border px-2.5 py-0.5 text-sm bg-white transition-colors hover:opacity-95 ${tagColors[idx % tagColors.length]}`}>
 													{tag}
 												</span>
 											</Link>
@@ -143,15 +143,15 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 								<div className="grid grid-cols-3 gap-2.5">
 						<Link
 							href="/technology"
-						className="group col-span-2 relative overflow-hidden rounded-xl border border-orange-200/50 bg-gradient-to-br from-orange-50/30 to-white p-4 md:p-5 filter ring-1 ring-orange-100/50 shadow-[0_6px_18px_rgba(251,146,60,0.08)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(251,146,60,0.12)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-300/60 hover:bg-gradient-to-br hover:from-orange-50/40 hover:to-white hover:z-10"
+					className="group col-span-2 relative overflow-hidden rounded-xl border border-orange-400/60 bg-white p-4 md:p-5 filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10"
 							aria-label="Technology Blogs"
 						>
-							<div className="pointer-events-none absolute inset-0 opacity-20 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-orange-100/60 via-transparent to-orange-50/50" />
-							<div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-orange-400 rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+					<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
+						<div className="absolute top-1.5 right-1.5 w-2 h-2 bg-orange-400 rounded-full opacity-85 group-hover:opacity-100 transition-opacity duration-300" />
 							<div className="relative z-10">
-								<h5 className="text-base md:text-lg font-semibold transition-colors duration-200 group-hover:text-orange-700">Technology</h5>
+							<h5 className="text-base md:text-lg font-semibold transition-colors duration-200 group-hover:text-orange-600">Technology</h5>
 								<p className="mt-1 text-xs text-neutral-600">Engineering deep-dives and best practices</p>
-								<div className="mt-1.5 h-px bg-orange-200/50" />
+							<div className="mt-1.5 h-px bg-neutral-200/70" />
 							</div>
 						</Link>
 						<a
@@ -194,15 +194,15 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 						</a>
 						<Link
 							href="/community"
-						className="group col-span-2 relative overflow-hidden rounded-xl border border-orange-200/50 bg-gradient-to-br from-orange-50/30 to-white p-4 md:p-5 filter ring-1 ring-orange-100/50 shadow-[0_6px_18px_rgba(251,146,60,0.08)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(251,146,60,0.12)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-300/60 hover:bg-gradient-to-br hover:from-orange-50/40 hover:to-white hover:z-10"
+					className="group col-span-2 relative overflow-hidden rounded-xl border border-orange-400/60 bg-white p-4 md:p-5 filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10"
 							aria-label="Community Blogs"
 						>
-							<div className="pointer-events-none absolute inset-0 opacity-20 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-orange-100/60 via-transparent to-orange-50/50" />
-							<div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-orange-400 rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+					<div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-300 bg-gradient-to-br from-orange-50/60 via-transparent to-pink-50/50" />
+						<div className="absolute top-1.5 right-1.5 w-2 h-2 bg-orange-400 rounded-full opacity-85 group-hover:opacity-100 transition-opacity duration-300" />
 							<div className="relative z-10">
-								<h5 className="text-base md:text-lg font-semibold transition-colors duration-200 group-hover:text-orange-700">Community</h5>
+							<h5 className="text-base md:text-lg font-semibold transition-colors duration-200 group-hover:text-orange-600">Community</h5>
 								<p className="mt-1 text-xs text-neutral-600">Open source, product updates, and stories</p>
-								<div className="mt-1.5 h-px bg-orange-200/50" />
+							<div className="mt-1.5 h-px bg-neutral-200/70" />
 							</div>
 						</Link>
 					</div>

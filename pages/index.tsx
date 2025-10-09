@@ -19,7 +19,7 @@ export default function Index({ communityPosts, technologyPosts, tags, preview }
       <Head>
         <title>{`Engineering | Keploy Blog`}</title>
       </Head>
-      <Header />
+      <Header compact transparentOnTop />
       <BlogHero
         latestPost={communityPosts && communityPosts[0] ? communityPosts[0].node : undefined}
         tags={tags}
