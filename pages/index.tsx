@@ -20,11 +20,11 @@ export default function Index({ communityPosts, technologyPosts, tags, preview }
         <title>{`Engineering | Keploy Blog`}</title>
       </Head>
       <Header />
+      <BlogHero
+        latestPost={communityPosts && communityPosts[0] ? communityPosts[0].node : undefined}
+        tags={tags}
+      />
       <Container>
-        <BlogHero
-          latestPost={communityPosts && communityPosts[0] ? communityPosts[0].node : undefined}
-          tags={tags}
-        />
         <TopBlogs
           communityPosts={communityPosts}
           technologyPosts={technologyPosts}

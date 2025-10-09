@@ -50,11 +50,16 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 	const displayTags = (filteredPreferred.length ? filteredPreferred : tags).slice(0, 10);
 
 	return (
-		<div className="relative overflow-hidden rounded-2xl border border-white/20 bg-transparent pt-0 p-3 md:p-6 max-h-[85vh]">
-			<div aria-hidden className="fixed left-0 right-0 top-16 md:top-20 h-[calc(100svh-4rem)] md:h-[calc(100svh-5rem)] -z-10 pointer-events-none">
-				<div className="absolute inset-0 bg-gradient-to-br from-orange-50/80 via-white/0 to-pink-50/60" />
+		<div className="relative overflow-hidden bg-transparent h-[calc(100vh-8rem)] md:h-[calc(100vh-10rem)] flex flex-col p-3 md:p-6">
+			<div aria-hidden className="absolute inset-0 -z-10 pointer-events-none">
+				{/* <div className="absolute inset-0 bg-gradient-to-br from-orange-50/80 via-white/0 to-pink-50/60" />
 				<div className="absolute inset-0 bg-[radial-gradient(70%_70%_at_50%_-8%,rgba(251,146,60,0.16),transparent_60%)]" />
-				<div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_120%,rgba(0,0,0,0.05),transparent_40%)]" />
+				<div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_120%,rgba(0,0,0,0.05),transparent_40%)]" /> */}
+				<div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,237,213,0.25)_25%,rgba(255,237,213,0.25)_75%,transparent_100%)]" />
+				<div className="absolute inset-0 bg-[radial-gradient(80%_70%_at_50%_45%,rgba(251,146,60,0.12),rgba(255,182,193,0.06),transparent_80%)]" />
+				<div className="absolute inset-0 bg-[radial-gradient(60%_100%_at_0%_50%,rgba(255,228,200,0.15),transparent_70%),radial-gradient(60%_100%_at_100%_50%,rgba(255,228,200,0.15),transparent_70%)]" /> 
+				<div className="absolute inset-0 bg-[linear-gradient(to_br,rgba(255,240,230,0.25),rgba(255,245,240,0.15),transparent_80%)]" />
+				{/* --grid-- */}
 				<div className="absolute inset-0 [background-image:radial-gradient(circle_at_1px_1px,rgba(251,146,60,0.14)_1px,transparent_0)] [background-size:18px_18px] opacity-30" />
 				<div className="absolute inset-0 [background-image:linear-gradient(to_right,rgba(0,0,0,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.035)_1px,transparent_1px)] [background-size:28px_28px] opacity-35" />
 				<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(251,146,60,0.08),transparent_60%)]" />
@@ -64,21 +69,24 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 				<div className="absolute inset-0" />
 				<div className="absolute inset-0" />
 				<div className="absolute inset-0" />
-				<div className="absolute -right-12 -bottom-6 hidden md:block opacity-15">
+				<div className="absolute right-8 -bottom-6 hidden md:block opacity-15">
 					<Image src="/blog/images/blog-bunny.png" alt="" width={200} height={200} />
 				</div>
 			</div>
 
 			<div className="relative mx-auto max-w-4xl text-center mb-1 animate-fadeUp">
-				<h1 className="heading1 font-bold text-6xl bg-clip-text text-transparent bg-gradient-to-r from-orange-600 via-orange-500 to-pink-500">
+				{/* <h1 className="heading1 font-bold text-5xl bg-clip-text text-transparent bg-gradient-to-r from-orange-600 via-orange-500 to-pink-500">
 					Keploy Blog
-				</h1>
-				<p className="content-body body text-base md:text-lg mb-3 text-neutral-600/95 tracking-[0.01em] leading-relaxed">
+				</h1> */}
+				<h1 className="heading1 font-bold text-5xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-[#ff7a3d] via-[#ff9859] to-[#ffc97a] drop-shadow-[0_2px_6px_rgba(255,140,80,0.25)]">
+					Keploy Blog
+					</h1>
+				<p className="content-body body text-base md:text-xl mb-3 text-neutral-600/95 tracking-[0.01em] leading-relaxed">
 					Empowering your tech journey with expert insights, tools, and stories.
 				</p>
 			</div>
 
-			<div className="relative mt-2 mx-auto max-w-[56rem] grid gap-4 md:grid-cols-2 items-stretch">
+			<div className="relative mx-auto max-w-[56rem] grid gap-4 md:grid-cols-2 items-stretch">
 				<Link
 					href={latestPost?.slug ? `/community/${latestPost.slug}` : "/community"}
 					className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white backdrop-blur-sm filter ring-1 ring-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.10)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.16)] hover:drop-shadow-[0_6px_14px_rgba(251,146,60,0.18)] hover:border-orange-100 hover:bg-white hover:z-10 md:min-h-[320px]"
