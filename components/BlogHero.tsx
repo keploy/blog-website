@@ -60,8 +60,8 @@ export default function BlogHero({ latestPost, tags }: BlogHeroProps) {
 				<div className="absolute inset-0 bg-[radial-gradient(60%_100%_at_0%_50%,rgba(255,228,200,0.15),transparent_70%),radial-gradient(60%_100%_at_100%_50%,rgba(255,228,200,0.15),transparent_70%)]" /> 
 				<div className="absolute inset-0 bg-[linear-gradient(to_br,rgba(255,240,230,0.25),rgba(255,245,240,0.15),transparent_80%)]" />
 				{/* --grid-- */}
-				<div className="absolute inset-0 [background-image:radial-gradient(circle_at_1px_1px,rgba(251,146,60,0.14)_1px,transparent_0)] [background-size:18px_18px] opacity-30 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] [mask-size:100%_100%]" />
-				<div className="absolute inset-0 [background-image:linear-gradient(to_right,rgba(0,0,0,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.035)_1px,transparent_1px)] [background-size:28px_28px] opacity-35 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] [mask-size:100%_100%]" />
+				<div className="absolute inset-0 [background-image:radial-gradient(circle_at_1px_1px,rgba(251,146,60,0.14)_1px,transparent_0)] [background-size:18px_18px] opacity-30 [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,1)_10%,rgba(0,0,0,1)_90%,transparent_100%)] [mask-size:100%_100%]" />
+				<div className="absolute inset-0 [background-image:linear-gradient(to_right,rgba(0,0,0,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.035)_1px,transparent_1px)] [background-size:28px_28px] opacity-35 [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,1)_10%,rgba(0,0,0,1)_90%,transparent_100%)] [mask-size:100%_100%]" />
 				<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(251,146,60,0.08),transparent_60%)]" />
 			</div>
 			<div aria-hidden className="pointer-events-none absolute inset-0">
