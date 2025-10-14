@@ -3,13 +3,16 @@ import { FaSearch, FaSortAlphaDown, FaSortAlphaDownAlt } from 'react-icons/fa';
 import Link from "next/link";
 import Image from "next/image";
 import { Post } from "../types/post";
+import { normalizeName } from "../utils/calculateAuthorPostCounts";
 
 export default function AuthorMapping({
   AuthorArray,
   itemsPerPage = 8, // You can customize the number of items per page
+  authorCounts,
 }:{
   AuthorArray: Pick<Post, "author" | "ppmaAuthorName" | "ppmaAuthorImage">[],
-  itemsPerPage?:number
+  itemsPerPage?:number,
+  authorCounts?: Record<string, number>
 }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -206,7 +209,10 @@ export default function AuthorMapping({
       ) : (
         <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-accent-1 m-4">
-        {visibleAuthors.map((author, index) => (
+        {visibleAuthors.map((author, index) => {
+          const countKey = normalizeName(author.ppmaAuthorName);
+          const postCount = (typeof countKey === 'string' && countKey) ? (authorCounts?.[countKey] ?? 0) : 0;
+          return (
           <Link href={`/authors/${author.slug}`} key={index}>
             <div className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between  border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30 hover:scale-105 cursor-pointer">
               <div className="flex items-center mb-3 sm:mb-0">
@@ -227,13 +233,19 @@ export default function AuthorMapping({
                     width={48}
                   />
                 )}
-                <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-2xl heading1 md:text-xl font-bold tracking-tighter leading-tight">
-                  {author.ppmaAuthorName}
-                </h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-2xl heading1 md:text-xl font-bold tracking-tighter leading-tight">
+                    {author.ppmaAuthorName}
+                  </h2>
+                  <span className="mb-8 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+                    {postCount} {postCount === 1 ? 'post' : 'posts'}
+                  </span>
+                </div>
               </div>
             </div>
           </Link>
-        ))}
+          );
+        })}
       </div>
       <div>
         <hr className="border-b border-gray-200 my-4" />
