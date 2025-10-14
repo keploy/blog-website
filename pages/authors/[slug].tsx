@@ -4,7 +4,7 @@ import Container from "../../components/container";
 import {
   getAllAuthors,
   getContent,
-  getPostsByAuthorName,
+  getAllPosts,
 } from "../../lib/api";
 import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
@@ -43,10 +43,13 @@ export default function AuthorPage({ preview, filteredPosts ,content }) {
 }
 export const getStaticPaths: GetStaticPaths = async ({}) => {
   const AllAuthors = await getAllAuthors();
+  const names = (AllAuthors.edges || []).flatMap(({ node }) => {
+    const raw = node.ppmaAuthorName || "";
+    return raw.includes(",") ? raw.split(",").map((s) => s.trim()) : [raw.trim()];
+  });
+  const unique = Array.from(new Set(names.filter(Boolean)));
   return {
-    paths:
-      AllAuthors.edges.map(({ node }) => `/authors/${node.ppmaAuthorName}`) ||
-      [],
+    paths: unique.map((n) => `/authors/${n}`),
     fallback: true,
   };
 };
@@ -57,33 +60,28 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const { slug } = params as { slug: string };
 
-  // Users mapped by first name
-  const usersMappedByFirstName = ["Animesh Pathak", "Shubham Jain", "Yash Khare"];
-
-  // Determine the userName based on the slug
-  let userName = slug;
-  if (usersMappedByFirstName.includes(slug)) {
-    userName = slug.split(" ")[0];
-  }
-
-  // Fetch posts by author name
-  const posts = await getPostsByAuthorName(userName);
-
-  // Safely extract edges from posts
-  const allPosts = posts?.edges || [];
-
-  // Extract postId from the first matching post (if any)
+  const all = await getAllPosts();
+  const allEdges = all?.edges || [];
+  const normalized = decodeURIComponent(slug).trim().toLowerCase();
+  const matches = allEdges.filter(({ node }) => {
+    const raw = (node?.ppmaAuthorName || "").toLowerCase();
+    if (!raw) return false;
+    if (raw.includes(",")) {
+      return raw.split(",").map((s) => s.trim()).includes(normalized);
+    }
+    return raw.trim() === normalized;
+  });
+  const allPosts = matches;
   const postId = allPosts.length > 0 ? allPosts[0]?.node?.postId : null;
 
-  // Fetch content using postId (if available)
   const content = postId ? await getContent(postId) : null;
 
   return {
     props: {
       preview,
-      filteredPosts: allPosts, // Ensure filteredPosts is always an array
+      filteredPosts: allPosts,
       content,
     },
-    revalidate: 10, // ISR with 10 seconds revalidation
+    revalidate: 10,
   };
 };

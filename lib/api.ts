@@ -147,6 +147,7 @@ export async function getAllPosts() {
               excerpt
               slug
               date
+              postId
               featuredImage {
                 node {
                   sourceUrl
@@ -166,6 +167,10 @@ export async function getAllPosts() {
                 }
               }
             }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
           }
         }
       }
