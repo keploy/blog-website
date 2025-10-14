@@ -17,46 +17,41 @@ export default function AuthorMapping({
   const [isSortOpen, setIsSortOpen] = useState(false);
 
   const authorData = useMemo(() => {
-    const uniqueDisplayNames: string[] = [];
-    const authors: {
+    // Use a map keyed by normalized display name to ensure strict de-duplication
+    const normalizedNameToAuthor = new Map<string, {
       publishingAuthor: string;
       ppmaAuthorName: string;
       avatarUrl: string;
       slug: string;
-    }[] = [];
+    }>();
 
     AuthorArray.forEach((item) => {
-      const ppmaAuthorName = formatAuthorName(item.ppmaAuthorName);
+      const formattedDisplay = formatAuthorName(item.ppmaAuthorName);
+      if (Array.isArray(formattedDisplay)) return; // skip multi-name entries
+
+      const normalizedKey = formattedDisplay.toLowerCase().trim();
+      if (normalizedNameToAuthor.has(normalizedKey)) return; // already captured
+
+      const publishingAuthor = formatAuthorName(item.author.node.name);
       const avatarUrl = item.ppmaAuthorImage;
       const slug = item.ppmaAuthorName;
-      const publishingAuthor = formatAuthorName(item.author.node.name);
-      if (Array.isArray(ppmaAuthorName)) {
-        return;
-      }
 
-      if (!uniqueDisplayNames.includes(ppmaAuthorName)) {
-        uniqueDisplayNames.push(ppmaAuthorName);
-      } else {
-        return;
-      }
-
-      authors.push({
+      normalizedNameToAuthor.set(normalizedKey, {
         publishingAuthor,
-        ppmaAuthorName,
+        ppmaAuthorName: formattedDisplay,
         avatarUrl,
         slug,
       });
     });
-    return authors;
+
+    return Array.from(normalizedNameToAuthor.values());
   }, [AuthorArray]);
 
   const filteredAuthors = useMemo(() => {
     if (!searchTerm.trim()) return authorData;
     const query = searchTerm.toLowerCase();
-    return authorData.filter((a) =>
-      a.ppmaAuthorName.toLowerCase().includes(query) ||
-      a.publishingAuthor.toLowerCase().includes(query)
-    );
+    // Restrict search to ppmaAuthorName only (display name)
+    return authorData.filter((a) => a.ppmaAuthorName.toLowerCase().includes(query));
   }, [authorData, searchTerm]);
 
   const sortedAuthors = useMemo(() => {

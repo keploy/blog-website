@@ -60,8 +60,15 @@ export const getStaticProps: GetStaticProps = async ({
 }) => {
   const { slug } = params as { slug: string };
 
-  const all = await getAllPosts();
-  const allEdges = all?.edges || [];
+  let allEdges: any[] = [];
+  try {
+    const all = await getAllPosts();
+    allEdges = all?.edges || [];
+  } catch (error) {
+    console.error('Error in getStaticProps getAllPosts:', error);
+    allEdges = [];
+  }
+
   const normalized = decodeURIComponent(slug).trim().toLowerCase();
   const matches = allEdges.filter(({ node }) => {
     const raw = (node?.ppmaAuthorName || "").toLowerCase();
@@ -72,9 +79,15 @@ export const getStaticProps: GetStaticProps = async ({
     return raw.trim() === normalized;
   });
   const allPosts = matches;
-  const postId = allPosts.length > 0 ? allPosts[0]?.node?.postId : null;
 
-  const content = postId ? await getContent(postId) : null;
+  let content: string | null = null;
+  try {
+    const postId = allPosts.length > 0 ? allPosts[0]?.node?.postId : null;
+    content = postId ? await getContent(postId) : null;
+  } catch (error) {
+    console.error('Error in getStaticProps getContent:', error);
+    content = null;
+  }
 
   return {
     props: {

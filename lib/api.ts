@@ -137,53 +137,58 @@ export async function getAllPosts() {
   let endCursor = null;
 
   while (hasNextPage) {
-    const data = await fetchAPI(
-      `
-      query AllPosts($after: String) {
-        posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
-          edges {
-            node {
-              title
-              excerpt
-              slug
-              date
-              postId
-              featuredImage {
-                node {
-                  sourceUrl
+    try {
+      const data = await fetchAPI(
+        `
+        query AllPosts($after: String) {
+          posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
+            edges {
+              node {
+                title
+                excerpt
+                slug
+                date
+                postId
+                featuredImage {
+                  node {
+                    sourceUrl
+                  }
                 }
-              }
-              author {
-                node {
-                  name
-                }
-              }
-              ppmaAuthorName
-              categories {
-                edges {
+                author {
                   node {
                     name
                   }
                 }
+                ppmaAuthorName
+                categories {
+                  edges {
+                    node {
+                      name
+                    }
+                  }
+                }
               }
             }
-          }
-          pageInfo {
-            hasNextPage
-            endCursor
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
           }
         }
-      }
-    `,
-      {
-        variables: { after: endCursor },
-      }
-    );
+      `,
+        {
+          variables: { after: endCursor },
+        }
+      );
 
-    const edges = data?.posts?.edges;
-    allEdges = [...allEdges, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
-    endCursor = data?.posts?.pageInfo?.endCursor;
+      const edges = data?.posts?.edges || [];
+      allEdges = [...allEdges, ...edges];
+      hasNextPage = Boolean(data?.posts?.pageInfo?.hasNextPage);
+      endCursor = data?.posts?.pageInfo?.endCursor || null;
+    } catch (error) {
+      console.error('Error in getAllPosts pagination fetch:', error);
+      hasNextPage = false;
+    }
   }
 
   return { edges: allEdges };
