@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import { Post } from "../types/post";
 import Link from "next/link";
@@ -63,6 +63,10 @@ const PostByAuthorMapping = ({
   Content: string;
 }) => {
   const AuthorName = filteredPosts[0].node.ppmaAuthorName;
+  const [visibleCount, setVisibleCount] = useState(12);
+  const visiblePosts = useMemo(() => filteredPosts.slice(0, visibleCount), [filteredPosts, visibleCount]);
+  const canLoadMore = visibleCount < filteredPosts.length;
+  const handleLoadMore = () => setVisibleCount((prev) => Math.min(prev + 12, filteredPosts.length));
   return (
     <div className="container mx-auto mt-8">
       <div className="mb-5">
@@ -76,10 +80,20 @@ const PostByAuthorMapping = ({
         Posts by {AuthorName}
       </h1>
       <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredPosts.map(({ node }) => {
+        {visiblePosts.map(({ node }) => {
           return <Node node={node} key={node.slug} />;
         })}
       </ul>
+      {canLoadMore && (
+        <div className="flex justify-center mt-8 mb-10">
+          <button
+            onClick={handleLoadMore}
+            className="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
+          >
+            Load More Posts
+          </button>
+        </div>
+      )}
     </div>
   );
 };
