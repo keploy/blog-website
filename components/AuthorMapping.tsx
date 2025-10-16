@@ -4,10 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Post } from "../types/post";
 import { normalizeName } from "../utils/calculateAuthorPostCounts";
+import AuthorCard from "./AuthorCard";
 
 export default function AuthorMapping({
   AuthorArray,
-  itemsPerPage = 8, // You can customize the number of items per page
+  itemsPerPage = 9, // You can customize the number of items per page
   authorCounts,
 }:{
   AuthorArray: Pick<Post, "author" | "ppmaAuthorName" | "ppmaAuthorImage">[],
@@ -145,25 +146,8 @@ export default function AuthorMapping({
             <span className="block truncate text-gray-700 font-medium">
               {sortOrder === 'desc' ? 'Z–A' : sortOrder === 'asc' ? 'A–Z' : 'Default'}
             </span>
-            {sortOrder === 'desc' ? (
-              <FaSortAlphaDownAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
-            ) : (
-              <FaSortAlphaDown className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
-            )}
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </span>
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">▾</span>
           </button>
-
           {isSortOpen && (
             <div
               role="listbox"
@@ -208,42 +192,18 @@ export default function AuthorMapping({
         <p className="text-center text-gray-500">No authors found by the name {`"${searchTerm}"`}</p>
       ) : (
         <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-accent-1 m-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-7 bg-accent-1 mx-4 mt-6 mb-10">
         {visibleAuthors.map((author, index) => {
           const countKey = normalizeName(author.ppmaAuthorName);
           const postCount = (typeof countKey === 'string' && countKey) ? (authorCounts?.[countKey] ?? 0) : 0;
           return (
-          <Link href={`/authors/${author.slug}`} key={index}>
-            <div className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between  border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30 hover:scale-105 cursor-pointer">
-              <div className="flex items-center mb-3 sm:mb-0">
-                {author.avatarUrl != "imag1" &&  author.avatarUrl != "image" ? (
-                  <Image
-                    src={author.avatarUrl}
-                    alt={`${author.ppmaAuthorName}'s Avatar`}
-                    className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
-                    height={48}
-                    width={48}
-                  />
-                ) : (
-                  <Image
-                    src={`/blog/images/author.png`}
-                    alt={`${author.ppmaAuthorName}'s Avatar`}
-                    className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
-                    height={48}
-                    width={48}
-                  />
-                )}
-                <div className="flex items-center gap-2">
-                  <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-2xl heading1 md:text-xl font-bold tracking-tighter leading-tight">
-                    {author.ppmaAuthorName}
-                  </h2>
-                  <span className="mb-8 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
-                    {postCount} {postCount === 1 ? 'post' : 'posts'}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </Link>
+            <AuthorCard
+              key={index}
+              name={author.ppmaAuthorName}
+              avatarUrl={author.avatarUrl}
+              slug={author.slug}
+              postCount={postCount}
+            />
           );
         })}
       </div>
