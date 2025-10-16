@@ -16,7 +16,7 @@ export default function AuthorCard({ name, avatarUrl, slug, postCount, linkedin,
   const hasAvatar = avatarUrl && avatarUrl !== "imag1" && avatarUrl !== "image";
 
   return (
-    <div className="p-5 rounded-xl border border-gray-100 bg-white shadow hover:shadow-lg ring-1 ring-gray-100/60 transition-all duration-200 flex flex-col h-full hover:-translate-y-0.5">
+    <div className="p-5 rounded-xl border border-gray-100 bg-white shadow-md hover:shadow-lg ring-1 ring-gray-100/60 transition-all duration-200 flex flex-col h-full hover:-translate-y-0.5">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           {hasAvatar ? (
@@ -61,9 +61,10 @@ export default function AuthorCard({ name, avatarUrl, slug, postCount, linkedin,
         </span>
         <Link
           href={`/authors/${slug}`}
-          className="px-4 py-2 rounded-full text-sm text-white bg-gradient-to-r from-orange-500/70 to-red-500/70 hover:from-red-500/80 hover:to-orange-500/80 shadow-sm transition-colors"
+          className="group text-sm text-orange-600 hover:text-orange-700 inline-flex items-center font-medium"
         >
-          View Author
+          <span className="underline underline-offset-4 decoration-2 decoration-orange-400">View more</span>
+          <span aria-hidden className="ml-1 transition-transform duration-150 group-hover:translate-x-0.5">→</span>
         </Link>
       </div>
     </div>
