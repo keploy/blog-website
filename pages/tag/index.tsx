@@ -36,63 +36,13 @@ import { getIconComponentForTag } from "../../utils/tagIcons";
        .map(({ name }) => ({ name }));
    }, [edgesAllTags, searchTerm]);
  
-   // Much wider palette; low-opacity backgrounds, non-white, minimal
-   const colorChoices = useMemo(() => {
-     return [
-       { bg: 'bg-blue-100', text: 'text-blue-700', hover: 'hover:bg-blue-200' },
-       { bg: 'bg-sky-100', text: 'text-sky-700', hover: 'hover:bg-sky-200' },
-       { bg: 'bg-cyan-100', text: 'text-cyan-700', hover: 'hover:bg-cyan-200' },
-       { bg: 'bg-teal-100', text: 'text-teal-700', hover: 'hover:bg-teal-200' },
-       { bg: 'bg-emerald-100', text: 'text-emerald-700', hover: 'hover:bg-emerald-200' },
-       { bg: 'bg-green-100', text: 'text-green-700', hover: 'hover:bg-green-200' },
-       { bg: 'bg-lime-100', text: 'text-lime-700', hover: 'hover:bg-lime-200' },
-       { bg: 'bg-yellow-100', text: 'text-yellow-700', hover: 'hover:bg-yellow-200' },
-       { bg: 'bg-amber-100', text: 'text-amber-700', hover: 'hover:bg-amber-200' },
-       { bg: 'bg-orange-100', text: 'text-orange-700', hover: 'hover:bg-orange-200' },
-       { bg: 'bg-red-100', text: 'text-red-700', hover: 'hover:bg-red-200' },
-       { bg: 'bg-rose-100', text: 'text-rose-700', hover: 'hover:bg-rose-200' },
-       { bg: 'bg-pink-100', text: 'text-pink-700', hover: 'hover:bg-pink-200' },
-       { bg: 'bg-fuchsia-100', text: 'text-fuchsia-700', hover: 'hover:bg-fuchsia-200' },
-       { bg: 'bg-purple-100', text: 'text-purple-700', hover: 'hover:bg-purple-200' },
-       { bg: 'bg-violet-100', text: 'text-violet-700', hover: 'hover:bg-violet-200' },
-       { bg: 'bg-indigo-100', text: 'text-indigo-700', hover: 'hover:bg-indigo-200' },
-       { bg: 'bg-blue-50', text: 'text-blue-700', hover: 'hover:bg-blue-100' },
-       { bg: 'bg-sky-50', text: 'text-sky-700', hover: 'hover:bg-sky-100' },
-       { bg: 'bg-cyan-50', text: 'text-cyan-700', hover: 'hover:bg-cyan-100' },
-       { bg: 'bg-teal-50', text: 'text-teal-700', hover: 'hover:bg-teal-100' },
-       { bg: 'bg-emerald-50', text: 'text-emerald-700', hover: 'hover:bg-emerald-100' },
-       { bg: 'bg-green-50', text: 'text-green-700', hover: 'hover:bg-green-100' },
-       { bg: 'bg-lime-50', text: 'text-lime-700', hover: 'hover:bg-lime-100' },
-       { bg: 'bg-yellow-50', text: 'text-yellow-700', hover: 'hover:bg-yellow-100' },
-       { bg: 'bg-amber-50', text: 'text-amber-700', hover: 'hover:bg-amber-100' },
-       { bg: 'bg-orange-50', text: 'text-orange-700', hover: 'hover:bg-orange-100' },
-       { bg: 'bg-red-50', text: 'text-red-700', hover: 'hover:bg-red-100' },
-       { bg: 'bg-rose-50', text: 'text-rose-700', hover: 'hover:bg-rose-100' },
-       { bg: 'bg-pink-50', text: 'text-pink-700', hover: 'hover:bg-pink-100' },
-       { bg: 'bg-fuchsia-50', text: 'text-fuchsia-700', hover: 'hover:bg-fuchsia-100' },
-       { bg: 'bg-purple-50', text: 'text-purple-700', hover: 'hover:bg-purple-100' },
-       { bg: 'bg-violet-50', text: 'text-violet-700', hover: 'hover:bg-violet-100' },
-       { bg: 'bg-indigo-50', text: 'text-indigo-700', hover: 'hover:bg-indigo-100' },
-       { bg: 'bg-slate-100', text: 'text-slate-700', hover: 'hover:bg-slate-200' },
-       { bg: 'bg-neutral-100', text: 'text-neutral-700', hover: 'hover:bg-neutral-200' },
-       { bg: 'bg-stone-100', text: 'text-stone-700', hover: 'hover:bg-stone-200' },
-     ];
-   }, []);
- 
-   const getColorForTag = (name: string) => {
-     let hash = 0;
-     for (let i = 0; i < name.length; i++) hash = (hash << 5) - hash + name.charCodeAt(i);
-     const idx = Math.abs(hash) % colorChoices.length;
-     return colorChoices[idx];
-   };
- 
-   // Avoid adjacent duplicate icons by checking previous tag's chosen icon
-   const renderTagButton = (name: string, prevIconName?: string) => {
-     const IconCompPreferred = getIconComponentForTag(name, prevIconName);
-     let IconComp = IconCompPreferred as any;
-     const { bg, text, hover } = getColorForTag(name);
-     return { IconComp, classes: `${bg} ${hover} ${text}` };
-   };
+  // Fixed gray style for all tag buttons
+  const renderTagButton = (name: string, prevIconName?: string) => {
+    const IconCompPreferred = getIconComponentForTag(name, prevIconName);
+    let IconComp = IconCompPreferred as any;
+    const classes = `bg-slate-100 hover:bg-slate-200 text-slate-700`;
+    return { IconComp, classes };
+  };
  
    const hasMore = filteredTags.length > visibleCount;
    const visibleTags = useMemo(() => filteredTags.slice(0, visibleCount), [filteredTags, visibleCount]);
