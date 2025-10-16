@@ -40,15 +40,17 @@ export default function AuthorCard({ name, avatarUrl, slug, postCount, linkedin,
             {name}
           </h2>
         </div>
-        <a
-          href={linkedin || '#'}
-          target={linkedin ? "_blank" : undefined}
-          rel={linkedin ? "noopener noreferrer" : undefined}
-          aria-label={`${name} LinkedIn`}
-          className={`text-gray-400 transition-colors ${linkedin ? 'hover:text-gray-600' : 'opacity-40 cursor-default pointer-events-none'}`}
-        >
-          <IoLogoLinkedin className="h-5 w-5" />
-        </a>
+        {linkedin && (
+          <a
+            href={linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${name} LinkedIn`}
+            className="text-gray-400 transition-colors hover:text-gray-600"
+          >
+            <IoLogoLinkedin className="h-5 w-5" />
+          </a>
+        )}
       </div>
 
       <p className="text-sm text-gray-600 mt-4 mb-6 leading-6 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>

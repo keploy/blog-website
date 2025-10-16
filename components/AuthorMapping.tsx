@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Post } from "../types/post";
 import { normalizeName } from "../utils/calculateAuthorPostCounts";
 import AuthorCard from "./AuthorCard";
+import { getAuthorInfoByName } from "../lib/authorData";
 
 export default function AuthorMapping({
   AuthorArray,
@@ -196,13 +197,16 @@ export default function AuthorMapping({
         {visibleAuthors.map((author, index) => {
           const countKey = normalizeName(author.ppmaAuthorName);
           const postCount = (typeof countKey === 'string' && countKey) ? (authorCounts?.[countKey] ?? 0) : 0;
+          const info = getAuthorInfoByName(author.ppmaAuthorName);
           return (
             <AuthorCard
               key={index}
               name={author.ppmaAuthorName}
-              avatarUrl={author.avatarUrl}
+              avatarUrl={info?.image || author.avatarUrl}
               slug={author.slug}
               postCount={postCount}
+              bio={info?.description}
+              linkedin={info?.linkedin}
             />
           );
         })}
