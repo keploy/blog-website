@@ -166,7 +166,7 @@ export default function MoreStories({
             ))}
           </PostGrid>
 
-          <div className="flex flex-col items-center gap-4 mb-8 pt-10">
+          <div className="flex flex-col items-center gap-4 mb-8">
             {error && (
               <div className="text-red-500 text-center p-4 bg-red-50 rounded-lg w-full max-w-md">
                 {error}
