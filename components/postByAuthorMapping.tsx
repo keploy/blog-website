@@ -1,59 +1,14 @@
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
+import React from "react";
 import { Post } from "../types/post";
-import Link from "next/link";
-import { animated, useInView, easings } from "@react-spring/web";
 import dynamic from "next/dynamic";
+import PostCard from "./post-card";
+import PostGrid from "./post-grid";
  
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
 })
-
-function Node({ node }) {
-  const [cardRef, cardSpringStyles] = useInView(
-    () => ({
-      from: {
-        opacity: 0,
-      },
-      to: {
-        opacity: 100,
-      },
-      config: {
-        duration: 500,
-        delay: 100,
-        easing: easings.easeInCubic,
-      },
-    }),
-    {
-      rootMargin: "-200px 0px",
-    }
-  );
-  return (
-    <animated.li className="mb-8" ref={cardRef} style={cardSpringStyles}>
-      <Link href={`/${node.categories.edges[0].node.name}/${node.slug}`}>
-        <div className="px-5 py-4  transition-colors duration-300 ease-in-out transform border border-transparent rounded-lg group hover:scale-105 hover:border-accent-2 hover:dark:bg-neutral-400/30">
-          <div className="flex items-center justify-between">
-            <h2 className="mb-2 mr-4 text-lg font-bold sm:text-xl text-slate-600">
-              {node.title}
-            </h2>
-          </div>
-          <Image
-            src={node.featuredImage?.node?.sourceUrl}
-            alt={node.title}
-            className="object-cover w-full h-32 mb-4 rounded-md"
-            height={200}
-            width={200}
-          />
-          <p className="mb-2 text-gray-400">Author: {node.ppmaAuthorName}</p>
-          <p className="mb-4 text-gray-500">
-            Category: {node.categories.edges[0].node.name}
-          </p>
-          {/* Additional details can be added based on your needs */}
-        </div>
-      </Link>
-    </animated.li>
-  );
-}
 
 const PostByAuthorMapping = ({
   filteredPosts,
@@ -94,6 +49,22 @@ const PostByAuthorMapping = ({
           </button>
         </div>
       )}
+      <PostGrid>
+        {filteredPosts.map(({ node }) => (
+          <PostCard
+            key={node.slug}
+            title={node.title}
+            coverImage={node.featuredImage}
+            date={node.date}
+            author={node.ppmaAuthorName}
+            slug={node.slug}
+            excerpt={node.excerpt}
+            isCommunity={
+              node.categories.edges[0]?.node.name === "community" ? true : false
+            }
+          />
+        ))}
+      </PostGrid>
     </div>
   );
 };
