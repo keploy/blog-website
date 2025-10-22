@@ -1,11 +1,12 @@
 import { getExcerpt } from "../utils/excerpt";
-import TagsPostPreview from "./TagsPostPreview";
+import PostCard from "./post-card";
+import PostGrid from "./post-grid";
 import { useRouter } from "next/router";
 export default function TagsStories({ posts}) {
     const router = useRouter();
   const { slug } = router.query;
   return (
-    <section>
+    <section className="pb-16">
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
         Tags
       </h2>
@@ -13,9 +14,9 @@ export default function TagsStories({ posts}) {
         #{slug}
       </h2>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
+      <PostGrid>
         {posts.map(({ node }) => (
-          <TagsPostPreview
+          <PostCard
             key={node.slug}
             title={node.title}
             coverImage={node.featuredImage}
@@ -23,10 +24,17 @@ export default function TagsStories({ posts}) {
             author={node.ppmaAuthorName}
             slug={node.slug}
             excerpt={getExcerpt(node.excerpt, 20)}
-            isCommunity={node.categories}
+            isCommunity={
+              node.categories &&
+              node.categories.edges &&
+              node.categories.edges[0] &&
+              node.categories.edges[0].node.name === "community"
+                ? true
+                : false
+            }
           />
         ))}
-      </div>
+      </PostGrid>
     </section>
   );
 }
