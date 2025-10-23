@@ -1,6 +1,7 @@
-import PostPreview from "./post-preview";
 import { getExcerpt } from "../utils/excerpt";
 import Link from "next/link";
+import PostCard from "./post-card";
+import PostGrid from "./post-grid";
 
 const TopBlogs = ({ communityPosts, technologyPosts }) => {
   return (
@@ -11,9 +12,9 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
           <span className="absolute left-0 bottom-0 w-16 h-1 bg-gradient-to-r from-orange-400 to-orange-600"></span>
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <PostGrid>
           {technologyPosts.map(({ node }) => (
-            <PostPreview
+            <PostCard
               key={node.slug}
               title={node.title}
               coverImage={node.featuredImage}
@@ -24,7 +25,7 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
               isCommunity={false}
             />
           ))}
-        </div>
+        </PostGrid>
 
         <div className="mt-6 flex justify-end">
           <Link
@@ -53,9 +54,9 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
           <span className="absolute left-0 bottom-0 w-16 h-1 bg-gradient-to-r from-orange-400 to-orange-600"></span>
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <PostGrid>
           {communityPosts.map(({ node }) => (
-            <PostPreview
+            <PostCard
               key={node.slug}
               title={node.title}
               coverImage={node.featuredImage}
@@ -66,7 +67,7 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
               isCommunity={true}
             />
           ))}
-        </div>
+        </PostGrid>
 
         <div className="mt-6 flex justify-end">
           <Link
