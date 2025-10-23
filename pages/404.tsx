@@ -7,9 +7,11 @@ import { GetStaticProps } from "next";
 
 interface Custom404Props {
   latestPosts: { edges: Array<{ node: any }> };
+  communityPosts: { edges: Array<{ node: any }> };
+  technologyPosts: { edges: Array<{ node: any }> };
 }
 
-export default function Custom404({ latestPosts }: Custom404Props) {
+export default function Custom404({ latestPosts, communityPosts, technologyPosts }: Custom404Props) {
   const router = useRouter();
   const asPath = router.asPath;
 
@@ -33,7 +35,7 @@ export default function Custom404({ latestPosts }: Custom404Props) {
         <title>404 - Page Not Found | Keploy Blog</title>
         <meta name="description" content="Oops! The page you're looking for doesn't exist. Explore our latest blog posts and featured articles." />
       </Head>
-      <NotFoundPage latestPosts={latestPosts} />
+      <NotFoundPage latestPosts={latestPosts} communityPosts={communityPosts} technologyPosts={technologyPosts} />
     </>
   );
 }
@@ -55,9 +57,15 @@ export const getStaticProps: GetStaticProps = async () => {
     // Get latest 6 posts for latest section
     const latestPosts = { edges: sortedPosts.slice(0, 6) };
 
+    // Get latest 6 posts for each category
+    const latestCommunityPosts = { edges: communityPosts.edges.slice(0, 6) };
+    const latestTechnologyPosts = { edges: techPosts.edges.slice(0, 6) };
+
     return {
       props: {
         latestPosts,
+        communityPosts: latestCommunityPosts,
+        technologyPosts: latestTechnologyPosts,
       },
       revalidate: 60, // Revalidate every minute
     };
@@ -66,6 +74,8 @@ export const getStaticProps: GetStaticProps = async () => {
     return {
       props: {
         latestPosts: { edges: [] },
+        communityPosts: { edges: [] },
+        technologyPosts: { edges: [] },
       },
       revalidate: 60,
     };
