@@ -118,14 +118,14 @@ export default function AuthorMapping({
 
   return (
     <div className="container mx-auto mt-8">
-      <div className="grid grid-cols-1 md:grid-cols-8 w-full mb-4 px-4 gap-3 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-8 w-full mb-8 px-4 gap-3 items-center">
         <div className="relative w-full md:col-span-7">
           <input
             type="text"
             placeholder="Search authors..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className="w-full p-4 pl-10 rounded-full border border-gray-200 bg-gradient-to-r from-white to-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-300 text-sm shadow-md hover:shadow-lg transition-all duration-200"
           />
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
         </div>
@@ -142,12 +142,12 @@ export default function AuthorMapping({
             onKeyDown={(e) => {
               if (e.key === 'Escape') setIsSortOpen(false);
             }}
-            className="w-full text-left p-4 pl-10 pr-8 rounded-full border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm"
+            className="w-full text-left p-4 pl-8 pr-8 rounded-full border border-gray-200 bg-gradient-to-r from-white to-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-300 text-sm shadow-md hover:shadow-lg transition-all duration-200"
           >
             <span className="block truncate text-gray-700 font-medium">
               {sortOrder === 'desc' ? 'Z–A' : sortOrder === 'asc' ? 'A–Z' : 'Default'}
             </span>
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">▾</span>
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-2xl text-gray-500">▾</span>
           </button>
           {isSortOpen && (
             <div
