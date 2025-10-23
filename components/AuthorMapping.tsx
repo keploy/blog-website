@@ -125,9 +125,9 @@ export default function AuthorMapping({
             placeholder="Search authors..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full p-4 pl-10 rounded-full border border-gray-200 bg-gradient-to-r from-white to-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-300 text-sm shadow-md hover:shadow-lg transition-all duration-200"
+            className="w-full p-4 pl-10 rounded-full border-2 border-white/70 bg-white/25 backdrop-blur-2xl ring-1 ring-white/20 shadow-[0_8px_30px_rgba(31,38,135,0.07)] focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-sm hover:shadow-[0_12px_40px_rgba(31,38,135,0.12)] hover:bg-white/35 transition-all duration-300 placeholder-gray-600 text-gray-800"
           />
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700" />
         </div>
         <div className="relative w-full md:col-span-1 md:w-34 md:justify-self-end">
           <button
@@ -142,26 +142,26 @@ export default function AuthorMapping({
             onKeyDown={(e) => {
               if (e.key === 'Escape') setIsSortOpen(false);
             }}
-            className="w-full text-left p-4 pl-8 pr-8 rounded-full border border-gray-200 bg-gradient-to-r from-white to-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-300 text-sm shadow-md hover:shadow-lg transition-all duration-200"
+            className="w-full text-left p-4 pl-8 pr-8 rounded-full border-2 border-white/70 bg-white/25 backdrop-blur-2xl ring-1 ring-white/20 shadow-[0_8px_30px_rgba(31,38,135,0.07)] focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-sm hover:shadow-[0_12px_40px_rgba(31,38,135,0.12)] hover:bg-white/35 transition-all duration-300 text-gray-800"
           >
             <span className="block truncate text-gray-700 font-medium">
               {sortOrder === 'desc' ? 'Z–A' : sortOrder === 'asc' ? 'A–Z' : 'Default'}
             </span>
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-2xl text-gray-500">▾</span>
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-2xl text-gray-700">▾</span>
           </button>
           {isSortOpen && (
             <div
               role="listbox"
               aria-label="Sort options"
               tabIndex={-1}
-              className="absolute z-20 mt-2 right-0 w-full min-w-[9rem] rounded-xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden"
+              className="absolute z-20 mt-2 right-0 w-full min-w-[9rem] rounded-xl bg-white/30 backdrop-blur-2xl shadow-2xl ring-2 ring-white/30 overflow-hidden border-2 border-white/60"
             >
               <button
                 role="option"
                 aria-selected={sortOrder === ''}
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSortSelect('')}
-                className={`w-full text-left px-4 py-2.5 text-sm ${sortOrder === '' ? 'bg-gray-50 font-semibold text-gray-800' : 'text-gray-700'} hover:bg-gray-50 focus:bg-gray-50`}
+                className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-300 ${sortOrder === '' ? 'bg-white/30 font-semibold text-gray-800' : 'text-gray-700'} hover:bg-white/30 focus:bg-white/30`}
               >
                 Default
               </button>
@@ -170,7 +170,7 @@ export default function AuthorMapping({
                 aria-selected={sortOrder === 'asc'}
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSortSelect('asc')}
-                className={`w-full text-left px-4 py-2.5 text-sm ${sortOrder === 'asc' ? 'bg-gray-50 font-semibold text-gray-800' : 'text-gray-700'} hover:bg-gray-50 focus:bg-gray-50`}
+                className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-300 ${sortOrder === 'asc' ? 'bg-white/30 font-semibold text-gray-800' : 'text-gray-700'} hover:bg-white/30 focus:bg-white/30`}
               >
                 A–Z
               </button>
@@ -179,7 +179,7 @@ export default function AuthorMapping({
                 aria-selected={sortOrder === 'desc'}
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSortSelect('desc')}
-                className={`w-full text-left px-4 py-2.5 text-sm ${sortOrder === 'desc' ? 'bg-gray-50 font-semibold text-gray-800' : 'text-gray-700'} hover:bg-gray-50 focus:bg-gray-50`}
+                className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-300 ${sortOrder === 'desc' ? 'bg-white/30 font-semibold text-gray-800' : 'text-gray-700'} hover:bg-white/30 focus:bg-white/30`}
               >
                 Z–A
               </button>
@@ -193,7 +193,7 @@ export default function AuthorMapping({
         <p className="text-center text-gray-500">No authors found by the name {`"${searchTerm}"`}</p>
       ) : (
         <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-7 bg-accent-1 mx-4 mt-6 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-7 mx-4 mt-6 mb-10">
         {visibleAuthors.map((author, index) => {
           const countKey = normalizeName(author.ppmaAuthorName);
           const postCount = (typeof countKey === 'string' && countKey) ? (authorCounts?.[countKey] ?? 0) : 0;
@@ -211,15 +211,16 @@ export default function AuthorMapping({
           );
         })}
       </div>
+      
       <div>
-        <hr className="border-b border-gray-200 my-4" />
+        <hr className="border-b-2 border-gray-300 my-6" />
       </div>
-      <div className="flex justify-center mb-4 sm:mt-4 sm:mb-3">
+      <div className="flex justify-center mb-6 sm:mt-6 sm:mb-6 px-6 py-4">
         <button
-          className={`mx-1 sm:mx-2 px-4 py-2 rounded-md ${
+          className={`mx-1 sm:mx-2 px-4 py-2 rounded-full border-2 border-white/60 bg-white/25 backdrop-blur-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ${
             currentPage <= 1
-              ? "bg-gray-300 text-gray-600"
-              : "bg-gray-300 text-gray-600 hover:bg-gray-300 hover:text-gray-800"
+              ? "text-gray-500 cursor-not-allowed"
+              : "text-gray-700 hover:bg-white/35 hover:text-gray-800"
           }`}
           onClick={handlePrevPage}
           disabled={currentPage <= 1}
@@ -231,10 +232,10 @@ export default function AuthorMapping({
             <button
               key={pageNumber}
               onClick={() => handlePageChange(pageNumber)}
-              className={`mx-1 sm:mx-2 px-4 py-3 rounded-md text-sm ${
+              className={`mx-1 sm:mx-2 px-4 py-3 rounded-full border-2 text-sm shadow-xl hover:shadow-2xl transition-all duration-300 ${
                 pageNumber === currentPage
-                  ? "bg-gray-300 text-white"
-                  : "bg-gray-300 text-gray-800"
+                  ? "border-orange-300/70 bg-orange-200/40 text-orange-800"
+                  : "border-white/60 bg-white/25 text-gray-700 hover:bg-white/35 hover:text-gray-800"
               }`}
             >
               {pageNumber}
@@ -242,10 +243,10 @@ export default function AuthorMapping({
           )
         )}
         <button
-          className={`mx-1 sm:mx-1 px-4 py-2 rounded-md ${
+          className={`mx-1 sm:mx-1 px-4 py-2 rounded-full border-2 border-white/60 bg-white/25 backdrop-blur-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ${
             currentPage >= totalPages
-              ? "bg-gray-300 text-gray-600"
-              : "bg-gray-300 text-gray-600 hover:bg-gray-300 hover:text-gray-800"
+              ? "text-gray-500 cursor-not-allowed"
+              : "text-gray-700 hover:bg-white/35 hover:text-gray-800"
           }`}
           onClick={handleNextPage}
           disabled={currentPage >= totalPages}
