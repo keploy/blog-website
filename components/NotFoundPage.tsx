@@ -25,7 +25,7 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          window.location.href = '/';
+          window.location.href = '/blog';
           return 0;
         }
         return prev - 1;
@@ -63,24 +63,61 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
 
   return (
     <>
-      <div className="relative min-h-screen bg-gradient-to-br from-orange-50/40 via-white to-orange-100/30 overflow-hidden">
+      <div className="relative min-h-screen bg-gradient-to-br from-orange-50/15 via-orange-25/10 to-orange-100/12 overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,165,0,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,165,0,0.08)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,165,0,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,165,0,0.06)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
           
-          <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-r from-orange-300/30 to-orange-400/25 rounded-full blur-2xl"></div>
-          <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-orange-400/25 to-red-300/20 rounded-full blur-xl"></div>
-          <div className="absolute bottom-40 left-1/4 w-48 h-48 bg-gradient-to-r from-orange-200/20 to-yellow-300/15 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-1/3 w-36 h-36 bg-gradient-to-r from-orange-300/25 to-orange-500/20 rounded-full blur-2xl"></div>
-          <div className="absolute top-1/3 right-1/3 w-28 h-28 bg-gradient-to-r from-orange-200/30 to-orange-300/25 rounded-full blur-xl"></div>
+          <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-r from-orange-300/18 to-orange-400/12 rounded-full blur-2xl"></div>
+          <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-orange-400/15 to-red-300/10 rounded-full blur-xl"></div>
+          <div className="absolute bottom-40 left-1/4 w-48 h-48 bg-gradient-to-r from-orange-200/12 to-yellow-300/8 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-1/3 w-36 h-36 bg-gradient-to-r from-orange-300/15 to-orange-500/12 rounded-full blur-2xl"></div>
+          <div className="absolute top-1/3 right-1/3 w-28 h-28 bg-gradient-to-r from-orange-200/18 to-orange-300/12 rounded-full blur-xl"></div>
           
-          <div className="absolute top-32 right-1/4 w-20 h-20 border-2 border-orange-300/50 rotate-45 bg-orange-100/20"></div>
-          <div className="absolute bottom-32 left-1/3 w-16 h-16 bg-orange-200/30 rounded-full"></div>
-          <div className="absolute top-1/2 left-10 w-12 h-12 border-2 border-orange-400/60 rotate-12 bg-orange-100/25"></div>
-          <div className="absolute top-1/4 left-1/2 w-14 h-14 border border-orange-300/40 rotate-45"></div>
-          <div className="absolute bottom-1/4 right-10 w-10 h-10 bg-orange-300/40 rounded-full"></div>
+          <div className="absolute top-60 left-1/5 w-24 h-24 bg-gradient-to-br from-orange-200/10 to-orange-300/8 rounded-full blur-lg"></div>
+          <div className="absolute top-80 right-1/5 w-20 h-20 bg-gradient-to-tl from-orange-400/12 to-orange-500/8 rounded-full blur-md"></div>
+          <div className="absolute bottom-60 left-1/6 w-28 h-28 bg-gradient-to-bl from-orange-300/10 to-yellow-200/6 rounded-full blur-xl"></div>
+          <div className="absolute bottom-80 right-1/6 w-22 h-22 bg-gradient-to-tr from-orange-400/8 to-red-200/6 rounded-full blur-lg"></div>
+          <div className="absolute top-1/4 left-1/8 w-18 h-18 bg-gradient-to-r from-orange-200/12 to-orange-300/8 rounded-full blur-sm"></div>
           
-          <div className="absolute top-16 right-1/2 w-6 h-6 bg-orange-400/40 rotate-45"></div>
-          <div className="absolute bottom-16 left-1/2 w-8 h-8 border border-orange-300/50 rounded-full"></div>
+          <div className="absolute top-32 right-1/4 w-20 h-20 border-2 border-orange-300/25 rotate-45 bg-orange-100/12"></div>
+          <div className="absolute bottom-32 left-1/3 w-16 h-16 bg-orange-200/18 rounded-full"></div>
+          <div className="absolute top-1/2 left-10 w-12 h-12 border-2 border-orange-400/22 rotate-12 bg-orange-100/10"></div>
+          <div className="absolute top-1/4 left-1/2 w-14 h-14 border border-orange-300/20 rotate-45"></div>
+          <div className="absolute bottom-1/4 right-10 w-10 h-10 bg-orange-300/18 rounded-full"></div>
+          
+          <div className="absolute top-24 left-1/4 w-8 h-8 bg-orange-400/20 rounded-sm rotate-12"></div>
+          <div className="absolute top-48 right-1/3 w-6 h-6 bg-orange-500/15 rounded-full"></div>
+          <div className="absolute bottom-48 left-1/5 w-10 h-10 bg-orange-300/18 rounded-lg rotate-45"></div>
+          <div className="absolute top-1/2 right-1/5 w-12 h-12 border border-orange-400/20 rounded-full"></div>
+          <div className="absolute bottom-1/3 left-2/3 w-14 h-14 bg-orange-200/12 rounded-sm rotate-30"></div>
+          
+          <div className="absolute top-16 left-1/6 w-18 h-18 bg-orange-300/15 rounded-lg rotate-60"></div>
+          <div className="absolute top-56 right-1/6 w-22 h-22 border-2 border-orange-400/18 rounded-full"></div>
+          <div className="absolute bottom-56 left-1/6 w-16 h-16 bg-orange-200/20 rounded-sm rotate-15"></div>
+          <div className="absolute top-2/3 right-1/6 w-20 h-20 border border-orange-300/22 rounded-lg rotate-75"></div>
+          <div className="absolute bottom-1/6 left-1/3 w-24 h-24 bg-orange-400/12 rounded-full"></div>
+          <div className="absolute top-1/6 right-2/3 w-14 h-14 bg-orange-300/18 rounded-sm rotate-45"></div>
+          <div className="absolute bottom-2/3 left-2/3 w-12 h-12 border-2 border-orange-500/15 rounded-full rotate-30"></div>
+          <div className="absolute top-3/4 right-1/4 w-26 h-26 bg-orange-200/15 rounded-lg rotate-90"></div>
+          
+          <div className="absolute top-12 left-1/3 w-7 h-7 bg-orange-300/16 rounded-full rotate-20"></div>
+          <div className="absolute top-36 right-1/4 w-9 h-9 border border-orange-400/18 rounded-sm rotate-55"></div>
+          <div className="absolute bottom-12 left-1/4 w-11 h-11 bg-orange-200/14 rounded-lg rotate-35"></div>
+          <div className="absolute bottom-36 right-1/3 w-8 h-8 border-2 border-orange-300/16 rounded-full rotate-70"></div>
+          <div className="absolute top-2/5 left-1/7 w-13 h-13 bg-orange-400/12 rounded-sm rotate-25"></div>
+          <div className="absolute top-3/5 right-1/7 w-15 h-15 border border-orange-500/14 rounded-lg rotate-80"></div>
+          <div className="absolute bottom-2/5 left-2/5 w-10 h-10 bg-orange-300/16 rounded-full rotate-40"></div>
+          <div className="absolute bottom-3/5 right-2/5 w-12 h-12 border-2 border-orange-400/15 rounded-sm rotate-65"></div>
+          <div className="absolute top-1/6 left-3/4 w-6 h-6 bg-orange-200/18 rounded-full rotate-15"></div>
+          <div className="absolute bottom-1/6 right-3/4 w-8 h-8 border border-orange-300/17 rounded-lg rotate-50"></div>
+          
+          <div className="absolute top-16 right-1/2 w-6 h-6 bg-orange-400/20 rotate-45"></div>
+          <div className="absolute bottom-16 left-1/2 w-8 h-8 border border-orange-300/18 rounded-full"></div>
+          
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-100/8 via-transparent to-orange-200/5"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-orange-200/6 via-transparent to-orange-100/4"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-orange-300/5 via-transparent to-orange-200/3"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-orange-100/7 via-transparent to-orange-300/4"></div>
         </div>
         
         <div className="relative z-20">
@@ -107,7 +144,13 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
                   </Link>
                 </Button>
                 <Button 
-                  onClick={() => window.history.back()}
+                  onClick={() => {
+                    if (window.history.length > 1) {
+                      window.history.back();
+                    } else {
+                      window.location.href = '/blog';
+                    }
+                  }}
                   className="w-auto bg-orange-500 hover:bg-orange-600 text-white border-0"
                 >
                   Back to Previous Page
