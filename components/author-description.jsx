@@ -1,9 +1,11 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { IoLogoLinkedin } from "react-icons/io"; // Import LinkedIn icon from react-icons/io
 
 const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
+  const { basePath } = useRouter();
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [authorLinkedIn, setAuthorLinkedIn] = useState("");
@@ -104,7 +106,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
       <div className="w-3/5 self-center sm:w-1/4 p-8 flex justify-center items-center">
         {avatarImgSrc !== "n/a" && (
           <Image
-            src={avatarImgSrc}
+            src={/^https?:\/\//i.test(avatarImgSrc) ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatarImgSrc)}` : avatarImgSrc}
             alt="Author Avatar"
             width={200}
             height={200}
