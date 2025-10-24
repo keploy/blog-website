@@ -24,7 +24,7 @@ export default function Custom404({ latestPosts, communityPosts, technologyPosts
       } else {
         router.replace("/");
       }
-    }, 300000); // 5 minutes
+    }, 12000); //12 secs
 
     return () => clearTimeout(redirectTimeout);
   }, [asPath, router]);
