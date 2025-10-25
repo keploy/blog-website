@@ -1,12 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+
+// Constants
+const CIRCLE_RADIUS = 15.92;
+const SCROLL_THRESHOLD = 300;
+const THROTTLE_DELAY = 16; // ~60fps
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  // Throttle function to limit scroll event frequency
+  const throttle = useCallback((func: Function, delay: number) => {
+    let timeoutId: NodeJS.Timeout | null = null;
+    let lastExecTime = 0;
+
+    return (...args: any[]) => {
+      const currentTime = Date.now();
+
+      if (currentTime - lastExecTime > delay) {
+        func(...args);
+        lastExecTime = currentTime;
+      } else {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          func(...args);
+          lastExecTime = Date.now();
+        }, delay - (currentTime - lastExecTime));
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
+      if (window.pageYOffset > SCROLL_THRESHOLD) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
@@ -26,9 +52,12 @@ const ScrollToTop = () => {
       updateScrollProgress();
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    // Throttled scroll handler
+    const throttledScrollHandler = throttle(handleScroll, THROTTLE_DELAY);
+
+    window.addEventListener("scroll", throttledScrollHandler);
+    return () => window.removeEventListener("scroll", throttledScrollHandler);
+  }, [throttle]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -37,7 +66,7 @@ const ScrollToTop = () => {
     });
   };
 
-  const circumference = 2 * Math.PI * 15.92;
+  const circumference = 2 * Math.PI * CIRCLE_RADIUS;
   const strokeDashoffset =
     circumference - (scrollProgress / 100) * circumference;
 
@@ -68,14 +97,14 @@ const ScrollToTop = () => {
           className="fill-white stroke-gray-300 opacity-90 dark:fill-gray-800 dark:stroke-gray-600"
           cx="17"
           cy="17"
-          r="15.92"
+          r={CIRCLE_RADIUS}
           strokeWidth="1.5"
         />
         <circle
           className="fill-none"
           cx="17"
           cy="17"
-          r="15.92"
+          r={CIRCLE_RADIUS}
           strokeWidth="1.5"
           strokeLinecap="round"
           stroke="url(#progressGradient)"
