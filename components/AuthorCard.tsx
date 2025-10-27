@@ -26,32 +26,38 @@ export default function AuthorCard({ name, avatarUrl, slug, postCount, linkedin,
 
   return (
     <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] border border-white/50 transition-all duration-300 overflow-hidden group hover:border-orange-400 hover:border-2 hover:-translate-y-2 hover:bg-white/95">
-      <div className="p-6">
-        {/* Standardized Author Image Container */}
-        <div className="w-full h-52 mb-6 rounded-xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 relative">
-          {hasAvatar ? (
-            <Image
-              src={avatarUrl as string}
-              alt={`${name}'s Avatar`}
-              className="w-full h-full object-cover object-center"
-              style={{ objectPosition: 'center 30%' }}
-              height={208}
-              width={300}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center shadow-lg">
+      {/* Background container - touches corners */}
+      <div className="w-full h-52 bg-white/90 relative">
+        {/* Gradient overlay - only 50% of container height */}
+        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-br from-orange-100 via-orange-50 to-orange-200"></div>
+        
+        {/* Circular profile image at center */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-lg">
+            {hasAvatar ? (
+              <Image
+                src={avatarUrl as string}
+                alt={`${name}'s Avatar`}
+                className="w-full h-full object-cover object-center"
+                height={144}
+                width={144}
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center">
                 <span className="text-2xl font-bold text-white">
                   {getInitials(name)}
                 </span>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
+      </div>
+      
+      <div className="p-6">
         
         {/* Author Name and LinkedIn */}
         <div className="flex items-start justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900 leading-tight group-hover:text-orange-600 transition-colors duration-200 flex-1 pr-2">
+          <h2 className="text-2xl font-semibold text-gray-900 leading-tight group-hover:text-orange-600 transition-colors duration-200 flex-1 pr-2">
             {name}
           </h2>
           {linkedin && (

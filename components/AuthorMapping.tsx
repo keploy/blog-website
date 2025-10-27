@@ -1,7 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
-import { FaSearch, FaSortAlphaDown, FaSortAlphaDownAlt } from 'react-icons/fa';
-import Link from "next/link";
-import Image from "next/image";
+import { useState, useMemo, useEffect } from "react";
 import { Post } from "../types/post";
 import { normalizeName } from "../utils/calculateAuthorPostCounts";
 import AuthorCard from "./AuthorCard";
@@ -11,15 +8,16 @@ export default function AuthorMapping({
   AuthorArray,
   itemsPerPage = 9, // You can customize the number of items per page
   authorCounts,
+  searchTerm,
+  sortOrder,
 }:{
   AuthorArray: Pick<Post, "author" | "ppmaAuthorName" | "ppmaAuthorImage">[],
   itemsPerPage?:number,
-  authorCounts?: Record<string, number>
+  authorCounts?: Record<string, number>,
+  searchTerm: string,
+  sortOrder: "" | "asc" | "desc",
 }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState<"" | "asc" | "desc">("");
-  const [isSortOpen, setIsSortOpen] = useState(false);
 
   const authorData = useMemo(() => {
     // Use a map keyed by normalized display name to ensure strict de-duplication
@@ -97,97 +95,13 @@ export default function AuthorMapping({
     }
   };
 
-  const handleSearchChange = useCallback((event) => {
-    setSearchTerm(event.target.value);
+  // Reset to first page when search or sort changes
+  useEffect(() => {
     setCurrentPage(1);
-  }, []);
-
-  const handleSortChange = useCallback((event) => {
-    const raw = event.target.value;
-    const value = raw === "desc" ? "desc" : raw === "asc" ? "asc" : "";
-    setSortOrder(value);
-    setCurrentPage(1);
-  }, []);
-
-  const handleSortSelect = useCallback((value) => {
-    const normalized = value === "desc" ? "desc" : value === "asc" ? "asc" : "";
-    setSortOrder(normalized);
-    setCurrentPage(1);
-    setIsSortOpen(false);
-  }, []);
+  }, [searchTerm, sortOrder]);
 
   return (
     <div className="container mx-auto mt-8">
-      <div className="grid grid-cols-1 md:grid-cols-8 w-full mb-8 px-4 gap-3 items-center">
-        <div className="relative w-full md:col-span-7">
-          <input
-            type="text"
-            placeholder="Search authors..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="w-full p-4 pl-10 rounded-full border-2 border-white/70 bg-white/25 backdrop-blur-2xl ring-1 ring-white/20 shadow-[0_8px_30px_rgba(31,38,135,0.07)] focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-sm hover:shadow-[0_12px_40px_rgba(31,38,135,0.12)] hover:bg-white/35 transition-all duration-300 placeholder-gray-600 text-gray-800"
-          />
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700" />
-        </div>
-        <div className="relative w-full md:col-span-1 md:w-34 md:justify-self-end">
-          <button
-            type="button"
-            aria-label="Sort authors"
-            aria-haspopup="listbox"
-            aria-expanded={isSortOpen}
-            onClick={() => setIsSortOpen((o) => !o)}
-            onBlur={(e) => {
-              if (!e.currentTarget.contains(e.relatedTarget)) setIsSortOpen(false);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') setIsSortOpen(false);
-            }}
-            className="w-full text-left p-4 pl-8 pr-8 rounded-full border-2 border-white/70 bg-white/25 backdrop-blur-2xl ring-1 ring-white/20 shadow-[0_8px_30px_rgba(31,38,135,0.07)] focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-sm hover:shadow-[0_12px_40px_rgba(31,38,135,0.12)] hover:bg-white/35 transition-all duration-300 text-gray-800"
-          >
-            <span className="block truncate text-gray-700 font-medium">
-              {sortOrder === 'desc' ? 'Z–A' : sortOrder === 'asc' ? 'A–Z' : 'Default'}
-            </span>
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-2xl text-gray-700">▾</span>
-          </button>
-          {isSortOpen && (
-            <div
-              role="listbox"
-              aria-label="Sort options"
-              tabIndex={-1}
-              className="absolute z-20 mt-2 right-0 w-full min-w-[9rem] rounded-xl bg-white/30 backdrop-blur-2xl shadow-2xl ring-2 ring-white/30 overflow-hidden border-2 border-white/60"
-            >
-              <button
-                role="option"
-                aria-selected={sortOrder === ''}
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => handleSortSelect('')}
-                className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-300 ${sortOrder === '' ? 'bg-white/30 font-semibold text-gray-800' : 'text-gray-700'} hover:bg-white/30 focus:bg-white/30`}
-              >
-                Default
-              </button>
-              <button
-                role="option"
-                aria-selected={sortOrder === 'asc'}
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => handleSortSelect('asc')}
-                className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-300 ${sortOrder === 'asc' ? 'bg-white/30 font-semibold text-gray-800' : 'text-gray-700'} hover:bg-white/30 focus:bg-white/30`}
-              >
-                A–Z
-              </button>
-              <button
-                role="option"
-                aria-selected={sortOrder === 'desc'}
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => handleSortSelect('desc')}
-                className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-300 ${sortOrder === 'desc' ? 'bg-white/30 font-semibold text-gray-800' : 'text-gray-700'} hover:bg-white/30 focus:bg-white/30`}
-              >
-                Z–A
-              </button>
-            </div>
-          )}
-        </div>
-
-      </div>
 
       {sortedAuthors.length === 0 ? (
         <p className="text-center text-gray-500">No authors found by the name {`"${searchTerm}"`}</p>
