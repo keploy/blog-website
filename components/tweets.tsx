@@ -1,8 +1,14 @@
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import Link from "next/link";
 
 const Tweets = ({ avatar, name, id, post, content }) => {
+  const { basePath } = useRouter();
+  const isExternal = typeof avatar === "string" && /^https?:\/\//i.test(avatar);
+  const proxiedAvatar = isExternal
+    ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
+    : avatar;
   return (
     <Link
       href={post}
@@ -14,7 +20,7 @@ const Tweets = ({ avatar, name, id, post, content }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Image
-            src={avatar}
+            src={proxiedAvatar}
             alt={`${name}'s avatar`}
             width={48}
             height={48}
