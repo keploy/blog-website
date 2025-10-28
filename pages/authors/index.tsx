@@ -7,6 +7,7 @@ import Header from "../../components/header";
 import Container from "../../components/container";
 import AuthorMapping from "../../components/AuthorMapping";
 import Background from "../../components/Background";
+import AuthorBackgroundOverlay from "../../components/AuthorBackgroundOverlay";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { Post } from "../../types/post";
 import { calculateAuthorPostCounts } from "../../utils/calculateAuthorPostCounts";
@@ -124,10 +125,21 @@ export default function Authors({
         <div className="relative min-h-screen overflow-hidden">
           <Header />
           
-          {/* Hero Section */}
+          {/* Hero Section with Author Overlay */}
           <div className="relative px-4 overflow-visible">
+            {/* Author Overlay for Hero Section Only */}
+            <AuthorBackgroundOverlay 
+              authors={authorArray.map(author => {
+                const imageUrl = author.ppmaAuthorImage || '';
+                // Log for debugging
+                if (imageUrl) {
+                  console.log('Author image URL:', imageUrl);
+                }
+                return imageUrl;
+              })} 
+            />
           <Container>
-              <div className="relative max-w-7xl mx-auto">
+              <div className="relative max-w-7xl mx-auto z-20">
                 {/* Centered heading */}
                 <div className="text-center mb-16 pt-6">
                   <h1 className="text-center font-bold text-gray-900 mb-8 leading-tight tracking-wide animate-fade-up">
@@ -157,8 +169,8 @@ export default function Authors({
               </p>
 
                   {/* Glassmorphism Search and Filter Section */}
-                  <div className="max-w-4xl mx-auto relative z-50">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-white/5 shadow-lg">
+                   <div className="max-w-4xl mx-auto relative z-30">
+                    <div className="bg-white/5 backdrop-blur-xs rounded-3xl p-6 shadow-2xl shadow-black/20">
                       <div className="flex flex-col sm:flex-row gap-4 items-center">
                       {/* Search Bar */}
                       <div className="relative flex-1 w-full">
