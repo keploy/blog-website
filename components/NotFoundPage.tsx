@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "./header";
 import Container from "./container";
-import Image from "next/image";
 import PostGrid from "./post-grid";
 import PostCard from "./post-card";
 import Link from "next/link";
@@ -163,13 +162,12 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
           </div>
 
           <div className="flex-1 lg:pl-12">
-            <div className="w-full h-80 lg:h-[500px] relative">
-              <Image
+            <div className="w-full h-72 md:h-80 lg:h-[500px] relative">
+              <img
                 src="/blog/images/error404.png"
                 alt="404 Error Illustration"
-                fill
-                className="object-contain"
-                priority
+                className="w-full h-full object-contain"
+                loading="eager"
               />
             </div>
           </div>
