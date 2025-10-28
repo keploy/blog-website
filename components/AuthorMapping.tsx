@@ -113,15 +113,19 @@ export default function AuthorMapping({
           const postCount = (typeof countKey === 'string' && countKey) ? (authorCounts?.[countKey] ?? 0) : 0;
           const info = getAuthorInfoByName(author.ppmaAuthorName);
           return (
-            <AuthorCard
+            <div
               key={index}
-              name={author.ppmaAuthorName}
-              avatarUrl={info?.image || author.avatarUrl}
-              slug={author.slug}
-              postCount={postCount}
-              bio={info?.description}
-              linkedin={info?.linkedin}
-            />
+              className="group bg-white/5 backdrop-blur-xs rounded-3xl p-4 border border-orange-300/40 hover:border-orange-400/70 shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/20 transition-transform duration-300 ease-out will-change-transform overflow-hidden hover:-translate-y-1"
+            >
+              <AuthorCard
+                name={author.ppmaAuthorName}
+                avatarUrl={info?.image || author.avatarUrl}
+                slug={author.slug}
+                postCount={postCount}
+                bio={info?.description}
+                linkedin={info?.linkedin}
+              />
+            </div>
           );
         })}
       </div>

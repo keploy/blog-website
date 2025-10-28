@@ -25,11 +25,11 @@ export default function AuthorCard({ name, avatarUrl, slug, postCount, linkedin,
   const hasAvatar = avatarUrl && avatarUrl !== "imag1" && avatarUrl !== "image" && avatarUrl.trim() !== "";
 
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] border border-white/50 transition-all duration-300 overflow-hidden group hover:border-orange-400 hover:border-2 hover:-translate-y-2 hover:bg-white/95">
+    <div className="bg-white/20 backdrop-blur-sm rounded-2xl border border-white/10 shadow-lg shadow-black/10">
       {/* Background container - touches corners */}
-      <div className="w-full h-52 bg-white/90 relative">
+      <div className="w-full h-52 bg-white/30 backdrop-blur-sm relative">
         {/* Gradient overlay - only 50% of container height */}
-        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-br from-orange-100 via-orange-50 to-orange-200"></div>
+        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-br from-orange-100/70 via-orange-50/60 to-orange-200/70"></div>
         
         {/* Circular profile image at center */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
