@@ -61,9 +61,10 @@ const Background = () => {
     const drawCircle = (x: number, y: number, radius: number, opacity: number = 0.6) => {
       if (!ctx) return;
       const gradient = ctx.createLinearGradient(x - radius, y, x + radius, y);
-      gradient.addColorStop(0, `rgba(255, 140, 0, ${opacity})`);
-      gradient.addColorStop(0.5, `rgba(255, 165, 0, ${opacity})`);
-      gradient.addColorStop(1, `rgba(255, 200, 0, ${opacity})`);
+      // Slightly reduced opacity for circles
+      gradient.addColorStop(0, `rgba(255, 140, 0, ${opacity * 0.8})`);
+      gradient.addColorStop(0.5, `rgba(255, 165, 0, ${opacity * 0.75})`);
+      gradient.addColorStop(1, `rgba(255, 200, 0, ${opacity * 0.7})`);
       
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -75,9 +76,10 @@ const Background = () => {
     const drawLine = (x1: number, y1: number, x2: number, y2: number) => {
       if (!ctx) return;
       const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-      gradient.addColorStop(0, 'rgba(255, 140, 0, 0.3)');
-      gradient.addColorStop(0.5, 'rgba(255, 165, 0, 0.4)');
-      gradient.addColorStop(1, 'rgba(255, 200, 0, 0.3)');
+      // Slightly reduced opacity for grid lines
+      gradient.addColorStop(0, 'rgba(255, 140, 0, 0.22)');
+      gradient.addColorStop(0.5, 'rgba(255, 165, 0, 0.28)');
+      gradient.addColorStop(1, 'rgba(255, 200, 0, 0.22)');
       
       ctx.beginPath();
       ctx.moveTo(x1, y1);
@@ -89,7 +91,8 @@ const Background = () => {
 
     const drawVertexDot = (x: number, y: number) => {
       if (!ctx) return;
-      ctx.fillStyle = 'rgba(255, 140, 0, 0.8)';
+      // Slightly reduced opacity for vertex dots
+      ctx.fillStyle = 'rgba(255, 140, 0, 0.6)';
       ctx.beginPath();
       ctx.arc(x, y, 2, 0, Math.PI * 2);
       ctx.fill();
@@ -98,8 +101,13 @@ const Background = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
       
-      // Clear canvas with off-white background
-      ctx.fillStyle = '#fafafa';
+      // Clear canvas with a subtle vertical gradient background (less opaque)
+      const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      // Subtler, transitioning gradient with lower opacity
+      bgGradient.addColorStop(0, 'rgba(250, 250, 250, 0.72)');      // soft light top
+      bgGradient.addColorStop(0.5, 'rgba(255, 245, 235, 0.70)');    // warm mid
+      bgGradient.addColorStop(1, 'rgba(245, 248, 255, 0.72)');      // cool light bottom
+      ctx.fillStyle = bgGradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       const nodes = nodesRef.current;

@@ -104,7 +104,7 @@ export default function AuthorMapping({
     <div className="container mx-auto mt-8">
 
       {sortedAuthors.length === 0 ? (
-        <p className="text-center text-gray-500">No authors found by the name {`"${searchTerm}"`}</p>
+        <p className="text-center text-gray-500 mb-10">No authors found by the name {`"${searchTerm}"`}</p>
       ) : (
         <>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-7 mx-4 mt-6 mb-10">
@@ -115,7 +115,7 @@ export default function AuthorMapping({
           return (
             <div
               key={index}
-              className="group bg-white/5 backdrop-blur-xs rounded-3xl p-4 border border-orange-300/40 hover:border-orange-400/70 shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/20 transition-transform duration-300 ease-out will-change-transform overflow-hidden hover:-translate-y-1"
+              className="group bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-orange-300/40 hover:border-orange-400/70 shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/20 transition-transform duration-300 ease-out will-change-transform overflow-hidden hover:-translate-y-1"
             >
               <AuthorCard
                 name={author.ppmaAuthorName}
