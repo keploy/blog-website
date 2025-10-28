@@ -52,8 +52,8 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
               <Image
                 src="/blog/images/blog-bunny.png"
                 alt="hero image"
-                width={600}
-                height={600}
+                width={900}
+                height={900}
               />
             </div>
           </div>
