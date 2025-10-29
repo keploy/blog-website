@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaSearch } from 'react-icons/fa';
 import { getAllAuthors, getAllPosts } from "../../lib/api";
 import Layout from "../../components/layout";
@@ -7,7 +7,8 @@ import Header from "../../components/header";
 import Container from "../../components/container";
 import AuthorMapping from "../../components/AuthorMapping";
 import Background from "../../components/Background";
-import AuthorBackgroundOverlay from "../../components/AuthorBackgroundOverlay";
+import AuthorEdgesOverlay from "../../components/AuthorEdgesOverlay";
+// import AuthorBackgroundOverlay from "../../components/AuthorBackgroundOverlay";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { Post } from "../../types/post";
 import { calculateAuthorPostCounts } from "../../utils/calculateAuthorPostCounts";
@@ -27,54 +28,14 @@ export default function Authors({
 }) {
   const authorArray = Array.from(new Set(edges.map((item) => item.node)));
 
-  // Typing animation for buzz words
-  const buzzWords = ["brilliant", "expert", "passionate", "creative", "talented"];
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [typedWord, setTypedWord] = useState("");
-  const [cursorVisible, setCursorVisible] = useState(true);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
+  // Static heading only (typewriter removed)
 
   // Search and filter state
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<"" | "asc" | "desc">("");
   const [isSortOpen, setIsSortOpen] = useState(false);
 
-  useEffect(() => {
-    const currentWord = buzzWords[currentWordIndex];
-    
-    const typeInterval = setInterval(() => {
-      setIsTyping(true);
-      setCursorVisible(true); // Show cursor while typing
-      
-      if (!isDeleting) {
-        setTypedWord(currentWord.slice(0, typedWord.length + 1));
-        if (typedWord.length === currentWord.length) {
-          setIsTyping(false);
-          setTimeout(() => setIsDeleting(true), 3000); // Wait 3 seconds before deleting
-        }
-      } else {
-        setTypedWord(currentWord.slice(0, typedWord.length - 1));
-        if (typedWord.length === 0) {
-          setIsDeleting(false);
-          setIsTyping(false);
-          setCurrentWordIndex((prev) => (prev + 1) % buzzWords.length);
-        }
-      }
-    }, isDeleting ? 80 : 200); // Slower, more gradual typing
-
-    // Cursor blinking - only when not typing
-    const cursorInterval = setInterval(() => {
-      if (!isTyping) {
-      setCursorVisible((prev) => !prev);
-      }
-    }, 500); // 500ms blink interval
-
-    return () => {
-      clearInterval(typeInterval);
-      clearInterval(cursorInterval);
-    };
-  }, [currentWordIndex, typedWord, isDeleting, isTyping, buzzWords]);
+  // No typing effect
 
   // Search and filter handlers
   const handleSearchChange = (event) => {
@@ -121,56 +82,39 @@ export default function Authors({
       >
         {/* Network Background */}
         <Background />
+        {/* Author images overlay across whole page (side-only placement) */}
+        <AuthorEdgesOverlay
+          images={authorArray
+            .map(a => (a.ppmaAuthorImage || '').trim())
+            .filter(Boolean)
+            .slice(0, 64)}
+        />
         
         <div className="relative min-h-screen overflow-hidden">
           <Header />
           
-          {/* Hero Section with Author Overlay */}
+          {/* Hero Section */}
           <div className="relative px-4 overflow-visible">
-            {/* Author Overlay for Hero Section Only */}
-            <AuthorBackgroundOverlay 
-              authors={authorArray.map(author => {
-                const imageUrl = author.ppmaAuthorImage || '';
-                // Log for debugging
-                if (imageUrl) {
-                  console.log('Author image URL:', imageUrl);
-                }
-                return imageUrl;
-              })} 
-            />
           <Container>
               <div className="relative max-w-7xl mx-auto z-20">
                 {/* Centered heading */}
                 <div className="text-center mb-16 pt-6">
                   <h1 className="text-center font-bold text-gray-900 mb-8 leading-tight tracking-wide animate-fade-up">
                     <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[6rem] mb-12">
-                      Meet our{" "}
-                        <span className="bg-gradient-to-r from-primary-300 to-primary-yellow-orange bg-clip-text text-transparent">
-                  {typedWord}
-                          <span
-                            aria-hidden="true"
-                            className={`inline-block ml-1 align-baseline bg-orange-500 w-[2px] h-[1.2em] rounded-sm transition-opacity duration-150 ${
-                              cursorVisible ? 'opacity-100' : 'opacity-0'
-                            }`}
-                            style={{
-                              borderRadius: '1px',
-                              boxShadow: '0 0 4px rgba(249,115,22,0.6)',
-                            }}
-                          />
-                        </span>
+                      Meet our <span className="bg-gradient-to-r from-primary-300 to-primary-yellow-orange bg-clip-text text-transparent">brilliant</span>
                     </span>
                     <span className="block italic font-bold text-gray-800 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[7rem] mb-12">
                       authors
-                </span>
-              </h1>
+                    </span>
+                  </h1>
               
-                  <p className="text-lg md:text-xl text-gray-700 pt-4 mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-up animation-delay-200">
+                  <p className="text-lg md:text-xl text-gray-700 pt-4 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-up animation-delay-200">
                 Our authors bring together insights from testing, open source, and developer advocacy to help you build better software.
               </p>
 
                   {/* Glassmorphism Search and Filter Section */}
                    <div className="max-w-4xl mx-auto relative z-30">
-                    <div className="bg-white/5 backdrop-blur-xs rounded-3xl p-6 border border-orange-300/40 hover:border-transparent transition-colors duration-300 shadow-2xl shadow-black/20">
+                    <div className="border-white/30 bg-white/20 backdrop-blur-sm rounded-3xl p-6 border shadow-sm shadow-black/20 ">
                       <div className="flex flex-col sm:flex-row gap-4 items-center">
                       {/* Search Bar */}
                       <div className="relative flex-1 w-full">
@@ -180,7 +124,7 @@ export default function Authors({
                             placeholder="Search authors..."
                             value={searchTerm}
                             onChange={handleSearchChange}
-                            className="w-full p-4 pl-12 pr-4 rounded-2xl border border-white/70 bg-white/60 backdrop-blur-lg hover:border-orange-300/50 focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-base transition-all duration-300 placeholder-gray-600 text-gray-800"
+                            className="w-full p-4 pl-12 pr-4 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/10 shadow-lg shadow-black/10 hover:border-orange-300/50 focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-base transition-all duration-300 placeholder-gray-600 text-gray-800"
                           />
                           <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600 group-hover:text-orange-500 transition-colors duration-300" />
                         </div>
@@ -200,7 +144,7 @@ export default function Authors({
                           onKeyDown={(e) => {
                             if (e.key === 'Escape') setIsSortOpen(false);
                           }}
-                          className="group w-full p-4 pr-10 rounded-2xl border border-white/70 bg-white/60 backdrop-blur-lg hover:border-orange-300/50 focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-base transition-all duration-300 text-gray-800 text-left"
+                          className="group w-full p-4 pr-10 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/10 shadow-lg shadow-black/10 hover:border-orange-300/50 focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-base transition-all duration-300 text-gray-800 text-left"
                         >
                           <span className="block truncate">
                             {sortOrder === 'desc' ? 'Z–A' : sortOrder === 'asc' ? 'A–Z' : 'Default'}
@@ -216,7 +160,7 @@ export default function Authors({
                             role="listbox"
                             aria-label="Sort options"
                             tabIndex={-1}
-                            className="absolute z-[9999] mt-2 right-0 w-full min-w-[9rem] rounded-2xl bg-white/50 backdrop-blur-lg border border-white/60 overflow-hidden"
+                            className="absolute z-[9999] mt-2 right-0 w-full min-w-[9rem] rounded-2xl bg-white/20 backdrop-blur-sm border border-white/10 shadow-lg shadow-black/10 overflow-hidden"
                           >
                             <button
                               role="option"

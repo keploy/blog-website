@@ -115,7 +115,7 @@ export default function AuthorMapping({
           return (
             <div
               key={index}
-              className="group bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-orange-300/40 hover:border-orange-400/70 shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/20 transition-transform duration-300 ease-out will-change-transform overflow-hidden hover:-translate-y-1"
+              className="group bg-white/10 backdrop-blur-sm rounded-3xl p-6 border-2 border-orange-300/50 shadow-xl shadow-black/20 transition-transform duration-300 ease-out will-change-transform overflow-hidden -translate-y-1 hover:border-orange-400/70 hover:shadow-2xl hover:shadow-black/25 hover:-translate-y-2"
             >
               <AuthorCard
                 name={author.ppmaAuthorName}
