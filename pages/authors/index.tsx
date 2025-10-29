@@ -110,7 +110,7 @@ export default function Authors({
               </p>
 
                   <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-20">
-                    <div className="w-[800px] h-[800px] rounded-full blur-3xl opacity-55 bg-[radial-gradient(ellipse_at_center,rgba(251,146,60,0.20)_0%,rgba(251,191,36,0.14)_35%,transparent_75%)] transform translate-y-32 sm:translate-y-36"></div>
+                    <div className="w-[1000px] h-[1000px] rounded-full blur-3xl opacity-45 bg-[radial-gradient(ellipse_at_center,rgba(251,146,60,0.16)_0%,rgba(251,191,36,0.10)_35%,transparent_80%)] transform translate-y-36 sm:translate-y-40"></div>
                   </div>
 
                    <div className="max-w-4xl mx-auto relative z-30 isolate">
@@ -132,7 +132,7 @@ export default function Authors({
                             aria-label="Clear search"
                             title="Clear search"
                             onClick={() => setSearchTerm("")}
-                            className={`absolute right-3 top-1/2 -translate-y-1/2 z-10 text-gray-700 hover:text-orange-600 transition-colors duration-300 leading-none flex items-center justify-center w-8 h-8 text-3xl font-semibold ${searchTerm ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                            className={`absolute right-4 top-1/2 -translate-y-1/2 z-10 text-gray-500 hover:text-orange-500 transition-colors duration-300 leading-none flex items-center justify-center w-9 h-9 text-xl font-semibold ${searchTerm ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                           >
                             ×
                           </button>
