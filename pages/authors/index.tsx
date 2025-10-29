@@ -86,18 +86,15 @@ export default function Authors({
         <AuthorEdgesOverlay
           images={authorArray
             .map(a => (a.ppmaAuthorImage || '').trim())
-            .filter(Boolean)
-            .slice(0, 64)}
+            .filter(Boolean)}
         />
         
         <div className="relative min-h-screen overflow-hidden">
           <Header />
           
-          {/* Hero Section */}
           <div className="relative px-4 overflow-visible">
           <Container>
               <div className="relative max-w-7xl mx-auto z-20">
-                {/* Centered heading */}
                 <div className="text-center mb-16 pt-6">
                   <h1 className="text-center font-bold text-gray-900 mb-8 leading-tight tracking-wide animate-fade-up">
                     <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[6rem] mb-12">
@@ -112,9 +109,12 @@ export default function Authors({
                 Our authors bring together insights from testing, open source, and developer advocacy to help you build better software.
               </p>
 
-                  {/* Glassmorphism Search and Filter Section */}
-                   <div className="max-w-4xl mx-auto relative z-30">
-                    <div className="border-white/30 bg-white/20 backdrop-blur-sm rounded-3xl p-6 border shadow-sm shadow-black/20 ">
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-20">
+                    <div className="w-[800px] h-[800px] rounded-full blur-3xl opacity-55 bg-[radial-gradient(ellipse_at_center,rgba(251,146,60,0.20)_0%,rgba(251,191,36,0.14)_35%,transparent_75%)] transform translate-y-32 sm:translate-y-36"></div>
+                  </div>
+
+                   <div className="max-w-4xl mx-auto relative z-30 isolate">
+                    <div className="relative z-20 border-white/30 bg-white/30 rounded-3xl p-6 border shadow-sm shadow-black/20 ">
                       <div className="flex flex-col sm:flex-row gap-4 items-center">
                       {/* Search Bar */}
                       <div className="relative flex-1 w-full">
@@ -124,9 +124,18 @@ export default function Authors({
                             placeholder="Search authors..."
                             value={searchTerm}
                             onChange={handleSearchChange}
-                            className="w-full p-4 pl-12 pr-4 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/10 shadow-lg shadow-black/10 hover:border-orange-300/50 focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-base transition-all duration-300 placeholder-gray-600 text-gray-800"
+                            className="w-full p-4 pl-12 pr-16 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/10 shadow-lg shadow-black/10 hover:border-orange-300/50 focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-base transition-all duration-300 placeholder-gray-600 text-gray-800"
                           />
                           <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600 group-hover:text-orange-500 transition-colors duration-300" />
+                          <button
+                            type="button"
+                            aria-label="Clear search"
+                            title="Clear search"
+                            onClick={() => setSearchTerm("")}
+                            className={`absolute right-3 top-1/2 -translate-y-1/2 z-10 text-gray-700 hover:text-orange-600 transition-colors duration-300 leading-none flex items-center justify-center w-8 h-8 text-3xl font-semibold ${searchTerm ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                          >
+                            ×
+                          </button>
                         </div>
                   </div>
 
@@ -144,7 +153,7 @@ export default function Authors({
                           onKeyDown={(e) => {
                             if (e.key === 'Escape') setIsSortOpen(false);
                           }}
-                          className="group w-full p-4 pr-10 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/10 shadow-lg shadow-black/10 hover:border-orange-300/50 focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-base transition-all duration-300 text-gray-800 text-left"
+                          className="group w-full p-4 pr-10 rounded-2xl bg-white/30 border border-white/10 shadow-lg shadow-black/10 hover:border-orange-300/50 focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:border-orange-300/50 text-base transition-all duration-300 text-gray-800 text-left"
                         >
                           <span className="block truncate">
                             {sortOrder === 'desc' ? 'Z–A' : sortOrder === 'asc' ? 'A–Z' : 'Default'}
@@ -160,7 +169,7 @@ export default function Authors({
                             role="listbox"
                             aria-label="Sort options"
                             tabIndex={-1}
-                            className="absolute z-[9999] mt-2 right-0 w-full min-w-[9rem] rounded-2xl bg-white/20 backdrop-blur-sm border border-white/10 shadow-lg shadow-black/10 overflow-hidden"
+                            className="absolute z-[9999] mt-2 right-0 w-full min-w-[9rem] rounded-2xl bg-white/30 border border-white/10 shadow-lg shadow-black/10 overflow-hidden"
                           >
                             <button
                               role="option"

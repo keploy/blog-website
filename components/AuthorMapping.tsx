@@ -130,9 +130,6 @@ export default function AuthorMapping({
         })}
       </div>
       
-      <div>
-        <hr className="border-b-2 border-gray-300 my-6" />
-      </div>
       <div className="flex justify-center mb-6 sm:mt-6 sm:mb-6 px-6 py-4">
         <button
           className={`mx-1 sm:mx-2 px-4 py-2 rounded-full border-2 border-white/60 bg-white/25 backdrop-blur-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ${

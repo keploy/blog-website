@@ -53,8 +53,7 @@ export default function AuthorCard({ name, avatarUrl, slug, postCount, linkedin,
         </div>
       </div>
 
-      {/* Subtle divider below image container */}
-      <div className="mx-6 h-px bg-gradient-to-r from-orange-200/50 via-orange-400/50 to-orange-200/50" />
+      <div className="mx-6 h-0.5 bg-gradient-to-r from-orange-300/30 via-orange-500/45 to-orange-300/30" />
 
       <div className="p-6">
         

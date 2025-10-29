@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useRef } from 'react';
 
 type AuthorEdgesOverlayProps = {
   images: string[];
@@ -12,9 +13,14 @@ export default function AuthorEdgesOverlay({ images }: AuthorEdgesOverlayProps) 
     return /^https?:\/\//.test(src) || /^\//.test(src);
   };
 
-  const unique = Array.from(new Set(images.filter(isValidSrc)));
-  const desired = Math.min(unique.length, 7 + Math.floor(Math.random() * 3)); // 7–9
-  const shuffled = [...unique].sort(() => Math.random() - 0.5).slice(0, desired);
+  const chosenRef = useRef<string[] | null>(null);
+  if (chosenRef.current === null) {
+    const unique = Array.from(new Set(images.filter(isValidSrc)));
+    const desired = Math.min(unique.length, 7 + Math.floor(Math.random() * 3)); // 7–9
+    const shuffledOnce = [...unique].sort(() => Math.random() - 0.5).slice(0, desired);
+    chosenRef.current = shuffledOnce;
+  }
+  const shuffled = chosenRef.current as string[];
 
   const positions: Array<React.CSSProperties> = [
     // Left edge cluster (varied Y)
