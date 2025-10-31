@@ -77,7 +77,12 @@ export default function PostCard({
           </span>
         </div>
         <div
-          className="text-gray-600 line-clamp-3"
+          className="text-gray-600 overflow-hidden"
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: 'vertical'
+          }}
           dangerouslySetInnerHTML={{ __html: cleanedExcerpt }}
         />
       </div>

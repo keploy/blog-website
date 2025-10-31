@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
+import Image from "next/image";
 import { Post } from "../types/post";
 import dynamic from "next/dynamic";
 import PostCard from "./post-card";
@@ -16,6 +17,10 @@ const PostByAuthorMapping = ({
   Content: string;
 }) => {
   const AuthorName = filteredPosts[0].node.ppmaAuthorName;
+  const [visibleCount, setVisibleCount] = useState(12);
+  const visiblePosts = useMemo(() => filteredPosts.slice(0, visibleCount), [filteredPosts, visibleCount]);
+  const canLoadMore = visibleCount < filteredPosts.length;
+  const handleLoadMore = () => setVisibleCount((prev) => Math.min(prev + 12, filteredPosts.length));
   return (
     <div className="container mx-auto mt-8">
       <div className="mb-5">

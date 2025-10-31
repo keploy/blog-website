@@ -5,6 +5,7 @@ import Header from "../../components/header";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Container from "../../components/container";
 import { getAllPostsFromTags, getAllTags } from "../../lib/api";
+import { sanitizeStringForURL } from "../../utils/sanitizeStringForUrl";
 import TagsStories from "../../components/TagsStories";
 import { useRouter } from "next/router";
 export default function PostByTags({ postsByTags,preview}) {
@@ -31,7 +32,9 @@ export default function PostByTags({ postsByTags,preview}) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const edgesAllTags = await getAllTags();
-  const paths = edgesAllTags.map((node) => `/tag/${node.name}`) || []; // Extract tag names from the nodes and create paths
+  const paths = (edgesAllTags || [])
+    .map((node) => `/tag/${sanitizeStringForURL(String(node?.name || ""))}`)
+    .filter((p) => !!p && !p.endsWith("/tag/"));
   return {
     paths: paths,
     fallback: true,
@@ -47,9 +50,19 @@ export const getStaticProps: GetStaticProps = async ({
     slug = slug.join('-');
   } else {
     // Replace spaces with dashes
-    slug = slug.replace(/\s+/g, '-');
+    slug = (slug || '').replace(/\s+/g, '-');
   }
-  const postsByTags = await getAllPostsFromTags(slug.toString(),preview);
+  const safeSlug = sanitizeStringForURL(String(slug || ""));
+  const fetched = await getAllPostsFromTags(safeSlug, preview);
+  // Ensure no undefined values are passed to props
+  const postsByTags = fetched && typeof fetched === 'object'
+    ? {
+        ...(fetched as any),
+        edges: Array.isArray((fetched as any).edges)
+          ? (fetched as any).edges.filter(Boolean)
+          : [],
+      }
+    : { edges: [] };
   return {
     props: { postsByTags,preview},
     revalidate: 10,

@@ -1,47 +1,83 @@
-import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import { useState, useMemo, useEffect } from "react";
 import { Post } from "../types/post";
+import { normalizeName } from "../utils/calculateAuthorPostCounts";
+import AuthorCard from "./AuthorCard";
+import { getAuthorInfoByName } from "../lib/authorData";
 
 export default function AuthorMapping({
   AuthorArray,
-  itemsPerPage = 8, // You can customize the number of items per page
+  itemsPerPage = 9, // You can customize the number of items per page
+  authorCounts,
+  searchTerm,
+  sortOrder,
 }:{
   AuthorArray: Pick<Post, "author" | "ppmaAuthorName" | "ppmaAuthorImage">[],
-  itemsPerPage?:number
+  itemsPerPage?:number,
+  authorCounts?: Record<string, number>,
+  searchTerm: string,
+  sortOrder: "" | "asc" | "desc",
 }) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const authorData = [];
-  const ppmaAuthorNameArray = [];
+  const authorData = useMemo(() => {
+    // Use a map keyed by normalized display name to ensure strict de-duplication
+    const normalizedNameToAuthor = new Map<string, {
+      publishingAuthor: string;
+      ppmaAuthorName: string;
+      avatarUrl: string;
+      slug: string;
+    }>();
 
-  AuthorArray.forEach((item) => {
-    const ppmaAuthorName = formatAuthorName(item.ppmaAuthorName);
-    const avatarUrl = item.ppmaAuthorImage;
-    const slug = item.ppmaAuthorName;
-    const publishingAuthor = formatAuthorName(item.author.node.name);
-    if (Array.isArray(ppmaAuthorName)) {
-      return;
-    }
+    AuthorArray.forEach((item) => {
+      const formattedDisplay = formatAuthorName(item.ppmaAuthorName);
+      if (Array.isArray(formattedDisplay)) return; // skip multi-name entries
 
-    if (!ppmaAuthorNameArray.includes(ppmaAuthorName)) {
-      ppmaAuthorNameArray.push(ppmaAuthorName);
-    } else {
-      return;
-    }
-    authorData.push({
-      publishingAuthor,
-      ppmaAuthorName,
-      avatarUrl,
-      slug,
+      const normalizedKey = formattedDisplay.toLowerCase().trim();
+      if (normalizedNameToAuthor.has(normalizedKey)) return; // already captured
+
+      const publishingAuthor = formatAuthorName(item.author.node.name);
+      const avatarUrl = item.ppmaAuthorImage;
+      const slug = item.ppmaAuthorName;
+
+      normalizedNameToAuthor.set(normalizedKey, {
+        publishingAuthor,
+        ppmaAuthorName: formattedDisplay,
+        avatarUrl,
+        slug,
+      });
     });
-  });
-  const totalPages = Math.ceil(authorData.length / itemsPerPage);
+
+    return Array.from(normalizedNameToAuthor.values());
+  }, [AuthorArray]);
+
+  const filteredAuthors = useMemo(() => {
+    if (!searchTerm.trim()) return authorData;
+    const query = searchTerm.toLowerCase();
+    // Restrict search to ppmaAuthorName only (display name)
+    return authorData.filter((a) => a.ppmaAuthorName.toLowerCase().includes(query));
+  }, [authorData, searchTerm]);
+
+  const sortedAuthors = useMemo(() => {
+    if (!sortOrder) return filteredAuthors;
+    const copied = [...filteredAuthors];
+    copied.sort((a, b) => {
+      const nameA = a.ppmaAuthorName.toLowerCase();
+      const nameB = b.ppmaAuthorName.toLowerCase();
+      if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
+      if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;
+      
+      const pubA = a.publishingAuthor.toLowerCase();
+      const pubB = b.publishingAuthor.toLowerCase();
+      if (pubA < pubB) return sortOrder === "asc" ? -1 : 1;
+      if (pubA > pubB) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+    return copied;
+  }, [filteredAuthors, sortOrder]);
+
+  const totalPages = Math.ceil(sortedAuthors.length / itemsPerPage) || 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const visibleAuthors = authorData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const visibleAuthors = sortedAuthors.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -59,50 +95,50 @@ export default function AuthorMapping({
     }
   };
 
+  // Reset to first page when search or sort changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, sortOrder]);
+
   return (
     <div className="container mx-auto mt-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-accent-1 m-4">
-        {visibleAuthors.map((author, index) => (
-          <Link href={`/authors/${author.slug}`} key={index}>
-            <div className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between  border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30 hover:scale-105 cursor-pointer">
-              <div className="flex items-center mb-3 sm:mb-0">
-                {author.avatarUrl != "imag1" &&  author.avatarUrl != "image" ? (
-                  <Image
-                    src={author.avatarUrl}
-                    alt={`${author.ppmaAuthorName}'s Avatar`}
-                    className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
-                    height={48}
-                    width={48}
-                  />
-                ) : (
-                  <Image
-                    src={`/blog/images/author.png`}
-                    alt={`${author.ppmaAuthorName}'s Avatar`}
-                    className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
-                    height={48}
-                    width={48}
-                  />
-                )}
-                <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-2xl heading1 md:text-xl font-bold tracking-tighter leading-tight">
-                  {author.ppmaAuthorName}
-                </h2>
-              </div>
+
+      {sortedAuthors.length === 0 ? (
+        <p className="text-center text-gray-500 mb-10">No authors found by the name {`"${searchTerm}"`}</p>
+      ) : (
+        <>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-7 mx-4 mt-6 mb-10">
+        {visibleAuthors.map((author, index) => {
+          const countKey = normalizeName(author.ppmaAuthorName);
+          const postCount = (typeof countKey === 'string' && countKey) ? (authorCounts?.[countKey] ?? 0) : 0;
+          const info = getAuthorInfoByName(author.ppmaAuthorName);
+          return (
+            <div
+              key={index}
+              className="group bg-white/10 backdrop-blur-sm rounded-3xl p-6 border-2 border-orange-300/50 shadow-xl shadow-black/20 transition-transform duration-300 ease-out will-change-transform overflow-hidden -translate-y-1 hover:border-orange-400/70 hover:shadow-2xl hover:shadow-black/25 hover:-translate-y-2"
+            >
+              <AuthorCard
+                name={author.ppmaAuthorName}
+                avatarUrl={info?.image || author.avatarUrl}
+                slug={author.slug}
+                postCount={postCount}
+                bio={info?.description}
+                linkedin={info?.linkedin}
+              />
             </div>
-          </Link>
-        ))}
+          );
+        })}
       </div>
-      <div>
-        <hr className="border-b border-gray-200 my-4" />
-      </div>
-      <div className="flex justify-center mb-4 sm:mt-4 sm:mb-3">
+      
+      <div className="flex justify-center mb-6 sm:mt-6 sm:mb-6 px-6 py-4">
         <button
-          className={`mx-1 sm:mx-2 px-4 py-2 rounded-md ${
+          className={`mx-1 sm:mx-2 px-4 py-2 rounded-full border-2 border-white/60 bg-white/25 backdrop-blur-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ${
             currentPage <= 1
-              ? "bg-gray-300 text-gray-600"
-              : "bg-gray-300 text-gray-600 hover:bg-gray-300 hover:text-gray-800"
+              ? "text-gray-500 cursor-not-allowed"
+              : "text-gray-700 hover:bg-white/35 hover:text-gray-800"
           }`}
           onClick={handlePrevPage}
-          disabled={currentPage < 1}
+          disabled={currentPage <= 1}
         >
           Back
         </button>
@@ -111,10 +147,10 @@ export default function AuthorMapping({
             <button
               key={pageNumber}
               onClick={() => handlePageChange(pageNumber)}
-              className={`mx-1 sm:mx-2 px-4 py-3 rounded-md text-sm ${
+              className={`mx-1 sm:mx-2 px-4 py-3 rounded-full border-2 text-sm shadow-xl hover:shadow-2xl transition-all duration-300 ${
                 pageNumber === currentPage
-                  ? "bg-gray-300 text-white"
-                  : "bg-gray-300 text-gray-800"
+                  ? "border-orange-300/70 bg-orange-200/40 text-orange-800"
+                  : "border-white/60 bg-white/25 text-gray-700 hover:bg-white/35 hover:text-gray-800"
               }`}
             >
               {pageNumber}
@@ -122,10 +158,10 @@ export default function AuthorMapping({
           )
         )}
         <button
-          className={`mx-1 sm:mx-1 px-4 py-2 rounded-md ${
+          className={`mx-1 sm:mx-1 px-4 py-2 rounded-full border-2 border-white/60 bg-white/25 backdrop-blur-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ${
             currentPage >= totalPages
-              ? "bg-gray-300 text-gray-600"
-              : "bg-gray-300 text-gray-600 hover:bg-gray-300 hover:text-gray-800"
+              ? "text-gray-500 cursor-not-allowed"
+              : "text-gray-700 hover:bg-white/35 hover:text-gray-800"
           }`}
           onClick={handleNextPage}
           disabled={currentPage >= totalPages}
@@ -133,6 +169,8 @@ export default function AuthorMapping({
           Next
         </button>
       </div>
+        </>
+      )}
     </div>
   );
 }
