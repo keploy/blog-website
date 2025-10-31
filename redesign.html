@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keploy Styled Navbar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glass {
+      backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-[#fef8f6] text-gray-800 font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+
+        <!-- Logo -->
+        <div class="flex-shrink-0 flex items-center">
+          <img src="https://keploy.io/logo.svg" alt="Keploy Logo" class="h-8 w-auto" />
+          <span class="text-orange-500 font-bold text-xl ml-2">Keploy</span>
+        </div>
+
+        <!-- Nav Items -->
+        <div class="hidden md:flex items-center space-x-10 text-sm font-medium relative">
+
+          <!-- Products Dropdown -->
+          <div class="relative group">
+            <button class="inline-flex items-center hover:text-orange-500 transition">
+              Products
+              <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.25 7.75L10 12.5l4.75-4.75" />
+              </svg>
+            </button>
+
+            <!-- Products Dropdown Panel -->
+            <div class="absolute left-0 top-12 w-[900px] p-6 rounded-2xl shadow-2xl glass invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 z-50">
+              <div class="grid grid-cols-3 gap-8">
+                <div class="bg-white/70 backdrop-blur-xl p-6 rounded-xl border border-orange-100 hover:scale-105 transition-all duration-300 shadow hover:shadow-lg">
+                  <div class="text-orange-600 font-semibold text-lg mb-2">Unit Testing</div>
+                  <p class="text-gray-700 text-sm">Generate unit tests with mocks in seconds.</p>
+                </div>
+                <div class="bg-white/70 backdrop-blur-xl p-6 rounded-xl border border-orange-100 hover:scale-105 transition-all duration-300 shadow hover:shadow-lg">
+                  <div class="text-orange-600 font-semibold text-lg mb-2">API Testing</div>
+                  <p class="text-gray-700 text-sm">Automatically record, replay, and validate APIs.</p>
+                </div>
+                <div class="bg-white/70 backdrop-blur-xl p-6 rounded-xl border border-orange-100 hover:scale-105 transition-all duration-300 shadow hover:shadow-lg">
+                  <div class="text-orange-600 font-semibold text-lg mb-2">Integration Testing</div>
+                  <p class="text-gray-700 text-sm">Open-source testing infrastructure for devs.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a href="#" class="hover:text-orange-500 transition">Solutions</a>
+          <a href="#" class="hover:text-orange-500 transition">Developers</a>
+          <a href="#" class="hover:text-orange-500 transition">Pricing</a>
+
+          <!-- Resources Dropdown with Cards -->
+          <div class="relative group">
+            <button class="inline-flex items-center hover:text-orange-500 transition">
+              Resources
+              <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.25 7.75L10 12.5l4.75-4.75" />
+              </svg>
+            </button>
+
+            <!-- Resources Dropdown Panel -->
+            <div class="absolute left-0 top-12 w-[720px] p-6 rounded-2xl shadow-2xl glass invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 z-50">
+              <div class="grid grid-cols-3 gap-8">
+
+                <!-- Docs -->
+                <div class="bg-white/70 backdrop-blur-xl p-6 rounded-xl border border-orange-100 hover:scale-105 transition-all duration-300 shadow hover:shadow-lg">
+                  <div class="text-orange-600 font-semibold text-lg mb-2">Docs</div>
+                  <p class="text-gray-700 text-sm">Dive into detailed documentation and guides.</p>
+                </div>
+
+                <!-- Blog -->
+                <div class="bg-white/70 backdrop-blur-xl p-6 rounded-xl border border-orange-100 hover:scale-105 transition-all duration-300 shadow hover:shadow-lg">
+                  <div class="text-orange-600 font-semibold text-lg mb-2">Blog</div>
+                  <p class="text-gray-700 text-sm">Explore ideas, insights, and latest product updates.</p>
+                </div>
+
+                <!-- Community -->
+                <div class="bg-white/70 backdrop-blur-xl p-6 rounded-xl border border-orange-100 hover:scale-105 transition-all duration-300 shadow hover:shadow-lg">
+                  <div class="text-orange-600 font-semibold text-lg mb-2">Community</div>
+                  <p class="text-gray-700 text-sm">Join discussions, meet developers, and collaborate.</p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="hidden md:flex items-center space-x-4 text-sm">
+          <div class="text-gray-500 space-x-2">
+            <span>📢 543K</span>
+            <span>👥 10.2K</span>
+          </div>
+          <button class="bg-orange-500 text-white px-4 py-1 rounded-full hover:bg-orange-600 transition">
+            Sign In
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="py-24 px-4 text-center">
+    <h2 class="text-4xl font-extrabold text-orange-500 mb-4">Explore Keploy</h2>
+    <p class="max-w-2xl mx-auto text-gray-700 text-lg">
+      Everything you need to test faster, collaborate better, and ship confidently.
+    </p>
+  </section>
+
+</body>
+</html>
