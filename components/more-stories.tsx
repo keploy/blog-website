@@ -129,7 +129,7 @@ export default function MoreStories({
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
         More Stories
       </h2>
-      
+
       {isIndex && (
         <div className="flex w-full mb-8">
           <div className="relative w-full">
@@ -138,7 +138,7 @@ export default function MoreStories({
               placeholder="Search posts..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-200"
             />
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
           </div>
@@ -146,7 +146,7 @@ export default function MoreStories({
       )}
 
       {filteredPosts.length === 0 ? (
-        <p className="text-center text-gray-500">No posts found by the name {`"${searchTerm}"`}</p>
+        <p className="text-center text-gray-500">No posts found by the name &quot;{searchTerm}&quot;</p>
       ) : (
         <>
           <PostGrid>
@@ -189,6 +189,7 @@ export default function MoreStories({
           </div>
         </>
       )}
+
     </section>
   );
 }
