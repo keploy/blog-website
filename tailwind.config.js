@@ -99,7 +99,6 @@ module.exports = {
   				'300': '#ef546b',
   				'400': '#d9cd9c',
   				'500': '#e6e2d4',
-  				gradient: 'linear-gradient(to right, #F5F5F5, #E35134, #FF914D, #BE2C1B, #6F0A0D)',
   				DEFAULT: 'hsl(var(--accent))',
   				foreground: 'hsl(var(--accent-foreground))'
   			},

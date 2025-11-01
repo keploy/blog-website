@@ -59,7 +59,7 @@ const ResponsiveBlock = ({
     <div className="relative h-full w-full rounded-xl p-[1.5px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all duration-200 group-hover:scale-[1.01]">
       {" "}
       {/* Gradient border, scale/transition moved here */}
-      <Card className="relative h-full w-full overflow-hidden rounded-[calc(0.75rem-3px)] bg-card">
+      <Card className="relative h-full w-full overflow-hidden rounded-[calc(0.75rem_-_3px)] bg-card">
         <CardContent className="relative w-full h-full p-0">
           <div className="absolute inset-x-0 top-0 h-1/3  pointer-events-none z-[1]" />
 
@@ -103,7 +103,7 @@ const FeaturedCard = ({ content }: { content: FeaturedCardContent }) => (
     {/* Inner Link/Content Area */}
     <Link
       href={content.href}
-      className="group relative block w-full overflow-hidden rounded-[calc(0.5rem-1.5px)] p-2 transition-all duration-200 bg-[#FFFCFA]" // Inner background
+      className="group relative block w-full overflow-hidden rounded-[calc(0.5rem_-_1.5px)] p-2 transition-all duration-200 bg-[#FFFCFA]" // Inner background
       target="_blank" // Assuming it opens in a new tab based on config
       rel="noopener noreferrer"
     >
