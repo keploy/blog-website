@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import sideBySideSvg from "../public/images/sidebyside-transparent.svg";
-import { SocialIcons } from "./footerIcons";
+import { SocialIcons } from "./footerIcons"; 
 
 export default function Footer() {
   const sections = [
@@ -33,11 +33,11 @@ export default function Footer() {
     {
       title: "Company",
       links: [
-        { text: "Career", url: "https://keploy.io/about" },
+        { text: "Career", url: "https://keploy.io/about" }, 
         { text: "Privacy", url: "https://keploy.io/privacy-policy" },
         {
           text: "Cookie Policy",
-          url: "https://keploy.io/cookie-policy",
+          url: "https://keploy.io/cookie-policy", 
         },
       ],
     },
@@ -65,9 +65,10 @@ export default function Footer() {
       icon: SocialIcons.youtube,
     },
   ];
+
   return (
     <footer className="border-t border-gray-200 bg-white">
-      <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8 pt-20 pb-8">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8 py-20"> 
         <div className="flex flex-col lg:flex-row gap-4">
             <div className="lg:mr-10">
               <Image
@@ -83,7 +84,7 @@ export default function Footer() {
                       key={index}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-500 hover:text-gray-900 transition-colors"
+                      className="text-gray-500 hover:text-gray-500 transition-colors" 
                       href={social.url}
                     >
                       <span className="sr-only">{social.name}</span>
@@ -99,7 +100,7 @@ export default function Footer() {
                   key={index}
                   className="lg:mt-4"
                 >
-                  <h3 className="text-base font-semibold text-gray-900">
+                  <h3 className="text-base font-semibold text-gray-900"> 
                     {section?.title}
                   </h3>
                   <ul className="mt-4 space-y-3">
@@ -108,7 +109,7 @@ export default function Footer() {
                         <Link
                           href={link.url}
                           className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
-                          target="_blank"
+                          target={link.url.startsWith('/') ? '_self' : '_blank'} 
                         >
                           {link.text}
                         </Link>
@@ -118,9 +119,9 @@ export default function Footer() {
                 </div>
               ))}
             </div>
-
         </div>
-        <div className="mt-12 pt-8 border-t border-gray-200">
+
+        <div className="my-12 pt-8 border-t border-gray-200"> 
           <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between">
             <p className="mt-8 text-sm text-gray-500 md:mt-0">© Keploy Inc</p>
           </div>
