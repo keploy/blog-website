@@ -27,28 +27,30 @@ export default function PostCard({
 
   const [ref, springStyles] = useInView(
     () => ({
-      from: {
-        opacity: 0,
-      },
-      to: {
-        opacity: 100,
-      },
+      from: { opacity: 0 },
+      to: { opacity: 100 },
       config: {
         duration: 500,
         delay: 100,
         easing: easings.easeInCubic,
       },
     }),
-    {
-      rootMargin: "-200px 0px",
-    }
+    { rootMargin: "-200px 0px" }
   );
 
   return (
     <animated.div
-      className="bg-white rounded-xl shadow-[0_6px_18px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-200 transition-all duration-300 overflow-hidden group hover:border-orange-300 hover:-translate-y-1"
       ref={ref}
       style={springStyles}
+      className="
+        bg-white dark:bg-[#1a1a1a] 
+        rounded-xl 
+        shadow-[0_6px_18px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)] 
+        hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.6)] 
+        border border-gray-200 dark:border-gray-700 
+        transition-all duration-300 overflow-hidden group 
+        hover:border-orange-400 hover:-translate-y-1
+      "
     >
       <div className="aspect-video overflow-hidden">
         {coverImage && (
@@ -61,28 +63,31 @@ export default function PostCard({
           />
         )}
       </div>
+
       <div className="p-6">
-        <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-3 leading-snug">
+        <h3 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-3 leading-snug">
           <Link
             href={`${basePath}/${slug}`}
-            className="line-clamp-2 hover:underline group-hover:text-orange-600 transition-colors duration-200"
+            className="line-clamp-2 hover:underline group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors duration-200"
             dangerouslySetInnerHTML={{ __html: title }}
           />
         </h3>
+
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-sm text-gray-500">{author ? author : "Anonymous"}</span>
-          <span className="text-gray-400">•</span>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {author ? author : "Anonymous"}
+          </span>
+          <span className="text-gray-400 dark:text-gray-500">•</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
             <Date dateString={date} />
           </span>
         </div>
+
         <div
-          className="text-gray-600 line-clamp-3"
+          className="text-gray-600 dark:text-gray-300 line-clamp-3"
           dangerouslySetInnerHTML={{ __html: cleanedExcerpt }}
         />
       </div>
     </animated.div>
   );
 }
-
-

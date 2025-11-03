@@ -1,40 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
 
 @tailwind base;
-
-/* Write your own custom base styles here */
-
-/* Start purging... */
 @tailwind components;
-/* Stop purging. */
-
-/* Write you own custom component styles here */
-
-/* Start purging... */
 @tailwind utilities;
-/* Stop purging. */
 
-/* Your own custom utilities */
-
-.has-text-align-left {
-  @apply text-left;
+html, body {
+  @apply transition-colors duration-500 ease-in-out bg-background text-foreground;
 }
 
-.has-text-align-center {
-  @apply text-center;
-}
+/* Text alignments and font sizes */
+.has-text-align-left { @apply text-left; }
+.has-text-align-center { @apply text-center; }
+.has-text-align-right { @apply text-right; }
+.has-large-font-size { @apply text-4xl; }
 
-.has-text-align-right {
-  @apply text-right;
-}
-
-.has-large-font-size {
-  @apply text-4xl;
-}
-
+/* Alignment and layout helpers */
 .alignfull {
   @apply w-screen relative;
-
   left: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
@@ -42,111 +24,59 @@
   right: 50%;
 }
 
-.wp-block-image img {
-  @apply max-w-full mt-2;
-}
-.wp-block-image.aligncenter {
-  @apply text-center;
-}
+/* Image blocks */
+.wp-block-image img { @apply max-w-full mt-2; }
+.wp-block-image.aligncenter { @apply text-center; }
 .wp-block-image.alignfull img,
-.wp-block-image.alignwide img {
-  @apply w-full;
-}
+.wp-block-image.alignwide img { @apply w-full; }
 .wp-block-image .alignleft,
 .wp-block-image .alignright,
 .wp-block-image .aligncenter,
-.wp-block-image.is-resized {
-  @apply table ml-0 mr-0;
-}
-.wp-block-image .alignleft > figcaption,
-.wp-block-image .alignright > figcaption,
-.wp-block-image .aligncenter > figcaption,
-.wp-block-image.is-resized > figcaption {
-  @apply table-caption;
+.wp-block-image.is-resized { @apply table ml-0 mr-0; }
+.wp-block-image figcaption { @apply table-caption; caption-side: bottom; }
+.wp-block-image .alignleft { @apply float-left mr-4; }
+.wp-block-image .alignright { @apply float-right ml-4; }
+.wp-block-image .aligncenter { @apply m-auto; }
 
-  caption-side: bottom;
-}
-
-.wp-block-image .alignleft {
-  @apply float-left mr-4;
-}
-.wp-block-image .alignright {
-  @apply float-right ml-4;
-}
-.wp-block-image .aligncenter {
-  @apply m-auto;
-}
-
+/* Buttons */
 .wp-block-button a,
 .wp-block-file a.wp-block-file__button {
-  @apply bg-blue-500 text-white no-underline py-2 px-4;
+  @apply bg-primary text-primary-foreground no-underline py-2 px-4 rounded-md;
 }
-
 .wp-block-button a:hover,
 .wp-block-file a.wp-block-file__button:hover {
-  @apply bg-blue-400 cursor-pointer;
+  @apply opacity-80 cursor-pointer;
 }
 
-.wp-block-file a:first-of-type {
-  @apply mr-4;
-}
+/* File links */
+.wp-block-file a:first-of-type { @apply mr-4; }
 
+/* Cover and media text blocks */
 .wp-block-cover {
   @apply flex flex-wrap justify-center items-center bg-cover bg-center overflow-hidden;
-
   min-height: 430px;
 }
+.wp-block-verse { @apply font-sans; }
+.wp-block-media-text { @apply grid grid-cols-2 gap-4; }
 
-.wp-block-verse {
-  @apply font-sans;
-}
+/* Video, caption */
+.wp-video, .wp-caption { @apply max-w-full; }
 
-.wp-block-media-text {
-  @apply grid grid-cols-2 gap-4;
-}
-
-.wp-video {
-  @apply max-w-full;
-}
-
-.wp-caption {
-  @apply max-w-full;
-}
-
-/* Custom CSS */
-
+/* Fonts */
 .baloo-2-600 {
   font-family: "Baloo 2", sans-serif;
-  font-optical-sizing: auto;
   font-weight: 600;
-  font-style: normal;
+}
+.heading1 { font-family: "Baloo 2", "bold", sans-serif; }
+.body { font-family: "Baloo 2", sans-serif; }
+
+body, .authormapping {
+  @apply bg-background text-foreground;
 }
 
-.heading1 {
-  font-family: "Baloo 2", "bold", sans-serif;
-}
-.body {
-  font-family: "Baloo 2", sans-serif;
-}
-
-body {
-  background: #fbfcff;
-  color: #222222;
-}
-.authormapping{
-  background-color: #0F172A;
-}
-
-/* .title-link{
-  position: relative;
-  background-color: aqua;
-  background-position: 0 100%;
-  background-size: 0 10px;
-  transition: background .3s ease;
-} */
+/* Hamburger animation */
 .hamburger.active svg > :first-child {
-  opacity: 0;
-  y: 11;
+  opacity: 0; y: 11;
   transform: rotate(225deg);
   transition: y 0.1s ease-out,
     transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s,
@@ -160,9 +90,6 @@ body {
   transform: rotate(225deg);
   transition: transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s;
 }
-.hamburger svg > :nth-child(2) {
-  transition: transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19);
-}
 .hamburger.active svg > :nth-child(3) {
   y: 11;
   transform: rotate(135deg);
@@ -170,7 +97,6 @@ body {
     transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s,
     width 0.1s ease-out;
 }
-
 .hamburger svg > :nth-child(3) {
   transition: y 0.1s ease-in 0.25s,
     transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19),
@@ -180,187 +106,182 @@ body {
 .hamburger svg > :nth-child(2),
 .hamburger svg > :nth-child(3) {
   transform-origin: center;
-  transform: rotate(0deg);
 }
 
-.spin-anim {
-  animation: 5s linear infinite spin;
-}
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Spin animation */
+.spin-anim { animation: 5s linear infinite spin; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
+/* Code blocks */
 pre {
-  background-color: #222222 !important;
-  color: antiquewhite;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
 }
 
-.footer-font{
+/* Footer */
+.footer-font {
   font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
 }
 
 /* Buttons */
-.btn,
-.btn-sm {
-    @apply font-medium inline-flex items-center justify-center border border-transparent rounded-sm leading-snug transition duration-150 ease-in-out;
+.btn, .btn-sm {
+  @apply font-medium inline-flex items-center justify-center border border-border rounded-sm leading-snug transition duration-150 ease-in-out;
+}
+.btn { @apply px-8 py-3; }
+.btn-sm { @apply px-4 py-2; }
+
+/* === White border fix for dark mode buttons (like Technology & Community) === */
+.dark .btn, .dark .btn-sm {
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+.dark .btn:hover, .dark .btn-sm:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.btn {
-    @apply px-8 py-3;
-}
-
-.btn-sm {
-    @apply px-4 py-2;
-}
-
-
-td{
-  border: solid 1px black;
+/* Tables */
+td, th {
+  border: 1px solid hsl(var(--border));
   padding: 5px;
+  color: hsl(var(--foreground));
 }
-
 .post-content-wrapper table {
   width: 100%;
   border-collapse: collapse;
-  box-sizing: border-box;
   display: block;
   overflow-x: auto;
+  background-color: hsl(var(--card));
 }
-
-.post-content-wrapper th,
-.post-content-wrapper td {
-  border: 1px solid #ccc;
-  padding: 8px 12px;
-  text-align: center;
-}
-
 .post-content-wrapper thead th {
-  background-color: #f5f5f5;
-  font-weight: bold;
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
 }
 
+/* Responsive tables */
 @media (max-width: 1024px) {
-  .post-content-wrapper th,
-  .post-content-wrapper td {
+  .post-content-wrapper th, .post-content-wrapper td {
     white-space: normal;
   }
 }
 
-
-
+/* Tailwind variable layers */
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
 
   :root {
-
     --background: 0 0% 100%;
-
     --foreground: 0 0% 3.9%;
-
     --card: 0 0% 100%;
-
     --card-foreground: 0 0% 3.9%;
-
     --popover: 0 0% 100%;
-
     --popover-foreground: 0 0% 3.9%;
-
-    --primary: 0 0% 9%;
-
+    --primary: 220 13% 18%;
     --primary-foreground: 0 0% 98%;
-
     --secondary: 0 0% 96.1%;
-
     --secondary-foreground: 0 0% 9%;
-
     --muted: 0 0% 96.1%;
-
     --muted-foreground: 0 0% 45.1%;
-
     --accent: 0 0% 96.1%;
-
     --accent-foreground: 0 0% 9%;
-
-    --destructive: 0 84.2% 60.2%;
-
-    --destructive-foreground: 0 0% 98%;
-
     --border: 0 0% 89.8%;
-
     --input: 0 0% 89.8%;
-
     --ring: 0 0% 3.9%;
-
-    --chart-1: 12 76% 61%;
-
-    --chart-2: 173 58% 39%;
-
-    --chart-3: 197 37% 24%;
-
-    --chart-4: 43 74% 66%;
-
-    --chart-5: 27 87% 67%;
-
-    --radius: 0.5rem;
   }
+
   .dark {
-
-    --background: 0 0% 3.9%;
-
-    --foreground: 0 0% 98%;
-
-    --card: 0 0% 3.9%;
-
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 3.9%;
-
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 14.9%;
-
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 14.9%;
-
-    --muted-foreground: 0 0% 63.9%;
-
-    --accent: 0 0% 14.9%;
-
+    --background: 220 14% 15%;
+    --foreground: 0 0% 96%;
+    --card: 220 14% 18%;
+    --card-foreground: 0 0% 96%;
+    --popover: 220 14% 18%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 25 90% 55%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 220 14% 25%;
+    --secondary-foreground: 0 0% 96%;
+    --muted: 220 14% 25%;
+    --muted-foreground: 0 0% 82%;
+    --accent: 25 90% 55%;
     --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 14.9%;
-
-    --input: 0 0% 14.9%;
-
-    --ring: 0 0% 83.1%;
-
-    --chart-1: 220 70% 50%;
-
-    --chart-2: 160 60% 45%;
-
-    --chart-3: 30 80% 55%;
-
-    --chart-4: 280 65% 60%;
-
-    --chart-5: 340 75% 55%;
+    --border: 220 10% 30%;
+    --input: 220 10% 30%;
+    --ring: 25 90% 55%;
   }
+}
+
+/* ==== Section Title Styling ==== */
+.section-title {
+  @apply relative inline-block font-bold text-foreground;
+}
+.section-title::after {
+  content: "";
+  @apply absolute left-0 bottom-0 h-[3px] w-[60px] rounded-full bg-gradient-to-r from-orange-500 to-yellow-500;
+}
+.dark .section-title::after {
+  @apply from-orange-400 to-yellow-300;
+}
+
+/* ==== Blog Card Styling ==== */
+.card, .Card {
+  @apply rounded-lg p-4 shadow-md transition-all duration-300 bg-card text-card-foreground;
+}
+.card:hover, .Card:hover {
+  @apply transform -translate-y-1 shadow-lg;
+}
+.dark .card, .dark .Card {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+}
+.dark .card:hover, .dark .Card:hover {
+  background-color: hsl(220 14% 22%) !important;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.05);
+}
+
+/* ==== Muted text styling for better contrast ==== */
+.dark .text-muted-foreground {
+  color: hsl(0 0% 75%) !important;
+}
+
+/* ==== Blog Tile Styling ==== */
+.blog-card, .post-card, .blog-tile {
+  @apply bg-card text-card-foreground border border-border rounded-lg shadow-md transition-colors duration-300;
+}
+.blog-card:hover, .post-card:hover, .blog-tile:hover {
+  @apply shadow-lg bg-muted;
+}
+:root .blog-card, :root .post-card, :root .blog-tile {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}
+.dark .blog-card, .dark .post-card, .dark .blog-tile {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}
+.dark .blog-card:hover, .dark .post-card:hover, .dark .blog-tile:hover {
+  background-color: hsl(220 14% 22%);
+}
+/* === Fix: White border around nav buttons in dark mode === */
+.dark .btn,
+.dark .btn-outline,
+.dark .nav-btn,
+.dark button,
+.dark a.btn {
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Optional hover glow for extra contrast */
+.dark .btn:hover,
+.dark .btn-outline:hover,
+.dark .nav-btn:hover,
+.dark button:hover,
+.dark a.btn:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
 }
