@@ -1,16 +1,9 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import sideBySideSvg from "../public/images/sidebyside-transparent.svg";
 import { SpringValue, animated } from "@react-spring/web";
-import { MainNav } from "../components/navbar/main-nav";
-import { GitHubStars } from "./navbar/github-stars";
-import { Vscode } from "./navbar/vscode-number";
-import { Button } from "../components/ui/button";
-import { MobileNav } from "../components/navbar/mobile-nav";
 import { useState, useEffect } from "react";
 import { cn } from "../lib/utils/utils";
+import FloatingNavbar from "./navbar/FloatingNavbar";
 
 export default function Header({
   readProgress,
@@ -29,63 +22,14 @@ export default function Header({
   }, []);
 
   return (
-    <div className="h-32 md:h-40">
+    <div className="h-28 md:h-32">
       <header
         className={cn(
-          "fixed z-30 w-full transition duration-300 ease-in-out border-none md:bg-opacity-90",
-          scrolled ? "lg:bg-neutral-100 lg:shadow-none" : "lg:bg-transparent",
-          "bg-white"
+          "fixed z-30 w-full transition duration-300 ease-in-out border-none bg-transparent",
+          scrolled ? "" : ""
         )}
       >
-        <div className="max-w-6xl px-5 mx-auto sm:px-6">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            <div className="flex items-center flex-1">
-              <div className="mr-4 shrink-0">
-                <Link href="https://keploy.io/">
-                  <Image
-                    src={sideBySideSvg}
-                    alt="Keploy Logo"
-                    className="h-[50px] w-[100px] mb-2"
-                  />
-                </Link>
-              </div>
-
-              {/* Desktop Navigation */}
-              <div className="hidden xl:flex flex-grow justify-start mr-4">
-                <MainNav />
-              </div>
-            </div>
-
-            <div className="justify-end flex-1 hidden header-btn-container xl:flex gap-2">
-              <Vscode />
-              <GitHubStars />
-              <Button className="ml-[8px]">
-                <a
-                  href="https://app.keploy.io/signin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Sign In
-                </a>
-              </Button>
-            </div>
-
-            {/* Mobile Navigation */}
-            <div className="flex items-center gap-2 xl:hidden">
-              <GitHubStars />
-              <Button className="ml-[8px] hidden md:flex">
-                <a
-                  href="https://app.keploy.io/signin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Sign In
-                </a>
-              </Button>
-              <MobileNav />
-            </div>
-          </div>
-        </div>
+        <FloatingNavbar />
         {readProgress && (
           <div className="relative h-1">
             <animated.div
