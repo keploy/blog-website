@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Logo from "./logo";
-import Image from "next/image";
-import CNCF from "../public/images/cncf-landscape.png";
-import GSA from "../public/images/gsa.png";
+ 
 
 export default function Footer() {
   const sections = [
@@ -106,12 +104,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Floating Chat Button */}
-        <div className="fixed bottom-6 right-6">
-          <div className="w-14 h-14 bg-[#ff914d] rounded-full shadow-lg flex items-center justify-center cursor-pointer hover:scale-105 transition">
-            <Image src="/images/chat-bunny.png" alt="Keploy Chat" width={36} height={36} />
-          </div>
-        </div>
+        
       </div>
     </footer>
   );
