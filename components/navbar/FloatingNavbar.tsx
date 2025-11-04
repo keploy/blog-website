@@ -85,7 +85,7 @@ export default function FloatingNavbar() {
   }, [searchOpen]);
 
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
+    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-5xl">
       <div className={`${glassNav} rounded-full px-8 py-4 overflow-visible`}>
         {/* sheen + vignette layers */}
         <div className="pointer-events-none absolute inset-0 rounded-full">
@@ -110,14 +110,14 @@ export default function FloatingNavbar() {
                 Technology
               </Link>
               {showTechDropdown && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-[650px]">
-                  <div className={`${glassDropdown} rounded-[28px] p-8 animate-in fade-in slide-in-from-top-2 duration-200`}>
+                <div className="absolute z-[60] top-full left-1/2 -translate-x-1/2 pt-6 w-[650px]">
+                  <div className={`${glassDropdown} rounded-[28px] p-8 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60 shadow-[0_28px_90px_rgba(0,0,0,0.28)]`}>
                     {/* inner glow */}
                     <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-white/45 blur-3xl" />
                     <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
                     <div className="relative z-10 grid grid-cols-2 gap-3">
                       {techLatest.map(({ node }) => (
-                        <Link key={node.slug} href={`/technology/${node.slug}`} className="flex items-start gap-3 p-4 rounded-[18px] hover:bg-white/45 transition-colors">
+                        <Link key={node.slug} href={`/technology/${node.slug}`} className="flex items-start gap-3 p-4 rounded-[18px] hover:bg-white/50 hover:shadow-md hover:ring-1 hover:ring-white/30 transition-all">
                           <span className="mt-1 h-2 w-2 rounded-full bg-orange-400" />
                           <span className="text-sm text-foreground/90 line-clamp-2">{node.title}</span>
                         </Link>
@@ -138,14 +138,14 @@ export default function FloatingNavbar() {
                 Community
               </Link>
               {showCommunityDropdown && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-[680px]">
-                  <div className={`${glassDropdown} rounded-[28px] p-8 animate-in fade-in slide-in-from-top-2 duration-200`}>
+                <div className="absolute z-[60] top-full left-1/2 -translate-x-1/2 pt-6 w-[680px]">
+                  <div className={`${glassDropdown} rounded-[28px] p-8 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60 shadow-[0_28px_90px_rgba(0,0,0,0.28)]`}>
                     {/* inner glow */}
                     <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-white/45 blur-3xl" />
                     <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
                     <div className="relative z-10 grid grid-cols-2 gap-3">
                       {communityLatest.map(({ node }) => (
-                        <Link key={node.slug} href={`/community/${node.slug}`} className="p-4 rounded-[18px] hover:bg-white/45 transition-all text-left flex items-start gap-3">
+                        <Link key={node.slug} href={`/community/${node.slug}`} className="p-4 rounded-[18px] hover:bg-white/50 hover:shadow-md hover:ring-1 hover:ring-white/30 transition-all text-left flex items-start gap-3">
                           <span className="mt-1 h-2 w-2 rounded-full bg-orange-400" />
                           <div className="font-semibold text-foreground/90 text-[15px] line-clamp-2">
                             {node.title}
@@ -172,7 +172,7 @@ export default function FloatingNavbar() {
                   <div className={`${glassDropdown} rounded-[28px] p-6 animate-in fade-in slide-in-from-top-2 duration-200`}>
                     <div className="relative z-10 grid grid-cols-2 gap-3">
                       {resourcesLinks.map((l) => (
-                        <Link key={l.href} href={l.href} className="px-4 py-3 rounded-[16px] hover:bg-white/45 transition-colors text-sm">
+                        <Link key={l.href} href={l.href} className="px-4 py-3 rounded-[16px] hover:bg-white/50 hover:shadow-md hover:ring-1 hover:ring-white/30 transition-all text-sm">
                           {l.label}
                         </Link>
                       ))}
@@ -187,20 +187,23 @@ export default function FloatingNavbar() {
           <div className="hidden md:flex items-center gap-6">
             <button
               onClick={() => setSearchOpen(true)}
-              className="text-muted-foreground hover:text-foreground transition-colors text-[15px] font-medium"
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-[15px] font-medium"
             >
-              Search
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <span>Search</span>
+              <kbd className="ml-1 hidden lg:inline-flex items-center gap-1 rounded-md border border-black/10 bg-black/5 px-1.5 py-0.5 text-[11px] text-black/70">⌘K</kbd>
             </button>
             <Vscode />
             <GitHubStars />
-            <Link
-              href="https://app.keploy.io/signin"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full px-5 py-2 text-[15px] font-semibold border-2 border-orange-400/80 bg-orange-400/10 text-orange-600 hover:bg-orange-500 hover:text-white"
-            >
-              Sign in
-            </Link>
+            <Button asChild>
+              <Link
+                href="https://app.keploy.io/signin"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Sign in
+              </Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -210,10 +213,10 @@ export default function FloatingNavbar() {
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </Button>
             </SheetTrigger>
-            <SheetContent side="top" className={`w-full h-full p-0 ${glassDropdown} border-none`}>
-              <div className="flex flex-col h-full pt-20 px-6 pb-8">
+            <SheetContent side="left" className={`z-[70] w-[85vw] max-w-[380px] h-full p-0 ${glassDropdown} border-none`}>
+              <div className="flex flex-col h-full pt-8 px-6 pb-8 overflow-hidden">
                 {/* Mobile Logo */}
-                <div className="flex items-center justify-between mb-10 -mt-10">
+                <div className="flex items-center justify-between mb-8">
                   <div className="font-black text-2xl tracking-tight" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>CRAFT</div>
                 </div>
 
@@ -284,16 +287,18 @@ export default function FloatingNavbar() {
       {/* Search Modal */}
       {searchOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center pt-32 bg-black/45 backdrop-blur-2xl"
+          className="fixed inset-0 z-[90] flex items-center justify-center bg-black/45 backdrop-blur-2xl p-4"
           onClick={() => setSearchOpen(false)}
         >
           <div
-            className="w-[min(780px,92vw)] rounded-2xl p-6 bg-white/85 backdrop-blur-2xl shadow-[0_24px_80px_rgba(0,0,0,0.35)]"
+            className="w-[min(90vw,720px)] rounded-2xl border border-white/70 p-5 md:p-6 bg-white/85 backdrop-blur-2xl shadow-[0_30px_90px_rgba(0,0,0,0.40)]"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
+            aria-label="Search blogs"
           >
-            <div className="flex justify-end">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-base md:text-lg font-semibold text-neutral-800">Search blogs</h3>
               <button
                 aria-label="Close search"
                 className="h-8 w-8 rounded-full text-neutral-600 hover:bg-black/5"
@@ -318,16 +323,26 @@ function SearchBox({ onClose }: { onClose: () => void }) {
     window.location.href = `/search?q=${encodeURIComponent(q.trim())}`;
   };
   return (
-    <form onSubmit={submit} className="flex items-center gap-3">
-      <input
-        autoFocus
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        placeholder="Search blogs..."
-        className="flex-1 rounded-xl bg-white/80 outline-none px-4 py-3 text-[15px] text-neutral-800"
-      />
-      <button type="submit" className="rounded-lg bg-black text-white px-3 py-2 text-sm">Search</button>
-      <button type="button" onClick={onClose} className="rounded-lg px-3 py-2 text-sm text-neutral-600">Close</button>
+    <form onSubmit={submit} className="space-y-3">
+      <div className="relative">
+        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500">
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </span>
+        <input
+          autoFocus
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search blogs..."
+          className="w-full rounded-xl bg-white/90 outline-none pl-9 pr-3 py-3 text-[15px] text-neutral-800 shadow-sm"
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-neutral-500 hidden sm:block">Tip: Press <kbd className="rounded border border-black/10 bg-black/5 px-1">⌘</kbd> + <kbd className="rounded border border-black/10 bg-black/5 px-1">K</kbd> to toggle search</p>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={onClose} className="rounded-md px-3 py-2 text-sm text-neutral-700 hover:bg-black/5">Close</button>
+          <button type="submit" className="rounded-md bg-black text-white px-3 py-2 text-sm hover:bg-black/90">Search</button>
+        </div>
+      </div>
     </form>
   );
 }
