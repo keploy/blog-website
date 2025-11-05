@@ -232,8 +232,14 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-[520px]">
               <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
                 <div className="relative z-10 grid grid-cols-2 gap-3">
-                  <Link href="/tag" className="px-4 py-3 rounded-[14px] bg-white ring-1 ring-neutral-200 hover:ring-orange-400 shadow-sm hover:shadow-md transition-all text-sm">Tags</Link>
-                  <Link href="/authors" className="px-4 py-3 rounded-[14px] bg-white ring-1 ring-neutral-200 hover:ring-orange-400 shadow-sm hover:shadow-md transition-all text-sm">Authors</Link>
+                  <Link href="/tag" className="p-5 rounded-[18px] bg-white ring-1 ring-neutral-200 hover:ring-orange-400 shadow-sm hover:shadow-md transition-all text-left">
+                    <div className="text-[15px] font-semibold">Tags</div>
+                    <div className="text-[12px] text-neutral-600 mt-1">Explore our blog posts via tags</div>
+                  </Link>
+                  <Link href="/authors" className="p-5 rounded-[18px] bg-white ring-1 ring-neutral-200 hover:ring-orange-400 shadow-sm hover:shadow-md transition-all text-left">
+                    <div className="text-[15px] font-semibold">Authors</div>
+                    <div className="text-[12px] text-neutral-600 mt-1">Browse articles from our writers</div>
+                  </Link>
                   <div className="col-span-2 my-2 border-t border-white/40" />
                   <Link href="/authors" className="col-span-2 group flex items-center gap-5 px-6 py-5 rounded-full bg-orange-500 text-white hover:bg-orange-500/90 transition-all ring-1 ring-orange-300/50 shadow-sm hover:shadow-md">
                     <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center font-bold">W</div>
