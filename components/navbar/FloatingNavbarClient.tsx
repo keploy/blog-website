@@ -15,18 +15,21 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 // We'll use our API route instead of importing server-only libs in the client
 
 const glassDropdown =
-  "relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-neutral-100/70 via-neutral-100/45 to-neutral-100/30 border border-white/40 shadow-[0_16px_48px_rgba(0,0,0,0.2)]";
+  "relative overflow-hidden backdrop-blur-md bg-gradient-to-br from-neutral-100/90 via-neutral-100/75 to-neutral-100/60 border border-white/60 shadow-[0_20px_60px_rgba(0,0,0,0.25)]";
 
 const resourcesLinks = [
   { label: "Tags", href: "/tag" },
   { label: "Authors", href: "/authors" },
 ];
 
-export default function FloatingNavbarClient({ techLatest = [], communityLatest = [] as any[] }: { techLatest?: any[]; communityLatest?: any[] }) {
+export default function FloatingNavbarClient({ techLatest = [], communityLatest = [] as any[], isScrolled = false }: { techLatest?: any[]; communityLatest?: any[]; isScrolled?: boolean }) {
   const router = useRouter();
   const [showTechDropdown, setShowTechDropdown] = useState(false);
   const [showCommunityDropdown, setShowCommunityDropdown] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [hoveredNav, setHoveredNav] = useState<null | 'tech' | 'community' | 'resources'>(null);
+  const [linkHoverTech, setLinkHoverTech] = useState(false);
+  const [linkHoverCommunity, setLinkHoverCommunity] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileTechOpen, setMobileTechOpen] = useState(false);
   const [mobileCommunityOpen, setMobileCommunityOpen] = useState(false);
@@ -106,24 +109,33 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   return (
     <div className="flex items-center justify-between overflow-visible">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2">
-        <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[80px]" />
+      <Link href="/" className="flex items-center gap-2 overflow-hidden">
+        <div className={`transition-all duration-300 ${isScrolled ? 'w-[24px]' : 'w-[80px]'}`} style={{ height: '30px' }}>
+          <div className={`transition-all duration-300 translate-x-0`} style={{ width: '80px', height: '30px' }}>
+            <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[80px]" />
+          </div>
+        </div>
       </Link>
 
       {/* Desktop Navigation */}
-      <div className="hidden md:flex items-center gap-7 overflow-visible ml-5">
+      <div className={`hidden md:flex items-center overflow-visible transition-all duration-300 ${isScrolled ? 'gap-5 ml-3' : 'gap-7 ml-5'}`}>
         {/* Technology Dropdown */}
         <div
           className="relative overflow-visible"
-          onMouseEnter={() => setShowTechDropdown(true)}
-          onMouseLeave={() => setShowTechDropdown(false)}
+          onMouseEnter={() => { setShowTechDropdown(true); setHoveredNav('tech'); }}
+          onMouseLeave={() => { setShowTechDropdown(false); setHoveredNav(null); setLinkHoverTech(false); }}
         >
-          <Link href="/technology" className="text-foreground hover:text-muted-foreground transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle">
+          <Link
+            href="/technology"
+            onMouseEnter={() => { setHoveredNav('tech'); setLinkHoverTech(true); }}
+            onMouseLeave={() => { setLinkHoverTech(false); setHoveredNav(null); }}
+            className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showTechDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverTech ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
+          >
             <span>Technology</span>
             <ChevronDown className="w-3.5 h-3.5 opacity-80" />
           </Link>
           {showTechDropdown && (
-            <div className="absolute z-[60] top-full left-1/2 -translate-x-1/2 pt-6 w-[800px] max-w-[90vw]">
+            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-5 w-[800px] max-w-[90vw]">
               <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
                 <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-white/45 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
@@ -143,7 +155,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                     }
                     const { node } = edge;
                     return (
-                      <Link key={node.slug} href={`/technology/${node.slug}`} className="group flex rounded-xl overflow-hidden ring-1 ring-neutral-200/60 hover:ring-orange-400/60 shadow-[0_6px_18px_rgba(0,0,0,0.12)] hover:shadow-[0_10px_26px_rgba(0,0,0,0.18)] transition-all bg-white">
+                      <Link key={node.slug} href={`/technology/${node.slug}`} className="group flex rounded-xl overflow-hidden ring-1 ring-neutral-200/60 hover:ring-orange-400/60 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] transition-all bg-white">
                         <div className="relative basis-[38%] min-w-0">
                           <div className="relative w-full h-full min-h-[120px] aspect-[16/12]">
                           {node?.featuredImage?.node?.sourceUrl && (
@@ -168,15 +180,20 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         {/* Community Dropdown */}
         <div
           className="relative overflow-visible"
-          onMouseEnter={() => setShowCommunityDropdown(true)}
-          onMouseLeave={() => setShowCommunityDropdown(false)}
+          onMouseEnter={() => { setShowCommunityDropdown(true); setHoveredNav('community'); }}
+          onMouseLeave={() => { setShowCommunityDropdown(false); setHoveredNav(null); setLinkHoverCommunity(false); }}
         >
-          <Link href="/community" className="text-foreground hover:text-muted-foreground transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle">
+          <Link
+            href="/community"
+            onMouseEnter={() => { setHoveredNav('community'); setLinkHoverCommunity(true); }}
+            onMouseLeave={() => { setLinkHoverCommunity(false); setHoveredNav(null); }}
+            className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showCommunityDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverCommunity ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
+          >
             <span>Community</span>
             <ChevronDown className="w-3.5 h-3.5 opacity-80" />
           </Link>
           {showCommunityDropdown && (
-            <div className="absolute z-[60] top-full left-1/2 -translate-x-1/2 pt-6 w-[800px] max-w-[90vw]">
+            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-5 w-[800px] max-w-[90vw]">
               <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
                 <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-white/45 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
@@ -196,7 +213,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                     }
                     const { node } = edge;
                     return (
-                      <Link key={node.slug} href={`/community/${node.slug}`} className="group flex rounded-xl overflow-hidden ring-1 ring-neutral-200/60 hover:ring-orange-400/60 shadow-[0_6px_18px_rgba(0,0,0,0.12)] hover:shadow-[0_10px_26px_rgba(0,0,0,0.18)] transition-all bg-white">
+                      <Link key={node.slug} href={`/community/${node.slug}`} className="group flex rounded-xl overflow-hidden ring-1 ring-neutral-200/60 hover:ring-orange-400/60 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] transition-all bg-white">
                         <div className="relative basis-[38%] min-w-0">
                           <div className="relative w-full h-full min-h-[120px] aspect-[16/12]">
                           {node?.featuredImage?.node?.sourceUrl && (
@@ -221,27 +238,31 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         {/* Resources */}
         <div
           className="relative overflow-visible"
-          onMouseEnter={() => setResourcesOpen(true)}
-          onMouseLeave={() => setResourcesOpen(false)}
+          onMouseEnter={() => { setResourcesOpen(true); setHoveredNav('resources'); }}
+          onMouseLeave={() => { setResourcesOpen(false); setHoveredNav(null); }}
         >
-          <button className="text-foreground hover:text-muted-foreground transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle">
+          <button
+            onMouseEnter={() => { setHoveredNav('resources'); }}
+            onMouseLeave={() => { if (!resourcesOpen) { setHoveredNav(null); } }}
+            className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !resourcesOpen ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle`}
+          >
             <span>Resources</span>
             <ChevronDown className="w-3.5 h-3.5 opacity-80" />
           </button>
           {resourcesOpen && (
-            <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-[520px]">
+            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-5 w-[520px]">
               <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
-                <div className="relative z-10 grid grid-cols-2 gap-3">
-                  <Link href="/tag" className="p-5 rounded-[18px] bg-white ring-1 ring-neutral-200 hover:ring-orange-400 shadow-sm hover:shadow-md transition-all text-left">
-                    <div className="text-[15px] font-semibold">Tags</div>
+                <div className="relative z-10 grid grid-cols-2 gap-2.5">
+                  <Link href="/tag" className="group p-5 rounded-[18px] bg-white ring-1 ring-neutral-200/60 hover:ring-orange-400/60 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] transition-all text-left">
+                    <div className="text-[15px] font-semibold transition-colors group-hover:text-orange-600">Tags</div>
                     <div className="text-[12px] text-neutral-600 mt-1">Explore our blog posts via tags</div>
                   </Link>
-                  <Link href="/authors" className="p-5 rounded-[18px] bg-white ring-1 ring-neutral-200 hover:ring-orange-400 shadow-sm hover:shadow-md transition-all text-left">
-                    <div className="text-[15px] font-semibold">Authors</div>
+                  <Link href="/authors" className="group p-5 rounded-[18px] bg-white ring-1 ring-neutral-200/60 hover:ring-orange-400/60 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] transition-all text-left">
+                    <div className="text-[15px] font-semibold transition-colors group-hover:text-orange-600">Authors</div>
                     <div className="text-[12px] text-neutral-600 mt-1">Browse articles from our writers</div>
                   </Link>
-                  <div className="col-span-2 my-2 border-t border-white/40" />
-                  <Link href="/authors" className="col-span-2 group flex items-center gap-5 px-6 py-5 rounded-full bg-orange-500 text-white hover:bg-orange-500/90 transition-all ring-1 ring-orange-300/50 shadow-sm hover:shadow-md">
+                  <div className="col-span-2 my-1 border-t border-white/40" />
+                  <Link href="/authors" className="col-span-2 group flex items-center gap-5 px-6 py-4 rounded-full bg-orange-500 text-white hover:bg-orange-500/90 transition-all ring-1 ring-orange-300/50 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
                     <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center font-bold">W</div>
                     <div className="flex-1">
                       <div className="text-sm font-semibold">Writers Program</div>
@@ -257,14 +278,14 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       </div>
 
       {/* Desktop CTA */}
-      <div className="hidden md:flex items-center gap-4 ml-6">
+      <div className={`hidden md:flex items-center transition-all duration-300 ${isScrolled ? 'gap-2.5 ml-3' : 'gap-4 ml-6'}`}>
         {/* Oval search container */}
         <button
           onClick={() => setSearchOpen(true)}
           className="inline-flex items-center gap-2 text-neutral-700 hover:text-neutral-900 transition-all text-[14px] font-medium rounded-full border border-neutral-300/80 bg-white/60 hover:bg-white/80 px-3 py-1.5 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-neutral-300/90"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <span>Search /</span>
+          {!isScrolled && <span>Search /</span>}
           <span className="font-mono text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px]">Ctrl + K</span>
         </button>
         <div className="flex items-center gap-3 ml-2">
