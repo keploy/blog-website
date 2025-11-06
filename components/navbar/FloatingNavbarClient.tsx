@@ -57,6 +57,8 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
     else document.body.style.overflow = "";
   }, [searchOpen]);
 
+  
+
   // Client-side fetch directly from WP GraphQL if API route not available
   useEffect(() => {
     let mounted = true;
@@ -300,80 +302,54 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       </div>
 
       {/* Mobile Menu Button */}
-      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-        <SheetTrigger asChild className="md:hidden">
-          <Button variant="ghost" size="icon" className="rounded-full hover:bg-accent/50">
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className={`z-[1000] w-[85vw] max-w-[380px] h-full p-0 bg-white border-none shadow-xl`}>
-          <div className="flex flex-col h-full pt-8 px-6 pb-8 overflow-hidden">
-            {/* Mobile Logo */}
-            <div className="flex items-center justify-between mb-8">
-              <Link href="/" className="flex items-center gap-2">
-                <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[80px]" />
-              </Link>
+      {/* Mobile expand panel (no overlay), extends the bar */}
+      <div className="md:hidden">
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-accent/50" onClick={() => setMobileMenuOpen(o=>!o)}>
+          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </Button>
+        <div className={`overflow-hidden transition-[max-height] duration-300 absolute left-1/2 -translate-x-1/2 top-full w-[95%] ${mobileMenuOpen ? 'max-h-[80vh] pt-3' : 'max-h-0'} z-[1000]`}>
+          <div className="rounded-3xl backdrop-blur-3xl bg-gradient-to-br from-white/95 via-white/85 to-white/75 ring-1 ring-white/80 shadow-[0_18px_56px_rgba(0,0,0,0.24)] p-4 space-y-3">
+            <Link href="/technology" onClick={()=>setMobileMenuOpen(false)} className="flex items-center justify-between w-full p-5 rounded-2xl bg-white/80 ring-1 ring-neutral-200 hover:bg-white/90 transition-all">
+              <span className="font-semibold text-[16px]">Technology</span>
+              <ChevronRight className="w-5 h-5" />
+            </Link>
+            <Link href="/community" onClick={()=>setMobileMenuOpen(false)} className="flex items-center justify-between w-full p-5 rounded-2xl bg-white/80 ring-1 ring-neutral-200 hover:bg-white/90 transition-all">
+              <span className="font-semibold text-[16px]">Community</span>
+              <ChevronRight className="w-5 h-5" />
+            </Link>
+            <Collapsible open={mobileResourcesOpen} onOpenChange={setMobileResourcesOpen}>
+              <CollapsibleTrigger className="flex items-center justify-between w-full p-5 rounded-2xl bg-white/80 ring-1 ring-neutral-200 hover:bg-white/90 transition-all duration-200">
+                <span className="font-semibold text-[16px]">Resources</span>
+                <ChevronDown className={`transition-transform w-5 h-5 ${mobileResourcesOpen ? 'rotate-180':''}`} />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="mt-3 space-y-3 pl-1">
+                <Link href="/tag" onClick={()=>setMobileMenuOpen(false)} className="flex items-center justify-between w-full p-4 rounded-xl bg-white ring-1 ring-neutral-200/60 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] hover:ring-orange-400/60 transition-all">
+                  <span className="font-semibold text-[15px]">Tags</span>
+                  <ChevronRight className="w-5 h-5" />
+                </Link>
+                <Link href="/authors" onClick={()=>setMobileMenuOpen(false)} className="flex items-center justify-between w-full p-4 rounded-xl bg-white ring-1 ring-neutral-200/60 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] hover:ring-orange-400/60 transition-all">
+                  <span className="font-semibold text-[15px]">Authors</span>
+                  <ChevronRight className="w-5 h-5" />
+                </Link>
+                <Link href="/authors" onClick={()=>setMobileMenuOpen(false)} className="w-full inline-flex items-center justify-center bg-orange-500 text-white hover:bg-orange-500/90 rounded-full py-4 text-[16px] font-semibold ring-1 ring-orange-300/50 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
+                  Writers Program – Enroll now →
+                </Link>
+              </CollapsibleContent>
+            </Collapsible>
+            <button onClick={()=>{setSearchOpen(true);}} className="inline-flex items-center gap-2 text-neutral-700 hover:text-neutral-900 transition-all text-[14px] font-medium rounded-full border border-neutral-300/80 bg-white/80 px-3 py-1.5 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-neutral-300/90 w-full justify-center">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <span className="font-mono text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px]">Ctrl + K</span>
+            </button>
+            <div className="flex items-center justify-between px-1">
+              <Vscode />
+              <GitHubStars />
             </div>
-
-            {/* Mobile Navigation */}
-            <div className="flex-1 overflow-y-auto space-y-3">
-              {/* Technology Section */}
-              <Collapsible open={mobileTechOpen} onOpenChange={setMobileTechOpen}>
-                <CollapsibleTrigger className="flex items-center justify-between w-full p-5 rounded-[20px] hover:bg-accent/40 transition-all duration-200">
-                  <span className="font-semibold text-[17px]">Technology</span>
-                  <ChevronDown className={`transition-transform w-5 h-5 ${mobileTechOpen ? "rotate-180" : ""}`} strokeWidth={2} />
-                </CollapsibleTrigger>
-                <CollapsibleContent className="mt-3 ml-2 space-y-2">
-                  <Link href="/technology" className="flex items-center justify-between w-full p-4 rounded-[16px] hover:bg-accent/40 transition-all">
-                    <span className="font-medium text-[15px]">Browse Technology Blogs</span>
-                    <ChevronRight className="w-5 h-5" strokeWidth={2} />
-                  </Link>
-                </CollapsibleContent>
-              </Collapsible>
-
-              {/* Resources - larger items with subtitle lines */}
-              <Collapsible open={mobileResourcesOpen} onOpenChange={setMobileResourcesOpen}>
-                <CollapsibleTrigger className="flex items-center justify-between w-full p-5 rounded-[20px] hover:bg-accent/40 transition-all duration-200">
-                  <span className="font-semibold text-[17px]">Resources</span>
-                  <ChevronDown className={`transition-transform w-5 h-5 ${mobileResourcesOpen ? "rotate-180" : ""}`} strokeWidth={2} />
-                </CollapsibleTrigger>
-                <CollapsibleContent className="mt-3 ml-2 space-y-3">
-                  <Link href="/tag" className="block p-5 rounded-[18px] bg-white ring-1 ring-neutral-200 shadow-sm hover:shadow-md hover:ring-orange-400 transition-all">
-                    <div className="text-[16px] font-semibold">Tags</div>
-                    <div className="text-[13px] text-neutral-600 mt-1">Explore our blog posts via tags</div>
-                  </Link>
-                  <Link href="/authors" className="block p-5 rounded-[18px] bg-white ring-1 ring-neutral-200 shadow-sm hover:shadow-md hover:ring-orange-400 transition-all">
-                    <div className="text-[16px] font-semibold">Authors</div>
-                    <div className="text-[13px] text-neutral-600 mt-1">Browse articles from our writers</div>
-                  </Link>
-                  <Link href="/authors" className="block p-5 rounded-full bg-orange-500 text-white hover:bg-orange-500/90 transition-all ring-1 ring-orange-300/50 text-center font-semibold">Writers Program – Enroll now →</Link>
-                </CollapsibleContent>
-              </Collapsible>
-
-              {/* Community Section */}
-              <Collapsible open={mobileCommunityOpen} onOpenChange={setMobileCommunityOpen}>
-                <CollapsibleTrigger className="flex items-center justify-between w-full p-5 rounded-[20px] hover:bg-accent/40 transition-all duration-200">
-                  <span className="font-semibold text-[17px]">Community</span>
-                  <ChevronDown className={`transition-transform w-5 h-5 ${mobileCommunityOpen ? "rotate-180" : ""}`} strokeWidth={2} />
-                </CollapsibleTrigger>
-                <CollapsibleContent className="mt-3 ml-2 space-y-2">
-                  <Link href="/community" className="flex items-center justify-between w-full p-4 rounded-[16px] hover:bg-accent/40 transition-all">
-                    <span className="font-medium text-[15px]">Browse Community Blogs</span>
-                    <ChevronRight className="w-5 h-5" strokeWidth={2} />
-                  </Link>
-                </CollapsibleContent>
-              </Collapsible>
-            </div>
-
-            {/* Mobile CTA */}
-            <div className="pt-8 border-t border-border/30 mt-6">
-              <Link href="https://app.keploy.io/signin" target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 rounded-full py-6 text-[17px] font-semibold shadow-lg">
-                Sign in
-              </Link>
-            </div>
+            <Link href="https://app.keploy.io/signin" target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 rounded-full py-5 text-[17px] font-semibold shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
+              Sign in
+            </Link>
           </div>
-        </SheetContent>
-      </Sheet>
+        </div>
+      </div>
 
       {/* Search Modal */}
       {searchOpen && typeof document !== 'undefined' && createPortal(
