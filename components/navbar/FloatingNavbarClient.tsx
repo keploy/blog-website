@@ -15,7 +15,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 // We'll use our API route instead of importing server-only libs in the client
 
 const glassDropdown =
-  "relative overflow-hidden backdrop-blur-md bg-gradient-to-br from-neutral-100/90 via-neutral-100/75 to-neutral-100/60 border border-white/60 shadow-[0_20px_60px_rgba(0,0,0,0.25)]";
+  "relative overflow-hidden backdrop-blur-none bg-gradient-to-br from-neutral-100/99 via-neutral-100/98 to-neutral-100/97 border border-neutral-200/70 shadow-[0_8px_20px_rgba(0,0,0,0.10)]";
 
 const resourcesLinks = [
   { label: "Tags", href: "/tag" },
@@ -354,12 +354,26 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       {/* Search Modal */}
       {searchOpen && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/45 backdrop-blur-2xl p-4" onClick={() => setSearchOpen(false)}>
+          {/* Global top-right close */}
+          <button
+            aria-label="Close search"
+            onClick={() => setSearchOpen(false)}
+            className="fixed top-3 right-3 md:top-5 md:right-5 z-[95] inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/80 text-neutral-700 hover:text-neutral-900 hover:bg-white shadow"
+          >
+            <X className="w-5 h-5" />
+          </button>
           <div className="w-[min(90vw,720px)] rounded-2xl border border-white/50 p-5 md:p-6 bg-neutral-100/70 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.30)]" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Search blogs">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-3 relative">
               <h3 className="text-base md:text-lg font-semibold text-neutral-800">Search blogs</h3>
-              <span className="font-mono text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px]">Ctrl + K</span>
             </div>
-            <SearchBox onClose={() => setSearchOpen(false)} />
+            <SearchBox onClose={() => setSearchOpen(false)} techLatest={techState} communityLatest={communityState} />
+            {/* Hide scrollbar via styled-jsx (scoped) */}
+            <style jsx>{`
+              :global(#search-results) { -ms-overflow-style: none; scrollbar-width: none; }
+              :global(#search-results::-webkit-scrollbar) { width: 0; height: 0; background: transparent; }
+              :global(#search-results::-webkit-scrollbar-thumb) { background: transparent; }
+              :global(#search-results::-webkit-scrollbar-track) { background: transparent; }
+            `}</style>
           </div>
         </div>, document.body)
       }
@@ -367,13 +381,68 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   );
 }
 
-function SearchBox({ onClose }: { onClose: () => void }) {
+function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: { onClose: () => void; techLatest?: any[]; communityLatest?: any[] }) {
+  const router = useRouter();
   const [q, setQ] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [results, setResults] = useState<any[]>([]);
+  const [allPosts, setAllPosts] = useState<any[] | null>(null);
+
+  // Preload all posts once for instant local filtering
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const base = (router?.basePath as string) || "";
+        const res = await fetch(`${base}/api/search-all`, { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to load posts");
+        const data = await res.json();
+        if (!mounted) return;
+        setAllPosts(data?.results || []);
+      } catch (e) {
+        // Fallback: we'll still try on-demand API search if needed
+        setAllPosts([]);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  // Instant local filtering like MoreStories (fallback to latest posts until preload completes)
+  useEffect(() => {
+    const term = q.trim().toLowerCase();
+    if (term.length < 2) {
+      setResults([]);
+      setError(null);
+      setLoading(false);
+      return;
+    }
+    const pool = Array.isArray(allPosts) && allPosts.length
+      ? allPosts
+      : [...(techLatest || []), ...(communityLatest || [])];
+    setLoading(false);
+    setError(null);
+    const filtered = pool.filter(({ node }) =>
+      (node?.title || "").toLowerCase().includes(term) ||
+      (node?.excerpt || "").toLowerCase().includes(term)
+    );
+    setResults(filtered.slice(0, 20));
+  }, [q, allPosts]);
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!q.trim()) return;
-    window.location.href = `/search?q=${encodeURIComponent(q.trim())}`;
+    const base = (router?.basePath as string) || "";
+    router.push(`${base}/search?q=${encodeURIComponent(q.trim())}`);
   };
+
+  const toPath = (node: any) => {
+    const cat = node?.categories?.edges?.[0]?.node?.name || "";
+    const isTech = String(cat).toLowerCase() === "technology";
+    const base = (router?.basePath as string) || "";
+    return `${base}/${isTech ? 'technology' : 'community'}/${node.slug}`;
+  };
+
   return (
     <form onSubmit={submit} className="space-y-3">
       <div className="relative">
@@ -385,14 +454,58 @@ function SearchBox({ onClose }: { onClose: () => void }) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search blogs..."
-          className="w-full rounded-xl bg-white/90 outline-none pl-9 pr-3 py-3 text-[15px] text-neutral-800 shadow-sm"
+          className="w-full rounded-xl bg-white/90 outline-none pl-9 pr-9 py-3 text-[15px] text-neutral-800 shadow-sm"
         />
+        {q && (
+          <button
+            type="button"
+            aria-label="Clear search"
+            onClick={() => setQ("")}
+            className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-6 h-6 rounded-full text-neutral-500 hover:text-neutral-800 hover:bg-black/5"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
+
+      {/* Results - thin glass/white cards, instant filter */}
+      <div id="search-results" className="max-h-[50vh] overflow-auto px-1 md:px-1.5">
+        {q.trim().length < 2 && (
+          <div className="text-xs text-neutral-500 px-1" />
+        )}
+        {!!error && (
+          <div className="text-sm text-red-600 px-1">{error}</div>
+        )}
+        {!error && results?.length > 0 && (
+          <ul className="space-y-2">
+            {results.map(({ node }) => (
+              <li key={node.slug}>
+                <Link href={toPath(node)} className="group flex w-full items-center gap-3 p-2 rounded-xl ring-1 ring-neutral-200/60 hover:ring-orange-400/60 transition-all bg-white/80 backdrop-blur-sm">
+                  <div className="relative w-16 h-12 flex-shrink-0 rounded-md overflow-hidden bg-white/40">
+                    {node?.featuredImage?.node?.sourceUrl && (
+                      <Image src={node.featuredImage.node.sourceUrl} alt={node.title} fill className="object-cover" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[13px] font-semibold text-neutral-900 group-hover:text-orange-600 truncate">{node.title}</div>
+                    <div className="text-[11px] text-neutral-600 truncate">{new Date(node.date).toLocaleDateString()} • {node.ppmaAuthorName || "Keploy"}</div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-orange-500 transition-colors" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+        {!error && q.trim().length >= 2 && results?.length === 0 && (
+          <div className="text-sm text-neutral-600 px-1">No results found.</div>
+        )}
+      </div>
+
       <div className="flex items-center justify-between">
-        <p className="text-xs text-neutral-500 hidden sm:block">Tip: Press <kbd className="rounded border border-black/10 bg-black/5 px-1">⌘</kbd> + <kbd className="rounded border border-black/10 bg-black/5 px-1">K</kbd> to toggle search</p>
+        <span />
         <div className="flex items-center gap-2">
           <button type="button" onClick={onClose} className="rounded-md px-3 py-2 text-sm text-neutral-700 hover:bg-black/5">Close</button>
-          <button type="submit" className="rounded-md bg-black text-white px-3 py-2 text-sm hover:bg-black/90">Search</button>
+          <button type="submit" className="rounded-md bg-black text-white px-3 py-2 text-sm hover:bg-black/90">Open full results</button>
         </div>
       </div>
     </form>
