@@ -137,7 +137,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             <ChevronDown className="w-3.5 h-3.5 opacity-80" />
           </Link>
           {showTechDropdown && (
-            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-5 w-[800px] max-w-[90vw]">
+            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-7 w-[800px] max-w-[90vw]">
               <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
                 <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-white/45 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
@@ -195,7 +195,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             <ChevronDown className="w-3.5 h-3.5 opacity-80" />
           </Link>
           {showCommunityDropdown && (
-            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-5 w-[800px] max-w-[90vw]">
+            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-7 w-[800px] max-w-[90vw]">
               <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
                 <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-white/45 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
@@ -252,7 +252,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             <ChevronDown className="w-3.5 h-3.5 opacity-80" />
           </button>
           {resourcesOpen && (
-            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-5 w-[520px]">
+            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-7 w-[520px]">
               <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
                 <div className="relative z-10 grid grid-cols-2 gap-2.5">
                   <Link href="/tag" className="group p-5 rounded-[18px] bg-white ring-1 ring-neutral-200/60 hover:ring-orange-400/60 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] transition-all text-left">
