@@ -53,9 +53,45 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   }, []);
 
   useEffect(() => {
-    if (searchOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
+    if (searchOpen) {
+      // Disable body scroll
+      const originalOverflow = document.body.style.overflow;
+      const originalPosition = document.body.style.position;
+      const originalWidth = document.body.style.width;
+      const originalTop = document.body.style.top;
+      
+      // Get current scroll position
+      const scrollY = window.scrollY;
+      
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+      document.body.style.top = `-${scrollY}px`;
+      
+      return () => {
+        // Restore original styles
+        document.body.style.overflow = originalOverflow;
+        document.body.style.position = originalPosition;
+        document.body.style.width = originalWidth;
+        document.body.style.top = originalTop;
+        
+        // Restore scroll position
+        window.scrollTo(0, scrollY);
+      };
+    }
   }, [searchOpen]);
+
+  // Disable body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
 
   
 
@@ -264,13 +300,14 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                     <div className="text-[12px] text-neutral-600 mt-1">Browse articles from our writers</div>
                   </Link>
                   <div className="col-span-2 my-1 border-t border-white/40" />
-                  <Link href="/authors" className="col-span-2 group flex items-center gap-5 px-6 py-4 rounded-full bg-orange-500 text-white hover:bg-orange-500/90 transition-all ring-1 ring-orange-300/50 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
-                    <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center font-bold">W</div>
-                    <div className="flex-1">
+                  <Link href="https://www.writers.keploy.io/" target="_blank" rel="noopener noreferrer" className="col-span-2 group relative flex items-center gap-5 px-6 py-4 rounded-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white transition-all duration-300 ring-1 ring-orange-300/50 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] overflow-hidden">
+                    <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center font-bold relative z-10">W</div>
+                    <div className="flex-1 relative z-10">
                       <div className="text-sm font-semibold">Writers Program</div>
                       <div className="text-xs opacity-95">Share your expertise on Keploy. Get featured and paid.</div>
                       <div className="text-xs font-semibold text-right mt-1">Enroll now →</div>
                     </div>
+                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                   </Link>
                 </div>
               </div>
@@ -302,54 +339,163 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       </div>
 
       {/* Mobile Menu Button */}
-      {/* Mobile expand panel (no overlay), extends the bar */}
-      <div className="md:hidden">
-        <Button variant="ghost" size="icon" className="rounded-full hover:bg-accent/50" onClick={() => setMobileMenuOpen(o=>!o)}>
+      <div className="md:hidden relative">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="rounded-full hover:bg-accent/50 min-w-[44px] min-h-[44px]" 
+          onClick={() => setMobileMenuOpen(o=>!o)}
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileMenuOpen}
+        >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
-        <div className={`overflow-hidden transition-[max-height] duration-300 absolute left-1/2 -translate-x-1/2 top-full w-[95%] ${mobileMenuOpen ? 'max-h-[80vh] pt-3' : 'max-h-0'} z-[1000]`}>
-          <div className="rounded-3xl backdrop-blur-3xl bg-gradient-to-br from-white/95 via-white/85 to-white/75 ring-1 ring-white/80 shadow-[0_18px_56px_rgba(0,0,0,0.24)] p-4 space-y-3">
-            <Link href="/technology" onClick={()=>setMobileMenuOpen(false)} className="flex items-center justify-between w-full p-5 rounded-2xl bg-white/80 ring-1 ring-neutral-200 hover:bg-white/90 transition-all">
-              <span className="font-semibold text-[16px]">Technology</span>
-              <ChevronRight className="w-5 h-5" />
-            </Link>
-            <Link href="/community" onClick={()=>setMobileMenuOpen(false)} className="flex items-center justify-between w-full p-5 rounded-2xl bg-white/80 ring-1 ring-neutral-200 hover:bg-white/90 transition-all">
-              <span className="font-semibold text-[16px]">Community</span>
-              <ChevronRight className="w-5 h-5" />
-            </Link>
-            <Collapsible open={mobileResourcesOpen} onOpenChange={setMobileResourcesOpen}>
-              <CollapsibleTrigger className="flex items-center justify-between w-full p-5 rounded-2xl bg-white/80 ring-1 ring-neutral-200 hover:bg-white/90 transition-all duration-200">
-                <span className="font-semibold text-[16px]">Resources</span>
-                <ChevronDown className={`transition-transform w-5 h-5 ${mobileResourcesOpen ? 'rotate-180':''}`} />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-3 space-y-3 pl-1">
-                <Link href="/tag" onClick={()=>setMobileMenuOpen(false)} className="flex items-center justify-between w-full p-4 rounded-xl bg-white ring-1 ring-neutral-200/60 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] hover:ring-orange-400/60 transition-all">
-                  <span className="font-semibold text-[15px]">Tags</span>
-                  <ChevronRight className="w-5 h-5" />
-                </Link>
-                <Link href="/authors" onClick={()=>setMobileMenuOpen(false)} className="flex items-center justify-between w-full p-4 rounded-xl bg-white ring-1 ring-neutral-200/60 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] hover:ring-orange-400/60 transition-all">
-                  <span className="font-semibold text-[15px]">Authors</span>
-                  <ChevronRight className="w-5 h-5" />
-                </Link>
-                <Link href="/authors" onClick={()=>setMobileMenuOpen(false)} className="w-full inline-flex items-center justify-center bg-orange-500 text-white hover:bg-orange-500/90 rounded-full py-4 text-[16px] font-semibold ring-1 ring-orange-300/50 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
-                  Writers Program – Enroll now →
-                </Link>
-              </CollapsibleContent>
-            </Collapsible>
-            <button onClick={()=>{setSearchOpen(true);}} className="inline-flex items-center gap-2 text-neutral-700 hover:text-neutral-900 transition-all text-[14px] font-medium rounded-full border border-neutral-300/80 bg-white/80 px-3 py-1.5 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-neutral-300/90 w-full justify-center">
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <span className="font-mono text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px]">Ctrl + K</span>
-            </button>
-            <div className="flex items-center justify-between px-1">
-              <Vscode />
-              <GitHubStars />
-            </div>
-            <Link href="https://app.keploy.io/signin" target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 rounded-full py-5 text-[17px] font-semibold shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
-              Sign in
-            </Link>
-          </div>
-        </div>
       </div>
+
+      {/* Mobile Menu Dropdown - Extends from top bar */}
+      {mobileMenuOpen && typeof document !== 'undefined' && createPortal(
+        <div 
+          className={`fixed left-1/2 -translate-x-1/2 z-[1000] md:hidden transition-all duration-300 ease-in-out animate-in fade-in-0 slide-in-from-top-2 ${
+            isScrolled ? 'w-[82%] max-w-4xl' : 'w-[96%] max-w-6xl'
+          }`}
+          style={{ 
+            top: isScrolled ? 'calc(1.5rem + 2.5rem + 0.625rem + 1.5rem)' : 'calc(1.5rem + 4rem + 1rem + 1rem)'
+          }}
+        >
+          <div 
+            className="flex flex-col rounded-3xl backdrop-blur-3xl bg-gradient-to-br from-white/95 via-white/85 to-white/75 border border-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.25)] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxHeight: 'calc(100vh - 10rem)' }}
+          >
+            {/* Sheen + Vignette layers matching desktop */}
+            <div className="pointer-events-none absolute inset-0 rounded-3xl">
+              <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-white/60 blur-2xl" />
+              <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-white/40 blur-3xl" />
+            </div>
+
+            {/* Scrollable Content Area */}
+            <div className="relative z-10 flex flex-col flex-1 overflow-hidden min-h-0" style={{ maxHeight: 'calc(100vh - 18rem)' }}>
+              <div className="overflow-y-auto overscroll-contain px-5 py-5 flex-1 min-h-0">
+                <div className="space-y-2.5">
+                  {/* Technology Link */}
+                  <Link 
+                  href="/technology" 
+                  onClick={()=>setMobileMenuOpen(false)} 
+                  className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]"
+                >
+                  <span className="font-semibold text-[15px] text-black/90">Technology</span>
+                  <ChevronRight className="w-4 h-4 text-neutral-500" />
+                </Link>
+
+                  {/* Community Link */}
+                  <Link 
+                    href="/community" 
+                    onClick={()=>setMobileMenuOpen(false)} 
+                    className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]"
+                  >
+                    <span className="font-semibold text-[15px] text-black/90">Community</span>
+                    <ChevronRight className="w-4 h-4 text-neutral-500" />
+                  </Link>
+
+                  {/* Resources Collapsible */}
+                  <Collapsible open={mobileResourcesOpen} onOpenChange={setMobileResourcesOpen}>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]">
+                      <span className="font-semibold text-[15px] text-black/90">Resources</span>
+                      <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform duration-200 ${mobileResourcesOpen ? 'rotate-180':''}`} />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-2.5 space-y-2">
+                      {/* Nested sub-items with visual hierarchy */}
+                      <div className="space-y-2 border-l-2 border-neutral-200/40 pl-4 ml-2">
+                        <Link 
+                          href="/tag" 
+                          onClick={()=>setMobileMenuOpen(false)} 
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/50 ring-1 ring-neutral-200/40 hover:bg-white/70 hover:ring-orange-400/50 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
+                        >
+                          <span className="font-medium text-sm text-black/75">Tags</span>
+                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+                        </Link>
+                        <Link 
+                          href="/authors" 
+                          onClick={()=>setMobileMenuOpen(false)} 
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/50 ring-1 ring-neutral-200/40 hover:bg-white/70 hover:ring-orange-400/50 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
+                        >
+                          <span className="font-medium text-sm text-black/75">Authors</span>
+                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+                        </Link>
+                        <Link 
+                          href="https://www.writers.keploy.io/" 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={()=>setMobileMenuOpen(false)} 
+                          className="group relative flex items-center justify-center w-full px-5 py-3.5 rounded-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white transition-all duration-300 shadow-lg hover:shadow-xl ring-1 ring-orange-300/50 min-h-[52px] overflow-hidden"
+                        >
+                          <span className="relative z-10 font-semibold text-sm flex items-center gap-2">
+                            Writers Program
+                            <ChevronRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                          </span>
+                          <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                        </Link>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+
+                  {/* Search Button */}
+                  <button 
+                    onClick={()=>{
+                      setSearchOpen(true);
+                      setMobileMenuOpen(false);
+                    }} 
+                    className="inline-flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-full border border-neutral-300/60 bg-white/60 hover:bg-white/80 transition-all duration-200 text-sm font-medium text-neutral-700 hover:text-neutral-900 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-neutral-300/60 min-h-[52px]"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span>Search</span>
+                    <span className="font-mono text-[10px] bg-neutral-100 border border-neutral-300 rounded px-1.5 py-0.5">Ctrl + K</span>
+                  </button>
+
+                  {/* VSCode and GitHub Stars */}
+                  <div className="flex items-center justify-between px-2 py-2.5 gap-2">
+                    <div className="border-2 border-orange-400/80 rounded-full">
+                      <Vscode />
+                    </div>
+                    <div className="border-2 border-orange-400/80 rounded-full">
+                      <GitHubStars />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fixed Bottom Section - Sign In Button */}
+              <div className="relative z-10 flex-shrink-0 px-5 py-4 border-t border-white/40 bg-white/30 backdrop-blur-sm">
+                <Link 
+                href="https://app.keploy.io/signin" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full inline-flex items-center justify-center bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-full py-3.5 text-[15px] font-semibold shadow-lg hover:shadow-xl transition-all duration-200 ring-1 ring-orange-300/50 min-h-[52px]"
+              >
+                  Sign in
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Backdrop overlay when menu is open - positioned below top bar */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 z-[999] bg-black/20 animate-in fade-in-0 duration-300 md:hidden"
+          style={{
+            top: isScrolled ? 'calc(1.5rem + 2.5rem + 0.625rem + 1.5rem)' : 'calc(1.5rem + 4rem + 1rem + 1rem)',
+            backdropFilter: 'none'
+          }}
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
 
       {/* Search Modal */}
       {searchOpen && typeof document !== 'undefined' && createPortal(
@@ -501,12 +647,8 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
         )}
       </div>
 
-      <div className="flex items-center justify-between">
-        <span />
-        <div className="flex items-center gap-2">
-          <button type="button" onClick={onClose} className="rounded-md px-3 py-2 text-sm text-neutral-700 hover:bg-black/5">Close</button>
-          <button type="submit" className="rounded-md bg-black text-white px-3 py-2 text-sm hover:bg-black/90">Open full results</button>
-        </div>
+      <div className="flex items-center justify-end">
+        <button type="button" onClick={onClose} className="rounded-md px-3 py-2 text-sm text-neutral-700 hover:bg-black/5">Close</button>
       </div>
     </form>
   );

@@ -69,11 +69,20 @@ export function CollapsibleContent({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const ctx = React.useContext(CollapsibleContext);
   if (!ctx) return null;
-  return ctx.open ? (
-    <div className={cn(className)} {...props}>
-      {children}
+  return (
+    <div 
+      className={cn(
+        "overflow-hidden transition-all duration-200 ease-in-out",
+        ctx.open ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0 pointer-events-none",
+        className
+      )} 
+      {...props}
+    >
+      <div className={cn(ctx.open ? "opacity-100" : "opacity-0")}>
+        {children}
+      </div>
     </div>
-  ) : null;
+  );
 }
 
 
