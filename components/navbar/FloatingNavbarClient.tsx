@@ -556,9 +556,6 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!q.trim()) return;
-    const base = (router?.basePath as string) || "";
-    router.push(`${base}/search?q=${encodeURIComponent(q.trim())}`);
   };
 
   const toPath = (node: any) => {
