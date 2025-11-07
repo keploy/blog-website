@@ -2,7 +2,6 @@ import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Container from "../../components/container";
 import {
-  getAllAuthors,
   getAllPosts,
   getContent,
   getPostsByAuthorName,
@@ -44,100 +43,111 @@ export default function AuthorPage({ preview, filteredPosts ,content }) {
   );
 }
 export const getStaticPaths: GetStaticPaths = async ({}) => {
-  const AllAuthors = await getAllAuthors();
-  // Create a Set to get unique author names
-  const uniqueAuthors = new Set<string>();
-  AllAuthors.edges.forEach(({ node }) => {
-    if (node.ppmaAuthorName) {
-      uniqueAuthors.add(node.ppmaAuthorName);
-    }
-  });
-  
-  return {
-    paths:
-      Array.from(uniqueAuthors).map((authorName) => `/authors/${sanitizeAuthorSlug(authorName)}`) ||
-      [],
-    fallback: true,
-  };
+  try {
+    const allPosts = await getAllPosts();
+    const uniqueNames = new Set<string>();
+
+    allPosts?.edges?.forEach(({ node }) => {
+      const authorName = node?.ppmaAuthorName;
+      if (typeof authorName === "string" && authorName.trim().length > 0) {
+        uniqueNames.add(authorName);
+      }
+    });
+
+    const paths = Array.from(uniqueNames).map((name) => `/authors/${sanitizeAuthorSlug(name)}`);
+
+    return {
+      paths,
+      fallback: true,
+    };
+  } catch (error) {
+    console.error("authors/[slug] getStaticPaths error:", error);
+    return {
+      paths: [],
+      fallback: true,
+    };
+  }
 };
 
 export const getStaticProps: GetStaticProps = async ({
   preview = false,
   params,
 }) => {
-  const { slug } = params as { slug: string };
+  const slugParam = params?.slug;
 
-  // Get all authors to find the original author name from the sanitized slug
-  const AllAuthors = await getAllAuthors();
-  const uniqueAuthors = new Set<string>();
-  AllAuthors.edges.forEach(({ node }) => {
-    if (node.ppmaAuthorName) {
-      uniqueAuthors.add(node.ppmaAuthorName);
-    }
-  });
-
-  // Find the original author name by matching sanitized slugs
-  let originalAuthorName = null;
-  for (const authorName of Array.from(uniqueAuthors)) {
-    if (sanitizeAuthorSlug(authorName) === slug) {
-      originalAuthorName = authorName;
-      break;
-    }
-  }
-
-  if (!originalAuthorName) {
+  if (typeof slugParam !== "string" || slugParam.trim().length === 0) {
     return {
-      notFound: true,
+      props: {
+        preview,
+        filteredPosts: [],
+        content: null,
+      },
+      revalidate: 60,
     };
   }
 
-  // Build a list of candidate author names to try when querying posts
-  const candidateAuthorNames = new Set<string>();
-  candidateAuthorNames.add(originalAuthorName);
-  candidateAuthorNames.add(originalAuthorName.toLowerCase());
-  candidateAuthorNames.add(originalAuthorName.trim());
-  candidateAuthorNames.add(originalAuthorName.replace(/-/g, " "));
+  const normalizedSlug = slugParam.toLowerCase();
+  const slugWords = normalizedSlug.split(/[-_\s]+/).filter(Boolean);
+  const capitalise = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+  const titleCaseName = slugWords.map(capitalise).join(" ");
+  const spacedLower = slugWords.join(" ");
+  const hyphenLower = slugWords.join("-");
+  const titleHyphen = slugWords.map(capitalise).join("-");
 
-  const nameParts = originalAuthorName.split(/\s+|-/).filter(Boolean);
-  if (nameParts.length) {
-    candidateAuthorNames.add(nameParts[0]);
+  const candidateAuthorNames = new Set<string>();
+  candidateAuthorNames.add(slugParam);
+  candidateAuthorNames.add(normalizedSlug);
+  if (spacedLower) candidateAuthorNames.add(spacedLower);
+  if (hyphenLower) candidateAuthorNames.add(hyphenLower);
+  if (titleCaseName) candidateAuthorNames.add(titleCaseName);
+  if (titleHyphen) candidateAuthorNames.add(titleHyphen);
+  if (slugWords.length) {
+    candidateAuthorNames.add(capitalise(slugWords[0]));
+    candidateAuthorNames.add(slugWords[0]);
   }
 
   let filteredPosts = [];
+
   for (const candidate of Array.from(candidateAuthorNames)) {
-    const postsResponse = await getPostsByAuthorName(candidate);
-    const edges = postsResponse?.edges || [];
-    if (edges.length > 0) {
-      filteredPosts = edges;
-      break;
+    if (!candidate) continue;
+    try {
+      const postsResponse = await getPostsByAuthorName(candidate);
+      const edges = postsResponse?.edges || [];
+      if (edges.length > 0) {
+        filteredPosts = edges;
+        break;
+      }
+    } catch (error) {
+      console.error(`authors/[slug] failed to fetch posts for candidate "${candidate}":`, error);
     }
   }
 
-  // Fallback: pull all posts and filter by ppmaAuthorName when direct lookup fails
   if (!filteredPosts.length) {
-    const allPostsResponse = await getAllPosts();
-    filteredPosts =
-      allPostsResponse?.edges?.filter(({ node }) => {
-        const candidateName = node?.ppmaAuthorName;
-        if (!candidateName || Array.isArray(candidateName)) {
-          return false;
-        }
-        return sanitizeAuthorSlug(candidateName) === slug;
-      }) || [];
+    try {
+      const allPostsResponse = await getAllPosts();
+      filteredPosts =
+        allPostsResponse?.edges?.filter(({ node }) => {
+          const candidateName = node?.ppmaAuthorName;
+          if (!candidateName || Array.isArray(candidateName)) {
+            return false;
+          }
+          return sanitizeAuthorSlug(candidateName) === sanitizeAuthorSlug(slugParam);
+        }) || [];
+    } catch (error) {
+      console.error("authors/[slug] fallback to getAllPosts failed:", error);
+      filteredPosts = [];
+    }
   }
 
-  if (!filteredPosts.length) {
-    return {
-      notFound: true,
-      revalidate: 10,
-    };
-  }
-
-  // Extract postId from the first matching post (if any)
+  let content = null;
   const postId = filteredPosts[0]?.node?.postId;
-
-  // Fetch content using postId (if available)
-  const content = postId ? await getContent(postId) : null;
+  if (postId) {
+    try {
+      content = await getContent(postId);
+    } catch (error) {
+      console.error(`authors/[slug] failed to fetch content for postId ${postId}:`, error);
+    }
+  }
 
   return {
     props: {
@@ -145,6 +155,6 @@ export const getStaticProps: GetStaticProps = async ({
       filteredPosts,
       content,
     },
-    revalidate: 10, // ISR with 10 seconds revalidation
+    revalidate: 60,
   };
 };
