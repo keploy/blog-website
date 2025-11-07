@@ -42,16 +42,16 @@ export const getStaticProps: GetStaticProps = async ({
   preview=false,
   params
 }) => {
-  let { slug } = params;
+  let { slug } = params || {} as any;
   if (Array.isArray(slug)) {
     slug = slug.join('-');
   } else {
     // Replace spaces with dashes
-    slug = slug.replace(/\s+/g, '-');
+    slug = (slug || '').replace(/\s+/g, '-');
   }
-  const postsByTags = await getAllPostsFromTags(slug.toString(),preview);
+  const postsByTags = (await getAllPostsFromTags((slug || '').toString(),preview)) || { edges: [] };
   return {
-    props: { postsByTags,preview},
+    props: { postsByTags: postsByTags ?? { edges: [] }, preview },
     revalidate: 10,
   };
 };

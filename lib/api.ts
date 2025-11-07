@@ -6,27 +6,49 @@ const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRE
 async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   const headers = { "Content-Type": "application/json" };
 
+  if (!API_URL) {
+    console.warn("WORDPRESS_API_URL is not set; returning empty data for fetchAPI.");
+    return {} as any;
+  }
+
   if (process.env.WORDPRESS_AUTH_REFRESH_TOKEN) {
     headers[
       "Authorization"
     ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
   }
-  // WPGraphQL Plugin must be enabled
-  const res = await fetch(API_URL, {
-    headers,
-    method: "POST",
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  });
 
-  const json = await res.json();
-  if (json.errors) {
-    console.error(json.errors);
-    throw new Error("Failed to fetch API");
+  try {
+    const res = await fetch(API_URL, {
+      headers,
+      method: "POST",
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+    });
+
+    const contentType = res.headers.get("content-type") || "";
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error("fetchAPI non-OK response:", res.status, body?.slice(0, 200));
+      return {} as any;
+    }
+    if (!contentType.includes("application/json")) {
+      const body = await res.text().catch(() => "");
+      console.error("fetchAPI unexpected content-type:", contentType, body?.slice(0, 200));
+      return {} as any;
+    }
+
+    const json = await res.json();
+    if (json?.errors) {
+      console.error(json.errors);
+      return {} as any;
+    }
+    return json?.data ?? ({} as any);
+  } catch (error) {
+    console.error("fetchAPI error:", error);
+    return {} as any;
   }
-  return json.data;
 }
 
 export async function getPreviewPost(id, idType = "DATABASE_ID") {
@@ -76,11 +98,15 @@ export async function getAllTags() {
       }
     );
 
-    const tags = data?.tags?.edges.map((edge) => edge.node);
+    const tags = data?.tags?.edges?.map((edge) => edge.node) || [];
     allTags = allTags.concat(tags);
 
-    hasNextPage = data?.tags?.pageInfo?.hasNextPage;
-    endCursor = data?.tags?.pageInfo?.endCursor;
+    hasNextPage = Boolean(data?.tags?.pageInfo?.hasNextPage) && Boolean(data?.tags?.pageInfo?.endCursor);
+    endCursor = data?.tags?.pageInfo?.endCursor ?? null;
+    if (!data?.tags) {
+      // Break if API is unavailable
+      hasNextPage = false;
+    }
   }
   return allTags;
 }
@@ -128,7 +154,7 @@ export async function getAllPostsFromTags(tagName: String, preview) {
     }
   );
 
-  return data?.posts;
+  return data?.posts ?? { edges: [] };
 }
 
 export async function getAllPosts() {
