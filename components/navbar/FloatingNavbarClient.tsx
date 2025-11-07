@@ -140,22 +140,32 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       {/* Desktop Navigation */}
       <div className={`hidden md:flex items-center overflow-visible transition-all duration-300 ${isScrolled ? 'gap-5 ml-3' : 'gap-7 ml-5'}`}>
         {/* Technology Dropdown */}
-        <div
-          className="relative overflow-visible"
-          onMouseEnter={() => { setShowTechDropdown(true); setHoveredNav('tech'); }}
-          onMouseLeave={() => { setShowTechDropdown(false); setHoveredNav(null); setLinkHoverTech(false); }}
-        >
-          <Link
-            href="/technology"
-            onMouseEnter={() => { setHoveredNav('tech'); setLinkHoverTech(true); }}
-            onMouseLeave={() => { setLinkHoverTech(false); setHoveredNav(null); }}
-            className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showTechDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverTech ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
+        <div className="relative">
+          <div
+            className="inline-block"
+            onMouseEnter={() => { setShowTechDropdown(true); setHoveredNav('tech'); }}
+            onMouseLeave={() => { setShowTechDropdown(false); setHoveredNav(null); setLinkHoverTech(false); }}
           >
-            <span>Technology</span>
-            <ChevronDown className="w-3.5 h-3.5 opacity-80" />
-          </Link>
+            <Link
+              href="/technology"
+              onMouseEnter={() => { setHoveredNav('tech'); setLinkHoverTech(true); }}
+              onMouseLeave={() => { setLinkHoverTech(false); setHoveredNav(null); }}
+              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showTechDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverTech ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
+            >
+              <span>Technology</span>
+              <ChevronDown className="w-3.5 h-3.5 opacity-80" />
+            </Link>
+          </div>
           {showTechDropdown && (
-            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-7 w-[800px] max-w-[90vw]">
+            <div 
+              className="absolute z-[100] top-full left-0 pt-7"
+              style={{ 
+                width: '800px', 
+                maxWidth: isScrolled ? 'min(800px, calc(82vw - 6rem), 896px)' : 'min(800px, calc(96vw - 6rem), 1152px)'
+              }}
+              onMouseEnter={() => { setShowTechDropdown(true); setHoveredNav('tech'); }}
+              onMouseLeave={() => { setShowTechDropdown(false); setHoveredNav(null); setLinkHoverTech(false); }}
+            >
               <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
                 <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-white/45 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
@@ -198,22 +208,32 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         </div>
 
         {/* Community Dropdown */}
-        <div
-          className="relative overflow-visible"
-          onMouseEnter={() => { setShowCommunityDropdown(true); setHoveredNav('community'); }}
-          onMouseLeave={() => { setShowCommunityDropdown(false); setHoveredNav(null); setLinkHoverCommunity(false); }}
-        >
-          <Link
-            href="/community"
-            onMouseEnter={() => { setHoveredNav('community'); setLinkHoverCommunity(true); }}
-            onMouseLeave={() => { setLinkHoverCommunity(false); setHoveredNav(null); }}
-            className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showCommunityDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverCommunity ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
+        <div className="relative">
+          <div
+            className="inline-block"
+            onMouseEnter={() => { setShowCommunityDropdown(true); setHoveredNav('community'); }}
+            onMouseLeave={() => { setShowCommunityDropdown(false); setHoveredNav(null); setLinkHoverCommunity(false); }}
           >
-            <span>Community</span>
-            <ChevronDown className="w-3.5 h-3.5 opacity-80" />
-          </Link>
+            <Link
+              href="/community"
+              onMouseEnter={() => { setHoveredNav('community'); setLinkHoverCommunity(true); }}
+              onMouseLeave={() => { setLinkHoverCommunity(false); setHoveredNav(null); }}
+              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showCommunityDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverCommunity ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
+            >
+              <span>Community</span>
+              <ChevronDown className="w-3.5 h-3.5 opacity-80" />
+            </Link>
+          </div>
           {showCommunityDropdown && (
-            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-7 w-[800px] max-w-[90vw]">
+            <div 
+              className="absolute z-[100] top-full left-0 pt-7"
+              style={{ 
+                width: '800px', 
+                maxWidth: isScrolled ? 'min(800px, calc(82vw - 6rem), 896px)' : 'min(800px, calc(96vw - 6rem), 1152px)'
+              }}
+              onMouseEnter={() => { setShowCommunityDropdown(true); setHoveredNav('community'); }}
+              onMouseLeave={() => { setShowCommunityDropdown(false); setHoveredNav(null); setLinkHoverCommunity(false); }}
+            >
               <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
                 <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-white/45 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
@@ -256,21 +276,31 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         </div>
 
         {/* Resources */}
-        <div
-          className="relative overflow-visible"
-          onMouseEnter={() => { setResourcesOpen(true); setHoveredNav('resources'); }}
-          onMouseLeave={() => { setResourcesOpen(false); setHoveredNav(null); }}
-        >
-          <button
-            onMouseEnter={() => { setHoveredNav('resources'); }}
-            onMouseLeave={() => { if (!resourcesOpen) { setHoveredNav(null); } }}
-            className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !resourcesOpen ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle`}
+        <div className="relative">
+          <div
+            className="inline-block"
+            onMouseEnter={() => { setResourcesOpen(true); setHoveredNav('resources'); }}
+            onMouseLeave={() => { setResourcesOpen(false); setHoveredNav(null); }}
           >
-            <span>Resources</span>
-            <ChevronDown className="w-3.5 h-3.5 opacity-80" />
-          </button>
+            <button
+              onMouseEnter={() => { setHoveredNav('resources'); }}
+              onMouseLeave={() => { if (!resourcesOpen) { setHoveredNav(null); } }}
+              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !resourcesOpen ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle`}
+            >
+              <span>Resources</span>
+              <ChevronDown className="w-3.5 h-3.5 opacity-80" />
+            </button>
+          </div>
           {resourcesOpen && (
-            <div className="absolute z-[100] top-full left-1/2 -translate-x-1/2 pt-7 w-[520px]">
+            <div 
+              className="absolute z-[100] top-full left-0 pt-7"
+              style={{ 
+                width: '520px', 
+                maxWidth: isScrolled ? 'min(520px, calc(82vw - 6rem), 896px)' : 'min(520px, calc(96vw - 6rem), 1152px)'
+              }}
+              onMouseEnter={() => { setResourcesOpen(true); setHoveredNav('resources'); }}
+              onMouseLeave={() => { setResourcesOpen(false); setHoveredNav(null); }}
+            >
               <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
                 <div className="relative z-10 grid grid-cols-2 gap-2.5">
                   <Link href="/tag" className="group p-5 rounded-[18px] bg-white ring-1 ring-neutral-200/60 hover:ring-orange-400/60 shadow-[0_8px_22px_rgba(0,0,0,0.14)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.22)] transition-all text-left">
