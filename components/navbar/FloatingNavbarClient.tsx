@@ -158,7 +158,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           </div>
           {showTechDropdown && (
             <div 
-              className="absolute z-[100] top-full left-0 pt-7"
+              className="absolute z-[100] top-full left-0 pt-7 transform -translate-x-[7%]"
               style={{ 
                 width: '800px', 
                 maxWidth: isScrolled ? 'min(800px, calc(82vw - 6rem), 896px)' : 'min(800px, calc(96vw - 6rem), 1152px)'
@@ -226,7 +226,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           </div>
           {showCommunityDropdown && (
             <div 
-              className="absolute z-[100] top-full left-0 pt-7"
+              className="absolute z-[100] top-full left-0 pt-7 transform -translate-x-[12%]"
               style={{ 
                 width: '800px', 
                 maxWidth: isScrolled ? 'min(800px, calc(82vw - 6rem), 896px)' : 'min(800px, calc(96vw - 6rem), 1152px)'
@@ -293,7 +293,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           </div>
           {resourcesOpen && (
             <div 
-              className="absolute z-[100] top-full left-0 pt-7"
+              className="absolute z-[100] top-full left-0 pt-7 transform -translate-x-[12%]"
               style={{ 
                 width: '520px', 
                 maxWidth: isScrolled ? 'min(520px, calc(82vw - 6rem), 896px)' : 'min(520px, calc(96vw - 6rem), 1152px)'
