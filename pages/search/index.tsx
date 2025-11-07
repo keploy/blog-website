@@ -20,7 +20,7 @@ export default function SearchPage({ q, results }) {
       </Head>
       <Header />
       <Container>
-        <h1 className="text-3xl font-semibold mb-6">Search results for "{q}"</h1>
+        <h1 className="text-3xl font-semibold mb-6">Search results for &quot;{q}&quot;</h1>
         {(!results || results.length === 0) ? (
           <p className="text-gray-600">No results found.</p>
         ) : (
@@ -63,5 +63,3 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return { props: { q, results } };
 };
-
-

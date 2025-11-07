@@ -12,15 +12,9 @@ import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
-// We'll use our API route instead of importing server-only libs in the client
 
 const glassDropdown =
   "relative overflow-hidden backdrop-blur-none bg-gradient-to-br from-neutral-100/99 via-neutral-100/98 to-neutral-100/97 border border-neutral-200/70 shadow-[0_8px_20px_rgba(0,0,0,0.10)]";
-
-const resourcesLinks = [
-  { label: "Tags", href: "/tag" },
-  { label: "Authors", href: "/authors" },
-];
 
 export default function FloatingNavbarClient({ techLatest = [], communityLatest = [] as any[], isScrolled = false }: { techLatest?: any[]; communityLatest?: any[]; isScrolled?: boolean }) {
   const router = useRouter();
@@ -54,13 +48,10 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
 
   useEffect(() => {
     if (searchOpen) {
-      // Disable body scroll
       const originalOverflow = document.body.style.overflow;
       const originalPosition = document.body.style.position;
       const originalWidth = document.body.style.width;
       const originalTop = document.body.style.top;
-      
-      // Get current scroll position
       const scrollY = window.scrollY;
       
       document.body.style.overflow = "hidden";
@@ -69,19 +60,14 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       document.body.style.top = `-${scrollY}px`;
       
       return () => {
-        // Restore original styles
         document.body.style.overflow = originalOverflow;
         document.body.style.position = originalPosition;
         document.body.style.width = originalWidth;
         document.body.style.top = originalTop;
-        
-        // Restore scroll position
         window.scrollTo(0, scrollY);
       };
     }
   }, [searchOpen]);
-
-  // Disable body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -93,9 +79,6 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
     };
   }, [mobileMenuOpen]);
 
-  
-
-  // Client-side fetch directly from WP GraphQL if API route not available
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -103,7 +86,6 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         if (techState.length === 0 || communityState.length === 0) {
           const endpoint = process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string | undefined;
           if (!endpoint) {
-            // Fallback to API route if env missing
             const res = await fetch(`${router.basePath || ''}/api/nav-latest`, { cache: "no-store" });
             if (!res.ok) throw new Error("Failed to fetch latest posts (no env, API 404)");
             const data = await res.json();
@@ -535,7 +517,6 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
   const [results, setResults] = useState<any[]>([]);
   const [allPosts, setAllPosts] = useState<any[] | null>(null);
 
-  // Preload all posts once for instant local filtering
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -547,14 +528,12 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
         if (!mounted) return;
         setAllPosts(data?.results || []);
       } catch (e) {
-        // Fallback: we'll still try on-demand API search if needed
         setAllPosts([]);
       }
     })();
     return () => { mounted = false; };
   }, []);
 
-  // Instant local filtering like MoreStories (fallback to latest posts until preload completes)
   useEffect(() => {
     const term = q.trim().toLowerCase();
     if (term.length < 2) {
