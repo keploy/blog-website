@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import sideBySideSvg from "../../public/images/sidebyside-transparent.svg";
 import { GitHubStars } from "./github-stars";
 import { Vscode } from "./vscode-number";
-import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
@@ -350,8 +350,20 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         </div>
       </div>
 
-      {/* Mobile Menu Button */}
-      <div className="md:hidden relative">
+      {/* Mobile Actions */}
+      <div className="md:hidden flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full hover:bg-accent/50 min-w-[44px] min-h-[44px]"
+          onClick={() => {
+            setMobileMenuOpen(false);
+            setSearchOpen(true);
+          }}
+          aria-label="Open search"
+        >
+          <Search className="w-5 h-5" />
+        </Button>
         <Button 
           variant="ghost" 
           size="icon" 
@@ -368,7 +380,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       {mobileMenuOpen && typeof document !== 'undefined' && createPortal(
         <div 
           className={`fixed left-1/2 -translate-x-1/2 z-[1000] md:hidden transition-all duration-300 ease-in-out animate-in fade-in-0 slide-in-from-top-2 ${
-            isScrolled ? 'w-[82%] max-w-4xl' : 'w-[96%] max-w-6xl'
+            isScrolled ? 'w-[78%]' : 'w-[90%]'
           }`}
           style={{ 
             top: isScrolled ? 'calc(1.5rem + 2.5rem + 0.625rem + 1.5rem)' : 'calc(1.5rem + 4rem + 1rem + 1rem)'
@@ -450,22 +462,6 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       </div>
                     </CollapsibleContent>
                   </Collapsible>
-
-                  {/* Search Button */}
-                  <button 
-                    onClick={()=>{
-                      setSearchOpen(true);
-                      setMobileMenuOpen(false);
-                    }} 
-                    className="inline-flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-full border border-neutral-300/60 bg-white/60 hover:bg-white/80 transition-all duration-200 text-sm font-medium text-neutral-700 hover:text-neutral-900 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-neutral-300/60 min-h-[52px]"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <circle cx="11" cy="11" r="8"></circle>
-                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <span>Search</span>
-                    <span className="font-mono text-[10px] bg-neutral-100 border border-neutral-300 rounded px-1.5 py-0.5">Ctrl + K</span>
-                  </button>
 
                   {/* VSCode and GitHub Stars */}
                   <div className="flex items-center justify-between px-2 py-2.5 gap-2">
