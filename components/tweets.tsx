@@ -9,12 +9,13 @@ const Tweets = ({ avatar, name, id, post, content }) => {
   const proxiedAvatar = isExternal
     ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
     : avatar;
+
   return (
     <Link
       href={post}
       target="_blank"
       rel="noopener noreferrer"
-      className="bg-white border border-gray-200 p-6 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 m-2 block"
+      className="bg-white dark:bg-[#1f1f23] border border-gray-200 dark:border-gray-700 p-6 rounded-lg shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all duration-300 m-2 block"
       aria-label={`View tweet by ${name}`}
     >
       <div className="flex items-center justify-between">
@@ -27,19 +28,21 @@ const Tweets = ({ avatar, name, id, post, content }) => {
             className="rounded-full"
           />
           <div>
-            <p className="font-semibold text-lg text-gray-800">{name}</p>
-            <p className="text-gray-500 text-sm">@{id}</p>
+            <p className="font-semibold text-lg text-gray-800 dark:text-gray-100">
+              {name}
+            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">@{id}</p>
           </div>
         </div>
         <Image
-          src="/blog/favicon/x-twitter.svg" 
+          src="/blog/favicon/x-twitter.svg"
           width={20}
           height={20}
           alt="Twitter Icon"
         />
       </div>
 
-      <p className="mt-4 text-gray-700">{content}</p>
+      <p className="mt-4 text-gray-700 dark:text-gray-300">{content}</p>
     </Link>
   );
 };
