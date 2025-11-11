@@ -2,13 +2,14 @@ import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Container from "../../components/container";
 import {
-  getAllAuthors,
+  getAllPosts,
   getContent,
   getPostsByAuthorName,
 } from "../../lib/api";
 import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
+import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
 
 export default function AuthorPage({ preview, filteredPosts ,content }) {
   if (!filteredPosts || filteredPosts.length === 0) {
@@ -42,48 +43,118 @@ export default function AuthorPage({ preview, filteredPosts ,content }) {
   );
 }
 export const getStaticPaths: GetStaticPaths = async ({}) => {
-  const AllAuthors = await getAllAuthors();
-  return {
-    paths:
-      AllAuthors.edges.map(({ node }) => `/authors/${node.ppmaAuthorName}`) ||
-      [],
-    fallback: true,
-  };
+  try {
+    const allPosts = await getAllPosts();
+    const uniqueNames = new Set<string>();
+
+    allPosts?.edges?.forEach(({ node }) => {
+      const authorName = node?.ppmaAuthorName;
+      if (typeof authorName === "string" && authorName.trim().length > 0) {
+        uniqueNames.add(authorName);
+      }
+    });
+
+    const paths = Array.from(uniqueNames).map((name) => `/authors/${sanitizeAuthorSlug(name)}`);
+
+    return {
+      paths,
+      fallback: true,
+    };
+  } catch (error) {
+    console.error("authors/[slug] getStaticPaths error:", error);
+    return {
+      paths: [],
+      fallback: true,
+    };
+  }
 };
 
 export const getStaticProps: GetStaticProps = async ({
   preview = false,
   params,
 }) => {
-  const { slug } = params as { slug: string };
+  const slugParam = params?.slug;
 
-  // Users mapped by first name
-  const usersMappedByFirstName = ["Animesh Pathak", "Shubham Jain", "Yash Khare"];
-
-  // Determine the userName based on the slug
-  let userName = slug;
-  if (usersMappedByFirstName.includes(slug)) {
-    userName = slug.split(" ")[0];
+  if (typeof slugParam !== "string" || slugParam.trim().length === 0) {
+    return {
+      props: {
+        preview,
+        filteredPosts: [],
+        content: null,
+      },
+      revalidate: 60,
+    };
   }
 
-  // Fetch posts by author name
-  const posts = await getPostsByAuthorName(userName);
+  const normalizedSlug = slugParam.toLowerCase();
+  const slugWords = normalizedSlug.split(/[-_\s]+/).filter(Boolean);
+  const capitalise = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+  const titleCaseName = slugWords.map(capitalise).join(" ");
+  const spacedLower = slugWords.join(" ");
+  const hyphenLower = slugWords.join("-");
+  const titleHyphen = slugWords.map(capitalise).join("-");
 
-  // Safely extract edges from posts
-  const allPosts = posts?.edges || [];
+  const candidateAuthorNames = new Set<string>();
+  candidateAuthorNames.add(slugParam);
+  candidateAuthorNames.add(normalizedSlug);
+  if (spacedLower) candidateAuthorNames.add(spacedLower);
+  if (hyphenLower) candidateAuthorNames.add(hyphenLower);
+  if (titleCaseName) candidateAuthorNames.add(titleCaseName);
+  if (titleHyphen) candidateAuthorNames.add(titleHyphen);
+  if (slugWords.length) {
+    candidateAuthorNames.add(capitalise(slugWords[0]));
+    candidateAuthorNames.add(slugWords[0]);
+  }
 
-  // Extract postId from the first matching post (if any)
-  const postId = allPosts.length > 0 ? allPosts[0]?.node?.postId : null;
+  let filteredPosts = [];
 
-  // Fetch content using postId (if available)
-  const content = postId ? await getContent(postId) : null;
+  for (const candidate of Array.from(candidateAuthorNames)) {
+    if (!candidate) continue;
+    try {
+      const postsResponse = await getPostsByAuthorName(candidate);
+      const edges = postsResponse?.edges || [];
+      if (edges.length > 0) {
+        filteredPosts = edges;
+        break;
+      }
+    } catch (error) {
+      console.error(`authors/[slug] failed to fetch posts for candidate "${candidate}":`, error);
+    }
+  }
+
+  if (!filteredPosts.length) {
+    try {
+      const allPostsResponse = await getAllPosts();
+      filteredPosts =
+        allPostsResponse?.edges?.filter(({ node }) => {
+          const candidateName = node?.ppmaAuthorName;
+          if (!candidateName || Array.isArray(candidateName)) {
+            return false;
+          }
+          return sanitizeAuthorSlug(candidateName) === sanitizeAuthorSlug(slugParam);
+        }) || [];
+    } catch (error) {
+      console.error("authors/[slug] fallback to getAllPosts failed:", error);
+      filteredPosts = [];
+    }
+  }
+
+  let content = null;
+  const postId = filteredPosts[0]?.node?.postId;
+  if (postId) {
+    try {
+      content = await getContent(postId);
+    } catch (error) {
+      console.error(`authors/[slug] failed to fetch content for postId ${postId}:`, error);
+    }
+  }
 
   return {
     props: {
       preview,
-      filteredPosts: allPosts, // Ensure filteredPosts is always an array
+      filteredPosts,
       content,
     },
-    revalidate: 10, // ISR with 10 seconds revalidation
+    revalidate: 60,
   };
 };

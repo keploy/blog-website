@@ -6,49 +6,27 @@ const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRE
 async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   const headers = { "Content-Type": "application/json" };
 
-  if (!API_URL) {
-    console.warn("WORDPRESS_API_URL is not set; returning empty data for fetchAPI.");
-    return {} as any;
-  }
-
   if (process.env.WORDPRESS_AUTH_REFRESH_TOKEN) {
     headers[
       "Authorization"
     ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
   }
+  // WPGraphQL Plugin must be enabled
+  const res = await fetch(API_URL, {
+    headers,
+    method: "POST",
+    body: JSON.stringify({
+      query,
+      variables,
+    }),
+  });
 
-  try {
-    const res = await fetch(API_URL, {
-      headers,
-      method: "POST",
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
-    });
-
-    const contentType = res.headers.get("content-type") || "";
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      console.error("fetchAPI non-OK response:", res.status, body?.slice(0, 200));
-      return {} as any;
-    }
-    if (!contentType.includes("application/json")) {
-      const body = await res.text().catch(() => "");
-      console.error("fetchAPI unexpected content-type:", contentType, body?.slice(0, 200));
-      return {} as any;
-    }
-
-    const json = await res.json();
-    if (json?.errors) {
-      console.error(json.errors);
-      return {} as any;
-    }
-    return json?.data ?? ({} as any);
-  } catch (error) {
-    console.error("fetchAPI error:", error);
-    return {} as any;
+  const json = await res.json();
+  if (json.errors) {
+    console.error(json.errors);
+    throw new Error("Failed to fetch API");
   }
+  return json.data;
 }
 
 export async function getPreviewPost(id, idType = "DATABASE_ID") {
@@ -98,15 +76,11 @@ export async function getAllTags() {
       }
     );
 
-    const tags = data?.tags?.edges?.map((edge) => edge.node) || [];
+    const tags = data?.tags?.edges.map((edge) => edge.node);
     allTags = allTags.concat(tags);
 
-    hasNextPage = Boolean(data?.tags?.pageInfo?.hasNextPage) && Boolean(data?.tags?.pageInfo?.endCursor);
-    endCursor = data?.tags?.pageInfo?.endCursor ?? null;
-    if (!data?.tags) {
-      // Break if API is unavailable
-      hasNextPage = false;
-    }
+    hasNextPage = data?.tags?.pageInfo?.hasNextPage;
+    endCursor = data?.tags?.pageInfo?.endCursor;
   }
   return allTags;
 }
@@ -154,7 +128,7 @@ export async function getAllPostsFromTags(tagName: String, preview) {
     }
   );
 
-  return data?.posts ?? { edges: [] };
+  return data?.posts;
 }
 
 export async function getAllPosts() {
@@ -173,6 +147,7 @@ export async function getAllPosts() {
               excerpt
               slug
               date
+              postId
               featuredImage {
                 node {
                   sourceUrl
@@ -568,11 +543,10 @@ export async function getMoreStoriesForSlugs(tags, slug) {
   };
 }
 
-export async function getPostsByAuthorName(authorName) {
-  let allEdges = [];
+export async function getPostsByAuthorName(authorName: string) {
   const data = await fetchAPI(
-    `query MyQuery3 {
-      posts(where: {authorName: "${authorName}"}) {
+    `query PostsByAuthorName($authorName: String!) {
+      posts(where: { authorName: $authorName }) {
         edges {
           node {
             title
@@ -610,11 +584,17 @@ export async function getPostsByAuthorName(authorName) {
           }
         }
       }
-    }`
+    }`,
+    {
+      variables: {
+        authorName,
+      },
+    }
   );
-  const edges = data.posts.edges;
-  allEdges = [...allEdges, ...edges];
-  return { edges: allEdges };
+
+  const edges = data?.posts?.edges || [];
+
+  return { edges };
 }
 
 
