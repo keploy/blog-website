@@ -47,10 +47,20 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const allPosts = await getAllPostsForTechnology(preview);
+  const emptyData = { edges: [], pageInfo: { hasNextPage: false, endCursor: null } };
 
-  return {
-    props: { allPosts, preview },
-    revalidate: 10,
-  };
+  try {
+    const allPosts = await getAllPostsForTechnology(preview);
+
+    return {
+      props: { allPosts: allPosts ?? emptyData, preview },
+      revalidate: 10,
+    };
+  } catch (error) {
+    console.error("technology/index getStaticProps error:", error);
+    return {
+      props: { allPosts: emptyData, preview },
+      revalidate: 60,
+    };
+  }
 };
