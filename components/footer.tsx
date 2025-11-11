@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Logo from './logo';
 import Image from "next/image";
+import CNCF from "../public/images/cncf-landscape.png";
+import GSA from "../public/images/gsa.png";
 
 export default function Footer() {
   const sections = [
@@ -63,14 +65,11 @@ export default function Footer() {
 
           <div className="sm:col-span-6 md:col-span-4 lg:col-span-3">
             <h6 className="text-primary-300 font-medium mb-2">Find us on CNCF Landscape</h6>
-            <Link href="https://landscape.cncf.io/?item=app-definition-and-development--continuous-integration-delivery--keploy" target="_blank" rel="noopener noreferrer">
-              <Image
-                width={200}
-                height={100}
-                src="/images/cncf.png"
-                alt="CNCF Landscape"
-                className="sm:w-9/12"
-              />
+            <Link href="https://landscape.cncf.io/?item=app-definition-and-development--continuous-integration-delivery--keploy" target="_blank">
+              <Image width={200} height={100} src={CNCF} alt="CNCF Landscape" className=" sm:w-9/12" />
+            </Link>
+            <Link href="https://blog.google/intl/en-in/introducing-the-eighth-cohort-of-google-for-startups-accelerator-india/" target="_blank">
+              <Image width={200} height={100} src={GSA} alt="Google for Startups" className=" sm:w-9/12 py-2" />
             </Link>
           </div>
         </div>

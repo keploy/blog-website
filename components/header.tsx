@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import sideBySideSvg from "../public/images/sidebyside-transparent.svg";
 import { SpringValue, animated } from "@react-spring/web";
 import { MainNav } from "../components/navbar/main-nav";
 import { GitHubStars } from "./navbar/github-stars";
@@ -43,7 +44,7 @@ export default function Header({
               <div className="mr-4 shrink-0">
                 <Link href="https://keploy.io/">
                   <Image
-                    src="/side-by-side.svg"
+                    src={sideBySideSvg}
                     alt="Keploy Logo"
                     className="h-[50px] w-[100px] mb-2"
                   />
