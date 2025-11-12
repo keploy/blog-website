@@ -6,27 +6,79 @@ const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRE
 async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   const headers = { "Content-Type": "application/json" };
 
+  if (!API_URL) {
+    throw new Error("Environment variable WORDPRESS_API_URL or NEXT_PUBLIC_WORDPRESS_API_URL is not set. Set it to your WPGraphQL endpoint (e.g. https://your-site.com/graphql)");
+  }
+
   if (process.env.WORDPRESS_AUTH_REFRESH_TOKEN) {
     headers[
       "Authorization"
     ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
   }
-  // WPGraphQL Plugin must be enabled
-  const res = await fetch(API_URL, {
-    headers,
-    method: "POST",
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  });
 
-  const json = await res.json();
-  if (json.errors) {
-    console.error(json.errors);
-    throw new Error("Failed to fetch API");
+  // We'll attempt the configured API_URL first. If it returns HTML (common when
+  // users set the site root instead of the GraphQL endpoint), try appending
+  // '/graphql' once as a fallback. This helps when env is set to the site root.
+
+  const tryFetch = async (url: string) => {
+    const res = await fetch(url, {
+      headers,
+      method: "POST",
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+    });
+
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      const text = await res.text();
+      return { ok: false, contentType, text, res } as const;
+    }
+
+    try {
+      const json = await res.json();
+      return { ok: true, json } as const;
+    } catch (err) {
+      const text = await res.text();
+      return { ok: false, contentType: 'application/json', text, res } as const;
+    }
+  };
+
+  // Normalize configured URL
+  let resolvedUrl = API_URL;
+  const first = await tryFetch(resolvedUrl);
+  let finalJson: any = null;
+
+  if (first.ok) {
+    finalJson = first.json;
+  } else {
+    // If first response is not JSON and URL doesn't already end with /graphql,
+    // try appending /graphql once.
+    const urlEndsWithGraphql = /\/graphql\/?$/i.test(resolvedUrl);
+    if (!urlEndsWithGraphql) {
+      const alt = resolvedUrl.replace(/\/$/, '') + '/graphql';
+      const second = await tryFetch(alt);
+      if (second.ok) {
+        resolvedUrl = alt;
+        finalJson = second.json;
+      } else {
+        // Log both responses for debugging
+        console.error(`fetchAPI: first attempt to ${resolvedUrl} returned content-type=${first.contentType}. Snippet: ${String(first.text).slice(0,200)}`);
+        console.error(`fetchAPI: retry to ${alt} also failed with content-type=${second.contentType}. Snippet: ${String(second.text).slice(0,200)}`);
+        throw new Error(`Invalid JSON response from WORDPRESS API at ${API_URL} (also tried ${alt}). See logs for response snippets.`);
+      }
+    } else {
+      console.error(`fetchAPI: expected JSON from ${resolvedUrl} but got content-type=${first.contentType}. Snippet: ${String(first.text).slice(0,200)}`);
+      throw new Error(`Invalid JSON response from WORDPRESS API at ${API_URL}. See logs for snippet.`);
+    }
   }
-  return json.data;
+
+  if (finalJson?.errors) {
+    console.error(finalJson.errors);
+    throw new Error("Failed to fetch API: GraphQL errors returned");
+  }
+  return finalJson?.data;
 }
 
 export async function getPreviewPost(id, idType = "DATABASE_ID") {

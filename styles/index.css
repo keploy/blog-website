@@ -129,10 +129,9 @@
   font-family: "Baloo 2", sans-serif;
 }
 
-body {
-  background: #fbfcff;
-  color: #222222;
-}
+/* Use CSS variables and Tailwind semantic classes for colors so dark mode works via the `.dark` class.
+   Body colors are defined in the `:root` / `.dark` variables below and applied with Tailwind's
+   `bg-background` and `text-foreground` utilities in the base layer. Avoid hard-coded colors here. */
 .authormapping{
   background-color: #0F172A;
 }
@@ -364,3 +363,37 @@ td{
     --chart-5: 340 75% 55%;
   }
 }
+
+/*
+  Broad compatibility overrides:
+  Many components use hard-coded Tailwind classes like `bg-white`, `text-black`,
+  and `border-gray-200`. Rather than editing every component, map those common
+  utilities to the theme CSS variables when `.dark` is present so dark mode
+  applies consistently across the site.
+
+  These are intentionally conservative and use attribute selectors to pick up
+  variants like `hover:bg-white` or classes that contain the substring.
+*/
+.dark [class*="bg-white"] {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
+}
+.dark [class*="text-black"] {
+  color: hsl(var(--foreground)) !important;
+}
+.dark [class*="border-black"],
+.dark [class*="border-gray-"],
+.dark [class*="border-zinc-"],
+.dark [class*="border-neutral-"] {
+  border-color: hsl(var(--border)) !important;
+}
+.dark [class*="text-gray-"],
+.dark [class*="text-zinc-"],
+.dark [class*="text-neutral-"] {
+  color: hsl(var(--muted-foreground)) !important;
+}
+.dark .shadow, .dark .shadow-md, .dark .shadow-sm {
+  /* lower shadow contrast in dark mode */
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45) !important;
+}
+

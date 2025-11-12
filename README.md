@@ -63,6 +63,17 @@ Your .env.local file should look like this:
 WORDPRESS_API_URL=...
 ```
 
+### Verify your WordPress GraphQL endpoint
+
+Before running the dev server or build, verify that `WORDPRESS_API_URL` points to a working WPGraphQL endpoint. You can use the included validator script:
+
+```bash
+# Uses the env var if set, or pass a URL as the first argument
+npm run verify-endpoint -- https://your-wordpress-site.com
+```
+
+This script will try the provided URL and automatically try `URL/graphql` as a fallback. It prints a short response snippet when the endpoint doesn't return JSON to help debugging.
+
 ### Step 6. Run Next.js in development mode
 ```bash
 npm run dev
