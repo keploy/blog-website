@@ -397,7 +397,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full hover:bg-accent/50 min-w-[44px] min-h-[44px]"
+          className="rounded-full hover:bg-accent/50 h-10 w-10 p-0"
           onClick={() => {
             setMobileMenuOpen(false);
             setSearchOpen(true);
@@ -409,7 +409,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         <Button 
           variant="ghost" 
           size="icon" 
-          className="rounded-full hover:bg-accent/50 min-w-[44px] min-h-[44px]" 
+          className="rounded-full hover:bg-accent/50 h-10 w-10 p-0" 
           onClick={() => setMobileMenuOpen(o=>!o)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
@@ -425,7 +425,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             isScrolled ? 'w-[78%]' : 'w-[90%]'
           }`}
           style={{ 
-            top: isScrolled ? 'calc(1.5rem + 2.5rem + 0.625rem + 1.5rem)' : 'calc(1.5rem + 4rem + 1rem + 1rem)'
+            top: isScrolled ? 'calc(1.5rem + 2.25rem + 0.625rem + 1.25rem)' : 'calc(1.5rem + 3.5rem + 1rem + 0.75rem)'
           }}
         >
           <div 
@@ -617,7 +617,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         <div 
           className="fixed inset-0 z-[999] bg-black/20 animate-in fade-in-0 duration-300 md:hidden"
           style={{
-            top: isScrolled ? 'calc(1.5rem + 2.5rem + 0.625rem + 1.5rem)' : 'calc(1.5rem + 4rem + 1rem + 1rem)',
+            top: isScrolled ? 'calc(1.5rem + 2.25rem + 0.625rem + 1.25rem)' : 'calc(1.5rem + 3.5rem + 1rem + 0.75rem)',
             backdropFilter: 'none'
           }}
           onClick={() => setMobileMenuOpen(false)}
@@ -706,8 +706,7 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
   const toPath = (node: any) => {
     const cat = node?.categories?.edges?.[0]?.node?.name || "";
     const isTech = String(cat).toLowerCase() === "technology";
-    const base = (router?.basePath as string) || "";
-    return `${base}/${isTech ? 'technology' : 'community'}/${node.slug}`;
+    return `/${isTech ? 'technology' : 'community'}/${node.slug}`;
   };
 
   return (
