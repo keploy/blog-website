@@ -2,6 +2,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Post } from "../types/post";
+import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
 
 export default function AuthorMapping({
   AuthorArray,
@@ -18,7 +19,7 @@ export default function AuthorMapping({
   AuthorArray.forEach((item) => {
     const ppmaAuthorName = formatAuthorName(item.ppmaAuthorName);
     const avatarUrl = item.ppmaAuthorImage;
-    const slug = item.ppmaAuthorName;
+    const slug = sanitizeAuthorSlug(item.ppmaAuthorName);
     const publishingAuthor = formatAuthorName(item.author.node.name);
     if (Array.isArray(ppmaAuthorName)) {
       return;
