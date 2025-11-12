@@ -56,10 +56,10 @@ const ResponsiveBlock = ({
     className={`group block w-full h-full ${className}`}
     rel="noopener noreferrer"
   >
-    <div className="relative h-full w-full rounded-xl p-[1.5px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all duration-200 group-hover:scale-[1.01]">
+    <div className="relative h-full w-full rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all duration-200 group-hover:scale-[1.01]">
       {" "}
       {/* Gradient border, scale/transition moved here */}
-      <Card className="relative h-full w-full overflow-hidden rounded-[calc(0.75rem-3px)] bg-card">
+      <Card className="relative h-full w-full overflow-hidden rounded-[calc(0.75rem-3px)] bg-card shadow-[0_6px_14px_rgba(0,0,0,0.10)] group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)] transition-shadow duration-200">
         <CardContent className="relative w-full h-full p-0">
           <div className="absolute inset-x-0 top-0 h-1/3  pointer-events-none z-[1]" />
 
