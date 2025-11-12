@@ -138,7 +138,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       </Link>
 
       {/* Desktop Navigation */}
-      <div className={`hidden md:flex items-center overflow-visible transition-all duration-300 ${isScrolled ? 'gap-5 ml-3' : 'gap-7 ml-5'}`}>
+      <div className={`hidden md:flex items-center overflow-visible transition-all duration-300 ${isScrolled ? 'md:gap-3 md:ml-2 lg:gap-5 lg:ml-3' : 'md:gap-4 md:ml-3 lg:gap-7 lg:ml-5'}`}>
         {/* Technology Dropdown */}
         <div className="relative">
           <div
@@ -371,19 +371,23 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       </div>
 
       {/* Desktop CTA */}
-      <div className={`hidden md:flex items-center transition-all duration-300 ${isScrolled ? 'gap-2.5 ml-3' : 'gap-4 ml-6'}`}>
+      <div className={`hidden md:flex items-center transition-all duration-300 ${isScrolled ? 'md:gap-2 md:ml-2 lg:gap-2.5 lg:ml-3' : 'md:gap-3 md:ml-3 lg:gap-4 lg:ml-6'}`}>
         {/* Oval search container */}
         <button
           onClick={() => setSearchOpen(true)}
-          className="inline-flex items-center gap-2 text-neutral-700 hover:text-neutral-900 transition-all text-[14px] font-medium rounded-full border border-neutral-300/80 bg-white/60 hover:bg-white/80 px-3 py-1.5 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-neutral-300/90"
+          className="inline-flex items-center gap-1.5 text-neutral-700 hover:text-neutral-900 transition-all text-[12px] lg:text-[14px] font-medium rounded-full border border-neutral-300/80 bg-white/60 hover:bg-white/80 px-2.5 py-1 md:px-3 md:py-1.5 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-neutral-300/90 whitespace-nowrap"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          {!isScrolled && <span>Search /</span>}
-          <span className="font-mono text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px]">Ctrl + K</span>
+          {!isScrolled && <span className="hidden lg:inline">Search</span>}
+          <span className="font-mono text-[10px] lg:text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px] whitespace-nowrap">Ctrl + K</span>
         </button>
-        <div className="flex items-center gap-3 ml-2">
-          <Vscode />
-          <GitHubStars />
+        <div className="flex items-center md:gap-1.5 lg:gap-3 md:ml-1 lg:ml-2">
+          <div className="hidden md:flex lg:border-2 lg:border-orange-400/80 rounded-full">
+            <Vscode />
+          </div>
+          <div className="hidden md:flex lg:border-2 lg:border-orange-400/80 rounded-full">
+            <GitHubStars />
+          </div>
           <Button asChild>
           <Link href="https://app.keploy.io/signin" target="_blank" rel="noopener noreferrer">
             Sign in

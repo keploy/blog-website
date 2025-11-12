@@ -19,7 +19,7 @@ export default function FloatingNavbar() {
 
   return (
     <nav className={`fixed top-6 left-1/2 -translate-x-1/2 z-40 transition-all duration-300 ${isScrolled ? 'w-[78%] md:w-[82%] md:max-w-4xl' : 'w-[90%] md:w-[96%] md:max-w-6xl'}`}>
-      <div className={`${glassNav} rounded-full transition-all duration-300 overflow-visible ${isScrolled ? 'px-4 py-1.5 md:px-5 md:py-2.5' : 'px-5 py-2 md:px-8 md:py-4'}`}>
+      <div className={`${glassNav} rounded-full transition-all duration-300 overflow-visible ${isScrolled ? 'px-4 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5' : 'px-5 py-2 md:px-6 md:py-3 lg:px-8 lg:py-4'}`}>
         <div className="pointer-events-none absolute inset-0 rounded-full">
           <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-white/60 blur-2xl" />
           <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-white/40 blur-3xl" />
