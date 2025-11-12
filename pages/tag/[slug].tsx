@@ -39,19 +39,33 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({
-  preview=false,
-  params
+  preview = false,
+  params,
 }) => {
-  let { slug } = params;
-  if (Array.isArray(slug)) {
-    slug = slug.join('-');
-  } else {
-    // Replace spaces with dashes
-    slug = slug.replace(/\s+/g, '-');
+  const paramSlug = params?.slug;
+
+  if (!paramSlug) {
+    return {
+      notFound: true,
+      revalidate: 60,
+    };
   }
-  const postsByTags = await getAllPostsFromTags(slug.toString(),preview);
-  return {
-    props: { postsByTags,preview},
-    revalidate: 10,
-  };
+
+  let slug = Array.isArray(paramSlug) ? paramSlug.join("-") : paramSlug;
+  slug = slug.replace(/\s+/g, "-");
+
+  try {
+    const postsByTags = await getAllPostsFromTags(slug.toString(), preview);
+
+    return {
+      props: { postsByTags: postsByTags || { edges: [] }, preview },
+      revalidate: 10,
+    };
+  } catch (error) {
+    console.error("tag/[slug] getStaticProps error:", error);
+    return {
+      notFound: true,
+      revalidate: 60,
+    };
+  }
 };

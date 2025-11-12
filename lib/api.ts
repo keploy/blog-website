@@ -147,6 +147,7 @@ export async function getAllPosts() {
               excerpt
               slug
               date
+              postId
               featuredImage {
                 node {
                   sourceUrl
@@ -542,11 +543,10 @@ export async function getMoreStoriesForSlugs(tags, slug) {
   };
 }
 
-export async function getPostsByAuthorName(authorName) {
-  let allEdges = [];
+export async function getPostsByAuthorName(authorName: string) {
   const data = await fetchAPI(
-    `query MyQuery3 {
-      posts(where: {authorName: "${authorName}"}) {
+    `query PostsByAuthorName($authorName: String!) {
+      posts(where: { authorName: $authorName }) {
         edges {
           node {
             title
@@ -584,11 +584,17 @@ export async function getPostsByAuthorName(authorName) {
           }
         }
       }
-    }`
+    }`,
+    {
+      variables: {
+        authorName,
+      },
+    }
   );
-  const edges = data.posts.edges;
-  allEdges = [...allEdges, ...edges];
-  return { edges: allEdges };
+
+  const edges = data?.posts?.edges || [];
+
+  return { edges };
 }
 
 
