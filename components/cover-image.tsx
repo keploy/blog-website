@@ -5,6 +5,7 @@ import { Post } from "../types/post";
 interface Props extends Partial<Pick<Post, "title" | "slug">> {
   coverImage: Post["featuredImage"];
   isCommunity?: boolean;
+  imgClassName?: string;
 }
 
 export default function CoverImage({
@@ -12,6 +13,7 @@ export default function CoverImage({
   coverImage,
   slug,
   isCommunity,
+  imgClassName,
 }: Props) {
   const basePath = isCommunity ? "/community/" : "/technology/";
 
@@ -21,7 +23,7 @@ export default function CoverImage({
       height={1000}
       alt={`Cover Image for ${title}`}
       src={coverImage?.node.sourceUrl}
-      className={cn("rounded-md transition-border duration-300", {
+      className={cn("rounded-md transition-border duration-300", imgClassName, {
         "  transition-scale duration-300": slug,
       })}
       priority

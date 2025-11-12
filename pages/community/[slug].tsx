@@ -113,7 +113,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   
       // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
-        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/s
+        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>([\s\S]*?)<\/p>/
       );
       
       // Apply table responsive wrapper
@@ -207,23 +207,47 @@ export const getStaticProps: GetStaticProps = async ({
   preview = false,
   previewData,
 }) => {
-  const data = await getPostAndMorePosts(params?.slug, preview, previewData);
-  const { communityMoreStories } = await getMoreStoriesForSlugs(data?.post?.tags, data?.post?.slug);
+  const slug = params?.slug;
 
-  const authorDetails = [];
-  authorDetails.push(await getReviewAuthorDetails("neha"));
-  authorDetails.push(await getReviewAuthorDetails("Jain"));
-  
-  return {
-    props: {
-      preview,
-      post: data?.post || {},
-      posts: communityMoreStories || [],
-      reviewAuthorDetails: authorDetails || {},
-    },
-    // CHANGE: Reduced revalidation time
-    revalidate: 60, // Revalidate every minute
-  };
+  if (typeof slug !== "string") {
+    return {
+      notFound: true,
+      revalidate: 60,
+    };
+  }
+
+  try {
+    const data = await getPostAndMorePosts(slug, preview, previewData);
+
+    if (!data?.post) {
+      return {
+        notFound: true,
+        revalidate: 60,
+      };
+    }
+
+    const moreStories = await getMoreStoriesForSlugs(data.post?.tags, data.post?.slug);
+    const authorDetails = await Promise.all([
+      getReviewAuthorDetails("neha"),
+      getReviewAuthorDetails("Jain"),
+    ]);
+
+    return {
+      props: {
+        preview,
+        post: data.post,
+        posts: moreStories?.communityMoreStories || { edges: [] },
+        reviewAuthorDetails: authorDetails,
+      },
+      revalidate: 60,
+    };
+  } catch (error) {
+    console.error("community/[slug] getStaticProps error:", error);
+    return {
+      notFound: true,
+      revalidate: 60,
+    };
+  }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
