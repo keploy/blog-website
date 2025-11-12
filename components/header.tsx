@@ -11,6 +11,7 @@ import { Button } from "../components/ui/button";
 import { MobileNav } from "../components/navbar/mobile-nav";
 import { useState, useEffect } from "react";
 import { cn } from "../lib/utils/utils";
+import { SearchNav } from "./navbar/search-nav";
 
 export default function Header({
   readProgress,
@@ -55,10 +56,10 @@ export default function Header({
                 <MainNav />
               </div>
             </div>
-
             <div className="justify-end flex-1 hidden header-btn-container xl:flex gap-2">
               <Vscode />
               <GitHubStars />
+              <SearchNav />
               <Button className="ml-[8px]">
                 <a
                   href="https://app.keploy.io/signin"
