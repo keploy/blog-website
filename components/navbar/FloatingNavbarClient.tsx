@@ -14,7 +14,7 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 
 const glassDropdown =
-  "relative overflow-hidden backdrop-blur-none bg-gradient-to-br from-neutral-100/99 via-neutral-100/98 to-neutral-100/97 border border-neutral-200/70 shadow-[0_8px_20px_rgba(0,0,0,0.10)]";
+  "relative overflow-hidden backdrop-blur-lg bg-gradient-to-br from-white/82 via-white/60 to-white/45 border border-white/50 shadow-[0_18px_44px_rgba(15,23,42,0.18)]";
 
 export default function FloatingNavbarClient({ techLatest = [], communityLatest = [] as any[], isScrolled = false }: { techLatest?: any[]; communityLatest?: any[]; isScrolled?: boolean }) {
   const router = useRouter();
@@ -382,7 +382,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           <span className="font-mono text-[10px] lg:text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px] whitespace-nowrap">Ctrl + K</span>
         </button>
         <div className="flex items-center md:gap-1.5 lg:gap-3 md:ml-1 lg:ml-2">
-          <div className="hidden md:flex lg:border-2 lg:border-orange-400/80 rounded-full">
+          <div className="hidden xl:flex xl:border-2 xl:border-orange-400/80 rounded-full">
             <Vscode />
           </div>
           <div className="hidden md:flex lg:border-2 lg:border-orange-400/80 rounded-full">
@@ -433,7 +433,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           }}
         >
           <div 
-            className="flex flex-col rounded-3xl backdrop-blur-3xl bg-gradient-to-br from-white/95 via-white/85 to-white/75 border border-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.25)] overflow-hidden"
+            className={`${glassDropdown} flex flex-col rounded-3xl overflow-hidden backdrop-blur-2xl border-white/50`}
             onClick={(e) => e.stopPropagation()}
             style={{ maxHeight: 'calc(100vh - 10rem)' }}
           >
