@@ -118,7 +118,7 @@ export default function SearchCommand() {
                     <CommandItem key={item.slug} className="flex flex-col items-start">
                       <Link href={href} className="w-full">
                         <div className="flex items-center justify-between w-full">
-                          <span className="font-medium text-black" dangerouslySetInnerHTML={{ __html: item.title }} />
+                          <span className="font-medium text-black">{item.title}</span>
                           <span className="text-[11px] text-zinc-500">{item.isCommunity ? "community" : "technology"}</span>
                         </div>
                         <div className="mt-1 text-xs text-zinc-600">
