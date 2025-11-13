@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           author: node.ppmaAuthorName || node.author?.node?.name || "Anonymous",
           tags,
           categories,
-          isCommunity: categories.includes("community"),
+          isCommunity: categories.some(cat => cat?.toLowerCase() === "community"),
         });
       }
       hasNextPage = data?.posts?.pageInfo?.hasNextPage ?? false;
