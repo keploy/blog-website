@@ -2,6 +2,7 @@
 
 import { SpringValue, animated } from "@react-spring/web";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { cn } from "../lib/utils/utils";
 import FloatingNavbar from "./navbar/FloatingNavbar";
 
@@ -11,6 +12,10 @@ export default function Header({
   readProgress?: SpringValue<number>;
 }) {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
+  const isBlogReadingPage =
+    router.pathname === "/technology/[slug]" ||
+    router.pathname === "/community/[slug]";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,11 +30,11 @@ export default function Header({
     <div className="h-28 md:h-32 border-b border-gray-200/50">
       <header
         className={cn(
-          "fixed z-30 w-full transition duration-300 ease-in-out border-none bg-transparent",
+          "fixed top-0 left-0 right-0 z-30 w-full transition duration-300 ease-in-out border-none bg-transparent",
           scrolled ? "" : ""
         )}
       >
-        <FloatingNavbar />
+        <FloatingNavbar isBlogReadingPage={isBlogReadingPage} />
         {readProgress && (
           <div className="relative h-1">
             <animated.div

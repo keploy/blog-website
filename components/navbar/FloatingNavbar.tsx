@@ -1,25 +1,56 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import FloatingNavbarClient from "./FloatingNavbarClient";
 
 const glassNav =
   "relative overflow-visible backdrop-blur-2xl bg-gradient-to-br from-white/80 via-white/62 to-white/48 border border-white/50";
 
-export default function FloatingNavbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
+type FloatingNavbarProps = {
+  isBlogReadingPage?: boolean;
+};
+
+export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProps) {
+  const router = useRouter();
+  const derivedBlogReadingPage =
+    typeof isBlogReadingPage === "boolean"
+      ? isBlogReadingPage
+      : router.pathname === "/technology/[slug]" || router.pathname === "/community/[slug]";
+  const [isScrolled, setIsScrolled] = useState(derivedBlogReadingPage);
 
   useEffect(() => {
+    if (derivedBlogReadingPage) {
+      setIsScrolled(true);
+      return;
+    }
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [derivedBlogReadingPage]);
+
+  const navPositionClasses = derivedBlogReadingPage
+    ? "relative top-0 mx-auto z-40"
+    : "fixed top-6 left-1/2 -translate-x-1/2 z-40";
+  const navWidthClasses = isScrolled
+    ? "w-[78%] md:w-[82%] md:max-w-4xl"
+    : "w-[90%] md:w-[96%] md:max-w-6xl";
+  const navPaddingClasses = isScrolled
+    ? "px-4 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5"
+    : "px-5 py-2 md:px-6 md:py-3 lg:px-8 lg:py-4";
+  const navShadowClasses = isScrolled
+    ? "shadow-none"
+    : "shadow-[0_18px_44px_rgba(15,23,42,0.18)]";
 
   return (
-    <nav className={`fixed top-6 left-1/2 -translate-x-1/2 z-40 transition-all duration-300 ${isScrolled ? 'w-[78%] md:w-[82%] md:max-w-4xl' : 'w-[90%] md:w-[96%] md:max-w-6xl'}`}>
-      <div className={`${glassNav} rounded-full transition-all duration-300 overflow-visible ${isScrolled ? 'shadow-none' : 'shadow-[0_18px_44px_rgba(15,23,42,0.18)]'} ${isScrolled ? 'px-4 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5' : 'px-5 py-2 md:px-6 md:py-3 lg:px-8 lg:py-4'}`}>
+    <nav className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}>
+      <div
+        className={`${glassNav} rounded-full transition-all duration-300 overflow-visible ${navShadowClasses} ${navPaddingClasses}`}
+      >
         <div className="pointer-events-none absolute inset-0 rounded-full">
           <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-white/60 blur-2xl" />
           <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-white/40 blur-3xl" />
