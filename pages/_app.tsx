@@ -2,7 +2,7 @@ import { AppProps } from 'next/app';
 import '../styles/index.css';
 import Router from "next/router";
 
-import { AnimatePresence } from "framer-motion";
+// framer-motion removed because module or type declarations are missing
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
 import { ThemeProvider } from 'next-themes';
@@ -33,9 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system">
-      <AnimatePresence>
-        {loading ? <PageLoader /> : <Component {...pageProps} />}
-      </AnimatePresence>
+      {loading ? <PageLoader /> : <Component {...pageProps} />}
     </ThemeProvider>
   );
 }
