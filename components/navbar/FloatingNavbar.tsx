@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import FloatingNavbarClient from "./FloatingNavbarClient";
 
 const glassNav =
-  "relative overflow-visible backdrop-blur-2xl bg-gradient-to-br from-white/80 via-white/62 to-white/48 border border-white/50";
+  "relative overflow-visible backdrop-blur-2xl bg-gradient-to-br from-gray-100/80 via-gray-100/62 to-gray-100/48 border border-gray-200/50";
 
 type FloatingNavbarProps = {
   isBlogReadingPage?: boolean;
@@ -52,8 +52,8 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
         className={`${glassNav} rounded-full transition-all duration-300 overflow-visible ${navShadowClasses} ${navPaddingClasses}`}
       >
         <div className="pointer-events-none absolute inset-0 rounded-full">
-          <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-white/60 blur-2xl" />
-          <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-white/40 blur-3xl" />
+          <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-gray-200/60 blur-2xl" />
+          <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-gray-200/40 blur-3xl" />
         </div>
         <FloatingNavbarClient isScrolled={isScrolled} />
       </div>

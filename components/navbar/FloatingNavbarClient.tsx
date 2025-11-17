@@ -14,7 +14,7 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 
 const glassDropdown =
-  "relative overflow-hidden backdrop-blur-lg bg-gradient-to-br from-white/82 via-white/60 to-white/45 border border-white/50 shadow-[0_18px_44px_rgba(15,23,42,0.18)]";
+  "relative overflow-hidden backdrop-blur-lg bg-gradient-to-br from-gray-100/82 via-gray-100/60 to-gray-100/45 border border-gray-200/50 shadow-[0_18px_44px_rgba(15,23,42,0.18)]";
 
 export default function FloatingNavbarClient({ techLatest = [], communityLatest = [] as any[], isScrolled = false }: { techLatest?: any[]; communityLatest?: any[]; isScrolled?: boolean }) {
   const router = useRouter();
@@ -166,9 +166,9 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               onMouseEnter={() => { setShowTechDropdown(true); setHoveredNav('tech'); }}
               onMouseLeave={() => { setShowTechDropdown(false); setHoveredNav(null); setLinkHoverTech(false); }}
             >
-              <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
-                <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-white/45 blur-3xl" />
-                <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
+              <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-gray-200/60`}>
+                <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-gray-200/45 blur-3xl" />
+                <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-gray-200/25 blur-3xl" />
                 <div className="relative z-10 grid grid-cols-2 gap-4">
                   {(techState.length ? techState.slice(0,4) : new Array(4).fill(null)).map((edge, i) => {
                     if (!edge) {
@@ -236,9 +236,9 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               onMouseEnter={() => { setShowCommunityDropdown(true); setHoveredNav('community'); }}
               onMouseLeave={() => { setShowCommunityDropdown(false); setHoveredNav(null); setLinkHoverCommunity(false); }}
             >
-              <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
-                <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-white/45 blur-3xl" />
-                <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
+              <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-gray-200/60`}>
+                <div className="pointer-events-none absolute -top-14 -left-12 h-40 w-40 rounded-full bg-gray-200/45 blur-3xl" />
+                <div className="pointer-events-none absolute -bottom-20 -right-16 h-48 w-48 rounded-full bg-gray-200/25 blur-3xl" />
                 <div className="relative z-10 grid grid-cols-2 gap-4">
                   {(communityState.length ? communityState.slice(0,4) : new Array(4).fill(null)).map((edge, i) => {
                     if (!edge) {
@@ -305,7 +305,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               onMouseEnter={() => { setResourcesOpen(true); setHoveredNav('resources'); }}
               onMouseLeave={() => { setResourcesOpen(false); setHoveredNav(null); }}
             >
-              <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/60`}>
+              <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-gray-200/60`}>
                 <div className="relative z-10 grid grid-cols-2 gap-3">
                   <div className="col-span-2 grid grid-cols-2 gap-3">
                     {/* Grid items with thin gradient borders + subtle shadows */}
@@ -433,14 +433,14 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           }}
         >
           <div 
-            className={`${glassDropdown} flex flex-col rounded-3xl overflow-hidden backdrop-blur-2xl border-white/50`}
+            className={`${glassDropdown} flex flex-col rounded-3xl overflow-hidden backdrop-blur-2xl border-gray-200/50`}
             onClick={(e) => e.stopPropagation()}
             style={{ maxHeight: 'calc(100vh - 10rem)' }}
           >
             {/* Sheen + Vignette layers matching desktop */}
             <div className="pointer-events-none absolute inset-0 rounded-3xl">
-              <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-white/60 blur-2xl" />
-              <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-white/40 blur-3xl" />
+              <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-gray-200/60 blur-2xl" />
+              <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-gray-200/40 blur-3xl" />
             </div>
 
             {/* Scrollable Content Area */}
