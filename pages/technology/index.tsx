@@ -12,7 +12,7 @@ import PostCard from "../../components/post-card";
 import PostListRow from "../../components/post-list-row";
 import CoverImage from "../../components/cover-image";
 import DateComponent from "../../components/date";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTimes } from "react-icons/fa";
 
 const DATE_FILTERS = [
   { value: "all", label: "All dates" },
@@ -22,8 +22,8 @@ const DATE_FILTERS = [
 ];
 
 const SORT_OPTIONS = [
-  { value: "newest", label: "Newest → Oldest" },
-  { value: "oldest", label: "Oldest → Newest" },
+  { value: "newest", label: "Newest first" },
+  { value: "oldest", label: "Oldest first" },
   { value: "az", label: "Title A → Z" },
   { value: "za", label: "Title Z → A" },
 ];
@@ -40,6 +40,7 @@ export default function Index({ allPosts: { edges }, preview }) {
   const [dateFilter, setDateFilter] = useState("all");
   const [sortOption, setSortOption] = useState("newest");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [gradientLoaded, setGradientLoaded] = useState(false);
 
   const authors = useMemo<string[]>(() => {
     const uniqueAuthors = new Set<string>(
@@ -98,6 +99,10 @@ export default function Index({ allPosts: { edges }, preview }) {
     setViewMode("grid");
   };
 
+  useEffect(() => {
+    setGradientLoaded(true);
+  }, []);
+
   const browseHeading = useMemo(() => {
     const trimmedSearch = searchTerm.trim();
     const filterParts: string[] = [];
@@ -144,48 +149,60 @@ export default function Index({ allPosts: { edges }, preview }) {
         <title>{`Keploy`}</title>
       </Head>
       <Header />
-      <section className="mt-10 w-full bg-gradient-to-br from-orange-50 via-white to-orange-100 border-y border-orange-100 shadow-[0_25px_70px_rgba(255,149,5,0.08)]">
+      <section className="mt-0 w-full">
         <Container>
-          <div className="py-10 md:py-14">
-            <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
-              <div className="flex flex-col gap-6">
-                <header className="space-y-3">
-                  <p className="text-xs uppercase tracking-[0.3em] text-orange-500">
-                    Technology
-                  </p>
-                  <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight">
-                    Keploy Technology Blog
+          <div className="pt-8 pb-12 md:pt-10 md:pb-16">
+            <div className="grid gap-10 lg:gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="flex flex-col gap-8 justify-center lg:justify-start lg:pt-20">
+                <header className="space-y-5">
+                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight text-left">
+                    <span
+                      className={`inline-block bg-clip-text text-transparent pb-1 ${
+                        gradientLoaded
+                          ? "gradient-text-animated opacity-100"
+                          : "opacity-0"
+                      }`}
+                    >
+                      <span className="whitespace-nowrap">Keploy Technology</span> Blog
+                    </span>
                   </h1>
-                  <p className="text-gray-600 text-base max-w-xl">
+                  <p className="text-gray-600 text-base md:text-lg max-w-xl leading-relaxed">
                     Deep dives, release notes, and engineering stories straight from the Keploy team.
                   </p>
                 </header>
 
-                <div className="flex flex-col gap-5">
-                  <div className="flex flex-col gap-3">
-                    <div className="relative">
+                <div className="flex flex-col gap-6 mt-12">
+                  <div className="flex flex-row gap-4 items-center">
+                    <div className="relative flex-[0.95]">
                       <input
                         type="text"
                         placeholder="Search technology posts..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full h-11 pl-12 pr-4 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 bg-white text-sm font-semibold shadow-sm"
+                        className="w-full h-11 pl-12 pr-10 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 bg-white text-sm font-semibold shadow-sm"
                       />
                       <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                      {searchTerm && (
+                        <button
+                          type="button"
+                          onClick={() => setSearchTerm("")}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                          <FaTimes className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
-                    <div className="flex justify-end">
-                      <button
-                        type="button"
-                        onClick={resetFilters}
-                        className="px-4 py-2 text-sm font-semibold text-orange-600 border border-orange-200 rounded-full bg-white hover:bg-orange-50 transition-colors"
-                      >
-                        Reset filters
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={resetFilters}
+                      className="px-4 py-2 h-11 text-sm font-semibold text-orange-600 border border-orange-200 rounded-full bg-white hover:bg-orange-50 transition-colors whitespace-nowrap"
+                    >
+                      Reset filter
+                    </button>
                   </div>
 
-                  <div className="flex flex-wrap gap-3">
-                    <div className="flex-1 min-w-[180px]">
+                  <div className="flex flex-nowrap gap-3 items-end">
+                    <div className="flex-1 min-w-0">
                       <FilterSelect
                         label="Author"
                         value={selectedAuthor}
@@ -197,7 +214,7 @@ export default function Index({ allPosts: { edges }, preview }) {
                       />
                     </div>
 
-                    <div className="flex-1 min-w-[180px]">
+                    <div className="flex-1 min-w-0">
                       <FilterSelect
                         label="Published"
                         value={dateFilter}
@@ -206,7 +223,7 @@ export default function Index({ allPosts: { edges }, preview }) {
                       />
                     </div>
 
-                    <div className="flex-1 min-w-[180px]">
+                    <div className="flex-1 min-w-0">
                       <FilterSelect
                         label="Sort"
                         value={sortOption}
@@ -215,7 +232,7 @@ export default function Index({ allPosts: { edges }, preview }) {
                       />
                     </div>
 
-                    <div className="flex-1 min-w-[180px]">
+                    <div className="flex-1 min-w-0">
                       <div className="flex flex-col">
                         <span className="text-xs text-gray-500 mb-1 uppercase tracking-[0.2em]">
                           View
@@ -251,9 +268,9 @@ export default function Index({ allPosts: { edges }, preview }) {
               </div>
 
               <div className="flex flex-col">
-                <div className="grid gap-6 md:grid-cols-2 items-start">
+                <div className="flex flex-col md:flex-row gap-4 items-start">
                   {latestPost && (
-                    <article className="bg-white border border-gray-100 rounded-3xl shadow-lg p-5 flex flex-col gap-4 h-full">
+                    <article className="bg-white border border-gray-100 rounded-3xl shadow-lg p-4 flex flex-col gap-3 w-full md:w-[44%] md:max-w-[44%] mt-8 md:mt-20 transition-all duration-300 hover:-translate-y-1 hover:border-orange-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] group">
                       <div className="text-xs uppercase tracking-[0.3em] text-orange-500">
                         Latest blog
                       </div>
@@ -264,29 +281,28 @@ export default function Index({ allPosts: { edges }, preview }) {
                             coverImage={latestPost.featuredImage}
                             slug={latestPost.slug}
                             isCommunity={false}
-                            imgClassName="w-full h-48 object-cover"
+                            imgClassName="w-full h-24 object-cover"
                           />
                         )}
                       </div>
-                      <Link
-                        href={`/technology/${latestPost.slug}`}
-                        className="text-2xl font-semibold leading-snug hover:text-orange-600"
+                      <h2
+                        className="text-base font-semibold leading-snug group-hover:text-orange-600 line-clamp-2 transition-colors duration-200"
                         dangerouslySetInnerHTML={{ __html: latestPost.title }}
                       />
-                      <p className="text-sm text-gray-500 flex items-center gap-2">
+                      <p className="text-xs text-gray-500 flex items-center gap-2">
                         <span>{latestPost.ppmaAuthorName || "Anonymous"}</span>
                         <span>•</span>
                         <DateComponent dateString={latestPost.date} />
                       </p>
                       <p
-                        className="text-gray-600 text-sm"
+                        className="text-gray-600 text-xs line-clamp-4 leading-relaxed"
                         dangerouslySetInnerHTML={{
-                          __html: getExcerpt(latestPost.excerpt, 32),
+                          __html: getExcerpt(latestPost.excerpt, 30),
                         }}
                       />
                       <Link
                         href={`/technology/${latestPost.slug}`}
-                        className="text-orange-600 font-semibold text-sm"
+                        className="text-orange-600 font-semibold text-xs hover:text-orange-700 hover:underline transition-colors duration-200"
                       >
                         Read latest →
                       </Link>
@@ -294,51 +310,43 @@ export default function Index({ allPosts: { edges }, preview }) {
                   )}
 
                   {!!featuredPosts.length && (
-                    <div className="bg-white border border-gray-100 rounded-3xl shadow-lg p-5 transform lg:-translate-y-6 h-full">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold">Featured blogs</h3>
-                        <span className="text-sm text-gray-500">
+                    <div className="bg-white border border-gray-100 rounded-3xl shadow-lg p-4 transform lg:-translate-y-10 w-full md:w-[48%] md:max-w-[48%] md:ml-auto mt-6 md:mt-0">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-sm font-semibold">Featured blogs</h3>
+                        <span className="text-xs text-gray-500">
                           {featuredPosts.length} picks
                         </span>
                       </div>
-                      <div className="mt-4 space-y-4">
+                      <div className="mt-3 space-y-3">
                         {featuredPosts.map((post) => (
                           <Link
                             key={post.slug}
                             href={`/technology/${post.slug}`}
-                            className="flex gap-4 items-stretch group"
+                            className="flex gap-3 items-stretch group transition-all duration-300 hover:-translate-y-1 rounded-xl p-2 -m-2 hover:bg-orange-50/50"
                           >
-                            <div className="w-[26%] min-w-[80px] rounded-2xl overflow-hidden bg-orange-50">
+                            <div className="w-[28%] min-w-[60px] rounded-xl overflow-hidden bg-orange-50 flex-shrink-0">
                               {post.featuredImage ? (
                                 <CoverImage
                                   title={post.title}
                                   coverImage={post.featuredImage}
                                   slug={post.slug}
                                   isCommunity={false}
-                                  imgClassName="w-full h-24 object-cover"
+                                  imgClassName="w-full h-14 object-cover"
                                 />
                               ) : (
-                                <div className="w-full h-24 flex items-center justify-center text-xs font-semibold text-orange-500 bg-orange-50">
+                                <div className="w-full h-14 flex items-center justify-center text-xs font-semibold text-orange-500 bg-orange-50">
                                   No image
                                 </div>
                               )}
                             </div>
-                            <div className="w-[74%] flex flex-col justify-between">
-                              <p className="text-xs text-gray-500 flex items-center gap-2">
-                                <span>{post.ppmaAuthorName || "Anonymous"}</span>
-                                <span>•</span>
-                                <DateComponent dateString={post.date} />
-                              </p>
+                            <div className="w-[72%] flex flex-col justify-center gap-2">
                               <h4
-                                className="text-base font-semibold text-gray-900 group-hover:text-orange-600 line-clamp-2"
+                                className="text-sm font-semibold text-gray-900 group-hover:text-orange-600 line-clamp-2 transition-colors duration-200"
                                 dangerouslySetInnerHTML={{ __html: post.title }}
                               />
-                              <p
-                                className="text-xs text-gray-500 mt-1 line-clamp-2"
-                                dangerouslySetInnerHTML={{
-                                  __html: getExcerpt(post.excerpt, 16),
-                                }}
-                              />
+                              <p className="text-xs text-gray-500">
+                                {post.ppmaAuthorName || "Anonymous"}
+                              </p>
                             </div>
                           </Link>
                         ))}
@@ -353,13 +361,13 @@ export default function Index({ allPosts: { edges }, preview }) {
       </section>
 
       <Container>
-        <section className="mt-12">
-          <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
+        <section className="mt-16 mb-12">
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
             <div>
-              <p className="text-sm uppercase tracking-widest text-orange-500">
+              <p className="text-sm uppercase tracking-widest text-orange-500 mb-2">
                 Browse
               </p>
-              <h2 className="text-3xl font-semibold">{browseHeading}</h2>
+              <h2 className="text-3xl md:text-4xl font-semibold text-left">{browseHeading}</h2>
             </div>
             <p className="text-gray-500 text-sm">
               Showing {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"}

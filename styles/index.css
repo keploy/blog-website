@@ -364,3 +364,35 @@ td{
     --chart-5: 340 75% 55%;
   }
 }
+
+/* Gradient animation for Keploy theme */
+.gradient-text-animated {
+  background: linear-gradient(90deg, #ff914d, #e67643, #c95919, #ff914d, #e67643);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fade-in 1s ease-in forwards, gradient-shift 4s ease-in-out infinite;
+  animation-delay: 0s, 1s;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

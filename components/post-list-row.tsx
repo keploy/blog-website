@@ -16,7 +16,7 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
   const basePath = isCommunity ? "/community" : "/technology";
 
   return (
-    <article className="group flex flex-col md:flex-row gap-4 p-4 bg-white border border-gray-200 rounded-[26px] shadow-[0_6px_18px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-orange-300 hover:shadow-[0_20px_40px_rgba(255,149,5,0.15)]">
+    <article className="group flex flex-col md:flex-row gap-4 p-4 bg-white border border-gray-200 rounded-[26px] shadow-[0_6px_18px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-orange-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
       <div className="md:w-[26%] w-full">
         {hasImage ? (
           <CoverImage
@@ -53,7 +53,7 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
         <div className="mt-auto flex justify-end">
           <Link
             href={`${basePath}/${slug}`}
-            className="inline-flex items-center gap-1 text-orange-600 font-semibold text-sm hover:underline"
+            className="inline-flex items-center gap-1 text-orange-600 font-semibold text-sm hover:text-orange-700 hover:underline transition-colors duration-200"
           >
             Read article →
           </Link>
