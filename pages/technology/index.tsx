@@ -151,8 +151,11 @@ export default function Index({ allPosts: { edges }, preview }) {
       <Header />
       <section className="mt-0 w-full">
         <Container>
-          <div className="pt-8 pb-12 md:pt-10 md:pb-16">
-            <div className="grid gap-10 lg:gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="relative isolate">
+            <HeroMeshAccent variant="left" />
+            <HeroMeshAccent variant="right" />
+            <div className="pt-8 pb-12 md:pt-10 md:pb-16">
+              <div className="grid gap-10 lg:gap-12 lg:grid-cols-[0.9fr_1.1fr]">
               <div className="flex flex-col gap-8 justify-center lg:justify-start lg:pt-20">
                 <header className="space-y-5">
                   <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight text-left">
@@ -357,6 +360,7 @@ export default function Index({ allPosts: { edges }, preview }) {
               </div>
             </div>
           </div>
+          </div>
         </Container>
       </section>
 
@@ -407,6 +411,99 @@ export default function Index({ allPosts: { edges }, preview }) {
         </section>
       </Container>
     </Layout>
+  );
+}
+
+type HeroMeshVariant = "left" | "right";
+
+function HeroMeshAccent({ variant }: { variant: HeroMeshVariant }) {
+  const isRight = variant === "right";
+
+  const config = {
+    wrapperClass: isRight
+      ? "absolute -z-10 -top-10 sm:-top-8 md:-top-4 right-[-18px] sm:right-0 md:right-6 lg:right-16 xl:right-20 h-60 w-60 sm:h-68 sm:w-68 md:h-76 md:w-76 lg:h-[420px] lg:w-[420px] rotate-[18deg]"
+      : "absolute -z-10 top-28 sm:top-32 md:top-36 left-[-20px] sm:left-0 md:left-6 lg:left-16 h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 rotate-[-16deg]",
+    glowGradient: isRight
+      ? "bg-gradient-to-br from-orange-200/60 via-rose-200/25 to-transparent rounded-[55%]"
+      : "bg-gradient-to-br from-sky-200/35 via-indigo-200/20 to-transparent rounded-[60%]",
+    innerShape: isRight ? "rounded-[36%]" : "rounded-[42%]",
+    spinClass: isRight ? "animate-[spin_38s_linear_infinite]" : "animate-[spin_34s_linear_infinite_reverse]",
+    blendOverlay: isRight
+      ? "bg-gradient-to-tr from-transparent via-white/8 to-white/28 rounded-[48%]"
+      : "bg-gradient-to-tr from-transparent via-white/6 to-white/18 rounded-[50%]",
+    diagonalOffsets: isRight ? [-120, -80, -40, 0, 40, 80, 120, 160, 200, 240] : [-50, -20, 10, 40, 70],
+    lineLength: isRight ? 250 : 200,
+    strokeWidth: isRight ? 1.2 : 1,
+    strokeDash: isRight ? "6 16" : "7 18",
+    sparkPositions: isRight
+      ? [
+          { cx: 70, cy: 50, r: 2.8, opacity: 0.42 },
+          { cx: 200, cy: 90, r: 2.2, opacity: 0.35 },
+          { cx: 150, cy: 210, r: 2.6, opacity: 0.4 },
+          { cx: 100, cy: 250, r: 1.8, opacity: 0.3 },
+          { cx: 250, cy: 170, r: 3.2, opacity: 0.42 },
+        ]
+      : [
+          { cx: 60, cy: 60, r: 1.8, opacity: 0.32 },
+          { cx: 35, cy: 130, r: 1.4, opacity: 0.26 },
+          { cx: 105, cy: 185, r: 2, opacity: 0.34 },
+        ],
+    maskCenterY: isRight ? "10%" : "20%",
+  };
+
+  const gradientId = `technology-hero-mesh-${variant}`;
+  const maskId = `technology-hero-mask-${variant}`;
+  const maskRefId = `technology-hero-mask-id-${variant}`;
+
+  return (
+    <div className={`pointer-events-none ${config.wrapperClass}`}>
+      <div className={`absolute inset-0 ${config.glowGradient} blur-3xl opacity-70`} />
+      <div
+        className={`absolute inset-4 sm:inset-5 md:inset-6 ${config.innerShape} bg-white/12 border border-white/25 backdrop-blur-[1.5px] shadow-[0_18px_45px_rgba(15,23,42,0.12)]`}
+      />
+      <svg
+        viewBox="0 0 320 320"
+        className={`absolute inset-0 w-full h-full text-orange-500/30 ${config.spinClass}`}
+        fill="none"
+      >
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="currentColor" stopOpacity={isRight ? 0.15 : 0.08} />
+            <stop offset="100%" stopColor="currentColor" stopOpacity={isRight ? 0.45 : 0.32} />
+          </linearGradient>
+          <radialGradient id={maskId} cx="50%" cy={config.maskCenterY} r="90%">
+            <stop offset="0%" stopColor="white" stopOpacity="0.88" />
+            <stop offset="100%" stopColor="white" stopOpacity="0" />
+          </radialGradient>
+          <mask id={maskRefId}>
+            <rect width="320" height="320" fill={`url(#${maskId})`} />
+          </mask>
+        </defs>
+        <g mask={`url(#${maskRefId})`}>
+          {config.diagonalOffsets.map((offset) => (
+            <path
+              key={`${variant}-${offset}`}
+              d={`M${offset} 320 L${offset + config.lineLength} 0`}
+              stroke={`url(#${gradientId})`}
+              strokeWidth={config.strokeWidth}
+              strokeLinecap="round"
+              strokeDasharray={config.strokeDash}
+            />
+          ))}
+          {config.sparkPositions.map((spark, index) => (
+            <circle
+              key={`${variant}-spark-${index}`}
+              cx={spark.cx}
+              cy={spark.cy}
+              r={spark.r}
+              fill="currentColor"
+              opacity={spark.opacity}
+            />
+          ))}
+        </g>
+      </svg>
+      <div className={`absolute inset-0 ${config.blendOverlay} mix-blend-screen opacity-80`} />
+    </div>
   );
 }
 
