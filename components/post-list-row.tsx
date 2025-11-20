@@ -18,7 +18,7 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
   const basePath = isCommunity ? "/community" : "/technology";
 
   return (
-    <article className="group flex flex-col md:flex-row gap-4 p-4 bg-white border border-gray-200 rounded-[26px] shadow-[0_6px_18px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-orange-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
+    <article className="group flex flex-col md:flex-row gap-4 p-4 bg-white border border-orange-200/80 rounded-[26px] shadow-[0_18px_44px_rgba(15,23,42,0.09)] transition-all duration-300 hover:-translate-y-2 hover:border-orange-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.15)]">
       <div className="md:w-[26%] w-full">
         {hasImage ? (
           <CoverImage

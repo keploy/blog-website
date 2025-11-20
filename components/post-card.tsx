@@ -51,7 +51,7 @@ export default function PostCard({
 
   return (
     <animated.div
-      className="bg-white rounded-xl shadow-[0_6px_18px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-200 transition-all duration-300 overflow-hidden group hover:border-orange-300 hover:-translate-y-1 flex flex-col h-full"
+      className="bg-white rounded-2xl border border-orange-200/80 shadow-[0_22px_50px_rgba(15,23,42,0.11)] hover:shadow-[0_28px_70px_rgba(15,23,42,0.16)] transition-all duration-300 overflow-hidden group hover:border-orange-300 hover:-translate-y-2 flex flex-col h-full"
       ref={ref}
       style={springStyles}
     >

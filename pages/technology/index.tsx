@@ -33,6 +33,15 @@ const SORT_OPTIONS = [
 
 type ViewMode = "grid" | "list";
 
+const formatAuthorName = (name?: string) => {
+  if (!name) return "Anonymous";
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+};
+
 export default function Index({ allPosts: { edges }, preview }) {
   const posts = edges.map((edge) => edge.node);
   const latestPost = posts[0];
@@ -275,12 +284,12 @@ export default function Index({ allPosts: { edges }, preview }) {
               <div className="flex flex-col">
                 <div className="flex flex-col md:flex-row gap-3 md:gap-3 items-start">
                   {latestPost && (
-                    <article className="group relative w-full md:w-[44%] md:max-w-[44%] mt-8 md:mt-16 transition-all duration-300 hover:-translate-y-1">
+                    <article className="group relative w-full md:w-[44%] md:max-w-[44%] mt-12 md:mt-24 transition-all duration-300 hover:-translate-y-1">
                       <div className="rounded-[30px] p-[1.5px] bg-gradient-to-br from-orange-300/40 via-orange-200/20 to-orange-100/30 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-orange-200/40">
                         <div className="relative overflow-hidden rounded-[27px] bg-gradient-to-br from-orange-50/70 via-white to-white border border-white/60 shadow-lg flex flex-col gap-3 p-4">
                           <div className="absolute inset-0 bg-gradient-to-br from-orange-200/20 via-transparent to-transparent blur-3xl opacity-70 pointer-events-none" />
-                          <div className="relative flex flex-col gap-3">
-                            <div className="text-xs uppercase tracking-[0.35em] text-orange-500 flex items-center gap-2">
+                          <div className="relative flex flex-col gap-4">
+                            <div className="text-xs uppercase tracking-[0.35em] text-black flex items-center gap-2">
                               <span>Latest blog</span>
                               <span className="flex-1 h-px bg-gradient-to-r from-orange-300 via-orange-200/70 to-transparent rounded-full" />
                             </div>
@@ -295,23 +304,25 @@ export default function Index({ allPosts: { edges }, preview }) {
                                 />
                               )}
                             </div>
-                            <h2
-                              className="text-[1.05rem] font-semibold leading-snug group-hover:text-orange-600 line-clamp-2 transition-colors duration-200"
-                              dangerouslySetInnerHTML={{ __html: latestPost.title }}
-                            />
-                            <p className="text-xs text-gray-500 flex items-center gap-2">
-                              <span className="font-semibold text-gray-900">
-                                {latestPost.ppmaAuthorName || "Anonymous"}
-                              </span>
-                              <span>•</span>
-                              <DateComponent dateString={latestPost.date} />
-                            </p>
-                            <p
-                              className="text-gray-600 text-[0.825rem] line-clamp-4 leading-relaxed"
-                              dangerouslySetInnerHTML={{
-                                __html: getExcerpt(latestPost.excerpt, 30),
-                              }}
-                            />
+                            <div className="flex flex-col gap-3">
+                              <h2
+                                className="text-[1rem] font-semibold leading-snug group-hover:text-orange-600 line-clamp-2 transition-colors duration-200"
+                                dangerouslySetInnerHTML={{ __html: latestPost.title }}
+                              />
+                              <p className="text-xs text-gray-500 flex items-center gap-2">
+                                <span className="font-semibold text-gray-900">
+                                  {latestPost.ppmaAuthorName || "Anonymous"}
+                                </span>
+                                <span>•</span>
+                                <DateComponent dateString={latestPost.date} />
+                              </p>
+                              <p
+                                className="text-gray-600 text-[0.75rem] line-clamp-2 leading-relaxed"
+                                dangerouslySetInnerHTML={{
+                                  __html: getExcerpt(latestPost.excerpt, 18),
+                                }}
+                              />
+                            </div>
                             <Link
                               href={`/technology/${latestPost.slug}`}
                               className="inline-flex items-center gap-1 text-orange-600 font-semibold text-xs hover:text-orange-700 hover:underline transition-colors duration-200 mt-1"
@@ -340,36 +351,42 @@ export default function Index({ allPosts: { edges }, preview }) {
                               </span>
                             </div>
                           <div className="mt-4 space-y-4">
-                          {featuredPosts.map((post, index) => (
-                            <div key={post.slug}>
-                              <Link
-                                href={`/technology/${post.slug}`}
-                                  className="relative flex items-center gap-2 group rounded-xl px-3 py-2 -m-1 min-h-[60px] overflow-hidden transition-all duration-400"
-                              >
-                                {post.featuredImage?.node?.sourceUrl && (
-                                  <div
-                                      className="absolute inset-0 opacity-5 group-hover:opacity-95 transition-opacity duration-500 bg-cover bg-center scale-105"
-                                    style={{
-                                      backgroundImage: `url(${post.featuredImage.node.sourceUrl})`,
-                                    }}
-                                  />
-                                )}
-                                  <div className="relative flex flex-col gap-2 transition-opacity duration-300 ease-out group-hover:opacity-0">
-                                  <h4
-                                    className="text-[0.9rem] font-semibold text-gray-900 leading-snug line-clamp-2"
-                                    dangerouslySetInnerHTML={{ __html: post.title }}
-                                  />
-                                  <p className="text-[0.7rem] font-semibold text-gray-800 uppercase tracking-wide">
-                                    {post.ppmaAuthorName || "Anonymous"}
-                                  </p>
+                            {featuredPosts.map((post, index) => {
+                              const authorName = formatAuthorName(post.ppmaAuthorName);
+                              return (
+                                <div key={post.slug}>
+                                  <Link
+                                    href={`/technology/${post.slug}`}
+                                    className="group relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 -m-1 min-h-[56px] transition-colors duration-300 hover:bg-orange-50/70"
+                                  >
+                                    {post.featuredImage?.node?.sourceUrl && (
+                                      <div className="relative flex-shrink-0 w-[4.25rem] h-14 rounded-xl overflow-hidden ring-1 ring-orange-100/70 bg-orange-50/60">
+                                        <Image
+                                          src={post.featuredImage.node.sourceUrl}
+                                          alt={post.title}
+                                          fill
+                                          sizes="68px"
+                                          className="object-cover"
+                                        />
+                                      </div>
+                                    )}
+                                    <div className="flex flex-col gap-1">
+                                      <h4
+                                        className="text-[0.85rem] font-semibold text-gray-900 leading-snug line-clamp-2 transition-colors duration-200 group-hover:text-orange-600"
+                                        dangerouslySetInnerHTML={{ __html: post.title }}
+                                      />
+                                      <p className="text-[0.7rem] font-semibold text-gray-800 tracking-tight">
+                                        {authorName}
+                                      </p>
+                                    </div>
+                                  </Link>
+                                  {index !== featuredPosts.length - 1 && (
+                                    <div className="h-[1.5px] w-full bg-gradient-to-r from-orange-200 via-gray-200 to-transparent rounded-full mt-4" />
+                                  )}
                                 </div>
-                              </Link>
-                              {index !== featuredPosts.length - 1 && (
-                                  <div className="h-[1.5px] w-full bg-gradient-to-r from-orange-200 via-gray-200 to-transparent rounded-full mt-4" />
-                              )}
-                            </div>
-                          ))}
-                            </div>
+                              );
+                            })}
+                          </div>
                           </div>
                         </div>
                       </div>
