@@ -40,13 +40,13 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
         />
 
         <div className="flex flex-wrap gap-2 text-sm text-gray-500 items-center">
-          <span>{ppmaAuthorName || "Anonymous"}</span>
+          <span className="font-semibold text-gray-900">{ppmaAuthorName || "Anonymous"}</span>
           <span className="text-gray-300">•</span>
           <DateComponent dateString={date} />
         </div>
 
         <div
-          className="text-gray-600 text-sm md:text-base line-clamp-3"
+          className="text-gray-600 text-sm md:text-base leading-relaxed line-clamp-2 min-h-[3.1rem]"
           dangerouslySetInnerHTML={{ __html: cleanedExcerpt }}
         />
 

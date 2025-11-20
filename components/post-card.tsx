@@ -46,7 +46,7 @@ export default function PostCard({
 
   return (
     <animated.div
-      className="bg-white rounded-xl shadow-[0_6px_18px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-200 transition-all duration-300 overflow-hidden group hover:border-orange-300 hover:-translate-y-1"
+      className="bg-white rounded-xl shadow-[0_6px_18px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-200 transition-all duration-300 overflow-hidden group hover:border-orange-300 hover:-translate-y-1 flex flex-col h-full"
       ref={ref}
       style={springStyles}
     >
@@ -61,25 +61,25 @@ export default function PostCard({
           />
         )}
       </div>
-      <div className="p-6">
-        <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-3 leading-snug">
+      <div className="p-6 flex flex-col flex-1 gap-4">
+        <h3 className="text-xl md:text-2xl font-semibold text-gray-900 leading-snug">
           <Link
             href={`${basePath}/${slug}`}
             className="line-clamp-2 hover:underline group-hover:text-orange-600 transition-colors duration-200"
             dangerouslySetInnerHTML={{ __html: title }}
           />
         </h3>
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-sm text-gray-500">{author ? author : "Anonymous"}</span>
-          <span className="text-gray-400">•</span>
-          <span className="text-sm text-gray-500">
+        <div
+          className="text-gray-600 text-sm md:text-base leading-relaxed line-clamp-2"
+          dangerouslySetInnerHTML={{ __html: cleanedExcerpt }}
+        />
+        <div className="mt-auto flex items-center gap-2 text-sm text-gray-500">
+          <span className="font-semibold text-gray-900">{author ? author : "Anonymous"}</span>
+          <span className="text-gray-300">•</span>
+          <span>
             <Date dateString={date} />
           </span>
         </div>
-        <div
-          className="text-gray-600 line-clamp-3"
-          dangerouslySetInnerHTML={{ __html: cleanedExcerpt }}
-        />
       </div>
     </animated.div>
   );

@@ -132,10 +132,10 @@ export default function Index({ allPosts: { edges }, preview }) {
     }
 
     if (filterParts.length > 0) {
-      return `Filtered stories (${filterParts.join(", ")})`;
+      return `Filtered blogs (${filterParts.join(", ")})`;
     }
 
-    return "All technology stories";
+    return "All technology blogs";
   }, [searchTerm, selectedAuthor, dateFilter, sortOption]);
 
   return (
@@ -151,14 +151,12 @@ export default function Index({ allPosts: { edges }, preview }) {
       <Header />
       <section className="mt-0 w-full">
         <Container>
-          <div className="relative isolate">
-            <HeroMeshAccent variant="left" />
-            <HeroMeshAccent variant="right" />
-            <div className="pt-8 pb-12 md:pt-10 md:pb-16">
-              <div className="grid gap-10 lg:gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="flex flex-col gap-8 justify-center lg:justify-start lg:pt-20">
+          <div className="relative">
+            <div className="pt-6 pb-10 md:pt-8 md:pb-12">
+              <div className="grid gap-10 lg:gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+              <div className="flex flex-col gap-8 justify-center lg:justify-start lg:-translate-y-4 xl:-translate-y-6 lg:pt-10">
                 <header className="space-y-5">
-                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight text-left">
+                  <h1 className="text-[2rem] md:text-[2.75rem] lg:text-[3.50rem] font-bold tracking-tight leading-tight text-left">
                     <span
                       className={`inline-block bg-clip-text text-transparent pb-1 ${
                         gradientLoaded
@@ -166,7 +164,7 @@ export default function Index({ allPosts: { edges }, preview }) {
                           : "opacity-0"
                       }`}
                     >
-                      <span className="whitespace-nowrap">Keploy Technology</span> Blog
+                      <span className="whitespace-nowrap">Keploy Technology Blog</span>
                     </span>
                   </h1>
                   <p className="text-gray-600 text-base md:text-lg max-w-xl leading-relaxed">
@@ -174,7 +172,7 @@ export default function Index({ allPosts: { edges }, preview }) {
                   </p>
                 </header>
 
-                <div className="flex flex-col gap-6 mt-12">
+                <div className="flex flex-col gap-6 mt-10">
                   <div className="flex flex-row gap-4 items-center">
                     <div className="relative flex-[0.95]">
                       <input
@@ -182,9 +180,9 @@ export default function Index({ allPosts: { edges }, preview }) {
                         placeholder="Search technology posts..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full h-11 pl-12 pr-10 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 bg-white text-sm font-semibold shadow-sm"
+                        className="w-full h-11 pl-12 pr-10 rounded-full border border-orange-100/80 bg-white/95 text-sm font-semibold shadow-[0_10px_30px_rgba(254,144,92,0.12)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-shadow placeholder:text-gray-400"
                       />
-                      <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                      <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-400/80" />
                       {searchTerm && (
                         <button
                           type="button"
@@ -198,7 +196,7 @@ export default function Index({ allPosts: { edges }, preview }) {
                     <button
                       type="button"
                       onClick={resetFilters}
-                      className="px-4 py-2 h-11 text-sm font-semibold text-orange-600 border border-orange-200 rounded-full bg-white hover:bg-orange-50 transition-colors whitespace-nowrap"
+                      className="px-4 py-2 h-11 text-sm font-semibold text-orange-600 border border-orange-200/80 rounded-full bg-white/95 hover:bg-orange-50 transition-colors whitespace-nowrap shadow-sm hover:shadow-md"
                     >
                       Reset filter
                     </button>
@@ -240,7 +238,7 @@ export default function Index({ allPosts: { edges }, preview }) {
                         <span className="text-xs text-gray-500 mb-1 uppercase tracking-[0.2em]">
                           View
                         </span>
-                        <div className="flex rounded-full border border-gray-200 bg-white p-1 h-11 shadow-sm">
+                        <div className="flex rounded-full border border-orange-100/80 bg-white/95 p-1 h-11 shadow-[0_8px_24px_rgba(15,23,42,0.08)]">
                           <button
                             type="button"
                             onClick={() => setViewMode("grid")}
@@ -271,88 +269,105 @@ export default function Index({ allPosts: { edges }, preview }) {
               </div>
 
               <div className="flex flex-col">
-                <div className="flex flex-col md:flex-row gap-4 items-start">
+                <div className="flex flex-col md:flex-row gap-3 md:gap-3 items-start">
                   {latestPost && (
-                    <article className="bg-white border border-gray-100 rounded-3xl shadow-lg p-4 flex flex-col gap-3 w-full md:w-[44%] md:max-w-[44%] mt-8 md:mt-20 transition-all duration-300 hover:-translate-y-1 hover:border-orange-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] group">
-                      <div className="text-xs uppercase tracking-[0.3em] text-orange-500">
-                        Latest blog
+                    <article className="group relative w-full md:w-[44%] md:max-w-[44%] mt-8 md:mt-16 transition-all duration-300 hover:-translate-y-1">
+                      <div className="rounded-[30px] p-[1.5px] bg-gradient-to-br from-orange-300/40 via-orange-200/20 to-orange-100/30 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-orange-200/40">
+                        <div className="relative overflow-hidden rounded-[27px] bg-gradient-to-br from-orange-50/70 via-white to-white border border-white/60 shadow-lg flex flex-col gap-3 p-4">
+                          <div className="absolute inset-0 bg-gradient-to-br from-orange-200/20 via-transparent to-transparent blur-3xl opacity-70 pointer-events-none" />
+                          <div className="relative flex flex-col gap-3">
+                            <div className="text-xs uppercase tracking-[0.35em] text-orange-500 flex items-center gap-2">
+                              <span>Latest blog</span>
+                              <span className="flex-1 h-px bg-gradient-to-r from-orange-300 via-orange-200/70 to-transparent rounded-full" />
+                            </div>
+                            <div className="overflow-hidden rounded-2xl ring-1 ring-orange-100/60 shadow-inner shadow-orange-200/30">
+                              {latestPost.featuredImage && (
+                                <CoverImage
+                                  title={latestPost.title}
+                                  coverImage={latestPost.featuredImage}
+                                  slug={latestPost.slug}
+                                  isCommunity={false}
+                                  imgClassName="w-full h-24 object-cover"
+                                />
+                              )}
+                            </div>
+                            <h2
+                              className="text-[1.05rem] font-semibold leading-snug group-hover:text-orange-600 line-clamp-2 transition-colors duration-200"
+                              dangerouslySetInnerHTML={{ __html: latestPost.title }}
+                            />
+                            <p className="text-xs text-gray-500 flex items-center gap-2">
+                              <span className="font-semibold text-gray-900">
+                                {latestPost.ppmaAuthorName || "Anonymous"}
+                              </span>
+                              <span>•</span>
+                              <DateComponent dateString={latestPost.date} />
+                            </p>
+                            <p
+                              className="text-gray-600 text-[0.825rem] line-clamp-4 leading-relaxed"
+                              dangerouslySetInnerHTML={{
+                                __html: getExcerpt(latestPost.excerpt, 30),
+                              }}
+                            />
+                            <Link
+                              href={`/technology/${latestPost.slug}`}
+                              className="inline-flex items-center gap-1 text-orange-600 font-semibold text-xs hover:text-orange-700 hover:underline transition-colors duration-200 mt-1"
+                            >
+                              Read latest →
+                            </Link>
+                          </div>
+                        </div>
                       </div>
-                      <div className="overflow-hidden rounded-2xl">
-                        {latestPost.featuredImage && (
-                          <CoverImage
-                            title={latestPost.title}
-                            coverImage={latestPost.featuredImage}
-                            slug={latestPost.slug}
-                            isCommunity={false}
-                            imgClassName="w-full h-24 object-cover"
-                          />
-                        )}
-                      </div>
-                      <h2
-                        className="text-base font-semibold leading-snug group-hover:text-orange-600 line-clamp-2 transition-colors duration-200"
-                        dangerouslySetInnerHTML={{ __html: latestPost.title }}
-                      />
-                      <p className="text-xs text-gray-500 flex items-center gap-2">
-                        <span>{latestPost.ppmaAuthorName || "Anonymous"}</span>
-                        <span>•</span>
-                        <DateComponent dateString={latestPost.date} />
-                      </p>
-                      <p
-                        className="text-gray-600 text-xs line-clamp-4 leading-relaxed"
-                        dangerouslySetInnerHTML={{
-                          __html: getExcerpt(latestPost.excerpt, 30),
-                        }}
-                      />
-                      <Link
-                        href={`/technology/${latestPost.slug}`}
-                        className="text-orange-600 font-semibold text-xs hover:text-orange-700 hover:underline transition-colors duration-200"
-                      >
-                        Read latest →
-                      </Link>
                     </article>
                   )}
 
                   {!!featuredPosts.length && (
-                    <div className="bg-white border border-gray-100 rounded-3xl shadow-lg p-4 transform lg:-translate-y-10 w-full md:w-[48%] md:max-w-[48%] md:ml-auto mt-6 md:mt-0">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-sm font-semibold">Featured blogs</h3>
-                        <span className="text-xs text-gray-500">
-                          {featuredPosts.length} picks
-                        </span>
-                      </div>
-                      <div className="mt-3 space-y-3">
-                        {featuredPosts.map((post) => (
-                          <Link
-                            key={post.slug}
-                            href={`/technology/${post.slug}`}
-                            className="flex gap-3 items-stretch group transition-all duration-300 hover:-translate-y-1 rounded-xl p-2 -m-2 hover:bg-orange-50/50"
-                          >
-                            <div className="w-[28%] min-w-[60px] rounded-xl overflow-hidden bg-orange-50 flex-shrink-0">
-                              {post.featuredImage ? (
-                                <CoverImage
-                                  title={post.title}
-                                  coverImage={post.featuredImage}
-                                  slug={post.slug}
-                                  isCommunity={false}
-                                  imgClassName="w-full h-14 object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-14 flex items-center justify-center text-xs font-semibold text-orange-500 bg-orange-50">
-                                  No image
+                    <div className="w-full md:w-[48%] md:max-w-[48%] md:ml-auto mt-6 md:mt-0 lg:-translate-y-16">
+                      <div className="rounded-[25px] p-[1.5px] bg-gradient-to-br from-orange-200/35 via-orange-100/20 to-transparent shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-orange-200/35">
+                        <div className="relative overflow-hidden rounded-[27px] bg-gradient-to-br from-white via-orange-50/45 to-white border border-white/60 shadow-lg p-4">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white via-orange-100/30 to-transparent opacity-70 blur-2xl pointer-events-none" />
+                        <div className="relative">
+                            <div className="flex items-center justify-between mb-3">
+                              <h3 className="text-sm font-semibold flex items-center gap-2">
+                                Featured blogs
+                                <span className="inline-flex h-1.5 w-1.5 rounded-full bg-orange-400/80" />
+                              </h3>
+                              <span className="text-xs text-gray-500">
+                                {featuredPosts.length} picks
+                              </span>
+                            </div>
+                          <div className="mt-4 space-y-4">
+                          {featuredPosts.map((post, index) => (
+                            <div key={post.slug}>
+                              <Link
+                                href={`/technology/${post.slug}`}
+                                  className="relative flex items-center gap-2 group rounded-xl px-3 py-2 -m-1 min-h-[60px] overflow-hidden transition-all duration-400"
+                              >
+                                {post.featuredImage?.node?.sourceUrl && (
+                                  <div
+                                      className="absolute inset-0 opacity-5 group-hover:opacity-95 transition-opacity duration-500 bg-cover bg-center scale-105"
+                                    style={{
+                                      backgroundImage: `url(${post.featuredImage.node.sourceUrl})`,
+                                    }}
+                                  />
+                                )}
+                                  <div className="relative flex flex-col gap-2 transition-opacity duration-300 ease-out group-hover:opacity-0">
+                                  <h4
+                                    className="text-[0.9rem] font-semibold text-gray-900 leading-snug line-clamp-2"
+                                    dangerouslySetInnerHTML={{ __html: post.title }}
+                                  />
+                                  <p className="text-[0.7rem] font-semibold text-gray-800 uppercase tracking-wide">
+                                    {post.ppmaAuthorName || "Anonymous"}
+                                  </p>
                                 </div>
+                              </Link>
+                              {index !== featuredPosts.length - 1 && (
+                                  <div className="h-[1.5px] w-full bg-gradient-to-r from-orange-200 via-gray-200 to-transparent rounded-full mt-4" />
                               )}
                             </div>
-                            <div className="w-[72%] flex flex-col justify-center gap-2">
-                              <h4
-                                className="text-sm font-semibold text-gray-900 group-hover:text-orange-600 line-clamp-2 transition-colors duration-200"
-                                dangerouslySetInnerHTML={{ __html: post.title }}
-                              />
-                              <p className="text-xs text-gray-500">
-                                {post.ppmaAuthorName || "Anonymous"}
-                              </p>
+                          ))}
                             </div>
-                          </Link>
-                        ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -403,7 +418,7 @@ export default function Index({ allPosts: { edges }, preview }) {
                 <PostListRow
                   key={post.slug}
                   post={post}
-                  excerptOverride={getExcerpt(post.excerpt, 32)}
+                  excerptOverride={getExcerpt(post.excerpt, 42)}
                 />
               ))}
             </div>
@@ -411,99 +426,6 @@ export default function Index({ allPosts: { edges }, preview }) {
         </section>
       </Container>
     </Layout>
-  );
-}
-
-type HeroMeshVariant = "left" | "right";
-
-function HeroMeshAccent({ variant }: { variant: HeroMeshVariant }) {
-  const isRight = variant === "right";
-
-  const config = {
-    wrapperClass: isRight
-      ? "absolute -z-10 -top-10 sm:-top-8 md:-top-4 right-[-18px] sm:right-0 md:right-6 lg:right-16 xl:right-20 h-60 w-60 sm:h-68 sm:w-68 md:h-76 md:w-76 lg:h-[420px] lg:w-[420px] rotate-[18deg]"
-      : "absolute -z-10 top-28 sm:top-32 md:top-36 left-[-20px] sm:left-0 md:left-6 lg:left-16 h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 rotate-[-16deg]",
-    glowGradient: isRight
-      ? "bg-gradient-to-br from-orange-200/60 via-rose-200/25 to-transparent rounded-[55%]"
-      : "bg-gradient-to-br from-sky-200/35 via-indigo-200/20 to-transparent rounded-[60%]",
-    innerShape: isRight ? "rounded-[36%]" : "rounded-[42%]",
-    spinClass: isRight ? "animate-[spin_38s_linear_infinite]" : "animate-[spin_34s_linear_infinite_reverse]",
-    blendOverlay: isRight
-      ? "bg-gradient-to-tr from-transparent via-white/8 to-white/28 rounded-[48%]"
-      : "bg-gradient-to-tr from-transparent via-white/6 to-white/18 rounded-[50%]",
-    diagonalOffsets: isRight ? [-120, -80, -40, 0, 40, 80, 120, 160, 200, 240] : [-50, -20, 10, 40, 70],
-    lineLength: isRight ? 250 : 200,
-    strokeWidth: isRight ? 1.2 : 1,
-    strokeDash: isRight ? "6 16" : "7 18",
-    sparkPositions: isRight
-      ? [
-          { cx: 70, cy: 50, r: 2.8, opacity: 0.42 },
-          { cx: 200, cy: 90, r: 2.2, opacity: 0.35 },
-          { cx: 150, cy: 210, r: 2.6, opacity: 0.4 },
-          { cx: 100, cy: 250, r: 1.8, opacity: 0.3 },
-          { cx: 250, cy: 170, r: 3.2, opacity: 0.42 },
-        ]
-      : [
-          { cx: 60, cy: 60, r: 1.8, opacity: 0.32 },
-          { cx: 35, cy: 130, r: 1.4, opacity: 0.26 },
-          { cx: 105, cy: 185, r: 2, opacity: 0.34 },
-        ],
-    maskCenterY: isRight ? "10%" : "20%",
-  };
-
-  const gradientId = `technology-hero-mesh-${variant}`;
-  const maskId = `technology-hero-mask-${variant}`;
-  const maskRefId = `technology-hero-mask-id-${variant}`;
-
-  return (
-    <div className={`pointer-events-none ${config.wrapperClass}`}>
-      <div className={`absolute inset-0 ${config.glowGradient} blur-3xl opacity-70`} />
-      <div
-        className={`absolute inset-4 sm:inset-5 md:inset-6 ${config.innerShape} bg-white/12 border border-white/25 backdrop-blur-[1.5px] shadow-[0_18px_45px_rgba(15,23,42,0.12)]`}
-      />
-      <svg
-        viewBox="0 0 320 320"
-        className={`absolute inset-0 w-full h-full text-orange-500/30 ${config.spinClass}`}
-        fill="none"
-      >
-        <defs>
-          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="currentColor" stopOpacity={isRight ? 0.15 : 0.08} />
-            <stop offset="100%" stopColor="currentColor" stopOpacity={isRight ? 0.45 : 0.32} />
-          </linearGradient>
-          <radialGradient id={maskId} cx="50%" cy={config.maskCenterY} r="90%">
-            <stop offset="0%" stopColor="white" stopOpacity="0.88" />
-            <stop offset="100%" stopColor="white" stopOpacity="0" />
-          </radialGradient>
-          <mask id={maskRefId}>
-            <rect width="320" height="320" fill={`url(#${maskId})`} />
-          </mask>
-        </defs>
-        <g mask={`url(#${maskRefId})`}>
-          {config.diagonalOffsets.map((offset) => (
-            <path
-              key={`${variant}-${offset}`}
-              d={`M${offset} 320 L${offset + config.lineLength} 0`}
-              stroke={`url(#${gradientId})`}
-              strokeWidth={config.strokeWidth}
-              strokeLinecap="round"
-              strokeDasharray={config.strokeDash}
-            />
-          ))}
-          {config.sparkPositions.map((spark, index) => (
-            <circle
-              key={`${variant}-spark-${index}`}
-              cx={spark.cx}
-              cy={spark.cy}
-              r={spark.r}
-              fill="currentColor"
-              opacity={spark.opacity}
-            />
-          ))}
-        </g>
-      </svg>
-      <div className={`absolute inset-0 ${config.blendOverlay} mix-blend-screen opacity-80`} />
-    </div>
   );
 }
 
@@ -541,8 +463,10 @@ function FilterSelect({
       <button
         type="button"
         className={`relative w-full h-11 rounded-full border text-left px-4 pr-10 text-sm font-semibold transition-all flex items-center ${
-          isOpen ? "border-orange-300 shadow-lg" : "border-orange-100 shadow-sm"
-        } bg-white/90 text-gray-800 hover:border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-200`}
+          isOpen
+            ? "border-orange-300 shadow-[0_12px_26px_rgba(254,144,92,0.18)]"
+            : "border-orange-100/80 shadow-[0_6px_18px_rgba(15,23,42,0.08)]"
+        } bg-gradient-to-r from-white/95 to-orange-50/15 text-gray-800 hover:border-orange-300 hover:shadow-[0_10px_24px_rgba(254,144,92,0.16)] focus:outline-none focus:ring-2 focus:ring-orange-200`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <span>{activeOption?.label ?? "Select"}</span>
