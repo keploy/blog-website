@@ -13,6 +13,7 @@ import PostListRow from "../../components/post-list-row";
 import CoverImage from "../../components/cover-image";
 import DateComponent from "../../components/date";
 import { FaSearch, FaTimes } from "react-icons/fa";
+import Background from "../../components/background";
 
 const DATE_FILTERS = [
   { value: "all", label: "All dates" },
@@ -148,6 +149,7 @@ export default function Index({ allPosts: { edges }, preview }) {
       <Head>
         <title>{`Keploy`}</title>
       </Head>
+      <Background />
       <Header />
       <section className="mt-0 w-full">
         <Container>
