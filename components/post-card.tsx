@@ -4,6 +4,7 @@ import CoverImage from "./cover-image";
 import Link from "next/link";
 import { Post } from "../types/post";
 import { animated, easings, useInView } from "@react-spring/web";
+import Image from "next/image";
 
 export default function PostCard({
   title,
@@ -13,6 +14,8 @@ export default function PostCard({
   author,
   slug,
   isCommunity = false,
+  authorImage,
+  readingTime,
 }: {
   title: Post["title"];
   coverImage: Post["featuredImage"];
@@ -21,6 +24,8 @@ export default function PostCard({
   author: Post["ppmaAuthorName"];
   slug: Post["slug"];
   isCommunity?: boolean;
+  authorImage?: string;
+  readingTime?: number;
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
   const cleanedExcerpt = (excerpt || "").replace("Table of Contents", "");
@@ -73,12 +78,35 @@ export default function PostCard({
           className="text-gray-600 text-sm md:text-base leading-relaxed line-clamp-2"
           dangerouslySetInnerHTML={{ __html: cleanedExcerpt }}
         />
-        <div className="mt-auto flex items-center gap-2 text-sm text-gray-500">
-          <span className="font-semibold text-gray-900">{author ? author : "Anonymous"}</span>
-          <span className="text-gray-300">•</span>
-          <span>
+        <div className="mt-auto flex items-center gap-1.5 text-xs md:text-sm text-gray-500 min-w-0">
+          {authorImage && authorImage !== "imag1" && authorImage !== "image" ? (
+            <Image
+              src={authorImage}
+              alt={`${author || "Author"}'s avatar`}
+              className="w-5 h-5 md:w-6 md:h-6 rounded-full flex-shrink-0"
+              height={24}
+              width={24}
+            />
+          ) : (
+            <Image
+              src="/blog/images/author.png"
+              alt="Author avatar"
+              className="w-5 h-5 md:w-6 md:h-6 rounded-full flex-shrink-0"
+              height={24}
+              width={24}
+            />
+          )}
+          <span className="font-semibold text-gray-900 truncate max-w-[120px] md:max-w-none">{author ? author : "Anonymous"}</span>
+          <span className="text-gray-300 flex-shrink-0">•</span>
+          <span className="whitespace-nowrap flex-shrink-0">
             <Date dateString={date} />
           </span>
+          {readingTime !== undefined && readingTime > 0 && (
+            <>
+              <span className="text-gray-300 flex-shrink-0">•</span>
+              <span className="whitespace-nowrap flex-shrink-0">{readingTime} min read</span>
+            </>
+          )}
         </div>
       </div>
     </animated.div>

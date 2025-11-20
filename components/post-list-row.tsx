@@ -2,15 +2,17 @@ import Link from "next/link";
 import CoverImage from "./cover-image";
 import DateComponent from "./date";
 import { Post } from "../types/post";
+import Image from "next/image";
 
 interface Props {
   post: Post;
   isCommunity?: boolean;
   excerptOverride?: string;
+  readingTime?: number;
 }
 
-export default function PostListRow({ post, isCommunity = false, excerptOverride }: Props) {
-  const { title, featuredImage, slug, date, ppmaAuthorName, excerpt } = post;
+export default function PostListRow({ post, isCommunity = false, excerptOverride, readingTime }: Props) {
+  const { title, featuredImage, slug, date, ppmaAuthorName, excerpt, ppmaAuthorImage } = post;
   const cleanedExcerpt = (excerptOverride ?? excerpt ?? "").replace("Table of Contents", "");
   const hasImage = Boolean(featuredImage?.node?.sourceUrl);
   const basePath = isCommunity ? "/community" : "/technology";
@@ -40,9 +42,32 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
         />
 
         <div className="flex flex-wrap gap-2 text-sm text-gray-500 items-center">
+          {ppmaAuthorImage && ppmaAuthorImage !== "imag1" && ppmaAuthorImage !== "image" ? (
+            <Image
+              src={ppmaAuthorImage}
+              alt={`${ppmaAuthorName || "Author"}'s avatar`}
+              className="w-6 h-6 rounded-full"
+              height={24}
+              width={24}
+            />
+          ) : (
+            <Image
+              src="/blog/images/author.png"
+              alt="Author avatar"
+              className="w-6 h-6 rounded-full"
+              height={24}
+              width={24}
+            />
+          )}
           <span className="font-semibold text-gray-900">{ppmaAuthorName || "Anonymous"}</span>
           <span className="text-gray-300">•</span>
           <DateComponent dateString={date} />
+          {readingTime !== undefined && readingTime > 0 && (
+            <>
+              <span className="text-gray-300">•</span>
+              <span>{readingTime} min read</span>
+            </>
+          )}
         </div>
 
         <div

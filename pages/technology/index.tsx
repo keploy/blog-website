@@ -14,6 +14,8 @@ import CoverImage from "../../components/cover-image";
 import DateComponent from "../../components/date";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import Background from "../../components/background";
+import { calculateReadingTime } from "../../utils/calculateReadingTime";
+import Image from "next/image";
 
 const DATE_FILTERS = [
   { value: "all", label: "All dates" },
@@ -401,28 +403,37 @@ export default function Index({ allPosts: { edges }, preview }) {
             </div>
           ) : viewMode === "grid" ? (
             <PostGrid>
-              {filteredPosts.map((post) => (
-                <PostCard
-                  key={post.slug}
-                  title={post.title}
-                  coverImage={post.featuredImage}
-                  date={post.date}
-                  author={post.ppmaAuthorName}
-                  slug={post.slug}
-                  excerpt={getExcerpt(post.excerpt, 20)}
-                  isCommunity={false}
-                />
-              ))}
+              {filteredPosts.map((post) => {
+                const readingTime = post.content ? 5 + calculateReadingTime(post.content) : undefined;
+                return (
+                  <PostCard
+                    key={post.slug}
+                    title={post.title}
+                    coverImage={post.featuredImage}
+                    date={post.date}
+                    author={post.ppmaAuthorName}
+                    slug={post.slug}
+                    excerpt={getExcerpt(post.excerpt, 20)}
+                    isCommunity={false}
+                    authorImage={post.ppmaAuthorImage}
+                    readingTime={readingTime}
+                  />
+                );
+              })}
             </PostGrid>
           ) : (
             <div className="space-y-6">
-              {filteredPosts.map((post) => (
-                <PostListRow
-                  key={post.slug}
-                  post={post}
-                  excerptOverride={getExcerpt(post.excerpt, 42)}
-                />
-              ))}
+              {filteredPosts.map((post) => {
+                const readingTime = post.content ? 5 + calculateReadingTime(post.content) : undefined;
+                return (
+                  <PostListRow
+                    key={post.slug}
+                    post={post}
+                    excerptOverride={getExcerpt(post.excerpt, 42)}
+                    readingTime={readingTime}
+                  />
+                );
+              })}
             </div>
           )}
         </section>
@@ -466,9 +477,9 @@ function FilterSelect({
         type="button"
         className={`relative w-full h-11 rounded-full border text-left px-4 pr-10 text-sm font-semibold transition-all flex items-center ${
           isOpen
-            ? "border-orange-300 shadow-[0_12px_26px_rgba(254,144,92,0.18)]"
-            : "border-orange-100/80 shadow-[0_6px_18px_rgba(15,23,42,0.08)]"
-        } bg-gradient-to-r from-white/95 to-orange-50/15 text-gray-800 hover:border-orange-300 hover:shadow-[0_10px_24px_rgba(254,144,92,0.16)] focus:outline-none focus:ring-2 focus:ring-orange-200`}
+            ? "border-orange-300 shadow-[0_10px_30px_rgba(254,144,92,0.12)]"
+            : "border-orange-100/80 shadow-[0_10px_30px_rgba(254,144,92,0.12)]"
+        } bg-white/95 text-gray-800 hover:border-orange-300 hover:shadow-[0_10px_30px_rgba(254,144,92,0.12)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <span>{activeOption?.label ?? "Select"}</span>
@@ -487,26 +498,28 @@ function FilterSelect({
 
       {isOpen && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-100 rounded-2xl shadow-2xl z-10 overflow-hidden">
-          {options.map((option) => {
-            const isActive = option.value === value;
-            return (
-              <button
-                type="button"
-                key={option.value}
-                className={`w-full text-left px-4 py-2 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-orange-50 text-orange-600"
-                    : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
-                }`}
-                onClick={() => {
-                  onChange(option.value);
-                  setIsOpen(false);
-                }}
-              >
-                {option.label}
-              </button>
-            );
-          })}
+          <div className="max-h-48 overflow-y-auto py-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-400">
+            {options.map((option) => {
+              const isActive = option.value === value;
+              return (
+                <button
+                  type="button"
+                  key={option.value}
+                  className={`w-full text-left px-4 py-2 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-orange-50 text-orange-600"
+                      : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
+                  }`}
+                  onClick={() => {
+                    onChange(option.value);
+                    setIsOpen(false);
+                  }}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

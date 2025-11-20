@@ -266,6 +266,8 @@ export async function getAllPostsForTechnology(preview = false, after = null) {
               }
             }
             ppmaAuthorName
+            ppmaAuthorImage
+            content
             categories {
               edges {
                 node {
@@ -570,6 +572,8 @@ export async function getPostsByAuthorName(authorName: string) {
               }
             }
             ppmaAuthorName
+            ppmaAuthorImage
+            content
             categories {
               edges {
                 node {
