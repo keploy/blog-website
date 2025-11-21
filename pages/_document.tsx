@@ -307,20 +307,17 @@ export default function Document() {
         {/* Hide initial skeleton once React loads */}
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
-            if (typeof window !== 'undefined') {
-              function hideSkeleton() {
-                var skeleton = document.getElementById('initial-skeleton');
-                if (skeleton) {
-                  skeleton.style.display = 'none';
-                }
-                document.body.classList.add('hydrated');
+            function hideSkeleton() {
+              var skeleton = document.getElementById('initial-skeleton');
+              if (skeleton) {
+                skeleton.style.display = 'none';
               }
-              
+              document.body.classList.add('hydrated');
+            }
+            if (document.readyState === 'complete') {
+              hideSkeleton();
+            } else {
               window.addEventListener('load', hideSkeleton);
-              
-              if (document.readyState === 'complete' || document.readyState === 'interactive') {
-                setTimeout(hideSkeleton, 100);
-              }
             }
           })();
         `}} />

@@ -2,7 +2,7 @@ import { Skeleton } from "./ui/skeleton";
 
 export function PostCardSkeleton() {
   return (
-    <div className="bg-white rounded-xl shadow-[0_6px_18px_rgba(0,0,0,0.08)] border border-gray-200 overflow-hidden">
+    <div className="bg-gray-100 border rounded-md overflow-hidden">
       <div className="aspect-video overflow-hidden">
         <Skeleton className="w-full h-full" />
       </div>

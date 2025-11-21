@@ -7,7 +7,6 @@ import Layout from "../../components/layout";
 import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
 import { useState, useEffect } from "react";
-import { HeroPostSkeleton, MoreStoriesSkeleton } from "../../components/skeletons";
 
 export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   // Start false - skeleton shows immediately
@@ -49,7 +48,7 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
               <div className="skeleton-hero-content">
                 <div className="skeleton-title skeleton-shimmer"></div>
                 <div className="skeleton-title skeleton-shimmer"></div>
-                <div className="skeleton-text skeleton-shimmer" style={{marginTop: '2rem'}}></div>
+                <div className="skeleton-text skeleton-shimmer mt-8"></div>
                 <div className="skeleton-text skeleton-shimmer"></div>
                 <div className="skeleton-text medium skeleton-shimmer"></div>
               </div>
