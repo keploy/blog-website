@@ -10,94 +10,71 @@ import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
+import { useState, useEffect } from "react";
 import {
   getBreadcrumbListSchema,
   getOrganizationSchema,
   getWebSiteSchema,
   SITE_URL,
 } from "../lib/structured-data";
+
 export default function Index({ communityPosts, technologyPosts, preview }) {
   const structuredData = [
     getOrganizationSchema(),
     getWebSiteSchema(),
     getBreadcrumbListSchema([{ name: "Home", url: SITE_URL }]),
   ];
+  
+  // Start with false - skeleton shows by default
+  const [isHydrated, setIsHydrated] = useState(false);
+  
+  useEffect(() => {
+    // Only runs on client after hydration
+    setIsHydrated(true);
+  }, []);
 
   return (
-
-    <Layout
-      preview={preview}
-      featuredImage={HOME_OG_IMAGE_URL}
-      Title={`Blog - Keploy`}
-      Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}
-      structuredData={structuredData}
-    >
-      <Head>
-        <title>{`Engineering | Keploy Blog`}</title>
-      </Head>
-      <Header />
-      <Container>
-        <div className="">
-          <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
-            <div className="content">
-              <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
-                Keploy Blog
-              </h2>
-              <p className="content-body body 2xl:text-2xl text-lg mt-6">
-                Empowering your tech journey with expert advice and analysis
-              </p>
-              <div className="btn-wrapper flex flex-wrap gap-4 mt-6 ">
-                <Link
-                  href="/technology"
-                  className="relative px-4 py-1 overflow-hidden transition-all border border-black md:text-xl 2xl:text-2xl md:px-8 md:py-2 hover:border-orange-400 before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-orange-400 before:transition-all before:duration-250 rounded-xl hover:text-white hover:before:left-0 hover:before:w-full"
-                >
-                  <span className="relative z-10">Technology</span>
-                </Link>
-                <Link
-                  href="/community"
-                  className="relative px-4 py-1 overflow-hidden transition-all border border-black active:scale-95 md:text-xl 2xl:text-2xl md:px-8 md:py-2 hover:border-orange-400 before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-orange-400 before:transition-all before:duration-250 rounded-xl hover:text-white hover:before:left-0 hover:before:w-full"
-                >
-                  <span className="relative z-10">Community</span>
-                </Link>
-              </div>
-            </div>
-
-            <div className="blog-hero-img">
-              <Image
-                src="/blog/images/blog-bunny.png"
-                alt="hero image"
-                width={600}
-                height={600}
-              />
-            </div>
+    <>
+      <Layout preview={preview} structuredData={structuredData}>
+        <Head>
+          <title>
+            {
+              "Keploy Blog: API Testing, Unit Testing, and Automation Testing Best Practices"
+            }
+          </title>
+        </Head>
+        <Container>
+          <div className="flex flex-col items-center">
+            <h1 className="text-4xl md:text-7xl font-bold tracking-tighter leading-tight md:pr-8">
+              Keploy Blog
+            </h1>
+            <p className="text-center text-lg mt-5 md:pl-8">
+              Learn about API Testing, Unit Testing, and Automation Testing Best
+              Practices
+            </p>
           </div>
-        </div>
-        <TopBlogs
-          communityPosts={communityPosts}
-          technologyPosts={technologyPosts}
-        />
-        <Testimonials />
-      </Container>
-    </Layout>
+          <TopBlogs 
+            posts={technologyPosts.edges} 
+            isCommunity={false} 
+            isLoading={!isHydrated}
+          />
+          <TopBlogs 
+            posts={communityPosts.edges} 
+            isCommunity={true} 
+            isLoading={!isHydrated}
+          />
+        </Container>
+      </Layout>
+    </>
   );
 }
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const allCommunityPosts = await getAllPostsForCommunity(preview);
-  const allTehcnologyPosts = await getAllPostsForTechnology(preview);
+  const communityPosts = await getAllPostsForCommunity(preview);
+  const technologyPosts = await getAllPostsForTechnology(preview);
 
   return {
-    props: {
-      communityPosts:
-        allCommunityPosts?.edges?.length > 3
-          ? allCommunityPosts?.edges?.slice(0, 3)
-          : allCommunityPosts?.edges,
-      technologyPosts:
-        allTehcnologyPosts?.edges?.length > 3
-          ? allTehcnologyPosts?.edges?.slice(0, 3)
-          : allTehcnologyPosts.edges,
-      preview,
-    },
+    props: { communityPosts, technologyPosts, preview },
     revalidate: 10,
   };
 };
