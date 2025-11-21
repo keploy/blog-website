@@ -12,7 +12,7 @@ export function GitHubStars({ className = "" }) {
         href="https://github.com/keploy/keploy"
         target="_blank"
         rel="noopener noreferrer"
-        className="relative overflow-hidden px-4 py-1 flex items-center gap-2 transition-all duration-200 border-2 border-transparent hover:border-orange-400/80 rounded-full hover:bg-orange-400/10 hover:text-orange-500 text-lg group/link"
+        className="relative overflow-hidden px-4 py-1 flex items-center gap-2 transition-all duration-200 border-2 border-transparent hover:border-orange-400/80 rounded-full bg-white/90 hover:bg-orange-400/10 hover:text-orange-500 text-lg group/link"
       >
         <GitHubIcon />
         <span className="tracking-wider font-medium text-[1rem]">{stars}</span>
