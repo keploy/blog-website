@@ -238,11 +238,19 @@ export async function getReviewAuthorDetails(authorName) {
 
 
 // Function for fetching post with technology category
-export async function getAllPostsForTechnology(preview = false, after = null) {
+export async function getAllPostsForTechnology(
+  preview = false,
+  after: string | null = null,
+  first: number = 22
+) {
   const data = await fetchAPI(
     `
-    query AllPostsForCategory($after: String) {
-      posts(first: 22, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
+    query AllPostsForCategory($after: String, $first: Int!) {
+      posts(
+        first: $first,
+        after: $after,
+        where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }
+      ) {
         edges {
           node {
             title
@@ -292,14 +300,63 @@ export async function getAllPostsForTechnology(preview = false, after = null) {
       variables: {
         preview,
         after,
+        first,
       },
     }
   );
 
   return {
     edges: data?.posts?.edges || [],
-    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
+    pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null },
   };
+}
+
+export async function getTechnologyPostsByPage(
+  page = 1,
+  pageSize = 21,
+  preview = false
+) {
+  const safePage = Math.max(1, Number(page) || 1);
+  const safePageSize = Math.max(1, Math.min(Number(pageSize) || 21, 50));
+
+  let cursor: string | null = null;
+  let currentPage = 1;
+
+  while (true) {
+    const { edges, pageInfo } = await getAllPostsForTechnology(preview, cursor, safePageSize);
+    const normalizedPageInfo = pageInfo || { hasNextPage: false, endCursor: null };
+    const nodes = edges?.map((edge) => edge.node) ?? [];
+
+    if (!nodes.length) {
+      return {
+        posts: [],
+        pageInfo: normalizedPageInfo,
+        currentPage: safePage,
+        lastAvailablePage: Math.max(currentPage - 1, 1),
+      };
+    }
+
+    if (currentPage === safePage) {
+      return {
+        posts: nodes,
+        pageInfo: normalizedPageInfo,
+        currentPage: safePage,
+        lastAvailablePage: currentPage,
+      };
+    }
+
+    if (!normalizedPageInfo.hasNextPage) {
+      return {
+        posts: [],
+        pageInfo: normalizedPageInfo,
+        currentPage: safePage,
+        lastAvailablePage: currentPage,
+      };
+    }
+
+    cursor = normalizedPageInfo.endCursor;
+    currentPage += 1;
+  }
 }
 
 
@@ -762,6 +819,8 @@ export async function fetchMorePosts(
               }
             }
             ppmaAuthorName
+            ppmaAuthorImage
+            content
             categories {
               edges {
                 node {

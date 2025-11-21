@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import Link from "next/link";
 import Container from "../../components/container";
 import Layout from "../../components/layout";
-import { getAllPostsForTechnology } from "../../lib/api";
+import { getTechnologyPostsByPage } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
 import PostGrid from "../../components/post-grid";
@@ -16,6 +16,7 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import Background from "../../components/background";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import Image from "next/image";
+import { Post } from "../../types/post";
 
 const DATE_FILTERS = [
   { value: "all", label: "All dates" },
@@ -33,6 +34,19 @@ const SORT_OPTIONS = [
 
 type ViewMode = "grid" | "list";
 
+type PageInfo = {
+  hasNextPage: boolean;
+  endCursor: string | null;
+};
+
+type TechnologyPageProps = {
+  posts: Post[];
+  pageInfo: PageInfo;
+  currentPage: number;
+  pageSize: number;
+  preview: boolean;
+};
+
 const formatAuthorName = (name?: string) => {
   if (!name) return "Anonymous";
   return name
@@ -42,8 +56,13 @@ const formatAuthorName = (name?: string) => {
     .join(" ");
 };
 
-export default function Index({ allPosts: { edges }, preview }) {
-  const posts = edges.map((edge) => edge.node);
+export default function Index({
+  posts,
+  pageInfo,
+  currentPage,
+  pageSize,
+  preview,
+}: TechnologyPageProps) {
   const latestPost = posts[0];
   const featuredPosts = posts.slice(1, 5);
 
@@ -114,6 +133,7 @@ export default function Index({ allPosts: { edges }, preview }) {
   useEffect(() => {
     setGradientLoaded(true);
   }, []);
+
 
   const browseHeading = useMemo(() => {
     const trimmedSearch = searchTerm.trim();
@@ -410,7 +430,8 @@ export default function Index({ allPosts: { edges }, preview }) {
               <h2 className="text-3xl md:text-4xl font-semibold text-left">{browseHeading}</h2>
             </div>
             <p className="text-gray-500 text-sm">
-              Showing {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"}
+              Showing {filteredPosts.length} of {pageSize}{" "}
+              {pageSize === 1 ? "post" : "posts"} on page {currentPage}
             </p>
           </div>
 
@@ -454,6 +475,8 @@ export default function Index({ allPosts: { edges }, preview }) {
             </div>
           )}
         </section>
+
+        <PaginationControls currentPage={currentPage} hasNextPage={pageInfo?.hasNextPage ?? false} />
       </Container>
     </Layout>
   );
@@ -543,21 +566,95 @@ function FilterSelect({
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
-  const emptyData = { edges: [], pageInfo: { hasNextPage: false, endCursor: null } };
+function PaginationControls({
+  currentPage,
+  hasNextPage,
+}: {
+  currentPage: number;
+  hasNextPage: boolean;
+}) {
+  const prevDisabled = currentPage <= 1;
+  const nextDisabled = !hasNextPage;
+  const prevHref =
+    currentPage - 1 <= 1 ? "/technology" : `/technology?page=${currentPage - 1}`;
+  const nextHref = `/technology?page=${currentPage + 1}`;
+
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-4 border-t border-orange-100 pt-8 mt-8 pb-16">
+      <PaginationButton href={prevHref} disabled={prevDisabled}>
+        ← Previous
+      </PaginationButton>
+      <span className="text-sm font-semibold text-gray-600">Page {currentPage}</span>
+      <PaginationButton href={nextHref} disabled={nextDisabled}>
+        Next →
+      </PaginationButton>
+    </div>
+  );
+}
+
+function PaginationButton({
+  href,
+  disabled,
+  children,
+}: {
+  href: string;
+  disabled: boolean;
+  children: ReactNode;
+}) {
+  if (disabled) {
+    return (
+      <span className="px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-400 cursor-not-allowed">
+        {children}
+      </span>
+    );
+  }
+
+  return (
+    <Link
+      href={href}
+      className="px-4 py-2 rounded-full text-sm font-semibold bg-orange-500 text-white hover:bg-orange-600 transition-colors"
+    >
+      {children}
+    </Link>
+  );
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ query, preview = false }) => {
+  const pageParam = Array.isArray(query.page) ? query.page[0] : query.page;
+  const requestedPage = Math.max(1, Number(pageParam) || 1);
+  const pageSize = 21;
 
   try {
-    const allPosts = await getAllPostsForTechnology(preview);
+    const data = await getTechnologyPostsByPage(requestedPage, pageSize, preview);
+    const lastAvailablePage = data.lastAvailablePage ?? requestedPage;
+
+    if (!data.posts.length && requestedPage > lastAvailablePage) {
+      const destination =
+        lastAvailablePage <= 1 ? "/technology" : `/technology?page=${lastAvailablePage}`;
+      return {
+        redirect: { destination, permanent: false },
+      };
+    }
 
     return {
-      props: { allPosts: allPosts ?? emptyData, preview },
-      revalidate: 10,
+      props: {
+        posts: data.posts,
+        pageInfo: data.pageInfo,
+        currentPage: requestedPage,
+        pageSize,
+        preview,
+      },
     };
   } catch (error) {
-    console.error("technology/index getStaticProps error:", error);
+    console.error("technology/index getServerSideProps error:", error);
     return {
-      props: { allPosts: emptyData, preview },
-      revalidate: 60,
+      props: {
+        posts: [],
+        pageInfo: { hasNextPage: false, endCursor: null },
+        currentPage: 1,
+        pageSize,
+        preview,
+      },
     };
   }
 };
