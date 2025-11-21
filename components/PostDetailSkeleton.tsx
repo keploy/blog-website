@@ -75,7 +75,7 @@ export default function PostDetailSkeleton() {
             <Skeleton className="h-8 w-20 rounded-full" />
             <Skeleton className="h-8 w-24 rounded-full" />
             <Skeleton className="h-8 w-28 rounded-full" />
-            <Skeleton className="h-8 w-22 rounded-full" />
+            <Skeleton className="h-8 w-[5.5rem] rounded-full" />
           </div>
 
           {/* Author Box */}
