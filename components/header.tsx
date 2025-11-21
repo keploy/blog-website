@@ -11,6 +11,7 @@ import { Button } from "../components/ui/button";
 import { MobileNav } from "../components/navbar/mobile-nav";
 import { useState, useEffect } from "react";
 import { cn } from "../lib/utils/utils";
+import SearchCommand from "./SearchCommand";
 
 export default function Header({
   readProgress,
@@ -57,6 +58,7 @@ export default function Header({
             </div>
 
             <div className="justify-end flex-1 hidden header-btn-container xl:flex gap-2">
+              <SearchCommand />
               <Vscode />
               <GitHubStars />
               <Button className="ml-[8px]">
@@ -72,6 +74,7 @@ export default function Header({
 
             {/* Mobile Navigation */}
             <div className="flex items-center gap-2 xl:hidden">
+              <SearchCommand />
               <GitHubStars />
               <Button className="ml-[8px] hidden md:flex">
                 <a
