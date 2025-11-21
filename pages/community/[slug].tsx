@@ -22,6 +22,7 @@ import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
+import PostDetailSkeleton from "../../components/PostDetailSkeleton";
 import "./styles.module.css"
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
@@ -148,7 +149,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       <Header readProgress={readProgress} />
       <Container>
         {router.isFallback ? (
-          <PostTitle>Loading…</PostTitle>
+          <PostDetailSkeleton />
         ) : (
           <>
             <PrismLoader /> {/* Load Prism.js here */}

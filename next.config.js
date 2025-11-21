@@ -14,8 +14,12 @@ module.exports = {
   basePath: '/blog',
   assetPrefix: "/blog",
   images: {
-    domains: ['secure.gravatar.com', 'wp.keploy.io' ,'keploy.io', 'pbs.twimg.com'],
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'secure.gravatar.com',
+        pathname: '/**',
+      },
       {
         protocol: 'https',
         hostname: 'keploy.io',
@@ -27,7 +31,12 @@ module.exports = {
         hostname: 'wp.keploy.io',
         port,
         pathname: '/**',
-      },  
+      },
+      {
+        protocol: 'https',
+        hostname: 'pbs.twimg.com',
+        pathname: '/**',
+      },
     ],
   },
 }

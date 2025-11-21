@@ -10,7 +10,15 @@ import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
+import { useState, useEffect } from "react";
+
 export default function Index({ communityPosts, technologyPosts, preview }) {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    // Only runs after hydration
+    setIsHydrated(true);
+  }, []);
   return (
 
     <Layout
@@ -61,6 +69,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
         <TopBlogs
           communityPosts={communityPosts}
           technologyPosts={technologyPosts}
+          isLoading={!isHydrated}
         />
         <Testimonials />
       </Container>
