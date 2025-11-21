@@ -25,21 +25,23 @@ export default function Layout({
         Title={Title}
         Description={Description}
       />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 20,
-        }}
-        className="min-h-screen"
-      >
-        {/* <Alert preview={preview} /> */}
-        <main>{children}</main>
-      </motion.div>
-      <Footer />
+      <div className="flex flex-col min-h-screen">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 20,
+          }}
+          className="flex-grow"
+        >
+          {/* <Alert preview={preview} /> */}
+          <main>{children}</main>
+        </motion.div>
+        <Footer />
+      </div>
       <ScrollToTop />
 
       <Script
