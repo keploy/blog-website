@@ -4,7 +4,7 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import Container from "../../components/container";
 import Layout from "../../components/layout";
-import { getTechnologyPostsByPage } from "../../lib/api";
+import { getAllTechnologyPosts, getTechnologyPostsByPage } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
 import PostGrid from "../../components/post-grid";
@@ -32,6 +32,18 @@ const SORT_OPTIONS = [
   { value: "za", label: "Title Z → A" },
 ];
 
+const TECHNOLOGY_PAGE_SIZE = 18;
+
+const dedupePosts = (posts: Post[] = []) => {
+  const seen = new Set<string>();
+  return posts.filter((post) => {
+    if (!post?.slug) return false;
+    if (seen.has(post.slug)) return false;
+    seen.add(post.slug);
+    return true;
+  });
+};
+
 type ViewMode = "grid" | "list";
 
 type PageInfo = {
@@ -43,8 +55,11 @@ type TechnologyPageProps = {
   posts: Post[];
   pageInfo: PageInfo;
   currentPage: number;
-  pageSize: number;
   preview: boolean;
+  latestPost: Post | null;
+  featuredPosts: Post[];
+  allPosts: Post[];
+  totalPages: number;
 };
 
 const formatAuthorName = (name?: string) => {
@@ -60,11 +75,13 @@ export default function Index({
   posts,
   pageInfo,
   currentPage,
-  pageSize,
   preview,
+  latestPost,
+  featuredPosts,
+  allPosts,
+  totalPages,
 }: TechnologyPageProps) {
-  const latestPost = posts[0];
-  const featuredPosts = posts.slice(1, 5);
+  const heroPost = latestPost ?? posts[0];
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAuthor, setSelectedAuthor] = useState("all");
@@ -72,13 +89,37 @@ export default function Index({
   const [sortOption, setSortOption] = useState("newest");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [gradientLoaded, setGradientLoaded] = useState(false);
+  const initialGlobalPosts = allPosts?.length ? dedupePosts(allPosts) : dedupePosts(posts);
+  const [globalPosts, setGlobalPosts] = useState<Post[]>(initialGlobalPosts);
+  const [hasGlobalPosts, setHasGlobalPosts] = useState(Boolean(initialGlobalPosts.length));
+  const [isGlobalLoading, setIsGlobalLoading] = useState(false);
+  const [clientPage, setClientPage] = useState(currentPage);
 
   const authors = useMemo<string[]>(() => {
     const uniqueAuthors = new Set<string>(
-      posts.map((post) => post.ppmaAuthorName || "Anonymous")
+      globalPosts.map((post) => post.ppmaAuthorName || "Anonymous")
     );
     return ["all", ...Array.from(uniqueAuthors)];
-  }, [posts]);
+  }, [globalPosts]);
+
+  const filtersActive = useMemo(() => {
+    return (
+      searchTerm.trim().length > 0 ||
+      selectedAuthor !== "all" ||
+      dateFilter !== "all" ||
+      sortOption !== "newest"
+    );
+  }, [searchTerm, selectedAuthor, dateFilter, sortOption]);
+
+  const filterablePosts = useMemo(() => {
+    const basePosts = filtersActive
+      ? hasGlobalPosts
+        ? globalPosts
+        : []
+      : posts;
+
+    return dedupePosts(basePosts);
+  }, [filtersActive, hasGlobalPosts, globalPosts, posts]);
 
   const filteredPosts = useMemo(() => {
     const normalize = (value?: string) =>
@@ -93,7 +134,7 @@ export default function Index({
       return diffInDays <= days;
     };
 
-    const sorted = [...posts]
+    const sorted = [...filterablePosts]
       .filter((post) => {
         const titleMatch = normalize(post.title).includes(searchTerm.toLowerCase());
         const excerptMatch = normalize(post.excerpt).includes(searchTerm.toLowerCase());
@@ -120,7 +161,19 @@ export default function Index({
     });
 
     return sorted;
-  }, [posts, searchTerm, selectedAuthor, dateFilter, sortOption]);
+  }, [filterablePosts, searchTerm, selectedAuthor, dateFilter, sortOption]);
+
+  const visiblePosts = useMemo(() => {
+    if (filtersActive) {
+      const start = (clientPage - 1) * TECHNOLOGY_PAGE_SIZE;
+      return filteredPosts.slice(start, start + TECHNOLOGY_PAGE_SIZE);
+    }
+    return filteredPosts;
+  }, [filtersActive, filteredPosts, clientPage]);
+
+  const showEmptyState =
+    visiblePosts.length === 0 && !(filtersActive && isGlobalLoading && !hasGlobalPosts);
+  const showHeroSection = !filtersActive && currentPage === 1;
 
   const resetFilters = () => {
     setSearchTerm("");
@@ -133,6 +186,63 @@ export default function Index({
   useEffect(() => {
     setGradientLoaded(true);
   }, []);
+
+  useEffect(() => {
+    if (hasGlobalPosts || isGlobalLoading) return;
+
+    let isCancelled = false;
+    const controller = new AbortController();
+
+    const fetchAllPosts = async () => {
+      try {
+        setIsGlobalLoading(true);
+        const response = await fetch("/api/technology-posts?mode=all", {
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          throw new Error("Failed to load technology posts");
+        }
+        const data = await response.json();
+        if (!isCancelled && Array.isArray(data?.posts)) {
+          setGlobalPosts(dedupePosts(data.posts));
+          setHasGlobalPosts(true);
+        }
+      } catch (error) {
+        if (isCancelled) return;
+        console.error("Failed to fetch full technology posts", error);
+      } finally {
+        if (!isCancelled) {
+          setIsGlobalLoading(false);
+        }
+      }
+    };
+
+    fetchAllPosts();
+
+    return () => {
+      isCancelled = true;
+      controller.abort();
+    };
+  }, [hasGlobalPosts, isGlobalLoading]);
+
+  useEffect(() => {
+    if (filtersActive) {
+      setClientPage(1);
+    } else {
+      setClientPage(currentPage);
+    }
+  }, [filtersActive, currentPage]);
+
+  useEffect(() => {
+    if (!filtersActive) return;
+    const totalPages = Math.max(
+      1,
+      Math.ceil(filteredPosts.length / TECHNOLOGY_PAGE_SIZE) || 1
+    );
+    if (clientPage > totalPages) {
+      setClientPage(totalPages);
+    }
+  }, [filtersActive, filteredPosts.length, clientPage]);
 
 
   const browseHeading = useMemo(() => {
@@ -173,8 +283,8 @@ export default function Index({
   return (
     <Layout
       preview={preview}
-      featuredImage={latestPost?.featuredImage?.node.sourceUrl}
-      Title={latestPost?.title}
+      featuredImage={heroPost?.featuredImage?.node.sourceUrl}
+      Title={heroPost?.title}
       Description={`Blog from the Technology Page`}
     >
       <Head>
@@ -301,119 +411,121 @@ export default function Index({
                 </div>
               </div>
 
-              <div className="flex flex-col">
-                <div className="flex flex-col md:flex-row gap-3 md:gap-3 items-start">
-                  {latestPost && (
-                    <article className="group relative w-full md:w-[44%] md:max-w-[44%] mt-12 md:mt-24 transition-all duration-300 hover:-translate-y-1">
-                      <div className="rounded-[30px] p-[1.5px] bg-gradient-to-br from-orange-300/40 via-orange-200/20 to-orange-100/30 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-orange-200/40">
-                        <div className="relative overflow-hidden rounded-[27px] bg-gradient-to-br from-orange-50/70 via-white to-white border border-white/60 shadow-lg flex flex-col gap-3 p-4">
-                          <div className="absolute inset-0 bg-gradient-to-br from-orange-200/20 via-transparent to-transparent blur-3xl opacity-70 pointer-events-none" />
-                          <div className="relative flex flex-col gap-4">
-                            <div className="text-xs uppercase tracking-[0.35em] text-black flex items-center gap-2">
-                              <span>Latest blog</span>
-                              <span className="flex-1 h-px bg-gradient-to-r from-orange-300 via-orange-200/70 to-transparent rounded-full" />
-                            </div>
-                            <div className="overflow-hidden rounded-2xl ring-1 ring-orange-100/60 shadow-inner shadow-orange-200/30">
-                              {latestPost.featuredImage && (
-                                <CoverImage
-                                  title={latestPost.title}
-                                  coverImage={latestPost.featuredImage}
-                                  slug={latestPost.slug}
-                                  isCommunity={false}
-                                  imgClassName="w-full h-24 object-cover"
+              {showHeroSection && (
+                <div className="flex flex-col">
+                  <div className="flex flex-col md:flex-row gap-3 md:gap-3 items-start">
+                    {heroPost && (
+                      <article className="group relative w-full md:w-[44%] md:max-w-[44%] mt-12 md:mt-24 transition-all duration-300 hover:-translate-y-1">
+                        <div className="rounded-[30px] p-[1.5px] bg-gradient-to-br from-orange-300/40 via-orange-200/20 to-orange-100/30 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-orange-200/40">
+                          <div className="relative overflow-hidden rounded-[27px] bg-gradient-to-br from-orange-50/70 via-white to-white border border-white/60 shadow-lg flex flex-col gap-3 p-4">
+                            <div className="absolute inset-0 bg-gradient-to-br from-orange-200/20 via-transparent to-transparent blur-3xl opacity-70 pointer-events-none" />
+                            <div className="relative flex flex-col gap-4">
+                              <div className="text-xs uppercase tracking-[0.35em] text-black flex items-center gap-2">
+                                <span>Latest blog</span>
+                                <span className="flex-1 h-px bg-gradient-to-r from-orange-300 via-orange-200/70 to-transparent rounded-full" />
+                              </div>
+                              <div className="overflow-hidden rounded-2xl ring-1 ring-orange-100/60 shadow-inner shadow-orange-200/30">
+                                {heroPost.featuredImage && (
+                                  <CoverImage
+                                    title={heroPost.title}
+                                    coverImage={heroPost.featuredImage}
+                                    slug={heroPost.slug}
+                                    isCommunity={false}
+                                    imgClassName="w-full h-24 object-cover"
+                                  />
+                                )}
+                              </div>
+                              <div className="flex flex-col gap-3">
+                                <h2
+                                  className="text-[1rem] font-semibold leading-snug group-hover:text-orange-600 line-clamp-2 transition-colors duration-200"
+                                  dangerouslySetInnerHTML={{ __html: heroPost.title }}
                                 />
-                              )}
+                                <p className="text-xs text-gray-500 flex items-center gap-2">
+                                  <span className="font-semibold text-gray-900">
+                                    {heroPost.ppmaAuthorName || "Anonymous"}
+                                  </span>
+                                  <span>•</span>
+                                  <DateComponent dateString={heroPost.date} />
+                                </p>
+                                <p
+                                  className="text-gray-600 text-[0.75rem] line-clamp-2 leading-relaxed"
+                                  dangerouslySetInnerHTML={{
+                                    __html: getExcerpt(heroPost.excerpt, 18),
+                                  }}
+                                />
+                              </div>
+                              <Link
+                                href={`/technology/${heroPost.slug}`}
+                                className="inline-flex items-center gap-1 text-orange-600 font-semibold text-xs hover:text-orange-700 hover:underline transition-colors duration-200 mt-1"
+                              >
+                                Read latest →
+                              </Link>
                             </div>
-                            <div className="flex flex-col gap-3">
-                              <h2
-                                className="text-[1rem] font-semibold leading-snug group-hover:text-orange-600 line-clamp-2 transition-colors duration-200"
-                                dangerouslySetInnerHTML={{ __html: latestPost.title }}
-                              />
-                              <p className="text-xs text-gray-500 flex items-center gap-2">
-                                <span className="font-semibold text-gray-900">
-                                  {latestPost.ppmaAuthorName || "Anonymous"}
-                                </span>
-                                <span>•</span>
-                                <DateComponent dateString={latestPost.date} />
-                              </p>
-                              <p
-                                className="text-gray-600 text-[0.75rem] line-clamp-2 leading-relaxed"
-                                dangerouslySetInnerHTML={{
-                                  __html: getExcerpt(latestPost.excerpt, 18),
-                                }}
-                              />
-                            </div>
-                            <Link
-                              href={`/technology/${latestPost.slug}`}
-                              className="inline-flex items-center gap-1 text-orange-600 font-semibold text-xs hover:text-orange-700 hover:underline transition-colors duration-200 mt-1"
-                            >
-                              Read latest →
-                            </Link>
                           </div>
                         </div>
-                      </div>
-                    </article>
-                  )}
+                      </article>
+                    )}
 
-                  {!!featuredPosts.length && (
-                    <div className="w-full md:w-[48%] md:max-w-[48%] md:ml-auto mt-6 md:mt-0 lg:-translate-y-16">
-                      <div className="rounded-[25px] p-[1.5px] bg-gradient-to-br from-orange-200/35 via-orange-100/20 to-transparent shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-orange-200/35">
-                        <div className="relative overflow-hidden rounded-[27px] bg-gradient-to-br from-white via-orange-50/45 to-white border border-white/60 shadow-lg p-4">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white via-orange-100/30 to-transparent opacity-70 blur-2xl pointer-events-none" />
-                        <div className="relative">
-                            <div className="flex items-center justify-between mb-3">
-                              <h3 className="text-sm font-semibold flex items-center gap-2">
-                                Featured blogs
-                                <span className="inline-flex h-1.5 w-1.5 rounded-full bg-orange-400/80" />
-                              </h3>
-                              <span className="text-xs text-gray-500">
-                                {featuredPosts.length} picks
-                              </span>
-                            </div>
-                          <div className="mt-4 space-y-4">
-                            {featuredPosts.map((post, index) => {
-                              const authorName = formatAuthorName(post.ppmaAuthorName);
-                              return (
-                                <div key={post.slug}>
-                                  <Link
-                                    href={`/technology/${post.slug}`}
-                                    className="group relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 -m-1 min-h-[56px] transition-colors duration-300 hover:bg-orange-50/70"
-                                  >
-                                    {post.featuredImage?.node?.sourceUrl && (
-                                      <div className="relative flex-shrink-0 w-[4.25rem] h-14 rounded-xl overflow-hidden ring-1 ring-orange-100/70 bg-orange-50/60">
-                                        <Image
-                                          src={post.featuredImage.node.sourceUrl}
-                                          alt={post.title}
-                                          fill
-                                          sizes="68px"
-                                          className="object-cover"
+                    {!!featuredPosts.length && (
+                      <div className="w-full md:w-[48%] md:max-w-[48%] md:ml-auto mt-6 md:mt-0 lg:-translate-y-16">
+                        <div className="rounded-[25px] p-[1.5px] bg-gradient-to-br from-orange-200/35 via-orange-100/20 to-transparent shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-orange-200/35">
+                          <div className="relative overflow-hidden rounded-[27px] bg-gradient-to-br from-white via-orange-50/45 to-white border border-white/60 shadow-lg p-4">
+                          <div className="absolute inset-0 bg-gradient-to-tr from-white via-orange-100/30 to-transparent opacity-70 blur-2xl pointer-events-none" />
+                          <div className="relative">
+                              <div className="flex items-center justify-between mb-3">
+                                <h3 className="text-sm font-semibold flex items-center gap-2">
+                                  Featured blogs
+                                  <span className="inline-flex h-1.5 w-1.5 rounded-full bg-orange-400/80" />
+                                </h3>
+                                <span className="text-xs text-gray-500">
+                                  {featuredPosts.length} picks
+                                </span>
+                              </div>
+                            <div className="mt-4 space-y-4">
+                              {featuredPosts.map((post, index) => {
+                                const authorName = formatAuthorName(post.ppmaAuthorName);
+                                return (
+                                  <div key={post.slug}>
+                                    <Link
+                                      href={`/technology/${post.slug}`}
+                                      className="group relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 -m-1 min-h-[56px] transition-colors duration-300 hover:bg-orange-50/70"
+                                    >
+                                      {post.featuredImage?.node?.sourceUrl && (
+                                        <div className="relative flex-shrink-0 w-[4.25rem] h-14 rounded-xl overflow-hidden ring-1 ring-orange-100/70 bg-orange-50/60">
+                                          <Image
+                                            src={post.featuredImage.node.sourceUrl}
+                                            alt={post.title}
+                                            fill
+                                            sizes="68px"
+                                            className="object-cover"
+                                          />
+                                        </div>
+                                      )}
+                                      <div className="flex flex-col gap-1">
+                                        <h4
+                                          className="text-[0.85rem] font-semibold text-gray-900 leading-snug line-clamp-2 transition-colors duration-200 group-hover:text-orange-600"
+                                          dangerouslySetInnerHTML={{ __html: post.title }}
                                         />
+                                        <p className="text-[0.7rem] font-semibold text-gray-800 tracking-tight">
+                                          {authorName}
+                                        </p>
                                       </div>
+                                    </Link>
+                                    {index !== featuredPosts.length - 1 && (
+                                      <div className="h-[1.5px] w-full bg-gradient-to-r from-orange-200 via-gray-200 to-transparent rounded-full mt-4" />
                                     )}
-                                    <div className="flex flex-col gap-1">
-                                      <h4
-                                        className="text-[0.85rem] font-semibold text-gray-900 leading-snug line-clamp-2 transition-colors duration-200 group-hover:text-orange-600"
-                                        dangerouslySetInnerHTML={{ __html: post.title }}
-                                      />
-                                      <p className="text-[0.7rem] font-semibold text-gray-800 tracking-tight">
-                                        {authorName}
-                                      </p>
-                                    </div>
-                                  </Link>
-                                  {index !== featuredPosts.length - 1 && (
-                                    <div className="h-[1.5px] w-full bg-gradient-to-r from-orange-200 via-gray-200 to-transparent rounded-full mt-4" />
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
           </div>
@@ -422,26 +534,34 @@ export default function Index({
 
       <Container>
         <section className="mt-16 mb-12">
-          <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+          <div className="flex items-start justify-between flex-wrap gap-4 mb-8">
             <div>
               <p className="text-sm uppercase tracking-widest text-orange-500 mb-2">
                 Browse
               </p>
               <h2 className="text-3xl md:text-4xl font-semibold text-left">{browseHeading}</h2>
+              <span className="sr-only" aria-live="polite">
+                {filtersActive
+                  ? `${filteredPosts.length} global results match your filters`
+                  : `${visiblePosts.length} results available on this page`}
+              </span>
             </div>
-            <p className="text-gray-500 text-sm">
-              Showing {filteredPosts.length} of {pageSize}{" "}
-              {pageSize === 1 ? "post" : "posts"} on page {currentPage}
-            </p>
           </div>
 
-          {filteredPosts.length === 0 ? (
+          {filtersActive && isGlobalLoading && !hasGlobalPosts && (
+            <div className="flex items-center gap-2 text-sm text-orange-500 mb-6">
+              <span className="h-2 w-2 rounded-full bg-orange-400 animate-pulse" />
+              <span>Loading all technology blogs…</span>
+            </div>
+          )}
+
+          {showEmptyState ? (
             <div className="text-center bg-white border border-dashed border-gray-200 rounded-3xl p-12 text-gray-500">
               No posts match your filters. Try adjusting the search or filters above.
             </div>
           ) : viewMode === "grid" ? (
             <PostGrid>
-              {filteredPosts.map((post) => {
+              {visiblePosts.map((post) => {
                 const readingTime = post.content ? 5 + calculateReadingTime(post.content) : undefined;
                 return (
                   <PostCard
@@ -461,7 +581,7 @@ export default function Index({
             </PostGrid>
           ) : (
             <div className="space-y-6">
-              {filteredPosts.map((post) => {
+              {visiblePosts.map((post) => {
                 const readingTime = post.content ? 5 + calculateReadingTime(post.content) : undefined;
                 return (
                   <PostListRow
@@ -476,7 +596,16 @@ export default function Index({
           )}
         </section>
 
-        <PaginationControls currentPage={currentPage} hasNextPage={pageInfo?.hasNextPage ?? false} />
+        <PaginationControls
+          currentPage={currentPage}
+          hasNextPage={pageInfo?.hasNextPage ?? false}
+          filtersActive={filtersActive}
+          clientPage={clientPage}
+          onClientPageChange={setClientPage}
+          totalFilteredPosts={filteredPosts.length}
+          pageSize={TECHNOLOGY_PAGE_SIZE}
+          totalPages={totalPages}
+        />
       </Container>
     </Layout>
   );
@@ -569,25 +698,84 @@ function FilterSelect({
 function PaginationControls({
   currentPage,
   hasNextPage,
+  filtersActive,
+  clientPage,
+  onClientPageChange,
+  totalFilteredPosts,
+  pageSize,
+  totalPages,
 }: {
   currentPage: number;
   hasNextPage: boolean;
+  filtersActive: boolean;
+  clientPage: number;
+  onClientPageChange: (page: number) => void;
+  totalFilteredPosts: number;
+  pageSize: number;
+  totalPages: number;
 }) {
+  const filteredTotalPages = Math.max(1, Math.ceil(totalFilteredPosts / pageSize) || 1);
+
+  if (filtersActive) {
+    const prevDisabled = clientPage <= 1;
+    const nextDisabled = clientPage >= totalPages;
+    return (
+      <div className="flex justify-center border-t border-orange-50 pt-10 mt-10 pb-16">
+        <div className="inline-flex items-center gap-6 rounded-full border border-orange-100/70 bg-gradient-to-r from-white via-orange-50/50 to-white px-5 py-2.5 shadow-[0_10px_30px_rgba(249,115,22,0.15)]">
+          <PaginationButton
+            disabled={prevDisabled}
+            ariaLabel="Previous filtered page"
+            onClick={() => onClientPageChange(Math.max(1, clientPage - 1))}
+          >
+            ←
+          </PaginationButton>
+          <div className="flex flex-col items-center text-gray-500">
+            <span className="text-[0.55rem] font-semibold uppercase tracking-[0.4em]">
+              Page
+            </span>
+            <span className="text-lg font-semibold text-gray-900">{clientPage}</span>
+            <span className="text-[0.65rem] uppercase tracking-[0.3em] text-gray-400 mt-0.5">
+              of {filteredTotalPages}
+            </span>
+          </div>
+          <PaginationButton
+            disabled={nextDisabled}
+            ariaLabel="Next filtered page"
+            onClick={() => onClientPageChange(Math.min(totalPages, clientPage + 1))}
+          >
+            →
+          </PaginationButton>
+        </div>
+      </div>
+    );
+  }
+
   const prevDisabled = currentPage <= 1;
   const nextDisabled = !hasNextPage;
   const prevHref =
     currentPage - 1 <= 1 ? "/technology" : `/technology?page=${currentPage - 1}`;
   const nextHref = `/technology?page=${currentPage + 1}`;
+  const displayTotalPages = Math.max(1, totalPages || (hasNextPage ? currentPage + 1 : currentPage));
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 border-t border-orange-100 pt-8 mt-8 pb-16">
-      <PaginationButton href={prevHref} disabled={prevDisabled}>
-        ← Previous
-      </PaginationButton>
-      <span className="text-sm font-semibold text-gray-600">Page {currentPage}</span>
-      <PaginationButton href={nextHref} disabled={nextDisabled}>
-        Next →
-      </PaginationButton>
+    <div className="flex justify-center border-t border-orange-50 pt-10 mt-10 pb-16">
+      <div className="inline-flex items-center gap-6 rounded-full border border-orange-100/70 bg-gradient-to-r from-white via-orange-50/50 to-white px-5 py-2.5 shadow-[0_10px_30px_rgba(249,115,22,0.15)]">
+        <PaginationButton href={prevHref} disabled={prevDisabled} ariaLabel="Previous page">
+          ←
+        </PaginationButton>
+        <div className="flex flex-col items-center text-gray-500">
+          <span className="text-[0.55rem] font-semibold uppercase tracking-[0.4em]">
+            Page
+          </span>
+          <span className="text-lg font-semibold text-gray-900">{currentPage}</span>
+          <span className="text-[0.65rem] uppercase tracking-[0.3em] text-gray-400 mt-0.5">
+            of {displayTotalPages}
+          </span>
+        </div>
+        <PaginationButton href={nextHref} disabled={nextDisabled} ariaLabel="Next page">
+          →
+        </PaginationButton>
+      </div>
     </div>
   );
 }
@@ -596,37 +784,74 @@ function PaginationButton({
   href,
   disabled,
   children,
+  ariaLabel,
+  onClick,
 }: {
-  href: string;
+  href?: string;
   disabled: boolean;
   children: ReactNode;
+  ariaLabel?: string;
+  onClick?: () => void;
 }) {
+  const label = ariaLabel ?? "Pagination button";
+
+  const baseClasses =
+    "inline-flex items-center justify-center w-12 h-12 rounded-full text-lg font-semibold transition-all duration-200";
+
   if (disabled) {
     return (
-      <span className="px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-400 cursor-not-allowed">
-        {children}
+      <span
+        aria-label={label}
+        className={`${baseClasses} border border-gray-200 text-gray-300 bg-gray-50 cursor-not-allowed`}
+      >
+        <span aria-hidden="true">{children}</span>
       </span>
     );
   }
 
+  if (href) {
+    return (
+      <Link
+        href={href}
+        aria-label={label}
+        className={`${baseClasses} border border-transparent text-white bg-gradient-to-br from-orange-500 to-orange-400 shadow-[0_8px_20px_rgba(249,115,22,0.35)] hover:shadow-[0_12px_30px_rgba(249,115,22,0.45)] focus:outline-none focus:ring-2 focus:ring-orange-200`}
+      >
+        <span aria-hidden="true">{children}</span>
+      </Link>
+    );
+  }
+
   return (
-    <Link
-      href={href}
-      className="px-4 py-2 rounded-full text-sm font-semibold bg-orange-500 text-white hover:bg-orange-600 transition-colors"
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className={`${baseClasses} border border-transparent text-white bg-gradient-to-br from-orange-500 to-orange-400 shadow-[0_8px_20px_rgba(249,115,22,0.35)] hover:shadow-[0_12px_30px_rgba(249,115,22,0.45)] focus:outline-none focus:ring-2 focus:ring-orange-200 disabled:opacity-60 disabled:cursor-not-allowed`}
+      disabled={disabled}
     >
-      {children}
-    </Link>
+      <span aria-hidden="true">{children}</span>
+    </button>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, preview = false }) => {
   const pageParam = Array.isArray(query.page) ? query.page[0] : query.page;
   const requestedPage = Math.max(1, Number(pageParam) || 1);
-  const pageSize = 21;
+  const pageSize = TECHNOLOGY_PAGE_SIZE;
 
   try {
-    const data = await getTechnologyPostsByPage(requestedPage, pageSize, preview);
-    const lastAvailablePage = data.lastAvailablePage ?? requestedPage;
+    const latestData = await getTechnologyPostsByPage(1, 5, preview);
+    const heroPost = latestData.posts[0] ?? null;
+    const [data, allPostsData] = await Promise.all([
+      getTechnologyPostsByPage(requestedPage, pageSize, preview),
+      getAllTechnologyPosts(preview),
+    ]);
+    const uniqueAllPosts = dedupePosts(allPostsData);
+    const totalPages = Math.max(1, Math.ceil(uniqueAllPosts.length / pageSize) || 1);
+    const lastAvailablePage = totalPages;
+    const featuredPosts = heroPost
+      ? latestData.posts.filter((post) => post.slug !== heroPost.slug).slice(0, 4)
+      : latestData.posts.slice(0, 4);
 
     if (!data.posts.length && requestedPage > lastAvailablePage) {
       const destination =
@@ -641,8 +866,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query, preview = 
         posts: data.posts,
         pageInfo: data.pageInfo,
         currentPage: requestedPage,
-        pageSize,
         preview,
+        latestPost: heroPost ?? null,
+        featuredPosts,
+        allPosts: uniqueAllPosts,
+        totalPages,
       },
     };
   } catch (error) {
@@ -652,8 +880,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query, preview = 
         posts: [],
         pageInfo: { hasNextPage: false, endCursor: null },
         currentPage: 1,
-        pageSize,
         preview,
+        latestPost: null,
+        featuredPosts: [],
+        allPosts: [],
+        totalPages: 1,
       },
     };
   }

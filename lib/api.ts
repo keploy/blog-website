@@ -313,50 +313,93 @@ export async function getAllPostsForTechnology(
 
 export async function getTechnologyPostsByPage(
   page = 1,
-  pageSize = 21,
-  preview = false
+  pageSize = 18,
+  preview = false,
+  excludeSlugs: string[] = []
 ) {
   const safePage = Math.max(1, Number(page) || 1);
-  const safePageSize = Math.max(1, Math.min(Number(pageSize) || 21, 50));
+  const safePageSize = Math.max(1, Math.min(Number(pageSize) || 18, 50));
+  const excludeSet = new Set(excludeSlugs.filter(Boolean));
+  const startIndex = (safePage - 1) * safePageSize;
+  const endIndex = startIndex + safePageSize;
 
   let cursor: string | null = null;
-  let currentPage = 1;
+  let hasMoreFromSource = true;
+  let normalizedPageInfo = { hasNextPage: false, endCursor: null as string | null };
+  const collectedPosts: any[] = [];
 
-  while (true) {
-    const { edges, pageInfo } = await getAllPostsForTechnology(preview, cursor, safePageSize);
-    const normalizedPageInfo = pageInfo || { hasNextPage: false, endCursor: null };
+  while (hasMoreFromSource && collectedPosts.length < endIndex + excludeSet.size) {
+    const { edges, pageInfo } = await getAllPostsForTechnology(
+      preview,
+      cursor,
+      safePageSize + excludeSet.size
+    );
     const nodes = edges?.map((edge) => edge.node) ?? [];
-
-    if (!nodes.length) {
-      return {
-        posts: [],
-        pageInfo: normalizedPageInfo,
-        currentPage: safePage,
-        lastAvailablePage: Math.max(currentPage - 1, 1),
-      };
-    }
-
-    if (currentPage === safePage) {
-      return {
-        posts: nodes,
-        pageInfo: normalizedPageInfo,
-        currentPage: safePage,
-        lastAvailablePage: currentPage,
-      };
-    }
-
-    if (!normalizedPageInfo.hasNextPage) {
-      return {
-        posts: [],
-        pageInfo: normalizedPageInfo,
-        currentPage: safePage,
-        lastAvailablePage: currentPage,
-      };
-    }
-
+    normalizedPageInfo = pageInfo || { hasNextPage: false, endCursor: null };
     cursor = normalizedPageInfo.endCursor;
-    currentPage += 1;
+    hasMoreFromSource = normalizedPageInfo.hasNextPage ?? false;
+
+    for (const node of nodes) {
+      if (excludeSet.has(node.slug)) continue;
+      collectedPosts.push(node);
+    }
+
+    if (!hasMoreFromSource) {
+      break;
+    }
   }
+
+  const posts = collectedPosts.slice(startIndex, endIndex);
+  const totalCollected = collectedPosts.length;
+  const hasNextPage =
+    totalCollected > endIndex ? true : normalizedPageInfo.hasNextPage ?? false;
+
+  if (!posts.length) {
+    const lastAvailablePage = hasMoreFromSource
+      ? safePage
+      : Math.max(1, Math.ceil(totalCollected / safePageSize));
+
+      return {
+        posts: [],
+      pageInfo: { hasNextPage: false, endCursor: cursor },
+        currentPage: safePage,
+      lastAvailablePage,
+    };
+  }
+
+  const lastAvailablePage = hasMoreFromSource
+    ? hasNextPage
+      ? safePage + 1
+      : safePage
+    : Math.max(1, Math.ceil(totalCollected / safePageSize));
+
+      return {
+    posts,
+    pageInfo: { hasNextPage, endCursor: cursor },
+        currentPage: safePage,
+    lastAvailablePage,
+      };
+    }
+
+export async function getAllTechnologyPosts(preview = false) {
+  let cursor: string | null = null;
+  let hasNextPage = true;
+  const aggregatedPosts: any[] = [];
+  const seenSlugs = new Set<string>();
+
+  while (hasNextPage) {
+    const { edges, pageInfo } = await getAllPostsForTechnology(preview, cursor, 50);
+    const nodes = edges?.map((edge) => edge.node) ?? [];
+    for (const node of nodes) {
+      if (!node?.slug || seenSlugs.has(node.slug)) continue;
+      seenSlugs.add(node.slug);
+      aggregatedPosts.push(node);
+    }
+    hasNextPage = pageInfo?.hasNextPage ?? false;
+    cursor = pageInfo?.endCursor ?? null;
+  }
+
+  return aggregatedPosts;
 }
 
 
