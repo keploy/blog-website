@@ -50,6 +50,13 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
     }
   };
 
+  const reviewerProfileLink =
+    blogreviewer[0]?.slug || blogreviewer[0]?.name
+      ? `/authors/${sanitizeAuthorSlug(
+          blogreviewer[0]?.slug || blogreviewer[0]?.name || ""
+        )}`
+      : "/authors";
+
   return (
     <>
       <div className="flex flex-col lg:flex-row lg:mt-7 items-start sm:items-center sm:justify-around gap-4 sm:gap-0  sm:px-0 lg:mx-28">
@@ -118,7 +125,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
 
               {hoverStateBlogReviewer && (
                 <div className="absolute bg-white p-4 text-sm rounded shadow-md z-40 mt-2 top-12 w-[calc(100vw-2rem)] sm:w-80 left-0">
-                  <Link href={`/authors/${sanitizeAuthorSlug(blogreviewer[0].name)}`}>
+                  <Link href={reviewerProfileLink}>
                     <div className="flex flex-row items-center gap-3 sm:gap-5">
                       <Image
                         src={blogreviewer[0].ImageUrl}

@@ -47,6 +47,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const [reviewAuthorName, setreviewAuthorName] = useState("");
   const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
   const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
+  const [reviewAuthorSlug, setreviewAuthorSlug] = useState("");
   const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
   useEffect(() => {
     if (reviewAuthorDetails && reviewAuthorDetails?.length > 0) {
@@ -57,6 +58,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         setreviewAuthorName(authorNode.name);
         setreviewAuthorImageUrl(authorNode.avatar.url);
         setreviewAuthorDescription(authorNode.description);
+        setreviewAuthorSlug(authorNode.slug || "");
       }
     }
   }, [post, reviewAuthorDetails]);
@@ -71,6 +73,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const blogreviewer = [
     {
       name: reviewAuthorName || "Reviewer",
+      slug: reviewAuthorSlug || "",
       ImageUrl: reviewAuthorImageUrl || "/blog/images/author.png",
       description: reviewAuthorDescription || "A Reviewer for keploy's blog",
     },
@@ -169,9 +172,9 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
             authorName={post?.ppmaAuthorName || ""}
             slug={slug}
             ReviewAuthorDetails={
-              reviewAuthorDetails &&
-              reviewAuthorDetails?.length > 0 &&
-              reviewAuthorDetails[postBodyReviewerAuthor]
+              reviewAuthorDetails?.length
+                ? reviewAuthorDetails[postBodyReviewerAuthor]
+                : null
             }
           />
         </div>
