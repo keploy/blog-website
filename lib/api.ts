@@ -216,6 +216,7 @@ export async function getReviewAuthorDetails(authorName) {
           node {
             name
             email
+            slug
             avatar {
               url
             }

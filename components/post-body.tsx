@@ -26,7 +26,16 @@ export default function PostBody({
 }: {
   content: Post["content"];
   authorName: Post["ppmaAuthorName"];
-  ReviewAuthorDetails: { edges: { node: { name: string; avatar: { url: string }; description: string } }[] };
+  ReviewAuthorDetails?: {
+    edges: {
+      node: {
+        name: string;
+        slug?: string;
+        avatar: { url: string };
+        description: string;
+      };
+    }[];
+  } | null;
   slug: string | string[] | undefined;
 }) {
   const [tocItems, setTocItems] = useState([]);
@@ -36,9 +45,12 @@ export default function PostBody({
   const [replacedContent, setReplacedContent] = useState(content); 
   const [isList, setIsList] = useState(false);
   const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
+  const reviewerNode = ReviewAuthorDetails?.edges?.[0]?.node;
   const sameAuthor =
-    authorName.split(" ")[0].toLowerCase() ===
-    ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
+    reviewerNode?.name &&
+    authorName &&
+    authorName.split(" ")[0]?.toLowerCase() ===
+      reviewerNode.name.split(" ")[0]?.toLowerCase();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -354,14 +366,15 @@ export default function PostBody({
             isPost={true}
           />
         </div>
-        {!sameAuthor && (
+        {!sameAuthor && reviewerNode && (
           <div className="my-20">
             <h1 className="text-2xl font-medium">Reviewed By:</h1>
             <div>
               <ReviewingAuthor
-                name={ReviewAuthorDetails.edges[0].node.name}
-                avatar={ReviewAuthorDetails.edges[0].node.avatar.url}
-                description={ReviewAuthorDetails.edges[0].node.description}
+                name={reviewerNode.name}
+                avatar={reviewerNode.avatar.url}
+                description={reviewerNode.description}
+                slug={reviewerNode.slug}
               />
             </div>
           </div>

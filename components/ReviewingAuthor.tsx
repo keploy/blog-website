@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
-const ReviewingAuthor = ({ name, avatar, description }) => {
+const ReviewingAuthor = ({ name, avatar, description, slug }) => {
   const { basePath } = useRouter();
   const [showMore, setShowMore] = useState(false);
   const toggleShowMore = () => {
@@ -25,6 +25,9 @@ const ReviewingAuthor = ({ name, avatar, description }) => {
     };
   };
   const { newAuthorDescription, length } = FormatDescription(description);
+  const reviewerSlug = slug
+    ? sanitizeAuthorSlug(slug)
+    : sanitizeAuthorSlug(name);
 
   return (
     <>
@@ -96,7 +99,7 @@ const ReviewingAuthor = ({ name, avatar, description }) => {
 
             <div className="mt-2  flex justify-end">
               <button className="text-slate-100 place-self-end focus:outline-none hover:bg-slate-800 hover:text-slate-50 bg-slate-500 p-2 rounded-lg mt-1">
-                <Link href={`/authors/${sanitizeAuthorSlug(name)}`}>View All Posts</Link>
+                <Link href={`/authors/${reviewerSlug}`}>View All Posts</Link>
               </button>
             </div>
           </div>
