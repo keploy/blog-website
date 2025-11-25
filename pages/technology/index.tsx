@@ -13,10 +13,12 @@ import PostListRow from "../../components/post-list-row";
 import CoverImage from "../../components/cover-image";
 import DateComponent from "../../components/date";
 import { FaSearch, FaTimes } from "react-icons/fa";
-import Background from "../../components/background";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import Image from "next/image";
 import { Post } from "../../types/post";
+import HeroLatestCard from "../../components/hero-latest-card";
+import HeroFeaturedCard from "../../components/hero-featured-card";
+import { CheckCircle2, Eye } from "lucide-react";
 
 const DATE_FILTERS = [
   { value: "all", label: "All dates" },
@@ -88,12 +90,27 @@ export default function Index({
   const [dateFilter, setDateFilter] = useState("all");
   const [sortOption, setSortOption] = useState("newest");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [gradientLoaded, setGradientLoaded] = useState(false);
   const initialGlobalPosts = allPosts?.length ? dedupePosts(allPosts) : dedupePosts(posts);
   const [globalPosts, setGlobalPosts] = useState<Post[]>(initialGlobalPosts);
   const [hasGlobalPosts, setHasGlobalPosts] = useState(Boolean(initialGlobalPosts.length));
   const [isGlobalLoading, setIsGlobalLoading] = useState(false);
   const [clientPage, setClientPage] = useState(currentPage);
+  
+  // Hero card rotation state
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const heroSectionRef = useRef<HTMLDivElement>(null);
+  
+  // Get latest 4 posts and featured 4 posts
+  const latestPosts = useMemo(() => {
+    const allLatest = latestPost ? [latestPost, ...posts.filter(p => p.slug !== latestPost.slug)] : posts;
+    return dedupePosts(allLatest).slice(0, 4);
+  }, [latestPost, posts]);
+  
+  const featuredPostsList = useMemo(() => {
+    return dedupePosts(featuredPosts).slice(0, 4);
+  }, [featuredPosts]);
 
   const authors = useMemo<string[]>(() => {
     const uniqueAuthors = new Set<string>(
@@ -183,9 +200,36 @@ export default function Index({
     setViewMode("grid");
   };
 
+  // Hero section intersection observer
   useEffect(() => {
-    setGradientLoaded(true);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+    if (heroSectionRef.current) {
+      observer.observe(heroSectionRef.current);
+    }
+    return () => observer.disconnect();
   }, []);
+
+  // Auto-rotate cards
+  useEffect(() => {
+    if (isVisible && (latestPosts.length > 0 || featuredPostsList.length > 0)) {
+      const maxIndex = Math.max(latestPosts.length, featuredPostsList.length);
+      const interval = setInterval(() => {
+        setIsAnimating(true);
+        setTimeout(() => {
+          setSelectedIndex((prev) => (prev + 1) % maxIndex);
+          setIsAnimating(false);
+        }, 500);
+      }, 4000);
+      return () => clearInterval(interval);
+    }
+  }, [isVisible, latestPosts.length, featuredPostsList.length]);
 
   useEffect(() => {
     if (hasGlobalPosts || isGlobalLoading) return;
@@ -290,244 +334,235 @@ export default function Index({
       <Head>
         <title>{`Keploy`}</title>
       </Head>
-      <Background />
       <Header />
+      {/* Hero Section */}
+      {showHeroSection && (
+        <div
+          ref={heroSectionRef}
+          className="min-h-screen bg-gradient-to-br from-orange-50 via-background to-amber-50 py-12 px-4 sm:px-6 relative overflow-hidden"
+        >
+          {/* Animated Background Blobs */}
+          <div className="absolute inset-0 overflow-hidden opacity-30 pointer-events-none">
+            {Array.from({ length: 40 }, (_, i) => ({
+              id: i,
+              top: (i * 2.5) % 100,
+              left: (i * 2.5) % 100,
+              size: 2 + (i % 3),
+              delay: (i * 0.1) % 5,
+              duration: 5 + (i % 10),
+            })).map((element) => (
+              <div
+                key={element.id}
+                className="absolute rounded-full bg-gradient-to-br from-primary to-secondary animate-float"
+                style={{
+                  top: `${element.top}%`,
+                  left: `${element.left}%`,
+                  width: `${element.size}px`,
+                  height: `${element.size}px`,
+                  animationDelay: `${element.delay}s`,
+                  animationDuration: `${element.duration}s`,
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="container mx-auto relative z-10 max-w-6xl">
+            {/* Hero Header */}
+            <div
+              className={`text-center mb-12 transition-all duration-1000 ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
+            >
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground mb-4 md:mb-6 leading-tight px-2">
+                Keploy Technology Blog
+                <br />
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  Deep dives, release notes, and engineering stories.
+                </span>
+              </h1>
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 md:mb-10 px-4">
+                Deep dives, release notes, and engineering stories straight from the Keploy team.
+              </p>
+            </div>
+
+            {/* Main Cards Viewer */}
+            <div className="max-w-5xl mx-auto mb-12">
+              <div
+                className={`grid lg:grid-cols-2 gap-6 transition-all duration-1000 delay-200 ${
+                  isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                }`}
+              >
+                {/* Latest Blogs Card */}
+                <div className="bg-card rounded-2xl shadow-lg overflow-hidden border-2 border-green-500/30">
+                  <div className="bg-green-500 px-4 py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-white" />
+                      <span className="text-white font-semibold">
+                        Latest Blogs
+                      </span>
+                    </div>
+                    <span className="text-white/80 text-sm">Consumer</span>
+                  </div>
+                  <div className="p-6">
+                    {latestPosts.length > 0 && selectedIndex < latestPosts.length ? (
+                      <HeroLatestCard
+                        post={latestPosts[selectedIndex]}
+                        isAnimating={isAnimating}
+                      />
+                    ) : null}
+                  </div>
+                </div>
+
+                {/* Featured Blogs Card */}
+                <div className="bg-card rounded-2xl shadow-lg overflow-hidden border-2 border-orange-500/30">
+                  <div className="bg-orange-500 px-4 py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Eye className="w-5 h-5 text-white" />
+                      <span className="text-white font-semibold">
+                        Featured Blogs
+                      </span>
+                    </div>
+                    <span className="text-white/80 text-sm">Provider</span>
+                  </div>
+                  <div className="p-6">
+                    {featuredPostsList.length > 0 && selectedIndex < featuredPostsList.length ? (
+                      <HeroFeaturedCard
+                        post={featuredPostsList[selectedIndex]}
+                        isAnimating={isAnimating}
+                      />
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+
+              {/* Pagination Dots */}
+              <div className="flex justify-center gap-2 mt-6">
+                {Array.from({ length: Math.max(latestPosts.length, featuredPostsList.length) }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setIsAnimating(true);
+                      setTimeout(() => {
+                        setSelectedIndex(i);
+                        setIsAnimating(false);
+                      }, 300);
+                    }}
+                    className={`rounded-full transition-all duration-300 ${
+                      selectedIndex === i ? "bg-orange-500" : "bg-orange-500/30 hover:bg-orange-500/50"
+                    }`}
+                    style={{
+                      width: selectedIndex === i ? "2rem" : "0.75rem",
+                      height: "0.75rem",
+                    }}
+                    aria-label={`View blog ${i + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Search and Filter Section */}
       <section className="mt-0 w-full">
         <Container>
           <div className="relative">
             <div className="pt-6 pb-10 md:pt-8 md:pb-12">
-              <div className="grid gap-10 lg:gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-              <div className="flex flex-col gap-8 justify-center lg:justify-start lg:-translate-y-4 xl:-translate-y-6 lg:pt-10">
-                <header className="space-y-5">
-                  <h1 className="text-[2rem] md:text-[2.75rem] lg:text-[3.50rem] font-bold tracking-tight leading-tight text-left">
-                    <span
-                      className={`inline-block bg-clip-text text-transparent pb-1 ${
-                        gradientLoaded
-                          ? "gradient-text-animated opacity-100"
-                          : "opacity-0"
-                      }`}
-                    >
-                      <span className="whitespace-nowrap">Keploy Technology Blog</span>
-                    </span>
-                  </h1>
-                  <p className="text-gray-600 text-base md:text-lg max-w-xl leading-relaxed">
-                    Deep dives, release notes, and engineering stories straight from the Keploy team.
-                  </p>
-                </header>
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-row gap-4 items-center">
+                  <div className="relative flex-[0.95]">
+                    <input
+                      type="text"
+                      placeholder="Search technology posts..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full h-11 pl-12 pr-10 rounded-full border border-orange-100/80 bg-white/95 text-sm font-semibold shadow-[0_10px_30px_rgba(254,144,92,0.12)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-shadow placeholder:text-gray-400"
+                    />
+                    <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-400/80" />
+                    {searchTerm && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchTerm("")}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                      >
+                        <FaTimes className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="px-4 py-2 h-11 text-sm font-semibold text-orange-600 border border-orange-200/80 rounded-full bg-white/95 hover:bg-orange-50 transition-colors whitespace-nowrap shadow-sm hover:shadow-md"
+                  >
+                    Reset filter
+                  </button>
+                </div>
 
-                <div className="flex flex-col gap-6 mt-10">
-                  <div className="flex flex-row gap-4 items-center">
-                    <div className="relative flex-[0.95]">
-                      <input
-                        type="text"
-                        placeholder="Search technology posts..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full h-11 pl-12 pr-10 rounded-full border border-orange-100/80 bg-white/95 text-sm font-semibold shadow-[0_10px_30px_rgba(254,144,92,0.12)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-shadow placeholder:text-gray-400"
-                      />
-                      <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-400/80" />
-                      {searchTerm && (
-                        <button
-                          type="button"
-                          onClick={() => setSearchTerm("")}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                        >
-                          <FaTimes className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={resetFilters}
-                      className="px-4 py-2 h-11 text-sm font-semibold text-orange-600 border border-orange-200/80 rounded-full bg-white/95 hover:bg-orange-50 transition-colors whitespace-nowrap shadow-sm hover:shadow-md"
-                    >
-                      Reset filter
-                    </button>
+                <div className="flex flex-nowrap gap-3 items-end">
+                  <div className="flex-1 min-w-0">
+                    <FilterSelect
+                      label="Author"
+                      value={selectedAuthor}
+                      onChange={setSelectedAuthor}
+                      options={authors.map((author) => ({
+                        value: author,
+                        label: author === "all" ? "All authors" : author,
+                      }))}
+                    />
                   </div>
 
-                  <div className="flex flex-nowrap gap-3 items-end">
-                    <div className="flex-1 min-w-0">
-                      <FilterSelect
-                        label="Author"
-                        value={selectedAuthor}
-                        onChange={setSelectedAuthor}
-                        options={authors.map((author) => ({
-                          value: author,
-                          label: author === "all" ? "All authors" : author,
-                        }))}
-                      />
-                    </div>
+                  <div className="flex-1 min-w-0">
+                    <FilterSelect
+                      label="Published"
+                      value={dateFilter}
+                      onChange={setDateFilter}
+                      options={DATE_FILTERS}
+                    />
+                  </div>
 
-                    <div className="flex-1 min-w-0">
-                      <FilterSelect
-                        label="Published"
-                        value={dateFilter}
-                        onChange={setDateFilter}
-                        options={DATE_FILTERS}
-                      />
-                    </div>
+                  <div className="flex-1 min-w-0">
+                    <FilterSelect
+                      label="Sort"
+                      value={sortOption}
+                      onChange={setSortOption}
+                      options={SORT_OPTIONS}
+                    />
+                  </div>
 
-                    <div className="flex-1 min-w-0">
-                      <FilterSelect
-                        label="Sort"
-                        value={sortOption}
-                        onChange={setSortOption}
-                        options={SORT_OPTIONS}
-                      />
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-col">
-                        <span className="text-xs text-gray-500 mb-1 uppercase tracking-[0.2em]">
-                          View
-                        </span>
-                        <div className="flex rounded-full border border-orange-100/80 bg-white/95 p-1 h-11 shadow-[0_8px_24px_rgba(15,23,42,0.08)]">
-                          <button
-                            type="button"
-                            onClick={() => setViewMode("grid")}
-                            className={`flex-1 px-3 text-sm font-semibold rounded-full transition-colors ${
-                              viewMode === "grid"
-                                ? "bg-orange-500 text-white shadow"
-                                : "text-gray-600"
-                            }`}
-                          >
-                            Card
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setViewMode("list")}
-                            className={`flex-1 px-3 text-sm font-semibold rounded-full transition-colors ${
-                              viewMode === "list"
-                                ? "bg-orange-500 text-white shadow"
-                                : "text-gray-600"
-                            }`}
-                          >
-                            List
-                          </button>
-                        </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col">
+                      <span className="text-xs text-gray-500 mb-1 uppercase tracking-[0.2em]">
+                        View
+                      </span>
+                      <div className="flex rounded-full border border-orange-100/80 bg-white/95 p-1 h-11 shadow-[0_8px_24px_rgba(15,23,42,0.08)]">
+                        <button
+                          type="button"
+                          onClick={() => setViewMode("grid")}
+                          className={`flex-1 px-3 text-sm font-semibold rounded-full transition-colors ${
+                            viewMode === "grid"
+                              ? "bg-orange-500 text-white shadow"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          Card
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setViewMode("list")}
+                          className={`flex-1 px-3 text-sm font-semibold rounded-full transition-colors ${
+                            viewMode === "list"
+                              ? "bg-orange-500 text-white shadow"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          List
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-              {showHeroSection && (
-                <div className="flex flex-col">
-                  <div className="flex flex-col md:flex-row gap-3 md:gap-3 items-start">
-                    {heroPost && (
-                      <article className="group relative w-full md:w-[44%] md:max-w-[44%] mt-12 md:mt-24 transition-all duration-300 hover:-translate-y-1">
-                        <div className="rounded-[30px] p-[1.5px] bg-gradient-to-br from-orange-300/40 via-orange-200/20 to-orange-100/30 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-orange-200/40">
-                          <div className="relative overflow-hidden rounded-[27px] bg-gradient-to-br from-orange-50/70 via-white to-white border border-white/60 shadow-lg flex flex-col gap-3 p-4">
-                            <div className="absolute inset-0 bg-gradient-to-br from-orange-200/20 via-transparent to-transparent blur-3xl opacity-70 pointer-events-none" />
-                            <div className="relative flex flex-col gap-4">
-                              <div className="text-xs uppercase tracking-[0.35em] text-black flex items-center gap-2">
-                                <span>Latest blog</span>
-                                <span className="flex-1 h-px bg-gradient-to-r from-orange-300 via-orange-200/70 to-transparent rounded-full" />
-                              </div>
-                              <div className="overflow-hidden rounded-2xl ring-1 ring-orange-100/60 shadow-inner shadow-orange-200/30">
-                                {heroPost.featuredImage && (
-                                  <CoverImage
-                                    title={heroPost.title}
-                                    coverImage={heroPost.featuredImage}
-                                    slug={heroPost.slug}
-                                    isCommunity={false}
-                                    imgClassName="w-full h-24 object-cover"
-                                  />
-                                )}
-                              </div>
-                              <div className="flex flex-col gap-3">
-                                <h2
-                                  className="text-[1rem] font-semibold leading-snug group-hover:text-orange-600 line-clamp-2 transition-colors duration-200"
-                                  dangerouslySetInnerHTML={{ __html: heroPost.title }}
-                                />
-                                <p className="text-xs text-gray-500 flex items-center gap-2">
-                                  <span className="font-semibold text-gray-900">
-                                    {heroPost.ppmaAuthorName || "Anonymous"}
-                                  </span>
-                                  <span>•</span>
-                                  <DateComponent dateString={heroPost.date} />
-                                </p>
-                                <p
-                                  className="text-gray-600 text-[0.75rem] line-clamp-2 leading-relaxed"
-                                  dangerouslySetInnerHTML={{
-                                    __html: getExcerpt(heroPost.excerpt, 18),
-                                  }}
-                                />
-                              </div>
-                              <Link
-                                href={`/technology/${heroPost.slug}`}
-                                className="inline-flex items-center gap-1 text-orange-600 font-semibold text-xs hover:text-orange-700 hover:underline transition-colors duration-200 mt-1"
-                              >
-                                Read latest →
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      </article>
-                    )}
-
-                    {!!featuredPosts.length && (
-                      <div className="w-full md:w-[48%] md:max-w-[48%] md:ml-auto mt-6 md:mt-0 lg:-translate-y-16">
-                        <div className="rounded-[25px] p-[1.5px] bg-gradient-to-br from-orange-200/35 via-orange-100/20 to-transparent shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-orange-200/35">
-                          <div className="relative overflow-hidden rounded-[27px] bg-gradient-to-br from-white via-orange-50/45 to-white border border-white/60 shadow-lg p-4">
-                          <div className="absolute inset-0 bg-gradient-to-tr from-white via-orange-100/30 to-transparent opacity-70 blur-2xl pointer-events-none" />
-                          <div className="relative">
-                              <div className="flex items-center justify-between mb-3">
-                                <h3 className="text-sm font-semibold flex items-center gap-2">
-                                  Featured blogs
-                                  <span className="inline-flex h-1.5 w-1.5 rounded-full bg-orange-400/80" />
-                                </h3>
-                                <span className="text-xs text-gray-500">
-                                  {featuredPosts.length} picks
-                                </span>
-                              </div>
-                            <div className="mt-4 space-y-4">
-                              {featuredPosts.map((post, index) => {
-                                const authorName = formatAuthorName(post.ppmaAuthorName);
-                                return (
-                                  <div key={post.slug}>
-                                    <Link
-                                      href={`/technology/${post.slug}`}
-                                      className="group relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 -m-1 min-h-[56px] transition-colors duration-300 hover:bg-orange-50/70"
-                                    >
-                                      {post.featuredImage?.node?.sourceUrl && (
-                                        <div className="relative flex-shrink-0 w-[4.25rem] h-14 rounded-xl overflow-hidden ring-1 ring-orange-100/70 bg-orange-50/60">
-                                          <Image
-                                            src={post.featuredImage.node.sourceUrl}
-                                            alt={post.title}
-                                            fill
-                                            sizes="68px"
-                                            className="object-cover"
-                                          />
-                                        </div>
-                                      )}
-                                      <div className="flex flex-col gap-1">
-                                        <h4
-                                          className="text-[0.85rem] font-semibold text-gray-900 leading-snug line-clamp-2 transition-colors duration-200 group-hover:text-orange-600"
-                                          dangerouslySetInnerHTML={{ __html: post.title }}
-                                        />
-                                        <p className="text-[0.7rem] font-semibold text-gray-800 tracking-tight">
-                                          {authorName}
-                                        </p>
-                                      </div>
-                                    </Link>
-                                    {index !== featuredPosts.length - 1 && (
-                                      <div className="h-[1.5px] w-full bg-gradient-to-r from-orange-200 via-gray-200 to-transparent rounded-full mt-4" />
-                                    )}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
-          </div>
           </div>
         </Container>
       </section>
