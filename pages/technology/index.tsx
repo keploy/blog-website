@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
@@ -19,6 +19,7 @@ import { Post } from "../../types/post";
 import HeroLatestCard from "../../components/hero-latest-card";
 import HeroFeaturedCard from "../../components/hero-featured-card";
 import { CheckCircle2, Eye } from "lucide-react";
+import TechnologyBackground from "../../components/technology-background";
 
 const DATE_FILTERS = [
   { value: "all", label: "All dates" },
@@ -99,8 +100,11 @@ export default function Index({
   // Hero card rotation state
   const [isVisible, setIsVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [animationPhase, setAnimationPhase] = useState<"idle" | "out" | "in">("idle");
   const heroSectionRef = useRef<HTMLDivElement>(null);
+  const rotationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const animationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const settleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // Get latest 4 posts and featured 4 posts
   const latestPosts = useMemo(() => {
@@ -111,6 +115,11 @@ export default function Index({
   const featuredPostsList = useMemo(() => {
     return dedupePosts(featuredPosts).slice(0, 4);
   }, [featuredPosts]);
+
+  const maxRotationIndex = useMemo(
+    () => Math.max(latestPosts.length, featuredPostsList.length),
+    [latestPosts.length, featuredPostsList.length]
+  );
 
   const authors = useMemo<string[]>(() => {
     const uniqueAuthors = new Set<string>(
@@ -216,20 +225,71 @@ export default function Index({
     return () => observer.disconnect();
   }, []);
 
-  // Auto-rotate cards
-  useEffect(() => {
-    if (isVisible && (latestPosts.length > 0 || featuredPostsList.length > 0)) {
-      const maxIndex = Math.max(latestPosts.length, featuredPostsList.length);
-      const interval = setInterval(() => {
-        setIsAnimating(true);
-        setTimeout(() => {
-          setSelectedIndex((prev) => (prev + 1) % maxIndex);
-          setIsAnimating(false);
-        }, 500);
-      }, 4000);
-      return () => clearInterval(interval);
+  const clearRotationTimers = useCallback(() => {
+    if (rotationIntervalRef.current) {
+      clearInterval(rotationIntervalRef.current);
+      rotationIntervalRef.current = null;
     }
-  }, [isVisible, latestPosts.length, featuredPostsList.length]);
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current);
+      animationTimeoutRef.current = null;
+    }
+    if (settleTimeoutRef.current) {
+      clearTimeout(settleTimeoutRef.current);
+      settleTimeoutRef.current = null;
+    }
+  }, []);
+
+  const startRotation = useCallback(() => {
+    clearRotationTimers();
+    if (!isVisible || maxRotationIndex <= 1) return;
+  
+    const OUT_DURATION = 600;
+    const IN_DURATION = 200;
+    const IDLE_DURATION = 6200; // remaining time
+    const CYCLE_DURATION = OUT_DURATION + IN_DURATION + IDLE_DURATION;
+  
+    rotationIntervalRef.current = setInterval(() => {
+      // Phase 1: OUT
+      setAnimationPhase("out");
+  
+      animationTimeoutRef.current = setTimeout(() => {
+        // Phase 2: SWAP + IN
+        setSelectedIndex((prev) => (prev + 1) % maxRotationIndex);
+        setAnimationPhase("in");
+  
+        settleTimeoutRef.current = setTimeout(() => {
+          // Phase 3: IDLE
+          setAnimationPhase("idle");
+        }, IN_DURATION);
+  
+      }, OUT_DURATION);
+  
+    }, CYCLE_DURATION);
+  }, [clearRotationTimers, isVisible, maxRotationIndex]);
+  
+
+  const handleManualSelection = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= maxRotationIndex) return;
+      clearRotationTimers();
+      setAnimationPhase("out");
+      animationTimeoutRef.current = setTimeout(() => {
+        setSelectedIndex(index);
+        setAnimationPhase("in");
+        settleTimeoutRef.current = setTimeout(() => {
+          setAnimationPhase("idle");
+        }, 900);
+        startRotation();
+      }, 720);
+    },
+    [clearRotationTimers, maxRotationIndex, startRotation]
+  );
+
+  useEffect(() => {
+    startRotation();
+    return () => clearRotationTimers();
+  }, [startRotation, clearRotationTimers]);
 
   useEffect(() => {
     if (hasGlobalPosts || isGlobalLoading) return;
@@ -334,80 +394,53 @@ export default function Index({
       <Head>
         <title>{`Keploy`}</title>
       </Head>
+      <TechnologyBackground />
       <Header />
       {/* Hero Section */}
       {showHeroSection && (
         <div
           ref={heroSectionRef}
-          className="min-h-screen bg-gradient-to-br from-orange-50 via-background to-amber-50 py-12 px-4 sm:px-6 relative overflow-hidden"
+          className="min-h-screen py-12 px-4 sm:px-6 relative"
         >
-          {/* Animated Background Blobs */}
-          <div className="absolute inset-0 overflow-hidden opacity-30 pointer-events-none">
-            {Array.from({ length: 40 }, (_, i) => ({
-              id: i,
-              top: (i * 2.5) % 100,
-              left: (i * 2.5) % 100,
-              size: 2 + (i % 3),
-              delay: (i * 0.1) % 5,
-              duration: 5 + (i % 10),
-            })).map((element) => (
-              <div
-                key={element.id}
-                className="absolute rounded-full bg-gradient-to-br from-primary to-secondary animate-float"
-                style={{
-                  top: `${element.top}%`,
-                  left: `${element.left}%`,
-                  width: `${element.size}px`,
-                  height: `${element.size}px`,
-                  animationDelay: `${element.delay}s`,
-                  animationDuration: `${element.duration}s`,
-                }}
-              />
-            ))}
-          </div>
 
           <div className="container mx-auto relative z-10 max-w-6xl">
             {/* Hero Header */}
             <div
-              className={`text-center mb-12 transition-all duration-1000 ${
+              className={`text-center mb-16 transition-all duration-1000 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               }`}
             >
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground mb-4 md:mb-6 leading-tight px-2">
-                Keploy Technology Blog
-                <br />
-                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  Deep dives, release notes, and engineering stories.
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-8 leading-[1.05] px-2 tracking-tight">
+                Keploy Technology{" "}
+                <span className="bg-gradient-to-r from-orange-400 via-orange-500 to-amber-400 bg-clip-text text-transparent">
+                  Blog
                 </span>
               </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 md:mb-10 px-4">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto px-4">
                 Deep dives, release notes, and engineering stories straight from the Keploy team.
               </p>
             </div>
 
             {/* Main Cards Viewer */}
-            <div className="max-w-5xl mx-auto mb-12">
+            <div className="max-w-5xl mx-auto mb-16">
               <div
-                className={`grid lg:grid-cols-2 gap-6 transition-all duration-1000 delay-200 ${
+                className={`grid lg:grid-cols-2 gap-8 transition-all duration-1000 delay-200 ${
                   isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
                 }`}
               >
                 {/* Latest Blogs Card */}
                 <div className="bg-card rounded-2xl shadow-lg overflow-hidden border-2 border-green-500/30">
-                  <div className="bg-green-500 px-4 py-3 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-white" />
-                      <span className="text-white font-semibold">
-                        Latest Blogs
-                      </span>
-                    </div>
-                    <span className="text-white/80 text-sm">Consumer</span>
+                  <div className="bg-green-500 px-4 py-3 flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-white" />
+                    <span className="text-white font-semibold">
+                      Latest Blogs
+                    </span>
                   </div>
-                  <div className="p-6">
+                  <div className="p-5">
                     {latestPosts.length > 0 && selectedIndex < latestPosts.length ? (
                       <HeroLatestCard
                         post={latestPosts[selectedIndex]}
-                        isAnimating={isAnimating}
+                        animationPhase={animationPhase}
                       />
                     ) : null}
                   </div>
@@ -415,20 +448,17 @@ export default function Index({
 
                 {/* Featured Blogs Card */}
                 <div className="bg-card rounded-2xl shadow-lg overflow-hidden border-2 border-orange-500/30">
-                  <div className="bg-orange-500 px-4 py-3 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Eye className="w-5 h-5 text-white" />
-                      <span className="text-white font-semibold">
-                        Featured Blogs
-                      </span>
-                    </div>
-                    <span className="text-white/80 text-sm">Provider</span>
+                  <div className="bg-orange-500 px-4 py-3 flex items-center gap-2">
+                    <Eye className="w-5 h-5 text-white" />
+                    <span className="text-white font-semibold">
+                      Featured Blogs
+                    </span>
                   </div>
-                  <div className="p-6">
+                  <div className="p-5">
                     {featuredPostsList.length > 0 && selectedIndex < featuredPostsList.length ? (
                       <HeroFeaturedCard
                         post={featuredPostsList[selectedIndex]}
-                        isAnimating={isAnimating}
+                        animationPhase={animationPhase}
                       />
                     ) : null}
                   </div>
@@ -436,17 +466,11 @@ export default function Index({
               </div>
 
               {/* Pagination Dots */}
-              <div className="flex justify-center gap-2 mt-6">
+              <div className="flex justify-center gap-2 mt-12">
                 {Array.from({ length: Math.max(latestPosts.length, featuredPostsList.length) }, (_, i) => (
                   <button
                     key={i}
-                    onClick={() => {
-                      setIsAnimating(true);
-                      setTimeout(() => {
-                        setSelectedIndex(i);
-                        setIsAnimating(false);
-                      }, 300);
-                    }}
+                    onClick={() => handleManualSelection(i)}
                     className={`rounded-full transition-all duration-300 ${
                       selectedIndex === i ? "bg-orange-500" : "bg-orange-500/30 hover:bg-orange-500/50"
                     }`}
