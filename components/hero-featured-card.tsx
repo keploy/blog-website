@@ -8,24 +8,14 @@ import { getExcerpt } from "../utils/excerpt";
 
 interface HeroFeaturedCardProps {
   post: Post;
-  animationPhase: "idle" | "out" | "in";
 }
 
-export default function HeroFeaturedCard({ post, animationPhase }: HeroFeaturedCardProps) {
+export default function HeroFeaturedCard({ post }: HeroFeaturedCardProps) {
   const readingTime = post.content ? 5 + calculateReadingTime(post.content) : undefined;
   const cleanedExcerpt = (post.excerpt || "").replace("Table of Contents", "");
 
-  const phaseClasses =
-    animationPhase === "out"
-      ? "opacity-80 scale-[0.98] translate-y-[4px] shadow-none"
-      : animationPhase === "in"
-      ? "opacity-85 scale-[0.985] translate-y-[2px] shadow-[0_5px_16px_rgba(249,115,22,0.12)]"
-      : "opacity-100 scale-[0.995] translate-y-0 shadow-[0_12px_32px_rgba(249,115,22,0.18)]";
-
   return (
-    <div
-      className={`rounded-2xl p-6 border-2 relative overflow-hidden bg-yellow-50 border-yellow-200 min-h-[440px] flex flex-col transition-[transform,opacity,box-shadow] duration-[1800ms] ease-[cubic-bezier(0.33,0.11,0.2,0.99)] ${phaseClasses}`}
-    >
+    <div className="rounded-2xl p-6 border-2 relative overflow-hidden bg-yellow-50 border-yellow-200 min-h-[440px] flex flex-col shadow-[0_12px_30px_rgba(249,115,22,0.18)]">
       <div className="absolute top-0 right-0 w-28 h-28 bg-yellow-200/30 rounded-full -mr-14 -mt-12" />
       <div className="relative flex flex-col gap-5 flex-1">
         {/* Cover Image - First */}

@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
@@ -37,6 +37,17 @@ const SORT_OPTIONS = [
 
 const TECHNOLOGY_PAGE_SIZE = 18;
 
+type AnimationPhase = "idle" | "out" | "in";
+
+type ViewMode = "grid" | "list" | "featured" | "compact";
+
+const VIEW_OPTIONS: { value: ViewMode; label: string }[] = [
+  { value: "grid", label: "Detailed view" },
+  { value: "list", label: "List view" },
+  { value: "featured", label: "Featured view" },
+  { value: "compact", label: "Compact view" },
+];
+
 const dedupePosts = (posts: Post[] = []) => {
   const seen = new Set<string>();
   return posts.filter((post) => {
@@ -46,8 +57,6 @@ const dedupePosts = (posts: Post[] = []) => {
     return true;
   });
 };
-
-type ViewMode = "grid" | "list";
 
 type PageInfo = {
   hasNextPage: boolean;
@@ -72,6 +81,19 @@ const formatAuthorName = (name?: string) => {
     .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join(" ");
+};
+
+const resolveAuthorImage = (image?: string | null) => {
+  if (!image || image === "imag1" || image === "image") {
+    return "/blog/images/author.png";
+  }
+  return image;
+};
+
+const HERO_CARD_ANIMATION_CLASSES: Record<AnimationPhase, string> = {
+  out: "opacity-80 scale-[0.985] translate-y-[6px] shadow-none",
+  in: "opacity-90 scale-[0.995] translate-y-[2px] shadow-[0_6px_18px_rgba(15,23,42,0.12)]",
+  idle: "opacity-100 scale-100 translate-y-0 shadow-[0_14px_36px_rgba(15,23,42,0.18)]",
 };
 
 export default function Index({
@@ -100,7 +122,7 @@ export default function Index({
   // Hero card rotation state
   const [isVisible, setIsVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [animationPhase, setAnimationPhase] = useState<"idle" | "out" | "in">("idle");
+  const [animationPhase, setAnimationPhase] = useState<AnimationPhase>("idle");
   const heroSectionRef = useRef<HTMLDivElement>(null);
   const rotationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const animationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -196,6 +218,15 @@ export default function Index({
     }
     return filteredPosts;
   }, [filtersActive, filteredPosts, clientPage]);
+
+  const postsWithMeta = useMemo(
+    () =>
+      visiblePosts.map((post) => ({
+        post,
+        readingTime: post.content ? 5 + calculateReadingTime(post.content) : undefined,
+      })),
+    [visiblePosts]
+  );
 
   const showEmptyState =
     visiblePosts.length === 0 && !(filtersActive && isGlobalLoading && !hasGlobalPosts);
@@ -429,7 +460,9 @@ export default function Index({
                 }`}
               >
                 {/* Latest Blogs Card */}
-                <div className="bg-card rounded-2xl shadow-lg overflow-hidden border-2 border-green-500/30">
+                <div
+                  className={`bg-card rounded-2xl overflow-hidden border-2 border-green-500/30 transition-[transform,opacity,box-shadow] duration-[1800ms] ease-[cubic-bezier(0.33,0.11,0.2,0.99)] ${HERO_CARD_ANIMATION_CLASSES[animationPhase]}`}
+                >
                   <div className="bg-green-500 px-4 py-3 flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-white" />
                     <span className="text-white font-semibold">
@@ -438,16 +471,15 @@ export default function Index({
                   </div>
                   <div className="p-5">
                     {latestPosts.length > 0 && selectedIndex < latestPosts.length ? (
-                      <HeroLatestCard
-                        post={latestPosts[selectedIndex]}
-                        animationPhase={animationPhase}
-                      />
+                      <HeroLatestCard post={latestPosts[selectedIndex]} />
                     ) : null}
                   </div>
                 </div>
 
                 {/* Featured Blogs Card */}
-                <div className="bg-card rounded-2xl shadow-lg overflow-hidden border-2 border-orange-500/30">
+                <div
+                  className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-[transform,opacity,box-shadow] duration-[1800ms] ease-[cubic-bezier(0.33,0.11,0.2,0.99)] ${HERO_CARD_ANIMATION_CLASSES[animationPhase]}`}
+                >
                   <div className="bg-orange-500 px-4 py-3 flex items-center gap-2">
                     <Eye className="w-5 h-5 text-white" />
                     <span className="text-white font-semibold">
@@ -456,10 +488,7 @@ export default function Index({
                   </div>
                   <div className="p-5">
                     {featuredPostsList.length > 0 && selectedIndex < featuredPostsList.length ? (
-                      <HeroFeaturedCard
-                        post={featuredPostsList[selectedIndex]}
-                        animationPhase={animationPhase}
-                      />
+                      <HeroFeaturedCard post={featuredPostsList[selectedIndex]} />
                     ) : null}
                   </div>
                 </div>
@@ -492,38 +521,35 @@ export default function Index({
         <Container>
           <div className="relative">
             <div className="pt-6 pb-10 md:pt-8 md:pb-12">
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-row gap-4 items-center">
-                  <div className="relative flex-[0.95]">
-                    <input
-                      type="text"
-                      placeholder="Search technology posts..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full h-11 pl-12 pr-10 rounded-full border border-orange-100/80 bg-white/95 text-sm font-semibold shadow-[0_10px_30px_rgba(254,144,92,0.12)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-shadow placeholder:text-gray-400"
-                    />
-                    <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-400/80" />
-                    {searchTerm && (
-                      <button
-                        type="button"
-                        onClick={() => setSearchTerm("")}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                      >
-                        <FaTimes className="w-4 h-4" />
-                      </button>
-                    )}
+              <div className="rounded-2xl border border-orange-100/70 bg-white/95 shadow-[0_8px_24px_rgba(15,23,42,0.08)] px-5 py-5 md:px-6 md:py-6">
+                <div className="flex flex-wrap gap-3 items-end">
+                  <div className="relative flex-[2] min-w-[280px] flex flex-col gap-1">
+                    <span className="text-[0.65rem] uppercase tracking-[0.35em] text-slate-500">
+                      Search
+                    </span>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Search technology posts..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full h-10 pl-11 pr-9 rounded-xl border border-orange-100/90 bg-white text-sm font-semibold text-slate-900 shadow-[0_2px_8px_rgba(15,23,42,0.04)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-all placeholder:text-slate-400"
+                      />
+                      <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-400/80 pointer-events-none w-4 h-4" />
+                      {searchTerm && (
+                        <button
+                          type="button"
+                          onClick={() => setSearchTerm("")}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
+                          aria-label="Clear search"
+                        >
+                          <FaTimes className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={resetFilters}
-                    className="px-4 py-2 h-11 text-sm font-semibold text-orange-600 border border-orange-200/80 rounded-full bg-white/95 hover:bg-orange-50 transition-colors whitespace-nowrap shadow-sm hover:shadow-md"
-                  >
-                    Reset filter
-                  </button>
-                </div>
 
-                <div className="flex flex-nowrap gap-3 items-end">
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-[0.8] min-w-[140px]">
                     <FilterSelect
                       label="Author"
                       value={selectedAuthor}
@@ -535,7 +561,7 @@ export default function Index({
                     />
                   </div>
 
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-[0.8] min-w-[130px]">
                     <FilterSelect
                       label="Published"
                       value={dateFilter}
@@ -544,7 +570,7 @@ export default function Index({
                     />
                   </div>
 
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-[0.8] min-w-[130px]">
                     <FilterSelect
                       label="Sort"
                       value={sortOption}
@@ -553,37 +579,22 @@ export default function Index({
                     />
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-col">
-                      <span className="text-xs text-gray-500 mb-1 uppercase tracking-[0.2em]">
-                        View
-                      </span>
-                      <div className="flex rounded-full border border-orange-100/80 bg-white/95 p-1 h-11 shadow-[0_8px_24px_rgba(15,23,42,0.08)]">
-                        <button
-                          type="button"
-                          onClick={() => setViewMode("grid")}
-                          className={`flex-1 px-3 text-sm font-semibold rounded-full transition-colors ${
-                            viewMode === "grid"
-                              ? "bg-orange-500 text-white shadow"
-                              : "text-gray-600"
-                          }`}
-                        >
-                          Card
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setViewMode("list")}
-                          className={`flex-1 px-3 text-sm font-semibold rounded-full transition-colors ${
-                            viewMode === "list"
-                              ? "bg-orange-500 text-white shadow"
-                              : "text-gray-600"
-                          }`}
-                        >
-                          List
-                        </button>
-                      </div>
-                    </div>
+                  <div className="flex-[0.8] min-w-[140px]">
+                    <FilterSelect
+                      label="View mode"
+                      value={viewMode}
+                      onChange={(value) => setViewMode(value as ViewMode)}
+                      options={VIEW_OPTIONS}
+                    />
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="shrink-0 h-10 px-5 rounded-xl border border-orange-200/90 bg-white text-sm font-semibold text-orange-600 hover:bg-orange-50 hover:border-orange-300 transition-all"
+                  >
+                    Reset all
+                  </button>
                 </div>
               </div>
             </div>
@@ -620,44 +631,49 @@ export default function Index({
             </div>
           ) : viewMode === "grid" ? (
             <PostGrid>
-              {visiblePosts.map((post) => {
-                const readingTime = post.content ? 5 + calculateReadingTime(post.content) : undefined;
-                return (
-                  <PostCard
-                    key={post.slug}
-                    title={post.title}
-                    coverImage={post.featuredImage}
-                    date={post.date}
-                    author={post.ppmaAuthorName}
-                    slug={post.slug}
-                    excerpt={getExcerpt(post.excerpt, 20)}
-                    isCommunity={false}
-                    authorImage={post.ppmaAuthorImage}
-                    readingTime={readingTime}
-                  />
-                );
-              })}
+              {postsWithMeta.map(({ post, readingTime }) => (
+                <PostCard
+                  key={post.slug}
+                  title={post.title}
+                  coverImage={post.featuredImage}
+                  date={post.date}
+                  author={post.ppmaAuthorName}
+                  slug={post.slug}
+                  excerpt={getExcerpt(post.excerpt, 20)}
+                  isCommunity={false}
+                  authorImage={post.ppmaAuthorImage}
+                  readingTime={readingTime}
+                />
+              ))}
             </PostGrid>
-          ) : (
+          ) : viewMode === "list" ? (
             <div className="space-y-6">
-              {visiblePosts.map((post) => {
-                const readingTime = post.content ? 5 + calculateReadingTime(post.content) : undefined;
-                return (
-                  <PostListRow
-                    key={post.slug}
-                    post={post}
-                    excerptOverride={getExcerpt(post.excerpt, 42)}
-                    readingTime={readingTime}
-                  />
-                );
-              })}
+              {postsWithMeta.map(({ post, readingTime }) => (
+                <PostListRow
+                  key={post.slug}
+                  post={post}
+                  excerptOverride={getExcerpt(post.excerpt, 42)}
+                  readingTime={readingTime}
+                />
+              ))}
+            </div>
+          ) : viewMode === "featured" ? (
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {postsWithMeta.map(({ post, readingTime }) => (
+                <FeaturedBlogCard key={post.slug} post={post} readingTime={readingTime} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {postsWithMeta.map(({ post, readingTime }) => (
+                <CompactBlogCard key={post.slug} post={post} readingTime={readingTime} />
+              ))}
             </div>
           )}
         </section>
 
         <PaginationControls
           currentPage={currentPage}
-          hasNextPage={pageInfo?.hasNextPage ?? false}
           filtersActive={filtersActive}
           clientPage={clientPage}
           onClientPageChange={setClientPage}
@@ -667,6 +683,105 @@ export default function Index({
         />
       </Container>
     </Layout>
+  );
+}
+
+function FeaturedBlogCard({ post, readingTime }: { post: Post; readingTime?: number }) {
+  const authorName = formatAuthorName(post.ppmaAuthorName);
+  const authorImage = resolveAuthorImage(post.ppmaAuthorImage);
+  const coverSrc = post.featuredImage?.node?.sourceUrl;
+  const readingLabel = typeof readingTime === "number" && readingTime > 0 ? `${readingTime} min read` : null;
+  const href = `/technology/${post.slug}`;
+  const plainTitle = post.title?.replace(/<[^>]*>/g, "") ?? "Technology blog cover";
+  const cleanedExcerpt = (post.excerpt || "").replace("Table of Contents", "");
+
+  return (
+    <Link href={href} className="group block h-full">
+      <article className="h-full bg-white rounded-2xl border border-orange-200/80 shadow-[0_22px_50px_rgba(15,23,42,0.11)] hover:shadow-[0_28px_70px_rgba(15,23,42,0.16)] transition-all duration-300 overflow-hidden hover:border-orange-300 hover:-translate-y-2 flex flex-col">
+        <div className="relative w-full aspect-video overflow-hidden">
+          {coverSrc ? (
+            <Image
+              src={coverSrc}
+              alt={plainTitle}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-orange-100" />
+          )}
+        </div>
+        <div className="p-6 flex flex-col flex-1 gap-4">
+          <h3 className="text-xl md:text-2xl font-semibold text-gray-900 leading-snug">
+            <span className="line-clamp-2 group-hover:text-orange-600 transition-colors duration-200" dangerouslySetInnerHTML={{ __html: post.title }} />
+          </h3>
+          <div className="mt-auto flex items-center gap-1.5 text-xs md:text-sm text-gray-500 min-w-0">
+            <Image
+              src={authorImage}
+              alt={`${authorName} avatar`}
+              width={24}
+              height={24}
+              className="w-5 h-5 md:w-6 md:h-6 rounded-full flex-shrink-0"
+            />
+            <span className="font-semibold text-gray-900 truncate max-w-[120px] md:max-w-none">{authorName}</span>
+            <span className="text-gray-300 flex-shrink-0">•</span>
+            <span className="whitespace-nowrap flex-shrink-0">
+              <DateComponent dateString={post.date} />
+            </span>
+            {readingLabel && (
+              <>
+                <span className="text-gray-300 flex-shrink-0">•</span>
+                <span className="whitespace-nowrap flex-shrink-0">{readingLabel}</span>
+              </>
+            )}
+          </div>
+        </div>
+      </article>
+    </Link>
+  );
+}
+
+function CompactBlogCard({ post, readingTime }: { post: Post; readingTime?: number }) {
+  const authorName = formatAuthorName(post.ppmaAuthorName);
+  const authorImage = resolveAuthorImage(post.ppmaAuthorImage);
+  const readingLabel = typeof readingTime === "number" && readingTime > 0 ? `${readingTime} min read` : null;
+  const href = `/technology/${post.slug}`;
+  const cleanedExcerpt = (post.excerpt || "").replace("Table of Contents", "");
+
+  return (
+    <Link href={href} className="group block h-full">
+      <article className="h-full bg-white rounded-2xl border border-orange-200/80 shadow-[0_22px_50px_rgba(15,23,42,0.11)] hover:shadow-[0_28px_70px_rgba(15,23,42,0.16)] transition-all duration-300 overflow-hidden hover:border-orange-300 hover:-translate-y-2 flex flex-col">
+        <div className="p-6 flex flex-col flex-1 gap-4">
+          <h3 className="text-xl md:text-2xl font-semibold text-gray-900 leading-snug">
+            <span className="line-clamp-2 group-hover:text-orange-600 transition-colors duration-200" dangerouslySetInnerHTML={{ __html: post.title }} />
+          </h3>
+          <div
+            className="text-gray-600 text-sm md:text-base leading-relaxed line-clamp-2"
+            dangerouslySetInnerHTML={{ __html: getExcerpt(cleanedExcerpt, 20) }}
+          />
+          <div className="mt-auto flex items-center gap-1.5 text-xs md:text-sm text-gray-500 min-w-0">
+            <Image
+              src={authorImage}
+              alt={`${authorName} avatar`}
+              width={24}
+              height={24}
+              className="w-5 h-5 md:w-6 md:h-6 rounded-full flex-shrink-0"
+            />
+            <span className="font-semibold text-gray-900 truncate max-w-[120px] md:max-w-none">{authorName}</span>
+            <span className="text-gray-300 flex-shrink-0">•</span>
+            <span className="whitespace-nowrap flex-shrink-0">
+              <DateComponent dateString={post.date} />
+            </span>
+            {readingLabel && (
+              <>
+                <span className="text-gray-300 flex-shrink-0">•</span>
+                <span className="whitespace-nowrap flex-shrink-0">{readingLabel}</span>
+              </>
+            )}
+          </div>
+        </div>
+      </article>
+    </Link>
   );
 }
 
@@ -698,21 +813,21 @@ function FilterSelect({
 
   return (
     <div className="flex flex-col gap-1 w-full relative" ref={containerRef}>
-      <span className="text-xs text-gray-500 uppercase tracking-[0.25em]">
+      <span className="text-[0.65rem] text-slate-500 uppercase tracking-[0.35em]">
         {label}
       </span>
       <button
         type="button"
-        className={`relative w-full h-11 rounded-full border text-left px-4 pr-10 text-sm font-semibold transition-all flex items-center ${
+        className={`relative w-full h-10 rounded-xl border text-left px-3 pr-9 text-sm font-semibold transition-all flex items-center min-w-0 ${
           isOpen
-            ? "border-orange-300 shadow-[0_10px_30px_rgba(254,144,92,0.12)]"
-            : "border-orange-100/80 shadow-[0_10px_30px_rgba(254,144,92,0.12)]"
-        } bg-white/95 text-gray-800 hover:border-orange-300 hover:shadow-[0_10px_30px_rgba(254,144,92,0.12)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300`}
+            ? "border-orange-300 shadow-[0_4px_12px_rgba(15,23,42,0.08)]"
+            : "border-orange-100/90 shadow-[0_2px_8px_rgba(15,23,42,0.04)]"
+        } bg-white text-slate-900 hover:border-orange-200 hover:shadow-[0_4px_12px_rgba(15,23,42,0.08)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <span>{activeOption?.label ?? "Select"}</span>
-        <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <span className="truncate flex-1 min-w-0">{activeOption?.label ?? "Select"}</span>
+        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 flex-shrink-0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path
               d="M6 9l6 6 6-6"
               stroke="currentColor"
@@ -725,23 +840,24 @@ function FilterSelect({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-100 rounded-2xl shadow-2xl z-10 overflow-hidden">
-          <div className="max-h-48 overflow-y-auto py-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-400">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-100/80 rounded-xl shadow-[0_8px_24px_rgba(15,23,42,0.12)] z-10 overflow-hidden">
+          <div className="max-h-48 overflow-y-auto py-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-slate-400">
             {options.map((option) => {
               const isActive = option.value === value;
               return (
                 <button
                   type="button"
                   key={option.value}
-                  className={`w-full text-left px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors truncate ${
                     isActive
-                      ? "bg-orange-50 text-orange-600"
-                      : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
+                      ? "bg-orange-50 text-slate-900"
+                      : "text-slate-700 hover:text-orange-600"
                   }`}
                   onClick={() => {
                     onChange(option.value);
                     setIsOpen(false);
                   }}
+                  title={option.label}
                 >
                   {option.label}
                 </button>
@@ -756,7 +872,6 @@ function FilterSelect({
 
 function PaginationControls({
   currentPage,
-  hasNextPage,
   filtersActive,
   clientPage,
   onClientPageChange,
@@ -765,7 +880,6 @@ function PaginationControls({
   totalPages,
 }: {
   currentPage: number;
-  hasNextPage: boolean;
   filtersActive: boolean;
   clientPage: number;
   onClientPageChange: (page: number) => void;
@@ -774,122 +888,149 @@ function PaginationControls({
   totalPages: number;
 }) {
   const filteredTotalPages = Math.max(1, Math.ceil(totalFilteredPosts / pageSize) || 1);
+  const totalPageCount = filtersActive ? filteredTotalPages : Math.max(1, totalPages || 1);
+  const activePage = filtersActive ? clientPage : currentPage;
+  const MAX_VISIBLE = 6;
+  const [windowStart, setWindowStart] = useState(1);
+  const maxWindowStart = Math.max(1, totalPageCount - MAX_VISIBLE + 1);
 
-  if (filtersActive) {
-    const prevDisabled = clientPage <= 1;
-    const nextDisabled = clientPage >= totalPages;
-    return (
-      <div className="flex justify-center border-t border-orange-50 pt-10 mt-10 pb-16">
-        <div className="inline-flex items-center gap-6 rounded-full border border-orange-100/70 bg-gradient-to-r from-white via-orange-50/50 to-white px-5 py-2.5 shadow-[0_10px_30px_rgba(249,115,22,0.15)]">
-          <PaginationButton
-            disabled={prevDisabled}
-            ariaLabel="Previous filtered page"
-            onClick={() => onClientPageChange(Math.max(1, clientPage - 1))}
-          >
-            ←
-          </PaginationButton>
-          <div className="flex flex-col items-center text-gray-500">
-            <span className="text-[0.55rem] font-semibold uppercase tracking-[0.4em]">
-              Page
-            </span>
-            <span className="text-lg font-semibold text-gray-900">{clientPage}</span>
-            <span className="text-[0.65rem] uppercase tracking-[0.3em] text-gray-400 mt-0.5">
-              of {filteredTotalPages}
-            </span>
-          </div>
-          <PaginationButton
-            disabled={nextDisabled}
-            ariaLabel="Next filtered page"
-            onClick={() => onClientPageChange(Math.min(totalPages, clientPage + 1))}
-          >
-            →
-          </PaginationButton>
-        </div>
-      </div>
-    );
+  useEffect(() => {
+    const halfWindow = Math.floor(MAX_VISIBLE / 2);
+    let nextStart = Math.max(1, activePage - halfWindow);
+    let nextEnd = Math.min(totalPageCount, nextStart + MAX_VISIBLE - 1);
+    nextStart = Math.max(1, nextEnd - MAX_VISIBLE + 1);
+    setWindowStart((prev) => (prev === nextStart ? prev : nextStart));
+  }, [activePage, totalPageCount]);
+
+  if (totalPageCount <= 1) {
+    return null;
   }
 
-  const prevDisabled = currentPage <= 1;
-  const nextDisabled = !hasNextPage;
-  const prevHref =
-    currentPage - 1 <= 1 ? "/technology" : `/technology?page=${currentPage - 1}`;
-  const nextHref = `/technology?page=${currentPage + 1}`;
-  const displayTotalPages = Math.max(1, totalPages || (hasNextPage ? currentPage + 1 : currentPage));
+  const windowEnd = Math.min(totalPageCount, windowStart + MAX_VISIBLE - 1);
+  const pageRange = Array.from({ length: windowEnd - windowStart + 1 }, (_, idx) => windowStart + idx);
+  const showLeadingFirst = windowStart > 1;
+  const showTrailingLast = windowEnd < totalPageCount;
+  const showLeftEllipsis = windowStart > 2;
+  const showRightEllipsis = windowEnd < totalPageCount - 1;
 
-  return (
-    <div className="flex justify-center border-t border-orange-50 pt-10 mt-10 pb-16">
-      <div className="inline-flex items-center gap-6 rounded-full border border-orange-100/70 bg-gradient-to-r from-white via-orange-50/50 to-white px-5 py-2.5 shadow-[0_10px_30px_rgba(249,115,22,0.15)]">
-        <PaginationButton href={prevHref} disabled={prevDisabled} ariaLabel="Previous page">
-          ←
-        </PaginationButton>
-        <div className="flex flex-col items-center text-gray-500">
-          <span className="text-[0.55rem] font-semibold uppercase tracking-[0.4em]">
-            Page
-          </span>
-          <span className="text-lg font-semibold text-gray-900">{currentPage}</span>
-          <span className="text-[0.65rem] uppercase tracking-[0.3em] text-gray-400 mt-0.5">
-            of {displayTotalPages}
-          </span>
-        </div>
-        <PaginationButton href={nextHref} disabled={nextDisabled} ariaLabel="Next page">
-          →
-        </PaginationButton>
-      </div>
-    </div>
-  );
-}
+  const shiftWindow = (direction: "prev" | "next") => {
+    setWindowStart((prev) => {
+      if (direction === "prev") {
+        return Math.max(1, prev - MAX_VISIBLE);
+      }
+      return Math.min(maxWindowStart, prev + MAX_VISIBLE);
+    });
+  };
 
-function PaginationButton({
-  href,
-  disabled,
-  children,
-  ariaLabel,
-  onClick,
-}: {
-  href?: string;
-  disabled: boolean;
-  children: ReactNode;
-  ariaLabel?: string;
-  onClick?: () => void;
-}) {
-  const label = ariaLabel ?? "Pagination button";
+  const createHref = (page: number) => (page <= 1 ? "/technology" : `/technology?page=${page}`);
 
-  const baseClasses =
-    "inline-flex items-center justify-center w-12 h-12 rounded-full text-lg font-semibold transition-all duration-200";
+  const pageButtonClasses = (isActive: boolean) =>
+    `w-10 h-10 rounded-2xl text-sm font-semibold flex items-center justify-center transition-all ${
+      isActive
+        ? "bg-gradient-to-br from-orange-500 to-orange-400 text-white shadow-[0_12px_25px_rgba(249,115,22,0.35)]"
+        : "bg-white/80 border border-white/60 text-slate-600 hover:text-orange-600 hover:border-orange-200"
+    }`;
 
-  if (disabled) {
-    return (
-      <span
-        aria-label={label}
-        className={`${baseClasses} border border-gray-200 text-gray-300 bg-gray-50 cursor-not-allowed`}
-      >
-        <span aria-hidden="true">{children}</span>
-      </span>
-    );
-  }
-
-  if (href) {
+  const renderPageNode = (page: number) => {
+    const isActive = page === activePage;
+    if (filtersActive) {
+      return (
+        <button
+          type="button"
+          key={`page-${page}`}
+          className={pageButtonClasses(isActive)}
+          onClick={() => onClientPageChange(page)}
+          disabled={isActive}
+          aria-current={isActive ? "page" : undefined}
+        >
+          {page}
+        </button>
+      );
+    }
     return (
       <Link
-        href={href}
-        aria-label={label}
-        className={`${baseClasses} border border-transparent text-white bg-gradient-to-br from-orange-500 to-orange-400 shadow-[0_8px_20px_rgba(249,115,22,0.35)] hover:shadow-[0_12px_30px_rgba(249,115,22,0.45)] focus:outline-none focus:ring-2 focus:ring-orange-200`}
+        key={`page-${page}`}
+        href={createHref(page)}
+        className={pageButtonClasses(isActive)}
+        aria-current={isActive ? "page" : undefined}
       >
-        <span aria-hidden="true">{children}</span>
+        {page}
       </Link>
     );
-  }
+  };
 
-  return (
+  const arrowClasses = (disabled: boolean) =>
+    `w-10 h-10 rounded-2xl border text-base font-semibold flex items-center justify-center transition-all ${
+      disabled
+        ? "border-white/40 text-slate-300 cursor-not-allowed"
+        : "border-white/60 text-slate-600 hover:text-orange-600 hover:border-orange-200"
+    }`;
+
+  const renderArrow = (direction: "prev" | "next") => {
+    const isPrev = direction === "prev";
+    const targetPage = isPrev ? activePage - 1 : activePage + 1;
+    const isDisabled = isPrev ? activePage <= 1 : activePage >= totalPageCount;
+    const label = isPrev ? "Previous page" : "Next page";
+    const symbol = isPrev ? "←" : "→";
+
+    if (filtersActive) {
+      return (
+        <button
+          type="button"
+          key={direction}
+          className={arrowClasses(isDisabled)}
+          disabled={isDisabled}
+          onClick={() => onClientPageChange(Math.min(totalPageCount, Math.max(1, targetPage)))}
+          aria-label={label}
+        >
+          {symbol}
+        </button>
+      );
+    }
+
+    if (isDisabled) {
+      return (
+        <span key={direction} className={arrowClasses(true)} aria-label={label}>
+          {symbol}
+        </span>
+      );
+    }
+
+    return (
+      <Link
+        key={direction}
+        href={createHref(targetPage)}
+        className={arrowClasses(false)}
+        aria-label={label}
+      >
+        {symbol}
+      </Link>
+    );
+  };
+
+  const EllipsisButton = ({ direction }: { direction: "prev" | "next" }) => (
     <button
       type="button"
-      aria-label={label}
-      onClick={onClick}
-      className={`${baseClasses} border border-transparent text-white bg-gradient-to-br from-orange-500 to-orange-400 shadow-[0_8px_20px_rgba(249,115,22,0.35)] hover:shadow-[0_12px_30px_rgba(249,115,22,0.45)] focus:outline-none focus:ring-2 focus:ring-orange-200 disabled:opacity-60 disabled:cursor-not-allowed`}
-      disabled={disabled}
+      className="w-10 h-10 rounded-2xl text-xl font-semibold text-slate-400 hover:text-orange-600 hover:border-orange-200 border border-transparent transition-all"
+      onClick={() => shiftWindow(direction)}
+      aria-label={direction === "prev" ? "Show previous pages" : "Show next pages"}
     >
-      <span aria-hidden="true">{children}</span>
+      …
     </button>
+  );
+
+  return (
+    <div className="border-t border-orange-100/60 pt-12 mt-12 pb-16">
+      <div className="flex flex-wrap justify-center items-center gap-2 rounded-2xl border border-orange-100/70 bg-white/95 px-4 py-3 shadow-[0_8px_24px_rgba(15,23,42,0.08)]">
+        {renderArrow("prev")}
+        {showLeadingFirst && renderPageNode(1)}
+        {showLeftEllipsis && <EllipsisButton direction="prev" />}
+        {pageRange.map(renderPageNode)}
+        {showRightEllipsis && <EllipsisButton direction="next" />}
+        {showTrailingLast && renderPageNode(totalPageCount)}
+        {renderArrow("next")}
+      </div>
+    </div>
   );
 }
 

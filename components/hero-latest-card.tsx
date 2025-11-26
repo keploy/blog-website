@@ -8,24 +8,14 @@ import { getExcerpt } from "../utils/excerpt";
 
 interface HeroLatestCardProps {
   post: Post;
-  animationPhase: "idle" | "out" | "in";
 }
 
-export default function HeroLatestCard({ post, animationPhase }: HeroLatestCardProps) {
+export default function HeroLatestCard({ post }: HeroLatestCardProps) {
   const readingTime = post.content ? 5 + calculateReadingTime(post.content) : undefined;
   const cleanedExcerpt = (post.excerpt || "").replace("Table of Contents", "");
 
-  const phaseClasses =
-    animationPhase === "out"
-      ? "opacity-80 scale-[0.98] translate-y-[4px] shadow-none"
-      : animationPhase === "in"
-      ? "opacity-85 scale-[0.985] translate-y-[2px] shadow-[0_4px_14px_rgba(34,197,94,0.12)]"
-      : "opacity-100 scale-[0.995] translate-y-0 shadow-[0_10px_24px_rgba(34,197,94,0.15)]";
-
   return (
-    <div
-      className={`bg-green-50 rounded-2xl p-6 border-2 border-green-200 relative overflow-hidden min-h-[440px] flex flex-col transition-[transform,opacity,box-shadow] duration-[1800ms] ease-[cubic-bezier(0.33,0.11,0.2,0.99)] ${phaseClasses}`}
-    >
+    <div className="bg-green-50 rounded-2xl p-6 border-2 border-green-200 relative overflow-hidden min-h-[440px] flex flex-col">
       <div className="absolute top-0 right-0 w-28 h-28 bg-green-200/30 rounded-full -mr-14 -mt-12" />
       <div className="relative flex flex-col gap-5 flex-1">
         {/* Cover Image - First */}
