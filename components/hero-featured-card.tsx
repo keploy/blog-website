@@ -15,8 +15,8 @@ export default function HeroFeaturedCard({ post }: HeroFeaturedCardProps) {
   const cleanedExcerpt = (post.excerpt || "").replace("Table of Contents", "");
 
   return (
-    <div className="rounded-2xl p-6 border-2 relative overflow-hidden bg-yellow-50 border-yellow-200 min-h-[440px] flex flex-col shadow-[0_12px_30px_rgba(249,115,22,0.18)]">
-      <div className="absolute top-0 right-0 w-28 h-28 bg-yellow-200/30 rounded-full -mr-14 -mt-12" />
+    <div className="rounded-2xl p-6 border-2 relative overflow-hidden bg-gradient-to-b from-rose-50 via-white to-rose-50 border-rose-200 min-h-[440px] flex flex-col shadow-[0_20px_45px_rgba(244,114,182,0.18)]">
+      <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-rose-200/60 to-orange-100/60 rounded-full -mr-14 -mt-12" />
       <div className="relative flex flex-col gap-5 flex-1">
         {/* Cover Image - First */}
         {post.featuredImage && (
@@ -69,7 +69,7 @@ export default function HeroFeaturedCard({ post }: HeroFeaturedCardProps) {
         <h3 className="text-2xl font-semibold text-card-foreground leading-tight flex-shrink-0 min-h-[3.5rem]">
           <Link
             href={`/technology/${post.slug}`}
-            className="line-clamp-2 hover:text-yellow-700 transition-colors"
+            className="line-clamp-2 hover:text-rose-600 transition-colors"
             dangerouslySetInnerHTML={{ __html: post.title }}
           />
         </h3>

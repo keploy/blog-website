@@ -18,7 +18,7 @@ import Image from "next/image";
 import { Post } from "../../types/post";
 import HeroLatestCard from "../../components/hero-latest-card";
 import HeroFeaturedCard from "../../components/hero-featured-card";
-import { CheckCircle2, Eye } from "lucide-react";
+import { Award, Sparkles } from "lucide-react";
 import TechnologyBackground from "../../components/technology-background";
 
 const DATE_FILTERS = [
@@ -230,7 +230,7 @@ export default function Index({
 
   const showEmptyState =
     visiblePosts.length === 0 && !(filtersActive && isGlobalLoading && !hasGlobalPosts);
-  const showHeroSection = !filtersActive && currentPage === 1;
+  const showHeroSection = !filtersActive;
 
   const resetFilters = () => {
     setSearchTerm("");
@@ -461,10 +461,10 @@ export default function Index({
               >
                 {/* Latest Blogs Card */}
                 <div
-                  className={`bg-card rounded-2xl overflow-hidden border-2 border-green-500/30 transition-[transform,opacity,box-shadow] duration-[1800ms] ease-[cubic-bezier(0.33,0.11,0.2,0.99)] ${HERO_CARD_ANIMATION_CLASSES[animationPhase]}`}
+                  className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-[transform,opacity,box-shadow] duration-[1800ms] ease-[cubic-bezier(0.33,0.11,0.2,0.99)] ${HERO_CARD_ANIMATION_CLASSES[animationPhase]}`}
                 >
-                  <div className="bg-green-500 px-4 py-3 flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-white" />
+                  <div className="bg-gradient-to-r from-orange-500 via-amber-400 to-orange-400 px-4 py-3 flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-white" />
                     <span className="text-white font-semibold">
                       Latest Blogs
                     </span>
@@ -478,10 +478,10 @@ export default function Index({
 
                 {/* Featured Blogs Card */}
                 <div
-                  className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-[transform,opacity,box-shadow] duration-[1800ms] ease-[cubic-bezier(0.33,0.11,0.2,0.99)] ${HERO_CARD_ANIMATION_CLASSES[animationPhase]}`}
+                  className={`bg-card rounded-2xl overflow-hidden border-2 border-rose-400/40 transition-[transform,opacity,box-shadow] duration-[1800ms] ease-[cubic-bezier(0.33,0.11,0.2,0.99)] ${HERO_CARD_ANIMATION_CLASSES[animationPhase]}`}
                 >
-                  <div className="bg-orange-500 px-4 py-3 flex items-center gap-2">
-                    <Eye className="w-5 h-5 text-white" />
+                  <div className="bg-gradient-to-r from-rose-500 via-rose-400 to-orange-300 px-4 py-3 flex items-center gap-2">
+                    <Award className="w-5 h-5 text-white" />
                     <span className="text-white font-semibold">
                       Featured Blogs
                     </span>
@@ -521,8 +521,8 @@ export default function Index({
         <Container>
           <div className="relative">
             <div className="pt-6 pb-10 md:pt-8 md:pb-12">
-              <div className="rounded-2xl border border-orange-100/70 bg-white/95 shadow-[0_8px_24px_rgba(15,23,42,0.08)] px-5 py-5 md:px-6 md:py-6">
-                <div className="flex flex-wrap gap-3 items-end">
+              <div className="rounded-[28px] border-2 border-orange-100/80 bg-white/97 shadow-[0_30px_80px_rgba(15,23,42,0.15)] px-5 py-6 md:px-8 md:py-7">
+                <div className="flex flex-wrap gap-4 items-end">
                   <div className="relative flex-[2] min-w-[280px] flex flex-col gap-1">
                     <span className="text-[0.65rem] uppercase tracking-[0.35em] text-slate-500">
                       Search
@@ -533,17 +533,17 @@ export default function Index({
                         placeholder="Search technology posts..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full h-10 pl-11 pr-9 rounded-xl border border-orange-100/90 bg-white text-sm font-semibold text-slate-900 shadow-[0_2px_8px_rgba(15,23,42,0.04)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-all placeholder:text-slate-400"
+                        className="w-full h-11 pl-12 pr-10 rounded-2xl border-2 border-orange-100/80 bg-white text-sm font-semibold text-slate-900 shadow-[0_18px_32px_rgba(15,23,42,0.12)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-all placeholder:text-slate-400"
                       />
-                      <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-400/80 pointer-events-none w-4 h-4" />
+                      <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-400/80 pointer-events-none w-[18px] h-[18px]" />
                       {searchTerm && (
                         <button
                           type="button"
                           onClick={() => setSearchTerm("")}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
                           aria-label="Clear search"
                         >
-                          <FaTimes className="w-3.5 h-3.5" />
+                          <FaTimes className="w-4 h-4" />
                         </button>
                       )}
                     </div>
@@ -591,7 +591,7 @@ export default function Index({
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="shrink-0 h-10 px-5 rounded-xl border border-orange-200/90 bg-white text-sm font-semibold text-orange-600 hover:bg-orange-50 hover:border-orange-300 transition-all"
+                    className="shrink-0 h-11 px-6 rounded-2xl border-2 border-orange-200/90 bg-white shadow-[0_12px_26px_rgba(249,115,22,0.18)] text-sm font-semibold text-orange-600 hover:bg-orange-50 hover:border-orange-300 transition-all"
                   >
                     Reset all
                   </button>
@@ -818,15 +818,15 @@ function FilterSelect({
       </span>
       <button
         type="button"
-        className={`relative w-full h-10 rounded-xl border text-left px-3 pr-9 text-sm font-semibold transition-all flex items-center min-w-0 ${
+        className={`relative w-full h-11 rounded-2xl border-2 text-left px-4 pr-11 text-sm font-semibold transition-all flex items-center min-w-0 ${
           isOpen
-            ? "border-orange-300 shadow-[0_4px_12px_rgba(15,23,42,0.08)]"
-            : "border-orange-100/90 shadow-[0_2px_8px_rgba(15,23,42,0.04)]"
-        } bg-white text-slate-900 hover:border-orange-200 hover:shadow-[0_4px_12px_rgba(15,23,42,0.08)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300`}
+            ? "border-orange-300 shadow-[0_16px_30px_rgba(15,23,42,0.12)]"
+            : "border-orange-100/80 shadow-[0_10px_22px_rgba(15,23,42,0.08)]"
+        } bg-white text-slate-900 hover:border-orange-200 hover:shadow-[0_18px_34px_rgba(15,23,42,0.12)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <span className="truncate flex-1 min-w-0">{activeOption?.label ?? "Select"}</span>
-        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 flex-shrink-0">
+        <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 flex-shrink-0">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path
               d="M6 9l6 6 6-6"
@@ -840,7 +840,7 @@ function FilterSelect({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-orange-100/80 rounded-xl shadow-[0_8px_24px_rgba(15,23,42,0.12)] z-10 overflow-hidden">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-orange-100 rounded-2xl shadow-[0_26px_60px_rgba(15,23,42,0.2)] z-20 overflow-hidden">
           <div className="max-h-48 overflow-y-auto py-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-slate-400">
             {options.map((option) => {
               const isActive = option.value === value;
@@ -851,7 +851,7 @@ function FilterSelect({
                   className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors truncate ${
                     isActive
                       ? "bg-orange-50 text-slate-900"
-                      : "text-slate-700 hover:text-orange-600"
+                      : "text-slate-700 hover:bg-orange-50/60 hover:text-orange-600"
                   }`}
                   onClick={() => {
                     onChange(option.value);

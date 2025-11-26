@@ -15,8 +15,8 @@ export default function HeroLatestCard({ post }: HeroLatestCardProps) {
   const cleanedExcerpt = (post.excerpt || "").replace("Table of Contents", "");
 
   return (
-    <div className="bg-green-50 rounded-2xl p-6 border-2 border-green-200 relative overflow-hidden min-h-[440px] flex flex-col">
-      <div className="absolute top-0 right-0 w-28 h-28 bg-green-200/30 rounded-full -mr-14 -mt-12" />
+    <div className="bg-gradient-to-b from-orange-50 via-white to-orange-100 rounded-2xl p-6 border-2 border-orange-200 relative overflow-hidden min-h-[440px] flex flex-col shadow-[0_18px_40px_rgba(249,115,22,0.18)]">
+      <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-orange-200/50 to-amber-100/60 rounded-full -mr-14 -mt-12" />
       <div className="relative flex flex-col gap-5 flex-1">
         {/* Cover Image - First */}
         {post.featuredImage && (
@@ -69,7 +69,7 @@ export default function HeroLatestCard({ post }: HeroLatestCardProps) {
         <h3 className="text-2xl font-semibold text-card-foreground leading-tight flex-shrink-0 min-h-[3.5rem]">
           <Link
             href={`/technology/${post.slug}`}
-            className="line-clamp-2 hover:text-green-700 transition-colors"
+            className="line-clamp-2 hover:text-orange-700 transition-colors"
             dangerouslySetInnerHTML={{ __html: post.title }}
           />
         </h3>
