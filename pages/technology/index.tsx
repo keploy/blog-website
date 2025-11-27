@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
@@ -36,8 +36,6 @@ const SORT_OPTIONS = [
 ];
 
 const TECHNOLOGY_PAGE_SIZE = 18;
-
-type AnimationPhase = "idle" | "out" | "in";
 
 type ViewMode = "grid" | "list" | "featured" | "compact";
 
@@ -90,12 +88,6 @@ const resolveAuthorImage = (image?: string | null) => {
   return image;
 };
 
-const HERO_CARD_ANIMATION_CLASSES: Record<AnimationPhase, string> = {
-  out: "opacity-80 scale-[0.985] translate-y-[6px] shadow-none",
-  in: "opacity-90 scale-[0.995] translate-y-[2px] shadow-[0_6px_18px_rgba(15,23,42,0.12)]",
-  idle: "opacity-100 scale-100 translate-y-0 shadow-[0_14px_36px_rgba(15,23,42,0.18)]",
-};
-
 export default function Index({
   posts,
   pageInfo,
@@ -122,17 +114,17 @@ export default function Index({
   // Hero card rotation state
   const [isVisible, setIsVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [animationPhase, setAnimationPhase] = useState<AnimationPhase>("idle");
+  const [isAnimating, setIsAnimating] = useState(false);
   const heroSectionRef = useRef<HTMLDivElement>(null);
-  const rotationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const animationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const settleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
-  // Get latest 4 posts and featured 4 posts
+  // Get latest 4 posts and featured 4 posts (consistent across pages)
   const latestPosts = useMemo(() => {
-    const allLatest = latestPost ? [latestPost, ...posts.filter(p => p.slug !== latestPost.slug)] : posts;
-    return dedupePosts(allLatest).slice(0, 4);
-  }, [latestPost, posts]);
+    if (latestPost) {
+      // Always build carousel from the hero + its companion featured posts
+      return dedupePosts([latestPost, ...featuredPosts]).slice(0, 4);
+    }
+    return dedupePosts(posts).slice(0, 4);
+  }, [latestPost, featuredPosts, posts]);
   
   const featuredPostsList = useMemo(() => {
     return dedupePosts(featuredPosts).slice(0, 4);
@@ -230,8 +222,6 @@ export default function Index({
 
   const showEmptyState =
     visiblePosts.length === 0 && !(filtersActive && isGlobalLoading && !hasGlobalPosts);
-  const showHeroSection = !filtersActive;
-
   const resetFilters = () => {
     setSearchTerm("");
     setSelectedAuthor("all");
@@ -256,71 +246,29 @@ export default function Index({
     return () => observer.disconnect();
   }, []);
 
-  const clearRotationTimers = useCallback(() => {
-    if (rotationIntervalRef.current) {
-      clearInterval(rotationIntervalRef.current);
-      rotationIntervalRef.current = null;
-    }
-    if (animationTimeoutRef.current) {
-      clearTimeout(animationTimeoutRef.current);
-      animationTimeoutRef.current = null;
-    }
-    if (settleTimeoutRef.current) {
-      clearTimeout(settleTimeoutRef.current);
-      settleTimeoutRef.current = null;
-    }
-  }, []);
-
-  const startRotation = useCallback(() => {
-    clearRotationTimers();
-    if (!isVisible || maxRotationIndex <= 1) return;
-  
-    const OUT_DURATION = 600;
-    const IN_DURATION = 200;
-    const IDLE_DURATION = 6200; // remaining time
-    const CYCLE_DURATION = OUT_DURATION + IN_DURATION + IDLE_DURATION;
-  
-    rotationIntervalRef.current = setInterval(() => {
-      // Phase 1: OUT
-      setAnimationPhase("out");
-  
-      animationTimeoutRef.current = setTimeout(() => {
-        // Phase 2: SWAP + IN
-        setSelectedIndex((prev) => (prev + 1) % maxRotationIndex);
-        setAnimationPhase("in");
-  
-        settleTimeoutRef.current = setTimeout(() => {
-          // Phase 3: IDLE
-          setAnimationPhase("idle");
-        }, IN_DURATION);
-  
-      }, OUT_DURATION);
-  
-    }, CYCLE_DURATION);
-  }, [clearRotationTimers, isVisible, maxRotationIndex]);
-  
-
-  const handleManualSelection = useCallback(
-    (index: number) => {
-      if (index < 0 || index >= maxRotationIndex) return;
-      clearRotationTimers();
-      setAnimationPhase("out");
-      animationTimeoutRef.current = setTimeout(() => {
-        setSelectedIndex(index);
-        setAnimationPhase("in");
-        settleTimeoutRef.current = setTimeout(() => {
-          setAnimationPhase("idle");
-        }, 900);
-        startRotation();
-      }, 720);
-    },
-    [clearRotationTimers, maxRotationIndex, startRotation]
-  );
-
+  // Hero cards auto-rotation (mirroring contract-testing hero logic)
   useEffect(() => {
-    startRotation();
-    return () => clearRotationTimers();
-  }, [startRotation, clearRotationTimers]);
+    if (!isVisible || maxRotationIndex <= 1) return;
+
+    const interval = setInterval(() => {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setSelectedIndex((prev) => (prev + 1) % maxRotationIndex);
+        setIsAnimating(false);
+      }, 500);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isVisible, maxRotationIndex]);
+
+  const handleManualSelection = (index: number) => {
+    if (index < 0 || index >= maxRotationIndex) return;
+    setIsAnimating(true);
+    setTimeout(() => {
+      setSelectedIndex(index);
+      setIsAnimating(false);
+    }, 300);
+  };
 
   useEffect(() => {
     if (hasGlobalPosts || isGlobalLoading) return;
@@ -428,112 +376,137 @@ export default function Index({
       <TechnologyBackground />
       <Header />
       {/* Hero Section */}
-      {showHeroSection && (
-        <div
-          ref={heroSectionRef}
-          className="min-h-screen py-12 px-4 sm:px-6 relative"
-        >
+      <div
+        ref={heroSectionRef}
+        className="px-4 sm:px-6 pt-10 pb-10 md:pt-14 md:pb-12 relative"
+      >
+        <div className="container mx-auto relative z-10 max-w-6xl">
+              {/* Hero Header */}
+          <div
+            className={`text-center mb-10 transition-all duration-1000 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
+          >
+            <h1 className="text-4xl mb-4 sm:text-6xl md:text-7xl lg:text-8xl font-bold text-slate-900 leading-tight px-2">
+              Keploy Technology Blog
+            </h1>
+            <p className="mt-6 mb-4 py-2 text-4xl sm:text-5xl font-semibold leading-snug bg-gradient-to-r from-orange-500 via-orange-500 to-amber-400 bg-clip-text text-transparent">
+              Engineering Insights. Deep Dives. Release Notes.
+            </p>
+            <p className="mt-4 mb-8 pb-2 text-lg sm:text-xl leading-relaxed text-muted-foreground max-w-3xl mx-auto px-4">
+              Keploy’s latest engineering stories, product updates, architecture breakdowns, and
+              practical guides to building reliable software at scale.
+            </p>
+          </div>
 
-          <div className="container mx-auto relative z-10 max-w-6xl">
-            {/* Hero Header */}
-            <div
-              className={`text-center mb-16 transition-all duration-1000 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-            >
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-8 leading-[1.05] px-2 tracking-tight">
-                Keploy Technology{" "}
-                <span className="bg-gradient-to-r from-orange-400 via-orange-500 to-amber-400 bg-clip-text text-transparent">
-                  Blog
-                </span>
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto px-4">
-                Deep dives, release notes, and engineering stories straight from the Keploy team.
-              </p>
-            </div>
-
-            {/* Main Cards Viewer */}
-            <div className="max-w-5xl mx-auto mb-16">
+          {/* Main Cards Viewer */}
+          <div className="max-w-5xl mx-auto mt-8 mb-16">
               <div
-                className={`grid lg:grid-cols-2 gap-8 transition-all duration-1000 delay-200 ${
+                className={`grid lg:grid-cols-2 gap-8 transition-all duration-700 delay-200 ${
                   isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
                 }`}
               >
                 {/* Latest Blogs Card */}
-                <div
-                  className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-[transform,opacity,box-shadow] duration-[1800ms] ease-[cubic-bezier(0.33,0.11,0.2,0.99)] ${HERO_CARD_ANIMATION_CLASSES[animationPhase]}`}
-                >
-                  <div className="bg-gradient-to-r from-orange-500 via-amber-400 to-orange-400 px-4 py-3 flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-white" />
-                    <span className="text-white font-semibold">
-                      Latest Blogs
-                    </span>
+                <div className="flex flex-col gap-6">
+                  <div
+                    className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-all duration-500 ${
+                      isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
+                    }`}
+                  >
+                    <div className="bg-orange-500 px-4 py-3 flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-white" />
+                      <span className="text-white font-semibold">
+                        Latest Blogs
+                      </span>
+                    </div>
+                    <div className="p-5">
+                      {latestPosts.length > 0 && selectedIndex < latestPosts.length ? (
+                        <HeroLatestCard post={latestPosts[selectedIndex]} variant="visual" />
+                      ) : null}
+                    </div>
                   </div>
-                  <div className="p-5">
-                    {latestPosts.length > 0 && selectedIndex < latestPosts.length ? (
-                      <HeroLatestCard post={latestPosts[selectedIndex]} />
-                    ) : null}
+                  <div
+                    className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-all duration-500 ${
+                      isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
+                    }`}
+                  >
+                    <div className="p-5">
+                      {latestPosts.length > 0 && selectedIndex < latestPosts.length ? (
+                        <HeroLatestCard post={latestPosts[selectedIndex]} variant="details" />
+                      ) : null}
+                    </div>
                   </div>
                 </div>
 
                 {/* Featured Blogs Card */}
-                <div
-                  className={`bg-card rounded-2xl overflow-hidden border-2 border-rose-400/40 transition-[transform,opacity,box-shadow] duration-[1800ms] ease-[cubic-bezier(0.33,0.11,0.2,0.99)] ${HERO_CARD_ANIMATION_CLASSES[animationPhase]}`}
-                >
-                  <div className="bg-gradient-to-r from-rose-500 via-rose-400 to-orange-300 px-4 py-3 flex items-center gap-2">
-                    <Award className="w-5 h-5 text-white" />
-                    <span className="text-white font-semibold">
-                      Featured Blogs
-                    </span>
+                <div className="flex flex-col gap-6">
+                  <div
+                    className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-all duration-500 ${
+                      isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
+                    }`}
+                  >
+                    <div className="bg-orange-500 px-4 py-3 flex items-center gap-2">
+                      <Award className="w-5 h-5 text-white" />
+                      <span className="text-white font-semibold">
+                        Featured Blogs
+                      </span>
+                    </div>
+                    <div className="p-5">
+                      {featuredPostsList.length > 0 && selectedIndex < featuredPostsList.length ? (
+                        <HeroFeaturedCard post={featuredPostsList[selectedIndex]} variant="visual" />
+                      ) : null}
+                    </div>
                   </div>
-                  <div className="p-5">
-                    {featuredPostsList.length > 0 && selectedIndex < featuredPostsList.length ? (
-                      <HeroFeaturedCard post={featuredPostsList[selectedIndex]} />
-                    ) : null}
+                  <div
+                    className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-all duration-500 ${
+                      isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
+                    }`}
+                  >
+                    <div className="p-5">
+                      {featuredPostsList.length > 0 && selectedIndex < featuredPostsList.length ? (
+                        <HeroFeaturedCard post={featuredPostsList[selectedIndex]} variant="details" />
+                      ) : null}
+                    </div>
                   </div>
                 </div>
-              </div>
+            </div>
 
-              {/* Pagination Dots */}
-              <div className="flex justify-center gap-2 mt-12">
-                {Array.from({ length: Math.max(latestPosts.length, featuredPostsList.length) }, (_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => handleManualSelection(i)}
-                    className={`rounded-full transition-all duration-300 ${
-                      selectedIndex === i ? "bg-orange-500" : "bg-orange-500/30 hover:bg-orange-500/50"
-                    }`}
-                    style={{
-                      width: selectedIndex === i ? "2rem" : "0.75rem",
-                      height: "0.75rem",
-                    }}
-                    aria-label={`View blog ${i + 1}`}
-                  />
-                ))}
-              </div>
+            {/* Pagination Dots */}
+            <div className="flex justify-center gap-2 mt-12">
+              {Array.from({ length: Math.max(latestPosts.length, featuredPostsList.length) }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleManualSelection(i)}
+                  className={`rounded-full transition-all duration-300 ${
+                    selectedIndex === i ? "bg-orange-500" : "bg-orange-500/30 hover:bg-orange-500/50"
+                  }`}
+                  style={{
+                    width: selectedIndex === i ? "2rem" : "0.75rem",
+                    height: "0.75rem",
+                  }}
+                  aria-label={`View blog ${i + 1}`}
+                />
+              ))}
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Search and Filter Section */}
       <section className="mt-0 w-full">
         <Container>
           <div className="relative">
             <div className="pt-6 pb-10 md:pt-8 md:pb-12">
-              <div className="rounded-[28px] border-2 border-orange-100/80 bg-white/97 shadow-[0_30px_80px_rgba(15,23,42,0.15)] px-5 py-6 md:px-8 md:py-7">
-                <div className="flex flex-wrap gap-4 items-end">
-                  <div className="relative flex-[2] min-w-[280px] flex flex-col gap-1">
-                    <span className="text-[0.65rem] uppercase tracking-[0.35em] text-slate-500">
-                      Search
-                    </span>
-                    <div className="relative">
+              <div className="rounded-md border border-black/90 bg-white shadow-md shadow-neutral-900 px-5 py-6 md:px-8 md:py-7 transition-shadow hover:shadow-none">
+                <div className="flex flex-wrap gap-4 items-center">
+                  <div className="relative flex-[2] min-w-[260px]">
+                    <div className="relative rounded-md border border-black/90 bg-white shadow-md shadow-neutral-900 transition-all hover:shadow-sm focus-within:shadow-sm">
                       <input
                         type="text"
                         placeholder="Search technology posts..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full h-11 pl-12 pr-10 rounded-2xl border-2 border-orange-100/80 bg-white text-sm font-semibold text-slate-900 shadow-[0_18px_32px_rgba(15,23,42,0.12)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-all placeholder:text-slate-400"
+                        className="w-full h-11 pl-12 pr-10 rounded-md bg-white text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-all placeholder:text-slate-400"
                       />
                       <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-400/80 pointer-events-none w-[18px] h-[18px]" />
                       {searchTerm && (
@@ -591,7 +564,7 @@ export default function Index({
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="shrink-0 h-11 px-6 rounded-2xl border-2 border-orange-200/90 bg-white shadow-[0_12px_26px_rgba(249,115,22,0.18)] text-sm font-semibold text-orange-600 hover:bg-orange-50 hover:border-orange-300 transition-all"
+                    className="shrink-0 h-11 px-6 rounded-md border border-black/90 bg-white text-sm font-semibold text-orange-600 shadow-md shadow-neutral-900 transition-all hover:bg-neutral-50 hover:border-orange-400 hover:text-orange-700 hover:shadow-sm focus-visible:ring-2 focus-visible:ring-orange-300"
                   >
                     Reset all
                   </button>
@@ -697,7 +670,7 @@ function FeaturedBlogCard({ post, readingTime }: { post: Post; readingTime?: num
 
   return (
     <Link href={href} className="group block h-full">
-      <article className="h-full bg-white rounded-2xl border border-orange-200/80 shadow-[0_22px_50px_rgba(15,23,42,0.11)] hover:shadow-[0_28px_70px_rgba(15,23,42,0.16)] transition-all duration-300 overflow-hidden hover:border-orange-300 hover:-translate-y-2 flex flex-col">
+      <article className="h-full bg-white rounded-md border border-black/90 shadow-md shadow-neutral-900 hover:shadow-none transition-all duration-300 overflow-hidden hover:-translate-y-2 flex flex-col">
         <div className="relative w-full aspect-video overflow-hidden">
           {coverSrc ? (
             <Image
@@ -750,7 +723,7 @@ function CompactBlogCard({ post, readingTime }: { post: Post; readingTime?: numb
 
   return (
     <Link href={href} className="group block h-full">
-      <article className="h-full bg-white rounded-2xl border border-orange-200/80 shadow-[0_22px_50px_rgba(15,23,42,0.11)] hover:shadow-[0_28px_70px_rgba(15,23,42,0.16)] transition-all duration-300 overflow-hidden hover:border-orange-300 hover:-translate-y-2 flex flex-col">
+      <article className="h-full bg-white rounded-md border border-black/90 shadow-md shadow-neutral-900 hover:shadow-none transition-all duration-300 overflow-hidden hover:-translate-y-2 flex flex-col">
         <div className="p-6 flex flex-col flex-1 gap-4">
           <h3 className="text-xl md:text-2xl font-semibold text-gray-900 leading-snug">
             <span className="line-clamp-2 group-hover:text-orange-600 transition-colors duration-200" dangerouslySetInnerHTML={{ __html: post.title }} />
@@ -812,20 +785,17 @@ function FilterSelect({
   }, []);
 
   return (
-    <div className="flex flex-col gap-1 w-full relative" ref={containerRef}>
-      <span className="text-[0.65rem] text-slate-500 uppercase tracking-[0.35em]">
-        {label}
-      </span>
+    <div className="w-full relative" ref={containerRef}>
       <button
         type="button"
-        className={`relative w-full h-11 rounded-2xl border-2 text-left px-4 pr-11 text-sm font-semibold transition-all flex items-center min-w-0 ${
+        className={`relative w-full h-11 rounded-md border text-left px-4 pr-11 text-sm font-semibold transition-all flex items-center min-w-0 shadow-md shadow-neutral-900 text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-300 ${
           isOpen
-            ? "border-orange-300 shadow-[0_16px_30px_rgba(15,23,42,0.12)]"
-            : "border-orange-100/80 shadow-[0_10px_22px_rgba(15,23,42,0.08)]"
-        } bg-white text-slate-900 hover:border-orange-200 hover:shadow-[0_18px_34px_rgba(15,23,42,0.12)] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300`}
+            ? "border-orange-400 bg-orange-50 shadow-sm"
+            : "border-black/90 bg-white hover:border-black hover:bg-neutral-50 hover:shadow-sm"
+        }`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <span className="truncate flex-1 min-w-0">{activeOption?.label ?? "Select"}</span>
+        <span className="truncate flex-1 min-w-0">{activeOption?.label ?? label}</span>
         <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 flex-shrink-0">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path
@@ -840,7 +810,7 @@ function FilterSelect({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-orange-100 rounded-2xl shadow-[0_26px_60px_rgba(15,23,42,0.2)] z-20 overflow-hidden">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-black/90 rounded-md shadow-lg shadow-neutral-900 z-20 overflow-hidden">
           <div className="max-h-48 overflow-y-auto py-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-slate-400">
             {options.map((option) => {
               const isActive = option.value === value;
@@ -848,10 +818,10 @@ function FilterSelect({
                 <button
                   type="button"
                   key={option.value}
-                  className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors truncate ${
+                  className={`w-full text-left px-4 py-2.5 text-sm font-semibold transition-colors truncate ${
                     isActive
-                      ? "bg-orange-50 text-slate-900"
-                      : "text-slate-700 hover:bg-orange-50/60 hover:text-orange-600"
+                      ? "bg-orange-100 text-orange-700"
+                      : "text-slate-700 hover:bg-orange-50 hover:text-orange-600"
                   }`}
                   onClick={() => {
                     onChange(option.value);
@@ -925,10 +895,10 @@ function PaginationControls({
   const createHref = (page: number) => (page <= 1 ? "/technology" : `/technology?page=${page}`);
 
   const pageButtonClasses = (isActive: boolean) =>
-    `w-10 h-10 rounded-2xl text-sm font-semibold flex items-center justify-center transition-all ${
+    `w-10 h-10 rounded-xl text-sm font-semibold flex items-center justify-center transition-all ${
       isActive
-        ? "bg-gradient-to-br from-orange-500 to-orange-400 text-white shadow-[0_12px_25px_rgba(249,115,22,0.35)]"
-        : "bg-white/80 border border-white/60 text-slate-600 hover:text-orange-600 hover:border-orange-200"
+        ? "bg-orange-500 text-white shadow-[0_5px_14px_rgba(15,23,42,0.35)]"
+        : "bg-white border border-orange-100 text-slate-600 hover:text-orange-600 hover:border-orange-300 hover:shadow-[0_4px_10px_rgba(15,23,42,0.22)]"
     }`;
 
   const renderPageNode = (page: number) => {
@@ -960,10 +930,10 @@ function PaginationControls({
   };
 
   const arrowClasses = (disabled: boolean) =>
-    `w-10 h-10 rounded-2xl border text-base font-semibold flex items-center justify-center transition-all ${
+    `w-10 h-10 rounded-xl border text-base font-semibold flex items-center justify-center transition-all ${
       disabled
-        ? "border-white/40 text-slate-300 cursor-not-allowed"
-        : "border-white/60 text-slate-600 hover:text-orange-600 hover:border-orange-200"
+        ? "border-orange-50 text-slate-300 cursor-not-allowed"
+        : "border-orange-100 text-slate-600 hover:text-orange-600 hover:border-orange-300 hover:shadow-[0_4px_10px_rgba(15,23,42,0.2)]"
     }`;
 
   const renderArrow = (direction: "prev" | "next") => {
@@ -1011,7 +981,7 @@ function PaginationControls({
   const EllipsisButton = ({ direction }: { direction: "prev" | "next" }) => (
     <button
       type="button"
-      className="w-10 h-10 rounded-2xl text-xl font-semibold text-slate-400 hover:text-orange-600 hover:border-orange-200 border border-transparent transition-all"
+      className="w-10 h-10 rounded-xl text-xl font-semibold text-slate-400 hover:text-orange-600 hover:border-orange-300 border border-transparent hover:shadow-[0_4px_10px_rgba(15,23,42,0.2)] transition-all"
       onClick={() => shiftWindow(direction)}
       aria-label={direction === "prev" ? "Show previous pages" : "Show next pages"}
     >
@@ -1020,8 +990,8 @@ function PaginationControls({
   );
 
   return (
-    <div className="border-t border-orange-100/60 pt-12 mt-12 pb-16">
-      <div className="flex flex-wrap justify-center items-center gap-2 rounded-2xl border border-orange-100/70 bg-white/95 px-4 py-3 shadow-[0_8px_24px_rgba(15,23,42,0.08)]">
+    <div className="border-top border-orange-100/60 pt-12 mt-12 pb-16">
+      <div className="flex flex-wrap justify-center items-center gap-2 rounded-xl border border-orange-100 bg-white px-4 py-3 shadow-[0_10px_26px_rgba(15,23,42,0.16)]">
         {renderArrow("prev")}
         {showLeadingFirst && renderPageNode(1)}
         {showLeftEllipsis && <EllipsisButton direction="prev" />}

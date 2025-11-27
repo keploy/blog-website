@@ -6,21 +6,23 @@ import { Post } from "../types/post";
 import { calculateReadingTime } from "../utils/calculateReadingTime";
 import { getExcerpt } from "../utils/excerpt";
 
+type HeroCardVariant = "full" | "visual" | "details";
+
 interface HeroFeaturedCardProps {
   post: Post;
+  variant?: HeroCardVariant;
 }
 
-export default function HeroFeaturedCard({ post }: HeroFeaturedCardProps) {
+export default function HeroFeaturedCard({ post, variant = "full" }: HeroFeaturedCardProps) {
   const readingTime = post.content ? 5 + calculateReadingTime(post.content) : undefined;
   const cleanedExcerpt = (post.excerpt || "").replace("Table of Contents", "");
 
-  return (
-    <div className="rounded-2xl p-6 border-2 relative overflow-hidden bg-gradient-to-b from-rose-50 via-white to-rose-50 border-rose-200 min-h-[440px] flex flex-col shadow-[0_20px_45px_rgba(244,114,182,0.18)]">
-      <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-rose-200/60 to-orange-100/60 rounded-full -mr-14 -mt-12" />
-      <div className="relative flex flex-col gap-5 flex-1">
-        {/* Cover Image - First */}
+  const visualSection = (
+    <div className="rounded-2xl p-6 border-2 relative overflow-hidden bg-orange-50 border-orange-200 shadow-[0_18px_40px_rgba(249,115,22,0.18)]">
+      <div className="absolute top-0 right-0 w-28 h-28 bg-orange-200/30 rounded-full -mr-14 -mt-12" />
+      <div className="relative flex flex-col gap-5">
         {post.featuredImage && (
-          <div className="overflow-hidden rounded-[22px] w-full h-48 md:h-52 flex-shrink-0">
+          <div className="overflow-hidden rounded-[22px] w-full h-48 md:h-52">
             <CoverImage
               title={post.title}
               coverImage={post.featuredImage}
@@ -31,7 +33,6 @@ export default function HeroFeaturedCard({ post }: HeroFeaturedCardProps) {
           </div>
         )}
 
-        {/* Author, Date, Read Time */}
         <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap">
           {post.ppmaAuthorImage && post.ppmaAuthorImage !== "imag1" && post.ppmaAuthorImage !== "image" ? (
             <Image
@@ -64,22 +65,33 @@ export default function HeroFeaturedCard({ post }: HeroFeaturedCardProps) {
             </>
           )}
         </div>
-
-        {/* Title - Always 2 lines */}
-        <h3 className="text-2xl font-semibold text-card-foreground leading-tight flex-shrink-0 min-h-[3.5rem]">
-          <Link
-            href={`/technology/${post.slug}`}
-            className="line-clamp-2 hover:text-rose-600 transition-colors"
-            dangerouslySetInnerHTML={{ __html: post.title }}
-          />
-        </h3>
-
-        {/* Excerpt - Always 3 lines */}
-        <div
-          className="text-base text-gray-600 leading-relaxed line-clamp-3 flex-1 min-h-[4.75rem]"
-          dangerouslySetInnerHTML={{ __html: getExcerpt(cleanedExcerpt, 35) }}
-        />
       </div>
+    </div>
+  );
+
+  const detailSection = (
+    <div className="rounded-2xl p-6 border-2 bg-orange-50 border-orange-200 shadow-[0_12px_26px_rgba(249,115,22,0.12)]">
+      <h3 className="text-2xl font-semibold text-card-foreground leading-tight mb-4">
+        <Link
+          href={`/technology/${post.slug}`}
+          className="line-clamp-2 hover:text-orange-700 transition-colors"
+          dangerouslySetInnerHTML={{ __html: post.title }}
+        />
+      </h3>
+      <div
+        className="text-base text-gray-600 leading-relaxed line-clamp-3"
+        dangerouslySetInnerHTML={{ __html: getExcerpt(cleanedExcerpt, 35) }}
+      />
+    </div>
+  );
+
+  if (variant === "visual") return visualSection;
+  if (variant === "details") return detailSection;
+
+  return (
+    <div className="flex flex-col gap-6">
+      {visualSection}
+      {detailSection}
     </div>
   );
 }
