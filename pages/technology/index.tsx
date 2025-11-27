@@ -406,70 +406,48 @@ export default function Index({
                   isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
                 }`}
               >
-                {/* Latest Blogs Card */}
-                <div className="flex flex-col gap-6">
-                  <div
-                    className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-all duration-500 ${
-                      isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
-                    }`}
-                  >
-                    <div className="bg-orange-500 px-4 py-3 flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-white" />
-                      <span className="text-white font-semibold">
-                        Latest Blogs
-                      </span>
-                    </div>
-                    <div className="p-5">
-                      {latestPosts.length > 0 && selectedIndex < latestPosts.length ? (
-                        <HeroLatestCard post={latestPosts[selectedIndex]} variant="visual" />
-                      ) : null}
-                    </div>
+                {latestPosts.length > 0 && selectedIndex < latestPosts.length ? (
+                  <div className="flex flex-col gap-4">
+                    <HeroLatestCard
+                      variant="visual"
+                      heading="Latest Blogs"
+                      headingIcon={<Sparkles className="w-5 h-5 text-white" />}
+                      post={latestPosts[selectedIndex]}
+                      className={`transition-all duration-500 ${
+                        isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
+                      }`}
+                    />
+                    <HeroLatestCard
+                      variant="details"
+                      post={latestPosts[selectedIndex]}
+                      className={`transition-all duration-500 ${
+                        isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
+                      }`}
+                    />
                   </div>
-                  <div
-                    className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-all duration-500 ${
-                      isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
-                    }`}
-                  >
-                    <div className="p-5">
-                      {latestPosts.length > 0 && selectedIndex < latestPosts.length ? (
-                        <HeroLatestCard post={latestPosts[selectedIndex]} variant="details" />
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
+                ) : null}
 
-                {/* Featured Blogs Card */}
-                <div className="flex flex-col gap-6">
-                  <div
-                    className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-all duration-500 ${
-                      isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
-                    }`}
-                  >
-                    <div className="bg-orange-500 px-4 py-3 flex items-center gap-2">
-                      <Award className="w-5 h-5 text-white" />
-                      <span className="text-white font-semibold">
-                        Featured Blogs
-                      </span>
-                    </div>
-                    <div className="p-5">
-                      {featuredPostsList.length > 0 && selectedIndex < featuredPostsList.length ? (
-                        <HeroFeaturedCard post={featuredPostsList[selectedIndex]} variant="visual" />
-                      ) : null}
-                    </div>
+                {featuredPostsList.length > 0 && selectedIndex < featuredPostsList.length ? (
+                  <div className="flex flex-col gap-4">
+                    <HeroFeaturedCard
+                      variant="visual"
+                      heading="Featured Blogs"
+                      headingIcon={<Award className="w-5 h-5 text-white" />}
+                      post={featuredPostsList[selectedIndex]}
+                      className={`transition-all duration-500 ${
+                        isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
+                      }`}
+                    />
+                    <HeroFeaturedCard
+                      variant="details"
+                      post={featuredPostsList[selectedIndex]}
+                      className={`transition-all duration-500 ${
+                        isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
+                      }`}
+                    />
                   </div>
-                  <div
-                    className={`bg-card rounded-2xl overflow-hidden border-2 border-orange-500/30 transition-all duration-500 ${
-                      isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
-                    }`}
-                  >
-                    <div className="p-5">
-                      {featuredPostsList.length > 0 && selectedIndex < featuredPostsList.length ? (
-                        <HeroFeaturedCard post={featuredPostsList[selectedIndex]} variant="details" />
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-            </div>
+                ) : null}
+              </div>
 
             {/* Pagination Dots */}
             <div className="flex justify-center gap-2 mt-12">
