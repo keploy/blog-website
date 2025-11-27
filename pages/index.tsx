@@ -75,12 +75,12 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   return {
     props: {
       communityPosts:
-        allCommunityPosts?.edges?.length > 3
-          ? allCommunityPosts?.edges?.slice(0, 3)
+        allCommunityPosts?.edges?.length > 10
+          ? allCommunityPosts?.edges?.slice(0, 10)
           : allCommunityPosts?.edges,
       technologyPosts:
-        allTehcnologyPosts?.edges?.length > 3
-          ? allTehcnologyPosts?.edges?.slice(0, 3)
+        allTehcnologyPosts?.edges?.length > 10
+          ? allTehcnologyPosts?.edges?.slice(0, 10)
           : allTehcnologyPosts.edges,
       preview,
     },
