@@ -872,11 +872,13 @@ function PaginationControls({
 
   const createHref = (page: number) => (page <= 1 ? "/technology" : `/technology?page=${page}`);
 
+  const baseButtonStyles =
+    "inline-flex h-9 min-w-[2.25rem] items-center justify-center rounded-lg text-xs font-semibold transition-colors";
   const pageButtonClasses = (isActive: boolean) =>
-    `w-10 h-10 rounded-xl text-sm font-semibold flex items-center justify-center transition-all ${
+    `${baseButtonStyles} ${
       isActive
-        ? "bg-orange-500 text-white shadow-[0_5px_14px_rgba(15,23,42,0.35)]"
-        : "bg-white border border-orange-100 text-slate-600 hover:text-orange-600 hover:border-orange-300 hover:shadow-[0_4px_10px_rgba(15,23,42,0.22)]"
+        ? "bg-orange-500 text-white shadow-sm"
+        : "border border-slate-200 bg-white text-slate-600 hover:border-orange-300 hover:text-orange-600"
     }`;
 
   const renderPageNode = (page: number) => {
@@ -908,10 +910,10 @@ function PaginationControls({
   };
 
   const arrowClasses = (disabled: boolean) =>
-    `w-10 h-10 rounded-xl border text-base font-semibold flex items-center justify-center transition-all ${
+    `${baseButtonStyles} ${
       disabled
-        ? "border-orange-50 text-slate-300 cursor-not-allowed"
-        : "border-orange-100 text-slate-600 hover:text-orange-600 hover:border-orange-300 hover:shadow-[0_4px_10px_rgba(15,23,42,0.2)]"
+        ? "border border-slate-100 text-slate-300 cursor-not-allowed bg-white"
+        : "border border-slate-200 bg-white text-slate-600 hover:border-orange-300 hover:text-orange-600"
     }`;
 
   const renderArrow = (direction: "prev" | "next") => {
@@ -959,7 +961,7 @@ function PaginationControls({
   const EllipsisButton = ({ direction }: { direction: "prev" | "next" }) => (
     <button
       type="button"
-      className="w-10 h-10 rounded-xl text-xl font-semibold text-slate-400 hover:text-orange-600 hover:border-orange-300 border border-transparent hover:shadow-[0_4px_10px_rgba(15,23,42,0.2)] transition-all"
+      className={`${baseButtonStyles} border border-transparent px-1 text-base text-slate-400 hover:text-orange-600`}
       onClick={() => shiftWindow(direction)}
       aria-label={direction === "prev" ? "Show previous pages" : "Show next pages"}
     >
@@ -968,8 +970,8 @@ function PaginationControls({
   );
 
   return (
-    <div className="border-top border-orange-100/60 pt-12 mt-12 pb-16">
-      <div className="flex flex-wrap justify-center items-center gap-2 rounded-xl border border-orange-100 bg-white px-4 py-3 shadow-[0_10px_26px_rgba(15,23,42,0.16)]">
+    <nav className="mt-12 mb-12 flex justify-center" aria-label="Pagination">
+      <div className="inline-flex flex-wrap items-center justify-center gap-1.5">
         {renderArrow("prev")}
         {showLeadingFirst && renderPageNode(1)}
         {showLeftEllipsis && <EllipsisButton direction="prev" />}
@@ -978,7 +980,7 @@ function PaginationControls({
         {showTrailingLast && renderPageNode(totalPageCount)}
         {renderArrow("next")}
       </div>
-    </div>
+    </nav>
   );
 }
 
