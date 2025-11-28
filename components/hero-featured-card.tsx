@@ -40,13 +40,18 @@ export default function HeroFeaturedCard({
         )}
         <div className="flex flex-col gap-4 px-4 pb-4 pt-4 flex-1">
           {post.featuredImage && (
-            <CoverImage
-              title={post.title}
-              coverImage={post.featuredImage}
-              slug={post.slug}
-              isCommunity={false}
-              imgClassName="w-full h-72 object-cover object-center rounded-none"
-            />
+            <div className="w-full overflow-hidden rounded-md bg-slate-100/60">
+              <div className="aspect-[16/9]">
+                <CoverImage
+                  title={post.title}
+                  coverImage={post.featuredImage}
+                  slug={post.slug}
+                  isCommunity={false}
+                  containerClassName="h-full w-full"
+                  imgClassName="h-full w-full object-cover object-center"
+                />
+              </div>
+            </div>
           )}
 
           <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap">

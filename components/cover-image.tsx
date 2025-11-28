@@ -6,6 +6,7 @@ interface Props extends Partial<Pick<Post, "title" | "slug">> {
   coverImage: Post["featuredImage"];
   isCommunity?: boolean;
   imgClassName?: string;
+  containerClassName?: string;
 }
 
 export default function CoverImage({
@@ -14,6 +15,7 @@ export default function CoverImage({
   slug,
   isCommunity,
   imgClassName,
+  containerClassName,
 }: Props) {
   const basePath = isCommunity ? "/community/" : "/technology/";
 
@@ -30,8 +32,7 @@ export default function CoverImage({
     />
   );
   return (
-    
-    <div className="sm:mx-0 ">
+    <div className={cn("sm:mx-0 h-full w-full", containerClassName)}>
       {slug ? (
         <Link href={`${basePath}${slug}`} aria-label={title}>
           {image}
