@@ -328,7 +328,6 @@ export default function PostBody({
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
         <div className="prose lg:prose-xl post-content-wrapper">{renderCodeBlocks()}</div>
         <hr className="border-gray-300 mt-10 mb-20" />
-        <div></div>
 
         <h1 className="text-2xl font-medium">Authored By:</h1>
         <div className="my-5">
