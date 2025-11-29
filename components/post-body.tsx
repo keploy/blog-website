@@ -359,9 +359,7 @@ export default function PostBody({
         </div>
 
         {/* 2. Sticky Share (hidden on <lg) */}
-        <div className="hidden lg:flex justify-center rounded-xl p-0">
-          <StickyShare />
-        </div>
+        <StickyShare />
 
         {/* 3. Ad slot (hidden on <lg) */}
         <div className="hidden lg:flex justify-center rounded-xl p-0">
