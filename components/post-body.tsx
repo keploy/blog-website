@@ -15,7 +15,7 @@ import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import AdSlot from "./Adslot";
-import StickyShare from "./StickyShare";
+import StickyShare from "./StickyShares";
 
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
