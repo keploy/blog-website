@@ -7,16 +7,15 @@ const StickyShare = () => {
     const router = useRouter();
     const [copied, setCopied] = useState(false);
 
-    const currentURL = typeof window !== 'undefined' ? encodeURIComponent(
-        `keploy.io/${router.basePath + router.asPath}`
-    ) : "";
+    const baseUrl = `https://keploy.io/blog${router.asPath}`;
+    const currentURL = typeof window !== 'undefined' ? encodeURIComponent(baseUrl) : "";
 
     const twitterShareUrl = `https://twitter.com/share?url=${currentURL}`;
     const linkedinShareUrl = `https://www.linkedin.com/shareArticle?url=${currentURL}`;
 
     const copyToClipboard = async () => {
         try {
-            await navigator.clipboard.writeText(`https://keploy.io/blog${router.asPath}`);
+            await navigator.clipboard.writeText(baseUrl);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
