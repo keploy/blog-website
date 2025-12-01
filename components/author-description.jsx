@@ -1,9 +1,12 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { IoLogoLinkedin } from "react-icons/io"; // Import LinkedIn icon from react-icons/io
+import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
 
 const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
+  const { basePath } = useRouter();
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [authorLinkedIn, setAuthorLinkedIn] = useState("");
@@ -104,7 +107,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
       <div className="w-3/5 self-center sm:w-1/4 p-8 flex justify-center items-center">
         {avatarImgSrc !== "n/a" && (
           <Image
-            src={avatarImgSrc}
+            src={/^https?:\/\//i.test(avatarImgSrc) ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatarImgSrc)}` : avatarImgSrc}
             alt="Author Avatar"
             width={200}
             height={200}
@@ -176,7 +179,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
           {isPost && (
             <div className="mt-2  flex justify-end">
               <button className="text-slate-100 place-self-end focus:outline-none hover:bg-slate-800 hover:text-slate-50 bg-slate-500 p-2 rounded-lg mt-1">
-                <Link href={`/authors/${AuthorName}`}>
+                <Link href={`/authors/${sanitizeAuthorSlug(AuthorName)}`}>
                 View All Posts
                 </Link>
               </button>

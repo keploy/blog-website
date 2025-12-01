@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
-import PostPreview from "./post-preview";
+import PostCard from "./post-card";
+import PostGrid from "./post-grid";
 import { FaSearch } from 'react-icons/fa';
 import { fetchMorePosts } from "../lib/api";
 
@@ -148,9 +149,9 @@ export default function MoreStories({
         <p className="text-center text-gray-500">No posts found by the name &quot;{searchTerm}&quot;</p>
       ) : (
         <>
-          <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 md:gap-x-8 lg:gap-x-8 gap-y-16 md:gap-y-16 mb-16">
+          <PostGrid>
             {filteredPosts.slice(0, visibleCount).map(({ node }) => (
-              <PostPreview
+              <PostCard
                 key={node.slug}
                 title={node.title}
                 coverImage={node.featuredImage}
@@ -163,7 +164,7 @@ export default function MoreStories({
                 }
               />
             ))}
-          </div>
+          </PostGrid>
 
           <div className="flex flex-col items-center gap-4 mb-8">
             {error && (
