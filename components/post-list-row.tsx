@@ -18,7 +18,7 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
   const basePath = isCommunity ? "/community" : "/technology";
 
   return (
-    <article className="group flex flex-col md:flex-row gap-4 p-4 bg-white border border-black/90 rounded-md shadow-md shadow-neutral-900 transition-all duration-300 hover:-translate-y-2 hover:shadow-none">
+    <article className="group flex flex-col md:flex-row gap-4 p-5 bg-white/95 rounded-2xl border border-orange-100 shadow-[0_18px_55px_rgba(15,23,42,0.08)] transition-all duration-300 hover:border-orange-300 hover:-translate-y-1.5 hover:shadow-[0_28px_85px_rgba(15,23,42,0.14)]">
       <div className="md:w-[26%] w-full">
         {hasImage ? (
           <CoverImage
@@ -37,41 +37,47 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
 
       <div className="md:w-[74%] w-full flex flex-col gap-3">
         <h3
-          className="text-xl md:text-2xl font-semibold text-gray-900 transition-colors line-clamp-2 group-hover:text-orange-600"
+          className="type-card-title text-xl md:text-2xl text-slate-900 transition-colors line-clamp-2 group-hover:text-orange-600"
           dangerouslySetInnerHTML={{ __html: title }}
         />
 
-        <div className="flex flex-wrap gap-2 text-sm text-gray-500 items-center">
+        <div className="flex items-center gap-2 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
           {ppmaAuthorImage && ppmaAuthorImage !== "imag1" && ppmaAuthorImage !== "image" ? (
             <Image
               src={ppmaAuthorImage}
               alt={`${ppmaAuthorName || "Author"}'s avatar`}
-              className="w-6 h-6 rounded-full"
-              height={24}
-              width={24}
+              className="w-9 h-9 rounded-full"
+              height={36}
+              width={36}
             />
           ) : (
             <Image
               src="/blog/images/author.png"
               alt="Author avatar"
-              className="w-6 h-6 rounded-full"
-              height={24}
-              width={24}
+              className="w-9 h-9 rounded-full"
+              height={36}
+              width={36}
             />
           )}
-          <span className="font-semibold text-gray-900">{ppmaAuthorName || "Anonymous"}</span>
-          <span className="text-gray-300">•</span>
-          <DateComponent dateString={date} />
+          <span className="font-heading font-semibold text-slate-900 tracking-tight truncate max-w-[170px] text-[0.98rem] md:text-[1.02rem]">
+            {ppmaAuthorName || "Anonymous"}
+          </span>
+          <span className="text-slate-300">•</span>
+          <span className="whitespace-nowrap flex-shrink-0 text-[0.72rem] md:text-[0.8rem]">
+            <DateComponent dateString={date} />
+          </span>
           {readingTime !== undefined && readingTime > 0 && (
             <>
-              <span className="text-gray-300">•</span>
-              <span>{readingTime} min read</span>
+              <span className="text-slate-300">•</span>
+                <span className="type-meta text-slate-500 text-[0.72rem] md:text-[0.8rem]">
+                {readingTime} min read
+              </span>
             </>
           )}
         </div>
 
         <div
-          className="text-gray-600 text-sm md:text-base leading-relaxed line-clamp-2 min-h-[3.1rem]"
+          className="type-card-excerpt text-[0.88rem] md:text-[0.95rem] line-clamp-3 min-h-[3.1rem]"
           dangerouslySetInnerHTML={{ __html: cleanedExcerpt }}
         />
 

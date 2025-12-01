@@ -18,7 +18,7 @@ import Image from "next/image";
 import { Post } from "../../types/post";
 import HeroLatestCard from "../../components/hero-latest-card";
 import HeroFeaturedCard from "../../components/hero-featured-card";
-import { Award, Sparkles } from "lucide-react";
+import { Sparkles, Star } from "lucide-react";
 import TechnologyBackground from "../../components/technology-background";
 
 const DATE_FILTERS = [
@@ -42,7 +42,7 @@ type ViewMode = "grid" | "list" | "featured" | "compact";
 const VIEW_OPTIONS: { value: ViewMode; label: string }[] = [
   { value: "grid", label: "Detailed view" },
   { value: "list", label: "List view" },
-  { value: "featured", label: "Featured view" },
+  { value: "featured", label: "Highlight view" },
   { value: "compact", label: "Compact view" },
 ];
 
@@ -104,7 +104,7 @@ export default function Index({
   const [selectedAuthor, setSelectedAuthor] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
   const [sortOption, setSortOption] = useState("newest");
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [viewMode, setViewMode] = useState<ViewMode>("featured");
   const initialGlobalPosts = allPosts?.length ? dedupePosts(allPosts) : dedupePosts(posts);
   const [globalPosts, setGlobalPosts] = useState<Post[]>(initialGlobalPosts);
   const [hasGlobalPosts, setHasGlobalPosts] = useState(Boolean(initialGlobalPosts.length));
@@ -227,7 +227,7 @@ export default function Index({
     setSelectedAuthor("all");
     setDateFilter("all");
     setSortOption("newest");
-    setViewMode("grid");
+    setViewMode("featured");
   };
 
   // Hero section intersection observer
@@ -383,17 +383,14 @@ export default function Index({
         <div className="container mx-auto relative z-10 max-w-6xl">
               {/* Hero Header */}
           <div
-            className={`text-center mb-10 transition-all duration-1000 ${
+            className={`text-center mb-12 transition-all duration-1000 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             }`}
           >
-            <h1 className="text-4xl mb-4 sm:text-6xl md:text-7xl lg:text-8xl font-bold text-slate-900 leading-tight px-2">
+            <h1 className="type-hero-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl p-2 leading-wide tracking-wider bg-gradient-to-r from-orange-500 via-orange-500 to-amber-400 bg-clip-text text-transparent">
               Keploy Technology Blog
             </h1>
-            <p className="mt-6 mb-4 py-2 text-4xl sm:text-5xl font-semibold leading-snug bg-gradient-to-r from-orange-500 via-orange-500 to-amber-400 bg-clip-text text-transparent">
-              Engineering Insights. Deep Dives. Release Notes.
-            </p>
-            <p className="mt-4 mb-8 pb-2 text-lg sm:text-xl leading-relaxed text-muted-foreground max-w-3xl mx-auto px-4">
+            <p className="type-hero-body mt-4 mb-8 pb-2 text-base sm:text-xl max-w-3xl mx-auto px-4">
               Keploy’s latest engineering stories, product updates, architecture breakdowns, and
               practical guides to building reliable software at scale.
             </p>
@@ -410,7 +407,7 @@ export default function Index({
                   <HeroLatestCard
                     variant="visual"
                     heading="Latest Blogs"
-                    headingIcon={<Sparkles className="w-5 h-5 text-white" />}
+                    headingIcon={<Sparkles className="w-4 h-4 text-white" />}
                     post={latestPosts[selectedIndex]}
                     className={`transition-all duration-500 ${
                       isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
@@ -422,7 +419,7 @@ export default function Index({
                   <HeroFeaturedCard
                     variant="visual"
                     heading="Featured Blogs"
-                    headingIcon={<Award className="w-5 h-5 text-white" />}
+                    headingIcon={<Star className="w-4 h-4 text-white" />}
                     post={featuredPostsList[selectedIndex]}
                     className={`transition-all duration-500 ${
                       isAnimating ? "scale-[0.97] opacity-80" : "scale-100 opacity-100"
@@ -452,37 +449,49 @@ export default function Index({
         </div>
       </div>
 
-      {/* Search and Filter Section */}
-      <section className="mt-0 w-full">
         <Container>
-          <div className="relative">
-            <div className="pt-6 pb-10 md:pt-8 md:pb-12">
-              <div className="rounded-md border border-black/90 bg-white shadow-md shadow-neutral-900 px-5 py-6 md:px-8 md:py-7 transition-shadow hover:shadow-none">
-                <div className="flex flex-wrap gap-4 items-center">
-                  <div className="relative flex-[2] min-w-[260px]">
-                    <div className="relative rounded-md border border-black/90 bg-white shadow-md shadow-neutral-900 transition-all hover:shadow-sm focus-within:shadow-sm">
-                      <input
-                        type="text"
-                        placeholder="Search technology posts..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full h-11 pl-12 pr-10 rounded-md bg-white text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-all placeholder:text-slate-400"
-                      />
-                      <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-400/80 pointer-events-none w-[18px] h-[18px]" />
-                      {searchTerm && (
-                        <button
-                          type="button"
-                          onClick={() => setSearchTerm("")}
-                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
-                          aria-label="Clear search"
-                        >
-                          <FaTimes className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
+          <section className="mt-10 mb-14">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between mb-10 lg:gap-12">
+              <div className="flex-[1.1] min-w-[260px] lg:pr-6">
+                <h2 className="type-section-title relative inline-block whitespace-nowrap text-3xl md:text-4xl lg:text-[2.25rem] tracking-[-0.01em] leading-snug text-gray-700 text-left">
+                  <span className="relative z-10">Technology Blogs</span>
+                  <span className="absolute inset-x-0 bottom-0 h-3 bg-gradient-to-r from-orange-200/80 to-orange-100/80 -z-0" />
+                </h2>
+                <span className="sr-only" aria-live="polite">
+                  {filtersActive
+                    ? `${browseHeading}. ${filteredPosts.length} global results match your filters`
+                    : `${browseHeading}. ${visiblePosts.length} results available on this page`}
+                </span>
+              </div>
 
-                  <div className="flex-[0.8] min-w-[140px]">
+              <div className="w-full lg:flex-[1] mt-4 lg:mt-0">
+                <div className="rounded-2xl border border-slate-200/70 bg-white px-3.5 py-3.5 shadow-[0_14px_45px_rgba(15,23,42,0.08)]">
+                  <div className="flex flex-wrap gap-2.5 lg:gap-3 items-center lg:flex-nowrap lg:justify-end">
+                <div className="relative flex-1 min-w-[200px] lg:max-w-[240px]">
+                  <div className="relative h-11 rounded-2xl border border-slate-200 bg-white transition-all focus-within:border-orange-300 focus-within:ring-1 focus-within:ring-orange-200 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+                    <input
+                      type="text"
+                      placeholder="Search blogs..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full h-full pl-9 pr-8 rounded-2xl bg-transparent text-sm font-medium text-slate-900 focus:outline-none placeholder:text-slate-400"
+                    />
+                    <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-400/80 pointer-events-none w-[16px] h-[16px]" />
+                    {searchTerm && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchTerm("")}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
+                        aria-label="Clear search"
+                      >
+                        <FaTimes className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2.5 w-full lg:w-auto lg:flex-nowrap">
+                  <div className="flex-[0.9] min-w-[110px]">
                     <FilterSelect
                       label="Author"
                       value={selectedAuthor}
@@ -494,7 +503,7 @@ export default function Index({
                     />
                   </div>
 
-                  <div className="flex-[0.8] min-w-[130px]">
+                  <div className="flex-[0.9] min-w-[110px]">
                     <FilterSelect
                       label="Published"
                       value={dateFilter}
@@ -503,7 +512,7 @@ export default function Index({
                     />
                   </div>
 
-                  <div className="flex-[0.8] min-w-[130px]">
+                  <div className="flex-[0.9] min-w-[110px]">
                     <FilterSelect
                       label="Sort"
                       value={sortOption}
@@ -512,7 +521,7 @@ export default function Index({
                     />
                   </div>
 
-                  <div className="flex-[0.8] min-w-[140px]">
+                  <div className="flex-[0.9] min-w-[110px]">
                     <FilterSelect
                       label="View mode"
                       value={viewMode}
@@ -520,34 +529,19 @@ export default function Index({
                       options={VIEW_OPTIONS}
                     />
                   </div>
+                </div>
 
+                <div className="w-full lg:w-auto lg:ml-2">
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="shrink-0 h-11 px-6 rounded-md border border-black/90 bg-white text-sm font-semibold text-orange-600 shadow-md shadow-neutral-900 transition-all hover:bg-neutral-50 hover:border-orange-400 hover:text-orange-700 hover:shadow-sm focus-visible:ring-2 focus-visible:ring-orange-300"
+                    className="w-full lg:w-auto h-11 px-5 rounded-2xl border border-slate-200 bg-white text-sm font-medium text-slate-700 transition-all hover:bg-orange-50 hover:border-orange-300 hover:text-orange-700 focus-visible:ring-2 focus-visible:ring-orange-200 shadow-[0_10px_30px_rgba(15,23,42,0.04)]"
                   >
-                    Reset all
+                    Reset
                   </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      <Container>
-        <section className="mt-16 mb-12">
-          <div className="flex items-start justify-between flex-wrap gap-4 mb-8">
-            <div>
-              <p className="text-sm uppercase tracking-widest text-orange-500 mb-2">
-                Browse
-              </p>
-              <h2 className="text-3xl md:text-4xl font-semibold text-left">{browseHeading}</h2>
-              <span className="sr-only" aria-live="polite">
-                {filtersActive
-                  ? `${filteredPosts.length} global results match your filters`
-                  : `${visiblePosts.length} results available on this page`}
-              </span>
             </div>
           </div>
 
@@ -567,12 +561,13 @@ export default function Index({
               {postsWithMeta.map(({ post, readingTime }) => (
                 <PostCard
                   key={post.slug}
+                  variant="subtle"
                   title={post.title}
                   coverImage={post.featuredImage}
                   date={post.date}
                   author={post.ppmaAuthorName}
                   slug={post.slug}
-                  excerpt={getExcerpt(post.excerpt, 20)}
+                  excerpt={getExcerpt(post.excerpt, 36)}
                   isCommunity={false}
                   authorImage={post.ppmaAuthorImage}
                   readingTime={readingTime}
@@ -585,7 +580,7 @@ export default function Index({
                 <PostListRow
                   key={post.slug}
                   post={post}
-                  excerptOverride={getExcerpt(post.excerpt, 42)}
+                  excerptOverride={getExcerpt(post.excerpt, 60)}
                   readingTime={readingTime}
                 />
               ))}
@@ -630,7 +625,7 @@ function FeaturedBlogCard({ post, readingTime }: { post: Post; readingTime?: num
 
   return (
     <Link href={href} className="group block h-full">
-      <article className="h-full bg-white rounded-md border border-black/90 shadow-md shadow-neutral-900 hover:shadow-none transition-all duration-300 overflow-hidden hover:-translate-y-2 flex flex-col">
+      <article className="h-full rounded-2xl bg-white/95 border border-orange-100 shadow-[0_18px_55px_rgba(15,23,42,0.08)] transition-all duration-300 overflow-hidden hover:border-orange-300 hover:-translate-y-1.5 hover:shadow-[0_28px_85px_rgba(15,23,42,0.14)] flex flex-col">
         <div className="relative w-full aspect-video overflow-hidden">
           {coverSrc ? (
             <Image
@@ -645,26 +640,33 @@ function FeaturedBlogCard({ post, readingTime }: { post: Post; readingTime?: num
           )}
         </div>
         <div className="p-6 flex flex-col flex-1 gap-4">
-          <h3 className="text-xl md:text-2xl font-semibold text-gray-900 leading-snug">
-            <span className="line-clamp-2 group-hover:text-orange-600 transition-colors duration-200" dangerouslySetInnerHTML={{ __html: post.title }} />
+          <h3 className="type-card-title text-xl md:text-2xl text-gray-900">
+            <span
+              className="line-clamp-2 group-hover:text-orange-600 transition-colors duration-200"
+              dangerouslySetInnerHTML={{ __html: post.title }}
+            />
           </h3>
-          <div className="mt-auto flex items-center gap-1.5 text-xs md:text-sm text-gray-500 min-w-0">
+          <div className="mt-auto flex items-center gap-2 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
             <Image
               src={authorImage}
               alt={`${authorName} avatar`}
-              width={24}
-              height={24}
-              className="w-5 h-5 md:w-6 md:h-6 rounded-full flex-shrink-0"
+              width={36}
+              height={36}
+              className="w-9 h-9 rounded-full flex-shrink-0"
             />
-            <span className="font-semibold text-gray-900 truncate max-w-[120px] md:max-w-none">{authorName}</span>
-            <span className="text-gray-300 flex-shrink-0">•</span>
-            <span className="whitespace-nowrap flex-shrink-0">
+            <span className="font-heading font-semibold text-slate-900 tracking-tight truncate max-w-[150px] md:max-w-none text-[0.98rem] md:text-[1.02rem]">
+              {authorName}
+            </span>
+            <span className="text-slate-300 flex-shrink-0">•</span>
+            <span className="whitespace-nowrap flex-shrink-0 text-[0.72rem] md:text-[0.8rem]">
               <DateComponent dateString={post.date} />
             </span>
             {readingLabel && (
               <>
-                <span className="text-gray-300 flex-shrink-0">•</span>
-                <span className="whitespace-nowrap flex-shrink-0">{readingLabel}</span>
+                <span className="text-slate-300 flex-shrink-0">•</span>
+                <span className="whitespace-nowrap flex-shrink-0 type-meta text-slate-500 text-[0.72rem] md:text-[0.8rem]">
+                  {readingLabel}
+                </span>
               </>
             )}
           </div>
@@ -683,32 +685,39 @@ function CompactBlogCard({ post, readingTime }: { post: Post; readingTime?: numb
 
   return (
     <Link href={href} className="group block h-full">
-      <article className="h-full bg-white rounded-md border border-black/90 shadow-md shadow-neutral-900 hover:shadow-none transition-all duration-300 overflow-hidden hover:-translate-y-2 flex flex-col">
+      <article className="h-full rounded-2xl bg-white/95 border border-orange-100 shadow-[0_18px_55px_rgba(15,23,42,0.08)] transition-all duration-300 overflow-hidden hover:border-orange-300 hover:-translate-y-1.5 hover:shadow-[0_28px_85px_rgba(15,23,42,0.14)] flex flex-col">
         <div className="p-6 flex flex-col flex-1 gap-4">
-          <h3 className="text-xl md:text-2xl font-semibold text-gray-900 leading-snug">
-            <span className="line-clamp-2 group-hover:text-orange-600 transition-colors duration-200" dangerouslySetInnerHTML={{ __html: post.title }} />
+          <h3 className="type-card-title text-xl md:text-2xl text-gray-900">
+            <span
+              className="line-clamp-2 group-hover:text-orange-600 transition-colors duration-200"
+              dangerouslySetInnerHTML={{ __html: post.title }}
+            />
           </h3>
           <div
-            className="text-gray-600 text-sm md:text-base leading-relaxed line-clamp-2"
-            dangerouslySetInnerHTML={{ __html: getExcerpt(cleanedExcerpt, 20) }}
+            className="type-card-excerpt text-[0.88rem] md:text-[0.95rem] line-clamp-2"
+            dangerouslySetInnerHTML={{ __html: getExcerpt(cleanedExcerpt, 34) }}
           />
-          <div className="mt-auto flex items-center gap-1.5 text-xs md:text-sm text-gray-500 min-w-0">
+          <div className="mt-auto flex items-center gap-2 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
             <Image
               src={authorImage}
               alt={`${authorName} avatar`}
-              width={24}
-              height={24}
-              className="w-5 h-5 md:w-6 md:h-6 rounded-full flex-shrink-0"
+              width={36}
+              height={36}
+              className="w-9 h-9 rounded-full flex-shrink-0"
             />
-            <span className="font-semibold text-gray-900 truncate max-w-[120px] md:max-w-none">{authorName}</span>
-            <span className="text-gray-300 flex-shrink-0">•</span>
-            <span className="whitespace-nowrap flex-shrink-0">
+            <span className="font-heading font-semibold text-slate-900 tracking-tight truncate max-w-[150px] md:max-w-none text-[0.98rem] md:text-[1.02rem]">
+              {authorName}
+            </span>
+            <span className="text-slate-300 flex-shrink-0">•</span>
+            <span className="whitespace-nowrap flex-shrink-0 text-[0.72rem] md:text-[0.8rem]">
               <DateComponent dateString={post.date} />
             </span>
             {readingLabel && (
               <>
-                <span className="text-gray-300 flex-shrink-0">•</span>
-                <span className="whitespace-nowrap flex-shrink-0">{readingLabel}</span>
+                <span className="text-slate-300 flex-shrink-0">•</span>
+                <span className="whitespace-nowrap flex-shrink-0 type-meta text-slate-500 text-[0.72rem] md:text-[0.8rem]">
+                  {readingLabel}
+                </span>
               </>
             )}
           </div>
@@ -748,14 +757,14 @@ function FilterSelect({
     <div className="w-full relative" ref={containerRef}>
       <button
         type="button"
-        className={`relative w-full h-11 rounded-md border text-left px-4 pr-11 text-sm font-semibold transition-all flex items-center min-w-0 shadow-md shadow-neutral-900 text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-300 ${
-          isOpen
-            ? "border-orange-400 bg-orange-50 shadow-sm"
-            : "border-black/90 bg-white hover:border-black hover:bg-neutral-50 hover:shadow-sm"
+        className={`relative w-full h-11 rounded-xl border text-left px-3.5 pr-9 text-sm font-medium flex items-center min-w-0 text-slate-900 focus:outline-none focus:ring-1 focus:ring-orange-200 transition-colors ${
+          isOpen ? "border-orange-300 bg-orange-50" : "border-slate-200 bg-white hover:border-orange-200 hover:bg-orange-50/40"
         }`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <span className="truncate flex-1 min-w-0">{activeOption?.label ?? label}</span>
+        <span className="truncate flex-1 min-w-0 tracking-tight">
+          {activeOption?.label ?? label}
+        </span>
         <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 flex-shrink-0">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path
@@ -770,7 +779,7 @@ function FilterSelect({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-black/90 rounded-md shadow-lg shadow-neutral-900 z-20 overflow-hidden">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-sm z-20 overflow-hidden">
           <div className="max-h-48 overflow-y-auto py-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-slate-400">
             {options.map((option) => {
               const isActive = option.value === value;
@@ -778,7 +787,7 @@ function FilterSelect({
                 <button
                   type="button"
                   key={option.value}
-                  className={`w-full text-left px-4 py-2.5 text-sm font-semibold transition-colors truncate ${
+                  className={`w-full text-left px-4 py-2.5 text-sm font-medium tracking-tight transition-colors truncate ${
                     isActive
                       ? "bg-orange-100 text-orange-700"
                       : "text-slate-700 hover:bg-orange-50 hover:text-orange-600"

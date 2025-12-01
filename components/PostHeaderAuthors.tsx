@@ -52,8 +52,8 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row lg:mt-7 items-start sm:items-center sm:justify-around gap-4 sm:gap-0  sm:px-0 lg:mx-28">
-        <p className="text-gray-500 text-sm order-1 sm:order-none mr-1 sm:my-2 md:my-4 lg:my-0">
+      <div className="flex flex-col lg:flex-row lg:mt-7 items-start sm:items-center sm:justify-around gap-4 sm:gap-0 sm:px-0 lg:mx-28">
+        <p className="type-meta uppercase tracking-[0.18em] text-slate-500 text-xs order-1 sm:order-none mr-1 sm:my-2 md:my-4 lg:my-0">
           {timetoRead} min read
         </p>
 
@@ -71,9 +71,11 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
               className={`rounded-full`}
             />
             <div className="relative">
-              <p>
-                <span className="text-gray-500">Written By:</span>{" "}
-                <span className="font-base">{blogwriter[0].name}</span>
+              <p className="text-sm sm:text-base text-slate-600">
+                <span className="type-meta text-xs tracking-[0.18em] text-slate-500">Written By</span>{" "}
+                <span className="font-heading font-semibold text-slate-900 tracking-tight text-[1rem] sm:text-[1.05rem]">
+                  {blogwriter[0].name}
+                </span>
               </p>
             </div>
 
@@ -88,9 +90,9 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
                       width={40}
                       className="rounded-full"
                     />
-                    <p className="text-base sm:text-lg">{blogwriter[0].name}</p>
+                <p className="type-card-title text-base sm:text-lg">{blogwriter[0].name}</p>
                   </div>
-                  <p className="mt-2 text-sm">{blogwriter[0].description}</p>
+                <p className="mt-2 type-card-excerpt text-sm">{blogwriter[0].description}</p>
                 </Link>
               </div>
             )}
@@ -110,9 +112,11 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
                 className="rounded-full"
               />
               <div className="relative flex-1">
-                <p className="text-sm sm:text-base">
-                  <span className="text-gray-500">Reviewed By:</span>{" "}
-                  <span className="font-base">{blogreviewer[0].name}</span>
+                <p className="text-sm sm:text-base text-slate-600">
+                  <span className="type-meta text-xs tracking-[0.18em] text-slate-500">Reviewed By</span>{" "}
+                  <span className="font-heading font-semibold text-slate-900 tracking-tight text-[1rem] sm:text-[1.05rem]">
+                    {blogreviewer[0].name}
+                  </span>
                 </p>
               </div>
 
@@ -127,11 +131,11 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
                         width={40}
                         className="rounded-full"
                       />
-                      <p className="text-base sm:text-lg">
+                      <p className="type-card-title text-base sm:text-lg">
                         {blogreviewer[0].name}
                       </p>
                     </div>
-                    <p className="mt-2 text-sm">
+                    <p className="mt-2 type-card-excerpt text-sm">
                       {blogreviewer[0].description}
                     </p>
                   </Link>
@@ -141,7 +145,9 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
           )}
         </div>
         <div className="flex flex-row gap-5 items-center gap-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
-          <p className="text-gray-500 text-sm">Share this</p>
+          <p className="type-meta text-xs text-slate-500 uppercase tracking-[0.3em]">
+            Share this
+          </p>
           <Link
             href={twitterShareUrl}
             target="_blank"
