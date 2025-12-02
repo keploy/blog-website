@@ -43,16 +43,16 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
 
       <div className="md:w-[74%] w-full flex flex-col gap-3.5">
         <h3
-          className="type-card-title text-xl md:text-2xl text-gray-700 transition-colors line-clamp-2 group-hover:text-orange-600"
+          className="type-card-title text-xl md:text-2xl text-gray-800 font-medium transition-colors line-clamp-2 group-hover:text-orange-600"
           dangerouslySetInnerHTML={{ __html: title }}
         />
 
-        <div className="flex items-center gap-3 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
+        <div className="flex items-center gap-2 text-[0.7rem] md:text-[0.75rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
           {ppmaAuthorImage && ppmaAuthorImage !== "imag1" && ppmaAuthorImage !== "image" ? (
             <Image
               src={ppmaAuthorImage}
               alt={`${ppmaAuthorName || "Author"}'s avatar`}
-              className="w-9 h-9 rounded-full"
+              className="w-9 h-9 rounded-full border border-orange-100/70"
               height={36}
               width={36}
             />
@@ -60,22 +60,22 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
             <Image
               src="/blog/images/author.png"
               alt="Author avatar"
-              className="w-9 h-9 rounded-full"
+              className="w-9 h-9 rounded-full border border-orange-100/70"
               height={36}
               width={36}
             />
           )}
-          <span className="font-heading font-semibold text-gray-700 tracking-tight truncate max-w-[170px] text-[0.98rem] md:text-[1.02rem]">
+          <span className="font-heading font-medium text-gray-800 tracking-tight max-w-[220px] md:max-w-none truncate text-[0.95rem] md:text-[1.02rem]">
             {ppmaAuthorName || "Anonymous"}
           </span>
-          <span className="text-slate-300">•</span>
-          <span className="whitespace-nowrap flex-shrink-0 text-[0.72rem] md:text-[0.8rem]">
+          <span className="text-slate-300 -mx-0.5">•</span>
+          <span className="whitespace-nowrap flex-shrink-0 text-[0.68rem] md:text-[0.72rem] tracking-tight">
             <DateComponent dateString={date} />
           </span>
           {readingTime !== undefined && readingTime > 0 && (
             <>
-              <span className="text-slate-300">•</span>
-                <span className="type-meta text-slate-500 text-[0.72rem] md:text-[0.8rem]">
+              <span className="text-slate-300 -mx-0.5">•</span>
+                <span className="type-meta text-slate-500 text-[0.68rem] md:text-[0.72rem] tracking-tight">
                 {readingTime} min read
               </span>
             </>

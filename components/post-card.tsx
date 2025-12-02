@@ -51,8 +51,7 @@ export default function PostCard({
     }
   );
 
-  const cardBaseClasses =
-    "flex flex-col h-full transition-all duration-300";
+  const cardBaseClasses = "flex flex-col h-full transition-all duration-300";
 
   const isSubtle = variant === "subtle";
   const avatarSize = isSubtle ? 36 : 24;
@@ -88,8 +87,8 @@ export default function PostCard({
             />
           )}
         </div>
-        <div className="px-6 pt-5 pb-6 flex flex-col flex-1 gap-3.5">
-          <h3 className="type-card-title text-xl md:text-2xl text-gray-700 line-clamp-2">
+        <div className="px-6 py-5 flex flex-col flex-1 gap-3.5">
+          <h3 className="type-card-title text-xl md:text-2xl text-gray-800 font-medium line-clamp-2">
             <span
               className="transition-colors duration-200 group-hover:text-orange-600"
               dangerouslySetInnerHTML={{ __html: title }}
@@ -102,8 +101,8 @@ export default function PostCard({
           <div
             className={
               isSubtle
-                ? "mt-auto flex items-center gap-3 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden"
-                : "mt-auto flex items-center gap-2 text-[0.78rem] md:text-[0.88rem] text-gray-500 min-w-0 whitespace-nowrap overflow-hidden"
+                ? "mt-auto flex items-center gap-2 text-[0.7rem] md:text-[0.75rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden"
+                : "mt-auto flex items-center gap-1.5 text-[0.7rem] md:text-[0.75rem] text-gray-500 min-w-0 whitespace-nowrap overflow-hidden"
             }
           >
             {authorImage && authorImage !== "imag1" && authorImage !== "image" ? (
@@ -126,14 +125,14 @@ export default function PostCard({
             <span
               className={
                 isSubtle
-                  ? "font-heading font-semibold text-gray-700 tracking-tight max-w-[140px] md:max-w-none truncate text-[0.98rem] md:text-[1.02rem]"
-                  : "font-semibold text-gray-700 max-w-[120px] md:max-w-none truncate text-[0.95rem] md:text-[1rem]"
+                  ? "font-heading font-medium text-gray-800 tracking-tight max-w-[210px] md:max-w-[240px] truncate text-[0.95rem] md:text-[1.02rem]"
+                  : "font-medium text-gray-800 max-w-[190px] md:max-w-[220px] truncate text-[0.9rem] md:text-[0.98rem]"
               }
             >
               {author ? author : "Anonymous"}
             </span>
             <span className={`${isSubtle ? "text-slate-300" : "text-gray-300"} flex-shrink-0`}>•</span>
-            <span className="whitespace-nowrap flex-shrink-0 text-[0.72rem] md:text-[0.8rem]">
+            <span className="whitespace-nowrap flex-shrink-0 text-[0.68rem] md:text-[0.72rem] tracking-tight">
               <Date dateString={date} />
             </span>
             {readingTime !== undefined && readingTime > 0 && (
@@ -142,8 +141,8 @@ export default function PostCard({
                 <span
                   className={
                     isSubtle
-                      ? "whitespace-nowrap flex-shrink-0 type-meta text-slate-500 text-[0.72rem] md:text-[0.8rem]"
-                      : "whitespace-nowrap flex-shrink-0 text-gray-500 text-[0.72rem] md:text-[0.8rem]"
+                      ? "whitespace-nowrap flex-shrink-0 type-meta text-slate-500 text-[0.68rem] md:text-[0.72rem] tracking-tight"
+                      : "whitespace-nowrap flex-shrink-0 text-gray-500 text-[0.68rem] md:text-[0.72rem] tracking-tight"
                   }
                 >
                   {readingTime} min read

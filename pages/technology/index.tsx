@@ -647,7 +647,7 @@ function FeaturedBlogCard({ post, readingTime }: { post: Post; readingTime?: num
               dangerouslySetInnerHTML={{ __html: post.title }}
             />
           </h3>
-          <div className="mt-auto flex items-center gap-3 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
+          <div className="mt-auto flex items-center gap-2 text-[0.7rem] md:text-[0.75rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
             <Image
               src={authorImage}
               alt={`${authorName} avatar`}
@@ -655,17 +655,17 @@ function FeaturedBlogCard({ post, readingTime }: { post: Post; readingTime?: num
               height={36}
               className="w-9 h-9 rounded-full flex-shrink-0"
             />
-            <span className="font-heading font-semibold text-gray-700 tracking-tight truncate max-w-[150px] md:max-w-none text-[0.98rem] md:text-[1.02rem]">
+            <span className="font-heading font-medium text-gray-800 tracking-tight max-w-[170px] md:max-w-none truncate text-[0.95rem] md:text-[1.02rem]">
               {authorName}
             </span>
-            <span className="text-slate-300 flex-shrink-0">•</span>
-            <span className="whitespace-nowrap flex-shrink-0 text-[0.72rem] md:text-[0.8rem]">
+            <span className="text-slate-300 flex-shrink-0 -mx-0.5">•</span>
+            <span className="whitespace-nowrap flex-shrink-0 text-[0.68rem] md:text-[0.72rem] tracking-tight">
               <DateComponent dateString={post.date} />
             </span>
             {readingLabel && (
               <>
-                <span className="text-slate-300 flex-shrink-0">•</span>
-                <span className="whitespace-nowrap flex-shrink-0 type-meta text-slate-500 text-[0.72rem] md:text-[0.8rem]">
+                <span className="text-slate-300 flex-shrink-0 -mx-0.5">•</span>
+                <span className="whitespace-nowrap flex-shrink-0 type-meta text-slate-500 text-[0.68rem] md:text-[0.72rem] tracking-tight">
                   {readingLabel}
                 </span>
               </>
@@ -698,7 +698,7 @@ function CompactBlogCard({ post, readingTime }: { post: Post; readingTime?: numb
             className="type-card-excerpt text-[0.88rem] md:text-[0.95rem] line-clamp-2"
             dangerouslySetInnerHTML={{ __html: getExcerpt(cleanedExcerpt, 34) }}
           />
-          <div className="mt-auto flex items-center gap-3 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
+          <div className="mt-auto flex items-center gap-2 text-[0.7rem] md:text-[0.75rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
             <Image
               src={authorImage}
               alt={`${authorName} avatar`}
@@ -706,17 +706,17 @@ function CompactBlogCard({ post, readingTime }: { post: Post; readingTime?: numb
               height={36}
               className="w-9 h-9 rounded-full flex-shrink-0"
             />
-            <span className="font-heading font-semibold text-gray-700 tracking-tight truncate max-w-[150px] md:max-w-none text-[0.98rem] md:text-[1.02rem]">
+            <span className="font-heading font-medium text-gray-800 tracking-tight max-w-[170px] md:max-w-none truncate text-[0.95rem] md:text-[1.02rem]">
               {authorName}
             </span>
-            <span className="text-slate-300 flex-shrink-0">•</span>
-            <span className="whitespace-nowrap flex-shrink-0 text-[0.72rem] md:text-[0.8rem]">
+            <span className="text-slate-300 flex-shrink-0 -mx-0.5">•</span>
+            <span className="whitespace-nowrap flex-shrink-0 text-[0.68rem] md:text-[0.72rem] tracking-tight">
               <DateComponent dateString={post.date} />
             </span>
             {readingLabel && (
               <>
-                <span className="text-slate-300 flex-shrink-0">•</span>
-                <span className="whitespace-nowrap flex-shrink-0 type-meta text-slate-500 text-[0.72rem] md:text-[0.8rem]">
+                <span className="text-slate-300 flex-shrink-0 -mx-0.5">•</span>
+                <span className="whitespace-nowrap flex-shrink-0 type-meta text-slate-500 text-[0.68rem] md:text-[0.72rem] tracking-tight">
                   {readingLabel}
                 </span>
               </>
