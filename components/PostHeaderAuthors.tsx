@@ -73,7 +73,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
             <div className="relative">
               <p className="text-sm sm:text-base text-slate-600">
                 <span className="type-meta text-xs tracking-[0.18em] text-slate-500">Written By</span>{" "}
-                <span className="font-heading font-semibold text-slate-900 tracking-tight text-[1rem] sm:text-[1.05rem]">
+                <span className="font-heading font-semibold text-gray-700 tracking-tight text-[1rem] sm:text-[1.05rem]">
                   {blogwriter[0].name}
                 </span>
               </p>
@@ -114,7 +114,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
               <div className="relative flex-1">
                 <p className="text-sm sm:text-base text-slate-600">
                   <span className="type-meta text-xs tracking-[0.18em] text-slate-500">Reviewed By</span>{" "}
-                  <span className="font-heading font-semibold text-slate-900 tracking-tight text-[1rem] sm:text-[1.05rem]">
+                  <span className="font-heading font-semibold text-gray-700 tracking-tight text-[1rem] sm:text-[1.05rem]">
                     {blogreviewer[0].name}
                   </span>
                 </p>

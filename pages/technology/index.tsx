@@ -580,7 +580,8 @@ export default function Index({
                 <PostListRow
                   key={post.slug}
                   post={post}
-                  excerptOverride={getExcerpt(post.excerpt, 60)}
+                  // Use a slightly larger excerpt budget so 3 clamped lines feel comfortably filled
+                  excerptOverride={getExcerpt(post.excerpt, 110)}
                   readingTime={readingTime}
                 />
               ))}
@@ -639,14 +640,14 @@ function FeaturedBlogCard({ post, readingTime }: { post: Post; readingTime?: num
             <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-orange-100" />
           )}
         </div>
-        <div className="p-6 flex flex-col flex-1 gap-4">
-          <h3 className="type-card-title text-xl md:text-2xl text-gray-900">
+        <div className="px-6 pt-5 pb-6 flex flex-col flex-1 gap-3.5">
+          <h3 className="type-card-title text-xl md:text-2xl text-gray-700">
             <span
               className="line-clamp-2 group-hover:text-orange-600 transition-colors duration-200"
               dangerouslySetInnerHTML={{ __html: post.title }}
             />
           </h3>
-          <div className="mt-auto flex items-center gap-2 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
+          <div className="mt-auto flex items-center gap-3 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
             <Image
               src={authorImage}
               alt={`${authorName} avatar`}
@@ -654,7 +655,7 @@ function FeaturedBlogCard({ post, readingTime }: { post: Post; readingTime?: num
               height={36}
               className="w-9 h-9 rounded-full flex-shrink-0"
             />
-            <span className="font-heading font-semibold text-slate-900 tracking-tight truncate max-w-[150px] md:max-w-none text-[0.98rem] md:text-[1.02rem]">
+            <span className="font-heading font-semibold text-gray-700 tracking-tight truncate max-w-[150px] md:max-w-none text-[0.98rem] md:text-[1.02rem]">
               {authorName}
             </span>
             <span className="text-slate-300 flex-shrink-0">•</span>
@@ -686,8 +687,8 @@ function CompactBlogCard({ post, readingTime }: { post: Post; readingTime?: numb
   return (
     <Link href={href} className="group block h-full">
       <article className="h-full rounded-2xl bg-white/95 border border-orange-100 shadow-[0_18px_55px_rgba(15,23,42,0.08)] transition-all duration-300 overflow-hidden hover:border-orange-300 hover:-translate-y-1.5 hover:shadow-[0_28px_85px_rgba(15,23,42,0.14)] flex flex-col">
-        <div className="p-6 flex flex-col flex-1 gap-4">
-          <h3 className="type-card-title text-xl md:text-2xl text-gray-900">
+        <div className="px-6 pt-5 pb-6 flex flex-col flex-1 gap-3.5">
+          <h3 className="type-card-title text-xl md:text-2xl text-gray-700">
             <span
               className="line-clamp-2 group-hover:text-orange-600 transition-colors duration-200"
               dangerouslySetInnerHTML={{ __html: post.title }}
@@ -697,7 +698,7 @@ function CompactBlogCard({ post, readingTime }: { post: Post; readingTime?: numb
             className="type-card-excerpt text-[0.88rem] md:text-[0.95rem] line-clamp-2"
             dangerouslySetInnerHTML={{ __html: getExcerpt(cleanedExcerpt, 34) }}
           />
-          <div className="mt-auto flex items-center gap-2 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
+          <div className="mt-auto flex items-center gap-3 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
             <Image
               src={authorImage}
               alt={`${authorName} avatar`}
@@ -705,7 +706,7 @@ function CompactBlogCard({ post, readingTime }: { post: Post; readingTime?: numb
               height={36}
               className="w-9 h-9 rounded-full flex-shrink-0"
             />
-            <span className="font-heading font-semibold text-slate-900 tracking-tight truncate max-w-[150px] md:max-w-none text-[0.98rem] md:text-[1.02rem]">
+            <span className="font-heading font-semibold text-gray-700 tracking-tight truncate max-w-[150px] md:max-w-none text-[0.98rem] md:text-[1.02rem]">
               {authorName}
             </span>
             <span className="text-slate-300 flex-shrink-0">•</span>

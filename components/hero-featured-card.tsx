@@ -33,14 +33,18 @@ export default function HeroFeaturedCard({
         className={`rounded-2xl bg-white/95 border border-orange-100 shadow-[0_18px_55px_rgba(15,23,42,0.08)] hover:border-orange-300 hover:shadow-[0_28px_85px_rgba(15,23,42,0.14)] overflow-hidden flex flex-col transition-all duration-300 ${className}`}
       >
         {heading && (
-          <div className="bg-orange-500 px-4 py-3 flex items-center gap-2">
-            {headingIcon}
-            <span className="font-heading text-white font-semibold uppercase tracking-[0.3em] text-xs">
+          <div className="bg-orange-500 px-4 py-3 flex items-center gap-2.5">
+            {headingIcon && (
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/15">
+                {headingIcon}
+              </span>
+            )}
+            <span className="font-heading text-white font-bold uppercase tracking-[0.3em] text-xs">
               {heading}
             </span>
           </div>
         )}
-        <div className="flex flex-col gap-4 px-4 pb-4 pt-4 flex-1">
+        <div className="flex flex-col gap-4 px-5 pb-5 pt-4 flex-1">
           {post.featuredImage && (
             <div className="w-full overflow-hidden rounded-md bg-slate-100/60">
               <div className="aspect-[16/9]">
@@ -56,7 +60,7 @@ export default function HeroFeaturedCard({
             </div>
           )}
 
-          <div className="flex items-center gap-2 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
+          <div className="flex items-center gap-3 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
             {post.ppmaAuthorImage && post.ppmaAuthorImage !== "imag1" && post.ppmaAuthorImage !== "image" ? (
               <Image
                 src={post.ppmaAuthorImage}
@@ -74,7 +78,7 @@ export default function HeroFeaturedCard({
                 width={36}
               />
             )}
-            <span className="font-heading font-semibold text-slate-900 tracking-tight truncate max-w-[150px] text-[0.98rem] md:text-[1.02rem]">
+            <span className="font-heading font-semibold text-gray-700 tracking-tight truncate max-w-[150px] text-[0.98rem] md:text-[1.02rem]">
               {post.ppmaAuthorName || "Anonymous"}
             </span>
             <span className="text-slate-300 flex-shrink-0">•</span>
@@ -97,9 +101,9 @@ export default function HeroFeaturedCard({
 
   return (
     <div
-      className={`rounded-2xl bg-white/95 border border-orange-100 shadow-[0_14px_40px_rgba(15,23,42,0.08)] hover:border-orange-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.14)] px-4 py-4 flex flex-col gap-3 transition-all duration-300 ${className}`}
+      className={`rounded-2xl bg-white/95 border border-orange-100 shadow-[0_14px_40px_rgba(15,23,42,0.08)] hover:border-orange-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.14)] px-5 py-4 flex flex-col gap-3 transition-all duration-300 ${className}`}
     >
-      <h3 className="type-card-title text-lg text-card-foreground line-clamp-1">
+      <h3 className="type-card-title text-lg text-gray-700 line-clamp-1">
         <Link
           href={`/technology/${post.slug}`}
           className="hover:text-orange-700 transition-colors"

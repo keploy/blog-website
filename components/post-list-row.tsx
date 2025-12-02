@@ -13,7 +13,13 @@ interface Props {
 
 export default function PostListRow({ post, isCommunity = false, excerptOverride, readingTime }: Props) {
   const { title, featuredImage, slug, date, ppmaAuthorName, excerpt, ppmaAuthorImage } = post;
-  const cleanedExcerpt = (excerptOverride ?? excerpt ?? "").replace("Table of Contents", "");
+  const rawExcerpt = excerptOverride ?? excerpt ?? "";
+  const cleanedExcerpt = rawExcerpt
+    .replace("Table of Contents", "")
+    // Normalize various WP-style ellipsis markers "[...]", "[&hellip;]", "[…]" to a clean "..."
+    .replace(/\[\s*\.\.\.\s*\]/g, "...")
+    .replace(/\[\s*…\s*\]/g, "...")
+    .replace(/\[\s*&hellip;\s*\]/gi, "...");
   const hasImage = Boolean(featuredImage?.node?.sourceUrl);
   const basePath = isCommunity ? "/community" : "/technology";
 
@@ -35,13 +41,13 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
         )}
       </div>
 
-      <div className="md:w-[74%] w-full flex flex-col gap-3">
+      <div className="md:w-[74%] w-full flex flex-col gap-3.5">
         <h3
-          className="type-card-title text-xl md:text-2xl text-slate-900 transition-colors line-clamp-2 group-hover:text-orange-600"
+          className="type-card-title text-xl md:text-2xl text-gray-700 transition-colors line-clamp-2 group-hover:text-orange-600"
           dangerouslySetInnerHTML={{ __html: title }}
         />
 
-        <div className="flex items-center gap-2 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
+        <div className="flex items-center gap-3 text-[0.8rem] md:text-[0.9rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
           {ppmaAuthorImage && ppmaAuthorImage !== "imag1" && ppmaAuthorImage !== "image" ? (
             <Image
               src={ppmaAuthorImage}
@@ -59,7 +65,7 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
               width={36}
             />
           )}
-          <span className="font-heading font-semibold text-slate-900 tracking-tight truncate max-w-[170px] text-[0.98rem] md:text-[1.02rem]">
+          <span className="font-heading font-semibold text-gray-700 tracking-tight truncate max-w-[170px] text-[0.98rem] md:text-[1.02rem]">
             {ppmaAuthorName || "Anonymous"}
           </span>
           <span className="text-slate-300">•</span>
