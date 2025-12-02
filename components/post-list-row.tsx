@@ -47,7 +47,7 @@ export default function PostListRow({ post, isCommunity = false, excerptOverride
           dangerouslySetInnerHTML={{ __html: title }}
         />
 
-        <div className="flex items-center gap-2 text-[0.7rem] md:text-[0.75rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
+        <div className="py-2 pl-2 flex items-center gap-2 text-[0.7rem] md:text-[0.75rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
           {ppmaAuthorImage && ppmaAuthorImage !== "imag1" && ppmaAuthorImage !== "image" ? (
             <Image
               src={ppmaAuthorImage}

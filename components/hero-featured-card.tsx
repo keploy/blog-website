@@ -60,7 +60,7 @@ export default function HeroFeaturedCard({
             </div>
           )}
 
-          <div className="mt-3 flex items-center gap-3 text-[0.75rem] md:text-[0.8rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
+          <div className="mt-3 py-2 pl-2 flex items-center gap-3 text-[0.75rem] md:text-[0.8rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden">
             {post.ppmaAuthorImage && post.ppmaAuthorImage !== "imag1" && post.ppmaAuthorImage !== "image" ? (
               <Image
                 src={post.ppmaAuthorImage}

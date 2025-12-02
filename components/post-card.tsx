@@ -101,8 +101,8 @@ export default function PostCard({
           <div
             className={
               isSubtle
-                ? "mt-auto flex items-center gap-2 text-[0.7rem] md:text-[0.75rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden"
-                : "mt-auto flex items-center gap-1.5 text-[0.7rem] md:text-[0.75rem] text-gray-500 min-w-0 whitespace-nowrap overflow-hidden"
+                ? "mt-auto py-2 pl-2 flex items-center gap-2 text-[0.7rem] md:text-[0.75rem] text-slate-600 min-w-0 whitespace-nowrap overflow-hidden"
+                : "mt-auto py-2 pl-2 flex items-center gap-1.5 text-[0.7rem] md:text-[0.75rem] text-gray-500 min-w-0 whitespace-nowrap overflow-hidden"
             }
           >
             {authorImage && authorImage !== "imag1" && authorImage !== "image" ? (
