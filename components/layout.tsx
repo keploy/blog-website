@@ -5,6 +5,8 @@ import Meta from "./meta";
 import Script from "next/script";
 import { motion } from "framer-motion";
 import ScrollToTop from "./ScrollToTop";
+import RagChat from "./ragchat";
+// import BlogRagChat from "./ragchat";
 export default function Layout({
   preview,
   children,
@@ -41,6 +43,7 @@ export default function Layout({
       </motion.div>
       <Footer />
       <ScrollToTop />
+      <RagChat/>
 
       <Script
         async
