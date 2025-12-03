@@ -14,6 +14,7 @@ import {
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
+import { getRedirectSlug } from "../../config/redirects";
 import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
 import { useRef, useState, useEffect } from "react";
@@ -202,6 +203,17 @@ export const getStaticProps: GetStaticProps = async ({
     return {
       notFound: true,
       revalidate: 60,
+    };
+  }
+
+  // Check if this slug should be redirected
+  const redirectSlug = getRedirectSlug(slug);
+  if (redirectSlug) {
+    return {
+      redirect: {
+        destination: `/technology/${redirectSlug}`,
+        permanent: true,
+      },
     };
   }
 
