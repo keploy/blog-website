@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
+import { getRedirectSlug } from "../../config/redirect";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Container from "../../components/container";
 import MoreStories from "../../components/more-stories";
@@ -41,7 +42,7 @@ const postBody = ({ content, post }) => {
 
 export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
-  const { slug }= router.query;
+  const { slug } = router.query;
   const morePosts = posts?.edges;
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const time = 5 + calculateReadingTime(post?.content);
@@ -110,18 +111,18 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       } else {
         setAvatarImgSrc("/blog/images/author.png");
       }
-  
+
       // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
         /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/
       );
-      
+
       // Apply table responsive wrapper
       const newContent = content.replace(
         /<table[^>]*>[\s\S]*?<\/table>/gm,
         (table) => `<div class="overflow-x-auto">${table}</div>`
       );
-  
+
       setUpdatedContent(newContent);
 
       if (authorDescriptionMatch && authorDescriptionMatch[1].trim()?.length > 0) {
@@ -216,6 +217,16 @@ export const getStaticProps: GetStaticProps = async ({
     };
   }
 
+  const redirectSlug = getRedirectSlug(slug);
+  if (redirectSlug) {
+    return {
+      redirect: {
+        destination: `/community/${redirectSlug}`,
+        permanent: true,
+      },
+    };
+  }
+
   try {
     const data = await getPostAndMorePosts(slug, preview, previewData);
 
@@ -255,9 +266,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const communityPosts =
     allPosts?.edges
       .map(({ node }) => `/community/${node?.slug}`) || [];
-  
+
   return {
     paths: communityPosts || [],
-    fallback: true, 
+    fallback: true,
   };
 };
