@@ -21,8 +21,11 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
               date={node.date}
               author={node.ppmaAuthorName}
               slug={node.slug}
-              excerpt={getExcerpt(node.excerpt, 20)}
+              excerpt={getExcerpt(node.excerpt, 36)}
               isCommunity={false}
+              variant="subtle"
+              hideAuthorImage={true}
+              hideReadingTime={true}
             />
           ))}
         </PostGrid>
@@ -63,8 +66,11 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
               date={node.date}
               author={node.ppmaAuthorName}
               slug={node.slug}
-              excerpt={getExcerpt(node.excerpt, 20)}
+              excerpt={getExcerpt(node.excerpt, 36)}
               isCommunity={true}
+              variant="subtle"
+              hideAuthorImage={true}
+              hideReadingTime={true}
             />
           ))}
         </PostGrid>

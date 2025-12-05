@@ -17,6 +17,8 @@ export default function PostCard({
   authorImage,
   readingTime,
   variant = "default",
+  hideAuthorImage = false,
+  hideReadingTime = false,
 }: {
   title: Post["title"];
   coverImage: Post["featuredImage"];
@@ -28,6 +30,8 @@ export default function PostCard({
   authorImage?: string;
   readingTime?: number;
   variant?: "default" | "subtle";
+  hideAuthorImage?: boolean;
+  hideReadingTime?: boolean;
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
   const cleanedExcerpt = (excerpt || "").replace("Table of Contents", "");
@@ -105,22 +109,26 @@ export default function PostCard({
                 : "mt-auto py-2 pl-2 flex items-center gap-1.5 text-[0.7rem] md:text-[0.75rem] text-gray-500 min-w-0 whitespace-nowrap overflow-hidden"
             }
           >
-            {authorImage && authorImage !== "imag1" && authorImage !== "image" ? (
-              <Image
-                src={authorImage}
-                alt={`${author || "Author"}'s avatar`}
-                className={avatarClass}
-                height={avatarSize}
-                width={avatarSize}
-              />
-            ) : (
-              <Image
-                src="/blog/images/author.png"
-                alt="Author avatar"
-                className={avatarClass}
-                height={avatarSize}
-                width={avatarSize}
-              />
+            {!hideAuthorImage && (
+              <>
+                {authorImage && authorImage !== "imag1" && authorImage !== "image" ? (
+                  <Image
+                    src={authorImage}
+                    alt={`${author || "Author"}'s avatar`}
+                    className={avatarClass}
+                    height={avatarSize}
+                    width={avatarSize}
+                  />
+                ) : (
+                  <Image
+                    src="/blog/images/author.png"
+                    alt="Author avatar"
+                    className={avatarClass}
+                    height={avatarSize}
+                    width={avatarSize}
+                  />
+                )}
+              </>
             )}
             <span
               className={
@@ -135,7 +143,7 @@ export default function PostCard({
             <span className="whitespace-nowrap flex-shrink-0 text-[0.68rem] md:text-[0.72rem] tracking-tight">
               <Date dateString={date} />
             </span>
-            {readingTime !== undefined && readingTime > 0 && (
+            {!hideReadingTime && readingTime !== undefined && readingTime > 0 && (
               <>
                 <span className={`${isSubtle ? "text-slate-300" : "text-gray-300"} flex-shrink-0`}>•</span>
                 <span

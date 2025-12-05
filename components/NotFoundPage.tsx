@@ -205,10 +205,13 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
                     title={post.title}
                     coverImage={post.featuredImage}
                     date={post.date}
-                    excerpt={getExcerpt(post.excerpt, 20)}
+                    excerpt={getExcerpt(post.excerpt, 36)}
                     author={post.ppmaAuthorName}
                     slug={post.slug}
                     isCommunity={post.categories?.edges?.some(edge => edge.node.name === 'community')}
+                    variant="subtle"
+                    hideAuthorImage={true}
+                    hideReadingTime={true}
                   />
                 ))}
               </PostGrid>
@@ -228,10 +231,13 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
                       title={post.title}
                       coverImage={post.featuredImage}
                       date={post.date}
-                      excerpt={getExcerpt(post.excerpt, 20)}
+                      excerpt={getExcerpt(post.excerpt, 36)}
                       author={post.ppmaAuthorName}
                       slug={post.slug}
                       isCommunity={post.categories?.edges?.some(edge => edge.node.name === 'community')}
+                      variant="subtle"
+                      hideAuthorImage={true}
+                      hideReadingTime={true}
                     />
                   ))}
                 </PostGrid>
@@ -250,10 +256,13 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
                       title={post.title}
                       coverImage={post.featuredImage}
                       date={post.date}
-                      excerpt={getExcerpt(post.excerpt, 20)}
+                      excerpt={getExcerpt(post.excerpt, 36)}
                       author={post.ppmaAuthorName}
                       slug={post.slug}
                       isCommunity={true}
+                      variant="subtle"
+                      hideAuthorImage={true}
+                      hideReadingTime={true}
                     />
                   ))}
                 </PostGrid>
@@ -272,10 +281,13 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
                       title={post.title}
                       coverImage={post.featuredImage}
                       date={post.date}
-                      excerpt={getExcerpt(post.excerpt, 20)}
+                      excerpt={getExcerpt(post.excerpt, 36)}
                       author={post.ppmaAuthorName}
                       slug={post.slug}
                       isCommunity={false}
+                      variant="subtle"
+                      hideAuthorImage={true}
+                      hideReadingTime={true}
                     />
                   ))}
                 </PostGrid>
