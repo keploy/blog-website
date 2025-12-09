@@ -6,7 +6,7 @@ export default function PostTitle({ children }: { children: string }) {
   }
   const finalString = toTitleCase(children);
   return (
-    <h1 className="text-4xl md:text-4xl lg:text-5xl max-w-4xl mx-auto heading1 leading-tight font-bold tracking-normal mb-2 sm:mb-0 lg:mb-0 sm:text-center">
+    <h1 className="type-post-title text-4xl md:text-5xl lg:text-6xl max-w-4xl mx-auto text-center mb-4 sm:mb-6">
       {finalString}
     </h1>
   );

@@ -3,6 +3,8 @@ import { Post } from "../types/post";
 import dynamic from "next/dynamic";
 import PostCard from "./post-card";
 import PostGrid from "./post-grid";
+import { calculateReadingTime } from "../utils/calculateReadingTime";
+import { getExcerpt } from "../utils/excerpt";
  
 const AuthorDescription = dynamic(() => import("./author-description"), {
   ssr: false,
@@ -29,20 +31,28 @@ const PostByAuthorMapping = ({
         Posts by {AuthorName}
       </h1>
       <PostGrid>
-        {filteredPosts.map(({ node }) => (
-          <PostCard
-            key={node.slug}
-            title={node.title}
-            coverImage={node.featuredImage}
-            date={node.date}
-            author={node.ppmaAuthorName}
-            slug={node.slug}
-            excerpt={node.excerpt}
-            isCommunity={
-              node.categories.edges[0]?.node.name === "community" ? true : false
-            }
-          />
-        ))}
+        {filteredPosts.map(({ node }) => {
+          const readingTime = node.content ? 5 + calculateReadingTime(node.content) : undefined;
+          return (
+            <PostCard
+              key={node.slug}
+              title={node.title}
+              coverImage={node.featuredImage}
+              date={node.date}
+              author={node.ppmaAuthorName}
+              slug={node.slug}
+              excerpt={getExcerpt(node.excerpt, 36)}
+              isCommunity={
+                node.categories.edges[0]?.node.name === "community" ? true : false
+              }
+              authorImage={node.ppmaAuthorImage}
+              readingTime={readingTime}
+              variant="subtle"
+              hideAuthorImage={true}
+              hideReadingTime={true}
+            />
+          );
+        })}
       </PostGrid>
     </div>
   );

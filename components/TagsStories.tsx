@@ -23,7 +23,7 @@ export default function TagsStories({ posts}) {
             date={node.date}
             author={node.ppmaAuthorName}
             slug={node.slug}
-            excerpt={getExcerpt(node.excerpt, 20)}
+            excerpt={getExcerpt(node.excerpt, 36)}
             isCommunity={
               node.categories &&
               node.categories.edges &&
@@ -32,6 +32,9 @@ export default function TagsStories({ posts}) {
                 ? true
                 : false
             }
+            variant="subtle"
+            hideAuthorImage={true}
+            hideReadingTime={true}
           />
         ))}
       </PostGrid>
