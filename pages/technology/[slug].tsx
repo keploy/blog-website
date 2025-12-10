@@ -21,6 +21,7 @@ import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
+import { getRedirectSlug } from "../../config/redirect";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -196,17 +197,24 @@ export const getStaticProps: GetStaticProps = async ({
   preview = false,
   previewData,
 }) => {
-  const slug = params?.slug;
+  const slugParam = params?.slug;
 
-  if (typeof slug !== "string") {
+  if (typeof slugParam !== "string") {
     return {
       notFound: true,
       revalidate: 60,
     };
   }
 
+  let realSlug = slugParam;
+  const redirectSlug = getRedirectSlug(realSlug);
+
+  if (redirectSlug) {
+    realSlug = redirectSlug;
+  }
+
   try {
-    const data = await getPostAndMorePosts(slug, preview, previewData);
+    const data = await getPostAndMorePosts(realSlug, preview, previewData);
 
     if (!data?.post) {
       return {
@@ -220,6 +228,16 @@ export const getStaticProps: GetStaticProps = async ({
       getReviewAuthorDetails("neha"),
       getReviewAuthorDetails("Jain"),
     ]);
+
+    // If we resolved a redirect slug, send a proper redirect response
+    if (redirectSlug) {
+      return {
+        redirect: {
+          destination: `/technology/${redirectSlug}`,
+          permanent: false,
+        },
+      };
+    }
 
     return {
       props: {
