@@ -67,13 +67,13 @@ export default function PostBentoCard({
 
         {/* Content */}
         <div className="relative z-10 text-white mt-auto">
-          <h3 className="text-xl font-semibold group-hover:text-orange-300 transition">
+          <h3 className="text-sm md:text-xl font-semibold group-hover:text-orange-300 transition">
             {title}
           </h3>
 
           <p
             dangerouslySetInnerHTML={{ __html: excerpt }}
-            className="text-sm opacity-80 mt-1 line-clamp-3"
+            className="text-xs opacity-80 mt-1 line-clamp-3 md:text-sm"
           />
 
           {/* Footer */}
