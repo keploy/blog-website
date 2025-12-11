@@ -12,9 +12,70 @@ import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import TopPosts from "@/components/topPost";
 const Skeleton = dynamic(() => import("../components/skeleton-main"), {
   ssr: false,
 });
+
+// set of demo and temporary data just for the testing purpose :
+export const posts = [
+  {
+    key: "post-1",
+    title: "Understanding React Hooks",
+    coverImage: "/images/react-hooks.jpg",
+    excerpt: "React Hooks revolutionized how we write components, enabling state and lifecycle features in functional components...",
+    author: "Harsh Kumar",
+    slug: "understanding-react-hooks",
+    readTime: 5,
+  },
+  {
+    key: "post-2",
+    title: "Getting Started with Next.js",
+    coverImage: "/images/nextjs-intro.jpg",
+    excerpt: "Next.js makes server-side rendering in React seamless. Learn how to set up a project and create your first page...",
+    author: "Jane Doe",
+    slug: "getting-started-with-nextjs",
+    readTime: 4,
+  },
+  {
+    key: "post-3",
+    title: "Tailwind CSS for Beginners",
+    coverImage: "/images/tailwind-css.jpg",
+    excerpt: "Tailwind CSS allows you to build modern websites quickly using utility-first classes. This guide covers the basics...",
+    author: "John Smith",
+    slug: "tailwind-css-for-beginners",
+    readTime: 3,
+  },
+  {
+    key: "post-4",
+    title: "Framer Motion Animations",
+    coverImage: "/images/framer-motion.jpg",
+    excerpt: "Animate your React apps effortlessly using Framer Motion. Learn how to use props like 'whileInView' and 'initial'...",
+    author: "Harsh Kumar",
+    slug: "framer-motion-animations",
+    readTime: 6,
+  },
+  {
+    key: "post-5",
+    title: "JavaScript ES2025 Features",
+    coverImage: "/images/js-es2025.jpg",
+    excerpt: "ES2025 brings exciting new features to JavaScript. Stay ahead by learning about new syntax and APIs...",
+    author: "Jane Doe",
+    slug: "javascript-es2025-features",
+    readTime: 4,
+  },
+  {
+    key: "post-5",
+    title: "JavaScript ES2025 Features",
+    coverImage: "/images/js-es2025.jpg",
+    excerpt: "ES2025 brings exciting new features to JavaScript. Stay ahead by learning about new syntax and APIs...",
+    author: "Jane Doe",
+    slug: "javascript-es2025-features",
+    readTime: 4,
+  }
+];
+
+
 export default function Index({ communityPosts, technologyPosts, preview }) {
   const [loading, setLoading] = useState(true);
 
@@ -77,6 +138,11 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
         <TopBlogs
           communityPosts={communityPosts}
           technologyPosts={technologyPosts}
+        />
+
+        <TopPosts
+          featuredPosts={posts}
+          latestPosts={posts}
         />
         <Testimonials />
       </Container>
