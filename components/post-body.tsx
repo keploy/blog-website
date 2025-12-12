@@ -41,13 +41,15 @@ export default function PostBody({
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [headingCopySuccessList, setHeadingCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [replacedContent, setReplacedContent] = useState(content);
+  const [replacedContent, setReplacedContent] = useState(content || ""); 
   const [isList, setIsList] = useState(false);
   const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
-  const [copied, setCopied] = useState(false);
+  // Optional safety: handle malformed ReviewAuthorDetails gracefully
+  const reviewer = ReviewAuthorDetails?.edges?.[0]?.node || null;
   const sameAuthor =
+    reviewer &&
     authorName.split(" ")[0].toLowerCase() ===
-    ReviewAuthorDetails.edges[0].node.name.split(" ")[0].toLowerCase();
+      reviewer.name.split(" ")[0].toLowerCase();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -56,6 +58,8 @@ export default function PostBody({
 
     checkScreenSize(); // Initial screen size check
     window.addEventListener("resize", checkScreenSize);
+
+    if (!content) return;
 
     // Separate effect for initial content replacement
     let initialReplacedContent = content.replace(
@@ -269,7 +273,8 @@ export default function PostBody({
   }, [headingCopySuccessList]);
 
   const renderCodeBlocks = () => {
-    const codeBlocks = replacedContent.match(/<pre[\s\S]*?<\/pre>/gm);
+    const safeContent = replacedContent || "";
+    const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
     if (!codeBlocks) {
       return (
@@ -287,7 +292,7 @@ export default function PostBody({
       return textarea.value;
     };
 
-    return replacedContent
+    return safeContent
       .split(/(<pre[\s\S]*?<\/pre>)/gm)
       .map((part, index) => {
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
@@ -399,14 +404,14 @@ export default function PostBody({
             isPost={true}
           />
         </div>
-        {!sameAuthor && (
+        {reviewer && !sameAuthor && (
           <div className="my-20">
             <h1 className="text-2xl font-medium">Reviewed By:</h1>
             <div>
               <ReviewingAuthor
-                name={ReviewAuthorDetails.edges[0].node.name}
-                avatar={ReviewAuthorDetails.edges[0].node.avatar.url}
-                description={ReviewAuthorDetails.edges[0].node.description}
+                name={reviewer.name}
+                avatar={reviewer.avatar.url}
+                description={reviewer.description}
               />
             </div>
           </div>
