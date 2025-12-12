@@ -46,6 +46,7 @@ export default function PostBody({
   const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
   // Optional safety: handle malformed ReviewAuthorDetails gracefully
   const reviewer = ReviewAuthorDetails?.edges?.[0]?.node || null;
+  const [copied, setCopied] = useState(false);
   const sameAuthor =
     reviewer &&
     authorName.split(" ")[0].toLowerCase() ===
