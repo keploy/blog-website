@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Head from "next/head"; // <--- Added for Schema
+import Head from "next/head";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostCard from "./post-card";
@@ -22,7 +22,7 @@ export default function MoreStories({
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Initialize with 21 posts (22 - 1 hero post)
+  // Initialize with 21 posts
   const [allPosts, setAllPosts] = useState(initialPosts.slice(0, 21));
   const [visibleCount, setVisibleCount] = useState(12);
   const [loading, setLoading] = useState(false);
@@ -31,25 +31,56 @@ export default function MoreStories({
   const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
 
-  // Sync URL Query to Search State on Load
+  // 1. Initial Load: Sync Input with URL (if user clicks a link with ?search=...)
   useEffect(() => {
-    if (router.isReady && router.query.search) {
-      setSearchTerm(router.query.search as string);
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("search");
+      if (q) setSearchTerm(q);
     }
-  }, [router.isReady, router.query.search]);
+  }, []);
 
-  // Set up initial buffer with remaining posts
+  // 2. Back Button Listener (The Fix)
+  // When user clicks Back, this detects the URL change and updates the input box
   useEffect(() => {
-    if (initialPosts.length > 21) {
-      setBuffer(initialPosts.slice(21));
-    }
-    // Start background fetch if we have less than 9 posts in buffer
-    if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
-      loadMoreInBackground();
-    }
-  }, [initialPosts]);
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      setSearchTerm(params.get("search") || "");
+    };
 
-  // Filter posts based on search term
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  // 3. Search Handler with "Push Once, Replace Later" logic
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+
+    if (isIndex && typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      const hasPreviousSearch = url.searchParams.has("search");
+      
+      if (value) {
+        url.searchParams.set("search", value);
+        
+        // CRITICAL LOGIC:
+        // If we weren't searching before, PUSH a new history entry.
+        // If we were already searching, REPLACE the current entry to update the term.
+        if (!hasPreviousSearch) {
+            window.history.pushState({ path: url.href }, "", url.toString());
+        } else {
+            window.history.replaceState({ path: url.href }, "", url.toString());
+        }
+      } else {
+        // If user clears input manually, remove param but stay on page
+        url.searchParams.delete("search");
+        window.history.replaceState({ path: url.href }, "", url.toString());
+      }
+    }
+  };
+
+  // Filter posts logic
   const filteredPosts = allPosts.filter(({ node }) => 
     node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
@@ -61,30 +92,16 @@ export default function MoreStories({
     setError(null);
   }, [searchTerm]);
 
-  // --- Handle Search Input (Updates URL without Scrolling) ---
-  const handleSearchChange = (event) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-
-    // Update URL using native History API to strictly prevent scrolling
-    if (isIndex && typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      
-      if (value) {
-        url.searchParams.set("search", value);
-      } else {
-        url.searchParams.delete("search");
-      }
-
-      window.history.replaceState(
-        { ...window.history.state, as: url.href, url: url.href },
-        "",
-        url.toString()
-      );
+  // Buffer management
+  useEffect(() => {
+    if (initialPosts.length > 21) {
+      setBuffer(initialPosts.slice(21));
     }
-  };
+    if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
+      loadMoreInBackground();
+    }
+  }, [initialPosts]);
 
-  // Fetch more posts in background
   const loadMoreInBackground = async () => {
     try {
       const category = isCommunity ? 'community' : 'technology';
@@ -99,7 +116,6 @@ export default function MoreStories({
       }
     } catch (error) {
       console.error('Error fetching more posts:', error);
-      setError('Failed to load more posts. Please try again later.');
     }
   };
 
@@ -113,11 +129,9 @@ export default function MoreStories({
 
     setLoading(true);
     try {
-      // First, show more posts from allPosts if available
       if (visibleCount < allPosts.length) {
         setVisibleCount(prev => Math.min(prev + 9, allPosts.length));
       } 
-      // Then, add posts from buffer if needed
       else if (buffer.length > 0) {
         const postsToAdd = buffer.slice(0, 9);
         setAllPosts(prev => [...prev, ...postsToAdd]);
@@ -125,7 +139,6 @@ export default function MoreStories({
         setVisibleCount(prev => prev + postsToAdd.length);
       }
 
-      // If buffer is getting low, fetch more posts
       if (buffer.length < 9 && hasMore) {
         const category = isCommunity ? 'community' : 'technology';
         const result = await fetchMorePosts(category, endCursor);
@@ -146,15 +159,13 @@ export default function MoreStories({
     }
   };
 
-  // Show load more button if there are more posts to show from allPosts,
-  // or if there are posts in buffer, or if we can fetch more
   const showLoadMore = (
     visibleCount < allPosts.length || 
     buffer.length > 0 || 
     hasMore
   ) && !loading && !error && isIndex;
 
-  // Search Action Schema (JSON-LD)
+  // JSON-LD Schema
   const searchSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -171,7 +182,6 @@ export default function MoreStories({
 
   return (
     <section>
-      {/* Inject JSON-LD Schema into Head */}
       {isIndex && (
         <Head>
           <script
