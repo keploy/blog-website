@@ -10,7 +10,72 @@ import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
+import FeaturedPosts from "../components/FeaturedPosts";
+import { LatestPosts } from "../components/LatestPosts";
 export default function Index({ communityPosts, technologyPosts, preview }) {
+  // Temporary demo posts (replace with real data later)
+  const posts = [
+    {
+      id: 1,
+      title: "Keploy v2: A Better Testing Experience",
+      excerpt: "Learn how Keploy 2.0 enhances API test automation.",
+      author: "Keploy Team",
+      image: "/blog/images/keploy-v2.jpg",
+      readTime: 5,
+      featured: true,
+    },
+    {
+      id: 2,
+      title: "Open Source and You",
+      excerpt: "Contribute to Keploy and make testing better for all developers.",
+      author: "Keploy Team",
+      image: "/blog/images/open-source.png",
+      readTime: 4,
+      featured: true,
+    },
+    {
+      id: 3,
+      title: "From Bugs to Insights: Using Keploy to Debug Faster in Local Environments",
+      excerpt:
+        "Discover how Keploy’s auto-generated mocks and test replays help developers trace API issues faster, enabling a smoother debugging experience without external dependencies.",
+      image: "/blog/images/keploy-debugging.png",
+      author: "Keploy Team",
+      readTime: 4,
+      featured: true,
+    },
+    {
+      id: 4,
+      title: "The Future of Mock Generation",
+      excerpt: "How Keploy’s approach is redefining integration testing.",
+      author: "Keploy Devs",
+      image: "/blog/images/mock-gen.jpg",
+      readTime: 6,
+      featured: false,
+    },
+    {
+      id: 5,
+      title: "Integrate Keploy with Postman for Seamless Testing Workflows",
+      excerpt: "Discover how to connect Keploy with Postman to record, replay, and validate APIs without writing a single line of test code.",
+      author: "Keploy Team",
+      image: "/blog/images/keploy-postman-integration.png",
+      readTime: 5,
+      featured: false,
+    },
+    // {
+    // id: 5,
+    // title: "Mocking Made Easy: How Keploy Improves Developer Velocity",
+    // excerpt:
+    //   "Explore how Keploy automatically records and mocks dependencies like databases and external APIs to make local development faster and more reliable.",
+    // image: "/images/keploy-mocking.png",
+    // author: "Ananya Sharma",
+    // readTime: 3,
+    // },
+    
+  ];
+
+  const featured = posts.filter((p) => p.featured);
+  const latest = posts.filter((p) => !p.featured);
+
   return (
 
     <Layout
@@ -58,6 +123,15 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
             </div>
           </div>
         </div>
+        {/* 🧱 Featured & Latest Posts Sections */}
+        <FeaturedPosts posts={featured} />
+        <LatestPosts posts={latest} />
+
+        {/* Existing Sections */}
+        <TopBlogs
+          communityPosts={communityPosts}
+          technologyPosts={technologyPosts}
+        />
         <TopBlogs
           communityPosts={communityPosts}
           technologyPosts={technologyPosts}
