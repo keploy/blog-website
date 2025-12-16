@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import Head from "next/head"; // <--- Added for Schema
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostCard from "./post-card";
@@ -17,7 +19,9 @@ export default function MoreStories({
   isIndex: boolean;
   initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
 }) {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  
   // Initialize with 21 posts (22 - 1 hero post)
   const [allPosts, setAllPosts] = useState(initialPosts.slice(0, 21));
   const [visibleCount, setVisibleCount] = useState(12);
@@ -26,6 +30,13 @@ export default function MoreStories({
   const [error, setError] = useState(null);
   const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
+
+  // Sync URL Query to Search State on Load
+  useEffect(() => {
+    if (router.isReady && router.query.search) {
+      setSearchTerm(router.query.search as string);
+    }
+  }, [router.isReady, router.query.search]);
 
   // Set up initial buffer with remaining posts
   useEffect(() => {
@@ -50,8 +61,27 @@ export default function MoreStories({
     setError(null);
   }, [searchTerm]);
 
+  // --- Handle Search Input (Updates URL without Scrolling) ---
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+    const value = event.target.value;
+    setSearchTerm(value);
+
+    // Update URL using native History API to strictly prevent scrolling
+    if (isIndex && typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      
+      if (value) {
+        url.searchParams.set("search", value);
+      } else {
+        url.searchParams.delete("search");
+      }
+
+      window.history.replaceState(
+        { ...window.history.state, as: url.href, url: url.href },
+        "",
+        url.toString()
+      );
+    }
   };
 
   // Fetch more posts in background
@@ -124,8 +154,33 @@ export default function MoreStories({
     hasMore
   ) && !loading && !error && isIndex;
 
+  // Search Action Schema (JSON-LD)
+  const searchSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "https://keploy.io/blog",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://keploy.io/blog?search={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <section>
+      {/* Inject JSON-LD Schema into Head */}
+      {isIndex && (
+        <Head>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(searchSchema) }}
+          />
+        </Head>
+      )}
+
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
         More Stories
       </h2>
