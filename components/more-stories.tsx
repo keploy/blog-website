@@ -8,22 +8,34 @@ import PostGrid from "./post-grid";
 import { FaSearch } from 'react-icons/fa';
 import { fetchMorePosts } from "../lib/api";
 
+interface MoreStoriesProps {
+  posts: { node: Post }[];
+  isCommunity: boolean;
+  isIndex: boolean;
+  isSearchPage?: boolean;
+  initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
+  externalSearchTerm?: string;
+  onSearchChange?: (term: string) => void;
+}
+
 export default function MoreStories({
   posts: initialPosts,
   isCommunity,
   isIndex,
+  isSearchPage = false,
   initialPageInfo,
-}: {
-  posts: { node: Post }[];
-  isCommunity: boolean;
-  isIndex: boolean;
-  initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
-}) {
-  const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
+  externalSearchTerm,
+  onSearchChange,
+}: MoreStoriesProps) {
   
-  // Initialize with 21 posts
-  const [allPosts, setAllPosts] = useState(initialPosts.slice(0, 21));
+  const router = useRouter();
+  
+  //Internal state for search if not controlled by parent
+  const [localSearchTerm, setLocalSearchTerm] = useState("");
+  // Determine which search term to use (Parent's or Local)
+  const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : localSearchTerm;
+  
+  const [allPosts, setAllPosts] = useState<{ node: Post }[]>([]);
   const [visibleCount, setVisibleCount] = useState(12);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialPageInfo?.hasNextPage ?? true);
@@ -31,76 +43,86 @@ export default function MoreStories({
   const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
 
-  // 1. Initial Load: Sync Input with URL (if user clicks a link with ?search=...)
+  // Initialize posts based on page type
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const q = params.get("search");
-      if (q) setSearchTerm(q);
+    if (isSearchPage) {
+      setAllPosts(initialPosts); // Search page usually has all posts passed
+    } else {
+      setAllPosts(initialPosts); // Index pages now also need all posts to filter locally
     }
-  }, []);
+  }, [initialPosts, isSearchPage]);
 
-  // 2. Back Button Listener (The Fix)
-  // When user clicks Back, this detects the URL change and updates the input box
+  // 1. Sync Input from URL on Load
   useEffect(() => {
-    const handlePopState = () => {
-      const params = new URLSearchParams(window.location.search);
-      setSearchTerm(params.get("search") || "");
-    };
+    if (!router.isReady || externalSearchTerm !== undefined) return;
+    const q = router.query.q as string;
+    if (q && !localSearchTerm) {
+      setLocalSearchTerm(q);
+    }
+  }, [router.isReady, router.query, externalSearchTerm]);
 
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
-
-  // 3. Search Handler with "Push Once, Replace Later" logic
-  const handleSearchChange = (event) => {
+  // 2. Handle Search Input (Universal URL Sync + Local State)
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setSearchTerm(value);
-
-    if (isIndex && typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      const hasPreviousSearch = url.searchParams.has("search");
+    
+    // If Parent controls input (Search Page), let parent handle it
+    if (onSearchChange) {
+      onSearchChange(value);
+    } else {
+      // Listing Page Logic (Community or Tech)
+      setLocalSearchTerm(value);
       
-      if (value) {
-        url.searchParams.set("search", value);
-        
-        // CRITICAL LOGIC:
-        // If we weren't searching before, PUSH a new history entry.
-        // If we were already searching, REPLACE the current entry to update the term.
-        if (!hasPreviousSearch) {
-            window.history.pushState({ path: url.href }, "", url.toString());
+      // Update URL instantly for ALL pages (Community & Tech)
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        if (value) {
+          url.searchParams.set("q", value);
         } else {
-            window.history.replaceState({ path: url.href }, "", url.toString());
+          url.searchParams.delete("q");
         }
-      } else {
-        // If user clears input manually, remove param but stay on page
-        url.searchParams.delete("search");
+        // Use replaceState to update URL without reloading
         window.history.replaceState({ path: url.href }, "", url.toString());
       }
     }
   };
 
-  // Filter posts logic
-  const filteredPosts = allPosts.filter(({ node }) => 
+  // 3. Handle Enter Key (Conditional Logic)
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      // ONLY redirect if we are on Community AND NOT already on the search page
+      if (isCommunity && !isSearchPage && searchTerm.trim()) {
+        event.preventDefault();
+        router.push(`/community/search?q=${encodeURIComponent(searchTerm)}`);
+      }
+      // For Technology (!isCommunity), do nothing. The local filter is already active.
+    }
+  };
+
+  // 4. Filtering Logic
+  // We filter locally for BOTH Community and Tech to give the "Then and There" experience.
+  const postsToDisplay = allPosts; 
+  
+  const filteredPosts = postsToDisplay.filter(({ node }) => 
     node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Reset visible count when search term changes
+  // Reset visible count when search changes
   useEffect(() => {
+    // If searching, show standard amount. If search cleared, revert.
     setVisibleCount(12);
     setError(null);
   }, [searchTerm]);
 
-  // Buffer management
+  // Buffer Logic (Mostly for infinite scroll on standard feed)
   useEffect(() => {
-    if (initialPosts.length > 21) {
+    if (!isSearchPage && initialPosts.length > 21) {
       setBuffer(initialPosts.slice(21));
     }
     if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
       loadMoreInBackground();
     }
-  }, [initialPosts]);
+  }, [initialPosts, isIndex, isSearchPage]);
 
   const loadMoreInBackground = async () => {
     try {
@@ -122,7 +144,8 @@ export default function MoreStories({
   const loadMorePosts = async () => {
     if (loading) return;
     
-    if (searchTerm) {
+    // If we are searching, we just show more from the filtered list (pagination)
+    if (searchTerm || isSearchPage) {
       setVisibleCount(prev => prev + 9);
       return;
     }
@@ -159,13 +182,11 @@ export default function MoreStories({
     }
   };
 
-  const showLoadMore = (
-    visibleCount < allPosts.length || 
-    buffer.length > 0 || 
-    hasMore
-  ) && !loading && !error && isIndex;
+  const showLoadMore = isSearchPage || searchTerm
+    ? visibleCount < filteredPosts.length 
+    : (visibleCount < allPosts.length || buffer.length > 0 || hasMore) && !loading && !error && isIndex;
 
-  // JSON-LD Schema
+  const basePath = isCommunity ? '/community' : '/technology';
   const searchSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -174,7 +195,7 @@ export default function MoreStories({
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://keploy.io/blog?search={search_term_string}"
+        "urlTemplate": `https://keploy.io/blog${basePath}/search?q={search_term_string}`
       },
       "query-input": "required name=search_term_string"
     }
@@ -182,7 +203,7 @@ export default function MoreStories({
 
   return (
     <section>
-      {isIndex && (
+      {(isIndex || isSearchPage) && (
         <Head>
           <script
             type="application/ld+json"
@@ -192,17 +213,22 @@ export default function MoreStories({
       )}
 
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
-        More Stories
+        {isSearchPage ? (
+            searchTerm ? `Results for "${searchTerm}"` : "Search Results"
+        ) : (
+            "More Stories"
+        )}
       </h2>
       
-      {isIndex && (
+      {(isIndex || isSearchPage) && (
         <div className="flex w-full mb-8">
           <div className="relative w-full">
             <input
               type="text"
-              placeholder="Search posts..."
+              placeholder={`Search ${isCommunity ? 'Community' : 'Technology'} posts...`}
               value={searchTerm}
               onChange={handleSearchChange}
+              onKeyDown={handleKeyDown}
               className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
@@ -211,7 +237,7 @@ export default function MoreStories({
       )}
 
       {filteredPosts.length === 0 ? (
-        <p className="text-center text-gray-500">No posts found by the name {`"${searchTerm}"`}</p>
+        <p className="text-center text-gray-500">No posts found matching {`"${searchTerm}"`}</p>
       ) : (
         <>
           <PostGrid>
@@ -225,7 +251,7 @@ export default function MoreStories({
                 slug={node.slug}
                 excerpt={getExcerpt(node.excerpt, 20)}
                 isCommunity={
-                  node.categories.edges[0]?.node.name === "technology" ? false : true
+                  node.categories?.edges?.[0]?.node?.name === "technology" ? false : true
                 }
               />
             ))}
