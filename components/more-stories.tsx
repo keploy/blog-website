@@ -255,7 +255,7 @@ export default function MoreStories({
         </p>
       ) : (
         <>
-          {loading && visibleCount === 0 ? (
+          {loading && visibleCount === 0 && isIndex ? (
             <PostGridSkeleton count={12} />
           ) : (
             <PostGrid>
