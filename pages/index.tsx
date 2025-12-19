@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { GetStaticProps } from "next";
+import { useState, useEffect } from "react";
 import Container from "../components/container";
 import Layout from "../components/layout";
 import { getAllPostsForCommunity, getAllPostsForTechnology } from "../lib/api";
@@ -11,13 +12,35 @@ import Testimonials from "../components/testimonials";
 import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 export default function Index({ communityPosts, technologyPosts, preview }) {
-  return (
+  const [isLoading, setIsLoading] = useState(true);
+  const [displayPosts, setDisplayPosts] = useState({
+    community: [],
+    technology: [],
+  });
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const timer = setTimeout(() => {
+        setDisplayPosts({
+          community: communityPosts || [],
+          technology: technologyPosts || [],
+        });
+        setIsLoading(false);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [communityPosts, technologyPosts]);
+
+  return (
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
       Title={`Blog - Keploy`}
-      Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}>
+      Description={
+        "The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."
+      }
+    >
       <Head>
         <title>{`Engineering | Keploy Blog`}</title>
       </Head>
@@ -59,8 +82,9 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
           </div>
         </div>
         <TopBlogs
-          communityPosts={communityPosts}
-          technologyPosts={technologyPosts}
+          communityPosts={displayPosts.community}
+          technologyPosts={displayPosts.technology}
+          isLoading={isLoading}
         />
         <Testimonials />
       </Container>

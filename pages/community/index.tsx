@@ -1,16 +1,33 @@
 import Head from "next/head";
 import { GetStaticProps } from "next";
+import { useState, useEffect } from "react";
 import Container from "../../components/container";
 import MoreStories from "../../components/more-stories";
 import HeroPost from "../../components/hero-post";
+import HeroPostSkeleton from "../../components/skeletons/HeroPostSkeleton";
+import PostGridSkeleton from "../../components/skeletons/PostGridSkeleton";
 import Layout from "../../components/layout";
 import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
 
 export default function Community({ allPosts: { edges, pageInfo }, preview }) {
-  const heroPost = edges[0]?.node;
-  const excerpt = getExcerpt(edges[0]?.node.excerpt);
-  const morePosts = edges.slice(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [displayPosts, setDisplayPosts] = useState([]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const timer = setTimeout(() => {
+        setDisplayPosts(edges || []);
+        setIsLoading(false);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [edges]);
+
+  const heroPost = displayPosts[0]?.node;
+  const excerpt = getExcerpt(displayPosts[0]?.node?.excerpt || "");
+  const morePosts = displayPosts.slice(1);
   function getExcerpt(content) {
     const maxWords = 50;
     // Split the content into an array of words
@@ -25,26 +42,45 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   }
 
   return (
-    <Layout preview={preview} featuredImage={heroPost?.featuredImage?.node.sourceUrl} Title={heroPost?.title} Description={`Blog from the Technology Page`}>
+    <Layout
+      preview={preview}
+      featuredImage={heroPost?.featuredImage?.node.sourceUrl}
+      Title={heroPost?.title}
+      Description={`Blog from the Technology Page`}
+    >
       <Head>
         <title>{`Keploy Blog`}</title>
       </Head>
       <Header />
       <Container>
-        {/* <Intro /> */}
-        {heroPost && (
-          <HeroPost
-            title={heroPost.title}
-            coverImage={heroPost.featuredImage}
-            date={heroPost.date}
-            author={heroPost.ppmaAuthorName}
-            slug={heroPost.slug}
-            excerpt={excerpt}
-            isCommunity={true}
-          />
-        )}
-        {morePosts.length > 0 && (
-          <MoreStories isIndex={true} posts={morePosts} isCommunity={true} initialPageInfo={pageInfo} />
+        {isLoading ? (
+          <>
+            <HeroPostSkeleton />
+            <PostGridSkeleton count={11} />
+          </>
+        ) : (
+          <>
+            {/* <Intro /> */}
+            {heroPost && (
+              <HeroPost
+                title={heroPost.title}
+                coverImage={heroPost.featuredImage}
+                date={heroPost.date}
+                author={heroPost.ppmaAuthorName}
+                slug={heroPost.slug}
+                excerpt={excerpt}
+                isCommunity={true}
+              />
+            )}
+            {morePosts.length > 0 && (
+              <MoreStories
+                isIndex={true}
+                posts={morePosts}
+                isCommunity={true}
+                initialPageInfo={pageInfo}
+              />
+            )}
+          </>
         )}
       </Container>
     </Layout>
