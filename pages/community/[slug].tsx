@@ -23,7 +23,8 @@ import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
-import "./styles.module.css"
+import "./styles.module.css";
+import PostDetailSkeleton from "../../components/skeletons/PostDetailSkeleton";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -100,7 +101,6 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   });
   useEffect(() => {
     if (post && post.content) {
-
       const content = post.content;
       const avatarDivMatch = content.match(
         /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
@@ -125,7 +125,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
       setUpdatedContent(newContent);
 
-      if (authorDescriptionMatch && authorDescriptionMatch[1].trim()?.length > 0) {
+      if (
+        authorDescriptionMatch &&
+        authorDescriptionMatch[1].trim()?.length > 0
+      ) {
         setBlogWriterDescription(authorDescriptionMatch[1].trim());
       } else {
         setBlogWriterDescription("An author for Keploy's blog.");
@@ -147,11 +150,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
     >
       <Header readProgress={readProgress} />
-      <Container>
-        {router.isFallback ? (
-          <PostTitle>Loading…</PostTitle>
-        ) : (
-          <>
+      {router.isFallback ? (
+        <PostDetailSkeleton />
+      ) : (
+        <>
+          <Container>
             <PrismLoader /> {/* Load Prism.js here */}
             <article>
               <Head>
@@ -168,37 +171,41 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 TimeToRead={time}
               />
             </article>
-          </>
-        )}
-      </Container>
-      <ContainerSlug>
-        {/* PostBody component placed outside the Container */}
-        <div ref={postBodyRef}>
-          <PostBody
-            content={
-              post?.content && postBody({ content: post?.content, post })
-            }
-            authorName={post?.ppmaAuthorName || ""}
-            ReviewAuthorDetails={
-              reviewAuthorDetails &&
-              reviewAuthorDetails?.length > 0 &&
-              reviewAuthorDetails[postBodyReviewerAuthor]
-            }
-            slug={slug}
-          />
-        </div>
-      </ContainerSlug>
-      <Container>
-        <article>
-          <footer>
-            {post?.tags?.edges?.length > 0 && <Tag tags={post?.tags} />}
-          </footer>
-          <SectionSeparator />
-          {morePosts?.length > 0 && (
-            <MoreStories isIndex={false} posts={morePosts} isCommunity={true} />
-          )}
-        </article>
-      </Container>
+          </Container>
+          <ContainerSlug>
+            {/* PostBody component placed outside the Container */}
+            <div ref={postBodyRef}>
+              <PostBody
+                content={
+                  post?.content && postBody({ content: post?.content, post })
+                }
+                authorName={post?.ppmaAuthorName || ""}
+                ReviewAuthorDetails={
+                  reviewAuthorDetails &&
+                  reviewAuthorDetails?.length > 0 &&
+                  reviewAuthorDetails[postBodyReviewerAuthor]
+                }
+                slug={slug}
+              />
+            </div>
+          </ContainerSlug>
+          <Container>
+            <article>
+              <footer>
+                {post?.tags?.edges?.length > 0 && <Tag tags={post?.tags} />}
+              </footer>
+              <SectionSeparator />
+              {morePosts?.length > 0 && (
+                <MoreStories
+                  isIndex={false}
+                  posts={morePosts}
+                  isCommunity={true}
+                />
+              )}
+            </article>
+          </Container>
+        </>
+      )}
     </Layout>
   );
 }
@@ -237,7 +244,10 @@ export const getStaticProps: GetStaticProps = async ({
       };
     }
 
-    const moreStories = await getMoreStoriesForSlugs(data.post?.tags, data.post?.slug);
+    const moreStories = await getMoreStoriesForSlugs(
+      data.post?.tags,
+      data.post?.slug
+    );
     const authorDetails = await Promise.all([
       getReviewAuthorDetails("neha"),
       getReviewAuthorDetails("Jain"),
@@ -264,8 +274,7 @@ export const getStaticProps: GetStaticProps = async ({
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsForCommunity(false);
   const communityPosts =
-    allPosts?.edges
-      .map(({ node }) => `/community/${node?.slug}`) || [];
+    allPosts?.edges.map(({ node }) => `/community/${node?.slug}`) || [];
 
   return {
     paths: communityPosts || [],

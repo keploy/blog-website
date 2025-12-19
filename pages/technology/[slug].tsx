@@ -22,6 +22,7 @@ import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
 import { getRedirectSlug } from "../../config/redirect";
+import PostDetailSkeleton from "../../components/skeletons/PostDetailSkeleton";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -125,7 +126,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
   useEffect(() => {
     if (!router.isFallback && !post?.slug) {
-      router.push("/404"); 
+      router.push("/404");
     }
   }, [router, router.isFallback, post]);
 
@@ -137,11 +138,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
     >
       <Header readProgress={readProgress} />
-      <Container>
-        {router.isFallback ? (
-          <PostTitle>Loading…</PostTitle>
-        ) : (
-          <>
+      {router.isFallback ? (
+        <PostDetailSkeleton />
+      ) : (
+        <>
+          <Container>
             <PrismLoader /> {/* Load Prism.js here */}
             <article>
               <Head>
@@ -158,36 +159,40 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 TimeToRead={time}
               />
             </article>
-          </>
-        )}
-      </Container>
-      <ContainerSlug>
-        <div ref={postBodyRef}>
-          <PostBody
-            content={
-              post?.content && postBody({ content: post?.content, post })
-            }
-            authorName={post?.ppmaAuthorName || ""}
-            slug={slug}
-            ReviewAuthorDetails={
-              reviewAuthorDetails &&
-              reviewAuthorDetails?.length > 0 &&
-              reviewAuthorDetails[postBodyReviewerAuthor]
-            }
-          />
-        </div>
-      </ContainerSlug>
-      <Container>
-        <article>
-          <footer>
-            {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />}
-          </footer>
-          <SectionSeparator />
-          {morePosts?.length > 0 && (
-            <MoreStories isIndex={false} posts={morePosts} isCommunity={false} />
-          )}
-        </article>
-      </Container>
+          </Container>
+          <ContainerSlug>
+            <div ref={postBodyRef}>
+              <PostBody
+                content={
+                  post?.content && postBody({ content: post?.content, post })
+                }
+                authorName={post?.ppmaAuthorName || ""}
+                slug={slug}
+                ReviewAuthorDetails={
+                  reviewAuthorDetails &&
+                  reviewAuthorDetails?.length > 0 &&
+                  reviewAuthorDetails[postBodyReviewerAuthor]
+                }
+              />
+            </div>
+          </ContainerSlug>
+          <Container>
+            <article>
+              <footer>
+                {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />}
+              </footer>
+              <SectionSeparator />
+              {morePosts?.length > 0 && (
+                <MoreStories
+                  isIndex={false}
+                  posts={morePosts}
+                  isCommunity={false}
+                />
+              )}
+            </article>
+          </Container>
+        </>
+      )}
     </Layout>
   );
 }
@@ -223,7 +228,10 @@ export const getStaticProps: GetStaticProps = async ({
       };
     }
 
-    const moreStories = await getMoreStoriesForSlugs(data.post?.tags, data.post?.slug);
+    const moreStories = await getMoreStoriesForSlugs(
+      data.post?.tags,
+      data.post?.slug
+    );
     const authorDetails = await Promise.all([
       getReviewAuthorDetails("neha"),
       getReviewAuthorDetails("Jain"),
@@ -260,8 +268,7 @@ export const getStaticProps: GetStaticProps = async ({
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsForTechnology(false);
   const technologyPosts =
-    allPosts?.edges
-      ?.map(({ node }) => `/technology/${node?.slug}`) || [];
+    allPosts?.edges?.map(({ node }) => `/technology/${node?.slug}`) || [];
   return {
     paths: technologyPosts || [],
     fallback: true,
