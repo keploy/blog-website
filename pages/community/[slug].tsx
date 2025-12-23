@@ -114,7 +114,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
       // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
-        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>(.*?)<\/p>/
+        /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i
       );
 
       // Apply table responsive wrapper
