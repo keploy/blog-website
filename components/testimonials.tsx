@@ -57,7 +57,7 @@ const TestimonialCard = ({
         </div>
 
         {/* Testimonial Content */}
-        <blockquote className="relative text-gray-700 text-base leading-relaxed mb-6 line-clamp-4 font-medium">
+        <blockquote className="relative text-gray-700 text-base leading-relaxed mb-6 line-clamp-5 font-medium min-h-[120px]">
           "{content}"
         </blockquote>
 
@@ -73,7 +73,7 @@ const TestimonialCard = ({
                 role="img"
                 aria-label={`${name}'s profile picture`}
               >
-                <span className="text-white font-bold text-lg" aria-hidden="true">{getInitials(name)}</span>
+                <span className="text-white font-bold text-lg">{getInitials(name)}</span>
               </div>
             ) : (
               <img
@@ -119,7 +119,8 @@ const TwitterTestimonials = () => {
       {/* Section Header */}
       <div className="relative max-w-7xl mx-auto mb-14 text-center px-4 md:px-8 lg:px-16">
         <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold text-primary-300 bg-orange-50 rounded-full border border-orange-100">
-          <span aria-hidden="true">💬</span> Testimonials
+          <span aria-hidden="true" className="mr-1">💬</span>
+          <span>Testimonials</span>
         </span>
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight heading1 text-gray-900">
           What our{" "}
@@ -143,7 +144,7 @@ const TwitterTestimonials = () => {
         {/* Marquee Track */}
         <div className="flex gap-6 py-4 animate-marquee">
           {duplicatedTweets.map((tweet, index) => (
-            <TestimonialCard key={`${tweet.id}-${index}`} {...tweet} />
+            <TestimonialCard key={index} {...tweet} />
           ))}
         </div>
       </div>
