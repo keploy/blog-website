@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
-const firstRow = Tweets.slice(0, Tweets.length / 2);
-const secondRow = Tweets.slice(Tweets.length / 2);
 
-const ReviewCard = ({
+// Generate initials from name (e.g., "Jay Vasant" -> "JV")
+const getInitials = (name: string): string => {
+  return name
+    .split(" ")
+    .map((word) => word.charAt(0))
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+};
+
+const TestimonialCard = ({
   avatar,
   name,
   id,
@@ -19,52 +26,151 @@ const ReviewCard = ({
   content: string;
 }) => {
   const { basePath } = useRouter();
+  const [imgError, setImgError] = useState(false);
   const isExternal = typeof avatar === "string" && /^https?:\/\//i.test(avatar);
-  const proxiedAvatar = isExternal ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}` : avatar;
+  const proxiedAvatar = isExternal
+    ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
+    : avatar;
+
   return (
-    <a href={post} target="_blank" className="lg:mx-2">
-      <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
-        <div className="flex flex-row items-center gap-2">
-          <img
-            className="rounded-full"
-            width="32"
-            height="32"
-            alt=""
-            src={proxiedAvatar}
-          />
-          <div className="flex flex-col">
-            <figcaption className="text-sm font-bold">{name}</figcaption>
-            <p className="text-xs font-medium ">{id}</p>
+    <a
+      href={post}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block h-full group flex-shrink-0 w-[350px] md:w-[400px]"
+    >
+      <div className="relative h-full bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 ease-out border border-gray-100 overflow-hidden group-hover:scale-[1.02]">
+        {/* Decorative gradient blob */}
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200 via-orange-100 to-transparent rounded-full opacity-50 blur-2xl group-hover:opacity-80 transition-opacity duration-500" />
+
+        {/* Quote icon with gradient */}
+        <div className="relative mb-5">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-300 to-primary-100 flex items-center justify-center shadow-lg shadow-orange-200/50">
+            <svg
+              className="w-6 h-6 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+            </svg>
           </div>
         </div>
-        <blockquote className="mt-2 text-sm">{content}</blockquote>
-      </figure>
+
+        {/* Testimonial Content */}
+        <blockquote className="relative text-gray-700 text-base leading-relaxed mb-6 line-clamp-4 font-medium">
+          "{content}"
+        </blockquote>
+
+        {/* Author Info with gradient border */}
+        <div className="relative flex items-center gap-4 pt-5 mt-auto">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-200 to-transparent" />
+
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-300 to-primary-100 rounded-full blur-sm opacity-60" />
+            {imgError ? (
+              <div
+                className="relative w-14 h-14 rounded-full bg-gradient-to-br from-primary-300 to-primary-100 flex items-center justify-center border-2 border-white shadow-lg"
+                role="img"
+                aria-label={`${name}'s profile picture`}
+              >
+                <span className="text-white font-bold text-lg" aria-hidden="true">{getInitials(name)}</span>
+              </div>
+            ) : (
+              <img
+                className="relative w-14 h-14 rounded-full object-cover border-2 border-white shadow-lg"
+                width="56"
+                height="56"
+                alt={`${name}'s profile picture`}
+                src={proxiedAvatar}
+                onError={() => setImgError(true)}
+              />
+            )}
+          </div>
+
+          <div className="flex flex-col min-w-0">
+            <span className="font-bold text-gray-900 text-base truncate heading1">
+              {name}
+            </span>
+            <span className="text-sm text-primary-300 font-semibold truncate flex items-center gap-1">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              @{id}
+            </span>
+          </div>
+        </div>
+      </div>
     </a>
   );
 };
 
 const TwitterTestimonials = () => {
+  // Double the tweets array for seamless infinite scroll
+  const duplicatedTweets = [...Tweets, ...Tweets];
+
   return (
-    <div className="">
-          <h3 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
-          What our community thinks
-        </h3>
-      <div className="relative flex mb-8  h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg border  ">
-        
-        <Marquee pauseOnHover className="[--duration:20s]">
-          {firstRow.map((tweet) => (
-            <ReviewCard key={tweet.id} {...tweet} />
-          ))}
-        </Marquee>
-        <Marquee reverse pauseOnHover className="[--duration:20s]">
-          {secondRow.map((tweet) => (
-            <ReviewCard key={tweet.id} {...tweet} />
-          ))}
-        </Marquee>
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-neutral-100 dark:from-background"></div>
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-neutral-100 dark:from-background"></div>
+    <section className="relative py-20 overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-100 rounded-full blur-3xl opacity-30" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-orange-50 rounded-full blur-3xl opacity-40" />
       </div>
-    </div>
+
+      {/* Section Header */}
+      <div className="relative max-w-7xl mx-auto mb-14 text-center px-4 md:px-8 lg:px-16">
+        <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold text-primary-300 bg-orange-50 rounded-full border border-orange-100">
+          <span aria-hidden="true">💬</span> Testimonials
+        </span>
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight heading1 text-gray-900">
+          What our{" "}
+          <span className="relative">
+            <span className="relative z-10">community</span>
+            <span className="absolute bottom-2 left-0 right-0 h-4 bg-gradient-to-r from-orange-200 to-orange-100 -z-0 rounded" />
+          </span>
+          {" "}thinks
+        </h2>
+        <p className="mt-5 text-gray-500 text-lg md:text-xl max-w-2xl mx-auto">
+          Join thousands of developers who trust Keploy for their testing needs
+        </p>
+      </div>
+
+      {/* Infinite Marquee Container */}
+      <div className="relative">
+        {/* Gradient overlays for smooth fade effect */}
+        <div className="absolute left-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+        {/* Marquee Track */}
+        <div className="flex gap-6 py-4 animate-marquee">
+          {duplicatedTweets.map((tweet, index) => (
+            <TestimonialCard key={`${tweet.id}-${index}`} {...tweet} />
+          ))}
+        </div>
+      </div>
+
+      {/* CSS for infinite scroll animation */}
+      <style jsx>{`
+        @keyframes marquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        .animate-marquee {
+          animation: marquee 25s linear infinite;
+        }
+        .animate-marquee:hover {
+          animation-play-state: paused;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .animate-marquee {
+            animation: none;
+          }
+        }
+      `}</style>
+    </section>
   );
 };
 
