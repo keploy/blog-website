@@ -23,9 +23,6 @@ const getInitials = (name: string): string => {
   }
   // Split on any sequence of whitespace to avoid extra map/filter passes.
   const words = trimmed.split(/\s+/);
-  if (words.length === 0) {
-    return "";
-  }
   // For single-word names, take the first two alphabetic characters.
   if (words.length === 1) {
     const lettersOnly = words[0].replace(/[^A-Za-z]/g, "");
@@ -80,6 +77,7 @@ const TestimonialCard = ({
               className="w-6 h-6 text-white"
               fill="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
             </svg>
@@ -114,7 +112,13 @@ const TestimonialCard = ({
                 height="56"
                 alt={`Profile picture for ${name}`}
                 src={proxiedAvatar}
-                onError={() => setImgError(true)}
+                onError={(event) => {
+                  console.error("Failed to load profile image", {
+                    src: (event.currentTarget as HTMLImageElement).src,
+                    name,
+                  });
+                  setImgError(true);
+                }}
               />
             )}
           </div>
@@ -124,7 +128,7 @@ const TestimonialCard = ({
               {name}
             </span>
             <span className="text-sm text-primary-300 font-semibold truncate flex items-center gap-1">
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
               </svg>
               @{id}
