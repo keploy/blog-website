@@ -3,6 +3,18 @@ import { useRouter } from "next/router";
 import Tweets from "../services/Tweets";
 
 /**
+ * Number of times to duplicate the tweets array for seamless infinite scroll.
+ * IMPORTANT: The animation transform must match this value (calc(-100% / DUPLICATION_COUNT)).
+ */
+const DUPLICATION_COUNT = 3;
+
+/**
+ * Cache for tracking which avatar URLs have failed to load.
+ * This ensures consistent fallback rendering across all instances of the same testimonial.
+ */
+const failedAvatarCache = new Set<string>();
+
+/**
  * Generate initials from a person's name.
  *
  * Behavior:
@@ -72,7 +84,8 @@ const TestimonialCard = ({
   content: string;
 }) => {
   const { basePath } = useRouter();
-  const [imgError, setImgError] = useState(false);
+  // Check if this avatar has already failed in another instance
+  const [imgError, setImgError] = useState(() => failedAvatarCache.has(avatar));
   const isExternal = typeof avatar === "string" && /^https?:\/\//i.test(avatar);
   const proxiedAvatar = isExternal
     ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
@@ -83,7 +96,7 @@ const TestimonialCard = ({
       href={post}
       target="_blank"
       rel="noopener noreferrer"
-      className="block group flex-shrink-0 w-[350px] md:w-[400px] min-h-[320px]"
+      className="block group flex-shrink-0 w-[350px] md:w-[400px]"
     >
       <span className="sr-only">(opens in new tab)</span>
       <div className="relative h-full bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 ease-out border border-gray-100 overflow-hidden group-hover:scale-[1.02] flex flex-col">
@@ -139,6 +152,8 @@ const TestimonialCard = ({
                       name,
                     });
                   }
+                  // Add to shared cache so other instances show fallback too
+                  failedAvatarCache.add(avatar);
                   setImgError(true);
                 }}
               />
@@ -172,9 +187,9 @@ const TestimonialCard = ({
  * @returns A JSX element representing the testimonials section.
  */
 const TwitterTestimonials = () => {
-  // Duplicate the tweets array multiple times for seamless infinite scroll.
-  // Using 3 copies ensures smooth looping; the animation translates by -33.333%.
-  const duplicatedTweets = [...Tweets, ...Tweets, ...Tweets];
+  // Duplicate the tweets array for seamless infinite scroll.
+  // The animation translates by calc(-100% / DUPLICATION_COUNT) to match.
+  const duplicatedTweets = Array(DUPLICATION_COUNT).fill(Tweets).flat();
 
   return (
     <section className="relative py-20 overflow-hidden">
@@ -190,7 +205,7 @@ const TwitterTestimonials = () => {
           <span aria-hidden="true" className="mr-1">💬</span>
           <span>Testimonials</span>
         </span>
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight heading1 text-gray-900">
+        <h2 id="testimonials-heading" className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight heading1 text-gray-900">
           What our{" "}
           <span className="relative">
             <span className="relative z-10">community</span>
@@ -209,12 +224,10 @@ const TwitterTestimonials = () => {
         <div className="absolute left-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-        {/* Marquee Track */}
         <div
           className="flex gap-6 py-4 testimonials-marquee-animation"
           role="region"
-          aria-label="Scrolling testimonials from our community"
-          tabIndex={0}
+          aria-labelledby="testimonials-heading"
         >
           {duplicatedTweets.map((tweet, index) => (
             <TestimonialCard key={`${tweet.id}-${index}`} {...tweet} />
@@ -229,8 +242,8 @@ const TwitterTestimonials = () => {
             transform: translateX(0);
           }
           100% {
-            /* Move left by one full set of tweets. 3 must match the number of duplicated tweet sets. */
-            transform: translateX(calc(-100% / 3));
+            /* Move left by one full set of tweets. Must match DUPLICATION_COUNT constant. */
+            transform: translateX(calc(-100% / ${DUPLICATION_COUNT}));
           }
         }
         .testimonials-marquee-animation {
