@@ -233,7 +233,7 @@ const TwitterTestimonials = () => {
   // The animation translates by calc(-100% / DUPLICATION_COUNT) to match.
   const duplicatedTweets = useMemo(
     () => Array(DUPLICATION_COUNT).fill(Tweets).flat(),
-    []
+    [Tweets]
   );
 
   return (
