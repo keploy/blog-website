@@ -13,7 +13,7 @@ const { protocol, hostname, port, pathname } = new URL(
 module.exports = {
   basePath: '/blog',
   assetPrefix: "/blog",
-  
+
   // --- ADD THIS BLOCK ---
   // This exposes the server-side variable to the browser
   env: {
@@ -22,18 +22,25 @@ module.exports = {
   // ----------------------
 
   images: {
-    domains: ['secure.gravatar.com', 'wp.keploy.io', 'keploy.io', 'pbs.twimg.com'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'keploy.io',
-        port,
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'wp.keploy.io',
-        port,
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'secure.gravatar.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pbs.twimg.com',
         pathname: '/**',
       },
     ],
