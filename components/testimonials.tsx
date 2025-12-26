@@ -2,19 +2,27 @@ import React, { useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import Tweets from "../services/Tweets";
 
-// Generate initials from name (e.g., "Jay Vasant" -> "JV")
+/**
+ * Generate initials from a person's name.
+ *
+ * Behavior:
+ * - Empty, null, or whitespace-only names return an empty string.
+ * - Single-word names: take the first two alphabetic characters (letters only),
+ *   uppercased. Non-alphabetic characters (digits, punctuation, symbols) are ignored.
+ *   Example: "A1!" -> "A", "J@y" -> "JY".
+ * - Multi-word names: take the first alphabetic character of up to the first two
+ *   words that contain at least one letter, uppercased.
+ *   Example: "Jay Vasant" -> "JV", "Mary-Jane O'Neil" -> "MO".
+ * - Words that contain no alphabetic characters (e.g., "123") do not contribute
+ *   to the initials.
+ */
 const getInitials = (name: string): string => {
-  if (!name) {
-    return "";
-  }
-  const trimmed = name.trim();
+  const trimmed = name ? name.trim() : "";
   if (!trimmed) {
     return "";
   }
-  const words = trimmed
-    .split(" ")
-    .map((word) => word.trim())
-    .filter((word) => word.length > 0);
+  // Split on any sequence of whitespace to avoid extra map/filter passes.
+  const words = trimmed.split(/\s+/);
   if (words.length === 0) {
     return "";
   }
@@ -24,15 +32,14 @@ const getInitials = (name: string): string => {
     return lettersOnly.slice(0, 2).toUpperCase();
   }
   // For multi-word names, take the first alphabetic character of up to two words.
-  const initials = words
-    .map((word) => {
-      const match = word.match(/[A-Za-z]/);
-      return match ? match[0].toUpperCase() : "";
-    })
-    .filter((ch) => ch !== "")
-    .slice(0, 2)
-    .join("");
-  return initials;
+  const initialsChars: string[] = [];
+  for (let i = 0; i < words.length && initialsChars.length < 2; i++) {
+    const match = words[i].match(/[A-Za-z]/);
+    if (match) {
+      initialsChars.push(match[0].toUpperCase());
+    }
+  }
+  return initialsChars.join("");
 };
 
 const TestimonialCard = ({
@@ -171,7 +178,7 @@ const TwitterTestimonials = () => {
 
         {/* Marquee Track */}
         <div
-          className="flex gap-6 py-4 animate-testimonial-marquee"
+          className="flex gap-6 py-4 testimonials-marquee-animation"
           role="region"
           aria-label="Scrolling testimonials from our community"
         >
@@ -183,7 +190,7 @@ const TwitterTestimonials = () => {
 
       {/* CSS for infinite scroll animation */}
       <style jsx>{`
-        @keyframes testimonial-marquee {
+        @keyframes testimonials-marquee {
           0% {
             transform: translateX(0);
           }
@@ -192,16 +199,17 @@ const TwitterTestimonials = () => {
             transform: translateX(calc(-100% / 3));
           }
         }
-        .animate-testimonial-marquee {
-          animation: testimonial-marquee 18s linear infinite;
+        .testimonials-marquee-animation {
+          --marquee-duration: 18s;
+          animation: testimonials-marquee var(--marquee-duration) linear infinite;
         }
-        .animate-testimonial-marquee:hover,
-        .animate-testimonial-marquee:focus,
-        .animate-testimonial-marquee:focus-within {
+        .testimonials-marquee-animation:hover,
+        .testimonials-marquee-animation:focus,
+        .testimonials-marquee-animation:focus-within {
           animation-play-state: paused;
         }
         @media (prefers-reduced-motion: reduce) {
-          .animate-testimonial-marquee {
+          .testimonials-marquee-animation {
             animation: none;
           }
         }
