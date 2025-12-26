@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Tweets from "../services/Tweets";
 
@@ -39,6 +39,25 @@ const getInitials = (name: string): string => {
   return initialsChars.join("");
 };
 
+/**
+ * Render a single testimonial card linking to the original post.
+ *
+ * The card displays the author's avatar (optionally proxied for external URLs),
+ * their name, and the testimonial content, and wraps everything in an anchor
+ * that opens the original post in a new tab.
+ *
+ * @param props - Props for the testimonial card.
+ * @param props.avatar - URL of the avatar image. External URLs are proxied through
+ *   the `/api/proxy-image` endpoint; if the image fails to load, the component
+ *   falls back to rendering initials derived from the author's name.
+ * @param props.name - Name of the person giving the testimonial, used for
+ *   display and to generate initials when the avatar image cannot be loaded.
+ * @param props.id - Twitter/X handle of the person giving the testimonial.
+ * @param props.content - The testimonial text content shown inside the card.
+ * @param props.post - URL of the original post or tweet; the entire card links
+ *   to this URL and opens it in a new browser tab.
+ * @returns A JSX element representing the testimonial card.
+ */
 const TestimonialCard = ({
   avatar,
   name,
@@ -66,6 +85,7 @@ const TestimonialCard = ({
       rel="noopener noreferrer"
       className="block group flex-shrink-0 w-[350px] md:w-[400px] min-h-[320px]"
     >
+      <span className="sr-only">(opens in new tab)</span>
       <div className="relative h-full bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 ease-out border border-gray-100 overflow-hidden group-hover:scale-[1.02] flex flex-col">
         {/* Decorative gradient blob */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200 via-orange-100 to-transparent rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-500" />
@@ -113,10 +133,12 @@ const TestimonialCard = ({
                 alt={`Profile picture for ${name}`}
                 src={proxiedAvatar}
                 onError={(event) => {
-                  console.error("Failed to load profile image", {
-                    src: (event.currentTarget as HTMLImageElement).src,
-                    name,
-                  });
+                  if (process.env.NODE_ENV !== "production") {
+                    console.error("Failed to load profile image", {
+                      src: (event.currentTarget as HTMLImageElement).src,
+                      name,
+                    });
+                  }
                   setImgError(true);
                 }}
               />
@@ -140,12 +162,19 @@ const TestimonialCard = ({
   );
 };
 
+/**
+ * Display a section with an infinite scrolling marquee of testimonials.
+ *
+ * This component renders a header and an auto-scrolling horizontal carousel
+ * of testimonial cards. The animation pauses on hover or keyboard focus
+ * and respects the user's reduced-motion preference.
+ *
+ * @returns A JSX element representing the testimonials section.
+ */
 const TwitterTestimonials = () => {
-  // Duplicate the tweets array multiple times for seamless infinite scroll - memoized to avoid recreation on each render
-  const duplicatedTweets = useMemo(
-    () => [...Tweets, ...Tweets, ...Tweets],
-    []
-  );
+  // Duplicate the tweets array multiple times for seamless infinite scroll.
+  // Using 3 copies ensures smooth looping; the animation translates by -33.333%.
+  const duplicatedTweets = [...Tweets, ...Tweets, ...Tweets];
 
   return (
     <section className="relative py-20 overflow-hidden">
@@ -185,6 +214,7 @@ const TwitterTestimonials = () => {
           className="flex gap-6 py-4 testimonials-marquee-animation"
           role="region"
           aria-label="Scrolling testimonials from our community"
+          tabIndex={0}
         >
           {duplicatedTweets.map((tweet, index) => (
             <TestimonialCard key={`${tweet.id}-${index}`} {...tweet} />
