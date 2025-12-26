@@ -9,10 +9,38 @@ import Tweets from "../services/Tweets";
 const DUPLICATION_COUNT = 3;
 
 /**
- * Cache for tracking which avatar URLs have failed to load.
- * This ensures consistent fallback rendering across all instances of the same testimonial.
+ * Maximum number of entries to keep in the failed avatar cache.
+ * This prevents unbounded growth across long-lived sessions.
  */
-const failedAvatarCache = new Set<string>();
+const MAX_FAILED_AVATAR_CACHE_SIZE = 500;
+
+/**
+ * A Set implementation with a maximum size that evicts the oldest entry
+ * when the limit is reached. This preserves the Set API while bounding memory.
+ */
+class LimitedSet<T> extends Set<T> {
+  private readonly maxSize: number;
+  constructor(maxSize: number) {
+    super();
+    this.maxSize = maxSize;
+  }
+  add(value: T): this {
+    if (this.size >= this.maxSize) {
+      const first = this.values().next().value as T | undefined;
+      if (first !== undefined) {
+        this.delete(first);
+      }
+    }
+    return super.add(value);
+  }
+}
+
+/**
+ * Cache for tracking which avatar URLs have failed to load.
+ * This ensures consistent fallback rendering across all instances of the same testimonial,
+ * while bounding memory usage via a maximum size with eviction.
+ */
+const failedAvatarCache = new LimitedSet<string>(MAX_FAILED_AVATAR_CACHE_SIZE);
 
 /**
  * Generate initials from a person's name.
@@ -35,20 +63,31 @@ const getInitials = (name: string): string => {
   }
   // Split on any sequence of whitespace to avoid extra map/filter passes.
   const words = trimmed.split(/\s+/);
+
+  let initials = "";
   // For single-word names, take the first two alphabetic characters.
   if (words.length === 1) {
     const lettersOnly = words[0].replace(/[^A-Za-z]/g, "");
-    return lettersOnly.slice(0, 2).toUpperCase();
-  }
-  // For multi-word names, take the first alphabetic character of up to two words.
-  const initialsChars: string[] = [];
-  for (let i = 0; i < words.length && initialsChars.length < 2; i++) {
-    const match = words[i].match(/[A-Za-z]/);
-    if (match) {
-      initialsChars.push(match[0].toUpperCase());
+    initials = lettersOnly.slice(0, 2).toUpperCase();
+  } else {
+    // For multi-word names, take the first alphabetic character of up to two words.
+    const initialsChars: string[] = [];
+    for (let i = 0; i < words.length && initialsChars.length < 2; i++) {
+      const match = words[i].match(/[A-Za-z]/);
+      if (match) {
+        initialsChars.push(match[0].toUpperCase());
+      }
     }
+    initials = initialsChars.join("");
   }
-  return initialsChars.join("");
+
+  if (initials) {
+    return initials;
+  }
+  // Fallback: if no alphabetic characters were found, use the first
+  // non-whitespace character (uppercased), or "?" as a last resort.
+  const firstCharMatch = trimmed.match(/\S/);
+  return firstCharMatch ? firstCharMatch[0].toUpperCase() : "?";
 };
 
 /**
@@ -96,12 +135,12 @@ const TestimonialCard = ({
       href={post}
       target="_blank"
       rel="noopener noreferrer"
-      className="block group flex-shrink-0 w-[350px] md:w-[400px]"
+      className="block group flex-shrink-0 w-[90vw] max-w-[350px] md:max-w-[400px]"
+      aria-label={`Read testimonial from ${name} on Twitter (opens in new tab)`}
     >
-      <span className="sr-only">(opens in new tab)</span>
       <div className="relative h-full bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 ease-out border border-gray-100 overflow-hidden group-hover:scale-[1.02] flex flex-col">
         {/* Decorative gradient blob */}
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200 via-orange-100 to-transparent rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-500" />
+        <div className="absolute -top-5 -right-5 md:-top-10 md:-right-10 w-32 h-32 bg-gradient-to-br from-orange-200 via-orange-100 to-transparent rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-500" />
 
         {/* Quote icon with gradient */}
         <div className="relative mb-5">
@@ -146,12 +185,11 @@ const TestimonialCard = ({
                 alt={`Profile picture for ${name}`}
                 src={proxiedAvatar}
                 onError={(event) => {
-                  if (process.env.NODE_ENV !== "production") {
-                    console.error("Failed to load profile image", {
-                      src: (event.currentTarget as HTMLImageElement).src,
-                      name,
-                    });
-                  }
+                  // Log error for debugging in all environments
+                  console.error("Failed to load profile image", {
+                    src: (event.currentTarget as HTMLImageElement).src,
+                    name,
+                  });
                   // Add to shared cache so other instances show fallback too
                   failedAvatarCache.add(avatar);
                   setImgError(true);
@@ -242,12 +280,18 @@ const TwitterTestimonials = () => {
             transform: translateX(0);
           }
           100% {
-            /* Move left by one full set of tweets. Must match DUPLICATION_COUNT constant. */
+            /*
+             * Scroll through exactly one copy of the tweets before looping.
+             * This creates seamless infinite scrolling because the duplicated
+             * content ensures there's always visible content during the loop reset.
+             * The divisor must match DUPLICATION_COUNT.
+             */
             transform: translateX(calc(-100% / ${DUPLICATION_COUNT}));
           }
         }
         .testimonials-marquee-animation {
-          --marquee-duration: 18s;
+          /* Dynamic duration based on content: ~2s per testimonial card */
+          --marquee-duration: ${duplicatedTweets.length * 2}s;
           animation: testimonials-marquee var(--marquee-duration) linear infinite;
         }
         .testimonials-marquee-animation:hover,
