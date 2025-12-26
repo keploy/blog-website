@@ -81,8 +81,7 @@ const TestimonialCard = ({
 
         {/* Testimonial Content */}
         <blockquote
-          className="relative text-gray-700 text-base leading-relaxed line-clamp-4 font-medium flex-grow"
-          title={content}
+          className="relative text-gray-700 text-base leading-relaxed font-medium flex-grow"
         >
           "{content}"
         </blockquote>
@@ -97,7 +96,7 @@ const TestimonialCard = ({
               <div
                 className="relative w-14 h-14 rounded-full bg-gradient-to-br from-primary-300 to-primary-100 flex items-center justify-center border-2 border-white shadow-lg"
                 role="img"
-                aria-label={`${name}'s profile picture`}
+                aria-label={`Profile picture for ${name}`}
               >
                 <span className="text-white font-bold text-lg">{getInitials(name)}</span>
               </div>
@@ -106,7 +105,7 @@ const TestimonialCard = ({
                 className="relative w-14 h-14 rounded-full object-cover border-2 border-white shadow-lg"
                 width="56"
                 height="56"
-                alt={`${name}'s profile picture`}
+                alt={`Profile picture for ${name}`}
                 src={proxiedAvatar}
                 onError={() => setImgError(true)}
               />
@@ -177,7 +176,7 @@ const TwitterTestimonials = () => {
           aria-label="Scrolling testimonials from our community"
         >
           {duplicatedTweets.map((tweet, index) => (
-            <TestimonialCard key={index} {...tweet} />
+            <TestimonialCard key={`${tweet.id}-${index}`} {...tweet} />
           ))}
         </div>
       </div>
@@ -189,7 +188,8 @@ const TwitterTestimonials = () => {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-33.333%);
+            /* Move left by one full set of tweets. 3 must match the number of duplicated tweet sets. */
+            transform: translateX(calc(-100% / 3));
           }
         }
         .animate-testimonial-marquee {
