@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import Tweets from "../services/Tweets";
 
@@ -229,9 +229,12 @@ const TestimonialCard = ({
  * @returns A JSX element representing the testimonials section.
  */
 const TwitterTestimonials = () => {
-  // Duplicate the tweets array for seamless infinite scroll.
+  // Memoize the duplicated tweets array to prevent recreation on each render.
   // The animation translates by calc(-100% / DUPLICATION_COUNT) to match.
-  const duplicatedTweets = Array(DUPLICATION_COUNT).fill(Tweets).flat();
+  const duplicatedTweets = useMemo(
+    () => Array(DUPLICATION_COUNT).fill(Tweets).flat(),
+    []
+  );
 
   return (
     <section className="relative py-20 overflow-hidden">
