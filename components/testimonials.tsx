@@ -4,12 +4,35 @@ import Tweets from "../services/Tweets";
 
 // Generate initials from name (e.g., "Jay Vasant" -> "JV")
 const getInitials = (name: string): string => {
-  return name
+  if (!name) {
+    return "";
+  }
+  const trimmed = name.trim();
+  if (!trimmed) {
+    return "";
+  }
+  const words = trimmed
     .split(" ")
-    .map((word) => word.charAt(0))
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+    .map((word) => word.trim())
+    .filter((word) => word.length > 0);
+  if (words.length === 0) {
+    return "";
+  }
+  // For single-word names, take the first two alphabetic characters.
+  if (words.length === 1) {
+    const lettersOnly = words[0].replace(/[^A-Za-z]/g, "");
+    return lettersOnly.slice(0, 2).toUpperCase();
+  }
+  // For multi-word names, take the first alphabetic character of up to two words.
+  const initials = words
+    .map((word) => {
+      const match = word.match(/[A-Za-z]/);
+      return match ? match[0].toUpperCase() : "";
+    })
+    .filter((ch) => ch !== "")
+    .slice(0, 2)
+    .join("");
+  return initials;
 };
 
 const TestimonialCard = ({
@@ -37,11 +60,11 @@ const TestimonialCard = ({
       href={post}
       target="_blank"
       rel="noopener noreferrer"
-      className="block group flex-shrink-0 w-[350px] md:w-[400px] h-[320px]"
+      className="block group flex-shrink-0 w-[350px] md:w-[400px] min-h-[320px]"
     >
       <div className="relative h-full bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 ease-out border border-gray-100 overflow-hidden group-hover:scale-[1.02] flex flex-col">
         {/* Decorative gradient blob */}
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200 via-orange-100 to-transparent rounded-full opacity-50 blur-2xl group-hover:opacity-80 transition-opacity duration-500" />
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200 via-orange-100 to-transparent rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-500" />
 
         {/* Quote icon with gradient */}
         <div className="relative mb-5">
@@ -57,7 +80,10 @@ const TestimonialCard = ({
         </div>
 
         {/* Testimonial Content */}
-        <blockquote className="relative text-gray-700 text-base leading-relaxed line-clamp-4 font-medium flex-grow">
+        <blockquote
+          className="relative text-gray-700 text-base leading-relaxed line-clamp-4 font-medium flex-grow"
+          title={content}
+        >
           "{content}"
         </blockquote>
 
@@ -105,8 +131,11 @@ const TestimonialCard = ({
 };
 
 const TwitterTestimonials = () => {
-  // Double the tweets array for seamless infinite scroll - memoized to avoid recreation on each render
-  const duplicatedTweets = useMemo(() => [...Tweets, ...Tweets], []);
+  // Duplicate the tweets array multiple times for seamless infinite scroll - memoized to avoid recreation on each render
+  const duplicatedTweets = useMemo(
+    () => [...Tweets, ...Tweets, ...Tweets],
+    []
+  );
 
   return (
     <section className="relative py-20 overflow-hidden">
@@ -143,34 +172,36 @@ const TwitterTestimonials = () => {
 
         {/* Marquee Track */}
         <div
-          className="flex gap-6 py-4 animate-marquee"
+          className="flex gap-6 py-4 animate-testimonial-marquee"
           role="region"
           aria-label="Scrolling testimonials from our community"
         >
           {duplicatedTweets.map((tweet, index) => (
-            <TestimonialCard key={`${tweet.id}-${index}`} {...tweet} />
+            <TestimonialCard key={index} {...tweet} />
           ))}
         </div>
       </div>
 
       {/* CSS for infinite scroll animation */}
       <style jsx>{`
-        @keyframes marquee {
+        @keyframes testimonial-marquee {
           0% {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(-33.333%);
           }
         }
-        .animate-marquee {
-          animation: marquee 25s linear infinite;
+        .animate-testimonial-marquee {
+          animation: testimonial-marquee 18s linear infinite;
         }
-        .animate-marquee:hover {
+        .animate-testimonial-marquee:hover,
+        .animate-testimonial-marquee:focus,
+        .animate-testimonial-marquee:focus-within {
           animation-play-state: paused;
         }
         @media (prefers-reduced-motion: reduce) {
-          .animate-marquee {
+          .animate-testimonial-marquee {
             animation: none;
           }
         }
