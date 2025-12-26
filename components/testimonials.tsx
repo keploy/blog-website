@@ -140,7 +140,7 @@ const TestimonialCard = ({
       target="_blank"
       rel="noopener noreferrer"
       className="block group flex-shrink-0 w-[90vw] max-w-[350px] md:max-w-[400px]"
-      aria-label={`Read testimonial from ${name} on Twitter (opens in new tab)`}
+      aria-label={`Read testimonial from ${name} on X (formerly Twitter) (opens in new tab)`}
     >
       <div className="relative h-full bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 ease-out border border-gray-100 overflow-hidden group-hover:scale-[1.02] flex flex-col">
         {/* Decorative gradient blob */}
@@ -279,7 +279,7 @@ const TwitterTestimonials = () => {
           aria-labelledby="testimonials-heading"
         >
           {duplicatedTweets.map((tweet, index) => (
-            <TestimonialCard key={`${tweet.id}-${index}`} {...tweet} />
+            <TestimonialCard key={index} {...tweet} />
           ))}
         </div>
       </div>
@@ -301,7 +301,11 @@ const TwitterTestimonials = () => {
           }
         }
         .testimonials-marquee-animation {
-          /* Dynamic duration with min/max bounds for consistent UX: 30s min, 90s max */
+          /*
+           * Dynamic duration with min/max bounds for consistent UX.
+           * Multiplier of 2 gives ~2 seconds per card, providing readable scroll speed.
+           * Clamped to 30s min (fast enough to be engaging) and 90s max (not too slow).
+           */
           --marquee-duration: ${Math.max(30, Math.min(duplicatedTweets.length * 2, 90))}s;
           animation: testimonials-marquee var(--marquee-duration) linear infinite;
         }
