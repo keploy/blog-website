@@ -17,6 +17,10 @@ const MAX_FAILED_AVATAR_CACHE_SIZE = 500;
 /**
  * A Set implementation with a maximum size that evicts the oldest entry
  * when the limit is reached. This preserves the Set API while bounding memory.
+ * 
+ * Design Note: Uses FIFO (first-in, first-out) eviction strategy. For failed
+ * avatar URLs, this is acceptable since URLs that fail once typically continue
+ * failing, so preserving recently failed entries is sufficient.
  */
 class LimitedSet<T> extends Set<T> {
   private readonly maxSize: number;
@@ -240,7 +244,14 @@ const TwitterTestimonials = () => {
       {/* Section Header */}
       <div className="relative max-w-7xl mx-auto mb-14 text-center px-4 md:px-8 lg:px-16">
         <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold text-primary-300 bg-orange-50 rounded-full border border-orange-100">
-          <span aria-hidden="true" className="mr-1">💬</span>
+          <svg
+            aria-hidden="true"
+            className="mr-1 inline-block h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M5 4h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-5.586L9 20.414A1 1 0 0 1 7.586 19L9 17.586H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+          </svg>
           <span>Testimonials</span>
         </span>
         <h2 id="testimonials-heading" className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight heading1 text-gray-900">
@@ -290,8 +301,8 @@ const TwitterTestimonials = () => {
           }
         }
         .testimonials-marquee-animation {
-          /* Dynamic duration based on content: ~2s per testimonial card */
-          --marquee-duration: ${duplicatedTweets.length * 2}s;
+          /* Dynamic duration with min/max bounds for consistent UX: 30s min, 90s max */
+          --marquee-duration: ${Math.max(30, Math.min(duplicatedTweets.length * 2, 90))}s;
           animation: testimonials-marquee var(--marquee-duration) linear infinite;
         }
         .testimonials-marquee-animation:hover,
