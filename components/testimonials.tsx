@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import Tweets from "../services/Tweets";
 
@@ -37,9 +37,9 @@ const TestimonialCard = ({
       href={post}
       target="_blank"
       rel="noopener noreferrer"
-      className="block h-full group flex-shrink-0 w-[350px] md:w-[400px]"
+      className="block group flex-shrink-0 w-[350px] md:w-[400px] h-[320px]"
     >
-      <div className="relative h-full bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 ease-out border border-gray-100 overflow-hidden group-hover:scale-[1.02]">
+      <div className="relative h-full bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 ease-out border border-gray-100 overflow-hidden group-hover:scale-[1.02] flex flex-col">
         {/* Decorative gradient blob */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200 via-orange-100 to-transparent rounded-full opacity-50 blur-2xl group-hover:opacity-80 transition-opacity duration-500" />
 
@@ -57,7 +57,7 @@ const TestimonialCard = ({
         </div>
 
         {/* Testimonial Content */}
-        <blockquote className="relative text-gray-700 text-base leading-relaxed mb-6 line-clamp-5 font-medium min-h-[120px]">
+        <blockquote className="relative text-gray-700 text-base leading-relaxed line-clamp-4 font-medium flex-grow">
           "{content}"
         </blockquote>
 
@@ -88,7 +88,7 @@ const TestimonialCard = ({
           </div>
 
           <div className="flex flex-col min-w-0">
-            <span className="font-bold text-gray-900 text-base truncate heading1">
+            <span className="font-bold text-gray-900 text-base truncate">
               {name}
             </span>
             <span className="text-sm text-primary-300 font-semibold truncate flex items-center gap-1">
@@ -105,8 +105,8 @@ const TestimonialCard = ({
 };
 
 const TwitterTestimonials = () => {
-  // Double the tweets array for seamless infinite scroll
-  const duplicatedTweets = [...Tweets, ...Tweets];
+  // Double the tweets array for seamless infinite scroll - memoized to avoid recreation on each render
+  const duplicatedTweets = useMemo(() => [...Tweets, ...Tweets], []);
 
   return (
     <section className="relative py-20 overflow-hidden">
@@ -142,9 +142,13 @@ const TwitterTestimonials = () => {
         <div className="absolute right-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
         {/* Marquee Track */}
-        <div className="flex gap-6 py-4 animate-marquee">
+        <div
+          className="flex gap-6 py-4 animate-marquee"
+          role="region"
+          aria-label="Scrolling testimonials from our community"
+        >
           {duplicatedTweets.map((tweet, index) => (
-            <TestimonialCard key={index} {...tweet} />
+            <TestimonialCard key={`${tweet.id}-${index}`} {...tweet} />
           ))}
         </div>
       </div>
