@@ -1,5 +1,5 @@
 // components/AdSlot.tsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 interface AdSlotProps {
   slotId: string;
@@ -21,26 +21,29 @@ declare global {
 
 export default function AdSlot({
   slotId,
-  className = '',
-  layout = '',
-  layoutKey = '',
-  format = 'auto',
+  className = "",
+  layout = "",
+  layoutKey = "",
+  format = "auto",
   fullWidthResponsive = true,
 }: AdSlotProps) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       try {
         // Initialize adsbygoogle if it doesn't exist
-        window.adsbygoogle = window.adsbygoogle || { push: () => {}, loaded: false };
-        
+        window.adsbygoogle = window.adsbygoogle || {
+          push: () => {},
+          loaded: false,
+        };
+
         // Only push if not already loaded
         if (!window.adsbygoogle.loaded) {
           window.adsbygoogle.push({});
         }
       } catch (error) {
-        console.error('AdSense error:', error);
+        console.error("AdSense error:", error);
       }
     }
 
@@ -56,7 +59,7 @@ export default function AdSlot({
 
       <ins
         className="adsbygoogle block"
-        style={{ display: 'block' }}
+        style={{ display: "block" }}
         data-ad-client="ca-pub-3485005084287002"
         data-ad-slot={slotId}
         data-ad-format={format}
