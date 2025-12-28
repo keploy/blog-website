@@ -1,7 +1,9 @@
 import Image from "next/image";
 import waitlistBannerImage from "../public/images/waitlistedBanner-1.png";
 import Link from "next/link";
-const waitlistBanner = () => {
+import React from "react";
+
+const WaitlistBanner: React.FC = () => {
   return (
     <div className="flex md:items-center flex-col rounded-xl">
         <Link
@@ -19,4 +21,5 @@ const waitlistBanner = () => {
     </div>
   );
 };
-export default waitlistBanner;
+
+export default WaitlistBanner;

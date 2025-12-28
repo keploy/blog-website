@@ -5,13 +5,19 @@ import React, { useEffect, useState } from "react";
 import { IoLogoLinkedin } from "react-icons/io"; // Import LinkedIn icon from react-icons/io
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
 
-const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
+interface AuthorDescriptionProps {
+  authorData: string;
+  AuthorName?: string | number;
+  isPost?: boolean;
+}
+
+const AuthorDescription: React.FC<AuthorDescriptionProps> = ({ authorData, AuthorName, isPost }) => {
   const { basePath } = useRouter();
-  const [avatarImgSrc, setAvatarImgSrc] = useState("");
-  const [authorName, setAuthorName] = useState("");
-  const [authorLinkedIn, setAuthorLinkedIn] = useState("");
-  const [authorDescription, setAuthorDescription] = useState("");
-  const [showMore, setShowMore] = useState(false);
+  const [avatarImgSrc, setAvatarImgSrc] = useState<string>("");
+  const [authorName, setAuthorName] = useState<string>("");
+  const [authorLinkedIn, setAuthorLinkedIn] = useState<string>("");
+  const [authorDescription, setAuthorDescription] = useState<string>("");
+  const [showMore, setShowMore] = useState<boolean>(false);
   const safeAuthorName = (AuthorName || "").toString();
   const AuthorNameNew = safeAuthorName
     ? safeAuthorName[0].toUpperCase() +
@@ -19,6 +25,8 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
     : "";
 
     useEffect(() => {
+      if (typeof window === "undefined") return;
+
       // Create a temporary div element to parse the HTML content
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = authorData;
@@ -34,66 +42,53 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
       );
     
       // Switch case for avatarImgElement
-      switch (Boolean(avatarImgElement)) {
-        case true:
-          setAvatarImgSrc(avatarImgElement.getAttribute("src"));
-          break;
-        default:
-          setAvatarImgSrc("n/a");
-          break;
+      if (avatarImgElement) {
+        setAvatarImgSrc(avatarImgElement.getAttribute("src") || "n/a");
+      } else {
+        setAvatarImgSrc("n/a");
       }
     
       // Switch case for authorNameElement
-      switch (Boolean(authorNameElement)) {
-        case true:
-          let NewName = authorNameElement.textContent;
-          NewName =
-            NewName.charAt(0).toUpperCase() + NewName.slice(1).toLowerCase();
-          setAuthorName(NewName);
-          break;
-        default:
-          // No action needed if authorNameElement is null
-          break;
+      if (authorNameElement) {
+        let NewName = authorNameElement.textContent || "";
+        NewName =
+          NewName.charAt(0).toUpperCase() + NewName.slice(1).toLowerCase();
+        setAuthorName(NewName);
       }
     
       // Switch case for authorDescriptionElement
-      switch (Boolean(authorDescriptionElement)) {
-        case true:
-          if (authorDescriptionElement.textContent) {
-            switch (authorDescriptionElement.textContent.trim() === "") {
-              case true:
-                setAuthorDescription("n/a");
-                break;
-              default:
-                setAuthorDescription(authorDescriptionElement.textContent.trim());
-                break;
-            }
-          }
-          break;
-        default:
+      if (authorDescriptionElement) {
+        const text = authorDescriptionElement.textContent || "";
+        if (text.trim() === "") {
           setAuthorDescription("n/a");
-          break;
+        } else {
+          setAuthorDescription(text.trim());
+        }
+      } else {
+        setAuthorDescription("n/a");
       }
     
       // Switch case for linkedinLink
-      switch (Boolean(linkedinLink)) {
-        case true:
-          setAuthorLinkedIn(linkedinLink.getAttribute("href"));
-          break;
-        default:
-          setAuthorLinkedIn("n/a");
-          break;
+      if (linkedinLink) {
+        setAuthorLinkedIn(linkedinLink.getAttribute("href") || "n/a");
+      } else {
+        setAuthorLinkedIn("n/a");
       }
     }, [authorData]);
     
     
-
   // Function to toggle show more
   const toggleShowMore = () => {
     setShowMore(!showMore);
   };
 
-  const FormatDescription = (description) => {
+  const FormatDescription = (description: string) => {
+    if (!description || description === "n/a") {
+      return {
+        newAuthorDescription: [],
+        length: 0,
+      };
+    }
     const des = description.split(". ");
     const len = des.length;
     return {
@@ -103,12 +98,13 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
   };
 
   const { newAuthorDescription, length } = FormatDescription(authorDescription);
+
   // Render the extracted information
   return (
     <>
     <div className="max-w-9xl mx-auto bg-slate-000 shadow-md rounded-lg overflow-hidden flex flex-col sm:flex-row md:flex-row lg:flex-row">
       <div className="w-3/5 self-center sm:w-1/4 p-8 flex justify-center items-center">
-        {avatarImgSrc !== "n/a" && (
+        {avatarImgSrc !== "n/a" && avatarImgSrc !== "" && (
           <Image
             src={/^https?:\/\//i.test(avatarImgSrc) ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatarImgSrc)}` : avatarImgSrc}
             alt="Author Avatar"
@@ -118,7 +114,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
             priority
           />
         )}
-        {avatarImgSrc === "n/a" && (
+        {(avatarImgSrc === "n/a" || avatarImgSrc === "") && (
           <Image
             src={"/blog/images/author.png"}
             alt="Author Avatar"
@@ -168,7 +164,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
             </div>
           )}
           </div>
-          {authorLinkedIn !== "n/a" && (
+          {authorLinkedIn !== "n/a" && authorLinkedIn !== "" && (
             <div className="mt-2">
               <IoLogoLinkedin className="h-5 w-5 inline mr-1" />
               <Link
