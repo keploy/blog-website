@@ -17,7 +17,7 @@ export default function Footer() {
     {
       title: "Company",
       links: [
-        { text: "Home", url: "#0" },
+        { text: "Home", url: "https://keploy.io/" },
         { text: "Security", url: "https://docs.keploy.io/security/" },
         {
           text: "Privacy Policy",

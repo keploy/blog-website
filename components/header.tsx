@@ -59,7 +59,7 @@ export default function Header({
             <div className="justify-end flex-1 hidden header-btn-container xl:flex gap-2">
               <Vscode />
               <GitHubStars />
-              <Button className="ml-[8px]">
+              <Button className="ml-[8px]" asChild>
                 <a
                   href="https://app.keploy.io/signin"
                   target="_blank"
@@ -73,7 +73,7 @@ export default function Header({
             {/* Mobile Navigation */}
             <div className="flex items-center gap-2 xl:hidden">
               <GitHubStars />
-              <Button className="ml-[8px] hidden md:flex">
+              <Button className="ml-[8px] hidden md:flex" asChild>
                 <a
                   href="https://app.keploy.io/signin"
                   target="_blank"
