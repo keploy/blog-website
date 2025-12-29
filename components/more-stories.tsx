@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
+import { cn } from "../lib/utils";
 import PostCard from "./post-card";
 import PostGrid from "./post-grid";
 import PostGridSkeleton from "./skeletons/PostGridSkeleton";
@@ -17,6 +18,8 @@ interface MoreStoriesProps {
   initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
   externalSearchTerm?: string;
   onSearchChange?: (term: string) => void;
+  initialSkeleton?: boolean;
+  initialSkeletonCount?: number;
 }
 
 export default function MoreStories({
@@ -27,8 +30,14 @@ export default function MoreStories({
   initialPageInfo,
   externalSearchTerm,
   onSearchChange,
+  initialSkeleton = false,
+  initialSkeletonCount = 12,
 }: MoreStoriesProps) {
   const router = useRouter();
+  const normalizedInitialPosts = useMemo(
+    () => initialPosts || [],
+    [initialPosts]
+  );
 
   //Internal state for search if not controlled by parent
   const [localSearchTerm, setLocalSearchTerm] = useState("");
@@ -36,7 +45,9 @@ export default function MoreStories({
   const searchTerm =
     externalSearchTerm !== undefined ? externalSearchTerm : localSearchTerm;
 
-  const [allPosts, setAllPosts] = useState<{ node: Post }[]>([]);
+  const [allPosts, setAllPosts] = useState<{ node: Post }[]>(
+    normalizedInitialPosts
+  );
   const [visibleCount, setVisibleCount] = useState(12);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialPageInfo?.hasNextPage ?? true);
@@ -48,12 +59,8 @@ export default function MoreStories({
 
   // Initialize posts based on page type
   useEffect(() => {
-    if (isSearchPage) {
-      setAllPosts(initialPosts); // Search page usually has all posts passed
-    } else {
-      setAllPosts(initialPosts); // Index pages now also need all posts to filter locally
-    }
-  }, [initialPosts, isSearchPage]);
+    setAllPosts(normalizedInitialPosts);
+  }, [normalizedInitialPosts]);
 
   // 1. Sync Input from URL on Load
   useEffect(() => {
@@ -197,6 +204,9 @@ export default function MoreStories({
         !error &&
         isIndex;
 
+  const skeletonActive =
+    initialSkeleton || (isIndex && loading && !allPosts.length);
+
   const basePath = isCommunity ? "/community" : "/technology";
   const searchSchema = {
     "@context": "https://schema.org",
@@ -255,28 +265,39 @@ export default function MoreStories({
         </p>
       ) : (
         <>
-          {loading && visibleCount === 0 && isIndex ? (
-            <PostGridSkeleton count={12} />
-          ) : (
-            <PostGrid>
-              {filteredPosts.slice(0, visibleCount).map(({ node }) => (
-                <PostCard
-                  key={node.slug}
-                  title={node.title}
-                  coverImage={node.featuredImage}
-                  date={node.date}
-                  author={node.ppmaAuthorName}
-                  slug={node.slug}
-                  excerpt={getExcerpt(node.excerpt, 20)}
-                  isCommunity={
-                    node.categories?.edges?.[0]?.node?.name === "technology"
-                      ? false
-                      : true
-                  }
-                />
-              ))}
-            </PostGrid>
-          )}
+          <div className="relative">
+            <div
+              className={cn(
+                "transition-opacity duration-300",
+                skeletonActive ? "opacity-0" : "opacity-100"
+              )}
+              aria-hidden={skeletonActive}
+            >
+              <PostGrid>
+                {filteredPosts.slice(0, visibleCount).map(({ node }) => (
+                  <PostCard
+                    key={node.slug}
+                    title={node.title}
+                    coverImage={node.featuredImage}
+                    date={node.date}
+                    author={node.ppmaAuthorName}
+                    slug={node.slug}
+                    excerpt={getExcerpt(node.excerpt, 20)}
+                    isCommunity={
+                      node.categories?.edges?.[0]?.node?.name === "technology"
+                        ? false
+                        : true
+                    }
+                  />
+                ))}
+              </PostGrid>
+            </div>
+            {skeletonActive && (
+              <div className="absolute inset-0 z-10 pointer-events-none">
+                <PostGridSkeleton count={initialSkeletonCount} />
+              </div>
+            )}
+          </div>
 
           <div className="flex flex-col items-center gap-4 mb-8">
             {error && (

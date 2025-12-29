@@ -1,10 +1,55 @@
-import { getExcerpt } from "../utils/excerpt";
+import { ReactNode } from "react";
 import Link from "next/link";
+import { getExcerpt } from "../utils/excerpt";
+import { cn } from "../lib/utils";
+import { Post } from "../types/post";
 import PostCard from "./post-card";
 import PostGrid from "./post-grid";
 import PostGridSkeleton from "./skeletons/PostGridSkeleton";
 
 const TopBlogs = ({ communityPosts, technologyPosts, isLoading = false }) => {
+  const renderGrid = (posts: { node: Post }[], isCommunity: boolean) => (
+    <PostGrid>
+      {posts.map(({ node }) => (
+        <PostCard
+          key={node.slug}
+          title={node.title}
+          coverImage={node.featuredImage}
+          date={node.date}
+          author={node.ppmaAuthorName}
+          slug={node.slug}
+          excerpt={getExcerpt(node.excerpt, 20)}
+          isCommunity={isCommunity}
+        />
+      ))}
+    </PostGrid>
+  );
+
+  const GridWithSkeleton = ({
+    children,
+    skeletonCount,
+  }: {
+    children: ReactNode;
+    skeletonCount: number;
+  }) => (
+    <div className="relative">
+      <div
+        className={cn(
+          "transition-opacity duration-300",
+          isLoading ? "opacity-0" : "opacity-100"
+        )}
+        aria-hidden={isLoading}
+      >
+        {children}
+      </div>
+      {isLoading && (
+        <div className="absolute inset-0 z-10 pointer-events-none">
+          <PostGridSkeleton count={skeletonCount} />
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <section className="py-12 px-4 md:px-8 lg:px-16 ">
       <div className="mb-16">
@@ -13,24 +58,9 @@ const TopBlogs = ({ communityPosts, technologyPosts, isLoading = false }) => {
           <span className="absolute left-0 bottom-0 w-16 h-1 bg-gradient-to-r from-orange-400 to-orange-600"></span>
         </h3>
 
-        {isLoading ? (
-          <PostGridSkeleton count={6} />
-        ) : (
-          <PostGrid>
-            {technologyPosts.map(({ node }) => (
-              <PostCard
-                key={node.slug}
-                title={node.title}
-                coverImage={node.featuredImage}
-                date={node.date}
-                author={node.ppmaAuthorName}
-                slug={node.slug}
-                excerpt={getExcerpt(node.excerpt, 20)}
-                isCommunity={false}
-              />
-            ))}
-          </PostGrid>
-        )}
+        <GridWithSkeleton skeletonCount={6}>
+          {renderGrid(technologyPosts, false)}
+        </GridWithSkeleton>
 
         <div className="mt-6 flex justify-end">
           <Link
@@ -64,24 +94,9 @@ const TopBlogs = ({ communityPosts, technologyPosts, isLoading = false }) => {
           <span className="absolute left-0 bottom-0 w-16 h-1 bg-gradient-to-r from-orange-400 to-orange-600"></span>
         </h3>
 
-        {isLoading ? (
-          <PostGridSkeleton count={6} />
-        ) : (
-          <PostGrid>
-            {communityPosts.map(({ node }) => (
-              <PostCard
-                key={node.slug}
-                title={node.title}
-                coverImage={node.featuredImage}
-                date={node.date}
-                author={node.ppmaAuthorName}
-                slug={node.slug}
-                excerpt={getExcerpt(node.excerpt, 20)}
-                isCommunity={true}
-              />
-            ))}
-          </PostGrid>
-        )}
+        <GridWithSkeleton skeletonCount={6}>
+          {renderGrid(communityPosts, true)}
+        </GridWithSkeleton>
 
         <div className="mt-6 flex justify-end">
           <Link

@@ -10,26 +10,20 @@ import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
-import OpenSourceVectorPng from "../public/images/open-source-vector.png";
+import { useConnectionAwareSkeleton } from "../hooks/useConnectionAwareSkeleton";
+
 export default function Index({ communityPosts, technologyPosts, preview }) {
-  const [isLoading, setIsLoading] = useState(true);
   const [displayPosts, setDisplayPosts] = useState({
-    community: [],
-    technology: [],
+    community: communityPosts || [],
+    technology: technologyPosts || [],
   });
+  const isLoading = useConnectionAwareSkeleton();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const timer = setTimeout(() => {
-        setDisplayPosts({
-          community: communityPosts || [],
-          technology: technologyPosts || [],
-        });
-        setIsLoading(false);
-      }, 500);
-
-      return () => clearTimeout(timer);
-    }
+    setDisplayPosts({
+      community: communityPosts || [],
+      technology: technologyPosts || [],
+    });
   }, [communityPosts, technologyPosts]);
 
   return (
