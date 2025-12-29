@@ -10,6 +10,7 @@ import { getAllPostsForSearch } from "../../lib/api";
 import { Post } from "../../types/post";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { getExcerpt } from "../../utils/excerpt"; // Importing from utils instead of inline
+import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
 export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }[] }) {
   const router = useRouter();
@@ -52,6 +53,13 @@ export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }
   const heroPost = filteredPosts[0]?.node;
   const morePosts = filteredPosts.slice(1);
   const excerpt = heroPost ? getExcerpt(heroPost.excerpt, 50) : "";
+  const structuredData = [
+    getBreadcrumbListSchema([
+      { name: "Home", url: SITE_URL },
+      { name: "Community", url: `${SITE_URL}/community` },
+      { name: "Search", url: `${SITE_URL}/community/search` },
+    ]),
+  ];
 
   return (
     <Layout 
@@ -59,6 +67,7 @@ export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }
       featuredImage={heroPost?.featuredImage?.node.sourceUrl || HOME_OG_IMAGE_URL} 
       Title={heroPost?.title || `Search: ${searchTerm}`} 
       Description={`Search results for ${searchTerm}`}
+      structuredData={structuredData}
     >
       <Head>
         <title>Keploy Community Search</title>

@@ -11,12 +11,14 @@ export default function Layout({
   featuredImage,
   Title,
   Description,
+  structuredData = [],
 }: {
   preview: any;
   Description: any;
   featuredImage: Post["featuredImage"]["node"]["sourceUrl"];
   Title: Post["title"];
   children: React.ReactNode;
+  structuredData?: Record<string, unknown>[];
 }) {
   return (
     <>
@@ -24,6 +26,7 @@ export default function Layout({
         featuredImage={featuredImage}
         Title={Title}
         Description={Description}
+        structuredData={structuredData}
       />
       <motion.div
         initial={{ opacity: 0 }}
