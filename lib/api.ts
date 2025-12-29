@@ -844,3 +844,56 @@ export async function fetchMorePosts(
     pageInfo: data?.posts?.pageInfo || { hasNextPage: false, endCursor: null }
   };
 }
+
+// --- ADDED THIS FUNCTION FOR SEARCH ---
+export async function getAllPostsForSearch(preview = false) {
+  // This query fetches ALL posts (up to 100) without a category filter
+  // It only fetches fields needed for the MoreStories card
+  const data = await fetchAPI(
+    `
+    query AllPostsForSearch {
+      posts(first: 100, where: { orderby: { field: DATE, order: DESC } }) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            postId
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+            ppmaAuthorName
+            categories {
+              edges {
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    `,
+    {
+      variables: {
+        preview,
+      },
+    }
+  );
+
+  return data?.posts?.edges || [];
+}
