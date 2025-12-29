@@ -30,7 +30,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
         '.pp-author-boxes-avatar-details a[aria-label="Website"]'
       );
       const authorDescriptionElement = tempDiv.querySelector(
-        ".pp-author-boxes-description.multiple-authors-description"
+        ".pp-author-boxes-description"
       );
     
       // Switch case for avatarImgElement

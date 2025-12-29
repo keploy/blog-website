@@ -13,8 +13,16 @@ const { protocol, hostname, port, pathname } = new URL(
 module.exports = {
   basePath: '/blog',
   assetPrefix: "/blog",
+  
+  // --- ADD THIS BLOCK ---
+  // This exposes the server-side variable to the browser
+  env: {
+    NEXT_PUBLIC_WORDPRESS_API_URL: process.env.WORDPRESS_API_URL,
+  },
+  // ----------------------
+
   images: {
-    domains: ['secure.gravatar.com', 'wp.keploy.io' ,'keploy.io', 'pbs.twimg.com'],
+    domains: ['secure.gravatar.com', 'wp.keploy.io', 'keploy.io', 'pbs.twimg.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -27,7 +35,7 @@ module.exports = {
         hostname: 'wp.keploy.io',
         port,
         pathname: '/**',
-      },  
+      },
     ],
   },
 }
