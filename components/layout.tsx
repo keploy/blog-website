@@ -82,6 +82,8 @@ export default function Layout({
         src="https://news.google.com/swg/js/v1/swg-basic.js"
       ></Script>
 
+
+
       <Script
         id="publisher"
         strategy="afterInteractive"
@@ -91,7 +93,7 @@ export default function Layout({
                   basicSubscriptions.init({
                     type: "NewsArticle",
                     isPartOfType: ["Product"],
-                    isPartOfProductId: "CAowz4a6DA:openaccess",
+                    isPartOfProductId: "CAowuMLeCw:openaccess",
                     clientOptions: { theme: "light", lang: "en" },
                   });
                 });
