@@ -1,5 +1,9 @@
 .content {
-  @apply text-lg leading-relaxed;
+  font-family: var(--font-body-stack);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  letter-spacing: -0.01em;
+  color: #1f2937;
 }
 
 .content p,
@@ -35,6 +39,16 @@
   list-style: circle;
 }
 
+.content h1,
+.content h2,
+.content h3,
+.content h4 {
+  font-family: var(--font-heading-stack);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
 .content h2 {
   @apply text-3xl mt-12 mb-4 leading-snug;
 }
@@ -60,7 +74,12 @@
 }
 
 .content blockquote {
-  @apply border-l-4 border-gray-500 bg-gray-200 italic ml-0 py-4 px-6;
+  @apply border-l-4 ml-0 py-4 px-6;
+  background-color: #fff7ed;
+  border-color: #fdba74;
+  font-family: var(--font-heading-stack);
+  font-style: normal;
+  letter-spacing: -0.01em;
 }
 
 .content blockquote p {
@@ -76,8 +95,8 @@
 }
 
 
-.content h1,
-.content h2,
-.content h3 {
-  font-weight: bold;
+.content strong {
+  font-weight: 600;
+  color: #0f172a;
+  font-family: var(--font-heading-stack);
 }

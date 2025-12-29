@@ -249,10 +249,13 @@ export default function MoreStories({
                 date={node.date}
                 author={node.ppmaAuthorName}
                 slug={node.slug}
-                excerpt={getExcerpt(node.excerpt, 20)}
+                excerpt={getExcerpt(node.excerpt, 36)}
                 isCommunity={
                   node.categories?.edges?.[0]?.node?.name === "technology" ? false : true
                 }
+                variant="subtle"
+                hideAuthorImage={true}
+                hideReadingTime={true}
               />
             ))}
           </PostGrid>
