@@ -11,6 +11,13 @@ import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
 import { useConnectionAwareSkeleton } from "../hooks/useConnectionAwareSkeleton";
+import OpenSourceVectorPng from "../public/images/open-source-vector.png";
+import {
+  getBreadcrumbListSchema,
+  getOrganizationSchema,
+  getWebSiteSchema,
+  SITE_URL,
+} from "../lib/structured-data";
 
 export default function Index({ communityPosts, technologyPosts, preview }) {
   const [displayPosts, setDisplayPosts] = useState({
@@ -18,6 +25,13 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
     technology: technologyPosts || [],
   });
   const isLoading = useConnectionAwareSkeleton();
+
+  const structuredData = [
+    getOrganizationSchema(),
+    getWebSiteSchema(),
+    getBreadcrumbListSchema([{ name: "Home", url: SITE_URL }]),
+  ];
+
 
   useEffect(() => {
     setDisplayPosts({
@@ -31,9 +45,8 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
       Title={`Blog - Keploy`}
-      Description={
-        "The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."
-      }
+      Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}
+      structuredData={structuredData}
     >
       <Head>
         <title>{`Engineering | Keploy Blog`}</title>

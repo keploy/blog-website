@@ -10,6 +10,7 @@ import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { useConnectionAwareSkeleton } from "../../hooks/useConnectionAwareSkeleton";
+import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
 export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   const safeEdges = edges || [];
@@ -23,6 +24,13 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = displayPosts[0]?.node || safeEdges[0]?.node;
   const excerpt = getExcerpt(heroPost?.excerpt || "");
   const morePosts = heroPost ? displayPosts.slice(1) : [];
+
+  const structuredData = [
+    getBreadcrumbListSchema([
+      { name: "Home", url: SITE_URL },
+      { name: "Community", url: `${SITE_URL}/community` },
+    ]),
+  ];
   function getExcerpt(content) {
     const maxWords = 50;
     // Split the content into an array of words
@@ -49,6 +57,7 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
       featuredImage={layoutImage}
       Title={layoutTitle}
       Description={layoutDescription}
+      structuredData={structuredData}
     >
       <Head>
         <title>{`Keploy Blog`}</title>

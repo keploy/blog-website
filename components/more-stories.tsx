@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
-import Head from "next/head";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import { cn } from "../lib/utils";
@@ -224,15 +223,6 @@ export default function MoreStories({
 
   return (
     <section>
-      {(isIndex || isSearchPage) && (
-        <Head>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(searchSchema) }}
-          />
-        </Head>
-      )}
-
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
         {isSearchPage
           ? searchTerm

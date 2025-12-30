@@ -23,6 +23,11 @@ import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
 import { getRedirectSlug } from "../../config/redirect";
 import PostDetailSkeleton from "../../components/skeletons/PostDetailSkeleton";
+import {
+  getBlogPostingSchema,
+  getBreadcrumbListSchema,
+  SITE_URL,
+} from "../../lib/structured-data";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -130,12 +135,40 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     }
   }, [router, router.isFallback, post]);
 
+  const postUrl = post?.slug ? `${SITE_URL}/technology/${post.slug}` : `${SITE_URL}/technology`;
+  const structuredData = [];
+  if (post?.slug) {
+    structuredData.push(
+      getBreadcrumbListSchema([
+        { name: "Home", url: SITE_URL },
+        { name: "Technology", url: `${SITE_URL}/technology` },
+        { name: post?.title || "Post", url: postUrl },
+      ]),
+      getBlogPostingSchema({
+        title: post?.title || "Keploy Blog Post",
+        url: postUrl,
+        datePublished: post?.date,
+        description: post?.seo?.metaDesc,
+        imageUrl: post?.featuredImage?.node?.sourceUrl,
+        authorName: post?.ppmaAuthorName,
+      })
+    );
+  } else {
+    structuredData.push(
+      getBreadcrumbListSchema([
+        { name: "Home", url: SITE_URL },
+        { name: "Technology", url: `${SITE_URL}/technology` },
+      ])
+    );
+  }
+
   return (
     <Layout
       preview={preview}
       featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
       Title={post?.seo.title || "Loading..."}
       Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
+      structuredData={structuredData}
     >
       <Header readProgress={readProgress} />
       {router.isFallback ? (

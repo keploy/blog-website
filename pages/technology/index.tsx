@@ -23,6 +23,14 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
   const layoutImage =
     heroPost?.featuredImage?.node?.sourceUrl ?? HOME_OG_IMAGE_URL;
   const showSkeleton = useConnectionAwareSkeleton();
+import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+
+  const structuredData = [
+    getBreadcrumbListSchema([
+      { name: "Home", url: SITE_URL },
+      { name: "Technology", url: `${SITE_URL}/technology` },
+    ]),
+  ];
 
   return (
     <Layout
@@ -30,6 +38,7 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       featuredImage={layoutImage}
       Title={layoutTitle}
       Description={layoutDescription}
+      structuredData={structuredData}
     >
       <Head>
         <title>{`Keploy`}</title>
