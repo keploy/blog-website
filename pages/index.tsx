@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { GetStaticProps } from "next";
+import { useState, useEffect } from "react";
 import Container from "../components/container";
 import Layout from "../components/layout";
 import { getAllPostsForCommunity, getAllPostsForTechnology } from "../lib/api";
@@ -9,6 +10,7 @@ import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import TopBlogs from "../components/topBlogs";
 import Testimonials from "../components/testimonials";
 import Image from "next/image";
+import { useConnectionAwareSkeleton } from "../hooks/useConnectionAwareSkeleton";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import {
   getBreadcrumbListSchema,
@@ -16,15 +18,29 @@ import {
   getWebSiteSchema,
   SITE_URL,
 } from "../lib/structured-data";
+
 export default function Index({ communityPosts, technologyPosts, preview }) {
+  const [displayPosts, setDisplayPosts] = useState({
+    community: communityPosts || [],
+    technology: technologyPosts || [],
+  });
+  const isLoading = useConnectionAwareSkeleton();
+
   const structuredData = [
     getOrganizationSchema(),
     getWebSiteSchema(),
     getBreadcrumbListSchema([{ name: "Home", url: SITE_URL }]),
   ];
 
-  return (
 
+  useEffect(() => {
+    setDisplayPosts({
+      community: communityPosts || [],
+      technology: technologyPosts || [],
+    });
+  }, [communityPosts, technologyPosts]);
+
+  return (
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
@@ -73,8 +89,9 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
           </div>
         </div>
         <TopBlogs
-          communityPosts={communityPosts}
-          technologyPosts={technologyPosts}
+          communityPosts={displayPosts.community}
+          technologyPosts={displayPosts.technology}
+          isLoading={isLoading}
         />
         <Testimonials />
       </Container>
