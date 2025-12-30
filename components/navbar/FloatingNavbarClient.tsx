@@ -447,25 +447,109 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             <div className="relative z-10 flex flex-col flex-1 overflow-hidden min-h-0" style={{ maxHeight: 'calc(100vh - 18rem)' }}>
               <div className="overflow-y-auto overscroll-contain px-5 py-5 flex-1 min-h-0">
                 <div className="space-y-2.5">
-                  {/* Technology Link */}
-                  <Link 
-                  href="/technology" 
-                  onClick={()=>setMobileMenuOpen(false)} 
-                  className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]"
-                >
-                  <span className="font-semibold text-[15px] text-black/90">Technology</span>
-                  <ChevronRight className="w-4 h-4 text-neutral-500" />
-                </Link>
+                  {/* Technology Collapsible */}
+                  <Collapsible open={mobileTechOpen} onOpenChange={setMobileTechOpen}>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]">
+                      <span className="font-semibold text-[15px] text-black/90">Technology</span>
+                      <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform duration-200 ${mobileTechOpen ? 'rotate-180':''}`} />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-2.5 space-y-2">
+                      <div className="space-y-2 border-l-2 border-neutral-200/40 pl-4 ml-2">
+                        {/* View All Technology Link */}
+                        <Link 
+                          href="/technology" 
+                          onClick={()=>setMobileMenuOpen(false)} 
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
+                        >
+                          <span className="font-medium text-sm text-black/75">View All Technology Posts</span>
+                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+                        </Link>
+                        {/* Latest Technology Posts */}
+                        {(techState.length ? techState.slice(0,4) : new Array(4).fill(null)).map((edge, i) => {
+                          if (!edge) {
+                            return (
+                              <div key={`tech-mobile-skel-${i}`} className="rounded-xl overflow-hidden ring-1 ring-neutral-200/60 bg-white/60 animate-pulse p-3 space-y-2 min-h-[60px]">
+                                <div className="h-3 w-3/4 bg-white/60 rounded" />
+                                <div className="h-2 w-2/3 bg-white/50 rounded" />
+                              </div>
+                            );
+                          }
+                          const { node } = edge;
+                          return (
+                            <Link
+                              key={node.slug}
+                              href={`/technology/${node.slug}`}
+                              onClick={()=>setMobileMenuOpen(false)}
+                              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[60px]"
+                            >
+                              <div className="relative w-16 h-12 flex-shrink-0 rounded-md overflow-hidden bg-white/40">
+                                {node?.featuredImage?.node?.sourceUrl && (
+                                  <Image src={node.featuredImage.node.sourceUrl} alt={node.title} fill className="object-cover" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-[13px] font-semibold text-neutral-900 line-clamp-2">{node.title}</h4>
+                                <p className="text-[11px] text-neutral-600 mt-0.5">{new Date(node.date).toLocaleDateString()} • {node.ppmaAuthorName || "Keploy"}</p>
+                              </div>
+                              <ChevronRight className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
 
-                  {/* Community Link */}
-                  <Link 
-                    href="/community" 
-                    onClick={()=>setMobileMenuOpen(false)} 
-                    className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]"
-                  >
-                    <span className="font-semibold text-[15px] text-black/90">Community</span>
-                    <ChevronRight className="w-4 h-4 text-neutral-500" />
-                  </Link>
+                  {/* Community Collapsible */}
+                  <Collapsible open={mobileCommunityOpen} onOpenChange={setMobileCommunityOpen}>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]">
+                      <span className="font-semibold text-[15px] text-black/90">Community</span>
+                      <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform duration-200 ${mobileCommunityOpen ? 'rotate-180':''}`} />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-2.5 space-y-2">
+                      <div className="space-y-2 border-l-2 border-neutral-200/40 pl-4 ml-2">
+                        {/* View All Community Link */}
+                        <Link 
+                          href="/community" 
+                          onClick={()=>setMobileMenuOpen(false)} 
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
+                        >
+                          <span className="font-medium text-sm text-black/75">View All Community Posts</span>
+                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+                        </Link>
+                        {/* Latest Community Posts */}
+                        {(communityState.length ? communityState.slice(0,4) : new Array(4).fill(null)).map((edge, i) => {
+                          if (!edge) {
+                            return (
+                              <div key={`comm-mobile-skel-${i}`} className="rounded-xl overflow-hidden ring-1 ring-neutral-200/60 bg-white/60 animate-pulse p-3 space-y-2 min-h-[60px]">
+                                <div className="h-3 w-3/4 bg-white/60 rounded" />
+                                <div className="h-2 w-2/3 bg-white/50 rounded" />
+                              </div>
+                            );
+                          }
+                          const { node } = edge;
+                          return (
+                            <Link
+                              key={node.slug}
+                              href={`/community/${node.slug}`}
+                              onClick={()=>setMobileMenuOpen(false)}
+                              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[60px]"
+                            >
+                              <div className="relative w-16 h-12 flex-shrink-0 rounded-md overflow-hidden bg-white/40">
+                                {node?.featuredImage?.node?.sourceUrl && (
+                                  <Image src={node.featuredImage.node.sourceUrl} alt={node.title} fill className="object-cover" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-[13px] font-semibold text-neutral-900 line-clamp-2">{node.title}</h4>
+                                <p className="text-[11px] text-neutral-600 mt-0.5">{new Date(node.date).toLocaleDateString()} • {node.ppmaAuthorName || "Keploy"}</p>
+                              </div>
+                              <ChevronRight className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
 
                   {/* Resources Collapsible */}
                   <Collapsible open={mobileResourcesOpen} onOpenChange={setMobileResourcesOpen}>
