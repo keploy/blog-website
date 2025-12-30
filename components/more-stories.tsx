@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Head from "next/head";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostCard from "./post-card";
@@ -186,32 +185,8 @@ export default function MoreStories({
     ? visibleCount < filteredPosts.length 
     : (visibleCount < allPosts.length || buffer.length > 0 || hasMore) && !loading && !error && isIndex;
 
-  const basePath = isCommunity ? '/community' : '/technology';
-  const searchSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "url": "https://keploy.io/blog",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": `https://keploy.io/blog${basePath}/search?q={search_term_string}`
-      },
-      "query-input": "required name=search_term_string"
-    }
-  };
-
   return (
     <section>
-      {(isIndex || isSearchPage) && (
-        <Head>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(searchSchema) }}
-          />
-        </Head>
-      )}
-
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
         {isSearchPage ? (
             searchTerm ? `Results for "${searchTerm}"` : "Search Results"
