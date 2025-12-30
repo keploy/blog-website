@@ -10,6 +10,7 @@ import { useMemo, useState } from "react";
 import { FaSearch } from 'react-icons/fa';
 import { useEffect, useRef } from "react";
 import { getIconComponentForTag } from "../../utils/tagIcons";
+import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
  
  export default function Tags({ edgesAllTags, preview }) {
    const [searchTerm, setSearchTerm] = useState("");
@@ -68,12 +69,18 @@ import { getIconComponentForTag } from "../../utils/tagIcons";
     return () => observer.unobserve(el);
   }, [hasMore, isLoading]);
 
-  return (
+ return (
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
       Title={`Tags`}
       Description={`List of All the Tags`}
+      structuredData={[
+        getBreadcrumbListSchema([
+          { name: "Home", url: SITE_URL },
+          { name: "Tags", url: `${SITE_URL}/tag` },
+        ]),
+      ]}
     >
       <Head>
         <title>{`Tags`}</title>

@@ -6,6 +6,7 @@ import Container from "../../components/container";
 import AuthorMapping from "../../components/AuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { Post } from "../../types/post";
+import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
 export default function Authors({
   AllAuthors: { edges },
@@ -27,6 +28,12 @@ export default function Authors({
         featuredImage={HOME_OG_IMAGE_URL}
         Title={`Authors Page`}
         Description={`Giving the List of all the Authors`}
+        structuredData={[
+          getBreadcrumbListSchema([
+            { name: "Home", url: SITE_URL },
+            { name: "Authors", url: `${SITE_URL}/authors` },
+          ]),
+        ]}
       >
         <Header />
         <Container>
