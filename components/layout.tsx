@@ -40,7 +40,7 @@ export default function Layout({
         className="min-h-screen"
       >
         {/* <Alert preview={preview} /> */}
-        <main>{children}</main>
+        <main className="pt-20 md:pt-24">{children}</main>
       </motion.div>
       <Footer />
       <ScrollToTop />
