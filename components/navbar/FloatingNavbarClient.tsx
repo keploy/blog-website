@@ -14,7 +14,7 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 
 const glassDropdown =
-  "relative overflow-hidden backdrop-blur-[80px] bg-gradient-to-br from-gray-200/99 via-gray-200/95 to-gray-200/88 border border-gray-100/70 shadow-[0_22px_54px_rgba(15,23,42,0.22)]";
+  "relative overflow-hidden backdrop-blur-[60px] bg-gray-200/95 bg-gradient-to-br from-white/85 via-gray-200/95 to-gray-300/90 border border-gray-200/70 shadow-[0_22px_54px_rgba(15,23,42,0.22)]";
 
 export default function FloatingNavbarClient({ techLatest = [], communityLatest = [] as any[], isScrolled = false }: { techLatest?: any[]; communityLatest?: any[]; isScrolled?: boolean }) {
   const router = useRouter();
