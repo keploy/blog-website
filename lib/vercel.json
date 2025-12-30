@@ -1,0 +1,29 @@
+{
+    "headers": [
+      {
+        "source": "/blog/(.*)",
+        "headers": [
+          {
+            "key": "Content-Security-Policy",
+            "value": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: secure.gravatar.com wp.keploy.io keploy.io pbs.twimg.com https://c.bing.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; frame-src https://googleads.g.doubleclick.net https://*.google.com; connect-src 'self' https://wp.keploy.io https://ep1.adtrafficquality.google https://news.google.com; upgrade-insecure-requests;"
+          },
+          {
+            "key": "Access-Control-Allow-Credentials",
+            "value": "true"
+          },
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          },
+          {
+            "key": "Access-Control-Allow-Methods",
+            "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+          },
+          {
+            "key": "Access-Control-Allow-Headers",
+            "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+          }
+        ]
+      }
+    ]
+  }
