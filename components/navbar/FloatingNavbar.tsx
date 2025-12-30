@@ -65,10 +65,10 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
         <div
           className={`${glassNavBase} ${navGlassClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}
         >
-        {/* <div className="pointer-events-none absolute inset-0 rounded-full">
+        <div className="pointer-events-none absolute inset-0 rounded-full">
           <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-gray-200/60 blur-2xl" />
           <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-gray-200/40 blur-3xl" />
-        </div> */}
+        </div>
         <FloatingNavbarClient isScrolled={isScrolled} />
       </div>
     </nav>
