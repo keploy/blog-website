@@ -90,12 +90,14 @@ export default function MoreStories({
   // 3. Handle Enter Key (Conditional Logic)
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      // ONLY redirect if we are on Community AND NOT already on the search page
-      if (isCommunity && !isSearchPage && searchTerm.trim()) {
+      // ONLY redirect if we are on Community index page (not detail pages with showSearch)
+      // AND NOT already on the search page
+      if (isCommunity && !isSearchPage && !showSearch && searchTerm.trim()) {
         event.preventDefault();
         router.push(`/community/search?q=${encodeURIComponent(searchTerm)}`);
       }
-      // For Technology (!isCommunity), do nothing. The local filter is already active.
+      // For Technology (!isCommunity) or detail pages (showSearch), do nothing. 
+      // The local filter is already active.
     }
   };
 
