@@ -67,7 +67,7 @@ export default function TOC({ headings, isList, setIsList }) {
   }, [])
 
   const handleItemClick = (id) => {
-    // id is already sanitized from post-body.tsx
+
     const element = document.getElementById(id);
     if (element) {
       const offset = 80; 
@@ -77,7 +77,6 @@ export default function TOC({ headings, isList, setIsList }) {
         behavior: "smooth",
       });
 
-      // Update URL hash with the sanitized ID
       window.history.replaceState(null, null, `#${id}`);
     }
   };
@@ -145,7 +144,7 @@ export default function TOC({ headings, isList, setIsList }) {
                   >
                     <button
                       onClick={() => {
-                        // item.id is already sanitized from post-body.tsx
+                   
                         const el = document.getElementById(item.id);
                         if (el) {
                           const offset = 80;
