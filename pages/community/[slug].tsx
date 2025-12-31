@@ -13,7 +13,6 @@ import PostTitle from "../../components/post-title";
 import Tag from "../../components/tag";
 import {
   getAllPostsForCommunity,
-  getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
 import PrismLoader from "../../components/prism-loader";
@@ -228,7 +227,12 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           </footer>
           <SectionSeparator />
           {morePosts?.length > 0 && (
-            <MoreStories isIndex={false} posts={morePosts} isCommunity={true} />
+            <MoreStories 
+              isIndex={true} 
+              posts={morePosts} 
+              isCommunity={true} 
+              initialPageInfo={posts?.pageInfo}
+            />
           )}
         </article>
       </Container>
@@ -270,7 +274,17 @@ export const getStaticProps: GetStaticProps = async ({
       };
     }
 
-    const moreStories = await getMoreStoriesForSlugs(data.post?.tags, data.post?.slug);
+    // Fetch community posts with pagination info (similar to index page)
+    const allCommunityPosts = await getAllPostsForCommunity(preview);
+    
+    // Filter out the current post from the results
+    const filteredPosts = allCommunityPosts.edges.filter(
+      ({ node }) => node.slug !== data.post?.slug
+    );
+    
+    // Get pageInfo for pagination
+    const pageInfo = allCommunityPosts.pageInfo;
+    
     const authorDetails = await Promise.all([
       getReviewAuthorDetails("neha"),
       getReviewAuthorDetails("Jain"),
@@ -280,7 +294,7 @@ export const getStaticProps: GetStaticProps = async ({
       props: {
         preview,
         post: data.post,
-        posts: moreStories?.communityMoreStories || { edges: [] },
+        posts: { edges: filteredPosts, pageInfo },
         reviewAuthorDetails: authorDetails,
       },
       revalidate: 60,
