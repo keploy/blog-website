@@ -7,12 +7,19 @@ import Layout from "../../components/layout";
 import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
+import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
   console.log("tech posts: ", edges.length)
   const heroPost = edges[0]?.node;
   const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
   const morePosts = edges.slice(1);
+  const structuredData = [
+    getBreadcrumbListSchema([
+      { name: "Home", url: SITE_URL },
+      { name: "Technology", url: `${SITE_URL}/technology` },
+    ]),
+  ];
 
   return (
     <Layout
@@ -20,6 +27,7 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       featuredImage={heroPost?.featuredImage?.node.sourceUrl}
       Title={heroPost?.title}
       Description={`Blog from the Technology Page`}
+      structuredData={structuredData}
     >
       <Head>
         <title>{`Keploy`}</title>

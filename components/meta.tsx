@@ -6,10 +6,12 @@ export default function Meta({
   featuredImage,
   Title,
   Description,
+  structuredData = [],
 }: {
   featuredImage: Post["featuredImage"]["node"]["sourceUrl"];
   Title: Post["title"];
   Description: string;
+  structuredData?: Record<string, unknown>[];
 }) {
   return (
     <Head>
@@ -66,6 +68,13 @@ export default function Meta({
           <meta name="twitter:image" content={HOME_OG_IMAGE_URL} />
         </>
       )}
+      {structuredData.map((schema, index) => (
+        <script
+          key={`jsonld-${index}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
       {/* <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css"

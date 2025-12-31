@@ -1,15 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import sideBySideSvg from "../public/images/sidebyside-transparent.svg";
 import { SpringValue, animated } from "@react-spring/web";
-import { MainNav } from "../components/navbar/main-nav";
-import { GitHubStars } from "./navbar/github-stars";
-import { Vscode } from "./navbar/vscode-number";
-import { Button } from "../components/ui/button";
-import { MobileNav } from "../components/navbar/mobile-nav";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { cn } from "../lib/utils/utils";
 import SearchCommand from "./SearchCommand";
 
@@ -19,6 +12,10 @@ export default function Header({
   readProgress?: SpringValue<number>;
 }) {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
+  const isBlogReadingPage =
+    router.pathname === "/technology/[slug]" ||
+    router.pathname === "/community/[slug]";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,12 +27,11 @@ export default function Header({
   }, []);
 
   return (
-    <div className="h-32 md:h-40">
+    <div className="h-28 md:h-32 border-b border-gray-200/50">
       <header
         className={cn(
-          "fixed z-30 w-full transition duration-300 ease-in-out border-none md:bg-opacity-90",
-          scrolled ? "lg:bg-neutral-100 lg:shadow-none" : "lg:bg-transparent",
-          "bg-white"
+          "fixed top-0 left-0 right-0 z-30 w-full transition duration-300 ease-in-out border-none bg-transparent",
+          scrolled ? "" : ""
         )}
       >
         <div className="max-w-6xl px-5 mx-auto sm:px-6">

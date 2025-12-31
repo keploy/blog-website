@@ -21,6 +21,12 @@ import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
+import { getRedirectSlug } from "../../config/redirect";
+import {
+  getBlogPostingSchema,
+  getBreadcrumbListSchema,
+  SITE_URL,
+} from "../../lib/structured-data";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -108,7 +114,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
       // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
-        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>([\s\S]*?)<\/p>/
+        /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i
       );
 
       if (
@@ -128,12 +134,40 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     }
   }, [router, router.isFallback, post]);
 
+  const postUrl = post?.slug ? `${SITE_URL}/technology/${post.slug}` : `${SITE_URL}/technology`;
+  const structuredData = [];
+  if (post?.slug) {
+    structuredData.push(
+      getBreadcrumbListSchema([
+        { name: "Home", url: SITE_URL },
+        { name: "Technology", url: `${SITE_URL}/technology` },
+        { name: post?.title || "Post", url: postUrl },
+      ]),
+      getBlogPostingSchema({
+        title: post?.title || "Keploy Blog Post",
+        url: postUrl,
+        datePublished: post?.date,
+        description: post?.seo?.metaDesc,
+        imageUrl: post?.featuredImage?.node?.sourceUrl,
+        authorName: post?.ppmaAuthorName,
+      })
+    );
+  } else {
+    structuredData.push(
+      getBreadcrumbListSchema([
+        { name: "Home", url: SITE_URL },
+        { name: "Technology", url: `${SITE_URL}/technology` },
+      ])
+    );
+  }
+
   return (
     <Layout
       preview={preview}
       featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
       Title={post?.seo.title || "Loading..."}
       Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
+      structuredData={structuredData}
     >
       <Header readProgress={readProgress} />
       <Container>
@@ -196,17 +230,24 @@ export const getStaticProps: GetStaticProps = async ({
   preview = false,
   previewData,
 }) => {
-  const slug = params?.slug;
+  const slugParam = params?.slug;
 
-  if (typeof slug !== "string") {
+  if (typeof slugParam !== "string") {
     return {
       notFound: true,
       revalidate: 60,
     };
   }
 
+  let realSlug = slugParam;
+  const redirectSlug = getRedirectSlug(realSlug);
+
+  if (redirectSlug) {
+    realSlug = redirectSlug;
+  }
+
   try {
-    const data = await getPostAndMorePosts(slug, preview, previewData);
+    const data = await getPostAndMorePosts(realSlug, preview, previewData);
 
     if (!data?.post) {
       return {
@@ -220,6 +261,16 @@ export const getStaticProps: GetStaticProps = async ({
       getReviewAuthorDetails("neha"),
       getReviewAuthorDetails("Jain"),
     ]);
+
+    // If we resolved a redirect slug, send a proper redirect response
+    if (redirectSlug) {
+      return {
+        redirect: {
+          destination: `/technology/${redirectSlug}`,
+          permanent: false,
+        },
+      };
+    }
 
     return {
       props: {

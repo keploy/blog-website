@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
+import { getRedirectSlug } from "../../config/redirect";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Container from "../../components/container";
 import MoreStories from "../../components/more-stories";
@@ -23,6 +24,11 @@ import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
 import "./styles.module.css"
+import {
+  getBlogPostingSchema,
+  getBreadcrumbListSchema,
+  SITE_URL,
+} from "../../lib/structured-data";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -41,7 +47,7 @@ const postBody = ({ content, post }) => {
 
 export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
-  const { slug }= router.query;
+  const { slug } = router.query;
   const morePosts = posts?.edges;
   const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const time = 5 + calculateReadingTime(post?.content);
@@ -110,18 +116,18 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       } else {
         setAvatarImgSrc("/blog/images/author.png");
       }
-  
+
       // Match the <p> with class pp-author-boxes-description and extract its content
       const authorDescriptionMatch = content.match(
-        /<p[^>]*class="pp-author-boxes-description multiple-authors-description"[^>]*>([\s\S]*?)<\/p>/
+        /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i
       );
-      
+
       // Apply table responsive wrapper
       const newContent = content.replace(
         /<table[^>]*>[\s\S]*?<\/table>/gm,
         (table) => `<div class="overflow-x-auto">${table}</div>`
       );
-  
+
       setUpdatedContent(newContent);
 
       if (authorDescriptionMatch && authorDescriptionMatch[1].trim()?.length > 0) {
@@ -138,12 +144,40 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     }
   }, [router, router.isFallback, post]);
 
+  const postUrl = post?.slug ? `${SITE_URL}/community/${post.slug}` : `${SITE_URL}/community`;
+  const structuredData = [];
+  if (post?.slug) {
+    structuredData.push(
+      getBreadcrumbListSchema([
+        { name: "Home", url: SITE_URL },
+        { name: "Community", url: `${SITE_URL}/community` },
+        { name: post?.title || "Post", url: postUrl },
+      ]),
+      getBlogPostingSchema({
+        title: post?.title || "Keploy Blog Post",
+        url: postUrl,
+        datePublished: post?.date,
+        description: post?.seo?.metaDesc,
+        imageUrl: post?.featuredImage?.node?.sourceUrl,
+        authorName: post?.ppmaAuthorName,
+      })
+    );
+  } else {
+    structuredData.push(
+      getBreadcrumbListSchema([
+        { name: "Home", url: SITE_URL },
+        { name: "Community", url: `${SITE_URL}/community` },
+      ])
+    );
+  }
+
   return (
     <Layout
       preview={preview}
       featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
       Title={post?.seo.title || "Loading..."}
       Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
+      structuredData={structuredData}
     >
       <Header readProgress={readProgress} />
       <Container>
@@ -216,6 +250,16 @@ export const getStaticProps: GetStaticProps = async ({
     };
   }
 
+  const redirectSlug = getRedirectSlug(slug);
+  if (redirectSlug) {
+    return {
+      redirect: {
+        destination: `/community/${redirectSlug}`,
+        permanent: true,
+      },
+    };
+  }
+
   try {
     const data = await getPostAndMorePosts(slug, preview, previewData);
 
@@ -255,9 +299,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const communityPosts =
     allPosts?.edges
       .map(({ node }) => `/community/${node?.slug}`) || [];
-  
+
   return {
     paths: communityPosts || [],
-    fallback: true, 
+    fallback: true,
   };
 };
