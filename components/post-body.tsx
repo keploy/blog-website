@@ -81,8 +81,8 @@ export default function PostBody({
       const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
 
       const tocItems = headings.map((heading) => {
-        const id = `${heading.textContent}`;
-        heading.setAttribute("id", sanitizeStringForURL(id, true));
+        const id = sanitizeStringForURL(`${heading.textContent}`, true);
+        heading.setAttribute("id", id);
 
         return {
           id,
