@@ -37,7 +37,7 @@ function TOCItem({
     <li className={itemClasses} style={{ marginLeft }}>
       <button
         onClick={() => onClick(id)}
-        className="block w-full py-1 text-sm text-left text-black transition-all duration-150 ease-in-out rounded-md opacity-75 hover:text-orange-500 hover:opacity-100"
+        className="block w-full py-1 text-sm text-left text-black transition-all duration-150 ease-in-out rounded-md opacity-75 hover:text-orange-500 hover:opacity-100 cursor-pointer"
       >
         {title}
       </button>
@@ -67,6 +67,7 @@ export default function TOC({ headings, isList, setIsList }) {
   }, [])
 
   const handleItemClick = (id) => {
+
     const element = document.getElementById(id);
     if (element) {
       const offset = 80; 
@@ -76,9 +77,7 @@ export default function TOC({ headings, isList, setIsList }) {
         behavior: "smooth",
       });
 
-      const urlChange = sanitizeStringForURL(element.innerHTML,true)
-
-      window.history.replaceState(null, null, `#${urlChange}`);
+      window.history.replaceState(null, null, `#${id}`);
     }
   };
 
@@ -145,6 +144,7 @@ export default function TOC({ headings, isList, setIsList }) {
                   >
                     <button
                       onClick={() => {
+                   
                         const el = document.getElementById(item.id);
                         if (el) {
                           const offset = 80;
@@ -152,16 +152,15 @@ export default function TOC({ headings, isList, setIsList }) {
                             top: el.offsetTop - offset,
                             behavior: "smooth",
                           });
-                          const sanitizedId = sanitizeStringForURL(item.title, true);
                           window.history.replaceState(
                             null,
                             null,
-                            `#${sanitizedId}`
+                            `#${item.id}`
                           );
                           setIsDropdownOpen(false);
                         }
                       }}
-                      className="w-full text-left"
+                      className="w-full text-left cursor-pointer"
                     >
                       {item.title}
                     </button>
