@@ -4,7 +4,7 @@ import { SpringValue, animated } from "@react-spring/web";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { cn } from "../lib/utils/utils";
-import FloatingNavbar from "./navbar/FloatingNavbar";
+import SearchCommand from "./SearchCommand";
 
 export default function Header({
   readProgress,
@@ -34,7 +34,57 @@ export default function Header({
           scrolled ? "" : ""
         )}
       >
-        <FloatingNavbar isBlogReadingPage={isBlogReadingPage} />
+        <div className="max-w-6xl px-5 mx-auto sm:px-6">
+          <div className="flex items-center justify-between h-16 md:h-20">
+            <div className="flex items-center flex-1">
+              <div className="mr-4 shrink-0">
+                <Link href="https://keploy.io/">
+                  <Image
+                    src={sideBySideSvg}
+                    alt="Keploy Logo"
+                    className="h-[50px] w-[100px] mb-2"
+                  />
+                </Link>
+              </div>
+
+              {/* Desktop Navigation */}
+              <div className="hidden xl:flex flex-grow justify-start mr-4">
+                <MainNav />
+              </div>
+            </div>
+
+            <div className="justify-end flex-1 hidden header-btn-container xl:flex gap-2">
+              <SearchCommand />
+              <Vscode />
+              <GitHubStars />
+              <Button className="ml-[8px]">
+                <a
+                  href="https://app.keploy.io/signin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Sign In
+                </a>
+              </Button>
+            </div>
+
+            {/* Mobile Navigation */}
+            <div className="flex items-center gap-2 xl:hidden">
+              <SearchCommand />
+              <GitHubStars />
+              <Button className="ml-[8px] hidden md:flex">
+                <a
+                  href="https://app.keploy.io/signin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Sign In
+                </a>
+              </Button>
+              <MobileNav />
+            </div>
+          </div>
+        </div>
         {readProgress && (
           <div className="relative h-1">
             <animated.div
