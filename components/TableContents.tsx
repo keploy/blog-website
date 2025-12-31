@@ -69,14 +69,14 @@ export default function TOC({ headings, isList, setIsList }) {
   const handleItemClick = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80; 
+      const offset = 80;
       const offsetPosition = element.offsetTop - offset;
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
 
-      const urlChange = sanitizeStringForURL(element.innerHTML,true)
+      const urlChange = sanitizeStringForURL(element.innerHTML, true)
 
       window.history.replaceState(null, null, `#${urlChange}`);
     }
@@ -188,7 +188,7 @@ export default function TOC({ headings, isList, setIsList }) {
           ))}
         </select>
       </div>
-      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
+      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky z-30 max-h-[calc(100vh-100px)] overflow-y-auto">
         <div className="mb-2 text-lg font-semibold">Table of Contents</div>
         {isList ? (
           <select

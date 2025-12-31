@@ -33,8 +33,8 @@ export default function AdSlot({
     if (typeof window !== 'undefined') {
       try {
         // Initialize adsbygoogle if it doesn't exist
-        window.adsbygoogle = window.adsbygoogle || { push: () => {}, loaded: false };
-        
+        window.adsbygoogle = window.adsbygoogle || { push: () => { }, loaded: false };
+
         // Only push if not already loaded
         if (!window.adsbygoogle.loaded) {
           window.adsbygoogle.push({});
@@ -49,7 +49,7 @@ export default function AdSlot({
   }, []);
 
   return (
-    <div className={`relative w-full ${className}`}>
+    <div className={`relative w-full z-30 ${className}`}>
       {!loaded && (
         <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-gray-300 animate-pulse rounded-lg" />
       )}
