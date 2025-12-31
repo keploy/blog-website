@@ -127,9 +127,9 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   }, []);
 
   return (
-    <div className="flex h-full items-center overflow-visible justify-between mt-[-6px]">
+    <div className="flex items-center overflow-visible justify-between mt-[-6px]">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2 overflow-hidden z-50 w-[80px]">
+      <Link href="/" className="flex items-center gap-2 overflow-visible z-60 w-[80px]">
         <div className={`transition-all duration-300 w-[80px]`} style={{ height: '30px' }}>
           <div className={`transition-all duration-300 translate-x-0`} style={{ width: '80px', height: '30px' }}>
             <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[80px]" />
