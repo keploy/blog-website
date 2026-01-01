@@ -64,8 +64,8 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
     ? "w-[82%] md:max-w-5xl rounded-full mx-auto items-center justify-center px-[10px]"
     : "";
   return (
-    <div className="w-[100%] h-[80px] bg-white">
-    <div className={`w-[100%] h-[80px] ${glassNavBase} ${navGlassClasses} ${navWidthouterClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}>
+    <div className="w-[100%] h-[80px]">
+    <div className={` w-[100%] ${isScrolled ? `h-[65px]` : `h-[80px]`} ${glassNavBase} ${navGlassClasses} ${navWidthouterClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}>
       <nav className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}>
         <FloatingNavbarClient isScrolled={isScrolled} />
       </nav>

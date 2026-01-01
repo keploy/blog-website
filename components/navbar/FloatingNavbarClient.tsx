@@ -127,7 +127,12 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   }, []);
 
   return (
-    <div className="flex items-center overflow-visible justify-between mt-[-6px]">
+    <div
+  className={`flex items-center overflow-visible justify-between ${
+    isScrolled ? "mt-[-15px]" : "mt-[-6px]"
+  }`}
+>
+
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2 overflow-visible z-60 w-[80px]">
         <div className={`transition-all duration-300 w-[80px]`} style={{ height: '30px' }}>

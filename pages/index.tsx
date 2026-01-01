@@ -37,7 +37,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       </Head>
       <Header />
       <Container>
-        <div className="">
+        <div className="overflow-hidden">
           <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
             <div className="content">
               <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
