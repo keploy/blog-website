@@ -14,7 +14,7 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 
 const glassDropdown =
-  "relative overflow-hidden backdrop-blur-[80px] bg-gradient-to-br from-gray-200/99 via-gray-200/95 to-gray-200/88 border border-gray-100/70 shadow-[0_22px_54px_rgba(15,23,42,0.22)]";
+  "relative overflow-hidden backdrop-blur-[60px] bg-gray-200/95 bg-gradient-to-br from-white/85 via-gray-200/95 to-gray-300/90 border border-gray-200/70 shadow-[0_22px_54px_rgba(15,23,42,0.22)]";
 
 export default function FloatingNavbarClient({ techLatest = [], communityLatest = [] as any[], isScrolled = false }: { techLatest?: any[]; communityLatest?: any[]; isScrolled?: boolean }) {
   const router = useRouter();
@@ -129,8 +129,8 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   return (
     <div className="flex items-center justify-between overflow-visible">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2 overflow-hidden">
-        <div className={`transition-all duration-300 ${isScrolled ? 'w-[24px]' : 'w-[80px]'}`} style={{ height: '30px' }}>
+      <Link href="/" className="flex items-center gap-2 overflow-hidden z-50 w-[80px]">
+        <div className={`transition-all duration-300 w-[80px]`} style={{ height: '30px' }}>
           <div className={`transition-all duration-300 translate-x-0`} style={{ width: '80px', height: '30px' }}>
             <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[80px]" />
           </div>
