@@ -12,7 +12,7 @@ import { Menu, X, ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
-
+import { ShortcutHint } from "@/utils/GetShortCutHint";
 const glassDropdown =
   "relative overflow-hidden backdrop-blur-[60px] bg-gray-200/95 bg-gradient-to-br from-white/85 via-gray-200/95 to-gray-300/90 border border-gray-200/70 shadow-[0_22px_54px_rgba(15,23,42,0.22)]";
 
@@ -379,7 +379,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           {!isScrolled && <span className="hidden lg:inline">Search</span>}
-          <span className="font-mono text-[10px] lg:text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px] whitespace-nowrap">Ctrl + K</span>
+          <span className="font-mono text-[10px] lg:text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px] whitespace-nowrap"><ShortcutHint /></span>
         </button>
         <div className="flex items-center md:gap-1.5 lg:gap-3 md:ml-1 lg:ml-2">
           <div className="hidden xl:flex xl:border-2 xl:border-orange-400/80 rounded-full">
