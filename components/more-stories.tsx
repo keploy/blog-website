@@ -12,6 +12,7 @@ interface MoreStoriesProps {
   isCommunity: boolean;
   isIndex: boolean;
   isSearchPage?: boolean;
+  showSearch?: boolean;
   initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
   externalSearchTerm?: string;
   onSearchChange?: (term: string) => void;
@@ -22,6 +23,7 @@ export default function MoreStories({
   isCommunity,
   isIndex,
   isSearchPage = false,
+  showSearch = false,
   initialPageInfo,
   externalSearchTerm,
   onSearchChange,
@@ -195,7 +197,7 @@ export default function MoreStories({
         )}
       </h2>
       
-      {(isIndex || isSearchPage) && (
+      {(isIndex || isSearchPage || showSearch) && (
         <div className="flex w-full mb-8">
           <div className="relative w-full">
             <input
