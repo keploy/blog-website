@@ -7,6 +7,7 @@ import Container from "../../components/container";
 import { getAllPostsFromTags, getAllTags } from "../../lib/api";
 import TagsStories from "../../components/TagsStories";
 import { useRouter } from "next/router";
+import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 export default function PostByTags({ postsByTags,preview}) {
   const posts = postsByTags?.edges || [];
   const router = useRouter();
@@ -17,6 +18,13 @@ export default function PostByTags({ postsByTags,preview}) {
       featuredImage={HOME_OG_IMAGE_URL}
       Title={`${slug} posts`}
       Description={`Posts by tag-${slug}`}
+      structuredData={[
+        getBreadcrumbListSchema([
+          { name: "Home", url: SITE_URL },
+          { name: "Tags", url: `${SITE_URL}/tag` },
+          { name: `${slug || "Tag"}`, url: `${SITE_URL}/tag/${slug || ""}` },
+        ]),
+      ]}
     >
       <Head>
         <title>{`${slug} posts`}</title>

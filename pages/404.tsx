@@ -4,6 +4,7 @@ import Head from "next/head";
 import NotFoundPage from "../components/NotFoundPage";
 import { getAllPostsForTechnology, getAllPostsForCommunity } from "../lib/api";
 import { GetStaticProps } from "next";
+import { getBreadcrumbListSchema, SITE_URL } from "../lib/structured-data";
 
 interface Custom404Props {
   latestPosts: { edges: Array<{ node: any }> };
@@ -14,6 +15,10 @@ interface Custom404Props {
 export default function Custom404({ latestPosts, communityPosts, technologyPosts }: Custom404Props) {
   const router = useRouter();
   const asPath = router.asPath;
+  const structuredData = getBreadcrumbListSchema([
+    { name: "Home", url: SITE_URL },
+    { name: "Not Found", url: `${SITE_URL}${asPath || "/404"}` },
+  ]);
 
   useEffect(() => {
     const redirectTimeout = setTimeout(() => {
@@ -34,6 +39,10 @@ export default function Custom404({ latestPosts, communityPosts, technologyPosts
       <Head>
         <title>404 - Page Not Found | Keploy Blog</title>
         <meta name="description" content="Oops! The page you're looking for doesn't exist. Explore our latest blog posts and featured articles." />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
       </Head>
       <NotFoundPage latestPosts={latestPosts} communityPosts={communityPosts} technologyPosts={technologyPosts} />
     </>
