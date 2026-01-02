@@ -27,7 +27,7 @@ export default function Header({
   }, []);
 
   return (
-    <div className="h-28 md:h-32 border-b border-gray-200/50">
+    <div className="h-28 md:h-32 border-b border-gray-200/50 z-50">
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-30 w-full transition duration-300 ease-in-out border-none bg-transparent",
