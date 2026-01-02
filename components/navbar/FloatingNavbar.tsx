@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import FloatingNavbarClient from "./FloatingNavbarClient";
 
 const glassNavBase =
-  "relative overflow-visible rounded-full transition-all duration-300 backdrop-blur-2xl";
+  "relative overflow-visible transition-all duration-300 backdrop-blur-2xl";
 const glassNavDefault =
   "bg-gradient-to-br from-gray-100/80 via-gray-100/62 to-gray-100/48 border border-white/70 shadow-[0_18px_44px_rgba(15,23,42,0.18)]";
 const glassNavScrolled =
@@ -40,19 +40,21 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
   }, [derivedBlogReadingPage]);
 
   const navPositionClasses = derivedBlogReadingPage
-    ? "relative top-0 mx-auto z-40"
-    : "fixed top-6 left-1/2 -translate-x-1/2 z-40";
+    ? "relative top-0 z-40"
+    : isScrolled
+      ? "fixed top-6 left-1/2 -translate-x-1/2 z-40"
+      : "fixed top-0 left-0 right-0 z-40";
   const navWidthClasses = isScrolled
-    ? "w-[82%] md:max-w-5xl"
-    : "w-[96%] md:max-w-6xl";
+    ? "w-[90%] md:w-[96%] md:max-w-6xl"
+    : "w-full";
   const navPaddingClasses = isScrolled
-    ? "px-4 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5"
+    ? "px-4 py-1.5 md:px-6 md:py-2 lg:px-8 lg:py-2.5"
     : "px-5 py-2 md:px-6 md:py-3 lg:px-8 lg:py-4";
   const navShadowClasses = derivedBlogReadingPage
     ? ""
     : isScrolled
-      ? "shadow-none"
-      : "shadow-[0_18px_44px_rgba(15,23,42,0.18)]";
+      ? "shadow-[0_18px_44px_rgba(15,23,42,0.18)]"
+      : "shadow-none";
 
   const navGlassClasses = derivedBlogReadingPage
     ? glassNavReading
@@ -60,12 +62,18 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
       ? glassNavScrolled
       : glassNavDefault;
 
+  const navBorderRadius = derivedBlogReadingPage
+    ? "rounded-none"
+    : isScrolled
+      ? "rounded-full"
+      : "rounded-none";
+
   return (
     <nav className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}>
         <div
-          className={`${glassNavBase} ${navGlassClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}
+          className={`${glassNavBase} ${navGlassClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses} ${navBorderRadius}`}
         >
-        <div className="pointer-events-none absolute inset-0 rounded-full">
+        <div className={`pointer-events-none absolute inset-0 ${navBorderRadius}`}>
           <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-gray-200/60 blur-2xl" />
           <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-gray-200/40 blur-3xl" />
         </div>
