@@ -228,7 +228,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           </footer>
           <SectionSeparator />
           {morePosts?.length > 0 && (
-            <MoreStories isIndex={false} posts={morePosts} isCommunity={true} />
+            <MoreStories isIndex={false} posts={morePosts} isCommunity={true} showSearch={true} />
           )}
         </article>
       </Container>
