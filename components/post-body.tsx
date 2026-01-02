@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import TOC from "./TableContents"; 
-import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5"; 
+import TOC from "./TableContents";
+import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
 import CodeMirror from "@uiw/react-codemirror";
@@ -17,7 +17,7 @@ import WaitlistBanner from "./waitlistBanner";
 import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
-import AdSlot from "./Adslot";
+// import AdSlot from "./Adslot";
 export default function PostBody({
   content,
   authorName,
@@ -33,7 +33,7 @@ export default function PostBody({
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [headingCopySuccessList, setHeadingCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [replacedContent, setReplacedContent] = useState(content || ""); 
+  const [replacedContent, setReplacedContent] = useState(content || "");
   const [isList, setIsList] = useState(false);
   const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
   // Optional safety: handle malformed ReviewAuthorDetails gracefully
@@ -41,7 +41,7 @@ export default function PostBody({
   const sameAuthor =
     reviewer &&
     authorName.split(" ")[0].toLowerCase() ===
-      reviewer.name.split(" ")[0].toLowerCase();
+    reviewer.name.split(" ")[0].toLowerCase();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -74,7 +74,7 @@ export default function PostBody({
     return () => {
       window.removeEventListener("resize", checkScreenSize);
     };
-  }, [content]); 
+  }, [content]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -97,31 +97,31 @@ export default function PostBody({
       }
       setTocItems(tocItems);
       setCopySuccessList(Array(tocItems.length).fill(false));
-      setHeadingCopySuccessList(Array(tocItems.length).fill(false)); 
-    }, 500); 
+      setHeadingCopySuccessList(Array(tocItems.length).fill(false));
+    }, 500);
 
-    return () => clearTimeout(timeout); 
+    return () => clearTimeout(timeout);
   }, [content]);
 
   useEffect(() => {
-  const timeout = setTimeout(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      const targetId = decodeURIComponent(hash.slice(1));
-      const el = document.getElementById(targetId);
-      if (el) {
-        setIsUserEnteredURL(true);
+    const timeout = setTimeout(() => {
+      const hash = window.location.hash;
+      if (hash) {
+        const targetId = decodeURIComponent(hash.slice(1));
+        const el = document.getElementById(targetId);
+        if (el) {
+          setIsUserEnteredURL(true);
 
-        const yOffset = -80;
-        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          const yOffset = -80;
+          const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
-        window.scrollTo({ top: y, behavior: "smooth" });
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
       }
-    }
-  }, 100);
+    }, 100);
 
-  return () => clearTimeout(timeout);
-}, [tocItems]);
+    return () => clearTimeout(timeout);
+  }, [tocItems]);
 
   useEffect(() => {
     const scrollObserverOptions = {
@@ -161,7 +161,7 @@ export default function PostBody({
         setTimeout(() => {
           updatedList[index] = false;
           setCopySuccessList(updatedList);
-        }, 2000); 
+        }, 2000);
       })
       .catch(() => {
         const updatedList = [...copySuccessList];
@@ -171,7 +171,7 @@ export default function PostBody({
   };
 
   const handleHeadingCopyClick = (id: string, index: number) => {
-    const url = sanitizeStringForURL(id,true);
+    const url = sanitizeStringForURL(id, true);
     const copyUrl = `${window.location.origin}${window.location.pathname}#${url}`;
     navigator.clipboard
       .writeText(copyUrl)
@@ -182,7 +182,7 @@ export default function PostBody({
         setTimeout(() => {
           updatedList[index] = false;
           setHeadingCopySuccessList([...updatedList]);
-        }, 2000); 
+        }, 2000);
       })
       .catch(() => {
         console.error("Failed to copy the URL.");
@@ -196,13 +196,13 @@ export default function PostBody({
 
       const button = document.createElement("button");
       button.className = "copy-url-button";
-      button.style.marginLeft = "8px"; 
+      button.style.marginLeft = "8px";
       button.style.cursor = "pointer";
       button.style.border = "none";
       button.style.background = "none";
       button.style.padding = "0";
       button.style.fontSize = "1rem";
-      button.style.color = "#555"; 
+      button.style.color = "#555";
       button.textContent = headingCopySuccessList[index] ? '✔️' : '#'; // // Copy Button
       button.addEventListener("click", () => {
         handleHeadingCopyClick(heading.innerHTML, index);
@@ -226,7 +226,7 @@ export default function PostBody({
       const button = heading.querySelector(".copy-url-button") as HTMLButtonElement;
       if (button) {
         // button.textContent = headingCopySuccessList[index] ? '✔️' : '🔗'; // // Copy Button
-        button.style.color = headingCopySuccessList[index] ? "#28a745" : "#555"; 
+        button.style.color = headingCopySuccessList[index] ? "#28a745" : "#555";
       }
     });
   }, [headingCopySuccessList]);
@@ -256,7 +256,7 @@ export default function PostBody({
       .map((part, index) => {
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
           const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
-          const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : ""; 
+          const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : "";
           const language =
             codeMatch && codeMatch[0].includes("language-")
               ? codeMatch[0].split("language-")[1].split('"')[0]
@@ -333,14 +333,12 @@ export default function PostBody({
 
   return (
     <div
-      className={`flex flex-col ${
-        isList ? "items-center" : "items-center lg:items-start lg:flex-row"
-      } `}
+      className={`flex flex-col ${isList ? "items-center" : "items-center lg:items-start lg:flex-row"
+        } `}
     >
       <div
-        className={`flex items-center justify-center w-full md:w-[80%] lg:w-1/4 top-20 lg:block ${
-          isList ? "" : "lg:sticky"
-        }`}
+        className={`flex items-center justify-center w-full md:w-[80%] lg:w-1/4 top-20 lg:block ${isList ? "" : "lg:sticky"
+          }`}
       >
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
@@ -350,7 +348,7 @@ export default function PostBody({
         <hr className="border-gray-300 mt-10 mb-20" />
         <div>
 
-</div>
+        </div>
 
         <h1 className="text-2xl font-medium">Authored By:</h1>
         <div className="my-5">
@@ -374,21 +372,21 @@ export default function PostBody({
         )}
       </div>
 
-  <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
-        
-  {/* 1. Waitlist banner (always shown) */}
-  <div className="flex justify-center">
-    <WaitlistBanner />
-  </div>
+      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
 
-  {/* 2. Ad slot (hidden on <lg) */}
-  <div className="hidden lg:flex justify-center rounded-xl p-4">
+        {/* 1. Waitlist banner (always shown) */}
+        <div className="flex justify-center">
+          <WaitlistBanner />
+        </div>
+
+        {/* 2. Ad slot (hidden on <lg) */}
+        {/* <div className="hidden lg:flex justify-center rounded-xl p-4">
     <AdSlot
       slotId="3356716061"
       className="w-full h-60"
     />
-  </div>
-</aside>
+  </div> */}
+      </aside>
 
     </div>
   );
