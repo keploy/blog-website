@@ -129,13 +129,22 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   return (
     <div className="flex items-center justify-between overflow-visible">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2 overflow-hidden z-50 w-[80px]">
-        <div className={`transition-all duration-300 w-[80px]`} style={{ height: '30px' }}>
-          <div className={`transition-all duration-300 translate-x-0`} style={{ width: '80px', height: '30px' }}>
-            <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[80px]" />
-          </div>
-        </div>
-      </Link>
+      {/* Logo */}
+<Link
+  href="/"
+  className="flex items-center z-50 overflow-visible"
+>
+  <div className="relative w-[80px] h-[30px] flex items-center">
+    <Image
+      src={sideBySideSvg}
+      alt="Keploy Logo"
+      fill
+      priority
+      className="object-contain"
+    />
+  </div>
+</Link>
+
 
       {/* Desktop Navigation */}
       <div className={`hidden md:flex items-center overflow-visible transition-all duration-300 ${isScrolled ? 'md:gap-3 md:ml-2 lg:gap-5 lg:ml-3' : 'md:gap-4 md:ml-3 lg:gap-7 lg:ml-5'}`}>
