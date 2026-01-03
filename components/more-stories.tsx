@@ -12,6 +12,7 @@ interface MoreStoriesProps {
   isCommunity: boolean;
   isIndex: boolean;
   isSearchPage?: boolean;
+  showSearch?: boolean;
   initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
   externalSearchTerm?: string;
   onSearchChange?: (term: string) => void;
@@ -22,6 +23,7 @@ export default function MoreStories({
   isCommunity,
   isIndex,
   isSearchPage = false,
+  showSearch = false,
   initialPageInfo,
   externalSearchTerm,
   onSearchChange,
@@ -88,12 +90,14 @@ export default function MoreStories({
   // 3. Handle Enter Key (Conditional Logic)
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      // ONLY redirect if we are on Community AND NOT already on the search page
-      if (isCommunity && !isSearchPage && searchTerm.trim()) {
+      // ONLY redirect if we are on Community index page (not detail pages with showSearch)
+      // AND NOT already on the search page
+      if (isCommunity && !isSearchPage && !showSearch && searchTerm.trim()) {
         event.preventDefault();
         router.push(`/community/search?q=${encodeURIComponent(searchTerm)}`);
       }
-      // For Technology (!isCommunity), do nothing. The local filter is already active.
+      // For Technology (!isCommunity) or detail pages (showSearch), do nothing. 
+      // The local filter is already active.
     }
   };
 
@@ -195,7 +199,7 @@ export default function MoreStories({
         )}
       </h2>
       
-      {(isIndex || isSearchPage) && (
+      {(isIndex || isSearchPage || showSearch) && (
         <div className="flex w-full mb-8">
           <div className="relative w-full">
             <input
