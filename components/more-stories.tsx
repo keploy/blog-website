@@ -97,14 +97,14 @@ export default function MoreStories({
     }
   };
 
-  // 4. Filtering Logic
-  // We filter locally for BOTH Community and Tech to give the "Then and There" experience.
-  const postsToDisplay = allPosts; 
-  
-  const filteredPosts = postsToDisplay.filter(({ node }) => 
-    node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+// 4. Filtering logic
+// We filter locally for BOTH Community and Tech to give the "Then and There" experience.
+const postsToDisplay = allPosts;
+
+const filteredPosts = postsToDisplay.filter(({ node }) =>
+  node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   // Reset visible count when search changes
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function MoreStories({
     try {
       const category = isCommunity ? 'community' : 'technology';
       const result = await fetchMorePosts(category, endCursor);
-      
+
       if (result.edges.length) {
         setBuffer(currentBuffer => [...currentBuffer, ...result.edges]);
         setEndCursor(result.pageInfo.endCursor);
@@ -164,7 +164,7 @@ export default function MoreStories({
       if (buffer.length < 9 && hasMore) {
         const category = isCommunity ? 'community' : 'technology';
         const result = await fetchMorePosts(category, endCursor);
-        
+
         if (result.edges.length > 0) {
           setBuffer(prev => [...prev, ...result.edges]);
           setEndCursor(result.pageInfo.endCursor);
@@ -181,35 +181,55 @@ export default function MoreStories({
     }
   };
 
-  const showLoadMore = isSearchPage || searchTerm
-    ? visibleCount < filteredPosts.length 
-    : (visibleCount < allPosts.length || buffer.length > 0 || hasMore) && !loading && !error && isIndex;
-
-  return (
-    <section>
-      <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
+const showLoadMore =
+  isSearchPage || searchTerm
+    ? visibleCount < filteredPosts.length
+    : (visibleCount < allPosts.length ||
+        buffer.length > 0 ||
+        hasMore) &&
+      !loading &&
+      !error &&
+      isIndex;
+return (
+  <section>
+    <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center">
+      {/* Title */}
+      <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
         {isSearchPage ? (
-            searchTerm ? `Results for "${searchTerm}"` : "Search Results"
+          searchTerm ? `Results for "${searchTerm}"` : "Search Results"
         ) : (
-            "More Stories"
+          "More Stories"
         )}
       </h2>
-      
+
+      {/* Spacer (desktop only) */}
+      <div className="hidden md:flex flex-1" />
+
+      {/* Search */}
       {(isIndex || isSearchPage) && (
-        <div className="flex w-full mb-8">
-          <div className="relative w-full">
+        <div className="relative w-full md:w-72">
+          {/* your SearchBar component here */}
+        </div>
+      )}
+    </div>
+
             <input
               type="text"
               placeholder={`Search ${isCommunity ? 'Community' : 'Technology'} posts...`}
               value={searchTerm}
               onChange={handleSearchChange}
-              onKeyDown={handleKeyDown}
-              className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+onKeyDown={handleKeyDown}
+className="w-full rounded-full border border-gray-300 p-2.5 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
+
             />
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
+
+
+
 
       {filteredPosts.length === 0 ? (
         <p className="text-center text-gray-500">No posts found matching {`"${searchTerm}"`}</p>
