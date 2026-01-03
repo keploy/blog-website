@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import PostCard from "./post-card";
@@ -6,20 +7,34 @@ import PostGrid from "./post-grid";
 import { FaSearch } from 'react-icons/fa';
 import { fetchMorePosts } from "../lib/api";
 
+interface MoreStoriesProps {
+  posts: { node: Post }[];
+  isCommunity: boolean;
+  isIndex: boolean;
+  isSearchPage?: boolean;
+  initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
+  externalSearchTerm?: string;
+  onSearchChange?: (term: string) => void;
+}
+
 export default function MoreStories({
   posts: initialPosts,
   isCommunity,
   isIndex,
+  isSearchPage = false,
   initialPageInfo,
-}: {
-  posts: { node: Post }[];
-  isCommunity: boolean;
-  isIndex: boolean;
-  initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
-}) {
-  const [searchTerm, setSearchTerm] = useState("");
-  // Initialize with 21 posts (22 - 1 hero post)
-  const [allPosts, setAllPosts] = useState(initialPosts.slice(0, 21));
+  externalSearchTerm,
+  onSearchChange,
+}: MoreStoriesProps) {
+  
+  const router = useRouter();
+  
+  //Internal state for search if not controlled by parent
+  const [localSearchTerm, setLocalSearchTerm] = useState("");
+  // Determine which search term to use (Parent's or Local)
+  const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : localSearchTerm;
+  
+  const [allPosts, setAllPosts] = useState<{ node: Post }[]>([]);
   const [visibleCount, setVisibleCount] = useState(12);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialPageInfo?.hasNextPage ?? true);
@@ -27,34 +42,87 @@ export default function MoreStories({
   const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
 
-  // Set up initial buffer with remaining posts
+  // Initialize posts based on page type
   useEffect(() => {
-    if (initialPosts.length > 21) {
-      setBuffer(initialPosts.slice(21));
+    if (isSearchPage) {
+      setAllPosts(initialPosts); // Search page usually has all posts passed
+    } else {
+      setAllPosts(initialPosts); // Index pages now also need all posts to filter locally
     }
-    // Start background fetch if we have less than 9 posts in buffer
-    if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
-      loadMoreInBackground();
-    }
-  }, [initialPosts]);
+  }, [initialPosts, isSearchPage]);
 
-  // Filter posts based on search term
-  const filteredPosts = allPosts.filter(({ node }) =>
-    node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  // Reset visible count when search term changes
+  // 1. Sync Input from URL on Load
   useEffect(() => {
+    if (!router.isReady || externalSearchTerm !== undefined) return;
+    const q = router.query.q as string;
+    if (q && !localSearchTerm) {
+      setLocalSearchTerm(q);
+    }
+  }, [router.isReady, router.query, externalSearchTerm]);
+
+  // 2. Handle Search Input (Universal URL Sync + Local State)
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    
+    // If Parent controls input (Search Page), let parent handle it
+    if (onSearchChange) {
+      onSearchChange(value);
+    } else {
+      // Listing Page Logic (Community or Tech)
+      setLocalSearchTerm(value);
+      
+      // Update URL instantly for ALL pages (Community & Tech)
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        if (value) {
+          url.searchParams.set("q", value);
+        } else {
+          url.searchParams.delete("q");
+        }
+        // Use replaceState to update URL without reloading
+        window.history.replaceState({ path: url.href }, "", url.toString());
+      }
+    }
+  };
+
+  // 3. Handle Enter Key (Conditional Logic)
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      // ONLY redirect if we are on Community AND NOT already on the search page
+      if (isCommunity && !isSearchPage && searchTerm.trim()) {
+        event.preventDefault();
+        router.push(`/community/search?q=${encodeURIComponent(searchTerm)}`);
+      }
+      // For Technology (!isCommunity), do nothing. The local filter is already active.
+    }
+  };
+
+// 4. Filtering logic
+// We filter locally for BOTH Community and Tech to give the "Then and There" experience.
+const postsToDisplay = allPosts;
+
+const filteredPosts = postsToDisplay.filter(({ node }) =>
+  node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+  // Reset visible count when search changes
+  useEffect(() => {
+    // If searching, show standard amount. If search cleared, revert.
     setVisibleCount(12);
     setError(null);
   }, [searchTerm]);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  // Buffer Logic (Mostly for infinite scroll on standard feed)
+  useEffect(() => {
+    if (!isSearchPage && initialPosts.length > 21) {
+      setBuffer(initialPosts.slice(21));
+    }
+    if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
+      loadMoreInBackground();
+    }
+  }, [initialPosts, isIndex, isSearchPage]);
 
-  // Fetch more posts in background
   const loadMoreInBackground = async () => {
     try {
       const category = isCommunity ? 'community' : 'technology';
@@ -69,25 +137,23 @@ export default function MoreStories({
       }
     } catch (error) {
       console.error('Error fetching more posts:', error);
-      setError('Failed to load more posts. Please try again later.');
     }
   };
 
   const loadMorePosts = async () => {
     if (loading) return;
-
-    if (searchTerm) {
+    
+    // If we are searching, we just show more from the filtered list (pagination)
+    if (searchTerm || isSearchPage) {
       setVisibleCount(prev => prev + 9);
       return;
     }
 
     setLoading(true);
     try {
-      // First, show more posts from allPosts if available
       if (visibleCount < allPosts.length) {
         setVisibleCount(prev => Math.min(prev + 9, allPosts.length));
-      }
-      // Then, add posts from buffer if needed
+      } 
       else if (buffer.length > 0) {
         const postsToAdd = buffer.slice(0, 9);
         setAllPosts(prev => [...prev, ...postsToAdd]);
@@ -95,7 +161,6 @@ export default function MoreStories({
         setVisibleCount(prev => prev + postsToAdd.length);
       }
 
-      // If buffer is getting low, fetch more posts
       if (buffer.length < 9 && hasMore) {
         const category = isCommunity ? 'community' : 'technology';
         const result = await fetchMorePosts(category, endCursor);
@@ -116,34 +181,46 @@ export default function MoreStories({
     }
   };
 
-  // Show load more button if there are more posts to show from allPosts,
-  // or if there are posts in buffer, or if we can fetch more
-  const showLoadMore = (
-    visibleCount < allPosts.length ||
-    buffer.length > 0 ||
-    hasMore
-  ) && !loading && !error && isIndex;
+const showLoadMore =
+  isSearchPage || searchTerm
+    ? visibleCount < filteredPosts.length
+    : (visibleCount < allPosts.length ||
+        buffer.length > 0 ||
+        hasMore) &&
+      !loading &&
+      !error &&
+      isIndex;
+return (
+  <section>
+    <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center">
+      {/* Title */}
+      <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
+        {isSearchPage ? (
+          searchTerm ? `Results for "${searchTerm}"` : "Search Results"
+        ) : (
+          "More Stories"
+        )}
+      </h2>
 
-  return (
-    <section>
-      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center">
-        {/* Title */}
-        <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
-          More Stories
-        </h2>
+      {/* Spacer (desktop only) */}
+      <div className="hidden md:flex flex-1" />
 
-        {/* Spacer (only on desktop) */}
-        <div className="hidden md:flex flex-1" />
+      {/* Search */}
+      {(isIndex || isSearchPage) && (
+        <div className="relative w-full md:w-72">
+          {/* your SearchBar component here */}
+        </div>
+      )}
+    </div>
 
-        {/* Search */}
-        {true && (
-          <div className="relative w-full md:w-72">
             <input
               type="text"
-              placeholder="Search posts..."
+              placeholder={`Search ${isCommunity ? 'Community' : 'Technology'} posts...`}
               value={searchTerm}
               onChange={handleSearchChange}
-              className="w-full rounded-full border border-gray-300 p-2.5 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
+onKeyDown={handleKeyDown}
+className="w-full rounded-full border border-gray-300 p-2.5 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
+
             />
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
           </div>
@@ -155,7 +232,7 @@ export default function MoreStories({
 
 
       {filteredPosts.length === 0 ? (
-        <p className="text-center text-gray-500">No posts found by the name {`"${searchTerm}"`}</p>
+        <p className="text-center text-gray-500">No posts found matching {`"${searchTerm}"`}</p>
       ) : (
         <>
           <PostGrid>
@@ -169,7 +246,7 @@ export default function MoreStories({
                 slug={node.slug}
                 excerpt={getExcerpt(node.excerpt, 20)}
                 isCommunity={
-                  node.categories.edges[0]?.node.name === "technology" ? false : true
+                  node.categories?.edges?.[0]?.node?.name === "technology" ? false : true
                 }
               />
             ))}
