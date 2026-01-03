@@ -101,7 +101,7 @@ export default function TOC({ headings, isList, setIsList }) {
   // Render dropdown if on a small screen, otherwise render regular TOC
   return isSmallScreen ? (
     <>
-      <div className="w-full max-w-[700px] px-4 mx-auto top-20">
+      <div className="w-full max-w-[700px] px-4 mx-auto top-20 z-10">
         <div className="flex items-center justify-center text-center w-full">
           <button
             onClick={() => setIsDropdownOpen((prev) => !prev)}
@@ -188,7 +188,7 @@ export default function TOC({ headings, isList, setIsList }) {
           ))}
         </select>
       </div>
-      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
+      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky z-10">
         <div className="mb-2 text-lg font-semibold">Table of Contents</div>
         {isList ? (
           <select

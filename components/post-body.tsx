@@ -372,7 +372,7 @@ export default function PostBody({
         )}
       </div>
 
-      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
+      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky lg:top-20 z-10">
 
         {/* 1. Waitlist banner (always shown) */}
         <div className="flex justify-center">
