@@ -11,7 +11,6 @@ import PostTitle from "../../components/post-title";
 import Tags from "../../components/tag";
 import {
   getAllPostsForTechnology,
-  getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
 import PrismLoader from "../../components/prism-loader";
@@ -217,7 +216,12 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           </footer>
           <SectionSeparator />
           {morePosts?.length > 0 && (
-            <MoreStories isIndex={false} posts={morePosts} isCommunity={false} />
+            <MoreStories 
+              isIndex={true} 
+              posts={morePosts} 
+              isCommunity={false} 
+              initialPageInfo={posts?.pageInfo}
+            />
           )}
         </article>
       </Container>
@@ -256,7 +260,17 @@ export const getStaticProps: GetStaticProps = async ({
       };
     }
 
-    const moreStories = await getMoreStoriesForSlugs(data.post?.tags, data.post?.slug);
+    // Fetch technology posts with pagination info (similar to index page)
+    const allTechPosts = await getAllPostsForTechnology(preview);
+    
+    // Filter out the current post from the results
+    const filteredPosts = allTechPosts.edges.filter(
+      ({ node }) => node.slug !== data.post?.slug
+    );
+    
+    // Get pageInfo for pagination
+    const pageInfo = allTechPosts.pageInfo;
+    
     const authorDetails = await Promise.all([
       getReviewAuthorDetails("neha"),
       getReviewAuthorDetails("Jain"),
@@ -276,7 +290,7 @@ export const getStaticProps: GetStaticProps = async ({
       props: {
         preview,
         post: data.post,
-        posts: moreStories?.techMoreStories || { edges: [] },
+        posts: { edges: filteredPosts, pageInfo },
         reviewAuthorDetails: authorDetails,
       },
       revalidate: 10,
