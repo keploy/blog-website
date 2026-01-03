@@ -63,9 +63,13 @@ const ReviewCard = ({
           " />
 
         {/* quote icon box */}
-        <div className="mb-4 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-500 text-lg font-bold">
+        {/* quote icon box */}
+        <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-500 text-2xl font-bold leading-none">
           “
         </div>
+
+
+
 
         {/* content */}
         <blockquote className="text-[14.5px] leading-relaxed text-gray-600">
