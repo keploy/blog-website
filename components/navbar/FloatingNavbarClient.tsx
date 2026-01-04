@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import ThemeToggle from './theme-toggle';
+
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
@@ -372,6 +374,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
 
       {/* Desktop CTA */}
       <div className={`hidden md:flex items-center transition-all duration-300 ${isScrolled ? 'md:gap-2 md:ml-2 lg:gap-2.5 lg:ml-3' : 'md:gap-3 md:ml-3 lg:gap-4 lg:ml-6'}`}>
+        <ThemeToggle />
         {/* Oval search container */}
         <button
           onClick={() => setSearchOpen(true)}
