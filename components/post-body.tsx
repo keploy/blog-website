@@ -350,7 +350,7 @@ export default function PostBody({
 
         </div>
 
-        <h1 className="text-2xl font-medium">Authored By:</h1>
+        <h1 className="text-2xl font-medium">Authored By: {authorName}</h1>
         <div className="my-5">
           <AuthorDescription
             authorData={content}
@@ -360,7 +360,7 @@ export default function PostBody({
         </div>
         {reviewer && !sameAuthor && (
           <div className="my-20">
-            <h1 className="text-2xl font-medium">Reviewed By:</h1>
+            <h1 className="text-2xl font-medium">Reviewed By: {reviewer.name}</h1>
             <div>
               <ReviewingAuthor
                 name={reviewer.name}
