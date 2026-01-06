@@ -66,21 +66,21 @@ export default function TOC({ headings, isList, setIsList }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+
   const handleItemClick = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const offsetPosition = element.offsetTop - offset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+  const sanitizedId = sanitizeStringForURL(id, true);
+  const element = document.getElementById(sanitizedId);
+  if (element) {
+    const offset = 80; 
+    const offsetPosition = element.offsetTop - offset;
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
 
-      const urlChange = sanitizeStringForURL(element.innerHTML, true)
-
-      window.history.replaceState(null, null, `#${urlChange}`);
-    }
-  };
+    window.history.replaceState(null, null, `#${sanitizedId}`);
+  }
+};
 
   // State to track screen width
   const [isSmallScreen, setIsSmallScreen] = useState(false);
