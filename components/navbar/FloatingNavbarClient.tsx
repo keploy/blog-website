@@ -447,25 +447,79 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             <div className="relative z-10 flex flex-col flex-1 overflow-hidden min-h-0" style={{ maxHeight: 'calc(100vh - 18rem)' }}>
               <div className="overflow-y-auto overscroll-contain px-5 py-5 flex-1 min-h-0">
                 <div className="space-y-2.5">
-                  {/* Technology Link */}
-                  <Link 
-                  href="/technology" 
-                  onClick={()=>setMobileMenuOpen(false)} 
-                  className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]"
-                >
-                  <span className="font-semibold text-[15px] text-black/90">Technology</span>
-                  <ChevronRight className="w-4 h-4 text-neutral-500" />
-                </Link>
+                  {/* Technology Collapsible */}
+                  <Collapsible open={mobileTechOpen} onOpenChange={setMobileTechOpen}>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]">
+                      <span className="font-semibold text-[15px] text-black/90">Technology</span>
+                      <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform duration-200 ${mobileTechOpen ? 'rotate-180':''}`} />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-2.5 space-y-2 overflow-visible">
+                      <div className="space-y-2 border-l-2 border-neutral-200/40 pl-4 ml-2 pr-1">
+                        {(techState.length ? techState.slice(0,4) : new Array(4).fill(null)).map((edge, i) => {
+                          if (!edge) {
+                            return (
+                              <div key={`tech-skel-${i}`} className="rounded-xl overflow-hidden ring-1 ring-neutral-200/60 bg-white shadow-sm animate-pulse flex flex-col p-3 space-y-2">
+                                <div className="h-4 w-3/4 bg-white/50 rounded" />
+                                <div className="h-3 w-2/3 bg-white/40 rounded" />
+                              </div>
+                            );
+                          }
+                          const { node } = edge;
+                          return (
+                            <Link
+                              key={node.slug}
+                              href={`/technology/${node.slug}`}
+                              onClick={()=>setMobileMenuOpen(false)}
+                              className="flex items-start justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md"
+                            >
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium text-sm text-black/90 line-clamp-1 hover:text-orange-600">{node.title}</div>
+                                <div className="text-xs text-neutral-600 mt-0.5">{new Date(node.date).toLocaleDateString()}</div>
+                              </div>
+                              <ChevronRight className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0 ml-2" />
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
 
-                  {/* Community Link */}
-                  <Link 
-                    href="/community" 
-                    onClick={()=>setMobileMenuOpen(false)} 
-                    className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]"
-                  >
-                    <span className="font-semibold text-[15px] text-black/90">Community</span>
-                    <ChevronRight className="w-4 h-4 text-neutral-500" />
-                  </Link>
+                  {/* Community Collapsible */}
+                  <Collapsible open={mobileCommunityOpen} onOpenChange={setMobileCommunityOpen}>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full px-5 py-3.5 rounded-2xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[52px]">
+                      <span className="font-semibold text-[15px] text-black/90">Community</span>
+                      <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform duration-200 ${mobileCommunityOpen ? 'rotate-180':''}`} />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-2.5 space-y-2 overflow-visible">
+                      <div className="space-y-2 border-l-2 border-neutral-200/40 pl-4 ml-2 pr-1">
+                        {(communityState.length ? communityState.slice(0,4) : new Array(4).fill(null)).map((edge, i) => {
+                          if (!edge) {
+                            return (
+                              <div key={`comm-skel-${i}`} className="rounded-xl overflow-hidden ring-1 ring-neutral-200/60 bg-white shadow-sm animate-pulse flex flex-col p-3 space-y-2">
+                                <div className="h-4 w-3/4 bg-white/50 rounded" />
+                                <div className="h-3 w-2/3 bg-white/40 rounded" />
+                              </div>
+                            );
+                          }
+                          const { node } = edge;
+                          return (
+                            <Link
+                              key={node.slug}
+                              href={`/community/${node.slug}`}
+                              onClick={()=>setMobileMenuOpen(false)}
+                              className="flex items-start justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md"
+                            >
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium text-sm text-black/90 line-clamp-1 hover:text-orange-600">{node.title}</div>
+                                <div className="text-xs text-neutral-600 mt-0.5">{new Date(node.date).toLocaleDateString()}</div>
+                              </div>
+                              <ChevronRight className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0 ml-2" />
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
 
                   {/* Resources Collapsible */}
                   <Collapsible open={mobileResourcesOpen} onOpenChange={setMobileResourcesOpen}>
@@ -473,9 +527,9 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       <span className="font-semibold text-[15px] text-black/90">Resources</span>
                       <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform duration-200 ${mobileResourcesOpen ? 'rotate-180':''}`} />
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="mt-2.5 space-y-2">
+                    <CollapsibleContent className="mt-2.5 space-y-2 overflow-visible">
                       {/* Nested sub-items with visual hierarchy */}
-                      <div className="space-y-2 border-l-2 border-neutral-200/40 pl-4 ml-2">
+                      <div className="space-y-2 border-l-2 border-neutral-200/40 pl-4 ml-2 pr-1">
                       <Link 
                           href="/tag" 
                           onClick={()=>setMobileMenuOpen(false)} 

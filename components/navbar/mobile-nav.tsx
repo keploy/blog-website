@@ -49,7 +49,8 @@ const MobileNavSection = ({
                   >
                     {column.title}
                   </Link>
-                ) : (
+                ) : 
+                (
                   <p className="text-base font-medium text-[#737373]">
                     {" "}
                     {column.title}
