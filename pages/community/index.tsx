@@ -1,17 +1,30 @@
 import Head from "next/head";
 import { GetStaticProps } from "next";
+import { useState, useEffect } from "react";
 import Container from "../../components/container";
 import MoreStories from "../../components/more-stories";
 import HeroPost from "../../components/hero-post";
+import HeroPostSkeleton from "../../components/skeletons/HeroPostSkeleton";
 import Layout from "../../components/layout";
 import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
+import { HOME_OG_IMAGE_URL } from "../../lib/constants";
+import { useConnectionAwareSkeleton } from "../../hooks/useConnectionAwareSkeleton";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
 export default function Community({ allPosts: { edges, pageInfo }, preview }) {
-  const heroPost = edges[0]?.node;
-  const excerpt = getExcerpt(edges[0]?.node.excerpt);
-  const morePosts = edges.slice(1);
+  const safeEdges = edges || [];
+  const [displayPosts, setDisplayPosts] = useState(safeEdges);
+  const showSkeleton = useConnectionAwareSkeleton();
+
+  useEffect(() => {
+    setDisplayPosts(edges || []);
+  }, [edges]);
+
+  const heroPost = displayPosts[0]?.node || safeEdges[0]?.node;
+  const excerpt = getExcerpt(heroPost?.excerpt || "");
+  const morePosts = heroPost ? displayPosts.slice(1) : [];
+
   const structuredData = [
     getBreadcrumbListSchema([
       { name: "Home", url: SITE_URL },
@@ -31,12 +44,19 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
     return content;
   }
 
+  const layoutTitle = heroPost?.title || "Keploy Community Blog";
+  const layoutDescription = heroPost
+    ? getExcerpt(heroPost?.excerpt || "")
+    : "Latest stories from the Keploy community.";
+  const layoutImage =
+    heroPost?.featuredImage?.node?.sourceUrl || HOME_OG_IMAGE_URL;
+
   return (
     <Layout
       preview={preview}
-      featuredImage={heroPost?.featuredImage?.node.sourceUrl}
-      Title={heroPost?.title}
-      Description={`Blog from the Technology Page`}
+      featuredImage={layoutImage}
+      Title={layoutTitle}
+      Description={layoutDescription}
       structuredData={structuredData}
     >
       <Head>
@@ -44,20 +64,43 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
       </Head>
       <Header />
       <Container>
-        {/* <Intro /> */}
         {heroPost && (
-          <HeroPost
-            title={heroPost.title}
-            coverImage={heroPost.featuredImage}
-            date={heroPost.date}
-            author={heroPost.ppmaAuthorName}
-            slug={heroPost.slug}
-            excerpt={excerpt}
-            isCommunity={true}
-          />
+          <div className="relative">
+            <div
+              className={`transition-opacity duration-300 ${
+                showSkeleton ? "opacity-0" : "opacity-100"
+              }`}
+              aria-hidden={showSkeleton}
+            >
+              <HeroPost
+                title={heroPost.title}
+                coverImage={heroPost.featuredImage}
+                date={heroPost.date}
+                author={heroPost.ppmaAuthorName}
+                slug={heroPost.slug}
+                excerpt={excerpt}
+                isCommunity={true}
+              />
+            </div>
+            {showSkeleton && (
+              <div className="absolute inset-0 z-10 pointer-events-none">
+                <HeroPostSkeleton />
+              </div>
+            )}
+          </div>
         )}
+
         {morePosts.length > 0 && (
-          <MoreStories isIndex={true} posts={morePosts} isCommunity={true} initialPageInfo={pageInfo} />
+          <div className="relative mt-10">
+            <MoreStories
+              isIndex={true}
+              posts={morePosts}
+              isCommunity={true}
+              initialPageInfo={pageInfo}
+              initialSkeleton={showSkeleton}
+              initialSkeletonCount={11}
+            />
+          </div>
         )}
       </Container>
     </Layout>

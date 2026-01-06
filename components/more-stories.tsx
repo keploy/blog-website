@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
+import { cn } from "../lib/utils";
 import PostCard from "./post-card";
 import PostGrid from "./post-grid";
-import { FaSearch } from 'react-icons/fa';
+import PostGridSkeleton from "./skeletons/PostGridSkeleton";
+import { FaSearch } from "react-icons/fa";
 import { fetchMorePosts } from "../lib/api";
 
 interface MoreStoriesProps {
@@ -15,6 +17,8 @@ interface MoreStoriesProps {
   initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
   externalSearchTerm?: string;
   onSearchChange?: (term: string) => void;
+  initialSkeleton?: boolean;
+  initialSkeletonCount?: number;
 }
 
 export default function MoreStories({
@@ -25,31 +29,37 @@ export default function MoreStories({
   initialPageInfo,
   externalSearchTerm,
   onSearchChange,
+  initialSkeleton = false,
+  initialSkeletonCount = 12,
 }: MoreStoriesProps) {
-  
   const router = useRouter();
-  
+  const normalizedInitialPosts = useMemo(
+    () => initialPosts || [],
+    [initialPosts]
+  );
+
   //Internal state for search if not controlled by parent
   const [localSearchTerm, setLocalSearchTerm] = useState("");
   // Determine which search term to use (Parent's or Local)
-  const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : localSearchTerm;
-  
-  const [allPosts, setAllPosts] = useState<{ node: Post }[]>([]);
+  const searchTerm =
+    externalSearchTerm !== undefined ? externalSearchTerm : localSearchTerm;
+
+  const [allPosts, setAllPosts] = useState<{ node: Post }[]>(
+    normalizedInitialPosts
+  );
   const [visibleCount, setVisibleCount] = useState(12);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialPageInfo?.hasNextPage ?? true);
   const [error, setError] = useState(null);
-  const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
+  const [endCursor, setEndCursor] = useState(
+    initialPageInfo?.endCursor ?? null
+  );
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
 
   // Initialize posts based on page type
   useEffect(() => {
-    if (isSearchPage) {
-      setAllPosts(initialPosts); // Search page usually has all posts passed
-    } else {
-      setAllPosts(initialPosts); // Index pages now also need all posts to filter locally
-    }
-  }, [initialPosts, isSearchPage]);
+    setAllPosts(normalizedInitialPosts);
+  }, [normalizedInitialPosts]);
 
   // 1. Sync Input from URL on Load
   useEffect(() => {
@@ -63,14 +73,14 @@ export default function MoreStories({
   // 2. Handle Search Input (Universal URL Sync + Local State)
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    
+
     // If Parent controls input (Search Page), let parent handle it
     if (onSearchChange) {
       onSearchChange(value);
     } else {
       // Listing Page Logic (Community or Tech)
       setLocalSearchTerm(value);
-      
+
       // Update URL instantly for ALL pages (Community & Tech)
       if (typeof window !== "undefined") {
         const url = new URL(window.location.href);
@@ -87,7 +97,7 @@ export default function MoreStories({
 
   // 3. Handle Enter Key (Conditional Logic)
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       // ONLY redirect if we are on Community AND NOT already on the search page
       if (isCommunity && !isSearchPage && searchTerm.trim()) {
         event.preventDefault();
@@ -99,11 +109,12 @@ export default function MoreStories({
 
   // 4. Filtering Logic
   // We filter locally for BOTH Community and Tech to give the "Then and There" experience.
-  const postsToDisplay = allPosts; 
-  
-  const filteredPosts = postsToDisplay.filter(({ node }) => 
-    node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+  const postsToDisplay = allPosts;
+
+  const filteredPosts = postsToDisplay.filter(
+    ({ node }) =>
+      node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Reset visible count when search changes
@@ -118,55 +129,58 @@ export default function MoreStories({
     if (!isSearchPage && initialPosts.length > 21) {
       setBuffer(initialPosts.slice(21));
     }
-    if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
+    if (
+      isIndex &&
+      initialPageInfo?.hasNextPage &&
+      (!buffer.length || buffer.length < 9)
+    ) {
       loadMoreInBackground();
     }
   }, [initialPosts, isIndex, isSearchPage]);
 
   const loadMoreInBackground = async () => {
     try {
-      const category = isCommunity ? 'community' : 'technology';
+      const category = isCommunity ? "community" : "technology";
       const result = await fetchMorePosts(category, endCursor);
-      
+
       if (result.edges.length) {
-        setBuffer(currentBuffer => [...currentBuffer, ...result.edges]);
+        setBuffer((currentBuffer) => [...currentBuffer, ...result.edges]);
         setEndCursor(result.pageInfo.endCursor);
         setHasMore(result.pageInfo.hasNextPage);
       } else {
         setHasMore(false);
       }
     } catch (error) {
-      console.error('Error fetching more posts:', error);
+      console.error("Error fetching more posts:", error);
     }
   };
 
   const loadMorePosts = async () => {
     if (loading) return;
-    
+
     // If we are searching, we just show more from the filtered list (pagination)
     if (searchTerm || isSearchPage) {
-      setVisibleCount(prev => prev + 9);
+      setVisibleCount((prev) => prev + 9);
       return;
     }
 
     setLoading(true);
     try {
       if (visibleCount < allPosts.length) {
-        setVisibleCount(prev => Math.min(prev + 9, allPosts.length));
-      } 
-      else if (buffer.length > 0) {
+        setVisibleCount((prev) => Math.min(prev + 9, allPosts.length));
+      } else if (buffer.length > 0) {
         const postsToAdd = buffer.slice(0, 9);
-        setAllPosts(prev => [...prev, ...postsToAdd]);
-        setBuffer(prev => prev.slice(9));
-        setVisibleCount(prev => prev + postsToAdd.length);
+        setAllPosts((prev) => [...prev, ...postsToAdd]);
+        setBuffer((prev) => prev.slice(9));
+        setVisibleCount((prev) => prev + postsToAdd.length);
       }
 
       if (buffer.length < 9 && hasMore) {
-        const category = isCommunity ? 'community' : 'technology';
+        const category = isCommunity ? "community" : "technology";
         const result = await fetchMorePosts(category, endCursor);
-        
+
         if (result.edges.length > 0) {
-          setBuffer(prev => [...prev, ...result.edges]);
+          setBuffer((prev) => [...prev, ...result.edges]);
           setEndCursor(result.pageInfo.endCursor);
           setHasMore(result.pageInfo.hasNextPage);
         } else {
@@ -174,33 +188,57 @@ export default function MoreStories({
         }
       }
     } catch (error) {
-      console.error('Error loading more posts:', error);
-      setError('Failed to load more posts. Please try again later.');
+      console.error("Error loading more posts:", error);
+      setError("Failed to load more posts. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
-  const showLoadMore = isSearchPage || searchTerm
-    ? visibleCount < filteredPosts.length 
-    : (visibleCount < allPosts.length || buffer.length > 0 || hasMore) && !loading && !error && isIndex;
+  const showLoadMore =
+    isSearchPage || searchTerm
+      ? visibleCount < filteredPosts.length
+      : (visibleCount < allPosts.length || buffer.length > 0 || hasMore) &&
+        !loading &&
+        !error &&
+        isIndex;
+
+  const skeletonActive =
+    initialSkeleton || (isIndex && loading && !allPosts.length);
+
+  const basePath = isCommunity ? "/community" : "/technology";
+  const searchSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    url: "https://keploy.io/blog",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `https://keploy.io/blog${basePath}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
 
   return (
     <section>
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
-        {isSearchPage ? (
-            searchTerm ? `Results for "${searchTerm}"` : "Search Results"
-        ) : (
-            "More Stories"
-        )}
+        {isSearchPage
+          ? searchTerm
+            ? `Results for "${searchTerm}"`
+            : "Search Results"
+          : "More Stories"}
       </h2>
-      
+
       {(isIndex || isSearchPage) && (
         <div className="flex w-full mb-8">
           <div className="relative w-full">
             <input
               type="text"
-              placeholder={`Search ${isCommunity ? 'Community' : 'Technology'} posts...`}
+              placeholder={`Search ${
+                isCommunity ? "Community" : "Technology"
+              } posts...`}
               value={searchTerm}
               onChange={handleSearchChange}
               onKeyDown={handleKeyDown}
@@ -212,25 +250,44 @@ export default function MoreStories({
       )}
 
       {filteredPosts.length === 0 ? (
-        <p className="text-center text-gray-500">No posts found matching {`"${searchTerm}"`}</p>
+        <p className="text-center text-gray-500">
+          No posts found matching {`"${searchTerm}"`}
+        </p>
       ) : (
         <>
-          <PostGrid>
-            {filteredPosts.slice(0, visibleCount).map(({ node }) => (
-              <PostCard
-                key={node.slug}
-                title={node.title}
-                coverImage={node.featuredImage}
-                date={node.date}
-                author={node.ppmaAuthorName}
-                slug={node.slug}
-                excerpt={getExcerpt(node.excerpt, 20)}
-                isCommunity={
-                  node.categories?.edges?.[0]?.node?.name === "technology" ? false : true
-                }
-              />
-            ))}
-          </PostGrid>
+          <div className="relative">
+            <div
+              className={cn(
+                "transition-opacity duration-300",
+                skeletonActive ? "opacity-0" : "opacity-100"
+              )}
+              aria-hidden={skeletonActive}
+            >
+              <PostGrid>
+                {filteredPosts.slice(0, visibleCount).map(({ node }) => (
+                  <PostCard
+                    key={node.slug}
+                    title={node.title}
+                    coverImage={node.featuredImage}
+                    date={node.date}
+                    author={node.ppmaAuthorName}
+                    slug={node.slug}
+                    excerpt={getExcerpt(node.excerpt, 20)}
+                    isCommunity={
+                      node.categories?.edges?.[0]?.node?.name === "technology"
+                        ? false
+                        : true
+                    }
+                  />
+                ))}
+              </PostGrid>
+            </div>
+            {skeletonActive && (
+              <div className="absolute inset-0 z-10 pointer-events-none">
+                <PostGridSkeleton count={initialSkeletonCount} />
+              </div>
+            )}
+          </div>
 
           <div className="flex flex-col items-center gap-4 mb-8">
             {error && (
@@ -248,7 +305,7 @@ export default function MoreStories({
                 {loading ? (
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
                 ) : (
-                  'Load More Posts'
+                  "Load More Posts"
                 )}
               </button>
             )}

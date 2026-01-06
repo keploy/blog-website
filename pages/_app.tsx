@@ -1,14 +1,14 @@
-import { AppProps } from 'next/app';
-import '../styles/index.css';
+import { AppProps } from "next/app";
+import "../styles/index.css";
 import Router from "next/router";
 
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import dynamic from 'next/dynamic'
- 
-const PageLoader = dynamic(() => import('../components/PageLoader'), {
+import dynamic from "next/dynamic";
+
+const PageLoader = dynamic(() => import("../components/PageLoader"), {
   ssr: false,
-})
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(false);
@@ -39,4 +39,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp
+export default MyApp;
