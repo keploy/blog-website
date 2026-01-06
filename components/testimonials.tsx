@@ -60,24 +60,19 @@ const ReviewCard = ({
             rounded-full
             bg-orange-50
             pointer-events-none
+            z-0
           " />
-
-        {/* quote icon box */}
-        {/* quote icon box */}
-        <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-500 text-2xl font-bold leading-none">
-          “
-        </div>
 
 
 
 
         {/* content */}
-        <blockquote className="text-[14.5px] leading-relaxed text-gray-600">
+        <blockquote className="relative z-10 text-[14.5px] leading-relaxed text-gray-600">
           {content}
         </blockquote>
 
         {/* author */}
-        <div className="mt-6 flex items-center gap-3">
+        <div className="relative z-10 mt-6 flex items-center gap-3">
           <img
             src={proxiedAvatar}
             alt={name}
