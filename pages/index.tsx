@@ -24,10 +24,10 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
     getWebSiteSchema(),
     getBreadcrumbListSchema([{ name: "Home", url: SITE_URL }]),
   ];
-  
+
   // Start with false - skeleton shows by default
   const [isHydrated, setIsHydrated] = useState(false);
-  
+
   useEffect(() => {
     // Only runs on client after hydration
     setIsHydrated(true);
@@ -53,14 +53,9 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
               Practices
             </p>
           </div>
-          <TopBlogs 
-            posts={technologyPosts.edges} 
-            isCommunity={false} 
-            isLoading={!isHydrated}
-          />
-          <TopBlogs 
-            posts={communityPosts.edges} 
-            isCommunity={true} 
+          <TopBlogs
+            communityPosts={communityPosts.edges}
+            technologyPosts={technologyPosts.edges}
             isLoading={!isHydrated}
           />
         </Container>

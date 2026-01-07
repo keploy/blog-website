@@ -8,16 +8,17 @@ import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 import { useState, useEffect } from "react";
+import { HeroPostSkeleton, MoreStoriesSkeleton } from "../../components/skeletons";
 
 export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   // Start false - skeleton shows immediately
   const [isHydrated, setIsHydrated] = useState(false);
-  
+
   useEffect(() => {
     // Runs only after client hydration
     setIsHydrated(true);
   }, []);
-  
+
   const heroPost = edges[0]?.node;
   const excerpt = getExcerpt(edges[0]?.node.excerpt);
   const morePosts = edges.slice(1);
@@ -54,33 +55,15 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
       <Header />
       <Container>
         {!isHydrated ? (
-          // Skeleton renders immediately as default state
-          <div className="loading-skeleton">
-            <div className="skeleton-hero">
-              <div className="skeleton-hero-img skeleton-shimmer"></div>
-              <div className="skeleton-hero-content">
-                <div className="skeleton-title skeleton-shimmer"></div>
-                <div className="skeleton-title skeleton-shimmer"></div>
-                <div className="skeleton-text skeleton-shimmer mt-8"></div>
-                <div className="skeleton-text skeleton-shimmer"></div>
-                <div className="skeleton-text medium skeleton-shimmer"></div>
-              </div>
-            </div>
-            <div className="skeleton-section-title"></div>
-            <div className="skeleton-grid">
-              {[1,2,3,4,5,6].map(i => (
-                <div key={i} className="skeleton-card">
-                  <div className="skeleton-card-img skeleton-shimmer"></div>
-                  <div className="skeleton-card-content">
-                    <div className="skeleton-title small skeleton-shimmer"></div>
-                    <div className="skeleton-text skeleton-shimmer"></div>
-                    <div className="skeleton-text skeleton-shimmer"></div>
-                    <div className="skeleton-text short skeleton-shimmer"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <>
+            <HeroPostSkeleton />
+            <section>
+              <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
+                More Stories
+              </h2>
+              <MoreStoriesSkeleton count={6} />
+            </section>
+          </>
         ) : (
           // Content shows after hydration
           <>
@@ -96,7 +79,7 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
               />
             )}
             {morePosts.length > 0 && (
-              <MoreStories posts={morePosts} isCommunity={true} />
+              <MoreStories posts={morePosts} isCommunity={true} isIndex={true} />
             )}
           </>
         )}

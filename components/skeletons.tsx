@@ -2,21 +2,21 @@ import { Skeleton } from "./ui/skeleton";
 
 export function PostCardSkeleton() {
   return (
-    <div className="bg-gray-100 border rounded-md overflow-hidden">
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
       <div className="aspect-video overflow-hidden">
         <Skeleton className="w-full h-full" />
       </div>
       <div className="p-6">
-        <Skeleton className="h-8 w-3/4 mb-3" />
-        <div className="flex items-center gap-2 mb-4">
-          <Skeleton className="h-4 w-24" />
-          <span className="text-gray-400">•</span>
-          <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-7 w-4/5 mb-4 rounded" />
+        <div className="flex items-center gap-3 mb-4">
+          <Skeleton className="h-4 w-24 rounded" />
+          <span className="text-gray-300">•</span>
+          <Skeleton className="h-4 w-20 rounded" />
         </div>
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-2/3" />
+        <div className="space-y-2.5">
+          <Skeleton className="h-4 w-full rounded" />
+          <Skeleton className="h-4 w-full rounded" />
+          <Skeleton className="h-4 w-3/5 rounded" />
         </div>
       </div>
     </div>
@@ -26,33 +26,33 @@ export function PostCardSkeleton() {
 export function HeroPostSkeleton() {
   return (
     <section>
-      <div className="relative bg-gray-100 border border-gray-300 px-8 py-8 rounded-md lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center overflow-hidden">
-        {/* Banner */}
-        <div className="absolute top-0 right-0 transform rotate-45 translate-x-[25%] translate-y-[90%] bg-orange-200 text-orange-800 text-[10px] font-bold py-0.5 w-[100px] flex justify-center items-center shadow-md">
+      <div className="relative bg-white border border-gray-200 px-8 py-8 rounded-lg lg:grid lg:grid-cols-2 lg:gap-x-8 mb-20 md:mb-28 content-center overflow-hidden shadow-sm">
+        {/* Banner placeholder */}
+        <div className="absolute top-0 right-0 transform rotate-45 translate-x-[25%] translate-y-[90%] bg-orange-100 text-orange-400 text-[10px] font-bold py-0.5 w-[100px] flex justify-center items-center">
           Latest Blog
         </div>
 
         {/* Image */}
         <div className="mb-8 lg:mb-0">
-          <Skeleton className="w-full aspect-video rounded-md" />
+          <Skeleton className="w-full aspect-video rounded-lg" />
         </div>
 
         {/* Content */}
-        <div className="space-y-4">
-          <Skeleton className="h-12 lg:h-16 w-full" />
-          <Skeleton className="h-12 lg:h-16 w-4/5" />
-          
+        <div className="space-y-5">
+          <Skeleton className="h-10 lg:h-14 w-full rounded" />
+          <Skeleton className="h-10 lg:h-14 w-4/5 rounded" />
+
           <div className="flex items-center gap-4 pt-4">
-            <Skeleton className="h-10 w-10 rounded-full" />
-            <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
-            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="divider bg-orange-300 h-1 w-1 rounded-full"></div>
+            <Skeleton className="h-4 w-28 rounded" />
           </div>
-          
-          <div className="space-y-2 pt-4">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
+
+          <div className="space-y-3 pt-4">
+            <Skeleton className="h-4 w-full rounded" />
+            <Skeleton className="h-4 w-full rounded" />
+            <Skeleton className="h-4 w-full rounded" />
+            <Skeleton className="h-4 w-3/4 rounded" />
           </div>
         </div>
       </div>
@@ -62,23 +62,23 @@ export function HeroPostSkeleton() {
 
 export function PostPreviewSkeleton() {
   return (
-    <div className="bg-gray-100 border p-6 rounded-md">
+    <div className="bg-white border border-gray-200 p-6 rounded-lg shadow-sm">
       <div className="mb-5">
-        <Skeleton className="w-full aspect-video rounded-md" />
+        <Skeleton className="w-full aspect-video rounded-lg" />
       </div>
-      
-      <Skeleton className="h-8 w-3/4 mb-4" />
-      
+
+      <Skeleton className="h-7 w-4/5 mb-4 rounded" />
+
       <div className="flex items-center gap-4 mb-4">
-        <Skeleton className="h-10 w-10 rounded-full" />
-        <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
-        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="divider bg-orange-300 h-1 w-1 rounded-full"></div>
+        <Skeleton className="h-4 w-28 rounded" />
       </div>
-      
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-2/3" />
+
+      <div className="space-y-2.5">
+        <Skeleton className="h-4 w-full rounded" />
+        <Skeleton className="h-4 w-full rounded" />
+        <Skeleton className="h-4 w-3/5 rounded" />
       </div>
     </div>
   );
