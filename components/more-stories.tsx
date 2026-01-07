@@ -153,17 +153,40 @@ export default function MoreStories({
 
     setLoading(true);
     try {
-      if (visibleCount < allPosts.length) {
-        setVisibleCount(prev => Math.min(prev + 9, allPosts.length));
+      // Calculate how many more posts we need to show
+      const newVisibleCount = visibleCount + 9;
+      
+      // If we have enough in allPosts, just show more
+      if (newVisibleCount <= allPosts.length) {
+        setVisibleCount(newVisibleCount);
       } 
+      // If we need posts from buffer
       else if (buffer.length > 0) {
-        const postsToAdd = buffer.slice(0, 9);
+        const postsNeeded = newVisibleCount - allPosts.length;
+        const postsToAdd = buffer.slice(0, Math.max(postsNeeded, 9));
         setAllPosts(prev => [...prev, ...postsToAdd]);
-        setBuffer(prev => prev.slice(9));
-        setVisibleCount(prev => prev + postsToAdd.length);
+        setBuffer(prev => prev.slice(postsToAdd.length));
+        setVisibleCount(allPosts.length + postsToAdd.length);
+      }
+      // If buffer is empty but we have more posts to fetch
+      else if (hasMore) {
+        const category = isCommunity ? 'community' : 'technology';
+        const result = await fetchMorePosts(category, endCursor);
+        
+        if (result.edges.length > 0) {
+          const postsToAdd = result.edges.slice(0, 9);
+          setAllPosts(prev => [...prev, ...postsToAdd]);
+          setBuffer(result.edges.slice(9));
+          setEndCursor(result.pageInfo.endCursor);
+          setHasMore(result.pageInfo.hasNextPage);
+          setVisibleCount(allPosts.length + postsToAdd.length);
+        } else {
+          setHasMore(false);
+        }
       }
 
-      if (buffer.length < 9 && hasMore) {
+      // Replenish buffer if running low (but not if we just fetched above)
+      if (buffer.length < 9 && buffer.length > 0 && hasMore) {
         const category = isCommunity ? 'community' : 'technology';
         const result = await fetchMorePosts(category, endCursor);
         
@@ -185,7 +208,7 @@ export default function MoreStories({
 
   const showLoadMore = isSearchPage || searchTerm
     ? visibleCount < filteredPosts.length 
-    : (visibleCount < allPosts.length || buffer.length > 0 || hasMore) && !loading && !error && isIndex;
+    : (visibleCount < allPosts.length || buffer.length > 0 || hasMore) && !error;
 
   return (
     <section>
