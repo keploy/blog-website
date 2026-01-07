@@ -11,7 +11,7 @@ const glassNavDefault =
 const glassNavScrolled =
   "bg-gradient-to-br from-gray-300/90 via-gray-300/78 to-gray-200/68 border border-gray-200/70 ring-1 ring-white/40 shadow-none";
 const glassNavReading =
-  "bg-white/75 border-none shadow-none backdrop-blur-2xl";
+  "bg-white/95 border-none shadow-none backdrop-blur-2xl";
 
 type FloatingNavbarProps = {
   isBlogReadingPage?: boolean;
