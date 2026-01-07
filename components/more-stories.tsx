@@ -130,17 +130,42 @@ export default function MoreStories({
 
     setLoading(true);
     try {
-      if (visibleCount < allPosts.length) {
-        setVisibleCount((prev) => Math.min(prev + 9, allPosts.length));
-      } else if (buffer.length > 0) {
-        const postsToAdd = buffer.slice(0, 9);
-        setAllPosts((prev) => [...prev, ...postsToAdd]);
-        setBuffer((prev) => prev.slice(9));
-        setVisibleCount((prev) => prev + postsToAdd.length);
-      }
+// Increase visible posts by 9
+const newVisibleCount = visibleCount + 9;
 
-      if (buffer.length < 9 && hasMore) {
-        const category = isCommunity ? "community" : "technology";
+// Case 1: We already have enough posts loaded
+if (newVisibleCount <= allPosts.length) {
+  setVisibleCount(newVisibleCount);
+}
+
+// Case 2: Take posts from buffer
+else if (buffer.length > 0) {
+  const postsNeeded = newVisibleCount - allPosts.length;
+  const postsToAdd = buffer.slice(0, Math.max(postsNeeded, 9));
+
+  setAllPosts(prev => [...prev, ...postsToAdd]);
+  setBuffer(prev => prev.slice(postsToAdd.length));
+  setVisibleCount(allPosts.length + postsToAdd.length);
+}
+
+// Case 3: Fetch more posts from API (only when not searching)
+else if (hasMore && searchQuery.trim() === "") {
+  const category = isCommunity ? "community" : "technology";
+  const result = await fetchMorePosts(category, endCursor);
+
+  if (result.edges.length > 0) {
+    const postsToAdd = result.edges.slice(0, 9);
+
+    setAllPosts(prev => [...prev, ...postsToAdd]);
+    setBuffer(result.edges.slice(9));
+    setEndCursor(result.pageInfo.endCursor);
+    setHasMore(result.pageInfo.hasNextPage);
+    setVisibleCount(allPosts.length + postsToAdd.length);
+  } else {
+    setHasMore(false);
+  }
+}
+
         const result = await fetchMorePosts(category, endCursor);
         if (result.edges.length > 0) {
           setBuffer((prev) => [...prev, ...result.edges]);
@@ -158,10 +183,14 @@ export default function MoreStories({
     }
   };
 
-  const showLoadMore =
-    isSearchPage || searchTerm
-      ? visibleCount < filteredPosts.length
-      : (visibleCount < allPosts.length || buffer.length > 0 || hasMore) && !loading && !error && isIndex;
+const showLoadMore =
+  isSearchPage || searchTerm
+    ? visibleCount < filteredPosts.length
+    : (visibleCount < allPosts.length || buffer.length > 0 || hasMore) &&
+      !loading &&
+      !error &&
+      isIndex;
+
 
   return (
     <section>
