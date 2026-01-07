@@ -22,6 +22,7 @@ import Link from "next/link";
 import { FaLinkedin, FaTwitter, FaLink } from "react-icons/fa";
 import { useRouter } from "next/router";
 import React from "react";
+// import AdSlot from "./Adslot";
 export default function PostBody({
   content,
   authorName,
@@ -41,7 +42,7 @@ export default function PostBody({
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [headingCopySuccessList, setHeadingCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [replacedContent, setReplacedContent] = useState(content || ""); 
+  const [replacedContent, setReplacedContent] = useState(content || "");
   const [isList, setIsList] = useState(false);
   const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
   // Optional safety: handle malformed ReviewAuthorDetails gracefully
@@ -50,7 +51,7 @@ export default function PostBody({
   const sameAuthor =
     reviewer &&
     authorName.split(" ")[0].toLowerCase() ===
-      reviewer.name.split(" ")[0].toLowerCase();
+    reviewer.name.split(" ")[0].toLowerCase();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -375,14 +376,12 @@ export default function PostBody({
 
   return (
     <div
-      className={`flex flex-col ${
-        isList ? "items-center" : "items-center lg:items-start lg:flex-row"
-      } `}
+      className={`flex flex-col ${isList ? "items-center" : "items-center lg:items-start lg:flex-row"
+        } `}
     >
       <div
-        className={`flex items-center justify-center w-full md:w-[80%] lg:w-1/4 top-20 lg:block ${
-          isList ? "" : "lg:sticky"
-        }`}
+        className={`flex items-center justify-center w-full md:w-[80%] lg:w-1/4 top-20 lg:block ${isList ? "" : "lg:sticky"
+          }`}
       >
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
@@ -395,9 +394,11 @@ export default function PostBody({
           {renderCodeBlocks()}
         </div>
         <hr className="border-gray-300 mt-10 mb-20" />
-        <div></div>
+        <div>
 
-        <h1 className="text-2xl font-medium">Authored By:</h1>
+        </div>
+
+        <h1 className="text-2xl font-medium">Authored By: {authorName}</h1>
         <div className="my-5">
           <AuthorDescription
             authorData={content}
@@ -407,7 +408,7 @@ export default function PostBody({
         </div>
         {reviewer && !sameAuthor && (
           <div className="my-20">
-            <h1 className="text-2xl font-medium">Reviewed By:</h1>
+            <h1 className="text-2xl font-medium">Reviewed By: {reviewer.name}</h1>
             <div>
               <ReviewingAuthor
                 name={reviewer.name}
@@ -454,6 +455,14 @@ export default function PostBody({
             <span className="ml-2 text-orange-500 text-sm">Copied!</span>
           )}
         </div>
+        {/* 2. Ad slot (hidden on <lg) */}
+        {/* <div className="hidden lg:flex justify-center rounded-xl p-4">
+    <AdSlot
+      slotId="3356716061"
+      className="w-full h-60"
+    />
+  </div> */}
+      </aside>
 
         {/* 2. Ad slot (hidden on <lg) */}
         <div className="hidden lg:flex justify-center rounded-xl p-4">
