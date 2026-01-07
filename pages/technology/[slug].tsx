@@ -21,12 +21,16 @@ import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
+<<<<<<< HEAD
 import { getRedirectSlug } from "../../config/redirect";
 import {
   getBlogPostingSchema,
   getBreadcrumbListSchema,
   SITE_URL,
 } from "../../lib/structured-data";
+=======
+import PostDetailSkeleton from "../../components/PostDetailSkeleton";
+>>>>>>> 24727ab (feat: add skeleton loaders for improved UX on slow networks (#3293))
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -172,7 +176,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       <Header readProgress={readProgress} />
       <Container>
         {router.isFallback ? (
-          <PostTitle>Loading…</PostTitle>
+          <PostDetailSkeleton />
         ) : (
           <>
             <PrismLoader /> {/* Load Prism.js here */}

@@ -12,7 +12,12 @@ const PageLoader = dynamic(() => import('../components/PageLoader'), {
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
+
   useEffect(() => {
+    // Set initial load to false after first render
+    setInitialLoad(false);
+
     // Used for page transition
     const startLoader = () => {
       setLoading(true);

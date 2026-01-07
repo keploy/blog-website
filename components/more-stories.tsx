@@ -6,6 +6,7 @@ import PostCard from "./post-card";
 import PostGrid from "./post-grid";
 import { FaSearch } from 'react-icons/fa';
 import { fetchMorePosts } from "../lib/api";
+import { PostGridSkeleton } from "./skeletons";
 
 interface MoreStoriesProps {
   posts: { node: Post }[];
@@ -254,6 +255,8 @@ export default function MoreStories({
               />
             ))}
           </PostGrid>
+
+          {loading && <PostGridSkeleton count={3} />}
 
           <div className="flex flex-col items-center gap-4 mb-8">
             {error && (
