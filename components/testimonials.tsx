@@ -2,9 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
-// const firstRow = Tweets.slice(0, Tweets.length / 2);
 const firstRow = Tweets.slice(0);
-// const secondRow = Tweets.slice(Tweets.length / 2);
 
 const ReviewCard = ({
   avatar,
