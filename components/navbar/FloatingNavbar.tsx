@@ -5,12 +5,13 @@ import { useRouter } from "next/router";
 import FloatingNavbarClient from "./FloatingNavbarClient";
 
 // --- Configuration Constants ---
-const SCROLL_THRESHOLD_START = 50;   // When to start the "pill" shape
-const SCROLL_THRESHOLD_DEEP = 750;   // When to shrink to content width (Hero height)
+// UPDATED: Threshold increased to ~760px to match Hero section height.
+// The navbar will remain in "Default" state until passing the Hero.
+const SCROLL_THRESHOLD = 760;
 
 // --- Styles ---
 const glassNavBase =
-  "relative overflow-visible rounded-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] backdrop-blur-2xl"; // Advanced bezier curve for smoother feeling
+  "relative overflow-visible rounded-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] backdrop-blur-2xl";
 const glassNavDefault =
   "bg-gradient-to-br from-gray-100/80 via-gray-100/62 to-gray-100/48 border border-white/70 shadow-[0_18px_44px_rgba(15,23,42,0.18)]";
 const glassNavScrolled =
@@ -29,14 +30,11 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
       ? isBlogReadingPage
       : router.pathname === "/technology/[slug]" || router.pathname === "/community/[slug]";
   
-  // State
   const [isScrolled, setIsScrolled] = useState(derivedBlogReadingPage);
-  const [isDeepScrolled, setIsDeepScrolled] = useState(derivedBlogReadingPage);
 
   useEffect(() => {
     if (derivedBlogReadingPage) {
       setIsScrolled(true);
-      setIsDeepScrolled(true);
       return;
     }
 
@@ -45,21 +43,15 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const y = window.scrollY;
-          
-          // Only update state if value changes (React handles this, but good to be explicit)
-          setIsScrolled(y > SCROLL_THRESHOLD_START);
-          setIsDeepScrolled(y > SCROLL_THRESHOLD_DEEP);
-          
+          // Logic Update: Only trigger "Scrolled" state after passing the Hero section
+          setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
           ticking = false;
         });
         ticking = true;
       }
     };
     
-    // Check initially in case we reload halfway down the page
     handleScroll();
-    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [derivedBlogReadingPage]);
@@ -68,15 +60,12 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
     ? "relative top-0 mx-auto z-40"
     : "fixed top-6 left-1/2 -translate-x-1/2 z-40";
 
-  // --- Dynamic Width Logic ---
-  // 1. Default (Top): Standard 7xl
-  // 2. Stage 1 (Hero Scroll): Wider (85%) to match Hero section width
-  // 3. Stage 2 (Content Scroll): Standard 7xl to match Blog Content width
-  const navWidthClasses = isDeepScrolled
-    ? "w-[95%] md:max-w-7xl"      // Stage 2: Content Alignment
-    : isScrolled
-      ? "w-[95%] md:max-w-[85%]"   // Stage 1: Hero Alignment (Wider)
-      : "w-[96%] md:max-w-7xl";    // Default Top State
+  // LOGIC FIX: Always use max-w-7xl.
+  // We removed the "85%" intermediate stage because it caused the misalignment gap.
+  // Now, both the Hero State (Default) and Blog State (Scrolled) align perfectly with the grid.
+  const navWidthClasses = isScrolled
+      ? "w-[95%] md:max-w-7xl"  // Scrolled State (Pill)
+      : "w-[96%] md:max-w-7xl"; // Default State (Hero)
 
   const navPaddingClasses = isScrolled
     ? "px-4 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5"
