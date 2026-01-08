@@ -177,14 +177,14 @@ export default function Tag({
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Center-aligned heading */}
-      <h3 className="mt-12 mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100 text-center">
+    <div className="max-w-[820px] mx-auto">
+      {/* Left-aligned heading */}
+      <h3 className="mt-12 mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100 text-left">
         tags
       </h3>
       
-      {/* Center-aligned flex container */}
-      <div className="flex flex-wrap gap-3 justify-center">
+      {/* Left-aligned flex container */}
+      <div className="flex flex-wrap gap-3 justify-start">
         {tags.edges.map((tag, index) => {
           const name = tag.node.name;
           const prev = index > 0 ? tags.edges[index - 1].node.name : undefined;
@@ -194,11 +194,11 @@ export default function Tag({
             <Link key={index} href={`/tag/${name}`}>
               <button
                 className={`
-                  group inline-flex items-center gap-2.5
+                  group inline-flex items-center gap-1.5 md:gap-2.5
                   ${colorScheme.bg} ${colorScheme.hover} ${colorScheme.text}
                   border ${colorScheme.border}
-                  font-semibold text-sm
-                  py-2.5 px-5
+                  font-semibold text-xs md:text-sm
+                  py-1.5 px-3 md:py-2.5 md:px-5
                   rounded-full
                   transition-all duration-300 ease-out
                   hover:scale-105 hover:-translate-y-0.5
