@@ -43,7 +43,7 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
     ? "relative top-0 mx-auto z-40"
     : "fixed top-6 left-1/2 -translate-x-1/2 z-40";
   const navWidthClasses = isScrolled
-    ? "w-[95%] md:max-w-5xl"
+    ? "w-[95%] md:max-w-6xl"
     : "w-[96%] md:max-w-6xl";
   const navPaddingClasses = isScrolled
     ? "px-4 mb-4 pt-2 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5"
@@ -61,12 +61,12 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
       : glassNavDefault;
 
       const navWidthouterClasses = isScrolled
-    ? "w-[82%] md:max-w-5xl rounded-full mx-auto items-center justify-center px-[10px]"
+    ? "w-[80%] md:max-w-[1150px] rounded-full mx-auto items-center justify-center px-[10px]"
     : "";
   return (
     <div className="w-[100%] h-[80px]">
-    <div className={` w-[100%] ${isScrolled ? `h-[65px]` : `h-[80px]`} ${glassNavBase} ${navGlassClasses} ${navWidthouterClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}>
-      <nav className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}>
+    <div className={` w-[100%] ${isScrolled ? `h-[65px] mt-5` : `h-[80px]`} ${glassNavBase} ${navGlassClasses} ${navWidthouterClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}>
+      <nav className={`${navPositionClasses} transition-all duration-500 ${navWidthClasses}`}>
         <FloatingNavbarClient isScrolled={isScrolled} />
       </nav>
     </div>
