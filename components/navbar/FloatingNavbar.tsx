@@ -61,7 +61,7 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
       : glassNavDefault;
 
       const navWidthouterClasses = isScrolled
-    ? "w-[80%] md:max-w-[1150px] rounded-full mx-auto items-center justify-center px-[10px]"
+    ? "w-[89%] md:max-w-[1150px] rounded-full mx-auto items-center justify-center px-[10px]"
     : "";
   return (
     <div className="w-[100%] h-[80px]">
