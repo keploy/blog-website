@@ -161,7 +161,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               className="absolute z-[100] top-full left-0 pt-7 transform -translate-x-[7%]"
               style={{ 
                 width: '800px', 
-                maxWidth: isScrolled ? 'min(800px, calc(82vw - 6rem), 896px)' : 'min(800px, calc(96vw - 6rem), 1152px)'
+                maxWidth: isScrolled ? 'min(800px, calc(82vw - 6rem), 896px)' : 'min(800px, calc(100vw - 6rem), 1152px)'
               }}
               onMouseEnter={() => { setShowTechDropdown(true); setHoveredNav('tech'); }}
               onMouseLeave={() => { setShowTechDropdown(false); setHoveredNav(null); setLinkHoverTech(false); }}
@@ -231,7 +231,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               className="absolute z-[100] top-full left-0 pt-7 transform -translate-x-[12%]"
               style={{ 
                 width: '800px', 
-                maxWidth: isScrolled ? 'min(800px, calc(82vw - 6rem), 896px)' : 'min(800px, calc(96vw - 6rem), 1152px)'
+                maxWidth: isScrolled ? 'min(800px, calc(82vw - 6rem), 896px)' : 'min(800px, calc(100vw - 6rem), 1152px)'
               }}
               onMouseEnter={() => { setShowCommunityDropdown(true); setHoveredNav('community'); }}
               onMouseLeave={() => { setShowCommunityDropdown(false); setHoveredNav(null); setLinkHoverCommunity(false); }}
@@ -300,7 +300,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               className={`absolute z-[100] top-full left-0 pt-7 transform ${isScrolled ? '-translate-x-[25%]' : '-translate-x-[12%]'}`}
               style={{ 
                 width: '780px', 
-                maxWidth: isScrolled ? 'min(780px, calc(82vw - 6rem), 960px)' : 'min(780px, calc(96vw - 6rem), 1024px)'
+                maxWidth: isScrolled ? 'min(780px, calc(82vw - 6rem), 960px)' : 'min(780px, calc(100vw - 6rem), 1024px)'
               }}
               onMouseEnter={() => { setResourcesOpen(true); setHoveredNav('resources'); }}
               onMouseLeave={() => { setResourcesOpen(false); setHoveredNav(null); }}
