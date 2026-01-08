@@ -2,7 +2,8 @@ import React from "react";
 import { useRouter } from "next/router";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
-const firstRow = Tweets.slice(0);
+const firstRow = Tweets.slice(0,Tweets.length/2);
+const secondRow = Tweets.slice(Tweets.length/2);
 
 const ReviewCard = ({
   avatar,
@@ -66,15 +67,20 @@ const TwitterTestimonials = () => {
         <p className="text-center lg:text-left text-gray-600 text-base mb-8">
           Join thousands of developers who trust Keploy for their testing needs
         </p>
-      <div className="relative flex mb-8 h-fix w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-gray-200/50 bg-gradient-to-br from-orange-50/30 via-white to-orange-50/20 p-8 shadow-inner">
+      <div className="relative flex mb-8 h-fix w-full flex-col items-center justify-center overflow-hidden rounded-2xl   p-8">
         
         <Marquee pauseOnHover className="[--duration:20s]">
           {firstRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-white via-white/80 to-transparent"></div>
+        <Marquee reverse pauseOnHover className="[--duration:20s]">
+          {secondRow.map((tweet) => (
+            <ReviewCard key={tweet.id} {...tweet} />
+          ))}
+        </Marquee>
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-[15%] bg-gradient-to-r from-neutral-100 dark:from-background"></div>
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-[15%] bg-gradient-to-l from-neutral-100 dark:from-background"></div>
       </div>
     </div>
   );
