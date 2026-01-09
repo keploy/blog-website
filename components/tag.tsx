@@ -177,14 +177,14 @@ export default function Tag({
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Center-aligned heading */}
-      <h3 className="mt-12 mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100 text-center">
+    <div className="max-w-2xl w-full mx-auto px-4 md:px-0">
+      {/* Left-aligned heading */}
+      <h3 className="mt-12 mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100 text-left">
         tags
       </h3>
       
-      {/* Center-aligned flex container */}
-      <div className="flex flex-wrap gap-3 justify-center">
+      {/* Left-aligned flex container */}
+      <div className="flex flex-wrap gap-3 justify-start">
         {tags.edges.map((tag, index) => {
           const name = tag.node.name;
           const prev = index > 0 ? tags.edges[index - 1].node.name : undefined;
