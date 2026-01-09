@@ -177,7 +177,10 @@ export default function Tag({
   };
 
   return (
-    <div className="max-w-[820px] mx-auto">
+
+
+    <div className="max-w-2xl w-full mx-auto px-4 md:px-0">
+
       {/* Left-aligned heading */}
       <h3 className="mt-12 mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100 text-left">
         tags
