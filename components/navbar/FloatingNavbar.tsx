@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import FloatingNavbarClient from "./FloatingNavbarClient";
 
 const glassNavBase =
-  "relative overflow-visible transition-all duration-300 backdrop-blur-2xl";
+  "relative overflow-visible rounded-full transition-all duration-300 backdrop-blur-2xl";
 const glassNavDefault =
   "bg-gradient-to-br from-gray-100/80 via-gray-100/62 to-gray-100/48 border border-white/70 shadow-[0_18px_44px_rgba(15,23,42,0.18)]";
 const glassNavScrolled =
@@ -41,11 +41,9 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
 
   const navPositionClasses = derivedBlogReadingPage
     ? "relative top-0 mx-auto z-40"
-    : isScrolled
-      ? "fixed top-6 left-1/2 -translate-x-1/2 z-40"
-      : "fixed top-0 left-0 z-40";
+    : "fixed top-6 left-1/2 -translate-x-1/2 z-40";
   const navWidthClasses = isScrolled
-    ? "w-[95%] md:w-[92%] max-w-7xl"
+    ? "w-[calc(100%-3rem)] md:w-[calc(100%-5rem)] lg:w-[calc(100%-8rem)] max-w-[72rem]"
     : "w-full max-w-full";
   const navPaddingClasses = isScrolled
     ? "px-4 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5"
@@ -64,11 +62,10 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
 
   return (
     <nav className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}>
-      <div
-        className={`${glassNavBase} ${navGlassClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses} ${isScrolled || derivedBlogReadingPage ? "rounded-full" : "rounded-none"
-          }`}
-      >
-        <div className={`pointer-events-none absolute inset-0 ${isScrolled || derivedBlogReadingPage ? "rounded-full" : "rounded-none"}`}>
+        <div
+          className={`${glassNavBase} ${navGlassClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}
+        >
+        <div className="pointer-events-none absolute inset-0 rounded-full">
           <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-gray-200/60 blur-2xl" />
           <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-gray-200/40 blur-3xl" />
         </div>
