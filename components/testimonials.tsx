@@ -95,7 +95,8 @@ const ReviewCard = ({
 
 const TwitterTestimonials = () => {
   return (
-    <section className="relative py-20 bg-white overflow-hidden">
+    <section className="relative py-20 bg-transparent overflow-hidden">
+
       {/* Header */}
       <div className="text-center mb-16">
         <span className="inline-block mb-4 rounded-full bg-orange-100 px-4 py-1 text-sm font-medium text-orange-600">
@@ -112,7 +113,7 @@ const TwitterTestimonials = () => {
         </h2>
 
         <p className="mt-4 text-gray-500 max-w-2xl mx-auto text-lg">
-          Join thousands of developers who trust Keploy for their testing needs
+          Join thousands of developers who trust Keploy for their testing needs.
         </p>
       </div>
 
@@ -132,8 +133,9 @@ const TwitterTestimonials = () => {
         </Marquee>
 
         {/* Gradient fade */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-white" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-white" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-transparent" />
+
       </div>
     </section>
   );
