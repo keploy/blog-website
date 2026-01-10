@@ -5,13 +5,14 @@ import { getExcerpt } from "../utils/excerpt";
 import PostCard from "./post-card";
 import PostGrid from "./post-grid";
 import { FaSearch } from 'react-icons/fa';
-import { fetchMorePosts } from "../lib/api";
+import { fetchMorePosts, getAllPostsForSearch } from "../lib/api";
 
 interface MoreStoriesProps {
   posts: { node: Post }[];
   isCommunity: boolean;
   isIndex: boolean;
   isSearchPage?: boolean;
+  showSearch?: boolean;
   initialPageInfo?: { hasNextPage: boolean; endCursor: string | null };
   externalSearchTerm?: string;
   onSearchChange?: (term: string) => void;
@@ -22,6 +23,7 @@ export default function MoreStories({
   isCommunity,
   isIndex,
   isSearchPage = false,
+  showSearch = false,
   initialPageInfo,
   externalSearchTerm,
   onSearchChange,
@@ -41,6 +43,8 @@ export default function MoreStories({
   const [error, setError] = useState(null);
   const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [fullPostsCache, setFullPostsCache] = useState<{ node: Post }[]>([]);
 
   // Initialize posts based on page type
   useEffect(() => {
@@ -59,6 +63,26 @@ export default function MoreStories({
       setLocalSearchTerm(q);
     }
   }, [router.isReady, router.query, externalSearchTerm]);
+
+  // Fetch all posts when user starts searching on blog reading pages
+  useEffect(() => {
+    // Only fetch if:
+    // 1. We're on a blog reading page (showSearch is true)
+    // 2. User has typed something
+    // 3. We haven't already cached the full posts
+    if (showSearch && searchTerm && !fullPostsCache.length && !searchLoading) {
+      setSearchLoading(true);
+      getAllPostsForSearch(false)
+        .then((fetchedPosts) => {
+          setFullPostsCache(fetchedPosts);
+          setSearchLoading(false);
+        })
+        .catch((err) => {
+          console.error('Error fetching all posts for search:', err);
+          setSearchLoading(false);
+        });
+    }
+  }, [searchTerm, showSearch, fullPostsCache.length, searchLoading]);
 
   // 2. Handle Search Input (Universal URL Sync + Local State)
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,8 +122,11 @@ export default function MoreStories({
   };
 
   // 4. Filtering Logic
-  // We filter locally for BOTH Community and Tech to give the "Then and There" experience.
-  const postsToDisplay = allPosts; 
+  // If we're on a blog reading page and user is searching, use the full cache
+  // Otherwise, use the initially loaded posts
+  const postsToDisplay = (showSearch && searchTerm && fullPostsCache.length > 0) 
+    ? fullPostsCache 
+    : allPosts;
   
   const filteredPosts = postsToDisplay.filter(({ node }) => 
     node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -218,7 +245,7 @@ export default function MoreStories({
         )}
       </h2>
       
-      {(isIndex || isSearchPage) && (
+      {(isIndex || isSearchPage || showSearch) && (
         <div className="flex w-full mb-8">
           <div className="relative w-full">
             <input
@@ -229,7 +256,13 @@ export default function MoreStories({
               onKeyDown={handleKeyDown}
               className="w-full p-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            {searchLoading ? (
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-500" />
+              </div>
+            ) : (
+              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            )}
           </div>
         </div>
       )}
