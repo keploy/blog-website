@@ -392,7 +392,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       { href: "https://keploy.io/unit-test-generator", title: "Keploy Unit Testing Extension", desc: "Generate unit tests with mocks" },
                       { href: "https://keploy.io/docs/concepts/what-is-keploy/#step-1--record-unique-network-interactions-as-test-case", title: "Keploy Test Recorder", desc: "Record and replay API calls" },
                       { href: "https://keploy.io/docs", title: "Keploy Documentation", desc: "Guides, references, tutorials" },
-                      { href: "https://www.writers.keploy.io/", title: "Writers Program", desc: "Be a part of the blog writing for Keploy", cta: true },
+                      { href: "https://www.writers.keploy.io/", title: "Writers Program", desc: "Be a part of the blog writing for Keploy" },
                     ].map((item, idx) => (
                       <div key={idx} className="rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all">
                         <Link
@@ -624,23 +624,21 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       </Link>
                       {/* Writers Program CTA - desktop-like card styling */}
                       <div className="rounded-xl p-[1.5px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] hover:p-[2px] transition-all">
-                        <Link 
-                          href="https://www.writers.keploy.io/" 
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={()=>setMobileMenuOpen(false)} 
-                          className="group relative block rounded-[calc(0.75rem-3px)] overflow-hidden bg-gradient-to-br from-orange-100 to-red-100 hover:from-orange-200 hover:to-red-200 ring-2 ring-orange-400/70 hover:ring-orange-500/90 shadow-none hover:shadow-none transition-all"
-                        >
-                          <span className="pointer-events-none absolute inset-0 opacity-75 [mask-image:radial-gradient(60%_60%_at_50%_50%,black,transparent)]">
-                            <span className="absolute -inset-16 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(255,138,76,0.14),rgba(255,71,87,0.12),rgba(255,138,76,0.14))] blur-3xl rounded-[inherit] animate-[spin_12s_linear_infinite]" />
-                          </span>
-                          <div className="relative z-[1] px-5 py-4">
-                            <div className="text-[15px] font-semibold text-black/90">Writers Program</div>
-                            <div className="text-[12px] text-neutral-700 mt-1">Be a part of the blog writing for Keploy</div>
-                            <div className="mt-2 text-[12px] font-semibold text-orange-600">Enroll →</div>
-                          </div>
-                          <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                        </Link>
+                  <Link 
+                       href="https://www.writers.keploy.io/" 
+                       target="_blank"
+                       rel="noopener noreferrer"
+                         onClick={() => setMobileMenuOpen(false)} 
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl
+                            bg-white/60 ring-1 ring-neutral-200/50
+                        hover:bg-white/80 hover:ring-orange-400/60
+                         transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
+>
+                              <span className="font-medium text-sm text-black/75">
+                                          Writers Program
+                                           </span>
+                           <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+                                </Link>
                       </div>
                       {/* Bottom compact 1x4 row */}
                       <div className="grid grid-cols-4 gap-2 pt-1 pb-2">
@@ -656,7 +654,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={()=>setMobileMenuOpen(false)} 
-                            className="text-center rounded-lg bg-white/60 ring-[0.5px] ring-neutral-300/60 px-2 py-2 text-[12px] font-medium text-black/75 hover:bg-white/80 hover:ring-[0.5px] hover:ring-orange-400/50 transition-all shadow-none hover:shadow-none"
+                            className="text-center rounded-lg bg-white/60 ring-[0.5px] ring-neutral-300/60 px-2 py-2 text-[12px] font-medium9*9 text-black/75 hover:bg-white/80 hover:ring-[0.5px] hover:ring-orange-400/50 transition-all shadow-none hover:shadow-none"
                           >
                             {l.label}
                           </Link>
