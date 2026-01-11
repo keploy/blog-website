@@ -156,122 +156,55 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
 
   useEffect(() => {
     let mounted = true;
-
     (async () => {
       try {
-        if (techState.length !== 0 && communityState.length !== 0) return;
-
-        const endpoint = process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string | undefined;
-
-        // ---- Case 1: No WP endpoint → fallback API ----
-        if (!endpoint) {
-          const res = await fetch(
-            `${router.basePath || ""}/api/nav-latest`,
-            { cache: "no-store" }
-          );
-
-          if (!res.ok) {
-            console.warn("nav-latest API not available");
+        if (techState.length === 0 || communityState.length === 0) {
+          const endpoint = process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string | undefined;
+          if (!endpoint) {
+            const res = await fetch(`${router.basePath || ''}/api/nav-latest`, { cache: "no-store" });
+            if (!res.ok) throw new Error("Failed to fetch latest posts (no env, API 404)");
+            const data = await res.json();
+            if (!mounted) return;
+            if (techState.length === 0) setTechState(data?.technology || []);
+            if (communityState.length === 0) setCommunityState(data?.community || []);
             return;
           }
 
-          let data: any;
-          try {
-            data = await res.json();
-          } catch {
-            console.warn("nav-latest returned non-JSON");
-            return;
-          }
 
-          if (!mounted) return;
-
-          if (techState.length === 0) setTechState(data?.technology || []);
-          if (communityState.length === 0) setCommunityState(data?.community || []);
-          return;
-        }
-
-        // ---- Case 2: WP GraphQL endpoint available ----
-        const query = (categoryName: string) => `
-        query Latest($first: Int!) {
-          posts(
-            first: $first,
-            where: {
-              orderby: { field: DATE, order: DESC },
-              categoryName: "${categoryName}"
-            }
-          ) {
-            edges {
-              node {
-                title
-                slug
-                date
-                featuredImage {
-                  node {
-                    sourceUrl
-                  }
-                }
-                ppmaAuthorName
+          const query = (categoryName: string) => `
+            query Latest($first: Int!) {
+              posts(first: $first, where: { orderby: { field: DATE, order: DESC }, categoryName: "${categoryName}" }) {
+                edges { node { title slug date featuredImage { node { sourceUrl } } ppmaAuthorName } }
               }
             }
-          }
-        }
-      `;
+          `;
 
-        const headers = { "Content-Type": "application/json" };
 
-        const [techRes, commRes] = await Promise.all([
-          fetch(endpoint, {
-            method: "POST",
-            headers,
-            body: JSON.stringify({
-              query: query("technology"),
-              variables: { first: 4 },
-            }),
-          }),
-          fetch(endpoint, {
-            method: "POST",
-            headers,
-            body: JSON.stringify({
-              query: query("community"),
-              variables: { first: 4 },
-            }),
-          }),
-        ]);
-
-        if (!mounted) return;
-
-        let techJson: any = null;
-        let commJson: any = null;
-
-        try {
-          [techJson, commJson] = await Promise.all([
-            techRes.json(),
-            commRes.json(),
+          const headers = { "Content-Type": "application/json" } as any;
+          const [techRes, commRes] = await Promise.all([
+            fetch(endpoint, { method: "POST", headers, body: JSON.stringify({ query: query("technology"), variables: { first: 4 } }) }),
+            fetch(endpoint, { method: "POST", headers, body: JSON.stringify({ query: query("community"), variables: { first: 4 } }) }),
           ]);
-        } catch {
-          console.warn("WP GraphQL returned non-JSON");
-          return;
-        }
-
-        const techEdges = techJson?.data?.posts?.edges || [];
-        const commEdges = commJson?.data?.posts?.edges || [];
-
-        if (techState.length === 0) setTechState(techEdges);
-        if (communityState.length === 0) setCommunityState(commEdges);
-
-        if (techEdges.length === 0 && commEdges.length === 0) {
-          setLoadError("No posts from WP GraphQL");
+          if (!mounted) return;
+          const [techJson, commJson] = await Promise.all([techRes.json(), commRes.json()]);
+          const techEdges = techJson?.data?.posts?.edges || [];
+          const commEdges = commJson?.data?.posts?.edges || [];
+          if (techState.length === 0) setTechState(techEdges);
+          if (communityState.length === 0) setCommunityState(commEdges);
+          if (techEdges.length === 0 && commEdges.length === 0) setLoadError("No posts from WP GraphQL");
         }
       } catch (e) {
         console.error("Navbar latest fetch failed", e);
         setLoadError("Failed to load latest posts");
       }
     })();
-
     return () => {
       mounted = false;
     };
   }, []);
+
+
+
 
 
   return (
@@ -689,7 +622,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                             rel="noopener noreferrer"
                             onClick={() => setMobileMenuOpen(false)}
                             className="group relative block rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md"
-                          >     
+                          >
                             <div className="relative z-[1] px-5 py-4">
                               <div className="text-[15px] font-semibold text-black/90">Writers Program</div>
                               <div className="text-[12px] text-neutral-700 mt-1">Be a part of the blog writing for Keploy</div>
