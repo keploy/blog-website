@@ -15,8 +15,13 @@ const AuthorDescription = dynamic(() => import("./author-description"), {
 import ReviewingAuthor from "./ReviewingAuthor";
 import WaitlistBanner from "./waitlistBanner";
 import { Post } from "../types/post";
+import { FaLinkedin, FaTwitter, FaLink } from "react-icons/fa";
+import { useRouter } from "next/router";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
+import Link from "next/link";
+import { Link as LinkIcon } from "lucide-react";
+
 // import AdSlot from "./Adslot";
 export default function PostBody({
   content,
@@ -42,6 +47,23 @@ export default function PostBody({
     reviewer &&
     authorName.split(" ")[0].toLowerCase() ===
     reviewer.name.split(" ")[0].toLowerCase();
+  const [copied, setCopied] = useState(false);
+  const router = useRouter();
+  const currentURL = encodeURIComponent(
+    `keploy.io/${router.basePath + router.asPath}`
+  );
+  const twitterShareUrl = `https://twitter.com/share?url=${currentURL}`;
+  const linkedinShareUrl = `https://www.linkedin.com/shareArticle?url=${currentURL}`;
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(`https://keploy.io/blog${router.asPath}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy!", err);
+    }
+  };
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -374,9 +396,39 @@ export default function PostBody({
 
       <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
 
-        {/* 1. Waitlist banner (always shown) */}
+      {/* 1. Waitlist banner (always shown) */}
         <div className="flex justify-center">
           <WaitlistBanner />
+        </div>
+
+        <div className="flex flex-row gap-5 items-center gap-3 px-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
+          <p className="text-gray-500 text-sm">Share this</p>
+          <Link
+            href={twitterShareUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="twitter-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
+          >
+            <FaTwitter className="icon" />
+          </Link>
+          <Link
+            href={linkedinShareUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="linkedin-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
+          >
+            <FaLinkedin className="icon" />
+          </Link>
+          <button
+            onClick={copyToClipboard}
+            className="link-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500 focus:outline-none"
+            aria-label="Copy URL to clipboard"
+          >
+            <FaLink className="icon" />
+          </button>
+          {copied && (
+            <span className="ml-2 text-orange-500 text-sm">Copied!</span>
+          )}
         </div>
 
         {/* 2. Ad slot (hidden on <lg) */}
