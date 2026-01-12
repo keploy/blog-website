@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { cn } from "../lib/utils/utils";
 import FloatingNavbar from "./navbar/FloatingNavbar";
+import { isWhiteSpaceLike } from "typescript";
+import { color } from "framer-motion";
 
 export default function Header({
   readProgress,
@@ -31,7 +33,7 @@ export default function Header({
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-30 w-full transition duration-300 ease-in-out border-none bg-transparent",
-          scrolled ? "" : ""
+          isBlogReadingPage && "bg-white"
         )}
       >
         <FloatingNavbar isBlogReadingPage={isBlogReadingPage} />
