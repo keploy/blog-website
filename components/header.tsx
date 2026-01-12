@@ -5,8 +5,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { cn } from "../lib/utils/utils";
 import FloatingNavbar from "./navbar/FloatingNavbar";
-import { isWhiteSpaceLike } from "typescript";
-import { color } from "framer-motion";
 
 export default function Header({
   readProgress,
