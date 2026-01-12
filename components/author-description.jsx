@@ -12,8 +12,11 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
   const [authorLinkedIn, setAuthorLinkedIn] = useState("");
   const [authorDescription, setAuthorDescription] = useState("");
   const [showMore, setShowMore] = useState(false);
-  const AuthorNameNew =
-    AuthorName[0].toUpperCase() + AuthorName.slice(1).toLowerCase();
+  const safeAuthorName = (AuthorName || "").toString();
+  const AuthorNameNew = safeAuthorName
+    ? safeAuthorName[0].toUpperCase() +
+      safeAuthorName.slice(1).toLowerCase()
+    : "";
 
     useEffect(() => {
       // Create a temporary div element to parse the HTML content
@@ -27,7 +30,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
         '.pp-author-boxes-avatar-details a[aria-label="Website"]'
       );
       const authorDescriptionElement = tempDiv.querySelector(
-        ".pp-author-boxes-description.multiple-authors-description"
+        ".pp-author-boxes-description"
       );
     
       // Switch case for avatarImgElement
@@ -179,7 +182,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
           {isPost && (
             <div className="mt-2  flex justify-end">
               <button className="text-slate-100 place-self-end focus:outline-none hover:bg-slate-800 hover:text-slate-50 bg-slate-500 p-2 rounded-lg mt-1">
-                <Link href={`/authors/${sanitizeAuthorSlug(AuthorName)}`}>
+                <Link href={`/authors/${sanitizeAuthorSlug(safeAuthorName)}`}>
                 View All Posts
                 </Link>
               </button>

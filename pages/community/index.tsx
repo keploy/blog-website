@@ -6,11 +6,18 @@ import HeroPost from "../../components/hero-post";
 import Layout from "../../components/layout";
 import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
+import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
 export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;
   const excerpt = getExcerpt(edges[0]?.node.excerpt);
   const morePosts = edges.slice(1);
+  const structuredData = [
+    getBreadcrumbListSchema([
+      { name: "Home", url: SITE_URL },
+      { name: "Community", url: `${SITE_URL}/community` },
+    ]),
+  ];
   function getExcerpt(content) {
     const maxWords = 50;
     // Split the content into an array of words
@@ -25,7 +32,13 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   }
 
   return (
-    <Layout preview={preview} featuredImage={heroPost?.featuredImage?.node.sourceUrl} Title={heroPost?.title} Description={`Blog from the Technology Page`}>
+    <Layout
+      preview={preview}
+      featuredImage={heroPost?.featuredImage?.node.sourceUrl}
+      Title={heroPost?.title}
+      Description={`Blog from the Technology Page`}
+      structuredData={structuredData}
+    >
       <Head>
         <title>{`Keploy Blog`}</title>
       </Head>
