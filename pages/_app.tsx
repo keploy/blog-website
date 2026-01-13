@@ -5,6 +5,8 @@ import Router from "next/router";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
+import { ThemeProvider } from 'next-themes';
+
  
 const PageLoader = dynamic(() => import('../components/PageLoader'), {
   ssr: false,
@@ -30,13 +32,18 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
   }, []);
 
-  return (
-    <>
+    return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+    >
       <AnimatePresence>
         {loading ? <PageLoader /> : <Component {...pageProps} />}
       </AnimatePresence>
-    </>
+    </ThemeProvider>
   );
+
 }
 
 export default MyApp
