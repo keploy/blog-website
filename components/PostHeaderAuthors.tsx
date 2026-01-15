@@ -33,12 +33,12 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row lg:mt-7 items-start sm:items-center sm:justify-around gap-4 sm:gap-0  sm:px-0 lg:mx-28">
-        <p className="text-gray-500 text-sm order-1 sm:order-none mr-1 sm:my-2 md:my-4 lg:my-0">
+      <div className="flex flex-col lg:flex-row lg:mt-7 items-start sm:items-center sm:justify-start gap-2 sm:gap-0  sm:px-0 lg:mx-28">
+        <p className="text-gray-500 text-sm order-1 sm:order-none mr-1 sm:my-1 md:my-2 lg:my-0">
           {timetoRead} min read
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 order-3 sm:order-none w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 order-3 sm:order-none w-full sm:w-auto sm:justify-center sm:pl-16">
           <div
             className="flex flex-row items-center gap-3 sm:gap-5 relative"
             onMouseEnter={onMouseEnterBlogWriter}
