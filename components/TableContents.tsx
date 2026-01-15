@@ -202,7 +202,7 @@ export default function TOC({ headings, isList, setIsList }) {
             ))}
           </select>
         ) : (
-          <nav ref={tocRef}>
+          <nav ref={tocRef} className="max-h-[80vh] overflow-y-auto pr-2">
             <ul className="pl-0 leading-5">
               {headings.map((item, index) => (
                 <TOCItem
