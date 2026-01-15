@@ -5,6 +5,7 @@ import Meta from "./meta";
 import Script from "next/script";
 import { motion } from "framer-motion";
 import ScrollToTop from "./ScrollToTop";
+import { useRouter } from "next/router";
 export default function Layout({
   preview,
   children,
@@ -20,6 +21,10 @@ export default function Layout({
   children: React.ReactNode;
   structuredData?: Record<string, unknown>[];
 }) {
+  const router = useRouter();
+  const isBlogReadingPage =
+    router.pathname === "/technology/[slug]" || router.pathname === "/community/[slug]";
+  const mainPadding = isBlogReadingPage ? "pt-12 md:pt-14" : "pt-20 md:pt-24";
   return (
     <>
       <Meta
@@ -40,7 +45,7 @@ export default function Layout({
         className="min-h-screen"
       >
         {/* <Alert preview={preview} /> */}
-        <main className="pt-20 md:pt-24">{children}</main>
+        <main className={mainPadding}>{children}</main>
       </motion.div>
       <Footer />
       <ScrollToTop />

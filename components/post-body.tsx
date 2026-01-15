@@ -359,7 +359,7 @@ export default function PostBody({
         )}
       </div>
 
-      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-4 sticky lg:top-20">
+      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky lg:top-20">
 
         {/* 1. Waitlist banner (always shown) */}
         <div className="flex justify-center">
@@ -367,12 +367,12 @@ export default function PostBody({
         </div>
 
         {/* 2. Sticky Share (hidden on <lg) */}
-        <div className="hidden lg:flex justify-center rounded-xl p-0">
+        <div className="hidden lg:flex justify-center rounded-xl p-4">
           <StickyShare />
         </div>
 
         {/* 3. Ad slot (hidden on <lg) */}
-        <div className="hidden lg:flex justify-center rounded-xl p-0">
+        <div className="hidden lg:flex justify-center rounded-xl p-4">
           <AdSlot
             slotId="3356716061"
             className="w-full h-60"

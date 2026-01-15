@@ -7,16 +7,26 @@ const StickyShare = () => {
     const router = useRouter();
     const [copied, setCopied] = useState(false);
 
-    const currentURL = typeof window !== 'undefined' ? encodeURIComponent(
-        `keploy.io/${router.basePath + router.asPath}`
-    ) : "";
+    const buildShareLinks = () => {
+        const baseUrlFallback = "https://keploy.io";
+        const fullUrl = typeof window !== "undefined"
+            ? `${window.location.origin}${router.basePath}${router.asPath}`
+            : `${baseUrlFallback}${router.basePath}${router.asPath}`;
 
-    const twitterShareUrl = `https://twitter.com/share?url=${currentURL}`;
-    const linkedinShareUrl = `https://www.linkedin.com/shareArticle?url=${currentURL}`;
+        const encodedUrl = encodeURIComponent(fullUrl);
+
+        return {
+            fullUrl,
+            twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}`,
+            linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+        };
+    };
+
+    const { fullUrl, twitter: twitterShareUrl, linkedin: linkedinShareUrl } = buildShareLinks();
 
     const copyToClipboard = async () => {
         try {
-            await navigator.clipboard.writeText(`https://keploy.io/blog${router.asPath}`);
+            await navigator.clipboard.writeText(fullUrl);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
