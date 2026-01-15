@@ -55,7 +55,9 @@ export default function TOC({ headings, isList, setIsList }) {
     const container = tocRef.current;
 
     function resizeHandler() {
-      setIsList(container.clientHeight > window.innerHeight * 0.8);
+      // Use scrollHeight to detect when content exceeds max-h-[80vh] constraint
+      // scrollHeight returns the full content height (including overflowed content)
+      setIsList(container.scrollHeight > window.innerHeight * 0.8);
     }
 
     resizeHandler()
