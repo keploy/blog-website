@@ -79,8 +79,10 @@ const TwitterTestimonials = () => {
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-[15%] bg-gradient-to-r from-neutral-100 dark:from-background"></div>
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-[15%] bg-gradient-to-l from-neutral-100 dark:from-background"></div>
+       <div className="pointer-events-none absolute inset-y-0 left-0 w-[15%] bg-gradient-to-r from-transparent via-background/90 to-transparent blur-[70px] opacity-100" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-[15%] bg-gradient-to-l from-transparent via-background/90 to-transparent blur-[70px] opacity-100" />
+
+
       </div>
     </div>
   );
