@@ -394,14 +394,14 @@ export default function PostBody({
         )}
       </div>
 
-      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
+      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 order-2 lg:order-none static lg:sticky lg:top-20">
 
-      {/* 1. Waitlist banner (always shown) */}
+        {/* 1. Waitlist banner (always shown) */}
         <div className="flex justify-center">
           <WaitlistBanner />
         </div>
 
-        <div className="flex flex-row gap-5 items-center gap-3 px-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
+        <div className="flex flex-row items-center gap-3 px-3 sm:gap-5 mt-2 md:mb-2 justify-center lg:justify-start">
           <p className="text-gray-500 text-sm">Share this</p>
           <Link
             href={twitterShareUrl}
