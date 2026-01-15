@@ -26,8 +26,10 @@ export default function Header({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const headerHeight = isBlogReadingPage ? "h-16 md:h-20" : "h-24 md:h-28";
+
   return (
-    <div className="h-28 md:h-32 border-b border-gray-200/50">
+    <div className={`${headerHeight} border-b border-gray-200/50`}>
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-30 w-full transition duration-300 ease-in-out border-none bg-transparent",
