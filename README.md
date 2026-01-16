@@ -73,5 +73,18 @@ yarn dev
 ```
 Your blog should be up and running on http://localhost:3000! If it doesn't work, post on GitHub discussions.
 
+### Step 7. Running Tests
+
+This project uses Jest for testing. To run the test suite:
+
+```bash
+npm test
+```
+
+### Contributing
+
+We welcome contributions! Please read our [Contribution Guidelines](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+
 
 For CSS files being rendered at vercel and not on keploy enpoint - we set generic redirection /blogs/* on cloudfront. 
