@@ -20,22 +20,26 @@ const ReviewCard = ({
   content: string;
 }) => {
   return (
-    <a href={post} target="_blank" className="lg:mx-2 block h-full">
-      <figure className="relative flex h-full w-80 flex-col justify-between rounded-3xl border border-gray-200 bg-white p-6 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl dark:border-gray-800 dark:bg-gray-950">
-        <div>
-          <Quote className="h-8 w-8 text-orange-400 mb-4 fill-orange-400/20" />
+    <a href={post} target="_blank" className="lg:mx-2 block h-fit relative group/card hover:z-50 transition-all duration-300">
+      <figure className="relative flex w-80 flex-col rounded-3xl border border-gray-200 bg-white p-6 shadow-lg transition-all duration-300 group-hover/card:scale-105 group-hover/card:shadow-2xl dark:border-gray-800 dark:bg-gray-950 overflow-hidden">
+        <Quote className="absolute -top-2 -right-2 h-24 w-24 text-orange-400/10 -rotate-12 transition-transform duration-500 group-hover/card:rotate-0" aria-hidden="true" />
+
+        <div className="relative z-10">
           <blockquote className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
             {content}
           </blockquote>
         </div>
 
-        <div className="mt-6 flex flex-row items-center gap-3">
+        <div className="mt-4 flex flex-row items-center gap-3 relative z-10">
           <img
-            className="rounded-full object-cover"
+            className="rounded-full object-cover bg-gray-100"
             width="40"
             height="40"
-            alt={name}
+            alt=""
             src={avatar}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
+            }}
           />
           <div className="flex flex-col">
             <figcaption className="text-sm font-bold text-gray-900 dark:text-white">
@@ -54,7 +58,7 @@ const ReviewCard = ({
 const TwitterTestimonials = () => {
   return (
     <div className="py-20 w-full overflow-hidden">
-      <div className="mb-12 flex flex-col items-center justify-center text-center">
+      <div className="mb-12 flex flex-col items-center justify-center text-center px-4">
         <div className="mb-2 inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
           <span className="mr-1">💬</span> Testimonials
         </div>
@@ -69,19 +73,19 @@ const TwitterTestimonials = () => {
         </p>
       </div>
 
-      <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
-        <Marquee pauseOnHover className="[--duration:40s] py-4">
+      <div className="relative flex w-full flex-col items-center justify-center overflow-visible">
+        <Marquee pauseOnHover className="[--duration:40s] py-12">
           {firstRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-        <Marquee reverse pauseOnHover className="[--duration:40s] py-4">
+        <Marquee reverse pauseOnHover className="[--duration:40s] py-12">
           {secondRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80"></div>
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80"></div>
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80 z-20"></div>
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80 z-20"></div>
       </div>
     </div>
   );
