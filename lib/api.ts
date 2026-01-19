@@ -1,4 +1,13 @@
-export const maxDuration = 300; // This can run Vercel Functions for a maximum of 300 seconds
+import {
+  AUTHOR_FIELDS_FRAGMENT,
+  POST_PREVIEW_FRAGMENT,
+  FULL_POST_FRAGMENT,
+  PAGINATION_INFO_FRAGMENT,
+  FEATURED_IMAGE_FRAGMENT,
+  CATEGORY_FIELDS_FRAGMENT,
+} from './graphql-fragments';
+
+export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
 const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL
@@ -70,7 +79,7 @@ export async function getAllTags() {
     `,
       {
         variables: {
-          first: 100, // Adjust as needed
+          first: 100,
           after: endCursor,
         },
       }
@@ -88,32 +97,13 @@ export async function getAllTags() {
 export async function getAllPostsFromTags(tagName: String, preview) {
   const data = await fetchAPI(
     `
+    ${POST_PREVIEW_FRAGMENT}
+    
     query AllPosts($tagName: String!) {
       posts(first: 100, where: { orderby: { field: DATE, order: DESC }, tag: $tagName }) {
         edges {
           node {
-            title
-            excerpt
-            slug
-            date
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            author {
-              node {
-                name
-              }
-            }
-            ppmaAuthorName
-            categories {
-              edges {
-                node {
-                  name
-                }
-              }
-            }
+            ...PostPreviewFields
           }
         }
       }
@@ -139,34 +129,18 @@ export async function getAllPosts() {
   while (hasNextPage) {
     const data = await fetchAPI(
       `
+      ${POST_PREVIEW_FRAGMENT}
+      ${PAGINATION_INFO_FRAGMENT}
+      
       query AllPosts($after: String) {
         posts(first: 50, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
           edges {
             node {
-              title
-              excerpt
-              slug
-              date
-              postId
-              featuredImage {
-                node {
-                  sourceUrl
-                }
-              }
-              author {
-                node {
-                  name
-                }
-              }
-              ppmaAuthorName
-              categories {
-                edges {
-                  node {
-                    name
-                  }
-                }
-              }
+              ...PostPreviewFields
             }
+          }
+          pageInfo {
+            ...PaginationInfo
           }
         }
       }
@@ -210,15 +184,14 @@ export async function getContent(postId: number) {
 export async function getReviewAuthorDetails(authorName) {
   const data = await fetchAPI(
     `
+    ${AUTHOR_FIELDS_FRAGMENT}
+    
     query AuthorDetailsByName($authorName: String!) {
       users(where: { search: $authorName }) {
         edges {
           node {
-            name
+            ...AuthorFields
             email
-            avatar {
-              url
-            }
             description
           }
         }
@@ -241,47 +214,18 @@ export async function getReviewAuthorDetails(authorName) {
 export async function getAllPostsForTechnology(preview = false, after = null) {
   const data = await fetchAPI(
     `
+    ${POST_PREVIEW_FRAGMENT}
+    ${PAGINATION_INFO_FRAGMENT}
+    
     query AllPostsForCategory($after: String) {
       posts(first: 22, after: $after, where: { orderby: { field: DATE, order: DESC }, categoryName: "technology" }) {
         edges {
           node {
-            title
-            excerpt
-            slug
-            date
-            postId
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            author {
-              node {
-                name
-                firstName
-                lastName
-                avatar {
-                  url
-                }
-              }
-            }
-            ppmaAuthorName
-            categories {
-              edges {
-                node {
-                  name
-                }
-              }
-            }
-            seo {
-              metaDesc
-              title
-            }
+            ...PostPreviewFields
           }
         }
         pageInfo {
-          hasNextPage
-          endCursor
+          ...PaginationInfo
         }
       }
     }
@@ -305,6 +249,9 @@ export async function getAllPostsForCommunity(preview = false, after = null) {
   try {
     const data = await fetchAPI(
       `
+      ${POST_PREVIEW_FRAGMENT}
+      ${PAGINATION_INFO_FRAGMENT}
+      
       query CommunityPosts($after: String) {
         posts(
           first: 22,
@@ -316,43 +263,11 @@ export async function getAllPostsForCommunity(preview = false, after = null) {
         ) {
           edges {
             node {
-              title
-              excerpt
-              slug
-              date
-              postId
-              featuredImage {
-                node {
-                  sourceUrl
-                }
-              }
-              author {
-                node {
-                  name
-                  firstName
-                  lastName
-                  avatar {
-                    url
-                  }
-                }
-              }
-              ppmaAuthorName
-              categories {
-                edges {
-                  node {
-                    name
-                  }
-                }
-              }
-              seo {
-                metaDesc
-                title
-              }
+              ...PostPreviewFields
             }
           }
           pageInfo {
-            hasNextPage
-            endCursor
+            ...PaginationInfo
           }
         }
       }
@@ -386,6 +301,9 @@ export async function getAllAuthors() {
   while (hasNextPage) {
     const data = await fetchAPI(
       `
+      ${AUTHOR_FIELDS_FRAGMENT}
+      ${PAGINATION_INFO_FRAGMENT}
+      
       query getAllAuthors($after: String) {
         posts(first: 50, after: $after) {
           edges {
@@ -394,19 +312,13 @@ export async function getAllAuthors() {
               ppmaAuthorImage
               author {
                 node {
-                  name
-                  firstName
-                  lastName
-                  avatar {
-                    url
-                  }
+                  ...AuthorFields
                 }
               }
             }
           }
           pageInfo {
-            hasNextPage
-            endCursor
+            ...PaginationInfo
           }
         }
       }
@@ -432,6 +344,10 @@ export async function getPostsByAuthor() {
   while (hasNextPage) {
     const data = await fetchAPI(
       `
+      ${FEATURED_IMAGE_FRAGMENT}
+      ${CATEGORY_FIELDS_FRAGMENT}
+      ${PAGINATION_INFO_FRAGMENT}
+      
       query getPostsByAuthor($after: String) {
         posts(first: 50, after: $after) {
           edges {
@@ -440,23 +356,12 @@ export async function getPostsByAuthor() {
               title
               ppmaAuthorName
               slug
-              featuredImage {
-                node {
-                  sourceUrl
-                }
-              }
-              categories {
-                edges {
-                  node {
-                    name
-                  }
-                }
-              }
+              ...FeaturedImageFields
+              ...CategoryFields
             }
           }
           pageInfo {
-            hasNextPage
-            endCursor
+            ...PaginationInfo
           }
         }
       }
@@ -481,6 +386,8 @@ export async function getMoreStoriesForSlugs(tags, slug) {
   let data;
 
   const queryWithTags = `
+    ${POST_PREVIEW_FRAGMENT}
+    
     query Posts($tags: [String!]) {
       posts(
         first: 7,
@@ -488,14 +395,7 @@ export async function getMoreStoriesForSlugs(tags, slug) {
       ) {
         edges {
           node {
-            title
-            excerpt
-            slug
-            date
-            featuredImage { node { sourceUrl } }
-            author { node { name firstName lastName avatar { url } } }
-            ppmaAuthorName
-            categories { edges { node { name } } }
+            ...PostPreviewFields
           }
         }
       }
@@ -503,18 +403,13 @@ export async function getMoreStoriesForSlugs(tags, slug) {
   `;
 
   const fallbackQuery = `
+    ${POST_PREVIEW_FRAGMENT}
+    
     query PostsWithoutTags {
       posts(first: 7, where: { orderby: { field: DATE, order: DESC } }) {
         edges {
           node {
-            title
-            excerpt
-            slug
-            date
-            featuredImage { node { sourceUrl } }
-            author { node { name firstName lastName avatar { url } } }
-            ppmaAuthorName
-            categories { edges { node { name } } }
+            ...PostPreviewFields
           }
         }
       }
@@ -545,42 +440,14 @@ export async function getMoreStoriesForSlugs(tags, slug) {
 
 export async function getPostsByAuthorName(authorName: string) {
   const data = await fetchAPI(
-    `query PostsByAuthorName($authorName: String!) {
+    `
+    ${POST_PREVIEW_FRAGMENT}
+    
+    query PostsByAuthorName($authorName: String!) {
       posts(where: { authorName: $authorName }) {
         edges {
           node {
-            title
-            excerpt
-            slug
-            date
-            postId
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            author {
-              node {
-                name
-                firstName
-                lastName
-                avatar {
-                  url
-                }
-              }
-            }
-            ppmaAuthorName
-            categories {
-              edges {
-                node {
-                  name
-                }
-              }
-            }
-            seo {
-              metaDesc
-              title
-            }
+            ...PostPreviewFields
           }
         }
       }
@@ -609,55 +476,12 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
   const isRevision = isSamePost && postPreview?.status === "publish";
   const data = await fetchAPI(
     `
-    fragment AuthorFields on User {
-      name
-      firstName
-      lastName
-      avatar {
-        url
-      }
-    }
-
-    fragment PostFields on Post {
-      title
-      excerpt
-      slug
-      date
-      ppmaAuthorName
-      featuredImage {
-        node {
-          sourceUrl
-        }
-      }
-      author {
-        node {
-          ...AuthorFields
-        }
-      }
-      categories {
-        edges {
-          node {
-            name
-          }
-        }
-      }
-      tags {
-        edges {
-          node {
-            name
-          }
-        }
-      }
-      seo{
-        metaDesc
-        title
-      }  
-    }
+    ${FULL_POST_FRAGMENT}
+    ${AUTHOR_FIELDS_FRAGMENT}
 
     query PostBySlug($id: ID!, $idType: PostIdType!) {
       post(id: $id, idType: $idType) {
-        ...PostFields
-        content
+        ...FullPostFields
         ${
           // Only some of the fields of a revision are considered as there are some inconsistencies
           isRevision
@@ -684,8 +508,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       posts(first: 3, where: { orderby: { field: DATE, order: DESC } }) {
         edges {
           node {
-            ...PostFields
-            
+            ...FullPostFields
           }
         }
       }
@@ -726,6 +549,9 @@ export async function fetchMorePosts(
 
   const data = await fetchAPI(
     `
+    ${POST_PREVIEW_FRAGMENT}
+    ${PAGINATION_INFO_FRAGMENT}
+    
     query MorePosts($after: String, $first: Int!, $category: String!) {
       posts(
         first: $first,
@@ -737,43 +563,11 @@ export async function fetchMorePosts(
       ) {
         edges {
           node {
-            title
-            excerpt
-            slug
-            date
-            postId
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            author {
-              node {
-                name
-                firstName
-                lastName
-                avatar {
-                  url
-                }
-              }
-            }
-            ppmaAuthorName
-            categories {
-              edges {
-                node {
-                  name
-                }
-              }
-            }
-            seo {
-              metaDesc
-              title
-            }
+            ...PostPreviewFields
           }
         }
         pageInfo {
-          hasNextPage
-          endCursor
+          ...PaginationInfo
         }
       }
     }
@@ -799,38 +593,13 @@ export async function getAllPostsForSearch(preview = false) {
   // It only fetches fields needed for the MoreStories card
   const data = await fetchAPI(
     `
+    ${POST_PREVIEW_FRAGMENT}
+    
     query AllPostsForSearch {
       posts(first: 100, where: { orderby: { field: DATE, order: DESC } }) {
         edges {
           node {
-            title
-            excerpt
-            slug
-            date
-            postId
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            author {
-              node {
-                name
-                firstName
-                lastName
-                avatar {
-                  url
-                }
-              }
-            }
-            ppmaAuthorName
-            categories {
-              edges {
-                node {
-                  name
-                }
-              }
-            }
+            ...PostPreviewFields
           }
         }
       }
