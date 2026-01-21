@@ -462,7 +462,6 @@ export default function PostBody({
       className="w-full h-60"
     />
   </div> */}
-      </aside>
 
         {/* 2. Ad slot (hidden on <lg) */}
         <div className="hidden lg:flex justify-center rounded-xl p-4">
