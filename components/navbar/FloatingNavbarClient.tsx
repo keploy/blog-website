@@ -154,6 +154,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
     };
   }, [mobileMenuOpen]);
 
+  // Fetch latest posts for navbar dropdowns (runs once on mount)
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -199,6 +200,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
     return () => {
       mounted = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -746,6 +748,7 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
   const [results, setResults] = useState<any[]>([]);
   const [allPosts, setAllPosts] = useState<any[] | null>(null);
 
+  // Fetch all posts for search (runs once on mount)
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -761,6 +764,7 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
       }
     })();
     return () => { mounted = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -781,7 +785,7 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
       (node?.excerpt || "").toLowerCase().includes(term)
     );
     setResults(filtered.slice(0, 20));
-  }, [q, allPosts]);
+  }, [q, allPosts, techLatest, communityLatest]);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
