@@ -94,6 +94,7 @@ export async function getAllPostsFromTags(tagName: String, preview) {
           node {
             title
             excerpt
+            content
             slug
             date
             featuredImage {
@@ -145,6 +146,7 @@ export async function getAllPosts() {
             node {
               title
               excerpt
+              content
               slug
               date
               postId
@@ -247,6 +249,7 @@ export async function getAllPostsForTechnology(preview = false, after = null) {
           node {
             title
             excerpt
+            content
             slug
             date
             postId
@@ -490,6 +493,7 @@ export async function getMoreStoriesForSlugs(tags, slug) {
           node {
             title
             excerpt
+            content
             slug
             date
             featuredImage { node { sourceUrl } }
@@ -509,6 +513,7 @@ export async function getMoreStoriesForSlugs(tags, slug) {
           node {
             title
             excerpt
+            content
             slug
             date
             featuredImage { node { sourceUrl } }
@@ -551,6 +556,7 @@ export async function getPostsByAuthorName(authorName: string) {
           node {
             title
             excerpt
+            content
             slug
             date
             postId
@@ -621,6 +627,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
     fragment PostFields on Post {
       title
       excerpt
+      content
       slug
       date
       ppmaAuthorName
@@ -657,7 +664,6 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
     query PostBySlug($id: ID!, $idType: PostIdType!) {
       post(id: $id, idType: $idType) {
         ...PostFields
-        content
         ${
           // Only some of the fields of a revision are considered as there are some inconsistencies
           isRevision
@@ -739,6 +745,7 @@ export async function fetchMorePosts(
           node {
             title
             excerpt
+            content
             slug
             date
             postId
@@ -805,6 +812,7 @@ export async function getAllPostsForSearch(preview = false) {
           node {
             title
             excerpt
+            content
             slug
             date
             postId

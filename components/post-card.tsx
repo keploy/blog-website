@@ -4,12 +4,14 @@ import CoverImage from "./cover-image";
 import Link from "next/link";
 import { Post } from "../types/post";
 import { animated, easings, useInView } from "@react-spring/web";
+import { calculateReadingTime } from "../utils/calculateReadingTime";
 
 export default function PostCard({
   title,
   coverImage,
   date,
   excerpt,
+  content,
   author,
   slug,
   isCommunity = false,
@@ -18,12 +20,16 @@ export default function PostCard({
   coverImage: Post["featuredImage"];
   date: Post["date"];
   excerpt: Post["excerpt"];
+  content?: Post["content"];
   author: Post["ppmaAuthorName"];
   slug: Post["slug"];
   isCommunity?: boolean;
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
   const cleanedExcerpt = (excerpt || "").replace("Table of Contents", "");
+  const readingTimeMinutes = calculateReadingTime(content || cleanedExcerpt || "");
+  const readTimeLabel =
+    readingTimeMinutes > 0 ? `${Math.max(1, readingTimeMinutes)} min read` : null;
 
   const [ref, springStyles] = useInView(
     () => ({
@@ -46,10 +52,15 @@ export default function PostCard({
 
   return (
     <animated.div
-      className="bg-white rounded-xl shadow-[0_6px_18px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-200 transition-all duration-300 overflow-hidden group hover:border-orange-300 hover:-translate-y-1"
+      className="relative bg-white rounded-xl shadow-[0_6px_18px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-200 transition-all duration-300 overflow-hidden group hover:border-orange-300 hover:-translate-y-1"
       ref={ref}
       style={springStyles}
     >
+      {readTimeLabel && (
+        <div className="absolute top-3 right-3 z-10 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-700 shadow-sm ring-1 ring-gray-200 backdrop-blur">
+          {readTimeLabel}
+        </div>
+      )}
       <div className="aspect-video overflow-hidden">
         {coverImage && (
           <CoverImage

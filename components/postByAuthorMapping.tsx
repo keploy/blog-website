@@ -38,6 +38,7 @@ const PostByAuthorMapping = ({
             author={node.ppmaAuthorName}
             slug={node.slug}
             excerpt={node.excerpt}
+            content={node.content}
             isCommunity={
               node.categories.edges[0]?.node.name === "community" ? true : false
             }

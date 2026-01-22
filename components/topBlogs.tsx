@@ -22,6 +22,7 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
               author={node.ppmaAuthorName}
               slug={node.slug}
               excerpt={getExcerpt(node.excerpt, 20)}
+              content={node.content}
               isCommunity={false}
             />
           ))}
@@ -64,6 +65,7 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
               author={node.ppmaAuthorName}
               slug={node.slug}
               excerpt={getExcerpt(node.excerpt, 20)}
+              content={node.content}
               isCommunity={true}
             />
           ))}
