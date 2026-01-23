@@ -4,7 +4,8 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "audit": "npm audit --audit-level=high"
   },
   "dependencies": {
     "@codemirror/lang-go": "^6.0.1",
