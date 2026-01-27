@@ -205,7 +205,7 @@ export default function Footer() {
         </div>
         <div className="my-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between max-lg:ml-10">
-            <p className="mt-8 text-sm text-gray-500 md:mt-0">Copyright © 2026 Keploy Inc</p>
+             <p className="mt-8 text-sm text-gray-500 md:mt-0"> Copyright © {new Date().getFullYear()} Keploy Inc</p>
           </div>
         </div>
       </div>
