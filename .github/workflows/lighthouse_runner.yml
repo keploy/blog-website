@@ -1,0 +1,82 @@
+name: Lighthouse – Run
+
+on:
+  pull_request:
+    branches:
+      - '**'
+    paths-ignore:
+      - '**/*.md'
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build PR branch
+        env:
+          WORDPRESS_API_URL: https://wp.keploy.io/graphql
+          NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.keploy.io/graphql
+        run: npm run build
+
+      - name: Start PR server (3001)
+        env:
+          WORDPRESS_API_URL: https://wp.keploy.io/graphql
+          NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.keploy.io/graphql
+        run: |
+          nohup npm run start -- -p 3001 >/dev/null 2>&1 &
+          npx wait-on http://localhost:3001/blog
+
+      - name: Checkout main branch
+        run: |
+          git fetch origin main
+          git worktree add main-branch origin/main
+
+      - name: Install & build main branch
+        working-directory: ./main-branch
+        env:
+          WORDPRESS_API_URL: https://wp.keploy.io/graphql
+          NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.keploy.io/graphql
+        run: |
+          npm install
+          npm run build
+
+      - name: Start main server (3000)
+        working-directory: ./main-branch
+        env:
+          WORDPRESS_API_URL: https://wp.keploy.io/graphql
+          NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.keploy.io/graphql
+        run: |
+          nohup npm run start -- -p 3000 >/dev/null 2>&1 &
+          npx wait-on http://localhost:3000/blog
+
+      - name: Run Lighthouse audits
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:3001/blog
+            http://localhost:3000/blog
+          uploadArtifacts: true
+
+      - name: Generate Lighthouse comment
+        run: node .github/scripts/lighthouse-report.js
+
+      - name: Upload Lighthouse comment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-comment
+          path: lighthouse-comment.md
