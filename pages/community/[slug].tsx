@@ -34,6 +34,14 @@ const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
 });
 
+const FloatingSocialShare = dynamic(() => import("../../components/floating-social-share"), {
+  ssr: false,
+});
+
+const InlineSocialShare = dynamic(() => import("../../components/inline-social-share"), {
+  ssr: false,
+});
+
 const postBody = ({ content, post }) => {
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
 
@@ -200,6 +208,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 BlogReviewer={blogreviewer}
                 TimeToRead={time}
               />
+              <InlineSocialShare postUrl={postUrl} postTitle={post?.title || ""} />
             </article>
           </>
         )}
@@ -221,6 +230,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           />
         </div>
       </ContainerSlug>
+      <FloatingSocialShare
+        postUrl={postUrl}
+        postTitle={post?.title || ""}
+      />
       <Container>
         <article>
           <footer>
