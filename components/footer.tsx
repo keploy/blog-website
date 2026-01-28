@@ -57,7 +57,7 @@ export default function Footer() {
     },
   ];
   return (
-    <footer className="border-t border-gray-200 bg-white">
+    <footer className="bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 ...">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8 my-20">
         <div className="flex flex-col  lg:flex-row gap-4 ">
           <div className="max-lg:ml-10">
