@@ -21,9 +21,23 @@ const ReviewCard = ({
   const { basePath } = useRouter();
   const isExternal = typeof avatar === "string" && /^https?:\/\//i.test(avatar);
   const proxiedAvatar = isExternal ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}` : avatar;
+  const isValidLink = Boolean(post && post.startsWith("http"));
+
   return (
-    <a href={post} target="_blank" className="lg:mx-2">
-      <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
+      <a
+        href={isValidLink ? post : undefined}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="lg:mx-2"
+        onClick={(e) => {
+          if (!isValidLink) e.preventDefault();
+        }}
+      >
+      <figure
+        className={`relative w-80 overflow-hidden rounded-xl border p-4 border-gray-950/[.1]
+        ${isValidLink ? "cursor-pointer hover:bg-gray-950/[.05]" : "cursor-not-allowed opacity-60"}
+        `}
+      >
         <div className="flex flex-row items-center gap-2">
           <img
             className="rounded-full"
