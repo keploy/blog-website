@@ -1,5 +1,30 @@
+"use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
+
+/* ---------------- Types ---------------- */
+
+type HeadingItem = {
+  id: string;
+  title: string;
+  type: "h1" | "h2" | "h3" | "h4";
+};
+
+type TOCProps = {
+  headings: HeadingItem[];
+  isList: boolean;
+};
+
+type TOCItemProps = {
+  id: string;
+  title: string;
+  type: HeadingItem["type"];
+  activeId: string;
+  onClick: (id: string) => void;
+};
+
+/* ---------------- TOC Item ---------------- */
 
 function TOCItem({
   id,
@@ -7,13 +32,7 @@ function TOCItem({
   type,
   onClick,
   activeId,
-}: {
-  id: string;
-  title: string;
-  type: string;
-  activeId: string;
-  onClick: (id: string) => void;
-}) {
+}: TOCItemProps) {
   let marginLeft = "2rem";
 
   switch (type) {
@@ -26,19 +45,12 @@ function TOCItem({
     case "h3":
       marginLeft = "1.5rem";
       break;
-    case "h4":
-      marginLeft = "2rem";
-      break;
   }
 
   const isActive = activeId === id;
 
   return (
-    <li
-      data-toc-id={id}
-      className="mb-1 space-y-1"
-      style={{ marginLeft }}
-    >
+    <li data-toc-id={id} style={{ marginLeft }}>
       <button
         onClick={() => onClick(id)}
         className={`block w-full py-1 text-sm text-left transition-all duration-150 rounded-md ${
@@ -53,7 +65,9 @@ function TOCItem({
   );
 }
 
-export default function TOC({ headings, isList }) {
+/* ---------------- TOC ---------------- */
+
+export default function TOC({ headings, isList }: TOCProps) {
   const tocContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -62,7 +76,7 @@ export default function TOC({ headings, isList }) {
 
   /* ---------------- Scroll Spy ---------------- */
   useEffect(() => {
-    if (!headings?.length) return;
+    if (!headings.length) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -83,7 +97,7 @@ export default function TOC({ headings, isList }) {
     return () => observer.disconnect();
   }, [headings]);
 
-  /* ---------------- Auto-scroll TOC to active item ---------------- */
+  /* ---------------- Auto-scroll TOC ---------------- */
   useEffect(() => {
     if (!activeId || !tocContainerRef.current) return;
 
@@ -91,12 +105,7 @@ export default function TOC({ headings, isList }) {
       `[data-toc-id="${activeId}"]`
     ) as HTMLElement | null;
 
-    if (activeEl) {
-      activeEl.scrollIntoView({
-        block: "nearest",
-        behavior: "smooth",
-      });
-    }
+    activeEl?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [activeId]);
 
   /* ---------------- Scroll on click ---------------- */
@@ -105,9 +114,8 @@ export default function TOC({ headings, isList }) {
     const element = document.getElementById(sanitizedId);
     if (!element) return;
 
-    const offset = 80;
     window.scrollTo({
-      top: element.offsetTop - offset,
+      top: element.offsetTop - 80,
       behavior: "smooth",
     });
 
@@ -126,40 +134,38 @@ export default function TOC({ headings, isList }) {
   /* ---------------- Mobile ---------------- */
   if (isSmallScreen) {
     return (
-      <div className="w-full max-w-[700px] px-4 mx-auto top-20">
+      <div className="w-full max-w-[700px] px-4 mx-auto">
         <button
           onClick={() => setIsDropdownOpen((p) => !p)}
-          className="w-full px-4 py-2 bg-white text-gray-700 border rounded-md shadow-sm flex justify-between"
+          className="w-full px-4 py-2 bg-white border rounded-md flex justify-between"
         >
           <span className="font-semibold">Table of Contents</span>
           <span>{isDropdownOpen ? "▲" : "▼"}</span>
         </button>
 
         {isDropdownOpen && (
-          <div className="mt-2 max-h-[300px] overflow-y-auto border rounded-md shadow-md p-2 bg-white">
-            <ul className="space-y-1">
-              {headings.map((item) => {
-                const id = sanitizeStringForURL(item.id, true);
-                return (
-                  <li key={id}>
-                    <button
-                      onClick={() => {
-                        handleItemClick(item.id);
-                        setIsDropdownOpen(false);
-                      }}
-                      className={`w-full text-left text-sm ${
-                        activeId === id
-                          ? "text-orange-500 font-medium"
-                          : "text-gray-700 hover:text-orange-500"
-                      }`}
-                    >
-                      {item.title}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          <ul className="mt-2 space-y-1">
+            {headings.map((item) => {
+              const id = sanitizeStringForURL(item.id, true);
+              return (
+                <li key={id}>
+                  <button
+                    onClick={() => {
+                      handleItemClick(item.id);
+                      setIsDropdownOpen(false);
+                    }}
+                    className={`text-sm ${
+                      activeId === id
+                        ? "text-orange-500 font-medium"
+                        : "text-gray-700 hover:text-orange-500"
+                    }`}
+                  >
+                    {item.title}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
         )}
       </div>
     );
@@ -167,62 +173,42 @@ export default function TOC({ headings, isList }) {
 
   /* ---------------- Desktop ---------------- */
   return (
-    <>
-      {/* Page-scoped scrollbar styling */}
-      <style>{`
-        .toc-scroll {
-          scrollbar-width: thin;
-          scrollbar-color: #fb923c transparent;
-        }
-        .toc-scroll::-webkit-scrollbar {
-          width: 6px;
-        }
-        .toc-scroll::-webkit-scrollbar-thumb {
-          background-color: #fb923c;
-          border-radius: 9999px;
-        }
-        .toc-scroll::-webkit-scrollbar-track {
-          background: transparent;
-        }
-      `}</style>
+    <div
+      ref={tocContainerRef}
+      className="hidden lg:inline-block sticky top-24 p-4 max-h-[80vh] overflow-y-auto"
+    >
+      <div className="mb-2 text-lg font-semibold">Table of Contents</div>
 
-      <div
-        ref={tocContainerRef}
-        className="toc-scroll hidden lg:inline-block sticky top-24 left-0 p-4 max-h-[80vh] overflow-y-auto"
-      >
-        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
-
-        {isList ? (
-          <select
-            className="block w-full px-4 py-2 border rounded-md bg-white"
-            onChange={(e) => handleItemClick(e.target.value)}
-          >
-            {headings.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.title}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <nav>
-            <ul className="pl-0 leading-5 space-y-1">
-              {headings.map((item) => {
-                const id = sanitizeStringForURL(item.id, true);
-                return (
-                  <TOCItem
-                    key={id}
-                    id={id}
-                    title={item.title}
-                    type={item.type}
-                    activeId={activeId}
-                    onClick={handleItemClick}
-                  />
-                );
-              })}
-            </ul>
-          </nav>
-        )}
-      </div>
-    </>
+      {isList ? (
+        <select
+          className="block w-full px-4 py-2 border rounded-md bg-white"
+          onChange={(e) => handleItemClick(e.target.value)}
+        >
+          {headings.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.title}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <nav>
+          <ul className="space-y-1">
+            {headings.map((item) => {
+              const id = sanitizeStringForURL(item.id, true);
+              return (
+                <TOCItem
+                  key={id}
+                  id={id}
+                  title={item.title}
+                  type={item.type}
+                  activeId={activeId}
+                  onClick={handleItemClick}
+                />
+              );
+            })}
+          </ul>
+        </nav>
+      )}
+    </div>
   );
 }
