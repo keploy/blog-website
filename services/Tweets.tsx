@@ -10,7 +10,7 @@ const Tweets = [
     },
     {
       avatar:
-        "https://pbs.twimg.com/profile_images/1422864637532332033/mC1Nx0vj_400x400.jpg",
+        "https://pbs.twimg.com/profile_images/2006390396847628288/cSHW1_MM_400x400.jpg",
       name: "matsuu@充電期間",
       id: "matsuu",
       post: "https://x.com/matsuu/status/1747448928575099236?s=20",
@@ -38,7 +38,7 @@ const Tweets = [
     },
     {
       avatar:
-        "https://pbs.twimg.com/profile_images/1653250498127089665/x5RJbLq5_400x400.jpg",
+        "https://pbs.twimg.com/profile_images/1942049397032034304/rTAx_nAm_400x400.jpg",
       name: "きょん/kyong",
       id: "kyongshiii06",
       post: "https://x.com/kyongshiii06/status/1746532217336250821?s=20",
@@ -47,7 +47,7 @@ const Tweets = [
     },
     {
       avatar:
-        "https://pbs.twimg.com/profile_images/1653250498127089665/x5RJbLq5_400x400.jpg",
+        "https://pbs.twimg.com/profile_images/1942049397032034304/rTAx_nAm_400x400.jpg",
       name: "きょん/kyong",
       id: "kyongshiii06",
       post: "https://x.com/kyongshiii06/status/1753030333128495470?s=20",
@@ -74,7 +74,7 @@ const Tweets = [
     },
     {
       avatar:
-        "https://pbs.twimg.com/profile_images/1712175220176355329/sLXbk_PZ_400x400.jpg",
+        "https://pbs.twimg.com/profile_images/1984184086991138817/FlSYVd74_400x400.jpg",
       name: "TadasG",
       id: "JustADude404",
       post: "https://x.com/JustADude404/status/1746888711491424681?s=20",
@@ -84,7 +84,7 @@ const Tweets = [
   
     {
       avatar:
-        "https://pbs.twimg.com/profile_images/1482259385959464960/1pQMXwj7_400x400.jpg",
+        "https://pbs.twimg.com/profile_images/1949818869377556480/lhgs3XQk_400x400.jpg",
       name: "yadon",
       id: "Seipann11",
       post: "https://x.com/Seipann11/status/1755989987039064103?s=20",
@@ -102,7 +102,7 @@ const Tweets = [
     },
     {
       avatar:
-        "https://pbs.twimg.com/profile_images/1604797450124144640/6G7KytX8_400x400.jpg",
+        "https://pbs.twimg.com/profile_images/1952462865153265664/w_wxnDll_400x400.jpg",
       name: "あんどーぼんばー",
       id: "AndooBomber",
       post: "https://x.com/AndooBomber/status/1747663021747691808?s=20",
