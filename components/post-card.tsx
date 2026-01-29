@@ -56,11 +56,6 @@ export default function PostCard({
       ref={ref}
       style={springStyles}
     >
-      {readTimeLabel && (
-        <div className="absolute top-3 right-3 z-10 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-700 shadow-sm ring-1 ring-gray-200 backdrop-blur">
-          {readTimeLabel}
-        </div>
-      )}
       <div className="aspect-video overflow-hidden">
         {coverImage && (
           <CoverImage
@@ -80,12 +75,18 @@ export default function PostCard({
             dangerouslySetInnerHTML={{ __html: title }}
           />
         </h3>
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-1 mb-4">
           <span className="text-sm text-gray-500">{author ? author : "Anonymous"}</span>
           <span className="text-gray-400">•</span>
           <span className="text-sm text-gray-500">
             <Date dateString={date} />
           </span>
+          {readTimeLabel && (
+            <>
+              <span className="text-gray-400">•</span>
+              <span className="text-sm text-gray-500">{readTimeLabel}</span>
+            </>
+          )}
         </div>
         <div
           className="text-gray-600 line-clamp-3"
