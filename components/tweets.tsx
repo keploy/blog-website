@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -9,12 +11,9 @@ const fallbackAvatar =
 const Tweets = ({ avatar, name, id, post, content }) => {
   const { basePath } = useRouter();
 
-  if (!post || !post.startsWith("https://")) return null;
-
   let imgSrc = avatar || fallbackAvatar;
 
   const isExternal = /^https?:\/\//i.test(imgSrc);
-
   const isTwitterCDN =
     imgSrc.includes("pbs.twimg.com") || imgSrc.includes("abs.twimg.com");
 
@@ -22,7 +21,11 @@ const Tweets = ({ avatar, name, id, post, content }) => {
     imgSrc = `${basePath}/api/proxy-image?url=${encodeURIComponent(imgSrc)}`;
   }
 
+  // ✅ HOOKS MUST COME BEFORE ANY RETURN
   const [src, setSrc] = useState(imgSrc);
+
+  // ✅ Conditional return AFTER hooks
+  if (!post || !post.startsWith("https://")) return null;
 
   return (
     <Link
