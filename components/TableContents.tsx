@@ -14,6 +14,7 @@ type HeadingItem = {
 type TOCProps = {
   headings: HeadingItem[];
   isList: boolean;
+  setIsList: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type TOCItemProps = {
@@ -67,7 +68,7 @@ function TOCItem({
 
 /* ---------------- TOC ---------------- */
 
-export default function TOC({ headings, isList }: TOCProps) {
+export default function TOC({ headings, isList, setIsList }: TOCProps) {
   const tocContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -96,6 +97,22 @@ export default function TOC({ headings, isList }: TOCProps) {
 
     return () => observer.disconnect();
   }, [headings]);
+
+  /* ---------------- Auto-switch list mode ---------------- */
+  useEffect(() => {
+    if (!tocContainerRef.current) return;
+
+    const resizeHandler = () => {
+      setIsList(
+        tocContainerRef.current!.clientHeight >
+          window.innerHeight * 0.8
+      );
+    };
+
+    resizeHandler();
+    window.addEventListener("resize", resizeHandler);
+    return () => window.removeEventListener("resize", resizeHandler);
+  }, [setIsList]);
 
   /* ---------------- Auto-scroll TOC ---------------- */
   useEffect(() => {
