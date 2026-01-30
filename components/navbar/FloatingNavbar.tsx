@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import FloatingNavbarClient from "./FloatingNavbarClient";
 
 const glassNavBase =
-  "relative overflow-visible rounded-full transition-all duration-300 backdrop-blur-2xl";
+  "relative overflow-visible transition-all duration-300 backdrop-blur-2xl";
 const glassNavDefault =
   "bg-gradient-to-br from-gray-100/80 via-gray-100/62 to-gray-100/48 border border-white/70 shadow-[0_18px_44px_rgba(15,23,42,0.18)]";
 const glassNavScrolled =
@@ -43,11 +43,11 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
     ? "relative top-0 mx-auto z-40"
     : "fixed top-6 left-1/2 -translate-x-1/2 z-40";
   const navWidthClasses = isScrolled
-    ? "w-[82%] md:max-w-5xl"
+    ? "w-[95%] md:max-w-6xl"
     : "w-[96%] md:max-w-6xl";
   const navPaddingClasses = isScrolled
-    ? "px-4 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5"
-    : "px-5 py-2 md:px-6 md:py-3 lg:px-8 lg:py-4";
+    ? "px-4 mb-4 pt-2 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5"
+    : "px-5 py-2 mb-4 pt-2 md:px-6 md:py-3 lg:px-8 lg:py-4";
   const navShadowClasses = derivedBlogReadingPage
     ? ""
     : isScrolled
@@ -60,18 +60,17 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
       ? glassNavScrolled
       : glassNavDefault;
 
+      const navWidthouterClasses = isScrolled
+    ? "w-[89%] md:max-w-[1150px] rounded-full mx-auto items-center justify-center px-[10px]"
+    : "";
   return (
-    <nav className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}>
-        <div
-          className={`${glassNavBase} ${navGlassClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}
-        >
-        <div className="pointer-events-none absolute inset-0 rounded-full">
-          <div className="absolute -top-8 -left-6 h-24 w-24 rounded-full bg-gray-200/60 blur-2xl" />
-          <div className="absolute -bottom-10 -right-8 h-32 w-32 rounded-full bg-gray-200/40 blur-3xl" />
-        </div>
+    <div className="w-[100%] h-[80px]">
+    <div className={` w-[100%] ${isScrolled ? `h-[65px] mt-5` : `h-[80px]`} ${glassNavBase} ${navGlassClasses} ${navWidthouterClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}>
+      <nav className={`${navPositionClasses} transition-all duration-500 ${navWidthClasses}`}>
         <FloatingNavbarClient isScrolled={isScrolled} />
-      </div>
-    </nav>
+      </nav>
+    </div>
+    </div>
   );
 }
 
