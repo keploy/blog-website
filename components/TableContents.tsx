@@ -68,19 +68,19 @@ export default function TOC({ headings, isList, setIsList }) {
 
 
   const handleItemClick = (id) => {
-  const sanitizedId = sanitizeStringForURL(id, true);
-  const element = document.getElementById(sanitizedId);
-  if (element) {
-    const offset = 80; 
-    const offsetPosition = element.offsetTop - offset;
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth",
-    });
+    const sanitizedId = sanitizeStringForURL(id, true);
+    const element = document.getElementById(sanitizedId);
+    if (element) {
+      const offset = 80;
+      const offsetPosition = element.offsetTop - offset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
 
-    window.history.replaceState(null, null, `#${sanitizedId}`);
-  }
-};
+      window.history.replaceState(null, null, `#${sanitizedId}`);
+    }
+  };
 
   // State to track screen width
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -202,7 +202,7 @@ export default function TOC({ headings, isList, setIsList }) {
             ))}
           </select>
         ) : (
-          <nav ref={tocRef}>
+          <nav ref={tocRef} className="max-h-[80vh] overflow-y-auto pr-2">
             <ul className="pl-0 leading-5">
               {headings.map((item, index) => (
                 <TOCItem
