@@ -1,8 +1,10 @@
 name: Lighthouse – Comment
 
 on:
-  pull_request_target:
-    types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: ["Lighthouse – Run"]
+    types:
+      - completed
 
 permissions:
   issues: write
