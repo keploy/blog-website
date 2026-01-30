@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
@@ -149,7 +149,7 @@ export default function PostBody({
       });
       return () => scrollObserver.disconnect();
     }
-  }, [tocItems]);
+  }, [tocItems, isUserEnteredURL]);
 
   const handleCopyClick = (code, index) => {
     navigator.clipboard
@@ -170,24 +170,29 @@ export default function PostBody({
       });
   };
 
-  const handleHeadingCopyClick = (id: string, index: number) => {
+  const handleHeadingCopyClick = useCallback((id: string, index: number) => {
     const url = sanitizeStringForURL(id, true);
     const copyUrl = `${window.location.origin}${window.location.pathname}#${url}`;
     navigator.clipboard
       .writeText(copyUrl)
       .then(() => {
-        const updatedList = [...headingCopySuccessList];
-        updatedList[index] = true;
-        setHeadingCopySuccessList(updatedList);
+        setHeadingCopySuccessList(prev => {
+          const updatedList = [...prev];
+          updatedList[index] = true;
+          return updatedList;
+        });
         setTimeout(() => {
-          updatedList[index] = false;
-          setHeadingCopySuccessList([...updatedList]);
+          setHeadingCopySuccessList(prev => {
+            const updatedList = [...prev];
+            updatedList[index] = false;
+            return updatedList;
+          });
         }, 2000);
       })
       .catch(() => {
         console.error("Failed to copy the URL.");
       });
-  };
+  }, []);
 
   useEffect(() => {
     const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2"));
@@ -218,7 +223,7 @@ export default function PostBody({
       });
       heading.appendChild(button);
     });
-  }, [tocItems, headingCopySuccessList]);
+  }, [tocItems, headingCopySuccessList, handleHeadingCopyClick]);
 
   useEffect(() => {
     const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));

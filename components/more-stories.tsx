@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
@@ -55,13 +55,14 @@ export default function MoreStories({
     }
   }, [initialPosts, isSearchPage]);
 
-  // 1. Sync Input from URL on Load
+  // 1. Sync Input from URL on Load (only on initial mount)
   useEffect(() => {
     if (!router.isReady || externalSearchTerm !== undefined) return;
     const q = router.query.q as string;
     if (q && !localSearchTerm) {
       setLocalSearchTerm(q);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady, router.query, externalSearchTerm]);
 
   // Fetch all posts when user starts searching on blog reading pages
@@ -140,17 +141,7 @@ export default function MoreStories({
     setError(null);
   }, [searchTerm]);
 
-  // Buffer Logic (Mostly for infinite scroll on standard feed)
-  useEffect(() => {
-    if (!isSearchPage && initialPosts.length > 21) {
-      setBuffer(initialPosts.slice(21));
-    }
-    if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
-      loadMoreInBackground();
-    }
-  }, [initialPosts, isIndex, isSearchPage]);
-
-  const loadMoreInBackground = async () => {
+  const loadMoreInBackground = useCallback(async () => {
     try {
       const category = isCommunity ? 'community' : 'technology';
       const result = await fetchMorePosts(category, endCursor);
@@ -165,7 +156,17 @@ export default function MoreStories({
     } catch (error) {
       console.error('Error fetching more posts:', error);
     }
-  };
+  }, [isCommunity, endCursor]);
+
+  // Buffer Logic (Mostly for infinite scroll on standard feed)
+  useEffect(() => {
+    if (!isSearchPage && initialPosts.length > 21) {
+      setBuffer(initialPosts.slice(21));
+    }
+    if (isIndex && initialPageInfo?.hasNextPage && (!buffer.length || buffer.length < 9)) {
+      loadMoreInBackground();
+    }
+  }, [initialPosts, isIndex, isSearchPage, initialPageInfo?.hasNextPage, buffer.length, loadMoreInBackground]);
 
   const loadMorePosts = async () => {
     if (loading) return;
