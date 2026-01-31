@@ -1,0 +1,32 @@
+name: Lighthouse – Comment
+
+on:
+  workflow_run:
+    workflows: ["Lighthouse – Run"]
+    types:
+      - completed
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Lighthouse comment artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lighthouse-comment
+          path: .
+
+      - name: Ensure comment file exists
+        run: test -f lighthouse-comment.md
+
+      - name: Post Lighthouse comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: lighthouse-comment.md
+          edit-mode: replace
