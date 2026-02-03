@@ -19,6 +19,8 @@ jobs:
       # Download artifacts from the completed "Lighthouse – Run" workflow
       # The run-id parameter is critical - it specifies to download from the
       # triggering workflow run, not the current workflow (which has no artifacts)
+      # Note: github-token is not needed as the default GITHUB_TOKEN has sufficient
+      # permissions to download artifacts from the same repository
       - name: Download Lighthouse comment artifact
         uses: actions/download-artifact@v4
         with:
