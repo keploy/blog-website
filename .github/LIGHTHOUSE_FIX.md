@@ -22,18 +22,25 @@ In a `workflow_run` event:
   uses: actions/download-artifact@v4
   with:
     name: lighthouse-comment
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    run-id: ${{ github.event.workflow_run.id }}  # Added: Download from triggering workflow
+    run-id: ${{ github.event.workflow_run.id }}  # Download from triggering workflow
 ```
 
-### 2. Added PR Number Extraction
+The `run-id` parameter is crucial - it specifies which workflow run's artifacts to download. Without it, the action would try to download from the current workflow (which has no artifacts).
+
+### 2. Added PR Number Extraction with Validation
 ```yaml
 - name: Extract PR number
   id: pr
   run: |
     PR_NUMBER=$(jq -r '.workflow_run.pull_requests[0].number' <<< '${{ toJSON(github.event) }}')
+    if [ -z "$PR_NUMBER" ] || [ "$PR_NUMBER" = "null" ]; then
+      echo "❌ Error: Could not extract PR number from workflow run event"
+      exit 1
+    fi
     echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
 ```
+
+This step extracts the PR number from the workflow run event and validates that it exists. If the extraction fails, the workflow will fail with a clear error message.
 
 ### 3. Updated Comment Step
 ```yaml
