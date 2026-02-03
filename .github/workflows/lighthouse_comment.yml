@@ -13,20 +13,28 @@ permissions:
 jobs:
   comment:
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
 
     steps:
       - name: Download Lighthouse comment artifact
         uses: actions/download-artifact@v4
         with:
           name: lighthouse-comment
-          path: .
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Ensure comment file exists
         run: test -f lighthouse-comment.md
 
+      - name: Extract PR number
+        id: pr
+        run: |
+          PR_NUMBER=$(jq -r '.workflow_run.pull_requests[0].number' <<< '${{ toJSON(github.event) }}')
+          echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
+
       - name: Post Lighthouse comment
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ steps.pr.outputs.number }}
           body-path: lighthouse-comment.md
           edit-mode: replace
