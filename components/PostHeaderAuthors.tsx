@@ -140,35 +140,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
             </div>
           )}
         </div>
-        <div className="flex flex-row gap-5 items-center gap-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
-          <p className="text-gray-500 text-sm">Share this</p>
-          <Link
-            href={twitterShareUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="twitter-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
-          >
-            <FaTwitter className="icon" />
-          </Link>
-          <Link
-            href={linkedinShareUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="linkedin-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
-          >
-            <FaLinkedin className="icon" />
-          </Link>
-          <button
-            onClick={copyToClipboard}
-            className="link-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500 focus:outline-none"
-            aria-label="Copy URL to clipboard"
-          >
-            <FaLink className="icon" />
-          </button>
-          {copied && (
-            <span className="ml-2 text-orange-500 text-sm">Copied!</span>
-          )}
-        </div>
+        
       </div>
 
       <hr className="border-slate-300 mb-20 mt-5" />
