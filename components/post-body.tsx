@@ -401,8 +401,7 @@ export default function PostBody({
           <WaitlistBanner />
         </div>
 
-        <div className="flex flex-row items-center gap-3 px-3 sm:gap-5 mt-2 md:mb-2 justify-center lg:justify-start whitespace-nowrap
-    min-w-fit">
+        <div className="flex flex-row items-center justify-center gap-3 px-3 sm:gap-5 mt-2 md:mb-2 w-full whitespace-nowrap">
           <p className="text-gray-500 text-sm">Share this</p>
           <Link
             href={twitterShareUrl}
