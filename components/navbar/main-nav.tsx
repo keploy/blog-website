@@ -1,3 +1,4 @@
+import ThemeToggle from './theme-toggle';
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { cn } from "../../lib/utils/utils";
@@ -305,6 +306,11 @@ export function MainNav() {
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
+                {/* Theme Toggle */}
+        <div className="flex items-center pl-2">
+          <ThemeToggle />
+        </div>
+
       </NavigationMenuList>
     </NavigationMenu>
   );
