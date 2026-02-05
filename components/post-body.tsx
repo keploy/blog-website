@@ -9,14 +9,18 @@ import { markdown } from "@codemirror/lang-markdown";
 import { python } from "@codemirror/lang-python";
 import { go } from "@codemirror/lang-go";
 import { dracula } from "@uiw/codemirror-theme-dracula";
-const AuthorDescription = dynamic(() => import("./author-description"), {
-  ssr: false,
-});
 import ReviewingAuthor from "./ReviewingAuthor";
 import WaitlistBanner from "./waitlistBanner";
 import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
+import AdSlot from "./Adslot";
+import StickyShare from "./StickyShare";
+
+const AuthorDescription = dynamic(() => import("./author-description"), {
+  ssr: false,
+});
+
 // import AdSlot from "./Adslot";
 export default function PostBody({
   content,
@@ -316,28 +320,13 @@ export default function PostBody({
       });
   };
 
-  const oldJson = {
-    name: "John",
-    age: 25,
-    location: "New York",
-    hobbies: ["Reading", "Cycling", "Hiking"],
-  };
-
-  const newJson = {
-    name: "John",
-    age: 26,
-    location: "San Francisco",
-    hobbies: ["Reading", "Traveling"],
-    job: "Software Developer",
-  };
-
   return (
     <div
       className={`flex flex-col ${isList ? "items-center" : "items-center lg:items-start lg:flex-row"
         } `}
     >
       <div
-        className={`flex items-center justify-center w-full md:w-[80%] lg:w-1/4 top-20 lg:block ${isList ? "" : "lg:sticky"
+        className={`flex flex-col items-center justify-center w-full md:w-[80%] lg:w-1/4 top-20 lg:block ${isList ? "" : "lg:sticky"
           }`}
       >
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
@@ -346,9 +335,7 @@ export default function PostBody({
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
         <div className="prose lg:prose-xl post-content-wrapper">{renderCodeBlocks()}</div>
         <hr className="border-gray-300 mt-10 mb-20" />
-        <div>
-
-        </div>
+        <div></div>
 
         <h1 className="text-2xl font-medium">Authored By: {authorName}</h1>
         <div className="my-5">
@@ -372,20 +359,26 @@ export default function PostBody({
         )}
       </div>
 
-      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
+      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky lg:top-20">
 
         {/* 1. Waitlist banner (always shown) */}
         <div className="flex justify-center">
           <WaitlistBanner />
         </div>
 
-        {/* 2. Ad slot (hidden on <lg) */}
-        {/* <div className="hidden lg:flex justify-center rounded-xl p-4">
-    <AdSlot
-      slotId="3356716061"
-      className="w-full h-60"
-    />
-  </div> */}
+        {/* 2. Sticky Share (hidden on <lg) */}
+        <div className="hidden lg:flex justify-center rounded-xl p-4">
+          <StickyShare />
+        </div>
+
+        {/* 3. Ad slot (hidden on <lg) */}
+        <div className="hidden lg:flex justify-center rounded-xl p-4">
+          <AdSlot
+            slotId="3356716061"
+            className="w-full h-60"
+          />
+        </div>
+
       </aside>
 
     </div>
