@@ -59,7 +59,7 @@ export default function AuthorEmptyState({
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto text-left py-16 px-6 bg-white rounded-2xl shadow-sm border border-orange-100 flex justify-between items-center mb-15">
+    <div className="w-full max-w-5xl mx-auto text-center md:text-left py-16 px-6 bg-white rounded-2xl shadow-sm border border-orange-100 flex flex-col md:flex-row md:justify-between items-center mb-15">
       <div>
         <h1 className="text-3xl md:text-3xl font-bold text-orange-600 ">
           OOPs!! No post found for the Author
