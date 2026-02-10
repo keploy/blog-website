@@ -387,7 +387,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                     {[
                       { href: "/tag", title: "Tags", desc: "Explore blog posts by topics" },
                       { href: "/authors", title: "Authors", desc: "Browse articles from our writers" },
-                      { href: "https://github.com/keploy", title: "Keploy Integration Testing", desc: "Open-source testing infrastructure" },
+                      { href: "https://keploy.io/integration-testing/", title: "Keploy Integration Testing", desc: "Open-source testing infrastructure" },
                       { href: "https://app.keploy.io", title: "Keploy API Testing Console", desc: "Run API tests in the cloud" },
                       { href: "https://keploy.io/unit-test-generator", title: "Keploy Unit Testing Extension", desc: "Generate unit tests with mocks" },
                       { href: "https://keploy.io/docs/concepts/what-is-keploy/#step-1--record-unique-network-interactions-as-test-case", title: "Keploy Test Recorder", desc: "Record and replay API calls" },
@@ -573,7 +573,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                           <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
                         </Link>
                       <Link 
-                        href="https://github.com/keploy" 
+                        href="https://keploy.io/integration-testing/" 
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={()=>setMobileMenuOpen(false)} 
