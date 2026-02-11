@@ -223,6 +223,14 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           >
             <Link
               href="/technology"
+              onClick={(e) => {
+  if (window.matchMedia("(hover: none)").matches) {
+    e.preventDefault();
+    setShowCommunityDropdown((v) => !v);
+    setShowTechDropdown(false);
+  }
+}}
+
               onMouseEnter={() => { setHoveredNav('tech'); setLinkHoverTech(true); }}
               onMouseLeave={() => { setLinkHoverTech(false); setHoveredNav(null); }}
               className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showTechDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverTech ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
@@ -293,6 +301,14 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           >
             <Link
               href="/community"
+              onClick={(e) => {
+  if (window.matchMedia("(hover: none)").matches) {
+    e.preventDefault();
+    setShowCommunityDropdown((v) => !v);
+    setShowTechDropdown(false);
+  }
+}}
+
               onMouseEnter={() => { setHoveredNav('community'); setLinkHoverCommunity(true); }}
               onMouseLeave={() => { setLinkHoverCommunity(false); setHoveredNav(null); }}
               className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showCommunityDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverCommunity ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
