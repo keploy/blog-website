@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { FaLinkedin, FaLink } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { useRouter } from "next/router";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
@@ -75,6 +79,24 @@ export default function PostBody({
       window.removeEventListener("resize", checkScreenSize);
     };
   }, [content]);
+
+    const [copied, setCopied] = useState(false); 
+    const router = useRouter();
+      
+    const currentURL = encodeURIComponent(
+      `keploy.io/${router.basePath + router.asPath}`
+    );
+    const twitterShareUrl = `https://twitter.com/share?url=${currentURL}`;
+    const linkedinShareUrl = `https://www.linkedin.com/shareArticle?url=${currentURL}`;
+    const copyToClipboard = async () => {
+        try {
+          await navigator.clipboard.writeText(`https://keploy.io/blog${router.asPath}`);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000); 
+        } catch (err) {
+          console.error("Failed to copy!", err);
+      }
+    };
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -371,8 +393,7 @@ export default function PostBody({
           </div>
         )}
       </div>
-
-      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
+        <aside className="w-full lg:w-1/5 lg:ml-10 p-4 items-center flex flex-col gap-6 sticky  lg:top-20">
 
         {/* 1. Waitlist banner (always shown) */}
         <div className="flex justify-center">
@@ -386,6 +407,35 @@ export default function PostBody({
       className="w-full h-60"
     />
   </div> */}
+          <div className="flex flex-row gap-5 items-center gap-3 sm:gap-5 order-2 sm:order-none mt-2 md:mb-2">
+              <p className="text-gray-500 text-sm">Share this</p>
+              <Link
+                href={twitterShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="twitter-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
+              >
+                <FaXTwitter className="icon" />
+              </Link>
+              <Link
+                href={linkedinShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="linkedin-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
+              >
+                <FaLinkedin className="icon" />
+              </Link>
+              <button
+                onClick={copyToClipboard}
+                className="link-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500 focus:outline-none"
+                aria-label="Copy URL to clipboard"
+              >
+                <FaLink className="icon" />
+              </button>
+            </div>
+              {copied && (
+                <span className="text-orange-500 text-sm">Copied!</span>
+              )}
       </aside>
 
     </div>
