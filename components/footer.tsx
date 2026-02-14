@@ -63,6 +63,7 @@ export default function Footer() {
           <div className="max-lg:ml-10">
             <div className="mr-4 shrink-0 w-52">
               <Link href="https://keploy.io/">
+              
                 <Image
                   src={sideBySideSvg}
                   alt="Keploy Logo"
@@ -71,10 +72,11 @@ export default function Footer() {
               </Link>
             </div>
             <div className="flex space-x-6 my-4">
+              
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-500 transition-colors"
+                className="text-gray-500 hover:text-gray-900 transition-colors duration-300"
                 href="https://x.com/Keployio"
               >
                 <span className="sr-only">Twitter</span>
@@ -92,7 +94,7 @@ export default function Footer() {
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-500 transition-colors"
+                className="text-gray-500 hover:text-gray-900 transition-colors duration-300"
                 href="https://github.com/keploy"
               >
                 <span className="sr-only">GitHub</span>
@@ -107,7 +109,7 @@ export default function Footer() {
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-500 transition-colors"
+                className="text-gray-500 hover:text-gray-900 transition-colors duration-300"
                 href="https://linkedin.com/company/keploy"
               >
                 <span className="sr-only">LinkedIn</span>
@@ -122,7 +124,7 @@ export default function Footer() {
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-500 transition-colors"
+                className="text-gray-500 hover:text-gray-900 transition-colors duration-300"
                 href="https://youtube.com/@keploy"
               >
                 <span className="sr-only">YouTube</span>
@@ -137,7 +139,7 @@ export default function Footer() {
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-500 transition-colors"
+                className="text-gray-500 hover:text-gray-900 transition-colors duration-300"
                 href="https://www.instagram.com/keploy.io/"
               >
                 <span className="sr-only">Instagram</span>
