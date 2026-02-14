@@ -27,6 +27,8 @@ import {
   getBreadcrumbListSchema,
   SITE_URL,
 } from "../../lib/structured-data";
+import FloatingSocialShare from "../../components/floating-social-share";
+import InlineSocialShare from "../../components/inline-social-share";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -190,6 +192,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 BlogReviewer={blogreviewer}
                 TimeToRead={time}
               />
+              <InlineSocialShare postUrl={postUrl} postTitle={post?.title || ""} />
             </article>
           </>
         )}
@@ -221,6 +224,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           )}
         </article>
       </Container>
+      <FloatingSocialShare postUrl={postUrl} postTitle={post?.title || ""} />
     </Layout>
   );
 }
