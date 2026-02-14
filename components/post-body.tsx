@@ -36,6 +36,7 @@ export default function PostBody({
   const [replacedContent, setReplacedContent] = useState(content || "");
   const [isList, setIsList] = useState(false);
   const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
+  const [activeId, setActiveId] = useState("");
   // Optional safety: handle malformed ReviewAuthorDetails gracefully
   const reviewer = ReviewAuthorDetails?.edges?.[0]?.node || null;
   const sameAuthor =
@@ -135,6 +136,7 @@ export default function PostBody({
         const id = entry.target.getAttribute("id");
 
         if (id) {
+          setActiveId(id);
           window.history.replaceState(null, "", `#${id}`);
         }
       }
@@ -340,7 +342,7 @@ export default function PostBody({
         className={`flex items-center justify-center w-full md:w-[80%] lg:w-1/4 top-20 lg:block ${isList ? "" : "lg:sticky"
           }`}
       >
-        <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
+        <TOC headings={tocItems} isList={isList} setIsList={setIsList} activeId={activeId} />
       </div>
       <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`} id="post-body-check">
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}

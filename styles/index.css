@@ -14,6 +14,15 @@
 @tailwind utilities;
 /* Stop purging. */
 
+/* Hide scrollbar but keep scroll functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
+}
+
 /* Your own custom utilities */
 
 .has-text-align-left {
