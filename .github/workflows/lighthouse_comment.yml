@@ -13,20 +13,36 @@ permissions:
 jobs:
   comment:
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
 
     steps:
+      # Download artifacts from the completed "Lighthouse – Run" workflow
+      # The run-id parameter is critical - it specifies to download from the
+      # triggering workflow run, not the current workflow (which has no artifacts)
+      # Note: github-token is not needed as the default GITHUB_TOKEN has sufficient
+      # permissions to download artifacts from the same repository
       - name: Download Lighthouse comment artifact
         uses: actions/download-artifact@v4
         with:
           name: lighthouse-comment
-          path: .
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Ensure comment file exists
         run: test -f lighthouse-comment.md
 
+      - name: Extract PR number
+        id: pr
+        run: |
+          PR_NUMBER=$(jq -r '.workflow_run.pull_requests[0].number' <<< '${{ toJSON(github.event) }}')
+          if [ -z "$PR_NUMBER" ] || [ "$PR_NUMBER" = "null" ]; then
+            echo "❌ Error: Could not extract PR number from workflow run event"
+            exit 1
+          fi
+          echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
+
       - name: Post Lighthouse comment
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ steps.pr.outputs.number }}
           body-path: lighthouse-comment.md
           edit-mode: replace
