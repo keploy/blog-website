@@ -11,6 +11,13 @@
 
 .content a {
   @apply underline;
+  color: #E67643;
+  
+}
+
+.content a:hover {
+  color: #C95919;
+  text-decoration: none;
 }
 
 .content ul,
