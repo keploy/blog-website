@@ -36,9 +36,10 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
         <title>{`Engineering | Keploy Blog`}</title>
       </Head>
       <Header />
-      <Container>
-        <div className="">
-          <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
+      
+        <Container>
+        <div className="overflow-hidden">
+          <div className="overflow-hidden home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
             <div className="content">
               <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
                 Keploy Blog
@@ -78,6 +79,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
         />
         <Testimonials />
       </Container>
+      
     </Layout>
   );
 }
