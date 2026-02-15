@@ -202,7 +202,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   }, []);
 
   return (
-    <div className="flex items-center justify-between overflow-visible">
+    <div className="flex items-center justify-between overflow-visible max-w-7xl mx-auto">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2 overflow-hidden z-50 w-[80px]">
         <div className={`transition-all duration-300 w-[80px]`} style={{ height: '30px' }}>
