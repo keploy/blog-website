@@ -171,12 +171,15 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
           {authorLinkedIn !== "n/a" && (
             <div className="mt-2">
               <IoLogoLinkedin className="h-5 w-5 inline mr-1" />
-              <Link
-                href={authorLinkedIn}
-                className="heading1 text-slate-500 hover:underline"
-              >
-                LinkedIn
-              </Link>
+<a
+  href={authorLinkedIn}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="heading1 text-slate-500 hover:underline"
+>
+  LinkedIn
+</a>
+
             </div>
           )}
           {isPost && (
