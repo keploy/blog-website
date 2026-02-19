@@ -112,5 +112,9 @@ export default defineConfig({
     timeout: process.env.WEB_SERVER_TIMEOUT ? parseInt(process.env.WEB_SERVER_TIMEOUT) : 120000,
     stdout: 'ignore',
     stderr: 'pipe',
+    env: {
+      WORDPRESS_API_URL: process.env.WORDPRESS_API_URL || '',
+      NEXT_PUBLIC_WORDPRESS_API_URL: process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '',
+    },
   },
 });
