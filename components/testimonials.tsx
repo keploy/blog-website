@@ -1,5 +1,4 @@
 import React from "react";
-import { useRouter } from "next/router";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
 const firstRow = Tweets.slice(0, Tweets.length / 2);
@@ -18,9 +17,7 @@ const ReviewCard = ({
   id: string;
   content: string;
 }) => {
-  const { basePath } = useRouter();
-  const isExternal = typeof avatar === "string" && /^https?:\/\//i.test(avatar);
-  const proxiedAvatar = isExternal ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}` : avatar;
+  const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=64`;
   return (
     <a href={post} target="_blank" className="lg:mx-2">
       <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
@@ -30,7 +27,10 @@ const ReviewCard = ({
             width="32"
             height="32"
             alt=""
-            src={proxiedAvatar}
+            src={avatar}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = fallbackAvatar;
+            }}
           />
           <div className="flex flex-col">
             <figcaption className="text-sm font-bold">{name}</figcaption>
@@ -46,23 +46,22 @@ const ReviewCard = ({
 const TwitterTestimonials = () => {
   return (
     <div className="">
-          <h3 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
-          What our community thinks
-        </h3>
-      <div className="relative flex mb-8  h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg border  ">
-        
-        <Marquee pauseOnHover className="[--duration:20s]">
+      <h3 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
+        What our community thinks
+      </h3>
+      <div className="relative flex mb-8  h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', willChange: 'transform' }}>
+
+        <Marquee pauseOnHover className="[--duration:17s]">
           {firstRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-        <Marquee reverse pauseOnHover className="[--duration:20s]">
+        <Marquee reverse pauseOnHover className="[--duration:17s]">
           {secondRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-neutral-100 dark:from-background"></div>
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-neutral-100 dark:from-background"></div>
+
       </div>
     </div>
   );
