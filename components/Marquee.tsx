@@ -5,7 +5,6 @@ interface MarqueeProps {
   children?: React.ReactNode;
   vertical?: boolean;
   repeat?: number;
-  isPaused?: boolean;
   [key: string]: any;
 }
 
@@ -16,7 +15,6 @@ export function Marquee({
   children,
   vertical = false,
   repeat = 4,
-  isPaused = false,
   ...props
 }: MarqueeProps) {
   return (
@@ -29,7 +27,7 @@ export function Marquee({
         .map((_, i) => (
           <div
             key={i}
-            className={`flex shrink-0 justify-around [gap:var(--gap)] ${vertical ? 'animate-marquee-vertical flex-col' : 'animate-marquee flex-row'} ${pauseOnHover ? 'group-hover:[animation-play-state:paused]' : ''} ${isPaused ? '[animation-play-state:paused]' : ''} ${reverse ? '[animation-direction:reverse]' : ''}`}
+            className={`flex shrink-0 justify-around [gap:var(--gap)] ${vertical ? 'animate-marquee-vertical flex-col' : 'animate-marquee flex-row'} ${pauseOnHover ? 'group-hover:[animation-play-state:paused]' : ''} ${reverse ? '[animation-direction:reverse]' : ''}`}
           >
             {children}
           </div>
