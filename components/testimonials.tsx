@@ -113,7 +113,6 @@ const ReviewCard = ({
 
 const TwitterTestimonials = () => {
   const [mounted, setMounted] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
 
   React.useEffect(() => {
     setMounted(true);
@@ -146,39 +145,20 @@ const TwitterTestimonials = () => {
 
   return (
     <section className="py-12 md:py-16">
-      <div className="flex items-center justify-between mb-8 overflow-hidden">
-        <h3 className="text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
-          What our community thinks
-        </h3>
-        <button
-          onClick={() => setIsPaused(!isPaused)}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-100"
-          aria-label={isPaused ? "Play marquee" : "Pause marquee"}
-        >
-          {isPaused ? (
-            <>
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-              <span>Play</span>
-            </>
-          ) : (
-            <>
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg>
-              <span>Pause</span>
-            </>
-          )}
-        </button>
-      </div>
+      <h3 className="text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
+        What our community thinks
+      </h3>
 
       <div className="relative flex flex-col items-center justify-center gap-4 overflow-hidden rounded-xl py-4">
         {/* Row 1 – scrolls left */}
-        <Marquee pauseOnHover isPaused={isPaused} className="[--duration:11s]">
+        <Marquee pauseOnHover className="[--duration:11s]">
           {firstRow.map((tweet) => (
             <ReviewCard key={tweet.id + "-r1"} {...tweet} />
           ))}
         </Marquee>
 
         {/* Row 2 – scrolls right */}
-        <Marquee reverse pauseOnHover isPaused={isPaused} className="[--duration:11s]">
+        <Marquee reverse pauseOnHover className="[--duration:11s]">
           {secondRow.map((tweet) => (
             <ReviewCard key={tweet.id + "-r2"} {...tweet} />
           ))}
