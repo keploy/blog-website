@@ -88,7 +88,7 @@ The CI pipeline will automatically run a build check and Lighthouse audits on yo
 
 ---
 
-### Deployment
+## Deployment
 
 The site is deployed on **Vercel**. CloudFront is configured to proxy `/blog/*` requests to the Vercel deployment, so CSS/JS assets resolve correctly under the `keploy.io` domain.
 
