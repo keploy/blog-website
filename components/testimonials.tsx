@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
