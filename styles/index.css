@@ -129,6 +129,11 @@
   font-family: "Baloo 2", sans-serif;
 }
 
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
 body {
   background: #fbfcff;
   color: #222222;
