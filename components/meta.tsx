@@ -32,9 +32,9 @@ export default function Meta({
         sizes="16x16"
         href="/blog/favicon/Group.png"
       />
-      <link rel="manifest" href="blog/favicon/site.webmanifest" />
-      <link rel="mask-icon" href="blog/favicon/Group.svg" color="#000000" />
-      <link rel="shortcut icon" href="blog/favicon/Group" />
+      <link rel="manifest" href="/blog/favicon/site.webmanifest" />
+      <link rel="mask-icon" href="/blog/favicon/Group.svg" color="#000000" />
+      <link rel="shortcut icon" href="/blog/favicon/Group.png" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={Title} />
@@ -45,10 +45,10 @@ export default function Meta({
       <meta name="msapplication-TileColor" content="#000000" />
       <meta
         name="msapplication-config"
-        content="blog/favicon/browserconfig.xml"
+        content="/blog/favicon/browserconfig.xml"
       />
       <meta name="theme-color" content="#000" />
-      <link rel="alternate" type="application/rss+xml" href="blog/feed.xml" />
+      <link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" />
       <meta name="description" content={Description} />
       <meta property="og:title" content={Title} />
       <meta property="og:description" content={Description} />

@@ -21,8 +21,8 @@ export default function CoverImage({
     <Image
       width={2000}
       height={1000}
-      alt={`Cover Image for ${title}`}
-      src={coverImage?.node.sourceUrl}
+      alt={title ? `Cover Image for ${title}` : "Cover Image"}
+      src={coverImage?.node.sourceUrl || "/blog/images/blog-bunny.png"}
       className={cn("rounded-md transition-border duration-300", imgClassName, {
         "  transition-scale duration-300": slug,
       })}
@@ -30,7 +30,7 @@ export default function CoverImage({
     />
   );
   return (
-    
+
     <div className="sm:mx-0 ">
       {slug ? (
         <Link href={`${basePath}${slug}`} aria-label={title}>
