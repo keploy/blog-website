@@ -12,10 +12,10 @@ dotenv.config({ path: path.resolve(__dirname, '.env.test') });
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests/e2e',
+  testDir: './tests',
   
   /* Output directory for test artifacts */
-  outputDir: 'test-results/e2e',
+  outputDir: 'test-results',
 
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -109,7 +109,7 @@ export default defineConfig({
     command: 'npm run dev',
     url: process.env.BASE_URL || 'http://localhost:3000/blog',
     reuseExistingServer: !process.env.CI,
-    timeout: process.env.WEB_SERVER_TIMEOUT ? parseInt(process.env.WEB_SERVER_TIMEOUT) : 120000,
+    timeout: process.env.CI ? 180000 : 120000, // 3 minutes for CI, 2 minutes locally
     stdout: 'ignore',
     stderr: 'pipe',
     env: {
