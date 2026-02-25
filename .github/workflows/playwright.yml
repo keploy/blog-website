@@ -33,8 +33,8 @@ jobs:
       - name: Build application
         run: npm run build
         env:
-          WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}
-          NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
       
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps ${{ matrix.browser }}
@@ -43,8 +43,8 @@ jobs:
         run: npm run test:e2e -- --project=${{ matrix.browser }}
         env:
           CI: true
-          WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}
-          NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+          NEXT_PUBLIC_WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
           BASE_URL: http://localhost:3000/blog
       
       - name: Upload test results
@@ -64,7 +64,7 @@ jobs:
           retention-days: 30
       
       - name: Comment PR with result
-        if: github.event_name == 'pull_request' && always()
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && always()
         uses: actions/github-script@v7
         with:
           script: |
