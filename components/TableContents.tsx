@@ -88,13 +88,14 @@ export default function TOC({ headings, isList, setIsList }) {
                   <React.Fragment key={index}>
                     <button
                       onClick={() => { handleItemClick(item.id); setIsDropdownOpen(false); }}
-                      className={`w-full text-left py-1.5 text-sm leading-snug transition-colors duration-150 ${isH3Plus ? "pl-4 text-sm text-gray-500" : "pl-0 text-gray-700 font-medium"
-                        } ${isAct ? "text-orange-500 font-semibold" : "hover:text-orange-500"}`}
+                      className={`w-full text-left py-1.5 text-sm leading-snug transition-colors duration-150 ${isH3Plus ? "pl-4 text-sm text-gray-500 font-normal opacity-60" : "pl-0 text-gray-700 font-normal"
+                        } ${isAct ? "text-orange-500 !opacity-100 font-normal" : "hover:text-orange-500"}`}
                     >
+                      {isAct && <span className="text-orange-500 mr-1">●</span>}
                       {item.title}
                     </button>
                     {index < headings.length - 1 && (
-                      <hr className="border-gray-100" />
+                      <hr className="border-gray-300" />
                     )}
                   </React.Fragment>
                 );
@@ -127,10 +128,10 @@ export default function TOC({ headings, isList, setIsList }) {
       ) : (
         <nav ref={tocRef}>
           {/* ─── TOC Card ─────────────────────────────── */}
-          <div className="w-66 rounded-2xl border border-gray-200 bg-gray-50 shadow-sm overflow-hidden pb-3">
+          <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden pb-3" style={{ width: '320px', maxWidth: '320px', minWidth: '320px' }}>
 
             {/* Card header */}
-            <div className="px-4 py-3 border-b border-gray-200 bg-gray-100">
+            <div className="px-4 py-3 border-b border-gray-200">
               {/* ← "Table of Contents" title size — change 22px here */}
               <p className="!text-[20px] font-bold uppercase tracking-widest text-gray-900">
                 Table of Contents
@@ -140,8 +141,8 @@ export default function TOC({ headings, isList, setIsList }) {
             {/* Scrollable items — height ≈ 1.4× the width (w-56=224px → ~320px) */}
             <div
               ref={scrollContainerRef}
-              className="overflow-y-auto"
-              style={{ maxHeight: "420px" }}
+              className="overflow-y-auto [&::-webkit-scrollbar]:hidden"
+              style={{ maxHeight: "400px", scrollbarWidth: "none" }}
             >
               {(() => {
                 let h2Count = 0;
@@ -175,23 +176,21 @@ export default function TOC({ headings, isList, setIsList }) {
                       <button
                         onClick={() => handleItemClick(item.id)}
                         className={`w-full text-left px-4 py-2 leading-snug transition-colors duration-150 ${isH4
-                          ? "pl-12 !text-[16px] font-semibold text-gray-700"       /* ← H4 (sub-sub-heading) size */
+                          ? "pl-12 !text-[14px] font-normal text-gray-700 opacity-40"       /* H4 (sub-sub-heading) */
                           : isH3Plus
-                            ? "pl-9 !text-[16px] font-semibold text-gray-800"      /* ← H3 (sub-heading) size */
-                            : "pl-6 !text-[18px] font-bold text-gray-900"          /* ← H2 (main heading) size */
+                            ? "pl-9 !text-[14px] font-normal text-gray-800 opacity-40"      /* H3 (sub-heading) */
+                            : "pl-6 !text-[16px] font-normal text-gray-900"                   /* H2 (main heading) */
                           } ${isAct
-                            ? "!text-orange-500 font-semibold"
+                            ? "!text-orange-500 !opacity-100 font-normal"
                             : "hover:text-orange-500"
                           }`}
                       >
-                        <span className="flex items-start gap-2">
-                          <span className="shrink-0">{number}</span>
-                          {item.title}
-                        </span>
+                        {isAct && <span className="text-orange-500 mr-1.5">●</span>}
+                        {item.title}
                       </button>
                       {/* Separator between items */}
                       {index < headings.length - 1 && (
-                        <hr className="border-gray-100 mx-4" />
+                        <hr className="border-gray-300 mx-4" />
                       )}
                     </div>
                   );
