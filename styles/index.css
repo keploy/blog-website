@@ -1,8 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
+@font-face {
+  font-family: 'Gilroy';
+  src: local('Gilroy-Regular'), url('https://fonts.cdnfonts.com/s/16219/Gilroy-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: local('Gilroy-Medium'), url('https://fonts.cdnfonts.com/s/16219/Gilroy-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: local('Gilroy-Bold'), url('https://fonts.cdnfonts.com/s/16219/Gilroy-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: local('Gilroy-Heavy'), url('https://fonts.cdnfonts.com/s/16219/Gilroy-Heavy.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 
 /* Write your own custom base styles here */
+html, body {
+  font-family: 'Gilroy', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+}
 
 /* Start purging... */
 @tailwind components;
@@ -45,23 +86,27 @@
 .wp-block-image img {
   @apply max-w-full mt-2;
 }
+
 .wp-block-image.aligncenter {
   @apply text-center;
 }
+
 .wp-block-image.alignfull img,
 .wp-block-image.alignwide img {
   @apply w-full;
 }
+
 .wp-block-image .alignleft,
 .wp-block-image .alignright,
 .wp-block-image .aligncenter,
 .wp-block-image.is-resized {
   @apply table ml-0 mr-0;
 }
-.wp-block-image .alignleft > figcaption,
-.wp-block-image .alignright > figcaption,
-.wp-block-image .aligncenter > figcaption,
-.wp-block-image.is-resized > figcaption {
+
+.wp-block-image .alignleft>figcaption,
+.wp-block-image .alignright>figcaption,
+.wp-block-image .aligncenter>figcaption,
+.wp-block-image.is-resized>figcaption {
   @apply table-caption;
 
   caption-side: bottom;
@@ -70,9 +115,11 @@
 .wp-block-image .alignleft {
   @apply float-left mr-4;
 }
+
 .wp-block-image .alignright {
   @apply float-right ml-4;
 }
+
 .wp-block-image .aligncenter {
   @apply m-auto;
 }
@@ -116,17 +163,19 @@
 /* Custom CSS */
 
 .baloo-2-600 {
-  font-family: "Baloo 2", sans-serif;
+  font-family: "Gilroy", sans-serif;
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
 }
 
 .heading1 {
-  font-family: "Baloo 2", "bold", sans-serif;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 700;
 }
+
 .body {
-  font-family: "Baloo 2", sans-serif;
+  font-family: "Gilroy", sans-serif;
 }
 
 .marquee-mask {
@@ -135,10 +184,12 @@
 }
 
 body {
-  background: #fbfcff;
+  background: #ffffff;
   color: #222222;
+  font-family: "Gilroy", sans-serif;
 }
-.authormapping{
+
+.authormapping {
   background-color: #0F172A;
 }
 
@@ -149,7 +200,7 @@ body {
   background-size: 0 10px;
   transition: background .3s ease;
 } */
-.hamburger.active svg > :first-child {
+.hamburger.active svg> :first-child {
   opacity: 0;
   y: 11;
   transform: rotate(225deg);
@@ -157,18 +208,22 @@ body {
     transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s,
     opacity 0.1s ease-out 0.12s;
 }
-.hamburger svg > :first-child {
+
+.hamburger svg> :first-child {
   transition: y 0.1s ease-in 0.25s,
     transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19), opacity 0.1s ease-in;
 }
-.hamburger.active svg > :nth-child(2) {
+
+.hamburger.active svg> :nth-child(2) {
   transform: rotate(225deg);
   transition: transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s;
 }
-.hamburger svg > :nth-child(2) {
+
+.hamburger svg> :nth-child(2) {
   transition: transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
-.hamburger.active svg > :nth-child(3) {
+
+.hamburger.active svg> :nth-child(3) {
   y: 11;
   transform: rotate(135deg);
   transition: y 0.1s ease-out,
@@ -176,14 +231,15 @@ body {
     width 0.1s ease-out;
 }
 
-.hamburger svg > :nth-child(3) {
+.hamburger svg> :nth-child(3) {
   transition: y 0.1s ease-in 0.25s,
     transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19),
     width 0.1s ease-in 0.25s;
 }
-.hamburger svg > :first-child,
-.hamburger svg > :nth-child(2),
-.hamburger svg > :nth-child(3) {
+
+.hamburger svg> :first-child,
+.hamburger svg> :nth-child(2),
+.hamburger svg> :nth-child(3) {
   transform-origin: center;
   transform: rotate(0deg);
 }
@@ -191,40 +247,69 @@ body {
 .spin-anim {
   animation: 5s linear infinite spin;
 }
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
-pre {
-  background-color: #222222 !important;
-  color: antiquewhite;
+.post-content-wrapper pre {
+  background-color: #1e1e2e;
+  color: #cdd6f4;
 }
 
-.footer-font{
-  font-family: "__Inter_aaf875","__Inter_Fallback_aaf875", sans-serif;
+/* Tighter line-height for headings inside blog posts */
+.post-content-wrapper h1,
+.post-content-wrapper h2,
+.post-content-wrapper h3,
+.post-content-wrapper h4 {
+  line-height: 1.1 !important;
+}
+
+/* Round + polish CodeMirror code blocks */
+.post-content-wrapper .cm-editor {
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* Remove white gutter strip — match the dracula editor background */
+.post-content-wrapper .cm-gutters {
+  background-color: #282a36 !important;
+  border-right: none !important;
+}
+
+.post-content-wrapper .relative {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  margin-bottom: 1.5rem;
+}
+
+.footer-font {
+  font-family: "Gilroy", sans-serif;
 }
 
 /* Buttons */
 .btn,
 .btn-sm {
-    @apply font-medium inline-flex items-center justify-center border border-transparent rounded-sm leading-snug transition duration-150 ease-in-out;
+  @apply font-medium inline-flex items-center justify-center border border-transparent rounded-sm leading-snug transition duration-150 ease-in-out;
 }
 
 .btn {
-    @apply px-8 py-3;
+  @apply px-8 py-3;
 }
 
 .btn-sm {
-    @apply px-4 py-2;
+  @apply px-4 py-2;
 }
 
 
-td{
+td {
   border: solid 1px black;
   padding: 5px;
 }
@@ -250,6 +335,7 @@ td{
 }
 
 @media (max-width: 1024px) {
+
   .post-content-wrapper th,
   .post-content-wrapper td {
     white-space: normal;
@@ -262,8 +348,9 @@ td{
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 
   :root {
@@ -318,6 +405,7 @@ td{
 
     --radius: 0.5rem;
   }
+
   .dark {
 
     --background: 0 0% 3.9%;

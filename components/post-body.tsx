@@ -189,47 +189,7 @@ export default function PostBody({
       });
   };
 
-  useEffect(() => {
-    const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2"));
-    headings.forEach((heading, index) => {
-      if (heading.querySelector(".copy-url-button")) return;
 
-      const button = document.createElement("button");
-      button.className = "copy-url-button";
-      button.style.marginLeft = "8px";
-      button.style.cursor = "pointer";
-      button.style.border = "none";
-      button.style.background = "none";
-      button.style.padding = "0";
-      button.style.fontSize = "1rem";
-      button.style.color = "#555";
-      button.textContent = headingCopySuccessList[index] ? '✔️' : '#'; // // Copy Button
-      button.addEventListener("click", () => {
-        handleHeadingCopyClick(heading.innerHTML, index);
-
-        const yOffset = -80;
-        const y = document.getElementById(heading.id).getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-        window.scrollTo({
-          top: y,
-          behavior: "smooth",
-        });
-        window.history.replaceState(null, "", `#${heading.id}`);
-      });
-      heading.appendChild(button);
-    });
-  }, [tocItems, headingCopySuccessList]);
-
-  useEffect(() => {
-    const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
-    headings.forEach((heading, index) => {
-      const button = heading.querySelector(".copy-url-button") as HTMLButtonElement;
-      if (button) {
-        // button.textContent = headingCopySuccessList[index] ? '✔️' : '🔗'; // // Copy Button
-        button.style.color = headingCopySuccessList[index] ? "#28a745" : "#555";
-      }
-    });
-  }, [headingCopySuccessList]);
 
   const renderCodeBlocks = () => {
     const safeContent = replacedContent || "";
@@ -257,12 +217,34 @@ export default function PostBody({
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
           const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
           const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : "";
-          const language =
+
+          // 1. Try language from <code class="language-X"> attribute
+          const langFromClass =
             codeMatch && codeMatch[0].includes("language-")
               ? codeMatch[0].split("language-")[1].split('"')[0]
-              : "bash";
-          const getLanguageExtension = (language: string) => {
-            switch (language) {
+              : "";
+
+          // 2. If no class, check if the first line is a known language keyword (WP pattern)
+          const knownLanguages = [
+            "go", "javascript", "js", "typescript", "ts",
+            "python", "bash", "sh", "java", "rust", "cpp",
+            "c", "yaml", "json", "markdown", "sql", "html", "css",
+          ];
+          const firstLine = code.trimStart().split("\n")[0].trim().toLowerCase();
+          const langFromFirstLine = knownLanguages.includes(firstLine) ? firstLine : "";
+
+          const language = langFromClass || langFromFirstLine || "bash";
+
+          // Strip language name from code if it was the first line
+          const cleanCode =
+            langFromFirstLine && !langFromClass
+              ? code.trimStart().slice(firstLine.length + 1)
+              : langFromClass && code.trimStart().startsWith(langFromClass + "\n")
+                ? code.trimStart().slice(langFromClass.length + 1)
+                : code;
+
+          const getLanguageExtension = (lang: string) => {
+            switch (lang) {
               case "javascript":
               case "js":
                 return javascript();
@@ -276,10 +258,27 @@ export default function PostBody({
                 return javascript();
             }
           };
+
           return (
-            <div key={index} className="relative mx-auto mb-4">
+            <div key={index} className="rounded-lg overflow-hidden mb-6 border border-[#313244] shadow-md">
+              {/* Header bar: language badge + copy button */}
+              <div className="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-[#313244]">
+                <span className="text-xs font-mono text-[#6c7086] uppercase tracking-widest select-none">
+                  {language}
+                </span>
+                <button
+                  onClick={() => handleCopyClick(cleanCode, index)}
+                  className="flex items-center gap-1 text-xs text-[#cdd6f4] bg-[#313244] hover:bg-[#45475a] px-2 py-1 rounded transition-colors duration-150"
+                >
+                  {copySuccessList[index] ? (
+                    <><IoCheckmarkOutline /> <span>Copied!</span></>
+                  ) : (
+                    <><IoCopyOutline /> <span>Copy</span></>
+                  )}
+                </button>
+              </div>
               <CodeMirror
-                value={code}
+                value={cleanCode}
                 extensions={[getLanguageExtension(language)]}
                 theme={dracula}
                 basicSetup={{
@@ -291,16 +290,6 @@ export default function PostBody({
                 readOnly={true}
                 indentWithTab={true}
               />
-              <button
-                onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 px-2 py-1 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
-              >
-                {copySuccessList[index] ? (
-                  <IoCheckmarkOutline />
-                ) : (
-                  <IoCopyOutline />
-                )}
-              </button>
             </div>
           );
         }
@@ -342,7 +331,7 @@ export default function PostBody({
       >
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
-      <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`} id="post-body-check">
+      <div className={`w-full p-4 pr-4 lg:pr-[24%] ${isList ? "ml-10" : "lg:ml-8"}  md:w-4/5 lg:w-4/5`} id="post-body-check">
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
         <div className="prose lg:prose-xl post-content-wrapper">{renderCodeBlocks()}</div>
         <hr className="border-gray-300 mt-10 mb-20" />
@@ -372,21 +361,12 @@ export default function PostBody({
         )}
       </div>
 
-      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
-
-        {/* 1. Waitlist banner (always shown) */}
+      {/* Waitlist banner (commented out — space given to blog body) */}
+      {/* <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky lg:top-20">
         <div className="flex justify-center">
           <WaitlistBanner />
         </div>
-
-        {/* 2. Ad slot (hidden on <lg) */}
-        {/* <div className="hidden lg:flex justify-center rounded-xl p-4">
-    <AdSlot
-      slotId="3356716061"
-      className="w-full h-60"
-    />
-  </div> */}
-      </aside>
+      </aside> */}
 
     </div>
   );

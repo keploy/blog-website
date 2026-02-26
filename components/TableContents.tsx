@@ -1,222 +1,206 @@
 import React, { useState, useEffect, useRef } from "react";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 
-function TOCItem({
-  id,
-  title,
-  type,
-  onClick,
-}: {
-  id: string;
-  title: string;
-  type: string;
-  onClick: (id: string) => void;
-}) {
-  const itemClasses = "mb-1 text-slate-600 space-y-1";
-
-  // Calculate margin left based on heading type
-  let marginLeft;
-  switch (type) {
-    case "h1":
-      marginLeft = 0;
-      break;
-    case "h2":
-      marginLeft = "1rem"; // Adjust as needed
-      break;
-    case "h3":
-      marginLeft = "1.5rem"; // Adjust as needed
-      break;
-    case "h4":
-      marginLeft = "2rem"; // Adjust as needed
-      break;
-    default:
-      marginLeft = "2rem"; // Default to h4 margin
-  }
-
-  return (
-    <li className={itemClasses} style={{ marginLeft }}>
-      <button
-        onClick={() => onClick(id)}
-        className="block w-full py-1 text-sm text-left text-black transition-all duration-150 ease-in-out rounded-md opacity-75 hover:text-orange-500 hover:opacity-100"
-      >
-        {title}
-      </button>
-    </li>
-  );
-}
-
 export default function TOC({ headings, isList, setIsList }) {
-  const tocRef = useRef(null);
+  const tocRef = useRef<HTMLElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    if (!tocRef.current) return;
-
-    const container = tocRef.current;
-
-    function resizeHandler() {
-      setIsList(container.clientHeight > window.innerHeight * 0.8);
-    }
-
-    resizeHandler()
-    window.addEventListener("resize", resizeHandler)
-
-    return () => { window.removeEventListener("resize", resizeHandler) }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-
-  const handleItemClick = (id) => {
-  const sanitizedId = sanitizeStringForURL(id, true);
-  const element = document.getElementById(sanitizedId);
-  if (element) {
-    const offset = 80; 
-    const offsetPosition = element.offsetTop - offset;
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth",
-    });
-
-    window.history.replaceState(null, null, `#${sanitizedId}`);
-  }
-};
-
-  // State to track screen width
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [activeId, setActiveId] = useState<string>("");
 
-  // Function to check if screen width is small
-  const checkScreenSize = () => {
-    setIsSmallScreen(window.innerWidth < 1024); // Adjust breakpoint as needed
-  };
-
+  // Detect screen size
   useEffect(() => {
-    checkScreenSize(); // Initial check
-    window.addEventListener("resize", checkScreenSize); // Event listener for screen resize
-    return () => {
-      window.removeEventListener("resize", checkScreenSize); // Cleanup on component unmount
-    };
+    const check = () => setIsSmallScreen(window.innerWidth < 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Render dropdown if on a small screen, otherwise render regular TOC
-  return isSmallScreen ? (
-    <>
-      <div className="w-full max-w-[700px] px-4 mx-auto top-20">
-        <div className="flex items-center justify-center text-center w-full">
-          <button
-            onClick={() => setIsDropdownOpen((prev) => !prev)}
-            className="text-gray-700 focus:outline-none flex items-center justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:shadow-outline gap-2 text-center"
-            aria-expanded={isDropdownOpen}
-            aria-controls="toc-dropdown"
-          >
-            <span className="text-lg font-semibold text-left flex-grow">
-              Table of Contents
-            </span>
-            <span className="text-sm">{isDropdownOpen ? "▲" : "▼"}</span>
-          </button>
-        </div>
+  // isList fallback (collapse to select if extremely long)
+  useEffect(() => {
+    if (!tocRef.current) return;
+    const el = tocRef.current;
+    const handler = () => setIsList(el.clientHeight > window.innerHeight * 0.8);
+    handler();
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Active section tracking
+  useEffect(() => {
+    if (!headings.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length) setActiveId(visible[0].target.getAttribute("id") ?? "");
+      },
+      { rootMargin: "0px 0px -60% 0px", threshold: 0 }
+    );
+    headings.forEach(({ id }) => {
+      const el = document.getElementById(sanitizeStringForURL(id, true));
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [headings]);
+
+  // Auto-scroll TOC to keep active item visible
+  useEffect(() => {
+    if (!activeId || !scrollContainerRef.current) return;
+    const el = scrollContainerRef.current.querySelector(
+      `[data-toc-id="${activeId}"]`
+    ) as HTMLElement | null;
+    el?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [activeId]);
+
+  const handleItemClick = (id: string) => {
+    const sanitizedId = sanitizeStringForURL(id, true);
+    const element = document.getElementById(sanitizedId);
+    if (element) {
+      window.scrollTo({ top: element.offsetTop - 80, behavior: "smooth" });
+      window.history.replaceState(null, null, `#${sanitizedId}`);
+    }
+  };
+
+  // ── Small screen: collapsible dropdown ──
+  if (isSmallScreen) {
+    return (
+      <div className="w-full max-w-[700px] px-4 mx-auto">
+        <button
+          onClick={() => setIsDropdownOpen((p) => !p)}
+          className="flex items-center justify-between w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-xl shadow-sm hover:border-gray-400 focus:outline-none"
+          aria-expanded={isDropdownOpen}
+        >
+          <span className="text-base font-semibold">Table of Contents</span>
+          <span className="text-sm">{isDropdownOpen ? "▲" : "▼"}</span>
+        </button>
 
         {isDropdownOpen && (
-          <div className="mt-2 max-h-[300px] overflow-y-auto border rounded-md shadow-md p-2 bg-white w-full md:w-auto">
-            <ul className="space-y-1">
+          <div className="mt-2 border border-gray-200 rounded-xl shadow-md bg-white overflow-hidden">
+            <div className="max-h-64 overflow-y-auto px-3 py-2">
               {headings.map((item, index) => {
-                let indent = "";
-                switch (item.type) {
-                  case "h1":
-                    indent = "ml-0";
-                    break;
-                  case "h2":
-                    indent = "ml-4";
-                    break;
-                  case "h3":
-                    indent = "ml-8";
-                    break;
-                  case "h4":
-                    indent = "ml-12";
-                    break;
-                  default:
-                    indent = "ml-0";
-                }
-
+                const sid = sanitizeStringForURL(item.id, true);
+                const isAct = sid === activeId;
+                const isH3Plus = item.type === "h3" || item.type === "h4";
                 return (
-                  <li
-                    key={item.id}
-                    className={`text-sm text-gray-700 hover:text-orange-500 ${indent}`}
-                  >
+                  <React.Fragment key={index}>
                     <button
-                      onClick={() => {
-                        const el = document.getElementById(item.id);
-                        if (el) {
-                          const offset = 80;
-                          window.scrollTo({
-                            top: el.offsetTop - offset,
-                            behavior: "smooth",
-                          });
-                          const sanitizedId = sanitizeStringForURL(item.title, true);
-                          window.history.replaceState(
-                            null,
-                            null,
-                            `#${sanitizedId}`
-                          );
-                          setIsDropdownOpen(false);
-                        }
-                      }}
-                      className="w-full text-left"
+                      onClick={() => { handleItemClick(item.id); setIsDropdownOpen(false); }}
+                      className={`w-full text-left py-1.5 text-sm leading-snug transition-colors duration-150 ${isH3Plus ? "pl-4 text-sm text-gray-500" : "pl-0 text-gray-700 font-medium"
+                        } ${isAct ? "text-orange-500 font-semibold" : "hover:text-orange-500"}`}
                     >
                       {item.title}
                     </button>
-                  </li>
+                    {index < headings.length - 1 && (
+                      <hr className="border-gray-100" />
+                    )}
+                  </React.Fragment>
                 );
               })}
-            </ul>
+            </div>
           </div>
         )}
       </div>
-    </>
-  ) : (
-    <>
-      <div className="left-0 inline-block p-4 lg:hidden top-20">
-        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
-        <select
-          className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
-          onChange={(e) => handleItemClick(e.target.value)}
-        >
-          {headings.map((item, index) => (
-            <option key={index} value={item.id}>
-              {item.title}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
-        <div className="mb-2 text-lg font-semibold">Table of Contents</div>
-        {isList ? (
+    );
+  }
+
+  // ── Desktop: card-style scrollable TOC ──
+  return (
+    <div className="hidden lg:block sticky top-24 ml-4">
+      {isList ? (
+        // Fallback select for extremely long TOCs
+        <div className="p-4">
+          <p className="!text-[22px] font-bold uppercase tracking-widest text-gray-900 mb-2">
+            Table of Contents
+          </p>
           <select
-            className="block w-full px-4 py-2 text-sm leading-tight bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:outline-none focus:shadow-outline"
+            className="block w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none"
             onChange={(e) => handleItemClick(e.target.value)}
           >
             {headings.map((item, index) => (
-              <option key={index} value={item.id}>
-                {item.title}
-              </option>
+              <option key={index} value={item.id}>{item.title}</option>
             ))}
           </select>
-        ) : (
-          <nav ref={tocRef}>
-            <ul className="pl-0 leading-5">
-              {headings.map((item, index) => (
-                <TOCItem
-                  key={index}
-                  id={item.id}
-                  title={item.title}
-                  type={item.type}
-                  onClick={handleItemClick}
-                />
-              ))}
-            </ul>
-          </nav>
-        )}
-      </div>
-    </>
+        </div>
+      ) : (
+        <nav ref={tocRef}>
+          {/* ─── TOC Card ─────────────────────────────── */}
+          <div className="w-66 rounded-2xl border border-gray-200 bg-gray-50 shadow-sm overflow-hidden pb-3">
+
+            {/* Card header */}
+            <div className="px-4 py-3 border-b border-gray-200 bg-gray-100">
+              {/* ← "Table of Contents" title size — change 22px here */}
+              <p className="!text-[20px] font-bold uppercase tracking-widest text-gray-900">
+                Table of Contents
+              </p>
+            </div>
+
+            {/* Scrollable items — height ≈ 1.4× the width (w-56=224px → ~320px) */}
+            <div
+              ref={scrollContainerRef}
+              className="overflow-y-auto"
+              style={{ maxHeight: "420px" }}
+            >
+              {(() => {
+                let h2Count = 0;
+                let h3Count = 0;
+                let h4Count = 0;
+
+                return headings.map((item, index) => {
+                  const sid = sanitizeStringForURL(item.id, true);
+                  const isAct = sid === activeId;
+                  const isH3Plus = item.type === "h3" || item.type === "h4";
+                  const isH4 = item.type === "h4";
+
+                  // Compute numbering
+                  let number = "";
+                  if (item.type === "h2" || item.type === "h1") {
+                    h2Count++;
+                    h3Count = 0;
+                    h4Count = 0;
+                    number = `${h2Count}.`;
+                  } else if (item.type === "h3") {
+                    h3Count++;
+                    h4Count = 0;
+                    number = `${h2Count}.${h3Count}`;
+                  } else if (item.type === "h4") {
+                    h4Count++;
+                    number = `${h2Count}.${h3Count}.${h4Count}`;
+                  }
+
+                  return (
+                    <div key={index} data-toc-id={sid}>
+                      <button
+                        onClick={() => handleItemClick(item.id)}
+                        className={`w-full text-left px-4 py-2 leading-snug transition-colors duration-150 ${isH4
+                          ? "pl-12 !text-[16px] font-semibold text-gray-700"       /* ← H4 (sub-sub-heading) size */
+                          : isH3Plus
+                            ? "pl-9 !text-[16px] font-semibold text-gray-800"      /* ← H3 (sub-heading) size */
+                            : "pl-6 !text-[18px] font-bold text-gray-900"          /* ← H2 (main heading) size */
+                          } ${isAct
+                            ? "!text-orange-500 font-semibold"
+                            : "hover:text-orange-500"
+                          }`}
+                      >
+                        <span className="flex items-start gap-2">
+                          <span className="shrink-0">{number}</span>
+                          {item.title}
+                        </span>
+                      </button>
+                      {/* Separator between items */}
+                      {index < headings.length - 1 && (
+                        <hr className="border-gray-100 mx-4" />
+                      )}
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+          </div>
+        </nav>
+      )}
+    </div>
   );
 }
