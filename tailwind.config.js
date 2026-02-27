@@ -19,10 +19,6 @@ module.exports = {
     "text-violet-600"
   ],
   theme: {
-  	fontFamily: {
-  		gilroy: ['Gilroy', 'sans-serif'],
-  		sans: ['Gilroy', 'sans-serif'],
-  	},
   	extend: {
   		animation: {
   			marquee: 'marquee var(--duration) linear infinite',

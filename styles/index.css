@@ -1,49 +1,8 @@
-@font-face {
-  font-family: 'Gilroy';
-  src: local('Gilroy-Regular'), url('https://fonts.cdnfonts.com/s/16219/Gilroy-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Gilroy';
-  src: local('Gilroy-Medium'), url('https://fonts.cdnfonts.com/s/16219/Gilroy-Medium.woff') format('woff');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Gilroy';
-  src: local('Gilroy-Bold'), url('https://fonts.cdnfonts.com/s/16219/Gilroy-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Gilroy';
-  src: local('Gilroy-Heavy'), url('https://fonts.cdnfonts.com/s/16219/Gilroy-Heavy.woff') format('woff');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
 
 @tailwind base;
 
 /* Write your own custom base styles here */
-html, body {
-  font-family: 'Gilroy', sans-serif;
-  font-size: 22px;
-  letter-spacing: 0.08em;
-  line-height: 1.5;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  letter-spacing: 0.08em;
-  line-height: 1.1;
-}
 
 /* Start purging... */
 @tailwind components;
@@ -163,19 +122,18 @@ h1, h2, h3, h4, h5, h6 {
 /* Custom CSS */
 
 .baloo-2-600 {
-  font-family: "Gilroy", sans-serif;
+  font-family: "Baloo 2", sans-serif;
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
 }
 
 .heading1 {
-  font-family: "Gilroy", sans-serif;
-  font-weight: 700;
+  font-family: "Baloo 2", "bold", sans-serif;
 }
 
 .body {
-  font-family: "Gilroy", sans-serif;
+  font-family: "Baloo 2", sans-serif;
 }
 
 .marquee-mask {
@@ -184,9 +142,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 body {
-  background: #ffffff;
+  background: #fbfcff;
   color: #222222;
-  font-family: "Gilroy", sans-serif;
 }
 
 .authormapping {
@@ -258,6 +215,13 @@ body {
   }
 }
 
+pre {
+  background-color: #222222 !important;
+  color: antiquewhite;
+}
+
+/* ── Blog-scoped styles (post-content-wrapper) ── */
+
 .post-content-wrapper pre {
   background-color: #1e1e2e;
   color: #cdd6f4;
@@ -291,7 +255,7 @@ body {
 }
 
 .footer-font {
-  font-family: "Gilroy", sans-serif;
+  font-family: "__Inter_aaf875", "__Inter_Fallback_aaf875", sans-serif;
 }
 
 /* Buttons */
@@ -343,14 +307,13 @@ td {
 }
 
 
-
 @layer base {
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
   }
 
   :root {

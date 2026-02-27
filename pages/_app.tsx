@@ -1,17 +1,10 @@
 import { AppProps } from 'next/app';
 import '../styles/index.css';
 import Router from "next/router";
-import { Inter } from 'next/font/google';
 
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
  
 const PageLoader = dynamic(() => import('../components/PageLoader'), {
   ssr: false,
@@ -38,11 +31,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <div className={inter.variable}>
+    <>
       <AnimatePresence>
         {loading ? <PageLoader /> : <Component {...pageProps} />}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
 

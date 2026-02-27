@@ -60,7 +60,7 @@ const ReviewCard = ({
 
 const TwitterTestimonials = () => {
   return (
-    <div className="px-4 md:px-8 lg:px-16">
+    <div className="">
       <h3 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
         What our community thinks
       </h3>

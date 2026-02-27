@@ -331,7 +331,8 @@ export default function PostBody({
       >
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
-      <div className={`w-full p-4 pr-4 lg:pr-4 ${isList ? "ml-10" : "lg:ml-8"}  md:w-4/5 lg:w-3/5`} id="post-body-check">
+      {/* <div className={`w-full p-4 pr-4 lg:pr-4 ${isList ? "ml-10" : "lg:ml-8"}  md:w-4/5 lg:w-3/5`} id="post-body-check"> */}
+      <div className={`p-4 ${isList ? "ml-10" : ""} mx-auto`} style={{ maxWidth: '800px' }} id="post-body-check">
         {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
         <div className="prose lg:prose-xl post-content-wrapper">{renderCodeBlocks()}</div>
         <hr className="border-gray-300 mt-10 mb-20" />
