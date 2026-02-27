@@ -5,11 +5,13 @@ function TOCItem({
   id,
   title,
   type,
+  isActive,
   onClick,
 }: {
   id: string;
   title: string;
   type: string;
+  isActive: boolean;
   onClick: (id: string) => void;
 }) {
   const itemClasses = "mb-1 text-slate-600 space-y-1";
@@ -36,8 +38,12 @@ function TOCItem({
   return (
     <li className={itemClasses} style={{ marginLeft }}>
       <button
+        id={`toc-item-${sanitizeStringForURL(id, true)}`}
         onClick={() => onClick(id)}
-        className="block w-full py-1 text-sm text-left text-black transition-all duration-150 ease-in-out rounded-md opacity-75 hover:text-orange-500 hover:opacity-100"
+        className={`block w-full py-1 text-sm text-left transition-all duration-150 ease-in-out rounded-md ${isActive
+          ? "text-orange-500 opacity-100 font-semibold"
+          : "text-black opacity-75 hover:text-orange-500 hover:opacity-100"
+          }`}
       >
         {title}
       </button>
@@ -45,7 +51,7 @@ function TOCItem({
   );
 }
 
-export default function TOC({ headings, isList, setIsList }) {
+export default function TOC({ headings, isList, setIsList, activeId }) {
   const tocRef = useRef(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -66,21 +72,30 @@ export default function TOC({ headings, isList, setIsList }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  useEffect(() => {
+    if (activeId) {
+      const activeElement = document.getElementById(`toc-item-${activeId}`);
+      if (activeElement) {
+        activeElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+  }, [activeId]);
+
 
   const handleItemClick = (id) => {
-  const sanitizedId = sanitizeStringForURL(id, true);
-  const element = document.getElementById(sanitizedId);
-  if (element) {
-    const offset = 80; 
-    const offsetPosition = element.offsetTop - offset;
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth",
-    });
+    const sanitizedId = sanitizeStringForURL(id, true);
+    const element = document.getElementById(sanitizedId);
+    if (element) {
+      const offset = 80;
+      const offsetPosition = element.offsetTop - offset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
 
-    window.history.replaceState(null, null, `#${sanitizedId}`);
-  }
-};
+      window.history.replaceState(null, null, `#${sanitizedId}`);
+    }
+  };
 
   // State to track screen width
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -117,7 +132,7 @@ export default function TOC({ headings, isList, setIsList }) {
         </div>
 
         {isDropdownOpen && (
-          <div className="mt-2 max-h-[300px] overflow-y-auto border rounded-md shadow-md p-2 bg-white w-full md:w-auto">
+          <div className="mt-2 max-h-[300px] overflow-y-auto border rounded-md shadow-md p-2 bg-white w-full md:w-auto" style={{ overscrollBehavior: 'contain' }}>
             <ul className="space-y-1">
               {headings.map((item, index) => {
                 let indent = "";
@@ -188,7 +203,7 @@ export default function TOC({ headings, isList, setIsList }) {
           ))}
         </select>
       </div>
-      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky  ">
+      <div className="hidden lg:inline-block left-0 top-20 bg-inherit p-4 sticky">
         <div className="mb-2 text-lg font-semibold">Table of Contents</div>
         {isList ? (
           <select
@@ -202,7 +217,7 @@ export default function TOC({ headings, isList, setIsList }) {
             ))}
           </select>
         ) : (
-          <nav ref={tocRef}>
+          <nav ref={tocRef} className="hide-scrollbar" style={{ maxHeight: 'calc(100vh - 10rem)', overflowY: 'auto', overscrollBehavior: 'contain' }}>
             <ul className="pl-0 leading-5">
               {headings.map((item, index) => (
                 <TOCItem
@@ -210,6 +225,7 @@ export default function TOC({ headings, isList, setIsList }) {
                   id={item.id}
                   title={item.title}
                   type={item.type}
+                  isActive={sanitizeStringForURL(item.id, true) === activeId}
                   onClick={handleItemClick}
                 />
               ))}
