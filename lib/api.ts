@@ -3,8 +3,25 @@ export const dynamic = 'force-dynamic';
 
 const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL
 
-async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
-  const headers = { "Content-Type": "application/json" };
+const DEFAULT_TIMEOUT_MS = 10000;
+const envTimeoutMs = Number.parseInt(
+  process.env.WORDPRESS_API_TIMEOUT_MS || "",
+  10
+);
+// can be overidden by setting the env , else the default will be used
+const DEFAULT_REQUEST_TIMEOUT_MS = Number.isFinite(envTimeoutMs)
+  ? envTimeoutMs
+  : DEFAULT_TIMEOUT_MS;
+
+async function fetchAPI(
+  query = "",
+  { variables, timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS }: Record<string, any> = {}
+) {
+  if (!API_URL) {
+    throw new Error("WORDPRESS_API_URL is not configured");
+  }
+
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
 
   if (process.env.WORDPRESS_AUTH_REFRESH_TOKEN) {
     headers[
@@ -12,21 +29,52 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
     ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`;
   }
   // WPGraphQL Plugin must be enabled
-  const res = await fetch(API_URL, {
-    headers,
-    method: "POST",
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-  const json = await res.json();
-  if (json.errors) {
-    console.error(json.errors);
-    throw new Error("Failed to fetch API");
+  let res: Response;
+  try {
+    res = await fetch(API_URL, {
+      headers,
+      method: "POST",
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+      signal: controller.signal,
+    });
+  } catch (err: any) {
+    const reason = err?.name === "AbortError" ? "Request timed out" : "Network error";
+    throw new Error(`${reason}: ${err?.message || "unknown"}`);
+  } finally {
+    clearTimeout(timeoutId);
   }
-  return json.data;
+
+  const contentType = res.headers.get("content-type") || "";
+  const isJson = contentType.includes("application/json");
+  const rawBody = isJson ? null : await res.text();
+
+  let json: any = null;
+  if (isJson) {
+    try {
+      json = await res.json();
+    } catch (err: any) {
+      throw new Error(`Invalid JSON response (status ${res.status}): ${err?.message || "parse failed"}`);
+    }
+  }
+
+  if (!res.ok) {
+    const bodySnippet = isJson ? JSON.stringify(json) : rawBody;
+    throw new Error(
+      `HTTP ${res.status} ${res.statusText}: ${bodySnippet?.slice(0, 500) || "no body"}`
+    );
+  }
+
+  if (json?.errors) {
+    console.error(json.errors);
+    throw new Error(`GraphQL errors: ${JSON.stringify(json.errors).slice(0, 500)}`);
+  }
+  return json?.data;
 }
 
 export async function getPreviewPost(id, idType = "DATABASE_ID") {
