@@ -73,9 +73,13 @@ jobs:
           uploadArtifacts: true
 
       - name: Generate Lighthouse comment
+        if: always()
+        continue-on-error: true
         run: node .github/scripts/lighthouse-report.js
 
       - name: Upload Lighthouse comment artifact
+        if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: lighthouse-comment

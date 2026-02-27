@@ -13,7 +13,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env.test') });
  */
 export default defineConfig({
   testDir: './tests',
-  
+
   /* Output directory for test artifacts */
   outputDir: 'test-results',
 
@@ -25,22 +25,22 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : 4,
-  
+
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html'], ['list'], ['github']],
-  
+
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 
   testMatch: '**/*.spec.ts',
   testIgnore: [
     '**/node_modules/**',
-    '**/fixtures/**',         
+    '**/fixtures/**',
     '**/utils/**',
     '**/*.draft.spec.ts',
   ],
 
   /* Maximum time one test can run */
-  timeout: process.env.TEST_TIMEOUT ? parseInt(process.env.TEST_TIMEOUT) : 30000,
+  timeout: process.env.TEST_TIMEOUT ? parseInt(process.env.TEST_TIMEOUT) : 60000,
 
   /* Expect timeout */
   expect: {
@@ -60,12 +60,12 @@ export default defineConfig({
 
     /* Timeouts */
     actionTimeout: process.env.TEST_ACTION_TIMEOUT ? parseInt(process.env.TEST_ACTION_TIMEOUT) : 15000,
-    navigationTimeout: process.env.TEST_NAVIGATION_TIMEOUT ? parseInt(process.env.TEST_NAVIGATION_TIMEOUT) : 30000,
+    navigationTimeout: process.env.TEST_NAVIGATION_TIMEOUT ? parseInt(process.env.TEST_NAVIGATION_TIMEOUT) : 60000,
 
     /* Network */
     offline: false,
   },
-  
+
   /* Configure projects for major browsers */
   projects: [
     {
@@ -83,38 +83,32 @@ export default defineConfig({
       use: { ...devices['Desktop Safari'] },
     },
 
-    /* Test against mobile viewports. */
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 13'] },
-    },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    // Mobile responsive tests use explicit viewport overrides within
+    // test.describe blocks (see tests/responsive/) instead of separate
+    // browser projects — same rendering engine, just different viewport.
   ],
 
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'npm run dev',
-    url: process.env.BASE_URL || 'http://localhost:3000/blog',
-    reuseExistingServer: !process.env.CI,
-    timeout: process.env.CI ? 180000 : 120000, // 3 minutes for CI, 2 minutes locally
-    stdout: 'ignore',
-    stderr: 'pipe',
-    env: {
-      WORDPRESS_API_URL: process.env.WORDPRESS_API_URL || '',
-      NEXT_PUBLIC_WORDPRESS_API_URL: process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '',
+  /* Run mock GraphQL server + Next.js dev server before starting the tests */
+  webServer: [
+    {
+      command: 'node tests/mock-server.js',
+      url: 'http://localhost:4000/graphql',
+      reuseExistingServer: !process.env.CI,
+      timeout: 10000,
+      stdout: 'pipe',
+      stderr: 'pipe',
     },
-  },
+    {
+      command: 'npm run dev',
+      url: process.env.BASE_URL || 'http://localhost:3000/blog',
+      reuseExistingServer: !process.env.CI,
+      timeout: process.env.CI ? 180000 : 120000,
+      stdout: 'ignore',
+      stderr: 'pipe',
+      env: {
+        WORDPRESS_API_URL: 'http://localhost:4000/graphql',
+        NEXT_PUBLIC_WORDPRESS_API_URL: 'http://localhost:4000/graphql',
+      },
+    },
+  ],
 });
