@@ -1,35 +1,27 @@
 import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Container from "../../components/container";
-import {
-  getAllPosts,
-  getContent,
-  getPostsByAuthorName,
-} from "../../lib/api";
+import { getAllPosts, getContent, getPostsByAuthorName } from "../../lib/api";
+import AuthorEmptyState from "../../components/author-empty-state";
 import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
-export default function AuthorPage({ preview, filteredPosts ,content }) {
-  if (!filteredPosts || filteredPosts.length === 0) {
-    return (
-      <div>
-        <p>No posts found for this author.</p>
-      </div>
-    );
-  }
-
-  const authorName  =  filteredPosts[0]?.node?.ppmaAuthorName;
+export default function AuthorPage({ preview, filteredPosts, content }) {
+  const noPosts = !filteredPosts || filteredPosts.length === 0;
+  const authorName = filteredPosts[0]?.node?.ppmaAuthorName;
 
   return (
     <div className="bg-accent-1">
       <Layout
         preview={preview}
         featuredImage={HOME_OG_IMAGE_URL}
-        Title={`${authorName} Page`}
-        Description={`Posts by ${authorName}`}
+        Title={noPosts ? "Author Not Found" : `${authorName} Page`}
+        Description={
+          noPosts ? "No posts found for this author" : `Posts by ${authorName}`
+        }
         structuredData={[
           getBreadcrumbListSchema([
             { name: "Home", url: SITE_URL },
@@ -43,11 +35,21 @@ export default function AuthorPage({ preview, filteredPosts ,content }) {
       >
         <Header />
         <Container>
-          <h1 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-6xl sm:xl font-bold tracking-tighter leading-tight">
-            Author Details
-          </h1>
+          <AuthorEmptyState
+            noPosts={noPosts}
+            imagePath="/images/error404.png"
+            initialSeconds={10}
+            renderLoading={() => <p>Loading author page...</p>}
+          >
+            <h1 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-6xl sm:xl font-bold tracking-tighter leading-tight">
+              Author Details
+            </h1>
 
-          <PostByAuthorMapping filteredPosts={filteredPosts} Content={content}/>
+            <PostByAuthorMapping
+              filteredPosts={filteredPosts}
+              Content={content}
+            />
+          </AuthorEmptyState>
         </Container>
       </Layout>
     </div>
@@ -65,7 +67,9 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
       }
     });
 
-    const paths = Array.from(uniqueNames).map((name) => `/authors/${sanitizeAuthorSlug(name)}`);
+    const paths = Array.from(uniqueNames).map(
+      (name) => `/authors/${sanitizeAuthorSlug(name)}`,
+    );
 
     return {
       paths,
@@ -99,7 +103,8 @@ export const getStaticProps: GetStaticProps = async ({
 
   const normalizedSlug = slugParam.toLowerCase();
   const slugWords = normalizedSlug.split(/[-_\s]+/).filter(Boolean);
-  const capitalise = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+  const capitalise = (word: string) =>
+    word.charAt(0).toUpperCase() + word.slice(1);
   const titleCaseName = slugWords.map(capitalise).join(" ");
   const spacedLower = slugWords.join(" ");
   const hyphenLower = slugWords.join("-");
@@ -119,34 +124,52 @@ export const getStaticProps: GetStaticProps = async ({
 
   let filteredPosts = [];
 
-  for (const candidate of Array.from(candidateAuthorNames)) {
-    if (!candidate) continue;
-    try {
-      const postsResponse = await getPostsByAuthorName(candidate);
-      const edges = postsResponse?.edges || [];
-      if (edges.length > 0) {
-        filteredPosts = edges;
-        break;
-      }
-    } catch (error) {
-      console.error(`authors/[slug] failed to fetch posts for candidate "${candidate}":`, error);
-    }
+  let allPostsResponse = null;
+  try {
+    allPostsResponse = await getAllPosts();
+  } catch (error) {
+    console.error("authors/[slug] getAllPosts failed:", error);
   }
 
+  const allEdges = allPostsResponse?.edges || [];
+
+  // 1) Try matching custom author field first (ppmaAuthorName)
+  filteredPosts = allEdges.filter(({ node }) => {
+    const candidateName = node?.ppmaAuthorName;
+    if (!candidateName || Array.isArray(candidateName)) {
+      return false;
+    }
+    return sanitizeAuthorSlug(candidateName) === sanitizeAuthorSlug(slugParam);
+  });
+
+  // 2) If no match, try WordPress author name
   if (!filteredPosts.length) {
-    try {
-      const allPostsResponse = await getAllPosts();
-      filteredPosts =
-        allPostsResponse?.edges?.filter(({ node }) => {
-          const candidateName = node?.ppmaAuthorName;
-          if (!candidateName || Array.isArray(candidateName)) {
-            return false;
-          }
-          return sanitizeAuthorSlug(candidateName) === sanitizeAuthorSlug(slugParam);
-        }) || [];
-    } catch (error) {
-      console.error("authors/[slug] fallback to getAllPosts failed:", error);
-      filteredPosts = [];
+    filteredPosts = allEdges.filter(({ node }) => {
+      const authorName = node?.author?.node?.name;
+      if (!authorName || Array.isArray(authorName)) {
+        return false;
+      }
+      return sanitizeAuthorSlug(authorName) === sanitizeAuthorSlug(slugParam);
+    });
+  }
+
+  // 3) If still no match and allPosts failed, fall back to direct author query
+  if (!filteredPosts.length && !allEdges.length) {
+    for (const candidate of Array.from(candidateAuthorNames)) {
+      if (!candidate) continue;
+      try {
+        const postsResponse = await getPostsByAuthorName(candidate);
+        const edges = postsResponse?.edges || [];
+        if (edges.length > 0) {
+          filteredPosts = edges;
+          break;
+        }
+      } catch (error) {
+        console.error(
+          `authors/[slug] failed to fetch posts for candidate "${candidate}":`,
+          error,
+        );
+      }
     }
   }
 
@@ -156,7 +179,10 @@ export const getStaticProps: GetStaticProps = async ({
     try {
       content = await getContent(postId);
     } catch (error) {
-      console.error(`authors/[slug] failed to fetch content for postId ${postId}:`, error);
+      console.error(
+        `authors/[slug] failed to fetch content for postId ${postId}:`,
+        error,
+      );
     }
   }
 
