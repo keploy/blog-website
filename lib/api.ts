@@ -168,6 +168,10 @@ export async function getAllPosts() {
               }
             }
           }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }
     `,
