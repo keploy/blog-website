@@ -281,6 +281,7 @@ export default function MoreStories({
                 author={node.ppmaAuthorName}
                 slug={node.slug}
                 excerpt={getExcerpt(node.excerpt, 20)}
+                content={node.content}
                 isCommunity={
                   node.categories?.edges?.[0]?.node?.name === "technology" ? false : true
                 }
