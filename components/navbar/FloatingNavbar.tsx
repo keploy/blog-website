@@ -4,8 +4,14 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import FloatingNavbarClient from "./FloatingNavbarClient";
 
+// --- Configuration Constants ---
+// UPDATED: Threshold increased to ~760px to match Hero section height.
+// The navbar will remain in "Default" state until passing the Hero.
+const SCROLL_THRESHOLD = 760;
+
+// --- Styles ---
 const glassNavBase =
-  "relative overflow-visible rounded-full transition-all duration-300 backdrop-blur-2xl";
+  "relative overflow-visible rounded-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] backdrop-blur-2xl";
 const glassNavDefault =
   "bg-gradient-to-br from-gray-100/80 via-gray-100/62 to-gray-100/48 border border-white/70 shadow-[0_18px_44px_rgba(15,23,42,0.18)]";
 const glassNavScrolled =
@@ -23,6 +29,7 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
     typeof isBlogReadingPage === "boolean"
       ? isBlogReadingPage
       : router.pathname === "/technology/[slug]" || router.pathname === "/community/[slug]";
+  
   const [isScrolled, setIsScrolled] = useState(derivedBlogReadingPage);
 
   useEffect(() => {
@@ -31,9 +38,19 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
       return;
     }
 
+    let ticking = false;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          // Logic Update: Only trigger "Scrolled" state after passing the Hero section
+          setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
+    
     handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -42,12 +59,18 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
   const navPositionClasses = derivedBlogReadingPage
     ? "relative top-0 mx-auto z-40"
     : "fixed top-6 left-1/2 -translate-x-1/2 z-40";
+
+  // LOGIC FIX: Always use max-w-7xl.
+  // We removed the "85%" intermediate stage because it caused the misalignment gap.
+  // Now, both the Hero State (Default) and Blog State (Scrolled) align perfectly with the grid.
   const navWidthClasses = isScrolled
-    ? "w-[82%] md:max-w-5xl"
-    : "w-[96%] md:max-w-6xl";
+      ? "w-[95%] md:max-w-7xl"  // Scrolled State (Pill)
+      : "w-[96%] md:max-w-7xl"; // Default State (Hero)
+
   const navPaddingClasses = isScrolled
     ? "px-4 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5"
     : "px-5 py-2 md:px-6 md:py-3 lg:px-8 lg:py-4";
+    
   const navShadowClasses = derivedBlogReadingPage
     ? ""
     : isScrolled
@@ -61,7 +84,7 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
       : glassNavDefault;
 
   return (
-    <nav className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}>
+    <nav className={`${navPositionClasses} transition-all duration-500 ease-in-out ${navWidthClasses}`}>
         <div
           className={`${glassNavBase} ${navGlassClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}
         >
@@ -74,4 +97,3 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
     </nav>
   );
 }
-
