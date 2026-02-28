@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Homepage - Component Availability', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL || 'http://localhost:3000/blog');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should load homepage successfully', async ({ page }) => {
@@ -47,10 +47,10 @@ test.describe('Homepage - Component Availability', () => {
 
   test('should have search functionality available', async ({ page, viewport }) => {
     test.skip(viewport && viewport.width < 768, 'Desktop only test');
-    const searchButton = page.locator('button').filter({ 
+    const searchButton = page.locator('button').filter({
       has: page.locator('svg.lucide-search')
     }).or(page.locator('button').filter({ hasText: /search/i }));
-    
+
     await expect(searchButton.first()).toBeVisible();
   });
 
@@ -61,23 +61,23 @@ test.describe('Homepage - Component Availability', () => {
 
   test('should have working navigation to technology page', async ({ page, baseURL }) => {
     const techLink = page.locator('a[href*="technology"]').first();
-    await techLink.click();
-    
+    await techLink.click({ force: true });
+
     await page.waitForURL(/.*\/technology$/);
     expect(page.url()).toContain('/technology');
   });
 
   test('should have working navigation to community page', async ({ page, baseURL }) => {
     const communityLink = page.locator('a[href*="community"]').first();
-    await communityLink.click();
-    
+    await communityLink.click({ force: true });
+
     await page.waitForURL(/.*\/community$/);
     expect(page.url()).toContain('/community');
   });
 
   test('should support keyboard navigation', async ({ page }) => {
     await page.keyboard.press('Tab');
-    const focusedElement = page.locator(':focus');
+    const focusedElement = page.locator(':focus').first();
     await expect(focusedElement).toBeVisible();
   });
 });

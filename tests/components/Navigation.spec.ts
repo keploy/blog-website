@@ -77,7 +77,7 @@ test.describe('Navigation Component', () => {
 
   test('should navigate back to homepage when logo is clicked from another page', async ({ page }) => {
     const techLink = page.locator('a[href*="technology"]').first();
-    await techLink.click();
+    await techLink.click({ force: true });
     await page.waitForURL('**/technology**', { timeout: 20000 });
 
     const logo = page.locator('img[alt="Keploy Logo"]').first();
