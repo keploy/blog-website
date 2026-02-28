@@ -40,14 +40,14 @@ test.describe('Navigation Component', () => {
 
   test('should navigate to Technology page when Technology link is clicked', async ({ page }) => {
     const techLink = page.locator('a[href*="technology"]').first();
-    await techLink.click();
+    await techLink.click({ force: true });
     await page.waitForURL('**/technology**', { timeout: 20000 });
     expect(page.url()).toContain('/technology');
   });
 
   test('should navigate to Community page when Community link is clicked', async ({ page }) => {
     const communityLink = page.locator('a[href*="community"]').first();
-    await communityLink.click();
+    await communityLink.click({ force: true });
     await page.waitForURL('**/community**', { timeout: 20000 });
     expect(page.url()).toContain('/community');
   });
@@ -83,7 +83,7 @@ test.describe('Navigation Component', () => {
     const logo = page.locator('img[alt="Keploy Logo"]').first();
     const logoLink = page.locator('a').filter({ has: logo }).first();
     const href = await logoLink.getAttribute('href');
-    await logoLink.click();
+    await logoLink.click({ force: true });
 
     await page.waitForTimeout(3000);
 

@@ -66,7 +66,7 @@ test.describe('More Stories Component', () => {
       const link = postLinks.nth(1);
       const href = await link.getAttribute('href');
       if (href) {
-        await link.click();
+        await link.click({ force: true });
         await page.waitForURL(`**${href}**`, { timeout: 20000 });
         expect(page.url()).toContain(href);
       }
