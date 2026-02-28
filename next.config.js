@@ -12,7 +12,7 @@ const { protocol, hostname, port, pathname } = new URL(
 const contentSecurityPolicy = `
   connect-src 'self' https://px.ads.linkedin.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://rp.liadm.com https://idx.liadm.com https://pagead2.googlesyndication.com https://*.clarity.ms https://news.google.com https://assets.apollo.io https://wp.keploy.io https://cdn.hashnode.com https://keploy-websites.vercel.app https://blog-website-phi-eight.vercel.app https://docbot.keploy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://*.youtube.com https://*.googlevideo.com https://googleads.g.doubleclick.net https://marketplace.visualstudio.com https://api.github.com https://pro.ip-api.com https://api.vector.co https://aplo-evnt.com https://ep1.adtrafficquality.google https://ppptg.com;
   frame-src 'self' https://www.googletagmanager.com https://keploy-websites.vercel.app https://blog-website-phi-eight.vercel.app https://docbot.keploy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://*.youtube.com https://news.google.com https://googleads.g.doubleclick.net https://*.google.com https://ppptg.com;
-  img-src 'self' https://c.bing.com https://ppptg.com;
+  img-src 'self' data: https://c.bing.com https://ppptg.com https://wp.keploy.io https://keploy.io https://secure.gravatar.com https://pbs.twimg.com https://*.wp.com https://*.wordpress.com *;
 `
   .replace(/\s{2,}/g, ' ')
   .trim()
@@ -21,7 +21,7 @@ const contentSecurityPolicy = `
 module.exports = {
   basePath: '/blog',
   assetPrefix: "/blog",
-  
+
   // --- ADD THIS BLOCK ---
   // This exposes the server-side variable to the browser
   env: {
