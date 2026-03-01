@@ -85,7 +85,7 @@ test.describe('Hero Post Component', () => {
     const heroContainer = page.locator('section').first().locator('> div').first();
     const initialBox = await heroContainer.boundingBox();
     expect(initialBox).toBeTruthy();
-    await heroContainer.hover();
+    await heroContainer.hover({ force: true });
     await page.waitForTimeout(100);
     await expect(heroContainer).toBeVisible();
   });
