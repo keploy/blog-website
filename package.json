@@ -4,7 +4,13 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:codegen": "playwright codegen http://localhost:3000/blog",
+    "test:e2e:chromium": "playwright test --project=chromium",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@codemirror/lang-go": "^6.0.1",
@@ -21,7 +27,6 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@react-spring/web": "^9.7.3",
     "@tailwindcss/forms": "^0.5.10",
-    "@types/node": "^18.6.3",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@uiw/codemirror-theme-dracula": "^4.23.5",
@@ -46,10 +51,13 @@
     "typescript": "^4.7.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.0",
     "@types/prismjs": "^1.26.3",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "autoprefixer": "10.4.7",
+    "dotenv": "^17.3.1",
     "eslint": "8.56.0",
     "eslint-config-next": "14.1.0",
     "postcss": "8.4.31",
