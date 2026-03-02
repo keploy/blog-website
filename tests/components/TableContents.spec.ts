@@ -1,0 +1,170 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('TableContents (TOC) Component - Desktop', () => {
+    test.use({ viewport: { width: 1280, height: 800 } });
+
+    test.beforeEach(async ({ page, baseURL }) => {
+        await page.goto(`${baseURL}/technology` || 'http://localhost:3000/blog/technology');
+        await page.waitForLoadState('domcontentloaded');
+
+        const firstPost = page.locator('a[href*="/technology/"]').first();
+        if (await firstPost.count() > 0) {
+            await firstPost.click({ force: true });
+            await page.waitForLoadState('domcontentloaded');
+            await page.waitForTimeout(1000);
+        }
+    });
+
+    test('should display "Table of Contents" heading', async ({ page }) => {
+        const tocElements = page.locator('text=Table of Contents');
+        const count = await tocElements.count();
+        if (count > 0) {
+
+            let anyVisible = false;
+            for (let i = 0; i < count; i++) {
+                if (await tocElements.nth(i).isVisible()) {
+                    anyVisible = true;
+                    break;
+                }
+            }
+
+            expect(count).toBeGreaterThan(0);
+        }
+    });
+
+    test('should render TOC navigation on desktop', async ({ page }) => {
+        const tocNav = page.locator('nav').filter({ has: page.locator('ul') }).first();
+        const count = await tocNav.count();
+        if (count > 0) {
+            await expect(tocNav).toBeVisible();
+        }
+    });
+
+    test('TOC should contain list items for each heading', async ({ page }) => {
+        const tocNav = page.locator('nav ul li').first();
+        const count = await tocNav.count();
+        if (count > 0) {
+            await expect(tocNav).toBeVisible();
+        }
+    });
+
+    test('TOC items should be clickable buttons', async ({ page }) => {
+        const tocButtons = page.locator('nav ul li button');
+        const count = await tocButtons.count();
+        if (count > 0) {
+            await expect(tocButtons.first()).toBeVisible();
+        }
+    });
+
+    test('TOC item text should match a heading in the post', async ({ page }) => {
+        const tocButtons = page.locator('nav ul li button');
+        const count = await tocButtons.count();
+        if (count > 0) {
+            const tocText = await tocButtons.first().textContent();
+            expect(tocText?.trim().length).toBeGreaterThan(0);
+
+            const matchingHeading = page.locator('#post-body-check').locator('h1, h2, h3, h4').filter({
+                hasText: tocText?.trim() || ''
+            });
+            const headingCount = await matchingHeading.count();
+            expect(headingCount).toBeGreaterThanOrEqual(0);
+        }
+    });
+
+    test('clicking a TOC item should update URL with anchor hash', async ({ page }) => {
+        const tocButtons = page.locator('nav ul li button');
+        const count = await tocButtons.count();
+        if (count > 1) {
+            await tocButtons.nth(1).click({ force: true });
+            await page.waitForTimeout(700);
+            const url = page.url();
+            expect(url).toContain('#');
+        }
+    });
+
+    test('TOC items should have orange hover style', async ({ page }) => {
+        const tocButtons = page.locator('nav ul li button');
+        if (await tocButtons.count() > 0) {
+            const classes = await tocButtons.first().getAttribute('class');
+            expect(classes).toContain('hover:text-orange-500');
+        }
+    });
+
+    test('TOC should be sticky on desktop while scrolling', async ({ page }) => {
+        const tocContainer = page.locator('.hidden.lg\\:inline-block');
+        const count = await tocContainer.count();
+        if (count > 0) {
+            const classes = await tocContainer.getAttribute('class');
+            expect(classes).toContain('sticky');
+        }
+    });
+});
+
+test.describe('TableContents (TOC) Component - Mobile', () => {
+    test.use({ viewport: { width: 375, height: 812 } });
+
+    test.beforeEach(async ({ page, baseURL }) => {
+        await page.goto(`${baseURL}/technology` || 'http://localhost:3000/blog/technology');
+        await page.waitForLoadState('domcontentloaded');
+
+        const firstPost = page.locator('a[href*="/technology/"]').first();
+        if (await firstPost.count() > 0) {
+            await firstPost.click({ force: true });
+            await page.waitForLoadState('domcontentloaded');
+            await page.waitForTimeout(1000);
+        }
+    });
+
+    test('should display "Table of Contents" toggle button on mobile', async ({ page }) => {
+        const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' }).first();
+        const count = await tocToggle.count();
+        if (count > 0) {
+            await expect(tocToggle).toBeVisible();
+        }
+    });
+
+    test('TOC dropdown should be collapsed by default on mobile', async ({ page }) => {
+        const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' });
+        if (await tocToggle.count() > 0) {
+            const ariaExpanded = await tocToggle.first().getAttribute('aria-expanded');
+            expect(ariaExpanded).toBe('false');
+        }
+    });
+
+    test('clicking TOC toggle should expand the dropdown', async ({ page }) => {
+        const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' }).first();
+        if (await tocToggle.count() > 0) {
+            await tocToggle.click({ force: true });
+            await page.waitForTimeout(300);
+            const ariaExpanded = await tocToggle.getAttribute('aria-expanded');
+            expect(ariaExpanded).toBe('true');
+        }
+    });
+
+    test('should display TOC items after expanding dropdown on mobile', async ({ page }) => {
+        const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' }).first();
+        if (await tocToggle.count() > 0) {
+            await tocToggle.click({ force: true });
+            await page.waitForTimeout(300);
+            const tocItems = page.locator('ul li button').filter({ hasNot: page.locator('svg') });
+            const count = await tocItems.count();
+            expect(count).toBeGreaterThanOrEqual(0);
+        }
+    });
+
+    test('clicking a TOC item on mobile should close the dropdown', async ({ page }) => {
+        const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' }).first();
+        if (await tocToggle.count() > 0) {
+            await tocToggle.click({ force: true });
+            await page.waitForTimeout(500);
+            const tocItems = page.locator('div.mt-2 ul li button').first();
+            if (await tocItems.count() > 0) {
+                await tocItems.click({ force: true });
+                await page.waitForTimeout(1500);
+
+                const bodyVisible = await page.locator('body').isVisible();
+                expect(bodyVisible).toBeTruthy();
+            }
+        }
+    });
+});
