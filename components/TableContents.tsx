@@ -1,5 +1,51 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
+
+/* ── Custom tooltip for truncated TOC items ── */
+function TocTooltip({ text, children }: { text: string; children: React.ReactNode }) {
+  const [show, setShow] = useState(false);
+  const [coords, setCoords] = useState({ top: 0, left: 0 });
+  const timeout = useRef<ReturnType<typeof setTimeout>>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const handleEnter = () => {
+    timeout.current = setTimeout(() => {
+      if (wrapperRef.current) {
+        const rect = wrapperRef.current.getBoundingClientRect();
+        setCoords({
+          top: rect.top + rect.height / 2,
+          left: rect.right + 12,
+        });
+      }
+      setShow(true);
+    }, 50);
+  };
+  const handleLeave = () => {
+    if (timeout.current) clearTimeout(timeout.current);
+    setShow(false);
+  };
+
+  return (
+    <div ref={wrapperRef} onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
+      {children}
+      {show &&
+        createPortal(
+          <div
+            className="fixed z-[9999] max-w-[240px] px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm text-gray-800 leading-snug pointer-events-none -translate-y-1/2"
+            style={{
+              top: coords.top,
+              left: coords.left,
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            {text}
+          </div>,
+          document.body
+        )}
+    </div>
+  );
+}
 
 export default function TOC({ headings, isList, setIsList }) {
   const tocRef = useRef<HTMLElement>(null);
@@ -8,9 +54,9 @@ export default function TOC({ headings, isList, setIsList }) {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [activeId, setActiveId] = useState<string>("");
 
-  // Detect screen size
+  // Detect screen size — show mobile dropdown below 1440px (matches grid breakpoint)
   useEffect(() => {
-    const check = () => setIsSmallScreen(window.innerWidth < 1024);
+    const check = () => setIsSmallScreen(window.innerWidth < 1440);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
@@ -67,7 +113,7 @@ export default function TOC({ headings, isList, setIsList }) {
   // ── Small screen: collapsible dropdown ──
   if (isSmallScreen) {
     return (
-      <div className="w-full max-w-[700px] px-4 mx-auto">
+      <div className="w-full max-w-[780px] px-4 mx-auto">
         <button
           onClick={() => setIsDropdownOpen((p) => !p)}
           className="flex items-center justify-between w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-xl shadow-sm hover:border-gray-400 focus:outline-none"
@@ -109,11 +155,11 @@ export default function TOC({ headings, isList, setIsList }) {
 
   // ── Desktop: card-style scrollable TOC ──
   return (
-    <div className="hidden lg:block sticky top-24 ml-4">
+    <div className="w-full max-w-[320px]">
       {isList ? (
         // Fallback select for extremely long TOCs
         <div className="p-4">
-          <p className="!text-[22px] font-bold uppercase tracking-widest text-gray-900 mb-2">
+          <p className="!text-[20px] font-bold uppercase tracking-widest text-gray-900 mb-2">
             Table of Contents
           </p>
           <select
@@ -128,21 +174,20 @@ export default function TOC({ headings, isList, setIsList }) {
       ) : (
         <nav ref={tocRef}>
           {/* ─── TOC Card ─────────────────────────────── */}
-          <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden pb-3" style={{ width: '320px', maxWidth: '320px', minWidth: '320px' }}>
+          <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden pb-3 w-full">
 
             {/* Card header */}
             <div className="px-4 py-3 border-b border-gray-200">
-              {/* ← "Table of Contents" title size — change 22px here */}
               <p className="!text-[20px] font-bold uppercase tracking-widest text-gray-900">
                 Table of Contents
               </p>
             </div>
 
-            {/* Scrollable items — height ≈ 1.4× the width (w-56=224px → ~320px) */}
+            {/* Scrollable items */}
             <div
               ref={scrollContainerRef}
-              className="overflow-y-auto [&::-webkit-scrollbar]:hidden"
-              style={{ maxHeight: "400px", scrollbarWidth: "none" }}
+              className="overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400"
+              style={{ maxHeight: "400px", scrollbarWidth: "thin", scrollbarColor: "#d1d5db transparent" }}
             >
               {(() => {
                 let h2Count = 0;
@@ -173,21 +218,23 @@ export default function TOC({ headings, isList, setIsList }) {
 
                   return (
                     <div key={index} data-toc-id={sid}>
-                      <button
-                        onClick={() => handleItemClick(item.id)}
-                        className={`w-full text-left px-4 py-2 leading-snug transition-colors duration-150 ${isH4
-                          ? "pl-12 !text-[14px] font-normal text-gray-700 opacity-40"       /* H4 (sub-sub-heading) */
-                          : isH3Plus
-                            ? "pl-9 !text-[14px] font-normal text-gray-800 opacity-40"      /* H3 (sub-heading) */
-                            : "pl-6 !text-[16px] font-normal text-gray-900"                   /* H2 (main heading) */
-                          } ${isAct
-                            ? "!text-orange-500 !opacity-100 font-normal"
-                            : "hover:text-orange-500"
-                          }`}
-                      >
-                        {isAct && <span className="text-orange-500 mr-1.5">●</span>}
-                        {item.title}
-                      </button>
+                      <TocTooltip text={item.title}>
+                        <button
+                          onClick={() => handleItemClick(item.id)}
+                          className={`w-full text-left px-4 py-2 leading-snug transition-colors duration-150 truncate block ${isH4
+                            ? "pl-12 !text-[14px] font-normal text-gray-700 opacity-40"       /* H4 (sub-sub-heading) */
+                            : isH3Plus
+                              ? "pl-9 !text-[14px] font-normal text-gray-800 opacity-40"      /* H3 (sub-heading) */
+                              : "pl-6 !text-[16px] font-normal text-gray-900"                   /* H2 (main heading) */
+                            } ${isAct
+                              ? "!text-orange-500 !opacity-100 font-normal"
+                              : "hover:text-orange-500"
+                            }`}
+                        >
+                          {isAct && <span className="text-orange-500 mr-1.5">●</span>}
+                          {item.title}
+                        </button>
+                      </TocTooltip>
                       {/* Separator between items */}
                       {index < headings.length - 1 && (
                         <hr className="border-gray-300 mx-4" />

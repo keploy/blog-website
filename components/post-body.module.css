@@ -1,76 +1,129 @@
+
+/* ── Base body text ── */
 .content {
   font-family: 'DM Sans', sans-serif;
-  font-size: 20px;
-  line-height: 1.6 !important;
+  font-size: clamp(0.9375rem, 2vw, 1.25rem);
+  /* 15px mobile → 20px desktop */
+  line-height: 1.6;
+  /* 160% per Figma */
+  letter-spacing: 0;
   color: #374151;
   font-weight: 400;
 }
 
-/* Override * selector's line-height on all children */
 .content * {
-  line-height: 1.6;
+  line-height: inherit;
 }
 
-/* Headings need tighter line-height for multi-line wrapping */
-.content h1 {
-  line-height: 1.1 !important;
-  font-weight: 500;
+/* ── Bold Text ── */
+.content strong,
+.content b {
+  color: #1D2022;
+  font-weight: 400;
+  /* Keeping standard bold, not increasing it */
+}
 
+.content h1 strong, .content h1 b,
+.content h2 strong, .content h2 b,
+.content h3 strong, .content h3 b,
+.content h4 strong, .content h4 b,
+.content h5 strong, .content h5 b,
+.content h6 strong, .content h6 b {
+  font-weight: inherit !important;
+}
+
+/* ── Headings ── */
+.content h1 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 2.25rem;
+  font-weight: 700 !important;
+  line-height: 1.35;
+  color: #1D2022;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
 }
 
 .content h2 {
-  line-height: 1.1 !important;
-  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.875rem;
+  font-weight: 700 !important;
+  line-height: 1.4;    
+  color: #1D2022;
+  margin-top: 2.25rem;
+  margin-bottom: 0.875rem;
+  letter-spacing: -0.015em;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
 }
 
 .content h3 {
-  line-height: 1.1 !important;
-  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700 !important;
+  line-height: 1.45;
+  color: #1D2022;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
 }
 
 .content h4 {
-  line-height: 1.1 !important;
-  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700 !important;
+  line-height: 1.5;
+  color: #1D2022;
+  margin-top: 1.5rem;
+  margin-bottom: 0.625rem;
 }
 
+.content h5 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700 !important;
+  line-height: 1.5;
+  color: #1D2022;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
 
+.content h6 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 700 !important;
+  font-style: italic;
+  line-height: 1.5;
+  color: #1D2022;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Paragraphs ── */
 .content p {
-  margin-bottom: 1.4rem;
+  margin-bottom: 1.5rem;
   text-align: justify;
+  color: #637277;
 }
 
-.content ul,
-.content ol,
-.content blockquote {
-  margin-top: 1.5rem !important;
-  margin-bottom: 1.5rem !important;
-}
-
-/* Ensure gap between paragraph and list */
-.content p+ul,
-.content p+ol {
-  margin-top: 1.5rem !important;
-}
-
-/* Visual section break before headings that follow body content */
-.content p+h2,
-.content ul+h2,
-.content ol+h2,
-.content p+h3,
-.content ul+h3,
-.content ol+h3 {
-  border-top: 1px solid #e5e7eb;
-  padding-top: 1.5rem;
-  margin-top: 2rem;
-}
-
+/* ── Links ── */
 .content a {
-  @apply underline;
+  color: #f97316;
+  text-decoration: none;
+  font-weight: inherit;
+  transition: color 0.15s;
 }
 
+.content a:hover {
+  color: #ea6d10;
+}
+
+/* ── Lists ── */
 .content ul,
 .content ol {
-  @apply pl-4;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-left: 1.25rem;
 }
 
 .content ul {
@@ -82,63 +135,96 @@
   padding-left: 1.5rem;
 }
 
-/* Custom orange dot bullet — adjust width/height to change size */
+/* Orange dot bullet */
 .content ul>li::before {
   content: "";
   position: absolute;
   left: 0;
   top: calc(0.9em - 4px);
-  /* vertically center dot within the first line (half line-height minus half dot-size) */
   width: 8px;
-  /* ← bullet size: increase/decrease this */
   height: 8px;
-  /* ← bullet size: keep same as width */
   border-radius: 50%;
   background-color: #f97316;
-  /* orange-500 */
 }
 
 .content ol {
-  @apply list-decimal;
+  list-style: decimal;
+  padding-left: 1.5rem;
 }
 
 .content li {
-  margin-bottom: 1rem;
+  margin-bottom: 0.625rem;
+  line-height: 1.7;
 }
 
 .content li>p {
   margin-bottom: 0;
 }
 
+/* Nested lists */
 .content ul>li>ul,
 .content ol>li>ol {
-  @apply my-0 ml-4;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: 1rem;
 }
 
 .content ul>li>ul {
   list-style: none;
 }
 
-/* Nested bullet — smaller, lighter orange */
 .content ul>li>ul>li::before {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   background-color: #fdba74;
-  /* orange-300 */
 }
 
-.content h2 {
-  @apply text-3xl mt-12 mb-4;
+/* ── Gap between paragraph and list ── */
+.content p+ul,
+.content p+ol {
+  margin-top: 1rem;
 }
 
-.content h3 {
-  @apply text-[28px] mt-8 mb-4;
+/* ── Images ── */
+.content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.5rem auto;
 }
 
-.content h4 {
-  @apply text-xl mt-6 mb-4;
+/* ── Figure captions ── */
+.content figcaption {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: -0.75rem;
+  margin-bottom: 1.5rem;
 }
 
+/* ── Blockquotes ── */
+.content blockquote {
+  border-left: 4px solid #f97316;
+  background-color: #fff7ed;
+  color: #4b5563;
+  font-style: italic;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.content blockquote p {
+  margin: 0;
+}
+
+.content blockquote cite {
+  font-style: normal;
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+/* ── Code block (pre) ── */
 .content pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace !important;
   font-size: 0.875rem;
@@ -154,7 +240,6 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Reset inline-code styles that accidentally inherit into pre */
 .content pre code {
   background: none;
   color: inherit;
@@ -165,7 +250,7 @@
   font-family: inherit !important;
 }
 
-/* Inline code outside of pre blocks */
+/* ── Inline code ── */
 .content :not(pre)>code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace !important;
   font-size: 0.875em;
@@ -176,39 +261,64 @@
   border: 1px solid #e5e7eb;
 }
 
-.content figcaption {
-  @apply text-center text-sm;
-}
-
-.content blockquote {
-  @apply border-l-4 border-gray-500 bg-gray-200 italic ml-0 py-1 px-4;
-}
-
-.content blockquote p {
-  @apply mt-0;
-}
-
-.content blockquote cite {
-  @apply not-italic;
-}
-
+/* ── Audio ── */
 .content audio {
-  @apply w-full;
+  width: 100%;
 }
 
-.content img {
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
-  margin-top: 1rem;
+/* ── Horizontal rule ── */
+.content hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 2.5rem 0;
 }
 
+/* ── Tables ── */
+.content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
 
-.content h1,
-.content h2,
-.content h3 {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  line-height: 1.1;
-  font-size: 40px;
+.content th {
+  background-color: #f9fafb;
+  text-align: left;
+  padding: 0.625rem 1rem;
+  border: 1px solid #e5e7eb;
+  font-weight: 600;
+  color: #111827;
+}
+
+.content td {
+  padding: 0.625rem 1rem;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.content tr:nth-child(even) td {
+  background-color: #f9fafb;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .content {
+    font-size: 16px;
+  }
+
+  .content h1 {
+    font-size: 1.75rem;
+  }
+
+  .content h2 {
+    font-size: 1.5rem;
+  }
+
+  .content h3 {
+    font-size: 1.25rem;
+  }
+
+  .content h4 {
+    font-size: 1.125rem;
+  }
 }

@@ -9,11 +9,11 @@ import { markdown } from "@codemirror/lang-markdown";
 import { python } from "@codemirror/lang-python";
 import { go } from "@codemirror/lang-go";
 import { dracula } from "@uiw/codemirror-theme-dracula";
-const AuthorDescription = dynamic(() => import("./author-description"), {
+const AuthorCard = dynamic(() => import("./AuthorCard"), {
   ssr: false,
 });
-import ReviewingAuthor from "./ReviewingAuthor";
-import WaitlistBanner from "./waitlistBanner";
+// import WaitlistBanner from "./waitlistBanner"; // Commented out — replaced by BlogSidebar
+import BlogSidebar from "./BlogSidebar";
 import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
@@ -21,13 +21,19 @@ import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 export default function PostBody({
   content,
   authorName,
+  authorImageUrl,
+  authorDescription,
   ReviewAuthorDetails,
-  slug
+  slug,
+  categories,
 }: {
   content: Post["content"];
   authorName: Post["ppmaAuthorName"];
+  authorImageUrl: string;
+  authorDescription: string;
   ReviewAuthorDetails: { edges: { node: { name: string; avatar: { url: string }; description: string } }[] };
   slug: string | string[] | undefined;
+  categories?: Post["categories"];
 }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
@@ -69,6 +75,12 @@ export default function PostBody({
       ""
     );
 
+    // Strip ALL inline styles from heading tags so our CSS module styles apply
+    initialReplacedContent = initialReplacedContent.replace(
+      /<(h[1-6])\b([^>]*?)\s*style\s*=\s*(['"])[^'"]*\3([^>]*?)>/gi,
+      '<$1$2$4>'
+    );
+
     setReplacedContent(initialReplacedContent);
 
     return () => {
@@ -78,7 +90,14 @@ export default function PostBody({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
+      const postBodyEl = document.getElementById('post-body-check');
+      if (!postBodyEl) return;
+      const headings = Array.from(postBodyEl.querySelectorAll("h1, h2, h3, h4"));
+
+      // Force font-weight 700 on every heading — overrides any WP inline styles
+      headings.forEach((heading: HTMLElement) => {
+        heading.style.setProperty("font-weight", "700", "important");
+      });
 
       const tocItems = headings.map((heading) => {
         const id = `${heading.textContent}`;
@@ -321,53 +340,58 @@ export default function PostBody({
   };
 
   return (
-    <div
-      className={`flex flex-col ${isList ? "items-center" : "items-center lg:items-start lg:flex-row"
-        } `}
-    >
-      <div
-        className={`flex items-center justify-center w-full md:w-[80%] lg:w-[340px] lg:shrink-0 top-20 lg:block ${isList ? "" : "lg:sticky"
-          }`}
-      >
+    <div className="w-full">
+      {/* ── TOC: collapsible dropdown on screens < 1440px ── */}
+      <div className="min-[1440px]:hidden mb-6">
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
-      <div className={`p-4 ${isList ? "lg:ml-10" : ""} mx-auto flex-1 min-w-0 w-full`} style={{ maxWidth: '800px' }} id="post-body-check">
-        {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
-        <div className="prose lg:prose-xl post-content-wrapper">{renderCodeBlocks()}</div>
-        <hr className="border-gray-300 mt-10 mb-20" />
-        <div>
 
+      {/* ── Main layout: 3-col grid on wide screens, single centered column otherwise ── */}
+      <div className="grid grid-cols-1 min-[1440px]:grid-cols-[minmax(200px,1fr)_minmax(0,780px)_minmax(200px,1fr)] gap-0">
+        {/* Left — TOC (wide desktop only, ≥1440px) */}
+        <div className={`hidden min-[1440px]:flex justify-end pr-6 ${isList ? "" : "sticky top-24 self-start"}`}>
+          <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
         </div>
 
-        <h1 className="text-2xl font-medium">Authored By: {authorName}</h1>
-        <div className="my-5">
-          <AuthorDescription
-            authorData={content}
-            AuthorName={authorName}
-            isPost={true}
-          />
-        </div>
-        {reviewer && !sameAuthor && (
-          <div className="my-20">
-            <h1 className="text-2xl font-medium">Reviewed By: {reviewer.name}</h1>
-            <div>
-              <ReviewingAuthor
+        {/* Center — Article content (900px max, matching PostHeader) */}
+        <div className="max-w-[780px] w-full mx-auto px-4 sm:px-6 min-w-0" id="post-body-check">
+          {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
+          <div className="post-content-wrapper">{renderCodeBlocks()}</div>
+          <hr className="border-gray-300 mt-10 mb-10" />
+
+          {/* Author card — Writer */}
+          <div className="mb-8">
+            <AuthorCard
+              name={authorName}
+              imageUrl={authorImageUrl}
+              description={authorDescription}
+              role="Writer"
+            />
+          </div>
+
+          {/* Author card — Reviewer */}
+          {reviewer && !sameAuthor && (
+            <div className="mb-8">
+              <AuthorCard
                 name={reviewer.name}
-                avatar={reviewer.avatar.url}
+                imageUrl={reviewer.avatar.url}
                 description={reviewer.description}
+                role="Reviewer"
               />
             </div>
-          </div>
-        )}
+          )}
+        </div>
+
+        {/* Right — Sidebar (wide desktop only, ≥1440px) */}
+        <aside className="hidden min-[1440px]:flex pl-6 sticky top-24 self-start justify-start">
+          <BlogSidebar categories={categories} />
+        </aside>
       </div>
 
-      {/* Waitlist banner (commented out — space given to blog body) */}
-      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky lg:top-20">
-        <div className="flex justify-center">
-          <WaitlistBanner />
-        </div>
-      </aside>
-
+      {/* ── Sidebar for screens < 1440px ── */}
+      <div className="min-[1440px]:hidden flex justify-center mt-8 px-4">
+        <BlogSidebar categories={categories} />
+      </div>
     </div>
   );
 }

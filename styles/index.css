@@ -232,7 +232,7 @@ pre {
 .post-content-wrapper h2,
 .post-content-wrapper h3,
 .post-content-wrapper h4 {
-  line-height: 1.1 !important;
+  font-weight: 700 !important;
 }
 
 /* Round + polish CodeMirror code blocks */
