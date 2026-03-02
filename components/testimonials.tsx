@@ -56,12 +56,12 @@ const TwitterTestimonials = () => {
       </h3>
       <div className="relative flex mb-8 h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent marquee-mask">
 
-        <Marquee pauseOnHover repeat={2} className="[--duration:17s]">
+        <Marquee pauseOnHover repeat={4} className="[--duration:30s]">
           {firstRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-        <Marquee reverse pauseOnHover repeat={2} className="[--duration:17s]">
+        <Marquee reverse pauseOnHover repeat={4} className="[--duration:30s]">
           {secondRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
