@@ -31,7 +31,7 @@ const ReviewCard = ({
             src={avatar}
             onError={(e) => {
               const img = e.target as HTMLImageElement;
-              if (img.src !== localPlaceholder) {
+              if (!img.src.endsWith(localPlaceholder)) {
                 img.onerror = () => { img.src = localPlaceholder; };
                 img.src = fallbackAvatar;
               }
