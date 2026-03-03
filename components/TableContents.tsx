@@ -159,7 +159,7 @@ export default function TOC({ headings, isList, setIsList }) {
       {isList ? (
         // Fallback select for extremely long TOCs
         <div className="p-4">
-          <p className="!text-[20px] font-bold uppercase tracking-widest text-gray-900 mb-2">
+          <p className="!text-[20px] font-bold tracking-widest text-gray-900 mb-2">
             Table of Contents
           </p>
           <select
@@ -178,7 +178,7 @@ export default function TOC({ headings, isList, setIsList }) {
 
             {/* Card header */}
             <div className="px-4 py-3 border-b border-gray-200">
-              <p className="!text-[20px] font-bold uppercase tracking-widest text-gray-900">
+              <p className="!text-[20px] font-bold tracking-widest text-gray-900">
                 Table of Contents
               </p>
             </div>

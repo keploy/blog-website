@@ -100,28 +100,6 @@ function SidebarShare() {
   );
 }
 
-/* ── Category Pill ── */
-function SidebarCategory({
-  categories,
-}: {
-  categories?: { edges: { node: { name: string } }[] };
-}) {
-  if (!categories?.edges?.length) return null;
-
-  const first = categories.edges[0].node.name;
-  const label = first.charAt(0).toUpperCase() + first.slice(1);
-
-  return (
-    <div>
-      <span
-        className="inline-block border border-gray-400 text-gray-700 text-xs font-medium px-3 py-1 rounded-full"
-        style={{ fontFamily: "'DM Sans', sans-serif" }}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
 
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
@@ -154,7 +132,7 @@ function SidebarAdBanner() {
       </p>
 
       <Link
-        href="https://keploy.io"
+        href="https://app.keploy.io/signin"
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1 font-semibold text-sm transition-colors duration-150 hover:opacity-80"
@@ -170,11 +148,7 @@ function SidebarAdBanner() {
 }
 
 /* ── Composed Sidebar ── */
-export default function BlogSidebar({
-  categories,
-}: {
-  categories?: { edges: { node: { name: string } }[] };
-}) {
+export default function BlogSidebar() {
   return (
     <div className="w-full max-w-[260px] flex flex-col gap-5">
       {/* Share */}
@@ -182,9 +156,6 @@ export default function BlogSidebar({
 
       {/* Dashed divider */}
       <hr className="border-0 border-t-2 border-dashed border-gray-300" />
-
-      {/* Category pill */}
-      <SidebarCategory categories={categories} />
 
       {/* Ad banner */}
       <SidebarAdBanner />

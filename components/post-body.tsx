@@ -384,13 +384,13 @@ export default function PostBody({
 
         {/* Right — Sidebar (wide desktop only, ≥1440px) */}
         <aside className="hidden min-[1440px]:flex pl-6 sticky top-24 self-start justify-start">
-          <BlogSidebar categories={categories} />
+          <BlogSidebar />
         </aside>
       </div>
 
       {/* ── Sidebar for screens < 1440px ── */}
       <div className="min-[1440px]:hidden flex justify-center mt-8 px-4">
-        <BlogSidebar categories={categories} />
+        <BlogSidebar />
       </div>
     </div>
   );
