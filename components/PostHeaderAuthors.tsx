@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FaLinkedin, FaTwitter, FaLink } from "react-icons/fa";
+import { FaLinkedin, FaLink } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug"; 
 
 const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
@@ -148,7 +149,7 @@ const PostHeaderAuthors = ({ blogwriter, blogreviewer, timetoRead }) => {
             rel="noopener noreferrer"
             className="twitter-share-button text-xl text-black transition-colors duration-300 hover:text-blue-500"
           >
-            <FaTwitter className="icon" />
+            <FaXTwitter className="icon" />
           </Link>
           <Link
             href={linkedinShareUrl}
