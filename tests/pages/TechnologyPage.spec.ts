@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Technology Page - Component Availability', () => {
   test.beforeEach(async ({ page, baseURL }) => {
-    await page.goto(`${baseURL}/technology` || 'http://localhost:3000/blog/technology');
+    await page.goto(baseURL ? `${baseURL}/technology` : 'http://localhost:3000/blog/technology');
     await page.waitForLoadState('domcontentloaded');
   });
 
