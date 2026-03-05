@@ -63,8 +63,13 @@ test.describe('Tag Component', () => {
         if (count > 0) {
             const href = await tagLinks.first().getAttribute('href');
             if (href) {
+                const tagPathMatch = href.match(/\/tag\/[^/?#]+/);
                 await tagLinks.first().click({ force: true });
-                await page.waitForURL('**/tagtag/**', { timeout: 20000 });
+                if (tagPathMatch) {
+                    await page.waitForURL(`**${tagPathMatch[0]}**`, { timeout: 20000 });
+                } else {
+                    await page.waitForURL(`**/tag/**`, { timeout: 20000 });
+                }
                 expect(page.url()).toContain('/tag/');
                 return;
             }
