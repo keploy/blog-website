@@ -4,7 +4,8 @@ test.describe('TableContents (TOC) Component - Desktop', () => {
     test.use({ viewport: { width: 1280, height: 800 } });
 
     test.beforeEach(async ({ page, baseURL }) => {
-        await page.goto(`${baseURL}/technology` || 'http://localhost:3000/blog/technology');
+        const targetUrl = baseURL ? `${baseURL}/technology` : 'http://localhost:3000/blog/technology';
+        await page.goto(targetUrl);
         await page.waitForLoadState('domcontentloaded');
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
