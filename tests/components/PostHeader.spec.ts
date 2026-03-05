@@ -8,9 +8,12 @@ test.describe('PostHeader Component', () => {
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
         if (await firstPost.count() > 0) {
-            await firstPost.click({ force: true });
-            await page.waitForLoadState('domcontentloaded');
-            await page.waitForTimeout(1500);
+            const href = await firstPost.getAttribute('href');
+            if (href) {
+                await page.goto(href);
+                await page.waitForLoadState('domcontentloaded');
+                await page.waitForTimeout(1500);
+            }
         }
     });
 

@@ -7,9 +7,12 @@ test.describe('ScrollToTop Component', () => {
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
         if (await firstPost.count() > 0) {
-            await firstPost.click({ force: true });
-            await page.waitForLoadState('domcontentloaded');
-            await page.waitForTimeout(500);
+            const href = await firstPost.getAttribute('href');
+            if (href) {
+                await page.goto(href);
+                await page.waitForLoadState('domcontentloaded');
+                await page.waitForTimeout(500);
+            }
         }
     });
 
@@ -46,8 +49,11 @@ test.describe('ScrollToTop Component', () => {
             return;
         }
         await page.evaluate(() => window.scrollTo(0, 600));
-        await page.waitForTimeout(600);
-        await scrollBtn.click({ force: true });
+        await page.waitForTimeout(800);
+        await page.evaluate(() => {
+            const btn = document.querySelector('button[aria-label="Scroll to top"]') as HTMLElement | null;
+            if (btn) btn.click();
+        });
         await page.waitForTimeout(800);
         const scrollY = await page.evaluate(() => window.scrollY);
         expect(scrollY).toBeLessThan(100);
