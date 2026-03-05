@@ -2,7 +2,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Technology Post Page - Component Availability', () => {
   test.beforeEach(async ({ page, baseURL }) => {
-    await page.goto(`${baseURL}/technology` || 'http://localhost:3000/blog/technology');
+    const technologyUrl = baseURL
+      ? new URL('/technology', baseURL).toString()
+      : 'http://localhost:3000/blog/technology';
+    await page.goto(technologyUrl);
     await page.waitForLoadState('domcontentloaded');
     const firstPost = page.locator('a[href*="/technology/"]').first();
     if (await firstPost.count() > 0) {
