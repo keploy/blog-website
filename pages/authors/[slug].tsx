@@ -9,9 +9,15 @@ import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
-export default function AuthorPage({ preview, filteredPosts, content }) {
-  const noPosts = !filteredPosts || filteredPosts.length === 0;
-  const authorName = filteredPosts[0]?.node?.ppmaAuthorName;
+export default function AuthorPage({
+  preview,
+  filteredPosts = [],
+  content,
+}) {
+  const noPosts = filteredPosts.length === 0;
+  const authorName =
+    filteredPosts?.[0]?.node?.ppmaAuthorName ??
+    filteredPosts?.[0]?.node?.author?.node?.name;
 
   return (
     <div className="bg-accent-1">
