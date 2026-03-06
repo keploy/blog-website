@@ -15,7 +15,13 @@ const PostByAuthorMapping = ({
   filteredPosts: { node: Post }[];
   Content: string;
 }) => {
-  const AuthorName = filteredPosts[0].node.ppmaAuthorName;
+  if (!filteredPosts?.length) {
+    return null;
+  }
+  const AuthorName =
+    filteredPosts[0]?.node?.ppmaAuthorName ??
+    filteredPosts[0]?.node?.author?.node?.name ??
+    "Author";
   return (
     <div className="container mx-auto mt-8">
       <div className="mb-5">
