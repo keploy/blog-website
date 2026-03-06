@@ -1,7 +1,7 @@
 import React from "react";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
-
+import { useRouter } from "next/router";
 const firstRow = Tweets.slice(0, Tweets.length / 2);
 const secondRow = Tweets.slice(Tweets.length / 2);
 
@@ -54,16 +54,17 @@ const TwitterTestimonials = () => {
         What our community thinks
       </h3>
 
-      <div className="relative flex mb-8 h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg border">
-        <Marquee pauseOnHover className="[--duration:20s]">
-          {firstRow.map((tweet, index) => (
-            <ReviewCard key={`${tweet.id}-${index}`} {...tweet} />
+      <div className="relative flex mb-8 h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent marquee-mask">
+
+        <Marquee pauseOnHover repeat={2} className="[--duration:17s]">
+          {firstRow.map((tweet) => (
+            <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
 
-        <Marquee reverse pauseOnHover className="[--duration:20s]">
-          {secondRow.map((tweet, index) => (
-            <ReviewCard key={`${tweet.id}-${index}`} {...tweet} />
+        <Marquee reverse pauseOnHover repeat={2} className="[--duration:17s]">
+          {secondRow.map((tweet) => (
+            <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
 
