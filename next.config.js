@@ -30,18 +30,29 @@ module.exports = {
   // ----------------------
 
   images: {
-    domains: ['secure.gravatar.com', 'wp.keploy.io', 'keploy.io', 'pbs.twimg.com'],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'keploy.io',
-        port,
+        hostname: 'secure.gravatar.com',
+        port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'wp.keploy.io',
-        port,
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'keploy.io',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pbs.twimg.com',
+        port: '',
         pathname: '/**',
       },
     ],
