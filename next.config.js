@@ -34,21 +34,25 @@ module.exports = {
       {
         protocol: 'https',
         hostname: 'secure.gravatar.com',
+        port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'wp.keploy.io',
+        port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'keploy.io',
+        port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'pbs.twimg.com',
+        port: '',
         pathname: '/**',
       },
     ],
