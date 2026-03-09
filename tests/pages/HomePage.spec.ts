@@ -81,7 +81,6 @@ test.describe('Homepage - Component Availability', () => {
     await page.keyboard.press('Tab');
 
     if (browserName === 'webkit') {
-      await page.waitForTimeout(500);
     }
 
     const focusedElement = page.locator(':focus').first();

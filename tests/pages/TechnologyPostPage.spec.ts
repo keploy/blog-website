@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Technology Post Page - Component Availability', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     const technologyUrl = baseURL
-      ? new URL('/technology', baseURL).toString()
+      ? `${baseURL}/technology`
       : 'http://localhost:3000/blog/technology';
     await page.goto(technologyUrl);
     await page.waitForLoadState('domcontentloaded');
