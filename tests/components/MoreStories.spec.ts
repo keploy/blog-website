@@ -4,7 +4,6 @@ test.describe('More Stories Component', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL || 'http://localhost:3000/blog');
     await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(1500);
   });
 
   test('should display multiple post cards', async ({ page }) => {
@@ -75,7 +74,6 @@ test.describe('More Stories Component', () => {
 
   test('should display "Load More" or pagination if available', async ({ page }) => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(500);
     const loadMoreButton = page.locator('button:has-text("Load"), button:has-text("More"), button:has-text("Show")').or(
       page.locator('[class*="pagination"], [class*="load"]')
     );

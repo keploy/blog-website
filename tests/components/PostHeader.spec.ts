@@ -12,7 +12,6 @@ test.describe('PostHeader Component', () => {
             if (href) {
                 await page.goto(href);
                 await page.waitForLoadState('domcontentloaded');
-                await page.waitForTimeout(1500);
             }
         }
     });

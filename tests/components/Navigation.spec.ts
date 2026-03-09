@@ -4,7 +4,6 @@ test.describe('Navigation Component', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL || 'http://localhost:3000/blog');
     await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(500);
   });
 
   test('should display Keploy logo', async ({ page }) => {
@@ -20,7 +19,6 @@ test.describe('Navigation Component', () => {
   });
 
   test('should display Technology navigation link', async ({ page }) => {
-    await page.waitForTimeout(1000);
     const techLink = page.locator('a[href*="technology"]').first();
     await expect(techLink).toBeVisible({ timeout: 15000 });
   });
@@ -70,7 +68,6 @@ test.describe('Navigation Component', () => {
       await expect(navbar).toBeVisible({ timeout: 15000 });
       const initialClasses = await navbar.getAttribute('class');
       await page.evaluate(() => window.scrollBy(0, 200));
-      await page.waitForTimeout(500);
       const scrolledClasses = await navbar.getAttribute('class');
       expect(scrolledClasses).toBeTruthy();
     }
@@ -86,7 +83,6 @@ test.describe('Navigation Component', () => {
     const href = await logoLink.getAttribute('href');
     await logoLink.click({ force: true });
 
-    await page.waitForTimeout(3000);
 
     const url = page.url();
     expect(url.includes('/blog') || url.includes('keploy.io')).toBeTruthy();
@@ -94,7 +90,6 @@ test.describe('Navigation Component', () => {
 
   test('should keep navigation visible at all scroll positions', async ({ page }) => {
     await page.evaluate(() => window.scrollTo(0, 500));
-    await page.waitForTimeout(300);
     const navbar = page.locator('nav').first();
     if (await navbar.count() > 0) {
       await expect(navbar).toBeVisible();

@@ -12,7 +12,6 @@ test.describe('Tag Component', () => {
         if (await firstPost.count() > 0) {
             await firstPost.click({ force: true });
             await page.waitForLoadState('domcontentloaded');
-            await page.waitForTimeout(500);
         }
     });
 

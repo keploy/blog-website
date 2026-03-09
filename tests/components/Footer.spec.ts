@@ -5,7 +5,6 @@ test.describe('Footer Component', () => {
     await page.goto(baseURL || 'http://localhost:3000/blog', { timeout: 60000 });
     await page.waitForLoadState('domcontentloaded');
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(1000);
   });
 
   test('should display footer element', async ({ page }) => {

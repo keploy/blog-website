@@ -12,7 +12,6 @@ test.describe('PostBody Component', () => {
         if (await firstPost.count() > 0) {
             await firstPost.click({ force: true });
             await page.waitForLoadState('domcontentloaded');
-            await page.waitForTimeout(1000);
         }
     });
 
@@ -96,7 +95,6 @@ test.describe('PostBody Component', () => {
     });
 
     test('should display author description section', async ({ page }) => {
-        await page.waitForTimeout(1000);
         const authorDesc = page.locator('[id="author-description-placeholder"], [class*="author"]').first();
         const count = await authorDesc.count();
         expect(count).toBeGreaterThanOrEqual(0);
@@ -133,7 +131,6 @@ test.describe('PostBody Component', () => {
         const tocItem = page.locator('nav ul li button').first();
         if (await tocItem.count() > 0) {
             await tocItem.click({ force: true });
-            await page.waitForTimeout(1500);
             const url = page.url();
             expect(url).toBeTruthy();
         }

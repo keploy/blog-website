@@ -6,7 +6,6 @@ test.describe('Testimonials Component - Homepage', () => {
         await page.waitForLoadState('domcontentloaded');
 
         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 1.5));
-        await page.waitForTimeout(1000);
     });
 
     test('should display "What our community thinks" heading', async ({ page }) => {

@@ -4,7 +4,6 @@ test.describe('Hero Post Component', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL || 'http://localhost:3000/blog');
     await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(1000);
   });
 
   test('should display hero post section', async ({ page }) => {
@@ -86,7 +85,6 @@ test.describe('Hero Post Component', () => {
     const initialBox = await heroContainer.boundingBox();
     expect(initialBox).toBeTruthy();
     await heroContainer.hover({ force: true });
-    await page.waitForTimeout(100);
     await expect(heroContainer).toBeVisible();
   });
 
