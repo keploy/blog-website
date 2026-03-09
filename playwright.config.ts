@@ -93,7 +93,7 @@ export default defineConfig({
       stderr: 'pipe',
     },
     {
-      command: 'npm run dev',
+      command: 'npm run build && npm start',
       url: process.env.BASE_URL || 'http://localhost:3000/blog',
       reuseExistingServer: !process.env.CI,
       timeout: process.env.CI ? 180000 : 120000,
