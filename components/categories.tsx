@@ -1,25 +1,23 @@
 import Link from "next/link";
 
 export default function Categories({ categories }) {
+  if (!categories?.edges?.length) return null;
+
   return (
-    <span className="ml-1">
-      .
-      {categories.edges.length > 0 ? (
-        categories.edges.map((category, index) => (
-          <span key={index} className="ml-1 hover:underline font-medium ">
-          <Link href={`/${category.node.name}`} >
-            {formatingString(category.node.name)}
-          </Link>
-          </span>
-        ))
-      ) : (
-        <span className="ml-1">{categories.edges.node.name}</span>
-      )}
-    </span>
-  )
+    <div className="flex flex-wrap gap-2">
+      {categories.edges.map((category, index) => (
+        <Link
+          key={index}
+          href={`/${category.node.name}`}
+          className="text-orange-500 font-semibold text-sm uppercase tracking-wide hover:text-orange-600 transition-colors duration-200"
+        >
+          {formattingString(category.node.name)}
+        </Link>
+      ))}
+    </div>
+  );
 }
 
-const formatingString=(Category)=>{
-  var newCategory = Category[0].toUpperCase() + Category.slice(1);
-  return newCategory
-}
+const formattingString = (category: string) => {
+  return category.charAt(0).toUpperCase() + category.slice(1);
+};
