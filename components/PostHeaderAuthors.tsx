@@ -7,12 +7,14 @@ import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
 const TagPill = ({ name }: { name: string }) => {
   const label = name.charAt(0).toUpperCase() + name.slice(1);
   return (
-    <span
-      className="inline-block border border-gray-300 text-gray-600 text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap transition-colors duration-150 hover:border-orange-400 hover:text-orange-500"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
-    >
-      {label}
-    </span>
+    <Link href={`/tag/${name}`}>
+      <span
+        className="inline-block border border-gray-300 text-gray-600 text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap transition-colors duration-150 hover:border-orange-400 hover:text-orange-500 cursor-pointer"
+        style={{ fontFamily: "'DM Sans', sans-serif" }}
+      >
+        {label}
+      </span>
+    </Link>
   );
 };
 
@@ -338,8 +340,6 @@ const PostHeaderAuthors = ({
           ))}
         </div>
       )}
-
-      <hr className="border-slate-200 mt-4 mb-0" />
     </>
   );
 };
