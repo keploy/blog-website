@@ -2,10 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Tag Component', () => {
     test.beforeEach(async ({ page, baseURL }) => {
-        const targetUrl = baseURL
-            ? `${baseURL}/technology`
-            : 'http://localhost:3000/blog/technology';
-        await page.goto(targetUrl);
+        await page.goto(`${baseURL!}/technology`);
         await page.waitForLoadState('domcontentloaded');
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
@@ -14,10 +11,12 @@ test.describe('Tag Component', () => {
     });
 
     test('should display tag section heading', async ({ page }) => {
-        const tagsHeading = page.locator('h3:has-text("tags")');
-        const tagLinks = page.locator('a[href*="/tag/"]');
-        if (await tagLinks.count() > 0) {
-            expect(await tagsHeading.count()).toBeGreaterThan(0);
+        const tagsSection = page.locator('[data-testid="tags-section"]');
+        if (await tagsSection.count() > 0) {
+            const tagsHeading = tagsSection.locator('h3');
+            await expect(tagsHeading).toBeVisible();
+            const text = await tagsHeading.textContent();
+            expect(text?.trim().toLowerCase()).toBe('tags');
         }
     });
 

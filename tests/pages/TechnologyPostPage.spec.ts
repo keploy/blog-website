@@ -45,7 +45,9 @@ test.describe('Technology Post Page - Component Availability', () => {
   });
 
   test('should render the Footer component', async ({ page }) => {
-    const footer = page.locator('footer').first();
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(500);
+    const footer = page.locator('[data-testid="site-footer"]').first();
     await expect(footer).toBeVisible();
   });
 });
