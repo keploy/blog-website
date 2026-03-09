@@ -31,13 +31,7 @@ export default defineConfig({
 
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 
-  testMatch: '**/*.spec.ts',
-  testIgnore: [
-    '**/node_modules/**',
-    '**/fixtures/**',
-    '**/utils/**',
-    '**/*.draft.spec.ts',
-  ],
+
 
   /* Maximum time one test can run */
   timeout: process.env.TEST_TIMEOUT ? parseInt(process.env.TEST_TIMEOUT) : 60000,
