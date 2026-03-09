@@ -1,7 +1,7 @@
-import cn from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import { Post } from "../types/post";
+
 interface Props extends Partial<Pick<Post, "title" | "slug">> {
   coverImage: Post["featuredImage"];
   isCommunity?: boolean;
@@ -23,15 +23,13 @@ export default function CoverImage({
       height={1000}
       alt={`Cover Image for ${title}`}
       src={coverImage?.node.sourceUrl}
-      className={cn("rounded-md transition-border duration-300", imgClassName, {
-        "  transition-scale duration-300": slug,
-      })}
+      className={`w-full h-auto rounded-xl object-cover${imgClassName ? ` ${imgClassName}` : ""}${slug ? " transition-transform duration-300 hover:scale-[1.01]" : ""}`}
       priority
     />
   );
+
   return (
-    
-    <div className="sm:mx-0 ">
+    <div className="w-full overflow-hidden rounded-xl">
       {slug ? (
         <Link href={`${basePath}${slug}`} aria-label={title}>
           {image}
