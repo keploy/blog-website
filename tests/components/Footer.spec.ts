@@ -94,19 +94,15 @@ test.describe('Footer Component', () => {
   test('should display LinkedIn social link', async ({ page }) => {
     const footer = page.locator('footer');
     const linkedinLink = footer.locator('a[href*="linkedin.com"]').first();
-    if (await linkedinLink.count() > 0) {
-      await expect(linkedinLink).toBeVisible({ timeout: 15000 });
-      await expect(linkedinLink).toHaveAttribute('target', '_blank');
-    }
+    await expect(linkedinLink).toBeVisible({ timeout: 15000 });
+    await expect(linkedinLink).toHaveAttribute('target', '_blank');
   });
 
   test('should display Slack social link', async ({ page }) => {
     const footer = page.locator('footer');
     const slackLink = footer.locator('a[href*="slack.com"], a[href*="slack"]').first();
-    if (await slackLink.count() > 0) {
-      await expect(slackLink).toBeVisible();
-      await expect(slackLink).toHaveAttribute('target', '_blank');
-    }
+    await expect(slackLink).toBeVisible();
+    await expect(slackLink).toHaveAttribute('target', '_blank');
   });
 
   test('all social links should open in new tab', async ({ page }) => {
