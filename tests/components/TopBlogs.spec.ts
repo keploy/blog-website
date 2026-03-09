@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('TopBlogs Component - Homepage', () => {
     test.beforeEach(async ({ page, baseURL }) => {
-        await page.goto(baseURL || 'http://localhost:3000/blog');
+        await page.goto(baseURL!);
         await page.waitForLoadState('domcontentloaded');
     });
 

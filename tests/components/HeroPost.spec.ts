@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Hero Post Component', () => {
   test.beforeEach(async ({ page, baseURL }) => {
-    await page.goto(baseURL || 'http://localhost:3000/blog');
+    await page.goto(baseURL!);
     await page.waitForLoadState('domcontentloaded');
   });
 
@@ -23,7 +23,7 @@ test.describe('Hero Post Component', () => {
   });
 
   test('should display hero post title', async ({ page }) => {
-    const heroTitle = page.locator('section').first().locator('h3, .heading1').first();
+    const heroTitle = page.locator('[data-testid="hero-post-title"]').first();
     await expect(heroTitle).toBeVisible();
     const titleText = await heroTitle.textContent();
     expect(titleText).toBeTruthy();
@@ -41,18 +41,17 @@ test.describe('Hero Post Component', () => {
 
   test('should display author information', async ({ page }) => {
     const heroSection = page.locator('section').first();
-    const authorEl = heroSection.locator('[class*="font-medium"], [class*="heading1"]').first();
+    const authorEl = heroSection.locator('[data-testid="hero-post-author"]').first();
     await expect(authorEl).toBeVisible();
-    const text = await authorEl.textContent();
-    expect(text?.trim().length).toBeGreaterThan(0);
+    await expect(authorEl).toHaveText('Tech Author One');
   });
 
   test('should display post date', async ({ page }) => {
     const heroSection = page.locator('section').first();
-    const dateElement = heroSection.locator('time').or(
-      heroSection.locator('text=/\\d{1,2}\\/\\d{1,2}\\/\\d{2,4}|\\d{4}-\\d{2}-\\d{2}|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/i')
-    );
-    await expect(dateElement.first()).toBeVisible();
+    const dateElement = heroSection.locator('time').first();
+    await expect(dateElement).toBeVisible();
+    const dateText = await dateElement.textContent();
+    expect(dateText?.trim().length).toBeGreaterThan(0);
   });
 
   test('should display post excerpt', async ({ page }) => {

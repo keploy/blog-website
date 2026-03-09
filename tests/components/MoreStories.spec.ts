@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('More Stories Component', () => {
   test.beforeEach(async ({ page, baseURL }) => {
-    await page.goto(baseURL || 'http://localhost:3000/blog');
+    await page.goto(baseURL!);
     await page.waitForLoadState('domcontentloaded');
   });
 
@@ -13,8 +13,11 @@ test.describe('More Stories Component', () => {
   });
 
   test('should display post grid layout', async ({ page }) => {
-    const gridContainer = page.locator('[class*="grid-cols"]').first();
-    await expect(gridContainer).toBeVisible();
+    const postGrid = page.locator('[data-testid="post-grid"]').first();
+    await expect(postGrid).toBeVisible();
+    const postCards = postGrid.locator('a[href*="/technology/"], a[href*="/community/"]');
+    const count = await postCards.count();
+    expect(count).toBeGreaterThan(1);
   });
 
   test('each post card should have a title', async ({ page }) => {

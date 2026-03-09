@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Footer Component', () => {
   test.beforeEach(async ({ page, baseURL }) => {
-    await page.goto(baseURL || 'http://localhost:3000/blog', { timeout: 60000 });
+    await page.goto(baseURL!, { timeout: 60000 });
     await page.waitForLoadState('domcontentloaded');
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   });
