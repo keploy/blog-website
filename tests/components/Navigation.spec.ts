@@ -53,24 +53,17 @@ test.describe('Navigation Component', () => {
 
   test('should render nav element', async ({ page }) => {
     const navbar = page.locator('nav').first();
-    const count = await navbar.count();
-    if (count > 0) {
-      await expect(navbar).toBeVisible({ timeout: 15000 });
-      const navClasses = await navbar.getAttribute('class');
-      expect(navClasses).toBeTruthy();
-    }
+    await expect(navbar).toBeVisible({ timeout: 15000 });
+    const navClasses = await navbar.getAttribute('class');
+    expect(navClasses).toBeTruthy();
   });
 
   test('should update navbar appearance on scroll', async ({ page }) => {
     const navbar = page.locator('nav').first();
-    const count = await navbar.count();
-    if (count > 0) {
-      await expect(navbar).toBeVisible({ timeout: 15000 });
-      const initialClasses = await navbar.getAttribute('class');
-      await page.evaluate(() => window.scrollBy(0, 200));
-      const scrolledClasses = await navbar.getAttribute('class');
-      expect(scrolledClasses).toBeTruthy();
-    }
+    await expect(navbar).toBeVisible({ timeout: 15000 });
+    await page.evaluate(() => window.scrollBy(0, 200));
+    const scrolledClasses = await navbar.getAttribute('class');
+    expect(scrolledClasses).toBeTruthy();
   });
 
   test('should navigate back to homepage when logo is clicked from another page', async ({ page }) => {

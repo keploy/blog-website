@@ -3,22 +3,22 @@ import { test, expect } from '@playwright/test';
 test.describe('Tag Component', () => {
     test.beforeEach(async ({ page, baseURL }) => {
         const targetUrl = baseURL
-            ? new URL('/technology', baseURL).toString()
+            ? `${baseURL}/technology`
             : 'http://localhost:3000/blog/technology';
         await page.goto(targetUrl);
         await page.waitForLoadState('domcontentloaded');
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
-        if (await firstPost.count() > 0) {
-            await firstPost.click({ force: true });
-            await page.waitForLoadState('domcontentloaded');
-        }
+        await firstPost.click({ force: true });
+        await page.waitForLoadState('domcontentloaded');
     });
 
     test('should display tag section heading', async ({ page }) => {
         const tagsHeading = page.locator('h3:has-text("tags")');
-        const count = await tagsHeading.count();
-        expect(count).toBeGreaterThanOrEqual(0);
+        const tagLinks = page.locator('a[href*="/tag/"]');
+        if (await tagLinks.count() > 0) {
+            expect(await tagsHeading.count()).toBeGreaterThan(0);
+        }
     });
 
     test('should display tag buttons when tags exist', async ({ page }) => {
@@ -61,17 +61,15 @@ test.describe('Tag Component', () => {
         const count = await tagLinks.count();
         if (count > 0) {
             const href = await tagLinks.first().getAttribute('href');
-            if (href) {
-                const tagPathMatch = href.match(/\/tag\/[^/?#]+/);
-                await tagLinks.first().click({ force: true });
-                if (tagPathMatch) {
-                    await page.waitForURL(`**${tagPathMatch[0]}**`, { timeout: 20000 });
-                } else {
-                    await page.waitForURL(`**/tag/**`, { timeout: 20000 });
-                }
-                expect(page.url()).toContain('/tag/');
-                return;
+            expect(href).toBeTruthy();
+            const tagPathMatch = href!.match(/\/tag\/[^/?#]+/);
+            await tagLinks.first().click({ force: true });
+            if (tagPathMatch) {
+                await page.waitForURL(`**${tagPathMatch[0]}**`, { timeout: 20000 });
+            } else {
+                await page.waitForURL(`**/tag/**`, { timeout: 20000 });
             }
+            expect(page.url()).toContain('/tag/');
         }
     });
 });
