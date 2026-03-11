@@ -1,4 +1,4 @@
-This XML file does not appear to have any style information associated with it. The document tree is shown below.
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 <url>
@@ -432,7 +432,7 @@ This XML file does not appear to have any style information associated with it. 
 <priority>0.64</priority>
 </url>
 <url>
-<loc>https://keploy.io/legal/CCPA</loc>
+<loc>https://keploy.io/legal/ccpa</loc>
 <lastmod>2026-03-11T21:50:59+00:00</lastmod>
 <priority>0.64</priority>
 </url>
@@ -1952,7 +1952,7 @@ This XML file does not appear to have any style information associated with it. 
 <priority>0.51</priority>
 </url>
 <url>
-<loc>https://keploy.io/Keploy_DPA.pdf</loc>
+<loc>https://keploy.io/keploy_dpa.pdf</loc>
 <lastmod>2026-03-11T21:50:59+00:00</lastmod>
 <priority>0.51</priority>
 </url>
@@ -2267,12 +2267,12 @@ This XML file does not appear to have any style information associated with it. 
 <priority>0.41</priority>
 </url>
 <url>
-<loc>https://keploy.io/blog/tag/QA%20Automation</loc>
+<loc>https://keploy.io/blog/tag/qa-automation</loc>
 <lastmod>2026-03-11T21:50:59+00:00</lastmod>
 <priority>0.41</priority>
 </url>
 <url>
-<loc>https://keploy.io/blog/tag/Agile%20development</loc>
+<loc>https://keploy.io/blog/tag/agile-development</loc>
 <lastmod>2026-03-11T21:50:59+00:00</lastmod>
 <priority>0.41</priority>
 </url>
