@@ -70,6 +70,9 @@ test.describe('More Stories Component', () => {
   test('should handle empty state gracefully', async ({ page }) => {
     await page.goto(`${page.url()}?q=veryrareunlikelysearchterm12345`);
     await page.waitForLoadState('domcontentloaded');
+    const postGrid = page.locator('[data-testid="post-grid"]').first();
+    const postCards = postGrid.locator('a[href*="/technology/"], a[href*="/community/"]');
+    await expect(postCards).toHaveCount(0);
     await expect(page).toHaveURL(/blog/);
   });
 });
