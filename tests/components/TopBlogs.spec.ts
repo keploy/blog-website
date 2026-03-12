@@ -40,7 +40,7 @@ test.describe('TopBlogs Component - Homepage', () => {
     test('should display community post cards', async ({ page }) => {
 
         const commGrid = page.locator('div[class*="grid"]').nth(1);
-        const commPosts = commGrid.locator('article, div[class*="post"], a[href*="/community/"], a[href*="/technology/"]');
+        const commPosts = commGrid.locator('article, div[class*="post"], a[href*="/community/"]');
         const count = await commPosts.count();
         expect(count).toBeGreaterThan(0);
         await expect(commPosts.first()).toBeVisible();
