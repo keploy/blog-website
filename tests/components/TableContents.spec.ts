@@ -29,6 +29,7 @@ test.describe('TableContents (TOC) Component - Desktop', () => {
                 }
             }
 
+            expect(anyVisible).toBe(true);
             expect(count).toBeGreaterThan(0);
         }
     });
