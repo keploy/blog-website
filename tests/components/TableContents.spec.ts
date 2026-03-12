@@ -69,7 +69,7 @@ test.describe('TableContents (TOC) Component - Desktop', () => {
                 hasText: tocText?.trim() || ''
             });
             const headingCount = await matchingHeading.count();
-            expect(headingCount).toBeGreaterThanOrEqual(0);
+            expect(headingCount).toBeGreaterThan(0);
         }
     });
 
