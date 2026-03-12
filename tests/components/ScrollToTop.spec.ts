@@ -18,10 +18,8 @@ test.describe('ScrollToTop Component', () => {
 
     test('should have ScrollToTop button in the DOM', async ({ page }) => {
         const scrollBtn = page.locator('button[aria-label="Scroll to top"]').first();
-        const count = await scrollBtn.count();
-        expect(count).toBeGreaterThanOrEqual(0);
+        await expect(scrollBtn).toBeAttached();
     });
-
     test('should NOT be visible before scrolling', async ({ page }) => {
         const scrollBtn = page.locator('button[aria-label="Scroll to top"]').first();
         if (await scrollBtn.count() > 0) {
