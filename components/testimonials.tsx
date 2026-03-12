@@ -31,7 +31,7 @@ const ReviewCard = ({
             src={avatar}
             onError={(e) => {
               const img = e.target as HTMLImageElement;
-              if (img.src !== localPlaceholder) {
+              if (!img.src.endsWith(localPlaceholder)) {
                 img.onerror = () => { img.src = localPlaceholder; };
                 img.src = fallbackAvatar;
               }
@@ -51,18 +51,18 @@ const ReviewCard = ({
 
 const TwitterTestimonials = () => {
   return (
-    <div className="">
+    <div className="px-4 md:px-8 lg:px-16">
       <h3 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
         What our community thinks
       </h3>
       <div className="relative flex mb-8 h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent marquee-mask">
 
-        <Marquee pauseOnHover repeat={2} className="[--duration:17s]">
+        <Marquee pauseOnHover repeat={4} className="[--duration:30s]">
           {firstRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-        <Marquee reverse pauseOnHover repeat={2} className="[--duration:17s]">
+        <Marquee reverse pauseOnHover repeat={4} className="[--duration:30s]">
           {secondRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
