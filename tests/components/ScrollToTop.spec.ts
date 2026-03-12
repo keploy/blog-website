@@ -40,7 +40,7 @@ test.describe('ScrollToTop Component', () => {
         await page.waitForTimeout(500);
         const classes = await scrollBtn.getAttribute('class');
         const isShown = classes?.includes('opacity-100') && classes?.includes('visible');
-        expect(typeof isShown).toBe('boolean');
+        expect(isShown).toBe(true);
     });
 
     test('should scroll back to top when button is clicked', async ({ page }) => {
