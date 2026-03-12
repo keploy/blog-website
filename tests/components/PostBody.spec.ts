@@ -42,7 +42,12 @@ test.describe('PostBody Component', () => {
         const tocHeading = page.locator('text=/Table of Contents/i');
         const count = await tocToggle.count() + await tocHeading.count();
         // TOC only appears when there are headings in the post content
-        expect(count).toBeGreaterThanOrEqual(0);
+        const headingCount = await page.locator('#post-body-check h2, #post-body-check h3, #post-body-check h4').count();
+        if (headingCount > 0) {
+            expect(count).toBeGreaterThan(0);
+        } else {
+            expect(count).toBe(0);
+        }
     });
 
     test('should display code blocks if post has code', async ({ page }) => {
