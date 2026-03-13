@@ -38,8 +38,13 @@ Fixes: #[issue-number]
 
 ## Testing
 <!-- Please describe how these changes were tested, specify any test cases or list any relevant details. -->
--
--
+- [ ] Ran `npm test` and all tests passed.
+- [ ] Added new tests for the changes (if applicable).
+- [ ] Manually verified the changes in the browser.
+
+### Test Scenarios
+- 
+- 
 
 ## Demo
 <!--
