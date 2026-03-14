@@ -1,0 +1,97 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('Mobile Navigation — Responsive', () => {
+    test.use({ viewport: { width: 375, height: 812 } });
+
+    test.beforeEach(async ({ page, baseURL }) => {
+        await page.goto(baseURL!);
+        await page.waitForLoadState('domcontentloaded');
+    });
+
+    test('should hide desktop nav links on mobile', async ({ page }) => {
+
+        const desktopNav = page.locator('.hidden.md\\:flex').first();
+            await expect(desktopNav).not.toBeVisible();
+    });
+
+    test('should show hamburger menu button on mobile', async ({ page }) => {
+
+        const menuButton = page.locator('button[aria-label="Open menu"], button[aria-label="Close menu"]').first();
+        await expect(menuButton).toBeVisible();
+    });
+
+    test('should open mobile menu when hamburger is tapped', async ({ page }) => {
+        const menuButton = page.locator('button[aria-label="Open menu"]').first();
+        await menuButton.click({ force: true });
+
+        const closeButton = page.locator('button[aria-label="Close menu"]');
+        await expect(closeButton.first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('should display Technology and Community sections in mobile menu', async ({ page }) => {
+        const menuButton = page.locator('button[aria-label="Open menu"]').first();
+        await menuButton.click({ force: true });
+
+        const techSection = page.locator('button, span').filter({ hasText: 'Technology' });
+        const communitySection = page.locator('button, span').filter({ hasText: 'Community' });
+        expect(await techSection.count()).toBeGreaterThan(0);
+        expect(await communitySection.count()).toBeGreaterThan(0);
+    });
+
+    test('should display Resources section in mobile menu', async ({ page }) => {
+        const menuButton = page.locator('button[aria-label="Open menu"]').first();
+        await menuButton.click({ force: true });
+
+        const resourcesSection = page.locator('button, span').filter({ hasText: 'Resources' });
+        expect(await resourcesSection.count()).toBeGreaterThan(0);
+    });
+
+    test('should expand Technology dropdown in mobile menu', async ({ page }) => {
+        const menuButton = page.locator('button[aria-label="Open menu"]').first();
+        await menuButton.click({ force: true });
+
+        const techTrigger = page.locator('button[aria-label="Toggle Technology posts dropdown"]');
+            await techTrigger.click({ force: true });
+
+            const viewAll = page.locator('text=View All Technology Posts');
+            await expect(viewAll).toBeVisible({ timeout: 3000 });
+    });
+
+    test('should show Sign in button in mobile menu', async ({ page }) => {
+        const menuButton = page.locator('button[aria-label="Open menu"]').first();
+        await menuButton.click({ force: true });
+
+        const signInLinks = page.locator('a:has-text("Sign in")');
+        const count = await signInLinks.count();
+        expect(count).toBeGreaterThan(0);
+    });
+
+    test('should close mobile menu when hamburger is tapped again', async ({ page }) => {
+        const openButton = page.locator('button[aria-label="Open menu"]').first();
+        await openButton.click({ force: true });
+
+        const closeButton = page.locator('button[aria-label="Close menu"]').first();
+        await closeButton.click({ force: true });
+
+        const reopenButton = page.locator('button[aria-label="Open menu"]');
+        await expect(reopenButton.first()).toBeVisible({ timeout: 3000 });
+    });
+
+    test('should show mobile search button', async ({ page }) => {
+        const searchButton = page.locator('button[aria-label="Open search"]').first();
+        await expect(searchButton).toBeVisible();
+    });
+
+    test('should open search modal on mobile', async ({ page }) => {
+        const searchButton = page.locator('button[aria-label="Open search"]').first();
+        await searchButton.click({ force: true });
+
+        const searchDialog = page.locator('[role="dialog"][aria-label="Search blogs"], h3:has-text("Search blogs")');
+        await expect(searchDialog.first()).toBeVisible({ timeout: 3000 });
+    });
+
+    test('should display the Keploy logo on mobile', async ({ page }) => {
+        const logo = page.locator('img[alt="Keploy Logo"]');
+        await expect(logo.first()).toBeVisible();
+    });
+});

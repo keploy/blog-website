@@ -1,0 +1,104 @@
+{
+    "data": {
+        "post": {
+            "title": "Understanding API Testing with Keploy",
+            "excerpt": "<p>Learn how Keploy simplifies API testing by automatically generating test cases from real traffic.</p>",
+            "slug": "understanding-api-testing-with-keploy",
+            "date": "2024-06-15T10:00:00",
+            "ppmaAuthorName": "Tech Author One",
+            "featuredImage": {
+                "node": {
+                    "sourceUrl": "/blog/favicon/Group.png"
+                }
+            },
+            "author": {
+                "node": {
+                    "name": "Tech Author One",
+                    "firstName": "Tech",
+                    "lastName": "Author One",
+                    "avatar": {
+                        "url": "/blog/favicon/Group.png"
+                    }
+                }
+            },
+            "categories": {
+                "edges": [
+                    {
+                        "node": {
+                            "name": "technology"
+                        }
+                    }
+                ]
+            },
+            "tags": {
+                "edges": [
+                    {
+                        "node": {
+                            "name": "testing"
+                        }
+                    },
+                    {
+                        "node": {
+                            "name": "api"
+                        }
+                    }
+                ]
+            },
+            "seo": {
+                "metaDesc": "Learn how Keploy simplifies API testing by automatically generating test cases.",
+                "title": "Understanding API Testing with Keploy | Keploy Blog"
+            },
+            "content": "<h2>Introduction</h2><p>API testing is a critical part of the software development lifecycle. Keploy makes it easy by automatically generating test cases from real API traffic.</p><h2>Getting Started</h2><p>To get started with Keploy, install the CLI tool and point it at your running application. Keploy will record all incoming API calls and generate test cases automatically.</p><h2>Why Keploy?</h2><p>Unlike traditional testing tools, Keploy captures real-world traffic patterns, ensuring your tests reflect actual usage. This approach reduces the time spent writing manual test cases while improving coverage.</p><div class='pp-author-boxes-avatar'><img src='/blog/favicon/Group.png' /></div><p class='pp-author-boxes-description'>An author for Keploy's blog.</p>"
+        },
+        "posts": {
+            "edges": [
+                {
+                    "node": {
+                        "title": "Getting Started with Unit Testing in Go",
+                        "excerpt": "<p>A comprehensive guide to writing effective unit tests in Go.</p>",
+                        "slug": "getting-started-unit-testing-go",
+                        "date": "2024-06-10T09:00:00",
+                        "ppmaAuthorName": "Tech Author Two",
+                        "featuredImage": {
+                            "node": {
+                                "sourceUrl": "/blog/favicon/Group.png"
+                            }
+                        },
+                        "author": {
+                            "node": {
+                                "name": "Tech Author Two",
+                                "firstName": "Tech",
+                                "lastName": "Author Two",
+                                "avatar": {
+                                    "url": "/blog/favicon/Group.png"
+                                }
+                            }
+                        },
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "technology"
+                                    }
+                                }
+                            ]
+                        },
+                        "tags": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "golang"
+                                    }
+                                }
+                            ]
+                        },
+                        "seo": {
+                            "metaDesc": "A guide to unit testing in Go.",
+                            "title": "Unit Testing in Go | Keploy Blog"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

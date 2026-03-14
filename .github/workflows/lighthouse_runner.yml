@@ -72,11 +72,4 @@ jobs:
             http://localhost:3000/blog
           uploadArtifacts: true
 
-      - name: Generate Lighthouse comment
-        run: node .github/scripts/lighthouse-report.js
 
-      - name: Upload Lighthouse comment artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: lighthouse-comment
-          path: lighthouse-comment.md

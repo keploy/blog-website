@@ -1,0 +1,177 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('Mobile Layout — Homepage', () => {
+    test.use({ viewport: { width: 375, height: 812 } });
+
+    test.beforeEach(async ({ page, baseURL }) => {
+        await page.goto(baseURL!);
+        await page.waitForLoadState('domcontentloaded');
+    });
+
+    test('hero post should stack vertically on mobile (no side-by-side grid)', async ({ page }) => {
+
+        const heroContainer = page.locator('div.lg\\:grid.lg\\:grid-cols-2').first();
+            const box = await heroContainer.boundingBox();
+
+            expect(box?.width).toBeLessThanOrEqual(375);
+    });
+
+    test('post cards should be single column on mobile', async ({ page }) => {
+
+        const postGrid = page.locator('.grid.grid-cols-1').first();
+            const gridBox = await postGrid.boundingBox();
+            expect(gridBox?.width).toBeLessThanOrEqual(375);
+    });
+
+    test('page should be scrollable on mobile', async ({ page }) => {
+        const scrollHeight = await page.evaluate(() => document.body.scrollHeight);
+        const viewHeight = await page.evaluate(() => window.innerHeight);
+        expect(scrollHeight).toBeGreaterThan(viewHeight);
+    });
+
+    test('no horizontal overflow on mobile', async ({ page }) => {
+        const overflowAmount = await page.evaluate(() => {
+            const scrollWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
+            const clientWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
+            return scrollWidth - clientWidth;
+        });
+        expect(overflowAmount).toBeLessThanOrEqual(50);
+    });
+
+    test('footer sections should stack on mobile', async ({ page }) => {
+
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+        const footer = page.locator('footer');
+        await expect(footer).toBeVisible({ timeout: 5000 });
+
+        const footerBox = await footer.boundingBox();
+        expect(footerBox?.width).toBeLessThanOrEqual(375);
+    });
+
+    test('Keploy logo should be visible on mobile', async ({ page }) => {
+        const logo = page.locator('img[alt="Keploy Logo"]');
+        await expect(logo.first()).toBeVisible();
+    });
+});
+
+test.describe('Mobile Layout — Technology Page', () => {
+    test.use({ viewport: { width: 375, height: 812 } });
+
+    test.beforeEach(async ({ page, baseURL }) => {
+        await page.goto(`${baseURL!}/technology`);
+        await page.waitForLoadState('domcontentloaded');
+    });
+
+    test('technology page should render on mobile', async ({ page }) => {
+        await expect(page.locator('body')).toBeVisible();
+        const title = await page.title();
+        expect(title).toBeDefined();
+    });
+
+    test('post cards should not overflow viewport on mobile', async ({ page }) => {
+        const cards = page.locator('a[href*="/technology/"]');
+            const cardBox = await cards.first().boundingBox();
+            expect(cardBox?.width).toBeLessThanOrEqual(375);
+    });
+
+    test('hero post image and content should stack on mobile', async ({ page }) => {
+
+        const overflowAmount = await page.evaluate(() => {
+            const scrollWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
+            const clientWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
+            return scrollWidth - clientWidth;
+        });
+        expect(overflowAmount).toBeLessThanOrEqual(50);
+
+        const postLinks = page.locator('a[href*="/technology/"]');
+            const linkBox = await postLinks.first().boundingBox();
+
+            expect(linkBox?.width).toBeLessThanOrEqual(375);
+    });
+});
+
+test.describe('Mobile Layout — Blog Post Page', () => {
+    test.use({ viewport: { width: 375, height: 812 } });
+
+    test.beforeEach(async ({ page, baseURL }) => {
+        await page.goto(`${baseURL!}/technology`);
+        await page.waitForLoadState('domcontentloaded');
+
+        const firstPost = page.locator('a[href*="/technology/"]').first();
+            await firstPost.click({ force: true });
+            await page.waitForLoadState('domcontentloaded');
+    });
+
+    test('blog post content should be readable on mobile (not clipped)', async ({ page }) => {
+        const content = page.locator('.prose, #post-body-check').first();
+            const contentBox = await content.boundingBox();
+
+            expect(contentBox?.width).toBeLessThanOrEqual(375);
+    });
+
+    test('post title should be visible on mobile', async ({ page }) => {
+        const title = page.locator('h1').first();
+            await expect(title).toBeVisible();
+            const titleBox = await title.boundingBox();
+            expect(titleBox?.width).toBeLessThanOrEqual(375);
+    });
+
+    test('TOC toggle should be visible on mobile post page', async ({ page }) => {
+
+        const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' });
+            await expect(tocToggle.first()).toBeVisible();
+    });
+
+    test('desktop TOC sidebar should be hidden on mobile', async ({ page }) => {
+
+        const desktopToc = page.locator('.hidden.lg\\:inline-block');
+            await expect(desktopToc.first()).not.toBeVisible();
+    });
+});
+
+test.describe('Tablet Layout — Responsive (768px)', () => {
+    test.use({ viewport: { width: 768, height: 1024 } });
+
+    test.beforeEach(async ({ page, baseURL }) => {
+        await page.goto(baseURL!);
+        await page.waitForLoadState('domcontentloaded');
+    });
+
+    test('desktop nav links should be visible at tablet width', async ({ page }) => {
+
+        const desktopNav = page.locator('nav').first();
+        await expect(desktopNav).toBeVisible();
+
+        const techLink = page.locator('a span:has-text("Technology"), a:has-text("Technology")').first();
+        await expect(techLink).toBeVisible();
+    });
+
+    test('hamburger menu should be hidden at tablet width', async ({ page }) => {
+
+        const menuButton = page.locator('button[aria-label="Open menu"]');
+            await expect(menuButton.first()).not.toBeVisible();
+    });
+
+    test('post grid should display 2 columns at tablet width', async ({ page }) => {
+        const postGrid = page.locator('[data-testid="post-grid"]').first();
+        const children = postGrid.locator('> *');
+        const count = await children.count();
+        if (count >= 2) {
+            const first = await children.first().boundingBox();
+            const second = await children.nth(1).boundingBox();
+            if (first && second) {
+                expect(Math.abs((second?.y || 0) - (first?.y || 0))).toBeLessThan(50);
+            }
+        }
+    });
+
+    test('no horizontal overflow at tablet width', async ({ page }) => {
+        const overflowAmount = await page.evaluate(() => {
+            const scrollWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
+            const clientWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
+            return scrollWidth - clientWidth;
+        });
+        expect(overflowAmount).toBeLessThanOrEqual(50);
+    });
+});

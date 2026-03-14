@@ -1,0 +1,126 @@
+{
+    "data": {
+        "posts": {
+            "edges": [
+                {
+                    "node": {
+                        "title": "Understanding API Testing with Keploy",
+                        "excerpt": "<p>Learn how Keploy simplifies API testing by automatically generating test cases from real traffic.</p>",
+                        "slug": "understanding-api-testing-with-keploy",
+                        "date": "2024-06-15T10:00:00",
+                        "postId": 2001,
+                        "featuredImage": {
+                            "node": {
+                                "sourceUrl": "/blog/favicon/Group.png"
+                            }
+                        },
+                        "author": {
+                            "node": {
+                                "name": "Tech Author One",
+                                "firstName": "Tech",
+                                "lastName": "Author One",
+                                "avatar": {
+                                    "url": "/blog/favicon/Group.png"
+                                }
+                            }
+                        },
+                        "ppmaAuthorName": "Tech Author One",
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "technology"
+                                    }
+                                }
+                            ]
+                        },
+                        "seo": {
+                            "metaDesc": "Learn how Keploy simplifies API testing by automatically generating test cases.",
+                            "title": "Understanding API Testing with Keploy | Keploy Blog"
+                        }
+                    }
+                },
+                {
+                    "node": {
+                        "title": "Getting Started with Unit Testing in Go",
+                        "excerpt": "<p>A comprehensive guide to writing effective unit tests in Go using popular testing frameworks.</p>",
+                        "slug": "getting-started-unit-testing-go",
+                        "date": "2024-06-10T09:00:00",
+                        "postId": 2002,
+                        "featuredImage": {
+                            "node": {
+                                "sourceUrl": "/blog/favicon/Group.png"
+                            }
+                        },
+                        "author": {
+                            "node": {
+                                "name": "Tech Author Two",
+                                "firstName": "Tech",
+                                "lastName": "Author Two",
+                                "avatar": {
+                                    "url": "/blog/favicon/Group.png"
+                                }
+                            }
+                        },
+                        "ppmaAuthorName": "Tech Author Two",
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "technology"
+                                    }
+                                }
+                            ]
+                        },
+                        "seo": {
+                            "metaDesc": "A comprehensive guide to writing effective unit tests in Go.",
+                            "title": "Getting Started with Unit Testing in Go | Keploy Blog"
+                        }
+                    }
+                },
+                {
+                    "node": {
+                        "title": "CI/CD Pipeline Best Practices for 2024",
+                        "excerpt": "<p>Explore modern CI/CD pipeline strategies that improve deployment reliability and developer experience.</p>",
+                        "slug": "cicd-pipeline-best-practices-2024",
+                        "date": "2024-06-05T08:30:00",
+                        "postId": 2003,
+                        "featuredImage": {
+                            "node": {
+                                "sourceUrl": "/blog/favicon/Group.png"
+                            }
+                        },
+                        "author": {
+                            "node": {
+                                "name": "DevOps Contributor",
+                                "firstName": "DevOps",
+                                "lastName": "Contributor",
+                                "avatar": {
+                                    "url": "/blog/favicon/Group.png"
+                                }
+                            }
+                        },
+                        "ppmaAuthorName": "DevOps Contributor",
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "technology"
+                                    }
+                                }
+                            ]
+                        },
+                        "seo": {
+                            "metaDesc": "Explore modern CI/CD pipeline strategies for 2024.",
+                            "title": "CI/CD Pipeline Best Practices for 2024 | Keploy Blog"
+                        }
+                    }
+                }
+            ],
+            "pageInfo": {
+                "hasNextPage": false,
+                "endCursor": null
+            }
+        }
+    }
+}
