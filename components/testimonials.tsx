@@ -4,7 +4,7 @@ import Tweets from "../services/Tweets";
 import { useRouter } from "next/router";
 const firstRow = Tweets.slice(0, Tweets.length / 2);
 const secondRow = Tweets.slice(Tweets.length / 2);
-
+import Image from "next/image";
 const ReviewCard = ({
   avatar,
   name,
@@ -28,10 +28,10 @@ const ReviewCard = ({
     <a href={post} target="_blank" rel="noopener noreferrer" className="lg:mx-2">
       <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border p-4 border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
         <div className="flex flex-row items-center gap-2">
-          <img
+          <Image
             className="rounded-full"
-            width="32"
-            height="32"
+            width={32}
+            height={32}
             alt={`${name}'s profile picture`}
             src={proxiedAvatar}
           />
