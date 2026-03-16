@@ -24,6 +24,7 @@ export default function TagsStories({ posts}) {
             author={node.ppmaAuthorName}
             slug={node.slug}
             excerpt={getExcerpt(node.excerpt, 20)}
+            content={node.content}
             isCommunity={
               node.categories &&
               node.categories.edges &&
