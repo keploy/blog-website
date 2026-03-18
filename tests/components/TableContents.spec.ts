@@ -157,8 +157,8 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
             await tocToggle.click({ force: true });
             await page.waitForTimeout(300);
             const headingCount = await page.locator('#post-body-check h2, #post-body-check h3, #post-body-check h4').count();
-            const dropdown = page.locator('div.mt-2').first();
-            const tocItems = page.locator('div.mt-2 ul li button, div.mt-2 ul li a').filter({ hasNot: page.locator('svg') });
+            const dropdown = tocToggle.locator('xpath=following-sibling::div[contains(@class,"mt-2")][1]');
+            const tocItems = dropdown.locator('ul li button, ul li a').filter({ hasNot: page.locator('svg') });
             const count = await tocItems.count();
             if (headingCount > 0) {
                 await expect(dropdown).toBeVisible();
@@ -174,7 +174,8 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
         if (await tocToggle.count() > 0) {
             await tocToggle.click({ force: true });
             await page.waitForTimeout(500);
-            const tocItems = page.locator('div.mt-2 ul li button').first();
+            const dropdown = tocToggle.locator('xpath=following-sibling::div[contains(@class,"mt-2")][1]');
+            const tocItems = dropdown.locator('ul li button').first();
             if (await tocItems.count() > 0) {
                 await tocItems.click({ force: true });
                 await page.waitForTimeout(1500);
