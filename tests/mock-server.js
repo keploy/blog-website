@@ -272,18 +272,40 @@ const server = http.createServer((req, res) => {
         let rawBody = '';
         req.on('data', chunk => { rawBody += chunk; });
         req.on('end', () => {
+            let body;
             try {
-                const body = JSON.parse(rawBody);
+                body = JSON.parse(rawBody);
+            } catch (err) {
+                console.error('[MockServer] Invalid JSON body for /graphql. Next step: ensure the request payload is valid JSON with a GraphQL query string.');
+                if (MOCK_SERVER_DEBUG) {
+                    console.debug('[MockServer] Invalid JSON request context:', {
+                        method: req.method,
+                        url: req.url,
+                        rawBody,
+                    });
+                    console.debug('[MockServer] Full error object:', err);
+                }
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(errorResponse));
+                return;
+            }
+
+            try {
                 const response = handleGraphQL(body);
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(response));
             } catch (err) {
-                console.error('[MockServer] Request handling error', {
-                    method: req.method,
-                    url: req.url,
-                    rawBody,
-                });
-                console.error('[MockServer] Full error object:', err);
+                console.error('[MockServer] GraphQL request handling failed. Next step: verify query routing in handleGraphQL and fixture shape for this operation.');
+                if (MOCK_SERVER_DEBUG) {
+                    console.debug('[MockServer] Request handling context:', {
+                        method: req.method,
+                        url: req.url,
+                        operationSnippet: String(body?.query || '').substring(0, 120),
+                        variables: body?.variables || {},
+                        rawBody,
+                    });
+                    console.debug('[MockServer] Full error object:', err);
+                }
                 res.writeHead(500, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(errorResponse));
             }

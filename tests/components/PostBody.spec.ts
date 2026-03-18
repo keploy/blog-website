@@ -37,6 +37,7 @@ test.describe('PostBody Component', () => {
     });
 
     test('should display Table of Contents on mobile as toggle', async ({ page }) => {
+        await page.setViewportSize({ width: 375, height: 812 });
         // TOC renders as a collapsible dropdown on screens < 1440px
         const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' });
         const tocHeading = page.locator('text=/Table of Contents/i');

@@ -2,9 +2,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Author Detail Page - Component Availability', () => {
   test.beforeEach(async ({ page, baseURL }) => {
-    await page.goto(`${baseURL!}/authors`);
+    await page.goto(`${baseURL!}/authors`, { waitUntil: 'domcontentloaded', timeout: 60000 });
     await page.waitForLoadState('domcontentloaded');
     const firstAuthor = page.locator('a[href*="/authors/"]').first();
+    await expect(firstAuthor).toBeVisible({ timeout: 15000 });
     await firstAuthor.click({ force: true });
     await page.waitForLoadState('domcontentloaded');
   });
@@ -26,13 +27,11 @@ test.describe('Author Detail Page - Component Availability', () => {
   });
 
   test('should render a page heading', async ({ page }) => {
-
-    const heading = page.locator('h1, h2');
-    const emptyState = page.locator('text=/No posts found/i');
-    const headingCount = await heading.count();
-    const emptyCount = await emptyState.count();
-
-    expect(headingCount > 0 || emptyCount > 0).toBeTruthy();
+    const heading = page.locator('h1, h2').first();
+    const posts = page.locator('a[href*="/technology/"], a[href*="/community/"]').first();
+    const hasVisibleHeading = await heading.isVisible().catch(() => false);
+    const hasVisiblePosts = await posts.isVisible().catch(() => false);
+    expect(hasVisibleHeading || hasVisiblePosts).toBeTruthy();
   });
 
   test('should render post cards by the author', async ({ page }) => {

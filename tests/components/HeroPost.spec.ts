@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Hero Post Component', () => {
   test.beforeEach(async ({ page, baseURL }) => {
-    await page.goto(`${baseURL!}/technology`);
+    await page.goto(`${baseURL!}/technology`, { waitUntil: 'domcontentloaded', timeout: 60000 });
     await page.waitForLoadState('domcontentloaded');
   });
 

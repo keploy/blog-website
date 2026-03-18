@@ -44,7 +44,7 @@ test.describe('Mobile Navigation — Responsive', () => {
 
         const closeButton = page.locator('button[aria-label="Close menu"]').first();
         await expect(closeButton).toBeVisible();
-        const resourcesSection = page.locator('button').filter({ hasText: 'Resources' }).first();
+        const resourcesSection = page.locator('button:visible').filter({ hasText: 'Resources' }).first();
         await expect(resourcesSection).toBeVisible();
     });
 
