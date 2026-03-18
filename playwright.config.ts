@@ -9,8 +9,7 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '.env.test') });
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000/blog';
-const GRAPHQL_SAME_ORIGIN_URL =
-  BASE_URL.replace(/\/+$/, '') + '/api/graphql';
+const GRAPHQL_API_URL = process.env.PLAYWRIGHT_GRAPHQL_URL || 'http://localhost:4000/graphql';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -106,8 +105,8 @@ export default defineConfig({
       stdout: 'ignore',
       stderr: 'pipe',
       env: {
-        WORDPRESS_API_URL: GRAPHQL_SAME_ORIGIN_URL,
-        NEXT_PUBLIC_WORDPRESS_API_URL: GRAPHQL_SAME_ORIGIN_URL,
+        WORDPRESS_API_URL: GRAPHQL_API_URL,
+        NEXT_PUBLIC_WORDPRESS_API_URL: GRAPHQL_API_URL,
       },
     },
   ],

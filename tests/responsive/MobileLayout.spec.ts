@@ -1,9 +1,25 @@
 import { test, expect } from '@playwright/test';
 
 const WIDTH_EPSILON = 2;
+const HORIZONTAL_OVERFLOW_EPSILON = 1;
 
 function maxAllowedWidth(page: { viewportSize: () => { width: number; height: number } | null }) {
     return (page.viewportSize()?.width ?? 375) + WIDTH_EPSILON;
+}
+
+async function getHorizontalOverflow(page: { evaluate: (pageFunction: () => number) => Promise<number> }) {
+    return page.evaluate(() => {
+        const scrollWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
+        const clientWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
+        return scrollWidth - clientWidth;
+    });
+}
+
+function assertNoHorizontalOverflow(overflowAmount: number, context: string) {
+    expect(
+        overflowAmount,
+        `${context}: expected <= ${HORIZONTAL_OVERFLOW_EPSILON}px horizontal overflow, found ${overflowAmount}px`,
+    ).toBeLessThanOrEqual(HORIZONTAL_OVERFLOW_EPSILON);
 }
 
 test.describe('Mobile Layout — Homepage', () => {
@@ -37,12 +53,8 @@ test.describe('Mobile Layout — Homepage', () => {
     });
 
     test('no horizontal overflow on mobile', async ({ page }) => {
-        const overflowAmount = await page.evaluate(() => {
-            const scrollWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
-            const clientWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
-            return scrollWidth - clientWidth;
-        });
-        expect(overflowAmount).toBeLessThanOrEqual(50);
+        const overflowAmount = await getHorizontalOverflow(page);
+        assertNoHorizontalOverflow(overflowAmount, 'Homepage mobile layout');
     });
 
     test('footer sections should stack on mobile', async ({ page }) => {
@@ -86,12 +98,8 @@ test.describe('Mobile Layout — Technology Page', () => {
 
     test('hero post image and content should stack on mobile', async ({ page }) => {
 
-        const overflowAmount = await page.evaluate(() => {
-            const scrollWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
-            const clientWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
-            return scrollWidth - clientWidth;
-        });
-        expect(overflowAmount).toBeLessThanOrEqual(50);
+        const overflowAmount = await getHorizontalOverflow(page);
+        assertNoHorizontalOverflow(overflowAmount, 'Technology page mobile layout');
 
         const postLinks = page.locator('a[href*="/technology/"]');
             const linkBox = await postLinks.first().boundingBox();
@@ -177,11 +185,7 @@ test.describe('Tablet Layout — Responsive (768px)', () => {
     });
 
     test('no horizontal overflow at tablet width', async ({ page }) => {
-        const overflowAmount = await page.evaluate(() => {
-            const scrollWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
-            const clientWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
-            return scrollWidth - clientWidth;
-        });
-        expect(overflowAmount).toBeLessThanOrEqual(50);
+        const overflowAmount = await getHorizontalOverflow(page);
+        assertNoHorizontalOverflow(overflowAmount, 'Homepage tablet layout');
     });
 });
