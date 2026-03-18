@@ -80,9 +80,6 @@ test.describe('Homepage - Component Availability', () => {
     await page.locator('body').click({ force: true, position: { x: 0, y: 0 } });
     await page.keyboard.press('Tab');
 
-    if (browserName === 'webkit') {
-    }
-
     const focusedElement = page.locator(':focus').first();
     await expect(focusedElement).toBeAttached();
   });

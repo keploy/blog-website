@@ -76,9 +76,8 @@ test.describe('Navigation Component', () => {
     const href = await logoLink.getAttribute('href');
     await logoLink.click({ force: true });
 
-
-    const url = page.url();
-    expect(url.includes('/blog') || url.includes('keploy.io')).toBeTruthy();
+    await page.waitForURL(/\/$/);
+    expect(page.url()).not.toContain('/technology');
   });
 
   test('should keep navigation visible at all scroll positions', async ({ page }) => {

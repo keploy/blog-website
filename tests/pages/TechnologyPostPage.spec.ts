@@ -25,11 +25,7 @@ test.describe('Technology Post Page - Component Availability', () => {
 
   test('should render the Keploy logo in Navigation', async ({ page }) => {
     const headerLogo = page.locator('header img[alt="Keploy Logo"]').first();
-    if (await headerLogo.count() > 0) {
-      await expect(headerLogo).toBeVisible();
-    } else {
-      await expect(page.locator('body')).toBeVisible();
-    }
+    await expect(headerLogo).toBeVisible();
   });
 
   test('should render the PostHeader component', async ({ page }) => {

@@ -150,7 +150,7 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
             await page.waitForTimeout(300);
             const tocItems = page.locator('ul li button').filter({ hasNot: page.locator('svg') });
             const count = await tocItems.count();
-            expect(count).toBeGreaterThanOrEqual(0);
+            expect(count).toBeGreaterThan(0);
         }
     });
 

@@ -12,7 +12,6 @@ function loadFixture(name) {
 const technologyPosts = loadFixture('technology-posts.json');
 const singlePost = loadFixture('single-post.json');
 const searchSuccess = loadFixture('search-success-response.json');
-const emptySearch = loadFixture('empty-search-response.json');
 const errorResponse = loadFixture('error-response.json');
 
 const tagsResponse = {

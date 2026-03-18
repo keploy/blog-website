@@ -22,11 +22,7 @@ test.describe('ScrollToTop Component', () => {
     });
     test('should NOT be visible before scrolling', async ({ page }) => {
         const scrollBtn = page.locator('button[aria-label="Scroll to top"]').first();
-        if (await scrollBtn.count() > 0) {
-            const classes = await scrollBtn.getAttribute('class');
-            const isAtTop = classes?.includes('opacity-0') || classes?.includes('invisible');
-            expect(typeof isAtTop).toBe('boolean');
-        }
+        await expect(scrollBtn).not.toBeVisible();
     });
 
     test('should become visible after scrolling down 300px', async ({ page }) => {
