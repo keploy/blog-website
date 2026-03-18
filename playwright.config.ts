@@ -6,7 +6,24 @@ import { defineConfig, devices } from '@playwright/test';
  */
 import dotenv from 'dotenv';
 import path from 'path';
-dotenv.config({ path: path.resolve(__dirname, '.env.test') });
+const envTestPath = path.resolve(__dirname, '.env.test');
+const dotenvResult = dotenv.config({ path: envTestPath });
+
+if (dotenvResult.error) {
+  if (process.env.CI) {
+    throw new Error(
+      `Failed to load environment variables from .env.test at "${envTestPath}". ` +
+        'In CI, .env.test must be present or all required environment variables must be provided by the CI environment.'
+    );
+  } else {
+    // Continue with defaults, but make it clear how to fix the configuration.
+    console.error(
+      `Failed to load environment variables from .env.test at "${envTestPath}". ` +
+        'Tests will fall back to default configuration values. To fix this, create a .env.test file at the given path ' +
+        'or ensure the necessary environment variables are set in your local environment.'
+    );
+  }
+}
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000/blog';
 const GRAPHQL_API_URL = process.env.PLAYWRIGHT_GRAPHQL_URL || 'http://localhost:4000/graphql';
