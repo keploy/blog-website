@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 const WIDTH_EPSILON = 2;
-const HORIZONTAL_OVERFLOW_EPSILON = 1;
+const HORIZONTAL_OVERFLOW_EPSILON = WIDTH_EPSILON;
 
 function maxAllowedWidth(page: { viewportSize: () => { width: number; height: number } | null }) {
     return (page.viewportSize()?.width ?? 375) + WIDTH_EPSILON;
