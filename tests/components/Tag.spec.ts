@@ -6,7 +6,9 @@ test.describe('Tag Component', () => {
         await page.waitForLoadState('domcontentloaded');
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
-        await firstPost.click({ force: true });
+        await expect(firstPost).toBeVisible({ timeout: 15000 });
+        await expect(firstPost).toBeEnabled();
+        await firstPost.click();
         await page.waitForLoadState('domcontentloaded');
     });
 
@@ -62,7 +64,9 @@ test.describe('Tag Component', () => {
             const href = await tagLinks.first().getAttribute('href');
             expect(href).toBeTruthy();
             const tagPathMatch = href!.match(/\/tag\/[^/?#]+/);
-            await tagLinks.first().click({ force: true });
+            await expect(tagLinks.first()).toBeVisible();
+            await expect(tagLinks.first()).toBeEnabled();
+            await tagLinks.first().click();
             if (tagPathMatch) {
                 await page.waitForURL(`**${tagPathMatch[0]}**`, { timeout: 20000 });
             } else {

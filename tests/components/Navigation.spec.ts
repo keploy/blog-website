@@ -39,14 +39,18 @@ test.describe('Navigation Component', () => {
 
   test('should navigate to Technology page when Technology link is clicked', async ({ page }) => {
     const techLink = page.locator('a[href*="technology"]').first();
-    await techLink.click({ force: true });
+    await expect(techLink).toBeVisible({ timeout: 15000 });
+    await expect(techLink).toBeEnabled();
+    await techLink.click();
     await page.waitForURL('**/technology**', { timeout: 20000 });
     expect(page.url()).toContain('/technology');
   });
 
   test('should navigate to Community page when Community link is clicked', async ({ page }) => {
     const communityLink = page.locator('a[href*="community"]').first();
-    await communityLink.click({ force: true });
+    await expect(communityLink).toBeVisible({ timeout: 15000 });
+    await expect(communityLink).toBeEnabled();
+    await communityLink.click();
     await page.waitForURL('**/community**', { timeout: 20000 });
     expect(page.url()).toContain('/community');
   });
@@ -68,14 +72,18 @@ test.describe('Navigation Component', () => {
 
   test('should navigate back to homepage when logo is clicked from another page', async ({ page }) => {
     const techLink = page.locator('a[href*="technology"]').first();
-    await techLink.click({ force: true });
+    await expect(techLink).toBeVisible({ timeout: 15000 });
+    await expect(techLink).toBeEnabled();
+    await techLink.click();
     await page.waitForURL('**/technology**', { timeout: 20000 });
 
     const logo = page.locator('img[alt="Keploy Logo"]').first();
     const logoLink = page.locator('a').filter({ has: logo }).first();
     const href = await logoLink.getAttribute('href');
     expect(href).toBeTruthy();
-    await logoLink.click({ force: true });
+    await expect(logoLink).toBeVisible();
+    await expect(logoLink).toBeEnabled();
+    await logoLink.click();
 
     await page.waitForURL(/\/blog\/?$/);
     expect(page.url()).not.toContain('/technology');

@@ -116,8 +116,10 @@ test.describe('Mobile Layout — Blog Post Page', () => {
         await page.waitForLoadState('domcontentloaded');
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
-            await firstPost.click({ force: true });
-            await page.waitForLoadState('domcontentloaded');
+        await expect(firstPost).toBeVisible({ timeout: 15000 });
+        await expect(firstPost).toBeEnabled();
+        await firstPost.click();
+        await page.waitForLoadState('domcontentloaded');
     });
 
     test('blog post content should be readable on mobile (not clipped)', async ({ page }) => {

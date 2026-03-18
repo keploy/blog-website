@@ -77,7 +77,9 @@ test.describe('TableContents (TOC) Component - Desktop', () => {
         const tocButtons = page.locator('nav ul li button');
         const count = await tocButtons.count();
         if (count > 1) {
-            await tocButtons.nth(1).click({ force: true });
+            await expect(tocButtons.nth(1)).toBeVisible();
+            await expect(tocButtons.nth(1)).toBeEnabled();
+            await tocButtons.nth(1).click();
             await page.waitForTimeout(700);
             const url = page.url();
             expect(url).toContain('#');
@@ -144,7 +146,9 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
     test('clicking TOC toggle should expand the dropdown', async ({ page }) => {
         const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' }).first();
         if (await tocToggle.count() > 0) {
-            await tocToggle.click({ force: true });
+            await expect(tocToggle).toBeVisible();
+            await expect(tocToggle).toBeEnabled();
+            await tocToggle.click();
             await page.waitForTimeout(300);
             const ariaExpanded = await tocToggle.getAttribute('aria-expanded');
             expect(ariaExpanded).toBe('true');
@@ -154,7 +158,9 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
     test('should display TOC items after expanding dropdown on mobile', async ({ page }) => {
         const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' }).first();
         if (await tocToggle.count() > 0) {
-            await tocToggle.click({ force: true });
+            await expect(tocToggle).toBeVisible();
+            await expect(tocToggle).toBeEnabled();
+            await tocToggle.click();
             await page.waitForTimeout(300);
             const headingCount = await page.locator('#post-body-check h2, #post-body-check h3, #post-body-check h4').count();
             const dropdown = tocToggle.locator('xpath=following-sibling::div[contains(@class,"mt-2")][1]');
@@ -172,12 +178,16 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
     test('clicking a TOC item on mobile should close the dropdown', async ({ page }) => {
         const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' }).first();
         if (await tocToggle.count() > 0) {
-            await tocToggle.click({ force: true });
+            await expect(tocToggle).toBeVisible();
+            await expect(tocToggle).toBeEnabled();
+            await tocToggle.click();
             await page.waitForTimeout(500);
             const dropdown = tocToggle.locator('xpath=following-sibling::div[contains(@class,"mt-2")][1]');
             const tocItems = dropdown.locator('ul li button').first();
             if (await tocItems.count() > 0) {
-                await tocItems.click({ force: true });
+                await expect(tocItems).toBeVisible();
+                await expect(tocItems).toBeEnabled();
+                await tocItems.click();
                 await page.waitForTimeout(1500);
 
                 const bodyVisible = await page.locator('body').isVisible();

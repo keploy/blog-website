@@ -22,7 +22,9 @@ test.describe('Mobile Navigation — Responsive', () => {
 
     test('should open mobile menu when hamburger is tapped', async ({ page }) => {
         const menuButton = page.locator('button[aria-label="Open menu"]').first();
-        await menuButton.click({ force: true });
+        await expect(menuButton).toBeVisible();
+        await expect(menuButton).toBeEnabled();
+        await menuButton.click();
 
         const closeButton = page.locator('button[aria-label="Close menu"]');
         await expect(closeButton.first()).toBeVisible({ timeout: 5000 });
@@ -30,7 +32,9 @@ test.describe('Mobile Navigation — Responsive', () => {
 
     test('should display Technology and Community sections in mobile menu', async ({ page }) => {
         const menuButton = page.locator('button[aria-label="Open menu"]').first();
-        await menuButton.click({ force: true });
+        await expect(menuButton).toBeVisible();
+        await expect(menuButton).toBeEnabled();
+        await menuButton.click();
 
         const techSection = page.locator('button, span').filter({ hasText: 'Technology' });
         const communitySection = page.locator('button, span').filter({ hasText: 'Community' });
@@ -40,7 +44,9 @@ test.describe('Mobile Navigation — Responsive', () => {
 
     test('should display Resources section in mobile menu', async ({ page }) => {
         const menuButton = page.locator('button[aria-label="Open menu"]').first();
-        await menuButton.click({ force: true });
+        await expect(menuButton).toBeVisible();
+        await expect(menuButton).toBeEnabled();
+        await menuButton.click();
 
         const closeButton = page.locator('button[aria-label="Close menu"]').first();
         await expect(closeButton).toBeVisible();
@@ -50,10 +56,14 @@ test.describe('Mobile Navigation — Responsive', () => {
 
     test('should expand Technology dropdown in mobile menu', async ({ page }) => {
         const menuButton = page.locator('button[aria-label="Open menu"]').first();
-        await menuButton.click({ force: true });
+        await expect(menuButton).toBeVisible();
+        await expect(menuButton).toBeEnabled();
+        await menuButton.click();
 
         const techTrigger = page.locator('button[aria-label="Toggle Technology posts dropdown"]');
-            await techTrigger.click({ force: true });
+            await expect(techTrigger).toBeVisible();
+            await expect(techTrigger).toBeEnabled();
+            await techTrigger.click();
 
             const viewAll = page.locator('text=View All Technology Posts');
             await expect(viewAll).toBeVisible({ timeout: 3000 });
@@ -61,7 +71,9 @@ test.describe('Mobile Navigation — Responsive', () => {
 
     test('should show Sign in button in mobile menu', async ({ page }) => {
         const menuButton = page.locator('button[aria-label="Open menu"]').first();
-        await menuButton.click({ force: true });
+        await expect(menuButton).toBeVisible();
+        await expect(menuButton).toBeEnabled();
+        await menuButton.click();
 
         const closeButton = page.locator('button[aria-label="Close menu"]').first();
         await expect(closeButton).toBeVisible();
@@ -71,10 +83,14 @@ test.describe('Mobile Navigation — Responsive', () => {
 
     test('should close mobile menu when hamburger is tapped again', async ({ page }) => {
         const openButton = page.locator('button[aria-label="Open menu"]').first();
-        await openButton.click({ force: true });
+        await expect(openButton).toBeVisible();
+        await expect(openButton).toBeEnabled();
+        await openButton.click();
 
         const closeButton = page.locator('button[aria-label="Close menu"]').first();
-        await closeButton.click({ force: true });
+        await expect(closeButton).toBeVisible();
+        await expect(closeButton).toBeEnabled();
+        await closeButton.click();
 
         const reopenButton = page.locator('button[aria-label="Open menu"]');
         await expect(reopenButton.first()).toBeVisible({ timeout: 3000 });
@@ -87,7 +103,9 @@ test.describe('Mobile Navigation — Responsive', () => {
 
     test('should open search modal on mobile', async ({ page }) => {
         const searchButton = page.locator('button[aria-label="Open search"]').first();
-        await searchButton.click({ force: true });
+        await expect(searchButton).toBeVisible();
+        await expect(searchButton).toBeEnabled();
+        await searchButton.click();
 
         const searchDialog = page.locator('[role="dialog"][aria-label="Search blogs"], h3:has-text("Search blogs")');
         await expect(searchDialog.first()).toBeVisible({ timeout: 3000 });

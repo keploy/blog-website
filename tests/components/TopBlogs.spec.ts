@@ -27,7 +27,9 @@ test.describe('TopBlogs Component - Homepage', () => {
 
     test('should navigate to technology page when "See all technology blogs" is clicked', async ({ page, baseURL }) => {
         const seeAllTechLink = page.locator('a:has-text("See all technology blogs")');
-        await seeAllTechLink.click({ force: true });
+        await expect(seeAllTechLink).toBeVisible();
+        await expect(seeAllTechLink).toBeEnabled();
+        await seeAllTechLink.click();
         await page.waitForURL('**/technology**', { timeout: 20000 });
         expect(page.url()).toContain('/technology');
     });
@@ -53,7 +55,9 @@ test.describe('TopBlogs Component - Homepage', () => {
 
     test('should navigate to community page when "See all community blogs" is clicked', async ({ page, baseURL }) => {
         const seeAllCommLink = page.locator('a:has-text("See all community blogs")');
-        await seeAllCommLink.click({ force: true });
+        await expect(seeAllCommLink).toBeVisible();
+        await expect(seeAllCommLink).toBeEnabled();
+        await seeAllCommLink.click();
         await page.waitForURL('**/community**', { timeout: 20000 });
         expect(page.url()).toContain('/community');
     });

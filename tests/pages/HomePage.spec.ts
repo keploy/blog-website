@@ -62,7 +62,9 @@ test.describe('Homepage - Component Availability', () => {
 
   test('should have working navigation to technology page', async ({ page, baseURL }) => {
     const techLink = page.locator('a[href*="technology"]').first();
-    await techLink.click({ force: true });
+    await expect(techLink).toBeVisible({ timeout: 15000 });
+    await expect(techLink).toBeEnabled();
+    await techLink.click();
 
     await page.waitForURL(/.*\/technology$/);
     expect(page.url()).toContain('/technology');
@@ -70,14 +72,18 @@ test.describe('Homepage - Component Availability', () => {
 
   test('should have working navigation to community page', async ({ page, baseURL }) => {
     const communityLink = page.locator('a[href*="community"]').first();
-    await communityLink.click({ force: true });
+    await expect(communityLink).toBeVisible({ timeout: 15000 });
+    await expect(communityLink).toBeEnabled();
+    await communityLink.click();
 
     await page.waitForURL(/.*\/community$/);
     expect(page.url()).toContain('/community');
   });
 
   test('should support keyboard navigation', async ({ page, browserName }) => {
-    await page.locator('body').click({ force: true, position: { x: 0, y: 0 } });
+    const body = page.locator('body');
+    await expect(body).toBeVisible();
+    await body.click({ position: { x: 0, y: 0 } });
     await page.keyboard.press('Tab');
 
     const focusedElement = page.locator(':focus').first();

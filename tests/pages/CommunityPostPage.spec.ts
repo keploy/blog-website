@@ -5,8 +5,10 @@ test.describe('Community Post Page - Component Availability', () => {
     await page.goto(`${baseURL!}/community`);
     await page.waitForLoadState('domcontentloaded');
     const firstPost = page.locator('a[href*="/community/"]').first();
-      await firstPost.click({ force: true });
-      await page.waitForLoadState('domcontentloaded');
+    await expect(firstPost).toBeVisible({ timeout: 15000 });
+    await expect(firstPost).toBeEnabled();
+    await firstPost.click();
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should load community post page successfully', async ({ page }) => {

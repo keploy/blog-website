@@ -64,9 +64,10 @@ test.describe('Hero Post Component', () => {
 
   test('should have hover effect on hero post container', async ({ page }) => {
     const heroContainer = page.locator('section').first().locator('> div').first();
+    await expect(heroContainer).toBeVisible();
     const initialBox = await heroContainer.boundingBox();
     expect(initialBox).toBeTruthy();
-    await heroContainer.hover({ force: true });
+    await heroContainer.hover();
     await expect(heroContainer).toBeVisible();
   });
 

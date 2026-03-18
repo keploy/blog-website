@@ -6,7 +6,8 @@ test.describe('Author Detail Page - Component Availability', () => {
     await page.waitForLoadState('domcontentloaded');
     const firstAuthor = page.locator('a[href*="/authors/"]').first();
     await expect(firstAuthor).toBeVisible({ timeout: 15000 });
-    await firstAuthor.click({ force: true });
+    await expect(firstAuthor).toBeEnabled();
+    await firstAuthor.click();
     await page.waitForLoadState('domcontentloaded');
   });
 

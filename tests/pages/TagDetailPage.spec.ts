@@ -5,7 +5,9 @@ test.describe('Tag Detail Page - Component Availability', () => {
     await page.goto(`${baseURL!}/tag`);
     await page.waitForLoadState('domcontentloaded');
     const firstTag = page.locator('a[href*="/tag/"]').first();
-    await firstTag.click({ force: true });
+    await expect(firstTag).toBeVisible({ timeout: 15000 });
+    await expect(firstTag).toBeEnabled();
+    await firstTag.click();
     await page.waitForLoadState('domcontentloaded');
   });
 
