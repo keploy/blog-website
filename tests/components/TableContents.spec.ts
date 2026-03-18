@@ -9,11 +9,11 @@ test.describe('TableContents (TOC) Component - Desktop', () => {
         await page.waitForLoadState('domcontentloaded');
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
-        if (await firstPost.count() > 0) {
-            await firstPost.click({ force: true });
-            await page.waitForLoadState('domcontentloaded');
-            await page.waitForTimeout(1000);
-        }
+        await expect(firstPost).toBeVisible({ timeout: 15000 });
+        await expect(firstPost).toBeEnabled();
+        await firstPost.click();
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(1000);
     });
 
     test('should display "Table of Contents" heading', async ({ page }) => {
@@ -118,11 +118,11 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
         await page.waitForLoadState('domcontentloaded');
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
-        if (await firstPost.count() > 0) {
-            await firstPost.click({ force: true });
-            await page.waitForLoadState('domcontentloaded');
-            await page.waitForTimeout(1000);
-        }
+        await expect(firstPost).toBeVisible({ timeout: 15000 });
+        await expect(firstPost).toBeEnabled();
+        await firstPost.click();
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(1000);
     });
 
     test('should display "Table of Contents" toggle button on mobile', async ({ page }) => {
