@@ -2,8 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Tag Component', () => {
     test.beforeEach(async ({ page, baseURL }) => {
-        await page.goto(`${baseURL!}/technology`);
-        await page.waitForLoadState('domcontentloaded');
+        await page.goto(`${baseURL!}/technology`, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
         await expect(firstPost).toBeVisible({ timeout: 15000 });

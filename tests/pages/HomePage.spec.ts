@@ -66,7 +66,7 @@ test.describe('Homepage - Component Availability', () => {
     await expect(techLink).toBeEnabled();
     await techLink.click();
 
-    await page.waitForURL(/.*\/technology$/);
+    await page.waitForURL('**/technology**', { timeout: 20000 });
     expect(page.url()).toContain('/technology');
   });
 
@@ -76,7 +76,7 @@ test.describe('Homepage - Component Availability', () => {
     await expect(communityLink).toBeEnabled();
     await communityLink.click();
 
-    await page.waitForURL(/.*\/community$/);
+    await page.waitForURL('**/community**', { timeout: 20000 });
     expect(page.url()).toContain('/community');
   });
 

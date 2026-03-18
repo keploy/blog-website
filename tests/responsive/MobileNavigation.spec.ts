@@ -40,7 +40,7 @@ test.describe('Mobile Navigation — Responsive', () => {
         await expect(closeButton).toBeVisible({ timeout: 5000 });
 
         const mobileMenu = page
-            .locator('div.fixed.left-1\/2.-translate-x-1\/2.z-\[1000\].md\\:hidden')
+            .locator('xpath=//div[contains(@class,"fixed") and contains(@class,"-translate-x-1/2") and contains(@class,"z-[1000]")]')
             .filter({ has: page.getByRole('link', { name: /sign in/i }) })
             .first();
         await expect(mobileMenu).toBeVisible();

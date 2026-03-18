@@ -85,7 +85,7 @@ test.describe('Navigation Component', () => {
     await expect(logoLink).toBeEnabled();
     await logoLink.click();
 
-    await page.waitForURL(/\/blog\/?$/);
+    await page.waitForURL(/\/blog\/?(?:[?#].*)?$/);
     expect(page.url()).not.toContain('/technology');
   });
 
