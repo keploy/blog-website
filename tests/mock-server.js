@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 4000;
+const MOCK_SERVER_DEBUG = process.env.MOCK_SERVER_DEBUG === 'true';
 
 function loadFixture(name) {
     const filePath = path.join(__dirname, 'fixtures', name);
@@ -10,6 +11,7 @@ function loadFixture(name) {
 }
 
 const technologyPosts = loadFixture('technology-posts.json');
+const communityPosts = loadFixture('community-posts.json');
 const singlePost = loadFixture('single-post.json');
 const searchSuccess = loadFixture('search-success-response.json');
 const errorResponse = loadFixture('error-response.json');
@@ -195,12 +197,19 @@ function handleGraphQL(body) {
         return reviewAuthorResponse;
     }
 
-    if (query.includes('AllPostsForCategory') || query.includes('categoryName: "technology"')) {
+    if (query.includes('AllPostsForCategory')) {
+        if (variables.categoryName === 'community' || query.includes('categoryName: "community"')) {
+            return communityPosts;
+        }
+        return technologyPosts;
+    }
+
+    if (query.includes('categoryName: "technology"')) {
         return technologyPosts;
     }
 
     if (query.includes('CommunityPosts') || query.includes('categoryName: "community"')) {
-        return technologyPosts;
+        return communityPosts;
     }
 
     if (query.includes('PostBySlug')) {
@@ -209,6 +218,10 @@ function handleGraphQL(body) {
 
     if (query.includes('AllPostsForSearch')) {
         return searchSuccess;
+    }
+
+    if (query.includes('MorePosts') && variables.category === 'community') {
+        return communityPosts;
     }
 
     if (query.includes('MorePosts')) {
@@ -231,7 +244,9 @@ function handleGraphQL(body) {
         return technologyPosts;
     }
 
-    console.log('[MockServer] Unmatched query:', query.substring(0, 100));
+    if (MOCK_SERVER_DEBUG) {
+        console.debug('[MockServer] Unmatched query:', query.substring(0, 100));
+    }
     return { data: { posts: { edges: [], pageInfo: { hasNextPage: false, endCursor: null } } } };
 }
 
