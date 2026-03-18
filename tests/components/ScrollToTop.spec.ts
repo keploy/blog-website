@@ -6,14 +6,13 @@ test.describe('ScrollToTop Component', () => {
         await page.waitForLoadState('domcontentloaded');
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
-        if (await firstPost.count() > 0) {
-            const href = await firstPost.getAttribute('href');
-            if (href) {
-                await page.goto(href);
-                await page.waitForLoadState('domcontentloaded');
-                await page.waitForTimeout(500);
-            }
-        }
+        await expect(firstPost).toBeVisible({ timeout: 15000 });
+        await expect(firstPost).toBeEnabled();
+        const href = await firstPost.getAttribute('href');
+        expect(href).toBeTruthy();
+        await page.goto(href!);
+        await page.waitForLoadState('domcontentloaded');
+        await expect(page.locator('button[aria-label="Scroll to top"]').first()).toBeAttached();
     });
 
     test('should have ScrollToTop button in the DOM', async ({ page }) => {
@@ -27,30 +26,19 @@ test.describe('ScrollToTop Component', () => {
 
     test('should become visible after scrolling down 300px', async ({ page }) => {
         const scrollBtn = page.locator('button[aria-label="Scroll to top"]').first();
-        if (await scrollBtn.count() === 0) {
-            return;
-        }
+        await expect(scrollBtn).toBeAttached();
         await page.evaluate(() => window.scrollTo(0, 500));
-        await page.waitForTimeout(500);
-        const classes = await scrollBtn.getAttribute('class');
-        const isShown = classes?.includes('opacity-100') && classes?.includes('visible');
-        expect(isShown).toBe(true);
+        await expect(scrollBtn).toHaveClass(/opacity-100/);
+        await expect(scrollBtn).toHaveClass(/visible/);
     });
 
     test('should scroll back to top when button is clicked', async ({ page }) => {
         const scrollBtn = page.locator('button[aria-label="Scroll to top"]').first();
-        if (await scrollBtn.count() === 0) {
-            return;
-        }
+        await expect(scrollBtn).toBeAttached();
         await page.evaluate(() => window.scrollTo(0, 600));
-        await page.waitForTimeout(800);
-        await page.evaluate(() => {
-            const btn = document.querySelector('button[aria-label="Scroll to top"]') as HTMLElement | null;
-            if (btn) btn.click();
-        });
-        await page.waitForTimeout(800);
-        const scrollY = await page.evaluate(() => window.scrollY);
-        expect(scrollY).toBeLessThan(100);
+        await expect(scrollBtn).toBeVisible();
+        await scrollBtn.click();
+        await expect.poll(async () => page.evaluate(() => window.scrollY)).toBeLessThan(100);
     });
 
     test('should have correct aria-label for accessibility', async ({ page }) => {
@@ -86,10 +74,8 @@ test.describe('ScrollToTop Component', () => {
         const scrollBtn = page.locator('button[aria-label="Scroll to top"]').first();
         await scrollBtn.waitFor({ state: 'attached' });
         await page.evaluate(() => window.scrollTo(0, 500));
-        await page.waitForTimeout(500);
         const circle = page.locator('circle[stroke="url(#progressGradient)"]').first();
         await expect(circle).toBeAttached();
-        const updatedOffset = await circle.getAttribute('stroke-dashoffset');
-        expect(updatedOffset).not.toBeNull();
+        await expect.poll(async () => circle.getAttribute('stroke-dashoffset')).not.toBeNull();
     });
 });

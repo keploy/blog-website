@@ -13,7 +13,7 @@ test.describe('TableContents (TOC) Component - Desktop', () => {
         await expect(firstPost).toBeEnabled();
         await firstPost.click();
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(1000);
+        await expect(page.locator('#post-body-check')).toBeVisible({ timeout: 10000 });
     });
 
     test('should display "Table of Contents" heading', async ({ page }) => {
@@ -80,9 +80,7 @@ test.describe('TableContents (TOC) Component - Desktop', () => {
             await expect(tocButtons.nth(1)).toBeVisible();
             await expect(tocButtons.nth(1)).toBeEnabled();
             await tocButtons.nth(1).click();
-            await page.waitForTimeout(700);
-            const url = page.url();
-            expect(url).toContain('#');
+            await expect.poll(async () => new URL(page.url()).hash).not.toBe('');
         }
     });
 
@@ -124,7 +122,7 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
         await expect(firstPost).toBeEnabled();
         await firstPost.click();
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(1000);
+        await expect(page.locator('#post-body-check')).toBeVisible({ timeout: 10000 });
     });
 
     test('should display "Table of Contents" toggle button on mobile', async ({ page }) => {
@@ -149,9 +147,7 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
             await expect(tocToggle).toBeVisible();
             await expect(tocToggle).toBeEnabled();
             await tocToggle.click();
-            await page.waitForTimeout(300);
-            const ariaExpanded = await tocToggle.getAttribute('aria-expanded');
-            expect(ariaExpanded).toBe('true');
+            await expect(tocToggle).toHaveAttribute('aria-expanded', 'true');
         }
     });
 
@@ -161,7 +157,7 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
             await expect(tocToggle).toBeVisible();
             await expect(tocToggle).toBeEnabled();
             await tocToggle.click();
-            await page.waitForTimeout(300);
+            await expect(tocToggle).toHaveAttribute('aria-expanded', 'true');
             const headingCount = await page.locator('#post-body-check h2, #post-body-check h3, #post-body-check h4').count();
             const dropdown = tocToggle.locator('xpath=following-sibling::div[contains(@class,"mt-2")][1]');
             const tocItems = dropdown.locator('ul li button, ul li a').filter({ hasNot: page.locator('svg') });
@@ -181,17 +177,14 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
             await expect(tocToggle).toBeVisible();
             await expect(tocToggle).toBeEnabled();
             await tocToggle.click();
-            await page.waitForTimeout(500);
+            await expect(tocToggle).toHaveAttribute('aria-expanded', 'true');
             const dropdown = tocToggle.locator('xpath=following-sibling::div[contains(@class,"mt-2")][1]');
             const tocItems = dropdown.locator('ul li button').first();
             if (await tocItems.count() > 0) {
                 await expect(tocItems).toBeVisible();
                 await expect(tocItems).toBeEnabled();
                 await tocItems.click();
-                await page.waitForTimeout(1500);
-
-                const bodyVisible = await page.locator('body').isVisible();
-                expect(bodyVisible).toBeTruthy();
+                await expect(tocToggle).toHaveAttribute('aria-expanded', 'false');
             }
         }
     });

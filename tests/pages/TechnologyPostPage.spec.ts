@@ -8,12 +8,10 @@ test.describe('Technology Post Page - Component Availability', () => {
     await page.goto(technologyUrl);
     await page.waitForLoadState('domcontentloaded');
     const firstPost = page.locator('a[href*="/technology/"]').first();
-    if (await firstPost.count() > 0) {
-      await expect(firstPost).toBeVisible({ timeout: 15000 });
-      await expect(firstPost).toBeEnabled();
-      await firstPost.click();
-      await page.waitForLoadState('domcontentloaded');
-    }
+    await expect(firstPost).toBeVisible({ timeout: 15000 });
+    await expect(firstPost).toBeEnabled();
+    await firstPost.click();
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should load technology post page successfully', async ({ page }) => {
@@ -44,8 +42,7 @@ test.describe('Technology Post Page - Component Availability', () => {
 
   test('should render the Footer component', async ({ page }) => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(500);
     const footer = page.locator('[data-testid="site-footer"]').first();
-    await expect(footer).toBeVisible();
+    await expect(footer).toBeVisible({ timeout: 10000 });
   });
 });

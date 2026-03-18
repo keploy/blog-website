@@ -36,10 +36,17 @@ test.describe('Mobile Navigation — Responsive', () => {
         await expect(menuButton).toBeEnabled();
         await menuButton.click();
 
-        const techSection = page.locator('button, span').filter({ hasText: 'Technology' });
-        const communitySection = page.locator('button, span').filter({ hasText: 'Community' });
-        expect(await techSection.count()).toBeGreaterThan(0);
-        expect(await communitySection.count()).toBeGreaterThan(0);
+        const closeButton = page.locator('button[aria-label="Close menu"]').first();
+        await expect(closeButton).toBeVisible({ timeout: 5000 });
+
+        const mobileMenu = page
+            .locator('div.fixed.left-1\/2.-translate-x-1\/2.z-\[1000\].md\\:hidden')
+            .filter({ has: page.getByRole('link', { name: /sign in/i }) })
+            .first();
+        await expect(mobileMenu).toBeVisible();
+
+        await expect(mobileMenu.getByText(/^Technology$/).first()).toBeVisible();
+        await expect(mobileMenu.getByText(/^Community$/).first()).toBeVisible();
     });
 
     test('should display Resources section in mobile menu', async ({ page }) => {
