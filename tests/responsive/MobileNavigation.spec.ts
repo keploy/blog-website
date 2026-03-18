@@ -42,8 +42,9 @@ test.describe('Mobile Navigation — Responsive', () => {
         const menuButton = page.locator('button[aria-label="Open menu"]').first();
         await menuButton.click({ force: true });
 
-        const resourcesSection = page.locator('button, span').filter({ hasText: 'Resources' });
-        expect(await resourcesSection.count()).toBeGreaterThan(0);
+        const mobileMenu = page.locator('[data-radix-collection-item]');
+        const resourcesSection = mobileMenu.locator('button, span').filter({ hasText: 'Resources' });
+        await expect(resourcesSection).toBeVisible();
     });
 
     test('should expand Technology dropdown in mobile menu', async ({ page }) => {
@@ -61,9 +62,9 @@ test.describe('Mobile Navigation — Responsive', () => {
         const menuButton = page.locator('button[aria-label="Open menu"]').first();
         await menuButton.click({ force: true });
 
-        const signInLinks = page.locator('a:has-text("Sign in")');
-        const count = await signInLinks.count();
-        expect(count).toBeGreaterThan(0);
+        const mobileMenu = page.locator('[data-radix-collection-item]');
+        const signInLink = mobileMenu.locator('a:has-text("Sign in")');
+        await expect(signInLink).toBeVisible();
     });
 
     test('should close mobile menu when hamburger is tapped again', async ({ page }) => {

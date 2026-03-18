@@ -30,7 +30,7 @@ test.describe('Tag Detail Page - Component Availability', () => {
     const emptyMessage = page.locator('text=/no posts|no content|empty/i');
     const postsCount = await posts.count();
     const emptyCount = await emptyMessage.count();
-    expect(postsCount + emptyCount).toBeGreaterThanOrEqual(0);
+    expect(postsCount > 0 || emptyCount > 0).toBeTruthy();
   });
 
   test('should render the Footer component', async ({ page }) => {

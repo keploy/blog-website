@@ -12,12 +12,9 @@ test.describe('Search Page - Component Availability', () => {
   });
 
   test('should render the Navigation component', async ({ page }) => {
-
     const nav = page.locator('nav').first();
     const header = page.locator('header').first();
-    const navCount = await nav.count();
-    const headerCount = await header.count();
-    expect(navCount + headerCount).toBeGreaterThanOrEqual(0);
+    await expect(nav.or(header).first()).toBeVisible();
   });
 
   test('should render the Keploy logo in Navigation', async ({ page }) => {
@@ -35,7 +32,7 @@ test.describe('Search Page - Component Availability', () => {
     const emptyMessage = page.locator('text=/no posts|no results|not found/i');
     const postsCount = await posts.count();
     const emptyCount = await emptyMessage.count();
-    expect(postsCount + emptyCount).toBeGreaterThanOrEqual(0);
+    expect(postsCount > 0 || emptyCount > 0).toBeTruthy();
   });
 
   test('should render the Footer component', async ({ page }) => {

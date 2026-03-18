@@ -9,18 +9,19 @@ test.describe('Mobile Layout — Homepage', () => {
     });
 
     test('hero post should stack vertically on mobile (no side-by-side grid)', async ({ page }) => {
-
         const heroContainer = page.locator('div.lg\\:grid.lg\\:grid-cols-2').first();
-            const box = await heroContainer.boundingBox();
-
-            expect(box?.width).toBeLessThanOrEqual(375);
+        await expect(heroContainer).toBeVisible();
+        const box = await heroContainer.boundingBox();
+        expect(box).not.toBeNull();
+        expect(box?.width).toBeLessThanOrEqual(375);
     });
 
     test('post cards should be single column on mobile', async ({ page }) => {
-
         const postGrid = page.locator('.grid.grid-cols-1').first();
-            const gridBox = await postGrid.boundingBox();
-            expect(gridBox?.width).toBeLessThanOrEqual(375);
+        await expect(postGrid).toBeVisible();
+        const gridBox = await postGrid.boundingBox();
+        expect(gridBox).not.toBeNull();
+        expect(gridBox?.width).toBeLessThanOrEqual(375);
     });
 
     test('page should be scrollable on mobile', async ({ page }) => {
@@ -71,8 +72,10 @@ test.describe('Mobile Layout — Technology Page', () => {
 
     test('post cards should not overflow viewport on mobile', async ({ page }) => {
         const cards = page.locator('a[href*="/technology/"]');
-            const cardBox = await cards.first().boundingBox();
-            expect(cardBox?.width).toBeLessThanOrEqual(375);
+        await expect(cards.first()).toBeVisible();
+        const cardBox = await cards.first().boundingBox();
+        expect(cardBox).not.toBeNull();
+        expect(cardBox?.width).toBeLessThanOrEqual(375);
     });
 
     test('hero post image and content should stack on mobile', async ({ page }) => {
@@ -105,9 +108,10 @@ test.describe('Mobile Layout — Blog Post Page', () => {
 
     test('blog post content should be readable on mobile (not clipped)', async ({ page }) => {
         const content = page.locator('.prose, #post-body-check').first();
-            const contentBox = await content.boundingBox();
-
-            expect(contentBox?.width).toBeLessThanOrEqual(375);
+        await expect(content).toBeVisible();
+        const contentBox = await content.boundingBox();
+        expect(contentBox).not.toBeNull();
+        expect(contentBox?.width).toBeLessThanOrEqual(375);
     });
 
     test('post title should be visible on mobile', async ({ page }) => {

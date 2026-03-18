@@ -27,8 +27,10 @@ test.describe('Community Search Page - Component Availability', () => {
 
   test('should render community post results or empty state', async ({ page }) => {
     const postLinks = page.locator('a[href*="/community/"]');
-    const count = await postLinks.count();
-    expect(count).toBeGreaterThanOrEqual(0);
+    const emptyMessage = page.locator('text=/no posts|no results|not found/i');
+    const postsCount = await postLinks.count();
+    const emptyCount = await emptyMessage.count();
+    expect(postsCount > 0 || emptyCount > 0).toBeTruthy();
   });
 
   test('should render the Footer component', async ({ page }) => {

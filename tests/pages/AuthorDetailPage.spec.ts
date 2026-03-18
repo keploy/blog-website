@@ -32,7 +32,7 @@ test.describe('Author Detail Page - Component Availability', () => {
     const headingCount = await heading.count();
     const emptyCount = await emptyState.count();
 
-    expect(headingCount + emptyCount).toBeGreaterThanOrEqual(0);
+    expect(headingCount > 0 || emptyCount > 0).toBeTruthy();
   });
 
   test('should render post cards by the author', async ({ page }) => {
