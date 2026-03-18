@@ -34,7 +34,7 @@ test.describe('SEO and Meta Tags Configuration', () => {
 
     test('Individual Post page should have dynamic SEO meta tags', async ({ page, baseURL }) => {
 
-        await page.goto(`${baseURL!}/technology/future-of-test-automation-in-ai-era`);
+        await page.goto(`${baseURL!}/technology/understanding-api-testing-with-keploy`);
         await page.waitForLoadState('domcontentloaded');
 
         await expect(page).not.toHaveTitle('Keploy Blog');
