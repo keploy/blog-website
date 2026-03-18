@@ -9,7 +9,9 @@ test.describe('PostBody Component', () => {
         await page.waitForLoadState('domcontentloaded');
 
         const firstPost = page.locator('a[href*="/technology/"]').first();
-        await firstPost.click({ force: true });
+        await expect(firstPost).toBeVisible({ timeout: 15000 });
+        await expect(firstPost).toBeEnabled();
+        await firstPost.click();
         await page.waitForLoadState('domcontentloaded');
     });
 

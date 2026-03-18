@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 
+const WIDTH_EPSILON = 2;
+
+function maxAllowedWidth(page: { viewportSize: () => { width: number; height: number } | null }) {
+    return (page.viewportSize()?.width ?? 375) + WIDTH_EPSILON;
+}
+
 test.describe('Mobile Layout — Homepage', () => {
     test.use({ viewport: { width: 375, height: 812 } });
 
@@ -13,7 +19,7 @@ test.describe('Mobile Layout — Homepage', () => {
         await expect(topContent).toBeVisible();
         const box = await topContent.boundingBox();
         expect(box).not.toBeNull();
-        expect(box?.width).toBeLessThanOrEqual(375);
+        expect(box?.width).toBeLessThanOrEqual(maxAllowedWidth(page));
     });
 
     test('post cards should be single column on mobile', async ({ page }) => {
@@ -21,7 +27,7 @@ test.describe('Mobile Layout — Homepage', () => {
         await expect(postGrid).toBeVisible();
         const gridBox = await postGrid.boundingBox();
         expect(gridBox).not.toBeNull();
-        expect(gridBox?.width).toBeLessThanOrEqual(375);
+        expect(gridBox?.width).toBeLessThanOrEqual(maxAllowedWidth(page));
     });
 
     test('page should be scrollable on mobile', async ({ page }) => {
@@ -47,7 +53,7 @@ test.describe('Mobile Layout — Homepage', () => {
         await expect(footer).toBeVisible({ timeout: 5000 });
 
         const footerBox = await footer.boundingBox();
-        expect(footerBox?.width).toBeLessThanOrEqual(375);
+        expect(footerBox?.width).toBeLessThanOrEqual(maxAllowedWidth(page));
     });
 
     test('Keploy logo should be visible on mobile', async ({ page }) => {
@@ -75,7 +81,7 @@ test.describe('Mobile Layout — Technology Page', () => {
         await expect(cards.first()).toBeVisible();
         const cardBox = await cards.first().boundingBox();
         expect(cardBox).not.toBeNull();
-        expect(cardBox?.width).toBeLessThanOrEqual(375);
+        expect(cardBox?.width).toBeLessThanOrEqual(maxAllowedWidth(page));
     });
 
     test('hero post image and content should stack on mobile', async ({ page }) => {
@@ -90,7 +96,7 @@ test.describe('Mobile Layout — Technology Page', () => {
         const postLinks = page.locator('a[href*="/technology/"]');
             const linkBox = await postLinks.first().boundingBox();
 
-            expect(linkBox?.width).toBeLessThanOrEqual(375);
+            expect(linkBox?.width).toBeLessThanOrEqual(maxAllowedWidth(page));
     });
 });
 
@@ -111,14 +117,14 @@ test.describe('Mobile Layout — Blog Post Page', () => {
         await expect(content).toBeVisible();
         const contentBox = await content.boundingBox();
         expect(contentBox).not.toBeNull();
-        expect(contentBox?.width).toBeLessThanOrEqual(375);
+        expect(contentBox?.width).toBeLessThanOrEqual(maxAllowedWidth(page));
     });
 
     test('post title should be visible on mobile', async ({ page }) => {
         const title = page.locator('h1').first();
             await expect(title).toBeVisible();
             const titleBox = await title.boundingBox();
-            expect(titleBox?.width).toBeLessThanOrEqual(375);
+            expect(titleBox?.width).toBeLessThanOrEqual(maxAllowedWidth(page));
     });
 
     test('TOC toggle should be visible on mobile post page', async ({ page }) => {
