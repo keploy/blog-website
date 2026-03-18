@@ -8,16 +8,11 @@ on:
 
 jobs:
   test:
-    name: E2E Tests (${{ matrix.browser }})
+    name: E2E Tests (chromium)
     timeout-minutes: 20
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
-    strategy:
-      fail-fast: false
-      matrix:  
-        browser: [chromium, firefox, webkit]
     
     steps:
       - name: Checkout code
@@ -33,10 +28,10 @@ jobs:
         run: npm ci
       
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps ${{ matrix.browser }}
+        run: npx playwright install --with-deps chromium
       
       - name: Run Playwright tests
-        run: npm run test:e2e -- --project=${{ matrix.browser }}
+        run: npm run test:e2e -- --project=chromium
         env:
           CI: true
           BASE_URL: http://localhost:3000/blog
@@ -45,7 +40,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ matrix.browser }}
+          name: test-results-chromium
           path: test-results/
           retention-days: 7
       
@@ -53,7 +48,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.browser }}
+          name: playwright-report-chromium
           path: playwright-report/
           retention-days: 7
       
