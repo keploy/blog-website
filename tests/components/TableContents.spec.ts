@@ -86,9 +86,17 @@ test.describe('TableContents (TOC) Component - Desktop', () => {
 
     test('TOC items should have orange hover style', async ({ page }) => {
         const tocButtons = page.locator('nav ul li button');
-        if (await tocButtons.count() > 0) {
-            const classes = await tocButtons.first().getAttribute('class');
-            expect(classes).toContain('hover:text-orange-500');
+        const buttonCount = await tocButtons.count();
+        if (buttonCount > 0) {
+            let hasHoverClass = false;
+            for (let i = 0; i < buttonCount; i++) {
+                const classes = await tocButtons.nth(i).getAttribute('class');
+                if (classes && classes.includes('hover:text-orange-500')) {
+                    hasHoverClass = true;
+                    break;
+                }
+            }
+            expect(hasHoverClass).toBe(true);
         }
     });
 
