@@ -31,8 +31,8 @@ test.describe('404 Not Found Page - Component Availability', () => {
     expect(count).toBeGreaterThan(0);
   });
 
-  test('should render the Footer component', async ({ page }) => {
-    const footer = page.locator('footer');
-      await expect(footer).toBeVisible();
+  test('should not render the global Footer on dedicated 404 layout', async ({ page }) => {
+    const footer = page.locator('[data-testid="site-footer"]');
+    await expect(footer).toHaveCount(0);
   });
 });

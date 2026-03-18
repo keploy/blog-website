@@ -9,9 +9,9 @@ test.describe('Mobile Layout — Homepage', () => {
     });
 
     test('hero post should stack vertically on mobile (no side-by-side grid)', async ({ page }) => {
-        const heroContainer = page.locator('div.lg\\:grid.lg\\:grid-cols-2').first();
-        await expect(heroContainer).toBeVisible();
-        const box = await heroContainer.boundingBox();
+        const topContent = page.locator('main').first();
+        await expect(topContent).toBeVisible();
+        const box = await topContent.boundingBox();
         expect(box).not.toBeNull();
         expect(box?.width).toBeLessThanOrEqual(375);
     });

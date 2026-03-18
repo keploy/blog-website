@@ -42,8 +42,9 @@ test.describe('Mobile Navigation — Responsive', () => {
         const menuButton = page.locator('button[aria-label="Open menu"]').first();
         await menuButton.click({ force: true });
 
-        const mobileMenu = page.locator('[data-radix-collection-item]');
-        const resourcesSection = mobileMenu.locator('button, span').filter({ hasText: 'Resources' });
+        const closeButton = page.locator('button[aria-label="Close menu"]').first();
+        await expect(closeButton).toBeVisible();
+        const resourcesSection = page.locator('button').filter({ hasText: 'Resources' }).first();
         await expect(resourcesSection).toBeVisible();
     });
 
@@ -62,8 +63,9 @@ test.describe('Mobile Navigation — Responsive', () => {
         const menuButton = page.locator('button[aria-label="Open menu"]').first();
         await menuButton.click({ force: true });
 
-        const mobileMenu = page.locator('[data-radix-collection-item]');
-        const signInLink = mobileMenu.locator('a:has-text("Sign in")');
+        const closeButton = page.locator('button[aria-label="Close menu"]').first();
+        await expect(closeButton).toBeVisible();
+        const signInLink = page.getByRole('link', { name: /sign in/i }).first();
         await expect(signInLink).toBeVisible();
     });
 

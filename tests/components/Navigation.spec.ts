@@ -74,9 +74,10 @@ test.describe('Navigation Component', () => {
     const logo = page.locator('img[alt="Keploy Logo"]').first();
     const logoLink = page.locator('a').filter({ has: logo }).first();
     const href = await logoLink.getAttribute('href');
+    expect(href).toBeTruthy();
     await logoLink.click({ force: true });
 
-    await page.waitForURL(/\/$/);
+    await page.waitForURL(/\/blog\/?$/);
     expect(page.url()).not.toContain('/technology');
   });
 

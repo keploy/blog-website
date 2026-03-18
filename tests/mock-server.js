@@ -278,7 +278,12 @@ const server = http.createServer((req, res) => {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(response));
             } catch (err) {
-                console.error('Mock server error:', err.message);
+                console.error('[MockServer] Request handling error', {
+                    method: req.method,
+                    url: req.url,
+                    rawBody,
+                });
+                console.error('[MockServer] Full error object:', err);
                 res.writeHead(500, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(errorResponse));
             }

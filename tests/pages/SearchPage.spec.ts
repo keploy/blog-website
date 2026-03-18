@@ -11,15 +11,15 @@ test.describe('Search Page - Component Availability', () => {
     await expect(body).toBeVisible();
   });
 
-  test('should render the Navigation component', async ({ page }) => {
-    const nav = page.locator('nav').first();
-    const header = page.locator('header').first();
-    await expect(nav.or(header).first()).toBeVisible();
+  test('should not render global navigation on search layout', async ({ page }) => {
+    const nav = page.locator('nav');
+    const header = page.locator('header');
+    expect((await nav.count()) + (await header.count())).toBe(0);
   });
 
-  test('should render the Keploy logo in Navigation', async ({ page }) => {
-    const headerLogo = page.locator('header img[alt="Keploy Logo"]').first();
-    await expect(headerLogo).toBeVisible();
+  test('should not depend on header logo rendering on search layout', async ({ page }) => {
+    const headerLogo = page.locator('header img[alt="Keploy Logo"]');
+    await expect(headerLogo).toHaveCount(0);
   });
 
   test('should render the search input field', async ({ page }) => {

@@ -21,7 +21,7 @@ test.describe('PostHeader Component', () => {
     });
 
     test('should display cover image with alt text', async ({ page }) => {
-        const coverImg = page.locator('img[alt*="Cover Image for"]');
+          const coverImg = page.locator('img[alt*="Cover Image for"]').first();
         await expect(coverImg).toBeVisible();
         const alt = await coverImg.getAttribute('alt');
         expect(alt).not.toBeNull();

@@ -34,7 +34,8 @@ test.describe('Community Post Page - Component Availability', () => {
   });
 
   test('should render the Footer component', async ({ page }) => {
-    const footer = page.locator('footer').first();
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    const footer = page.locator('[data-testid="site-footer"]').first();
     await expect(footer).toBeVisible();
   });
 });

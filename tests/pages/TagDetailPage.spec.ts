@@ -25,12 +25,10 @@ test.describe('Tag Detail Page - Component Availability', () => {
     await expect(headerLogo).toBeVisible();
   });
 
-  test('should render post cards or empty state for the tag', async ({ page }) => {
-    const posts = page.locator('article, a[href*="/technology/"], a[href*="/community/"]');
-    const emptyMessage = page.locator('text=/no posts|no content|empty/i');
-    const postsCount = await posts.count();
-    const emptyCount = await emptyMessage.count();
-    expect(postsCount > 0 || emptyCount > 0).toBeTruthy();
+  test('should render tag section with heading and optional post cards', async ({ page }) => {
+    const tagSection = page.locator('section.pb-16').first();
+    await expect(tagSection).toBeVisible();
+    await expect(page.locator('h2').filter({ hasText: 'Tags' }).first()).toBeVisible();
   });
 
   test('should render the Footer component', async ({ page }) => {

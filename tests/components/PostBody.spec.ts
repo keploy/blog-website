@@ -45,6 +45,9 @@ test.describe('PostBody Component', () => {
         const headingCount = await page.locator('#post-body-check h2, #post-body-check h3, #post-body-check h4').count();
         if (headingCount > 0) {
             expect(count).toBeGreaterThan(0);
+            const hasVisibleToggle = await tocToggle.first().isVisible().catch(() => false);
+            const hasVisibleHeading = await tocHeading.first().isVisible().catch(() => false);
+            expect(hasVisibleToggle || hasVisibleHeading).toBeTruthy();
         } else {
             expect(count).toBe(0);
         }
