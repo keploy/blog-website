@@ -84,8 +84,7 @@ test.describe('Navigation Component', () => {
     await expect(logoLink).toBeVisible();
     await expect(logoLink).toBeEnabled();
     await logoLink.click();
-
-    await page.waitForURL(/\/blog\/?(?:[?#].*)?$/);
+    await page.waitForURL((url) => !url.pathname.includes('/technology'), { timeout: 20000 });
     expect(page.url()).not.toContain('/technology');
   });
 

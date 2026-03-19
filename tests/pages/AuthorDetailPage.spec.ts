@@ -30,8 +30,8 @@ test.describe('Author Detail Page - Component Availability', () => {
   test('should render a page heading', async ({ page }) => {
     const heading = page.locator('h1, h2').first();
     const posts = page.locator('a[href*="/technology/"], a[href*="/community/"]').first();
-    const hasVisibleHeading = await heading.isVisible().catch(() => false);
-    const hasVisiblePosts = await posts.isVisible().catch(() => false);
+    const hasVisibleHeading = await expect(heading).toBeVisible({ timeout: 15000 }).then(() => true).catch(() => false);
+    const hasVisiblePosts = await expect(posts).toBeVisible({ timeout: 15000 }).then(() => true).catch(() => false);
     expect(hasVisibleHeading || hasVisiblePosts).toBeTruthy();
   });
 
