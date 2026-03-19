@@ -23,13 +23,13 @@ export default function CoverImage({
       height={1000}
       alt={`Cover Image for ${title}`}
       src={coverImage?.node.sourceUrl}
-      className={`w-full h-auto rounded-xl object-cover${imgClassName ? ` ${imgClassName}` : ""}${slug ? " transition-transform duration-300 hover:scale-[1.01]" : ""}`}
+      className={`w-full h-auto object-cover${imgClassName ? ` ${imgClassName}` : ""}${slug ? " transition-transform duration-300 hover:scale-[1.01]" : ""}`}
       priority
     />
   );
 
   return (
-    <div className="w-full overflow-hidden rounded-xl">
+    <div className="w-full overflow-hidden">
       {slug ? (
         <Link href={`${basePath}${slug}`} aria-label={title}>
           {image}
