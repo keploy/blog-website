@@ -56,18 +56,18 @@ test.describe('Navigation Component', () => {
   });
 
   test('should render nav element', async ({ page }) => {
-    const navbar = page.locator('nav').first();
+    const navbar = page.getByTestId('navbar').first();
     await expect(navbar).toBeVisible({ timeout: 15000 });
-    const navClasses = await navbar.getAttribute('class');
-    expect(navClasses).toBeTruthy();
+    // Verify it has some base classes related to layout
+    await expect(navbar).toHaveClass(/mx-auto|fixed/);
   });
 
   test('should update navbar appearance on scroll', async ({ page }) => {
-    const navbar = page.locator('nav').first();
+    const navbar = page.getByTestId('navbar').first();
     await expect(navbar).toBeVisible({ timeout: 15000 });
     await page.evaluate(() => window.scrollBy(0, 200));
-    const scrolledClasses = await navbar.getAttribute('class');
-    expect(scrolledClasses).toBeTruthy();
+    // When scrolled, width changes from max-w-6xl to max-w-5xl (or similar width classes)
+    await expect(navbar).toHaveClass(/w-\[82%\]|max-w-5xl/);
   });
 
   test('should navigate back to homepage when logo is clicked from another page', async ({ page }) => {
@@ -90,9 +90,7 @@ test.describe('Navigation Component', () => {
 
   test('should keep navigation visible at all scroll positions', async ({ page }) => {
     await page.evaluate(() => window.scrollTo(0, 500));
-    const navbar = page.locator('nav').first();
-    if (await navbar.count() > 0) {
-      await expect(navbar).toBeVisible();
-    }
+    const navbar = page.getByTestId('navbar').first();
+    await expect(navbar).toBeVisible();
   });
 });

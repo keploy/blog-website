@@ -41,8 +41,7 @@ test.describe('PostHeader Component', () => {
         const authorSection = page.locator('img[alt*="avatar"]').or(
             page.locator('[class*="author"]')
         );
-        const count = await authorSection.count();
-        expect(count).toBeGreaterThan(0);
+        await expect(authorSection.first()).toBeVisible();
     });
 });
 

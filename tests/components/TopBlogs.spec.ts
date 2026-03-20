@@ -12,11 +12,8 @@ test.describe('TopBlogs Component - Homepage', () => {
     });
 
     test('should display technology post cards', async ({ page }) => {
-
         const techGrid = page.locator('div[class*="grid"]').first();
-        const techPosts = techGrid.locator('article, div[class*="post"], a[href*="/technology/"]');
-        const count = await techPosts.count();
-        expect(count).toBeGreaterThan(0);
+        const techPosts = techGrid.getByTestId('post-card');
         await expect(techPosts.first()).toBeVisible();
     });
 
@@ -40,11 +37,8 @@ test.describe('TopBlogs Component - Homepage', () => {
     });
 
     test('should display community post cards', async ({ page }) => {
-
         const commGrid = page.locator('div[class*="grid"]').nth(1);
-        const commPosts = commGrid.locator('article, div[class*="post"], a[href*="/community/"]');
-        const count = await commPosts.count();
-        expect(count).toBeGreaterThan(0);
+        const commPosts = commGrid.getByTestId('post-card');
         await expect(commPosts.first()).toBeVisible();
     });
 
@@ -63,17 +57,9 @@ test.describe('TopBlogs Component - Homepage', () => {
     });
 
     test('post cards inside TopBlogs should have image, title, and date', async ({ page }) => {
-
         const techSection = page.locator('h3:has-text("Recent Technology Blogs")').locator('..');
-        const postTitle = techSection.locator('h3 a[href*="/technology/"]').first();
-        const count = await postTitle.count();
-
-        if (count > 0) {
-            await expect(postTitle).toBeVisible();
-        } else {
-
-            const heading = page.locator('h3:has-text("Recent Technology Blogs")');
-            await expect(heading).toBeVisible();
-        }
+        const firstCard = techSection.getByTestId('post-card').first();
+        await expect(firstCard).toBeVisible();
+        await expect(firstCard.locator('h3 a')).toBeVisible();
     });
 });

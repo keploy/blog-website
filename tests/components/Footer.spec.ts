@@ -107,31 +107,25 @@ test.describe('Footer Component', () => {
 
   test('all social links should open in new tab', async ({ page }) => {
     const footer = page.locator('[data-testid="site-footer"]');
-    const socialLinks = footer.locator('a[href*="twitter.com"], a[href*="x.com"], a[href*="github.com"], a[href*="linkedin.com"], a[href*="slack"]');
-    const count = await socialLinks.count();
-    expect(count).toBeGreaterThan(0);
-    const firstLink = socialLinks.first();
-    await expect(firstLink).toHaveAttribute('target', '_blank');
-    await expect(firstLink).toHaveAttribute('rel', /noopener/);
+    const twitterLink = footer.locator('a[href*="twitter.com"], a[href*="x.com"]').first();
+    await expect(twitterLink).toBeVisible();
+    await expect(twitterLink).toHaveAttribute('target', '_blank');
+    await expect(twitterLink).toHaveAttribute('rel', /noopener/);
   });
 
   test('should have accessible social link labels', async ({ page }) => {
     const footer = page.locator('[data-testid="site-footer"]');
-    const socialLinks = footer.locator('a[href*="twitter.com"], a[href*="x.com"], a[href*="github.com"]');
-    const count = await socialLinks.count();
-    expect(count).toBeGreaterThan(0);
-    const firstLink = socialLinks.first();
-    const srOnly = firstLink.locator('.sr-only');
-    const ariaLabel = await firstLink.getAttribute('aria-label');
-    const hasSrOnly = await srOnly.count() > 0;
-    const hasAriaLabel = ariaLabel !== null;
-    expect(hasSrOnly || hasAriaLabel).toBe(true);
+    const githubLink = footer.locator('a[href*="github.com"]').first();
+    await expect(githubLink).toBeVisible();
+    // Verify it either has an aria-label or accessible text (sr-only)
+    const ariaLabel = await githubLink.getAttribute('aria-label');
+    const srOnlyText = await githubLink.locator('.sr-only').first().textContent().catch(() => '');
+    expect(ariaLabel || srOnlyText?.trim()).toBeTruthy();
   });
 
   test('should display multiple footer links', async ({ page }) => {
     const footer = page.locator('[data-testid="site-footer"]');
     const allLinks = footer.locator('a');
-    const count = await allLinks.count();
-    expect(count).toBeGreaterThan(10);
+    await expect(allLinks.nth(10)).toBeAttached();
   });
 });

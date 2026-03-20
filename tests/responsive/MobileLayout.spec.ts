@@ -39,11 +39,21 @@ test.describe('Mobile Layout — Homepage', () => {
     });
 
     test('post cards should be single column on mobile', async ({ page }) => {
-        const postGrid = page.locator('.grid.grid-cols-1').first();
+        const postGrid = page.getByTestId('post-grid').first();
         await expect(postGrid).toBeVisible();
-        const gridBox = await postGrid.boundingBox();
-        expect(gridBox).not.toBeNull();
-        expect(gridBox?.width).toBeLessThanOrEqual(maxAllowedWidth(page));
+        
+        const children = postGrid.locator('> *');
+        await expect(children.nth(1)).toBeVisible();
+        
+        const firstPost = await children.nth(0).boundingBox();
+        const secondPost = await children.nth(1).boundingBox();
+        
+        if (firstPost && secondPost) {
+            // In single column, X positions should be identical (within epsilon)
+            expect(Math.abs(firstPost.x - secondPost.x)).toBeLessThan(10);
+            // Second post must be below the first
+            expect(secondPost.y).toBeGreaterThan(firstPost.y + firstPost.height/2);
+        }
     });
 
     test('page should be scrollable on mobile', async ({ page }) => {
@@ -123,7 +133,7 @@ test.describe('Mobile Layout — Blog Post Page', () => {
     });
 
     test('blog post content should be readable on mobile (not clipped)', async ({ page }) => {
-        const content = page.locator('.prose, #post-body-check').first();
+        const content = page.getByTestId('post-content');
         await expect(content).toBeVisible();
         const contentBox = await content.boundingBox();
         expect(contentBox).not.toBeNull();
@@ -138,15 +148,16 @@ test.describe('Mobile Layout — Blog Post Page', () => {
     });
 
     test('TOC toggle should be visible on mobile post page', async ({ page }) => {
-
-        const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' });
-            await expect(tocToggle.first()).toBeVisible();
+        const mobileToc = page.getByTestId('mobile-toc');
+        const tocToggle = mobileToc.locator('button').filter({ hasText: 'Table of Contents' });
+        await expect(tocToggle.first()).toBeVisible();
     });
 
     test('desktop TOC sidebar should be hidden on mobile', async ({ page }) => {
-
-        const desktopToc = page.locator('.hidden.lg\\:inline-block');
-            await expect(desktopToc.first()).not.toBeVisible();
+        const desktopToc = page.getByTestId('desktop-toc');
+        // Ensure it's in the DOM but hidden by Tailwind's responsive classes
+        await expect(desktopToc.first()).toBeAttached();
+        await expect(desktopToc.first()).not.toBeVisible();
     });
 });
 
@@ -168,21 +179,20 @@ test.describe('Tablet Layout — Responsive (768px)', () => {
     });
 
     test('hamburger menu should be hidden at tablet width', async ({ page }) => {
-
-        const menuButton = page.locator('button[aria-label="Open menu"]');
-            await expect(menuButton.first()).not.toBeVisible();
+        const menuButton = page.getByTestId('navbar-toggle');
+        await expect(menuButton.first()).not.toBeVisible();
     });
 
-    test('post grid should display 2 columns at tablet width', async ({ page }) => {
+    test('post grid should display multiple columns at tablet width', async ({ page }) => {
         const postGrid = page.locator('[data-testid="post-grid"]').first();
         const children = postGrid.locator('> *');
-        const count = await children.count();
-        if (count >= 2) {
-            const first = await children.first().boundingBox();
-            const second = await children.nth(1).boundingBox();
-            if (first && second) {
-                expect(Math.abs((second?.y || 0) - (first?.y || 0))).toBeLessThan(50);
-            }
+        await expect(children.nth(1)).toBeVisible();
+        
+        const first = await children.first().boundingBox();
+        const second = await children.nth(1).boundingBox();
+        if (first && second) {
+            // Horizontal alignment check
+            expect(Math.abs((second?.y || 0) - (first?.y || 0))).toBeLessThan(50);
         }
     });
 

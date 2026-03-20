@@ -128,7 +128,7 @@ const authorPostsResponse = {
 const postContentResponse = {
     data: {
         postBy: {
-            content: '<h2>Introduction</h2><p>API testing is a critical part of software development.</p>'
+            content: '<h2>Introduction</h2><p>API testing is a critical part of software development.</p><h3>Getting Started</h3><p>Install Keploy to begin.</p><pre><code class="language-javascript">console.log("Hello Keploy");</code></pre><h2>Key Features</h2><p>Record and replay traffic.</p>'
         }
     }
 };

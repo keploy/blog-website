@@ -15,16 +15,12 @@ test.describe('Testimonials Component - Homepage', () => {
 
     test('should display marquee container', async ({ page }) => {
         const marqueeContainer = page.locator('.marquee-mask');
-        const count = await marqueeContainer.count();
-        expect(count).toBeGreaterThan(0);
-        await expect(marqueeContainer).toBeVisible();
+        await expect(marqueeContainer.first()).toBeVisible();
     });
 
     test('should display testimonial review cards', async ({ page }) => {
-
         const figures = page.locator('.marquee-mask figure');
-        const count = await figures.count();
-        expect(count).toBeGreaterThan(0);
+        await expect(figures.first()).toBeVisible();
     });
 
     test('review cards should contain an avatar, name, and ID', async ({ page }) => {

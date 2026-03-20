@@ -172,7 +172,7 @@ export default function TOC({ headings, isList, setIsList }) {
           </select>
         </div>
       ) : (
-        <nav ref={tocRef}>
+        <nav ref={tocRef} data-testid="toc-nav">
           {/* ─── TOC Card ─────────────────────────────── */}
           <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden pb-3 w-full">
 

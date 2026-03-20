@@ -194,7 +194,7 @@ export default function Tag({
           const { IconComp, colorScheme } = renderTagButton(name, prev as string | undefined);
           
           return (
-            <Link key={index} href={`/tag/${name}`}>
+            <Link key={index} href={`/tag/${name}`} data-testid="tag-link">
               <button
                 className={`
                   group inline-flex items-center gap-1.5 md:gap-2.5

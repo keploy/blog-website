@@ -35,9 +35,7 @@ test.describe('Technology Post Page - Component Availability', () => {
 
   test('should render the PostBody component', async ({ page }) => {
     const postBody = page.locator('#post-body-check, article, [class*="post-body"], [class*="content"]').first();
-    if (await postBody.count() > 0) {
-      await expect(postBody).toBeVisible();
-    }
+    await expect(postBody).toBeVisible();
   });
 
   test('should render the Footer component', async ({ page }) => {
