@@ -5,13 +5,14 @@ test.describe('Technology Post Page - Component Availability', () => {
     const technologyUrl = baseURL
       ? `${baseURL}/technology`
       : 'http://localhost:3000/blog/technology';
-    await page.goto(technologyUrl);
-    await page.waitForLoadState('domcontentloaded');
-    const firstPost = page.locator('a[href*="/technology/"]').first();
+    await page.goto(technologyUrl, { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('h2').filter({ hasText: /More Stories/i })).toBeVisible({ timeout: 15000 });
+
+    const firstPost = page.locator('[data-testid="hero-post-title"] a, [data-testid="post-card"] a').first();
     await expect(firstPost).toBeVisible({ timeout: 15000 });
     await expect(firstPost).toBeEnabled();
     await firstPost.click();
-    await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByTestId('post-content')).toBeVisible({ timeout: 15000 });
   });
 
   test('should load technology post page successfully', async ({ page }) => {

@@ -5,15 +5,17 @@ test.describe('TableContents (TOC) Component - Desktop', () => {
 
     test.beforeEach(async ({ page, baseURL }) => {
         const targetUrl = baseURL ? `${baseURL}/technology` : 'http://localhost:3000/blog/technology';
-        await page.goto(targetUrl);
-        await page.waitForLoadState('domcontentloaded');
+        await page.goto(targetUrl, { waitUntil: 'domcontentloaded' });
+        await expect(page.locator('h2').filter({ hasText: /More Stories/i })).toBeVisible({ timeout: 15000 });
 
-        const firstPost = page.locator('a[href*="/technology/"]').first();
+
+        const firstPost = page.locator('[data-testid="hero-post-title"] a, [data-testid="post-card"] a').first();
         await expect(firstPost).toBeVisible({ timeout: 15000 });
         await expect(firstPost).toBeEnabled();
         await firstPost.click();
-        await page.waitForLoadState('domcontentloaded');
-        await expect(page.getByTestId('post-content')).toBeVisible({ timeout: 10000 });
+        await expect(page.getByTestId('post-content')).toBeVisible({ timeout: 15000 });
+        const tocItem = page.getByTestId('toc-nav').filter({ visible: true }).locator('[data-toc-id] button').first();
+        await expect(tocItem).toBeVisible({ timeout: 10000 });
     });
 
     test('should display "Table of Contents" heading', async ({ page }) => {
@@ -74,15 +76,19 @@ test.describe('TableContents (TOC) Component - Mobile', () => {
     test.use({ viewport: { width: 375, height: 812 } });
 
     test.beforeEach(async ({ page, baseURL }) => {
-        await page.goto(`${baseURL!}/technology`);
-        await page.waitForLoadState('domcontentloaded');
+        const targetUrl = baseURL ? `${baseURL}/technology` : 'http://localhost:3000/blog/technology';
+        await page.goto(targetUrl, { waitUntil: 'domcontentloaded' });
 
-        const firstPost = page.locator('a[href*="/technology/"]').first();
+        await expect(page.locator('h2').filter({ hasText: /More Stories/i })).toBeVisible({ timeout: 15000 });
+
+        const firstPost = page.locator('[data-testid="hero-post-title"] a, [data-testid="post-card"] a').first();
         await expect(firstPost).toBeVisible({ timeout: 15000 });
         await expect(firstPost).toBeEnabled();
         await firstPost.click();
-        await page.waitForLoadState('domcontentloaded');
-        await expect(page.getByTestId('post-content')).toBeVisible({ timeout: 10000 });
+
+        await expect(page.getByTestId('post-content')).toBeVisible({ timeout: 15000 });
+        const tocToggle = page.locator('button').filter({ hasText: 'Table of Contents' }).first();
+        await expect(tocToggle).toBeVisible({ timeout: 10000 });
     });
 
     test('should display "Table of Contents" toggle button on mobile', async ({ page }) => {

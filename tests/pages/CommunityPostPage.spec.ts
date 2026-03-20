@@ -2,13 +2,15 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Community Post Page - Component Availability', () => {
   test.beforeEach(async ({ page, baseURL }) => {
-    await page.goto(`${baseURL!}/community`);
-    await page.waitForLoadState('domcontentloaded');
-    const firstPost = page.locator('a[href*="/community/"]').first();
+    const communityUrl = baseURL ? `${baseURL}/community` : 'http://localhost:3000/blog/community';
+    await page.goto(communityUrl, { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('h2').filter({ hasText: /More Stories/i })).toBeVisible({ timeout: 15000 });
+
+    const firstPost = page.locator('[data-testid="hero-post-title"] a, [data-testid="post-card"] a').first();
     await expect(firstPost).toBeVisible({ timeout: 15000 });
     await expect(firstPost).toBeEnabled();
     await firstPost.click();
-    await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByTestId('post-content')).toBeVisible({ timeout: 15000 });
   });
 
   test('should load community post page successfully', async ({ page }) => {
