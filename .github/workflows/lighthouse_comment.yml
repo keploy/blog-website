@@ -1,29 +1,52 @@
-name: Lighthouse – Comment
+name: Lighthouse CI
 
 on:
-  workflow_run:
-    workflows: ["Lighthouse – Run"]
-    types:
-      - completed
+  pull_request:
+    branches: [main]
 
 permissions:
-  issues: write
+  contents: read
   pull-requests: write
 
 jobs:
-  comment:
+  lighthouse:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download Lighthouse comment artifact
-        uses: actions/download-artifact@v4
+      # 1. Checkout code
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # 2. Setup Node
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          name: lighthouse-comment
-          path: .
+          node-version: 18
 
-      - name: Ensure comment file exists
-        run: test -f lighthouse-comment.md
+      # 3. Install dependencies (if needed)
+      - name: Install dependencies
+        run: npm install
 
+      # 4. Build project (if React/Vite)
+      - name: Build project
+        run: npm run build
+
+      # 5. Run Lighthouse CI
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            https://your-live-site-url.com
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      # 6. Generate comment file
+      - name: Create Lighthouse comment
+        run: |
+          echo "## 🚀 Lighthouse Report" > lighthouse-comment.md
+          echo "Check performance report in artifacts." >> lighthouse-comment.md
+
+      # 7. Post comment on PR
       - name: Post Lighthouse comment
         uses: peter-evans/create-or-update-comment@v4
         with:
