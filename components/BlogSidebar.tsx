@@ -103,46 +103,58 @@ function SidebarShare() {
 
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
+  // Image size (adjust as needed)
+  // Remove fixed width/height from container, let image set size
+  const [imgError, setImgError] = React.useState(false);
   return (
     <div
-      className="rounded-2xl p-5"
-      style={{
-        backgroundColor: "#FFF4EE",
-        border: "1.5px solid #FF914D",
-      }}
+      className="rounded-2xl flex items-center justify-center bg-[#FFF4EE] border border-[#FF914D]"
+      style={{ padding: 0, overflow: 'hidden', position: 'relative', maxWidth: 320, margin: '0 auto' }}
     >
-      <h4
-        className="font-bold text-base leading-snug mb-1.5"
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          color: "#1D2022",
-        }}
-      >
-        Try Keploy for free
-      </h4>
-
-      <p
-        className="text-sm leading-relaxed mb-3"
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          color: "#4b5563",
-        }}
-      >
-        Generate test cases and data mocks with one click. Reduce unit test development time by 90%.
-      </p>
-
-      <Link
-        href="https://app.keploy.io/signin"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 font-semibold text-sm transition-colors duration-150 hover:opacity-80"
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          color: "#FF6D41",
-        }}
-      >
-        Sign up <span aria-hidden="true">→</span>
-      </Link>
+      {!imgError ? (
+        <Link
+          href="https://app.keploy.io/signin"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Sign up for Keploy"
+          style={{ display: 'block', width: '100%' }}
+        >
+          <img
+            src="/blog/images/keploy-ad-banner.jpg"
+            alt="Keploy Ad Banner"
+            className="transition-shadow duration-200 ease-in-out cursor-pointer hover:ad-glow"
+            style={{ borderRadius: '16px', width: '100%', height: 'auto', display: 'block', transition: 'box-shadow 0.2s' }}
+            onError={() => setImgError(true)}
+          />
+        </Link>
+      ) : (
+        <div
+          className="rounded-2xl p-5 w-full h-full flex flex-col justify-center"
+          style={{ backgroundColor: "#FFF4EE", border: "1.5px solid #FF914D" }}
+        >
+          <h4
+            className="font-bold text-base leading-snug mb-1.5"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "#1D2022" }}
+          >
+            Try Keploy for free
+          </h4>
+          <p
+            className="text-sm leading-relaxed mb-3"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "#4b5563" }}
+          >
+            Generate test cases and data mocks with one click. Reduce unit test development time by 90%.
+          </p>
+          <Link
+            href="https://app.keploy.io/signin"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 font-semibold text-sm transition-colors duration-150 hover:opacity-80"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "#FF6D41" }}
+          >
+            Sign up <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
