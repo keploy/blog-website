@@ -122,7 +122,7 @@ function SidebarAdBanner() {
           <img
             src="/blog/images/keploy-ad-banner.jpg"
             alt="Keploy Ad Banner"
-            className="transition-shadow duration-200 ease-in-out cursor-pointer hover:ad-glow"
+            className="transition-shadow duration-200 ease-in-out cursor-pointer hover:shadow-lg"
             style={{ borderRadius: '16px', width: '100%', height: 'auto', display: 'block', transition: 'box-shadow 0.2s' }}
             onError={() => setImgError(true)}
           />
@@ -130,7 +130,7 @@ function SidebarAdBanner() {
       ) : (
         <div
           className="rounded-2xl p-5 w-full h-full flex flex-col justify-center"
-          style={{ backgroundColor: "#FFF4EE", border: "1.5px solid #FF914D" }}
+          style={{ backgroundColor: "#FFF4EE" }}
         >
           <h4
             className="font-bold text-base leading-snug mb-1.5"
