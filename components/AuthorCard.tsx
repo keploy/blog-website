@@ -71,6 +71,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
 
   return (
     <div
+      data-testid="author-card"
       className="rounded-xl overflow-hidden bg-white"
       style={{ border: "1.5px solid #e5e7eb" }}
     >
