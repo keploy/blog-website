@@ -17,7 +17,7 @@ export default function Footer() {
         { text: "Unit Testing", url: "https://keploy.io/unit-test-generator/" },
         {
           text: "VS Code Extension",
-          url: "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio/",
+          url: "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio",
         },
       ],
     },
