@@ -44,6 +44,7 @@ export default function PostPreview({
   );
   return (
     <animated.div
+      data-testid="post-preview"
       className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition group"
       ref={ref}
       style={springStyles}

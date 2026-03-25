@@ -488,6 +488,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         <Button 
           variant="ghost" 
           size="icon" 
+          data-testid="navbar-toggle"
           className="rounded-full hover:bg-accent/50 h-10 w-10 p-0" 
           onClick={() => setMobileMenuOpen(o=>!o)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}

@@ -228,7 +228,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         <Container>
           <article>
             <footer>
-              {/* {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />} */}
+              {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />}
             </footer>
             <SectionSeparator />
             {morePosts?.length > 0 && (

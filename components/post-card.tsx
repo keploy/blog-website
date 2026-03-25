@@ -46,6 +46,7 @@ export default function PostCard({
 
   return (
     <animated.div
+      data-testid="post-card"
       className="bg-white rounded-lg border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all duration-300 overflow-hidden group"
       ref={ref}
       style={springStyles}

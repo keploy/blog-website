@@ -15,7 +15,7 @@ export default function Avatar({ author }: { author: Post["ppmaAuthorName"] }) {
           alt={name}
         />
       </div> */}
-      <div className="text-md font-medium heading1">{author}</div>
+      <div data-testid="hero-post-author" className="text-md font-medium heading1">{author}</div>
     </div>
   );
 }

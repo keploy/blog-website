@@ -279,13 +279,14 @@ export default function PostBody({
           };
 
           return (
-            <div key={index} className="rounded-lg overflow-hidden mb-6 border border-[#313244] shadow-md">
+            <div key={index} data-testid="code-block" className="rounded-lg overflow-hidden mb-6 border border-[#313244] shadow-md">
               {/* Header bar: language badge + copy button */}
               <div className="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-[#313244]">
                 <span className="text-xs font-mono text-[#6c7086] uppercase tracking-widest select-none">
                   {language}
                 </span>
                 <button
+                  data-testid="copy-button"
                   onClick={() => handleCopyClick(cleanCode, index)}
                   className="flex items-center gap-1 text-xs text-[#cdd6f4] bg-[#313244] hover:bg-[#45475a] px-2 py-1 rounded transition-colors duration-150"
                 >
@@ -342,19 +343,19 @@ export default function PostBody({
   return (
     <div className="w-full">
       {/* ── TOC: collapsible dropdown on screens < 1440px ── */}
-      <div className="min-[1440px]:hidden mb-6">
+      <div data-testid="mobile-toc" className="min-[1440px]:hidden mb-6">
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
 
       {/* ── Main layout: 3-col grid on wide screens, single centered column otherwise ── */}
       <div className="grid grid-cols-1 min-[1440px]:grid-cols-[minmax(200px,1fr)_minmax(0,780px)_minmax(200px,1fr)] gap-0">
         {/* Left — TOC (wide desktop only, ≥1440px) */}
-        <div className={`hidden min-[1440px]:flex justify-end pr-6 ${isList ? "" : "sticky top-24 self-start"}`}>
+        <div data-testid="desktop-toc" className={`hidden min-[1440px]:flex justify-end pr-6 ${isList ? "" : "sticky top-24 self-start"}`}>
           <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
         </div>
 
         {/* Center — Article content (900px max, matching PostHeader) */}
-        <div className="max-w-[780px] w-full mx-auto px-4 sm:px-6 min-w-0" id="post-body-check">
+        <div data-testid="post-content" className="max-w-[780px] w-full mx-auto px-4 sm:px-6 min-w-0" id="post-body-check">
           {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
           <div className="post-content-wrapper">{renderCodeBlocks()}</div>
           <hr className="border-gray-300 mt-10 mb-10" />
