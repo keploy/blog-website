@@ -45,7 +45,7 @@ export default function HeroPost({
     </div>
     <div className="">
       <div>
-        <h3 className="heading1 text-4xl lg:text-6xl font-bold leading-none">
+        <h3 data-testid="hero-post-title" className="heading1 text-4xl lg:text-6xl font-bold leading-none">
           <Link
             href={`${basePath}/${slug}`}
             className="hero-title-link title-link bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
