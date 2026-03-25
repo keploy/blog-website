@@ -204,7 +204,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   return (
     <div className="flex items-center justify-between overflow-visible">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2 overflow-hidden z-50 w-[80px]">
+      <Link href="https://keploy.io/" className="flex items-center gap-2 overflow-hidden z-50 w-[80px]">
         <div className={`transition-all duration-300 w-[80px]`} style={{ height: '30px' }}>
           <div className={`transition-all duration-300 translate-x-0`} style={{ width: '80px', height: '30px' }}>
             <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[80px]" />
@@ -488,6 +488,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         <Button 
           variant="ghost" 
           size="icon" 
+          data-testid="navbar-toggle"
           className="rounded-full hover:bg-accent/50 h-10 w-10 p-0" 
           onClick={() => setMobileMenuOpen(o=>!o)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
