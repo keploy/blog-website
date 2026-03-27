@@ -18,6 +18,13 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
+        <Script
+          id="keploy-telemetry-sdk"
+          src="https://telemetry.keploy.io/sessions/sdk.js"
+          data-endpoint="https://telemetry.keploy.io/sessions/collect"
+          data-source="blog"
+          strategy="lazyOnload"
+        />
       </body>
     </Html>
   );
