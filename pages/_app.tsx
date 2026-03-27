@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app';
 import '../styles/index.css';
 import Router from "next/router";
+import Script from 'next/script';
 
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -32,6 +33,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Script
+        id="keploy-telemetry-sdk"
+        src="https://telemetry.keploy.io/sessions/sdk.js"
+        data-endpoint="https://telemetry.keploy.io/sessions/collect"
+        data-source="blog"
+        strategy="lazyOnload"
+      />
       <AnimatePresence>
         {loading ? <PageLoader /> : <Component {...pageProps} />}
       </AnimatePresence>
