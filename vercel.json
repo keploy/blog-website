@@ -23,6 +23,20 @@
   ],
   "headers": [
     {
+      "source": "/blog/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/blog/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
       "source": "/blog/(.*)",
       "headers": [
         {
