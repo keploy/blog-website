@@ -1,1651 +1,3254 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-    <!--  created with Free Online Sitemap Generator   -->
-    <url>
-        <loc>https://keploy.io/blog</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>1.00</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.80</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.80</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/mongodb-in-mock-mode-acting-the-server-part</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.80</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/capture-grpc-traffic-going-out-from-a-server</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.80</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/integration-vs-e2e-testing-what-worked-for-me-as-a-charm</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.80</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/canary-testing-a-comprehensive-guide-for-developers</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.80</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/mock-vs-stub-vs-fake-understand-the-difference</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.80</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/writing-test-cases-for-cron-jobs-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.80</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/gittogether</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/about</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/security</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/privacy-policy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/automated-e2e-tests-using-property-based-testing-part-ii</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/automated-end-to-end-tests-using-property-based-testing-part-i</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/go-mocks-and-stubs-made-easy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/understand-the-role-of-continuous-testing-in-ci-cd</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/understanding-testing-in-production</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/5-unit-testing-tools-you-must-know-in-2024</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/securing-data-protocols-tls-application</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/demystifying-cron-job-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/building-custom-yaml-dsl-in-python</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/what-is-service-mesh</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/understanding-condition-coverage-in-software-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/why-do-i-need-a-unit-testing-tool</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/revolutionizing-software-testing-with-feature-flags</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/all-about-system-integration-testing-in-software-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/bdd-testing-with-cucumber</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/how-to-choose-your-api-performance-testing-tool-a-guide</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/dignify-your-test-automation-with-concise-code-documentation</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/how-to-do-java-unit-testing-effectively</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/performance-testing-guide-to-ensure-your-software-performs-at-its-best</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/top-5-cypress-alternatives-for-web-testing-and-automation</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/what-is-quality-engineering-software</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/functional-testing-unveiling-types-and-real-world-applications</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/understanding-branch-coverage-in-software-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/creating-the-balance-between-end-to-end-and-unit-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/understanding-code-coverage-in-software-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/decoding-http2-traffic-is-hard-but-ebpf-can-help</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/testng-vs-junit-performance-ease-of-use-and-flexibility-compared</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/exploring-the-effectiveness-of-e2e-testing-in-comparison-with-integration-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/understanding-statement-coverage-in-software-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/why-i-love-end-to-end-e2e-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/how-to-generate-test-cases-with-automation-tools</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/decoding-brd-a-devs-guide-to-functional-and-non-functional-requirements-in-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/testing-in-production-with-keploy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/mastering-test-coverage-quality-over-quantity-in-software-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/all-about-api-testing-keploy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/exploring-end-to-end-testing-with-ai</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/ai-powered-testing-in-production-revolutionizing-software-stability</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/what-is-the-difference-between-uat-and-e2e-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/software-development-phases</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/testing-nirvana-unveiled-what-why-and-how-in-development</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/what-problem-keploy-solves</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/getting-started-with-keploy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/mastering-api-test-automation-best-practices-and-tools</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/why-more-end-to-end-testing-is-often-good-enough-for-less-stress</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/e2e-testing-strategies-handling-edge-cases-while-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/understanding-the-difference-between-test-scenarios-and-test-cases</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/qa-automation-engineers-overcoming-testing-limitations</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/code-integrity-explained-building-trust-in-software</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/testing-with-chatgpt-epic-wins-and-fails</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/a-guide-for-observing-go-process-with-ebpf</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/stubs-mocks-fakes-lets-define-the-boundaries</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/e2e-testing-or-unit-testing-difference</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/4-ways-to-accelerate-your-software-testing-life-cycle</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/using-ebpf-for-tracing-go-function-arguments-in-production</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/my-journey-of-devrel-cohort-at-keploy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/building-a-crud-application-from-scratch-using-golang</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/exploring-graphql-api-development</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/diverse-test-data-boosting-regression-testing-efficiency</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/writing-a-potions-bank-rest-api-with-spring-boot-mongodb</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/my-journey-of-automating-test-cases</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/a-guide-to-various-api-architectures</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/postman-features-that-will-help-you-on-your-journey</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/api-automation-testing-pynt-keploy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/fun-facts-about-apis</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/know-about-record-and-replay-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/the-game-of-shadow-testing-the-core-of-test-generation</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/apis-vs-webhooks-make-a-github-webhook</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/how-to-secure-your-apis-and-protect-sensitive-data</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/soap-vs-rest-choosing-the-right-api-protocol</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/simplifying-junit-test-stubs-and-mocking</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/terminologies-around-api</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/my-keploy-api-fellowship-journey-2</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/what-is-unit-testing-anyways</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/what-is-end-to-end-testing-and-why-do-you-need-it</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/an-introduction-to-api-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/everything-you-need-to-know-about-unit-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/my-journey-of-keploy-fellowship-program</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/how-to-mock-backend-of-selenium-tests-using-keploy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/how-to-do-frontend-test-automation-using-selenium</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/types-of-apis-and-api-architecture</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/introduction-to-testing-with-mocha-keploy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/my-keploy-api-fellowship-journey</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/teleport-into-tech-space-through-api-gateways</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/frustrations-of-api-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/difficulties-of-api-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/swagger-design-and-document-your-apis</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/history-of-apis</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/understanding-http-and-https-as-a-beginner</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/understanding-the-components-of-apis</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/devrel-at-keploy-experience</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/how-did-i-get-to-know-about-apis</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Ritik%20Jain</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/go</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/http</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/mongodb</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/proxy-server</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/canary-testing-a-comprehensive-guide-for-developers</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/mock-vs-stub-vs-fake-understand-the-difference</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Mehfooz</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/golang</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/grpc</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Sarthak%20Shyngle</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/api-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/automation-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/e2e</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/integration-test</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/testgpt</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Animesh%20Pathak</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/canary</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/Feature%20Flags</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Arindam</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/ai-tools</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/mocks</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/stub</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/ai%20tool</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/cron-job</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/cronjobs</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/keploy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/reset-password</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/signup</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/charan</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/apis</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/chatgpt</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/openai</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/test-automation</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/tdd</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Jain</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/gomock</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/test-generator</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/unit-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Prajwal</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/ci-cd</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/cicd</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/continuous-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/development</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/devops</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/testing-in-production</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/test-coverage</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/unit%20testing%20tool</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Shivam</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/https</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/networking</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/protocols</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/redis</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/tls</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/cronjob</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/code</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/python</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/yaml-dsl</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/ebpf-service-mesh-and-sidecar</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/ebpf</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/service%20mesh</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/sidecar</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/condition%20coverage</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/software-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/test-coverage-in-software-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/tvisha</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/junit</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/software-development</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/system%20integration</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/bdd%20test</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/cucumber%20js</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/performance</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/testing-tool</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/automation</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/documentation</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/java</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/java%20unit%20testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/performance%20testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/cypress%20alternative</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/katalon</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/developers</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/engineering</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/learning</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/quality-assurance</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/software-engineering</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/bdd</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/cross-browser-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/ecommerce</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/functional-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/security</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/branchcoverage</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/e2e%20testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/end%20to%20end%20test</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/coding</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/deployment</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/http2</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/wireshark</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Pranshu%20Srivastava</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/maven</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/testing-library</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Shashwat</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/end-to-end-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/integration-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/software-development-life-cyclesdlc</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/backend-developments</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/statement-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/end-to-end-testing-and-why-do-you-need-it</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/banking</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/developers-mindset</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/gps</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/jest</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/postman</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/business-requirement-document</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/functional-requirement</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/functional-vs-non-functional-requirements</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/non-functional-requirements</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/prashant</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/ai</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/ai-based-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/test-coverage-in-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Arindam,%20Neha</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/web-development</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/wemakedevs</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/developer-tools</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Aditya%20Tomar</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/e2etesting</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/uat-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Harshit%20Paneri</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/software-development-phases</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/strategies-handling-edge-cases-e2e-tests</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/continuous-deployment</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/continuous-integration</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/software-quality-assurance</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/testing-nirvana</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/api-automation</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/best-practices</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/mocking</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/test</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Shashwat%20Gupta</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/edge-cases</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/test-driven-development</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/testing-tools</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/end-to-end-tests</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/qa-automation-engineers</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/test-scenarios</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/testing-limitations</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/code-review</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/software</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Neha%20Gupta</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/generative-ai</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/observability</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/opensource</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/fakes</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/stubs</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/test-doubles</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Shivang%20Shandilya</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/docker</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/docker-compose</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/postgresql</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/rest-api</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/graphql</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/ai-test-generation</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/data-generator</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/regression-test-suite</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/regression-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/test-data-management</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/springboot</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Nishant%20Mishra</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/api</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Aditya%20Singh</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/api-architecture</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/api-basics</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Sejal%20Jain</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Ankit%20Kumar</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Hardik%20kumar</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/databases</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/github</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/webhooks</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Jyotirmoy%20Roy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/soap-api</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Sanskriti%20Harmukh</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/mockito</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Barkatul%20Mujauddin</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Yash%20Saxena</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Zoheb%20Ahmed</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/methodology-and-types-of-software-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Priya%20Srivastava</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Diganta%20Kr%20Banik</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/api-testing-tools</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Krupesh%20Vithlani</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/app-development</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/developer</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/technology</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Ankit%20Kumar,%20Animesh%20Pathak</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/backend</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/frontend-development</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/selenium</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/KANISHAK%20CHAURASIA</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/keploy-api-fellowship</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Pradhyuman%20Sharma</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/javascript</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/authors/Harsh%20Rastogi</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/devrel</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/api-gateway</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/microservices</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/monoliths</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/osi</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/api-development</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/frustration</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/swagger</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/history</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/ssl</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/internship</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/startup</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/technical-writing-1</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/tag/beginners</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/mongodb-in-mock-mode-acting-the-server-part</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/writing-test-cases-for-cron-jobs-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/capture-grpc-traffic-going-out-from-a-server</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/automated-e2e-tests-using-property-based-testing-part-ii</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/automated-end-to-end-tests-using-property-based-testing-part-i</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/integration-vs-e2e-testing-what-worked-for-me-as-a-charm</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/go-mocks-and-stubs-made-easy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/signin</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.41</priority>
-    </url>
-
+<url>
+<loc>https://keploy.io/blog</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>1.00</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/future-of-test-automation-in-ai-era</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/gemini-pro-vs-openai-benchmark-ai-for-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/building-a-cli-tool-in-go-with-cobra-and-viper</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/types-of-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-test-automation-frameworks</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/building-reliable-ai-writing-tools-lessons-from-developing-textero</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/automation-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/automation-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ai</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ai-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/benchmark</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/gemini</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/cli</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/cobra</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/go</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/devops</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/quality-assurance</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/test-automation-framework</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/edtech</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/machinelearning</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/softwaretesting</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.64</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-deployment</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-test-automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-for-coding</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/introduction-to-selenium-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/integration-of-e2e-testing-in-a-cicd-pipeline</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ship-faster-fix-less-a-guide-to-continuous-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/dignify-your-test-automation-with-concise-code-documentation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-5-cypress-alternatives-for-web-testing-and-automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-generate-test-cases-with-automation-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mastering-api-test-automation-best-practices-and-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/4-ways-to-accelerate-your-software-testing-life-cycle</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-testing-strategies</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-testing-basics</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-10-open-source-automation-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/agile-vs-waterfall-methodology-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-monkey-testing-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-quality-assurance-services</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mockito-spy-your-complete-guide-to-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/manual-vs-automation-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/regression-testing-an-introductory-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/maintaining-auto-generative-api-tests-need-of-de-duplicate-tests</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-and-cli-tools-a-new-era-of-developer-productivity-and-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-development-engineer-in-test-meaning-role-and-salary-insights</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/continuous-ui-testing-pipeline-browserstack-with-github-actions</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/exploring-cypress-and-keploy-streamlining-test-automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/why-i-love-end-to-end-e2e-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/integration-vs-e2e-testing-what-worked-for-me-as-a-charm</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/api-automation-testing-pynt-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/know-about-record-and-replay-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/infrastructure-automation-future</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/api-automation-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-devops-automation-tools-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/state-transition-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/security-testing-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-quality-gates</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-delta-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/github-copilot-for-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/faster-testing-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-baseline-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-quality-assurance-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/beta-testing-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/model-based-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/test-driven-development-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/test-data-management-best-practices</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/complete-guide-to-ci-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/bug-bashing-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/soapui-vs-postman</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/generative-ai-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/end-to-end-test-automation-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/open-source-load-testing-tools-for-devops</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-a-test-script-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/test-completion-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/sanity-checklist-for-load-testing-and-performance-validation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-testing-metrics-for-qa</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/retesting-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/modified-condition-decision-coverage</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/speed-up-development-cycle-with-feature-driven-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-a-traceability-matrix</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-risk-analysis-guide-best-practices</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-code-complexity</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/root-cause-analysis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-open-source-test-management-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-random-testing-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-sanity-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-api-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/dynamic-testing-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-negative-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/quality-assurance-vs-quality-control</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-regression-testing-services</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/reliability-testing-a-complete-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/integration-testing-a-comprehensive-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/defect-management-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-a-flaky-test</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-use-a-testing-suite-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/unit-testing-vs-functional-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-alpha-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/gemini-pro-vs-openai-benchmark-ai-for-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/unit-testing-vs-regression-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/smoke-testing-vs-regression-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/testing-methodologies-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/regression-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-achieve-scalable-automation-with-ai-driven-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-10-ai-tools-transforming-software-quality-assurance</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/benchmark-testing-in-software-the-key-to-optimizing-performance</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/a-guide-to-test-cases-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-the-different-levels-of-the-software-testing-pyramid</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-condition-coverage-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/all-about-system-integration-testing-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/functional-testing-unveiling-types-and-real-world-applications</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mastering-test-coverage-quality-over-quantity-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/qa-automation-engineers-overcoming-testing-limitations</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-unit-testing-anyways</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/agentic-ai-vs-generative-ai</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-model-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-ad-hoc-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-the-differences-between-windsurf-and-cursorai</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-ai-tools-and-libraries-for-java-developers</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/10-developer-communities-to-be-a-part-of-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-revolutionizes-software-qa-testing-frameworks</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-powered-test-automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/swift-ai-revolutionizing-ios-app-development-with-ai-solutions</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/is-your-copilot-ai-slow-heres-what-you-can-do</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-testing-prompt-engineering</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-open-source-ai-agents</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-ai-is-transforming-software-and-testing-annotations</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-5-ai-tools-in-2025-developer-should-must-try</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-5-ai-powered-vs-code-extensions-for-coding-testing-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/language-capabilities-of-chatgpt-40-vs-claude-35-sonnet</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/gpt-4-cost-everything-you-need-to-know-before-getting-started</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/comparing-github-copilot-vs-chatgpt-for-unit-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-code</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/the-impact-of-ai-on-code-commenting-and-software-documentation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/revolutionising-unit-test-generation-with-llms</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/testing-in-production-with-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/exploring-end-to-end-testing-with-ai</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-an-api-endpoint</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-code-checker</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-coding-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/exploring-unit-test-generative-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-free-ai-code-generators</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/react-testing-on-vs-code</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-ai-coding-tools-in-2025-for-developers</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/boost-unit-test-efficiency-using-ai-powered-extensions-for-vs-code</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mock-vs-stub-vs-fake-understand-the-difference</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-testing-in-production</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/5-unit-testing-tools-you-must-know-in-2024</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/tracking-multiple-requests-over-a-single-connection-with-ebpf</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/efficient-tcp-server-connection-management</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/choosing-the-perfect-message-queue-factors-to-consider</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/managing-go-processes</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/mongodb-in-mock-mode-acting-the-server-part</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/a-guide-for-observing-go-process-with-ebpf</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-10-futuristic-open-source-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/5-best-open-source-api-testing-tools-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-free-code-testing-tools-for-web-software-developers</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-ci-tools-for-efficient-software-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/code-quality-with-automated-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/10-unit-testing-best-practices</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-tools-for-static-analysis-in-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-8-code-coverage-tools-for-free-a-developers-guide-to-smarter-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/unit-testing-vs-end-to-end-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-3-free-bug-triage-tools-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-ci-tools-to-streamline-your-testing-workflow</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-fuzz-testing-saved-a-software-company-millions</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/7-best-test-data-management-tools-in-2024</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/types-of-regression-testing-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/datadog-vs-sentry-comparison</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/platform-engineering-vs-devops</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understand-the-role-of-continuous-testing-in-ci-cd</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/automation-framework-for-api-first-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-quality-engineering-software</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ci-cd</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/continuous-deployment</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/automated-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ai-assistants</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ai-developer-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ai-for-coding</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/selenium</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/api-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/code</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/documentation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/test-automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/software-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/software-engineering</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/devops-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/qa-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/developer-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/monkey-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/random-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/apis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/functional-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/mocking</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/mockito</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/corrective-regression-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/regression-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/artificial-intelligence</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/brwoserstack</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/deployment</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/banking</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/developers-mindset</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/gps</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/automation-in-it-infrastructure</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/infrastructure-management</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/infrastructureautomation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ai-workflows</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/api-automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/api-workflows</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ai-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ai-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ai-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/state-transitions</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/api-security-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/application-security</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/cybersecurity</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/quality-gates</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/agile-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/cicd</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/delta-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ai-test-automation-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/end-to-end-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/github-copilot</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/faster-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/integration-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/baseline-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/performance-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/api-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/qa-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/security-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/beta-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/product-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/qa-automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/agile-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/backend-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/ci-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/continuous-integration</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/postman</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/generative-ai</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/end-to-end-test-automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/keploy-automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/load-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/load-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/open-source-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/code-coverage</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/software-development-life-cyclesdlc</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/sanity-checklist</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/metrics</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/metrics-tracking</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/qa</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/retesting</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/retesting-vs-regression-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/embedded-systems</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/mcdc</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/modified-condition-decision-coverage</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/feature-based-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/feature-driven-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/tdd</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/project-risk</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/qa-best-practices</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/risk-management</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/clean-code</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/code-quality</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/code-analysis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/code-complexity</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/problem-solving</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/root-cause-analysis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/software-architecture</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/opensource</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/automated-random-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/manual-random-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/sanity-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/sdlc</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/smoke-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/smoke-vs-sanity-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/api</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/qa-vs-qc</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/reliability-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/tag/testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.41</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/4-ways-to-write-comments-in-json</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/a-guide-to-testing-react-components-with-jest-and-react-testing-library</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/a-guide-to-various-api-architectures</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/a-technical-guide-to-test-mock-data-levels-tools-and-best-practices</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/a-test-strategy-is-critical-for-your-project-success</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/access-control-testing-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/adding-colour-to-the-log-output-of-logging-libraries-in-go</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-code-generators</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-powered-testing-in-production-revolutionizing-software-stability</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-test-generator</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ai-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/all-about-api-testing-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/all-about-load-testing-a-detailed-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/alpha-vs-beta-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/an-introduction-to-api-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/angular-vs-react-complete-guide-for-development-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/api-functional-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/api-integration-importance-and-best-practices</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/apis-vs-webhooks-make-a-github-webhook</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/assertion-testing-techniques</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/automate-testing-on-bitbucket-for-golang-crud-app-with-docker</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/automated-e2e-tests-using-property-based-testing-part-ii</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/automated-end-to-end-tests-using-property-based-testing-part-i</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/automated-test-equipment</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/bdd-testing-with-cucumber</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-browser-for-mac-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-browsers-for-web-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-claude-3-5-style-for-code</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-llm-for-coding-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-opensource-coding-ai</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-practices-for-using-accessibility-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-replit-alternatives-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/bitbucket-self-hosting-running-ebpfprivileged-programs</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/black-box-testing-and-white-box-testing-a-complete-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/build-an-http-server-using-bunjs-and-prisma</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/build-faster-with-rapid-api-test-smarter-with-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/building-a-cli-tool-in-go-with-cobra-and-viper</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/building-a-crud-application-from-scratch-using-golang</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/building-custom-yaml-dsl-in-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/canary-testing-a-comprehensive-guide-for-developers</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/cannot-use-import-statement-outside-a-module</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/capture-grpc-traffic-going-out-from-a-server</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/capturing-multiple-requests-on-the-same-connection-with-ebpf</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/chaos-testing-explained-a-comprehensive-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/chatgpt-newsletter-template-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/choosing-the-perfect-message-queue-factors-to-consider</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/choosing-the-right-penetration-testing-tools-for-your-system</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/cline-vs-cursor-ai-coding-tools-comparison</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/code-integrity-explained-building-trust-in-software</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/codium-vs-copilot-which-ai-coding-assistant-is-best-for-you</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/complete-guide-to-low-code-automation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/component-integration-testing-methods-benefits-and-challenges</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/comprehensive-guide-to-running-tests-with-cypress</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/connecting-a-hosted-ui-website-to-an-aws-ec2-instance</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/create-api-rate-limiting-with-token-bucket</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/creating-the-balance-between-end-to-end-and-unit-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/cross-browser-testing-a-complete-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/cursor-vs-github-copilot</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/cypress-vs-selenium-which-testing-tool-is-right-for-you</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/data-driven-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/decoding-brd-a-devs-guide-to-functional-and-non-functional-requirements-in-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/decoding-http2-traffic-is-hard-but-ebpf-can-help</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/decoding-network-traffic-telemetry-with-network-activity</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/demystifying-cron-job-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/developers-guide-to-smoke-testing-ensuring-basic-functionality</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/devrel-at-keploy-experience-2</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/difference-between-pytest-and-unittest</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/difficulties-of-api-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/diverse-test-data-boosting-regression-testing-efficiency</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/e2e-testing-or-unit-testing-difference</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ebpf-for-tls-traffic-tracing-secure-efficient-observability</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/efficient-tcp-server-connection-management</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/end-to-end-testing-and-why-do-you-need-it</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/end-to-end-testing-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/essential-free-api-testing-tools-every-developer-should-know</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/essential-functional-testing-tools-for-mobile-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/everything-you-need-to-know-about-api-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/everything-you-need-to-know-about-unit-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/executing-ebpf-in-github-actions</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/exploring-cursor-the-ai-code-editor-revolutionizing-development-productivity</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/exploring-graphql-api-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/exploring-the-effectiveness-of-e2e-testing-in-comparison-with-integration-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/frustrations-of-api-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/fun-facts-about-apis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/functional-testing-an-in-depth-overview</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/future-of-test-automation-in-ai-era</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/getting-code-coverage-data-for-each-request-coming-to-a-python-web-server</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/getting-started-with-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/getting-started-with-microservices-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/getting-started-with-selenium-ide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/go-mocks-and-stubs-made-easy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/good-vs-bad-unit-tests-tips-for-making-the-best-decision</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/gorilla-testing-vs-monkey-testing-whats-right-for-you</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/grpc-vs-rest-a-comparative-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/guide-finding-elements-in-a-list-using-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/guide-to-automated-testing-tools-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/guide-to-katalon-studio</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/history-of-apis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-api-monitoring-works-behind-the-scenes</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-cicd-is-changing-the-future-of-software-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-did-i-get-to-know-about-apis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-exploratory-testing-can-improve-software-quality</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-i-simulated-a-response-from-a-third-party-app</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-check-network-latency</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-choose-your-api-performance-testing-tool-a-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-clone-a-project-from-github-using-https-a-complete-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-compare-two-json-files</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-create-a-grafana-dashboard-for-keploy-easy-step-by-step-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-create-a-pandas-pivot-table-in-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-delete-local-and-remote-branches-in-git-a-complete-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-do-frontend-test-automation-using-selenium</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-do-java-unit-testing-effectively</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-download-and-install-intellij-idea-community-edition</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-exit-full-screen-on-mac</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-get-your-chatgpt-api-key</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-handle-node-js-code-coverage-with-nyc-in-docker-containers</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-mock-backend-of-selenium-tests-using-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-replace-strings-in-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-run-pytest-program</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-run-tests-in-visual-studio-code-a-complete-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-secure-your-apis-and-protect-sensitive-data</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-test-traffic-with-a-custom-kubernetes-controller</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-upload-a-file-to-the-s3-aws-with-using-rest-api</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-use-assertions-in-python-selenium-for-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-use-covdata-for-better-code-coverage-in-go</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-use-deepseek-v3-with-cursor-agent-mode</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-use-junit-on-vs-code-a-comprehensive-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/impact-of-gpt-03-mini-on-tech</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/integral-test-for-convergence-a-comprehensive-guide-with-examples</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/integration-of-e2e-testing-in-a-cicd-pipeline</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/integration-vs-e2e-testing-what-worked-for-me-as-a-charm</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/introducing-the-keploy-oss-fund</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/introduction-to-database-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/introduction-to-gitlab-python-api</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/introduction-to-rest-api-in-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/introduction-to-shift-left-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/introduction-to-testing-with-mocha-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/java-native-interface</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/javascript-array-filter-method-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/javascript-random-number</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/javascript-var-vs-let-vs-const</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/jest-mock-how-to-mock-a-provider-in-javascript-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/jest-testing-top-choice-for-front-end-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/json-escape-and-unescape</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/key-extraction-by-uprobe-attachment-on-openssl-for-ssl-inspection</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/kodo-the-art-of-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/llm-txt-generator</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/maintaining-auto-generative-api-tests-need-of-de-duplicate-tests</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/manage-config-files-on-aws-s3</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/managing-go-processes</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mastering-mcp-to-a2a</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mastering-mocking-a-complete-guide-to-mocks-and-other-test-doubles</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mastering-node-js-backend-testing-with-mocha-and-chai</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mastering-nyc-enhance-javascript-typescript-test-coverage</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mastering-stress-testing-breaking-systems-to-build-better-ones</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mastering-the-redo-shortcut-key-a-guide-for-efficient-workflows</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/migrate-from-jest-to-vitest</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/migration-guide-from-restassured-to-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mocking-httpx-requests-with-respx-a-comprehensive-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/mongodb-in-mock-mode-acting-the-server-part</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/monitor-api-calls-chrome-validate-flask-apis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/my-journey-of-automating-test-cases</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/my-journey-of-devrel-cohort-at-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/my-journey-of-keploy-fellowship-program</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/my-keploy-api-fellowship-journey</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/my-keploy-api-fellowship-journey-2</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/no-code-api-testing-tools</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/openapi-vs-swagger</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/paired-vs-unpaired-t-test</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/performance-testing-guide-to-ensure-your-software-performs-at-its-best</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/performance-testing-vs-load-testing-vs-stress-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/playwright-alternative-for-api-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/playwright-vs-cypress-choosing-the-best-e2e-testing-framework</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/playwright-vs-selenium</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/podman-vs-docker</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/postman-features-that-will-help-you-on-your-journey</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/prompt-engineering-for-python-code-generation-with-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/protocol-parsing-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/pull-api-data-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/python-automation-testing-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/python-get-current-directory</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/python-switch-case-how-to-implement</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/python-testing-with-pytest-features-best-practices</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/python-unit-testing-a-complete-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/qa-automation-revolutionizing-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/quality-assurance-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/react-devtools-complete</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/react-vs-react-native-which-one-should-you-use</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/regression-testing-tools-rankings-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/rest-assured-alternatives-for-api-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/rest-vs-graphql-whats-the-difference</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/revolutionising-unit-test-generation-with-llms</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/revolutionizing-software-testing-with-feature-flags</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/running-react-code-in-visual-studio-code-and-online</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/scram-authentication-overcoming-mock-testing-challenges</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/sdk-vs-api</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/secure-your-database-communications-with-ssl-in-docker-containers-learn-to-set-up-ssl-for-mongodb-and-postgresql-efficiently</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/securing-data-protocols-tls-application</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/shifting-gears-why-graphql-is-turbocharging-apis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/simplifying-junit-test-stubs-and-mocking</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/soap-api-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/soap-vs-rest-choosing-the-right-api-protocol</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-development-phases</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-development-tools-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/software-egg-explained</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/ssl-problem-unable-to-get-local-issuer-certificate</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/staging-vs-production-key-differences-explained</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/strategies-handling-edge-cases-e2e-tests</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/stubbing-and-verifying-my-journey-to-smarter-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/stubs-mocks-fakes-lets-define-the-boundaries</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/supercharge-your-testing-5-free-cypress-ai-tools-that-actually-work</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/swagger-design-and-document-your-apis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/system-testing-vs-integration-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/teleport-into-tech-space-through-api-gateways</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/terminologies-around-api</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/test-automation-pricing-comparison</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/test-case-generation-for-faster-api-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/test-driven-development-in-php-elevating-testing-with-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/test-reporting-and-analytics-from-raw-data-to-strategic</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/testing-bunjs-web-application-with-cucumber-js-and-keploy</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/testing-library-react-hooks</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/testing-nirvana-unveiled-what-why-and-how-in-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/testing-vs-debugging-prioritize-efficiently</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/testing-with-chatgpt-epic-wins-and-fails</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/testng-vs-junit-performance-ease-of-use-and-flexibility-compared</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/the-game-of-shadow-testing-the-core-of-test-generation</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/tips-macbook-with-touch-bar-users</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/tools-for-software-unit-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-5-best-ides-to-use-for-python-in-2024</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-5-low-code-test-automation-frameworks-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-5-must-use-vs-code-extensions-for-developers-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-5-tools-for-performance-testing-boost-your-applications-speed</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-7-test-automation-tools-boost-your-software-testing-efficiency</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-alternatives-to-the-zsh-ls-command</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-api-documentation-tools-to-use-in-2025</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-selenium-alternatives-for-your-node-js-application</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/tracing-tls-data-with-ethical-and-secure-practices</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/tracking-multiple-requests-over-a-single-connection-with-ebpf</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/types-of-apis-and-api-architecture</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/typescript-interface-complete-guide-for-modern-developers</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/typescript-vs-javascript</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/uft-testing-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-base64-decoding</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-branch-coverage-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-code-coverage-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-different-types-of-behavioral-unit-tests</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-http-and-https-as-a-beginner</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-http-status-codes</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-json-templatization-with-recursion-for-dynamic-data-handling</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-statement-coverage-in-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-tdd-and-bdd-a-guide-for-developers</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-the-components-of-apis-2</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/understanding-the-difference-between-test-scenarios-and-test-cases</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/unit-testing-in-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/unit-testing-vs-integration-testing-a-comprehensive-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/using-ebpf-for-tracing-go-function-arguments-in-production</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/using-grpc-error-codes</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/using-tc-bpf-program-to-redirect-dns-traffic-in-docker-containers</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/verify-ai-assistant-functionality</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/verify-if-a-key-is-present-in-a-js-object</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/vibe-coding-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/visual-regression-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/visual-scripting-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/volume-testing-a-comprehensive-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/vs-code-vs-pycharm-best-ide-for-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/vscode-python-debugger-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/vscode-vs-cursor</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/waterfall-api-a-comprehensive-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-does-enumerate-mean-in-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-a-bearer-token-a-complete-guide-for-developers</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-a-python-bytestring</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-acceptance-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-agile-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-api-contract-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-api-mocking</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-code-refactoring</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-code-scanning</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-component-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-contract-testing-a-knowledge-guide</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-etl-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-grey-box-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-grpc</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-latency-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-low-code-and-no-code</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-postgres-wire-protocol</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-rapid-application-development</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-regression-analysis</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-scripting</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-service-mesh</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-software-architecture</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-spiral-model-in-software-engineering</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-test-planning</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-the-difference-between-uat-and-e2e-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-unit-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-user-acceptance-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-problem-keploy-solves</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/when-to-use-a-list-comprehension-in-python</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/why-apps-crash-and-how-resilience-testing-can-help</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/why-developers-should-care-about-uat</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/why-do-i-need-a-unit-testing-tool</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/why-manual-testing-matters-a-ultimate-guide-to-software-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/why-more-end-to-end-testing-is-often-good-enough-for-less-stress</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/why-traditional-api-testing-fails-comparing-shadow-production-replay-techniques</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/write-clean-and-efficient-unit-tests-in-go</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/writing-a-potions-bank-rest-api-with-spring-boot-mongodb</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/writing-test-cases-for-cron-jobs-testing</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/yaml-vs-yml-developers-guide-to-syntax-and-ease-of-use</loc>
+<lastmod>2026-03-11T21:50:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/capturing-multiple-requests-on-the-same-connection-with-ebpf</loc>
+<lastmod>2025-04-29T23:07:38+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/protocol-parsing-guide</loc>
+<lastmod>2025-06-19T00:19:06+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/shifting-gears-why-graphql-is-turbocharging-apis</loc>
+<lastmod>2025-04-08T05:51:40+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/streamlining-deployments-how-to-master-gitops-with-fluxcd</loc>
+<lastmod>2025-06-19T01:11:06+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/mastering-nyc-enhance-javascript-typescript-test-coverage</loc>
+<lastmod>2025-06-18T01:45:31+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/playwright-alternative-for-api-testing</loc>
+<lastmod>2025-06-19T01:00:45+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/how-to-test-traffic-with-a-custom-kubernetes-controller</loc>
+<lastmod>2025-06-19T01:04:17+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/secure-your-database-communications-with-ssl-in-docker-containers-learn-to-set-up-ssl-for-mongodb-and-postgresql-efficiently</loc>
+<lastmod>2025-06-17T01:10:53+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/migration-guide-from-restassured-to-keploy</loc>
+<lastmod>2024-11-08T06:35:27+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/how-to-handle-node-js-code-coverage-with-nyc-in-docker-containers</loc>
+<lastmod>2025-06-19T00:10:51+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/bitbucket-self-hosting-running-ebpfprivileged-programs</loc>
+<lastmod>2025-06-17T05:18:00+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/efficient-dom-manipulation-with-the-virtual-dom-and-refs</loc>
+<lastmod>2025-06-19T00:30:28+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/how-to-use-covdata-for-better-code-coverage-in-go</loc>
+<lastmod>2025-06-19T22:48:05+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/my-testing-journey-with-jasmine-and-mocha</loc>
+<lastmod>2025-06-19T22:49:58+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/why-traditional-api-testing-fails-comparing-shadow-production-replay-techniques</loc>
+<lastmod>2025-06-19T03:24:55+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/decoding-network-traffic-telemetry-with-network-activity</loc>
+<lastmod>2025-06-19T06:18:35+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/create-stunning-parallax-animations-on-your-website</loc>
+<lastmod>2025-06-18T01:56:35+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/using-tc-bpf-program-to-redirect-dns-traffic-in-docker-containers</loc>
+<lastmod>2024-10-08T02:35:35+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/adding-colour-to-the-log-output-of-logging-libraries-in-go</loc>
+<lastmod>2025-07-03T03:03:37+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/scram-authentication-overcoming-mock-testing-challenges</loc>
+<lastmod>2025-06-18T04:27:17+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/getting-code-coverage-data-for-each-request-coming-to-a-python-web-server</loc>
+<lastmod>2025-06-19T23:48:34+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/capture-grpc-traffic-going-out-from-a-server</loc>
+<lastmod>2024-10-08T02:34:08+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/automated-e2e-tests-using-property-based-testing-part-ii</loc>
+<lastmod>2025-06-19T06:20:26+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/automated-end-to-end-tests-using-property-based-testing-part-i</loc>
+<lastmod>2025-06-19T03:39:57+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/technology/go-mocks-and-stubs-made-easy</loc>
+<lastmod>2025-06-19T01:49:12+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/top-integration-testing-tools</loc>
+<lastmod>2026-02-17T04:30:46+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/copilot-vs-cursor</loc>
+<lastmod>2026-01-28T07:46:14+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-vps-architecture-solves-the-problem</loc>
+<lastmod>2026-01-20T07:46:04+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/api-observability-guide</loc>
+<lastmod>2026-01-19T02:24:39+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-improve-dora-metrics</loc>
+<lastmod>2026-02-01T21:50:45+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/postman-alternative</loc>
+<lastmod>2026-01-13T01:28:38+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/stateful-vs-stateless</loc>
+<lastmod>2026-01-14T02:54:45+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-srs-writing</loc>
+<lastmod>2026-01-05T02:40:16+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/why-i-switched-from-rest-assured-to-keploy-for-microservices-testing</loc>
+<lastmod>2026-01-02T03:14:28+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/penetration-testing-service</loc>
+<lastmod>2026-01-01T02:10:15+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/verification-vs-validation</loc>
+<lastmod>2026-02-18T13:25:16+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-does-extensible-mean</loc>
+<lastmod>2025-12-25T04:00:43+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/functionality-testing-software-improves-quality</loc>
+<lastmod>2025-12-19T02:28:26+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/replit-vs-cursor-ai-development-tools</loc>
+<lastmod>2025-12-18T03:00:37+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-integrate-keploy-in-github-actions</loc>
+<lastmod>2025-12-17T04:44:04+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/devops-testing</loc>
+<lastmod>2025-12-15T05:17:31+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/api-first</loc>
+<lastmod>2025-12-09T02:02:04+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/rest-api-testing-guide</loc>
+<lastmod>2025-12-05T00:51:07+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/4-phases-of-rapid-application-development</loc>
+<lastmod>2025-12-03T01:17:48+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/bug-tracking-tools</loc>
+<lastmod>2025-11-27T01:18:12+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-scenario-testing</loc>
+<lastmod>2025-11-19T22:58:20+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/how-to-use-coverlet-coverage</loc>
+<lastmod>2025-11-18T23:05:52+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/what-is-a-test-environment</loc>
+<lastmod>2025-11-17T02:39:54+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/test-recorder-guide</loc>
+<lastmod>2025-11-14T03:04:50+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/v-software-development-and-the-v-model-approach</loc>
+<lastmod>2025-11-13T01:33:51+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/zen-of-python</loc>
+<lastmod>2025-10-23T01:33:41+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/spike-testing</loc>
+<lastmod>2025-08-29T07:34:45+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/api-authentication</loc>
+<lastmod>2025-08-19T07:02:22+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/api-security-testing-101</loc>
+<lastmod>2025-07-03T23:32:07+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/generative-ai-and-ml-comparison</loc>
+<lastmod>2025-07-09T07:04:59+00:00</lastmod>
+<priority>0.51</priority>
+</url>
+<url>
+<loc>https://keploy.io/blog/community/best-ai-coding-assistant-for-beginners-and-experts</loc>
+<lastmod>2025-09-04T05:38:23+00:00</lastmod>
+<priority>0.51</priority>
+</url>
 </urlset>
