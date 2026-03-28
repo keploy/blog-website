@@ -21,9 +21,11 @@ export default function CoverImage({
     <Image
       width={2000}
       height={1000}
-      alt={`Cover Image for ${title}`}
-      src={coverImage?.node.sourceUrl}
-      className={`w-full h-auto object-cover${imgClassName ? ` ${imgClassName}` : ""}${slug ? " transition-transform duration-300 hover:scale-[1.01]" : ""}`}
+      alt={title ? `Cover Image for ${title}` : "Cover Image"}
+      src={coverImage?.node.sourceUrl || "/blog/images/blog-bunny.png"}
+      className={cn("rounded-md transition-border duration-300", imgClassName, {
+        "  transition-scale duration-300": slug,
+      })}
       priority
     />
   );
