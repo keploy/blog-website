@@ -9,11 +9,11 @@ import { markdown } from "@codemirror/lang-markdown";
 import { python } from "@codemirror/lang-python";
 import { go } from "@codemirror/lang-go";
 import { dracula } from "@uiw/codemirror-theme-dracula";
-const AuthorDescription = dynamic(() => import("./author-description"), {
+const AuthorCard = dynamic(() => import("./AuthorCard"), {
   ssr: false,
 });
-import ReviewingAuthor from "./ReviewingAuthor";
-import WaitlistBanner from "./waitlistBanner";
+// import WaitlistBanner from "./waitlistBanner"; // Commented out — replaced by BlogSidebar
+import BlogSidebar from "./BlogSidebar";
 import { Post } from "../types/post";
 import JsonDiffViewer from "./json-diff-viewer";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
@@ -21,13 +21,19 @@ import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 export default function PostBody({
   content,
   authorName,
+  authorImageUrl,
+  authorDescription,
   ReviewAuthorDetails,
-  slug
+  slug,
+  categories,
 }: {
   content: Post["content"];
   authorName: Post["ppmaAuthorName"];
+  authorImageUrl: string;
+  authorDescription: string;
   ReviewAuthorDetails: { edges: { node: { name: string; avatar: { url: string }; description: string } }[] };
   slug: string | string[] | undefined;
+  categories?: Post["categories"];
 }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
@@ -69,6 +75,12 @@ export default function PostBody({
       ""
     );
 
+    // Strip ALL inline styles from heading tags so our CSS module styles apply
+    initialReplacedContent = initialReplacedContent.replace(
+      /<(h[1-6])\b([^>]*?)\s*style\s*=\s*(['"])[^'"]*\3([^>]*?)>/gi,
+      '<$1$2$4>'
+    );
+
     setReplacedContent(initialReplacedContent);
 
     return () => {
@@ -78,7 +90,14 @@ export default function PostBody({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
+      const postBodyEl = document.getElementById('post-body-check');
+      if (!postBodyEl) return;
+      const headings = Array.from(postBodyEl.querySelectorAll("h1, h2, h3, h4"));
+
+      // Force font-weight 700 on every heading — overrides any WP inline styles
+      headings.forEach((heading: HTMLElement) => {
+        heading.style.setProperty("font-weight", "700", "important");
+      });
 
       const tocItems = headings.map((heading) => {
         const id = `${heading.textContent}`;
@@ -189,47 +208,7 @@ export default function PostBody({
       });
   };
 
-  useEffect(() => {
-    const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2"));
-    headings.forEach((heading, index) => {
-      if (heading.querySelector(".copy-url-button")) return;
 
-      const button = document.createElement("button");
-      button.className = "copy-url-button";
-      button.style.marginLeft = "8px";
-      button.style.cursor = "pointer";
-      button.style.border = "none";
-      button.style.background = "none";
-      button.style.padding = "0";
-      button.style.fontSize = "1rem";
-      button.style.color = "#555";
-      button.textContent = headingCopySuccessList[index] ? '✔️' : '#'; // // Copy Button
-      button.addEventListener("click", () => {
-        handleHeadingCopyClick(heading.innerHTML, index);
-
-        const yOffset = -80;
-        const y = document.getElementById(heading.id).getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-        window.scrollTo({
-          top: y,
-          behavior: "smooth",
-        });
-        window.history.replaceState(null, "", `#${heading.id}`);
-      });
-      heading.appendChild(button);
-    });
-  }, [tocItems, headingCopySuccessList]);
-
-  useEffect(() => {
-    const headings = Array.from(document.getElementById('post-body-check').querySelectorAll("h1, h2, h3, h4"));
-    headings.forEach((heading, index) => {
-      const button = heading.querySelector(".copy-url-button") as HTMLButtonElement;
-      if (button) {
-        // button.textContent = headingCopySuccessList[index] ? '✔️' : '🔗'; // // Copy Button
-        button.style.color = headingCopySuccessList[index] ? "#28a745" : "#555";
-      }
-    });
-  }, [headingCopySuccessList]);
 
   const renderCodeBlocks = () => {
     const safeContent = replacedContent || "";
@@ -257,12 +236,34 @@ export default function PostBody({
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
           const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
           const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : "";
-          const language =
+
+          // 1. Try language from <code class="language-X"> attribute
+          const langFromClass =
             codeMatch && codeMatch[0].includes("language-")
               ? codeMatch[0].split("language-")[1].split('"')[0]
-              : "bash";
-          const getLanguageExtension = (language: string) => {
-            switch (language) {
+              : "";
+
+          // 2. If no class, check if the first line is a known language keyword (WP pattern)
+          const knownLanguages = [
+            "go", "javascript", "js", "typescript", "ts",
+            "python", "bash", "sh", "java", "rust", "cpp",
+            "c", "yaml", "json", "markdown", "sql", "html", "css",
+          ];
+          const firstLine = code.trimStart().split("\n")[0].trim().toLowerCase();
+          const langFromFirstLine = knownLanguages.includes(firstLine) ? firstLine : "";
+
+          const language = langFromClass || langFromFirstLine || "bash";
+
+          // Strip language name from code if it was the first line
+          const cleanCode =
+            langFromFirstLine && !langFromClass
+              ? code.trimStart().slice(firstLine.length + 1)
+              : langFromClass && code.trimStart().startsWith(langFromClass + "\n")
+                ? code.trimStart().slice(langFromClass.length + 1)
+                : code;
+
+          const getLanguageExtension = (lang: string) => {
+            switch (lang) {
               case "javascript":
               case "js":
                 return javascript();
@@ -276,10 +277,28 @@ export default function PostBody({
                 return javascript();
             }
           };
+
           return (
-            <div key={index} className="relative mx-auto mb-4">
+            <div key={index} data-testid="code-block" className="rounded-lg overflow-hidden mb-6 border border-[#313244] shadow-md">
+              {/* Header bar: language badge + copy button */}
+              <div className="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-[#313244]">
+                <span className="text-xs font-mono text-[#6c7086] uppercase tracking-widest select-none">
+                  {language}
+                </span>
+                <button
+                  data-testid="copy-button"
+                  onClick={() => handleCopyClick(cleanCode, index)}
+                  className="flex items-center gap-1 text-xs text-[#cdd6f4] bg-[#313244] hover:bg-[#45475a] px-2 py-1 rounded transition-colors duration-150"
+                >
+                  {copySuccessList[index] ? (
+                    <><IoCheckmarkOutline /> <span>Copied!</span></>
+                  ) : (
+                    <><IoCopyOutline /> <span>Copy</span></>
+                  )}
+                </button>
+              </div>
               <CodeMirror
-                value={code}
+                value={cleanCode}
                 extensions={[getLanguageExtension(language)]}
                 theme={dracula}
                 basicSetup={{
@@ -291,16 +310,6 @@ export default function PostBody({
                 readOnly={true}
                 indentWithTab={true}
               />
-              <button
-                onClick={() => handleCopyClick(code, index)}
-                className="absolute top-0 right-0 px-2 py-1 mr-2 text-white bg-gray-700 rounded hover:bg-gray-600"
-              >
-                {copySuccessList[index] ? (
-                  <IoCheckmarkOutline />
-                ) : (
-                  <IoCopyOutline />
-                )}
-              </button>
             </div>
           );
         }
@@ -332,62 +341,58 @@ export default function PostBody({
   };
 
   return (
-    <div
-      className={`flex flex-col ${isList ? "items-center" : "items-center lg:items-start lg:flex-row"
-        } `}
-    >
-      <div
-        className={`flex items-center justify-center w-full md:w-[80%] lg:w-1/4 top-20 lg:block ${isList ? "" : "lg:sticky"
-          }`}
-      >
+    <div className="w-full">
+      {/* ── TOC: collapsible dropdown on screens < 1440px ── */}
+      <div data-testid="mobile-toc" className="min-[1440px]:hidden mb-6">
         <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
       </div>
-      <div className={`w-full p-4 ${isList ? "ml-10" : ""}  md:w-4/5 lg:w-3/5`} id="post-body-check">
-        {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
-        <div className="prose lg:prose-xl post-content-wrapper">{renderCodeBlocks()}</div>
-        <hr className="border-gray-300 mt-10 mb-20" />
-        <div>
 
+      {/* ── Main layout: 3-col grid on wide screens, single centered column otherwise ── */}
+      <div className="grid grid-cols-1 min-[1440px]:grid-cols-[minmax(200px,1fr)_minmax(0,780px)_minmax(200px,1fr)] gap-0">
+        {/* Left — TOC (wide desktop only, ≥1440px) */}
+        <div data-testid="desktop-toc" className={`hidden min-[1440px]:flex justify-end pr-6 ${isList ? "" : "sticky top-24 self-start"}`}>
+          <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
         </div>
 
-        <h1 className="text-2xl font-medium">Authored By: {authorName}</h1>
-        <div className="my-5">
-          <AuthorDescription
-            authorData={content}
-            AuthorName={authorName}
-            isPost={true}
-          />
-        </div>
-        {reviewer && !sameAuthor && (
-          <div className="my-20">
-            <h1 className="text-2xl font-medium">Reviewed By: {reviewer.name}</h1>
-            <div>
-              <ReviewingAuthor
+        {/* Center — Article content (900px max, matching PostHeader) */}
+        <div data-testid="post-content" className="max-w-[780px] w-full mx-auto px-4 sm:px-6 min-w-0" id="post-body-check">
+          {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
+          <div className="post-content-wrapper">{renderCodeBlocks()}</div>
+          <hr className="border-gray-300 mt-10 mb-10" />
+
+          {/* Author card — Writer */}
+          <div className="mb-8">
+            <AuthorCard
+              name={authorName}
+              imageUrl={authorImageUrl}
+              description={authorDescription}
+              role="Writer"
+            />
+          </div>
+
+          {/* Author card — Reviewer */}
+          {reviewer && !sameAuthor && (
+            <div className="mb-8">
+              <AuthorCard
                 name={reviewer.name}
-                avatar={reviewer.avatar.url}
+                imageUrl={reviewer.avatar.url}
                 description={reviewer.description}
+                role="Reviewer"
               />
             </div>
-          </div>
-        )}
-      </div>
-
-      <aside className="w-full lg:w-1/5 lg:ml-10 p-4 flex flex-col gap-6 sticky  lg:top-20">
-
-        {/* 1. Waitlist banner (always shown) */}
-        <div className="flex justify-center">
-          <WaitlistBanner />
+          )}
         </div>
 
-        {/* 2. Ad slot (hidden on <lg) */}
-        {/* <div className="hidden lg:flex justify-center rounded-xl p-4">
-    <AdSlot
-      slotId="3356716061"
-      className="w-full h-60"
-    />
-  </div> */}
-      </aside>
+        {/* Right — Sidebar (wide desktop only, ≥1440px) */}
+        <aside className="hidden min-[1440px]:flex pl-6 sticky top-24 self-start justify-start">
+          <BlogSidebar />
+        </aside>
+      </div>
 
+      {/* ── Sidebar for screens < 1440px ── */}
+      <div className="min-[1440px]:hidden flex justify-center mt-8 px-4">
+        <BlogSidebar />
+      </div>
     </div>
   );
 }

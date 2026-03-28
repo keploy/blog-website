@@ -61,7 +61,7 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
       : glassNavDefault;
 
   return (
-    <nav className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}>
+    <nav data-testid="navbar" className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}>
         <div
           className={`${glassNavBase} ${navGlassClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}
         >
