@@ -97,15 +97,21 @@ async function fetchAllTaxonomies(type: 'tags' | 'categories' | 'users'): Promis
     `
     const data = await fetchGraphQL<any>(query, { after: after || null })
     if (!data?.[type]) {
-      console.log(`DEBUG: fetchGraphQL returned missing data for ${type}`)
+      if (process.env.NODE_ENV === 'development') {
+        console.debug(`fetchGraphQL returned missing data for ${type}`)
+      }
       break
     }
 
-    console.log(`DEBUG: Fetched ${type} page with ${data[type].edges.length} items. hasNextPage: ${data[type].pageInfo.hasNextPage}, endCursor: ${data[type].pageInfo.endCursor}`)
+    if (process.env.NODE_ENV === 'development') {
+      console.debug(`Fetched ${type} page with ${data[type].edges.length} items. hasNextPage: ${data[type].pageInfo.hasNextPage}, endCursor: ${data[type].pageInfo.endCursor}`)
+    }
 
     // Failsafe to prevent excessive polling
     if (allNodes.length > 5000) {
-      console.log(`DEBUG: Failsafe triggered for ${type}`)
+      if (process.env.NODE_ENV === 'development') {
+        console.debug(`Failsafe triggered for ${type}`)
+      }
       break
     }
 
