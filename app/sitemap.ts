@@ -102,7 +102,7 @@ async function fetchAllTaxonomies(type: 'tags' | 'categories' | 'users'): Promis
     }
 
     console.log(`DEBUG: Fetched ${type} page with ${data[type].edges.length} items. hasNextPage: ${data[type].pageInfo.hasNextPage}, endCursor: ${data[type].pageInfo.endCursor}`)
-    
+
     // Failsafe to prevent excessive polling
     if (allNodes.length > 5000) {
       console.log(`DEBUG: Failsafe triggered for ${type}`)
@@ -193,7 +193,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Process Posts
   posts.forEach((post) => {
-    const primaryCategory = post.categories?.nodes[0]?.slug || 'uncategorized'
+    let primaryCategory = post.categories?.nodes[0]?.slug
+    if (!primaryCategory || primaryCategory === 'uncategorized') {
+      // Skip posts that aren't properly categorized to avoid providing invalid URLs with the wrong metadata/headers in the sitemap.
+      return
+    }
+
     const url = `${baseUrl}/${encodeURIComponent(primaryCategory)}/${encodeURIComponent(post.slug)}`
 
     if (addedUrls.has(url)) return
