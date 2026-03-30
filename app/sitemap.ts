@@ -5,7 +5,7 @@ const WP_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'https://wp.kepl
 interface WPPostNode {
   slug: string
   modified: string
-  categories: {
+  categories?: {
     nodes: {
       slug: string
     }[]
@@ -23,7 +23,10 @@ async function fetchGraphQL<T>(query: string, variables: Record<string, any> = {
       next: { revalidate: 86400 }, // 24-hour cache
     })
 
-    if (!res.ok) return null
+    if (!res.ok) {
+      console.error("fetchGraphQL res not ok:", res.status, res.statusText)
+      return null
+    }
     const json = await res.json()
     return json.data as T
   } catch (error) {
@@ -69,8 +72,8 @@ async function fetchAllPosts(): Promise<WPPostNode[]> {
   return allPosts
 }
 
-async function fetchAllSlugs(type: 'tags' | 'categories' | 'users'): Promise<string[]> {
-  const allSlugs: string[] = []
+async function fetchAllTaxonomies(type: 'tags' | 'categories' | 'users'): Promise<{ slug: string; lastModified: Date }[]> {
+  const allNodes: { slug: string; lastModified: Date }[] = []
   let hasNextPage = true
   let after = ''
 
@@ -78,67 +81,104 @@ async function fetchAllSlugs(type: 'tags' | 'categories' | 'users'): Promise<str
     const query = `
       query All${type}($after: String) {
         ${type}(first: 100, after: $after) {
-          edges { node { slug } }
+          edges { 
+            node { 
+              slug
+              posts(first: 1) {
+                nodes {
+                  modified
+                }
+              }
+            } 
+          }
           pageInfo { hasNextPage endCursor }
         }
       }
     `
     const data = await fetchGraphQL<any>(query, { after: after || null })
-    if (!data?.[type]) break
+    if (!data?.[type]) {
+      console.log(`DEBUG: fetchGraphQL returned missing data for ${type}`)
+      break
+    }
 
-    allSlugs.push(...data[type].edges.map((edge: any) => edge.node.slug))
+    console.log(`DEBUG: Fetched ${type} page with ${data[type].edges.length} items. hasNextPage: ${data[type].pageInfo.hasNextPage}, endCursor: ${data[type].pageInfo.endCursor}`)
+    
+    // Failsafe to prevent excessive polling
+    if (allNodes.length > 5000) {
+      console.log(`DEBUG: Failsafe triggered for ${type}`)
+      break
+    }
+
+    for (const edge of data[type].edges) {
+      const node = edge.node
+      const postMod = node.posts?.nodes?.[0]?.modified
+      // Only include taxonomies that actually have published posts
+      if (postMod) {
+        allNodes.push({ slug: node.slug, lastModified: new Date(postMod) })
+      }
+    }
     hasNextPage = data[type].pageInfo.hasNextPage
     after = data[type].pageInfo.endCursor
   }
-  return allSlugs
+  return allNodes
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://keploy.io/blog'
 
-  // Static root blog entry
+  // Sequential fetching to deeply respect WP Engine GraphQL burst limits
+  const posts = await fetchAllPosts()
+  const tags = await fetchAllTaxonomies('tags')
+  const categories = await fetchAllTaxonomies('categories')
+  const authors = await fetchAllTaxonomies('users')
+
+  // Get global latest from posts for the root `/blog`
+  let globalLatestModified = new Date(0)
+  posts.forEach(post => {
+    const postDate = new Date(post.modified)
+    if (postDate > globalLatestModified) {
+      globalLatestModified = postDate
+    }
+  })
+  if (globalLatestModified.getTime() === 0) {
+    globalLatestModified = new Date()
+  }
+
+  // Static root blog entry using global max post modification date
   const sitemapData: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}`,
-      lastModified: new Date(),
+      lastModified: globalLatestModified,
       changeFrequency: 'daily',
       priority: 1.0,
     }
   ]
 
-  // Dynamic Entries
-  const [posts, tags, categories, authors] = await Promise.all([
-    fetchAllPosts(),
-    fetchAllSlugs('tags'),
-    fetchAllSlugs('categories'),
-    fetchAllSlugs('users')
-  ])
-
   // Process Tags
-  tags.forEach(slug => {
+  tags.forEach(tag => {
     sitemapData.push({
-      url: `${baseUrl}/tag/${encodeURIComponent(slug)}`,
-      lastModified: new Date(),
+      url: `${baseUrl}/tag/${encodeURIComponent(tag.slug)}`,
+      lastModified: tag.lastModified,
       changeFrequency: 'weekly',
       priority: 0.64,
     })
   })
 
   // Process Categories
-  categories.forEach(slug => {
+  categories.forEach(cat => {
     sitemapData.push({
-      url: `${baseUrl}/${encodeURIComponent(slug)}`,
-      lastModified: new Date(),
+      url: `${baseUrl}/${encodeURIComponent(cat.slug)}`,
+      lastModified: cat.lastModified,
       changeFrequency: 'weekly',
-      priority: 0.80, // Giving categories high priority similar to old static URLs
+      priority: 0.80,
     })
   })
 
-  // Process Authors
-  authors.forEach(slug => {
+  // Process Authors (verified exact path: /blog/authors/[slug])
+  authors.forEach(author => {
     sitemapData.push({
-      url: `${baseUrl}/authors/${encodeURIComponent(slug)}`, // authors logic in WP
-      lastModified: new Date(),
+      url: `${baseUrl}/authors/${encodeURIComponent(author.slug)}`,
+      lastModified: author.lastModified,
       changeFrequency: 'weekly',
       priority: 0.64,
     })
