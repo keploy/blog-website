@@ -130,7 +130,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
   useEffect(() => {
     if (!router.isFallback && !post?.slug) {
-      router.push("/404"); 
+      router.push("/404");
     }
   }, [router, router.isFallback, post]);
 
@@ -171,6 +171,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     >
       <Header readProgress={readProgress} />
       <Container>
+        <div className="-mt-16 md:-mt-20">
         {router.isFallback ? (
           <PostTitle>Loading…</PostTitle>
         ) : (
@@ -179,6 +180,13 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
             <article>
               <Head>
                 <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
+                {/* DM Sans — scoped to this page only */}
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <link
+                  href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap"
+                  rel="stylesheet"
+                />
               </Head>
               <PostHeader
                 title={post?.title || "Loading..."}
@@ -189,38 +197,46 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 BlogWriter={blogwriter}
                 BlogReviewer={blogreviewer}
                 TimeToRead={time}
+                tags={post?.tags}
               />
             </article>
           </>
         )}
-      </Container>
-      <ContainerSlug>
-        <div ref={postBodyRef}>
-          <PostBody
-            content={
-              post?.content && postBody({ content: post?.content, post })
-            }
-            authorName={post?.ppmaAuthorName || ""}
-            slug={slug}
-            ReviewAuthorDetails={
-              reviewAuthorDetails &&
-              reviewAuthorDetails?.length > 0 &&
-              reviewAuthorDetails[postBodyReviewerAuthor]
-            }
-          />
         </div>
-      </ContainerSlug>
-      <Container>
-        <article>
-          <footer>
-            {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />}
-          </footer>
-          <SectionSeparator />
-          {morePosts?.length > 0 && (
-            <MoreStories isIndex={false} posts={morePosts} isCommunity={false} showSearch={true} />
-          )}
-        </article>
       </Container>
+      {/* DM Sans wrapper — scoped to blog article content only */}
+      <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        <ContainerSlug>
+          <div ref={postBodyRef}>
+            <PostBody
+              content={
+                post?.content && postBody({ content: post?.content, post })
+              }
+              authorName={post?.ppmaAuthorName || ""}
+              authorImageUrl={avatarImgSrc || "/blog/images/author.png"}
+              authorDescription={blogWriterDescription || "An author for keploy's blog."}
+              slug={slug}
+              ReviewAuthorDetails={
+                reviewAuthorDetails &&
+                reviewAuthorDetails?.length > 0 &&
+                reviewAuthorDetails[postBodyReviewerAuthor]
+              }
+              categories={post?.categories}
+            />
+          </div>
+        </ContainerSlug>
+        <Container>
+          <article>
+            <footer>
+              {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />}
+            </footer>
+            <SectionSeparator />
+            {morePosts?.length > 0 && (
+              <MoreStories isIndex={false} posts={morePosts} isCommunity={false} showSearch={true} />
+            )}
+          </article>
+        </Container>
+      </div> {/* end DM Sans wrapper */}
     </Layout>
   );
 }
