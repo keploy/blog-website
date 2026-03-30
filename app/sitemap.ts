@@ -12,19 +12,23 @@ interface WPPostNode {
   }
 }
 
-interface WPGraphQLEdge {
-  node: WPPostNode
-}
+async function fetchGraphQL<T>(query: string, variables: Record<string, any> = {}): Promise<T | null> {
+  try {
+    const res = await fetch(WP_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query, variables }),
+      next: { revalidate: 86400 }, // 24-hour cache
+    })
 
-interface WPGraphQLResponse {
-  data: {
-    posts: {
-      edges: WPGraphQLEdge[]
-      pageInfo: {
-        hasNextPage: boolean
-        endCursor: string
-      }
-    }
+    if (!res.ok) return null
+    const json = await res.json()
+    return json.data as T
+  } catch (error) {
+    console.error('WPGraphQL fetch error:', error)
+    return null
   }
 }
 
@@ -55,83 +59,102 @@ async function fetchAllPosts(): Promise<WPPostNode[]> {
         }
       }
     `
+    const data = await fetchGraphQL<any>(query, { after: after || null })
+    if (!data?.posts) break
 
-    const res = await fetch(WP_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query,
-        variables: { after: after || null },
-      }),
-      next: { revalidate: 86400 }, // 24-hour cache
-    })
-
-    if (!res.ok) {
-      console.error('Failed to fetch posts for sitemap')
-      break
-    }
-
-    const json = (await res.json()) as WPGraphQLResponse
-    const postsData = json.data?.posts
-
-    if (!postsData) {
-      break
-    }
-
-    allPosts.push(...postsData.edges.map(edge => edge.node))
-
-    hasNextPage = postsData.pageInfo.hasNextPage
-    after = postsData.pageInfo.endCursor
+    allPosts.push(...data.posts.edges.map((edge: any) => edge.node))
+    hasNextPage = data.posts.pageInfo.hasNextPage
+    after = data.posts.pageInfo.endCursor
   }
-
   return allPosts
+}
+
+async function fetchAllSlugs(type: 'tags' | 'categories' | 'users'): Promise<string[]> {
+  const allSlugs: string[] = []
+  let hasNextPage = true
+  let after = ''
+
+  while (hasNextPage) {
+    const query = `
+      query All${type}($after: String) {
+        ${type}(first: 100, after: $after) {
+          edges { node { slug } }
+          pageInfo { hasNextPage endCursor }
+        }
+      }
+    `
+    const data = await fetchGraphQL<any>(query, { after: after || null })
+    if (!data?.[type]) break
+
+    allSlugs.push(...data[type].edges.map((edge: any) => edge.node.slug))
+    hasNextPage = data[type].pageInfo.hasNextPage
+    after = data[type].pageInfo.endCursor
+  }
+  return allSlugs
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://keploy.io/blog'
-  
-  // Static Entries
+
+  // Static root blog entry
   const sitemapData: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/technology`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/community`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1.0,
-    },
+    }
   ]
 
   // Dynamic Entries
-  const posts = await fetchAllPosts()
+  const [posts, tags, categories, authors] = await Promise.all([
+    fetchAllPosts(),
+    fetchAllSlugs('tags'),
+    fetchAllSlugs('categories'),
+    fetchAllSlugs('users')
+  ])
+
+  // Process Tags
+  tags.forEach(slug => {
+    sitemapData.push({
+      url: `${baseUrl}/tag/${encodeURIComponent(slug)}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.64,
+    })
+  })
+
+  // Process Categories
+  categories.forEach(slug => {
+    sitemapData.push({
+      url: `${baseUrl}/${encodeURIComponent(slug)}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.80, // Giving categories high priority similar to old static URLs
+    })
+  })
+
+  // Process Authors
+  authors.forEach(slug => {
+    sitemapData.push({
+      url: `${baseUrl}/authors/${encodeURIComponent(slug)}`, // authors logic in WP
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.64,
+    })
+  })
 
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-  // To ensure uniqueness per URL, though slug + primary category is usually unique 
-  // we can use a Set to track added URLs
+  // Track unique URLs to ensure no duplicates
   const addedUrls = new Set<string>()
+  sitemapData.forEach(item => addedUrls.add(item.url))
 
+  // Process Posts
   posts.forEach((post) => {
-    // Get primary category (first one)
     const primaryCategory = post.categories?.nodes[0]?.slug || 'uncategorized'
-    
-    // Some posts might be tagged in multiple categories but we only generate one URL per post
-    // based on the first category as per requirements "no duplicate URLs if a post is tagged in multiple 
-    // categories (pick the first one)"
-    const url = `${baseUrl}/${primaryCategory}/${post.slug}`
+    const url = `${baseUrl}/${encodeURIComponent(primaryCategory)}/${encodeURIComponent(post.slug)}`
 
     if (addedUrls.has(url)) return
     addedUrls.add(url)
