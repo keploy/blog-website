@@ -80,6 +80,13 @@ const STATIC_ROUTES: Array<Omit<SitemapEntry, "lastModified">> = [
 ];
 
 let lastSuccessfulSitemapXml: string | null = null;
+let refreshSitemapPromise: Promise<SitemapRefreshResult> | null = null;
+
+export type SitemapRefreshResult = {
+  entryCount: number;
+  generatedAt: string;
+  xml: string;
+};
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -412,10 +419,21 @@ export function serializeSitemap(entries: SitemapEntry[]) {
 
 async function readPersistedSitemapSnapshot() {
   try {
-    return await fs.readFile(SITEMAP_SNAPSHOT_PATH, "utf8");
+    const xml = await fs.readFile(SITEMAP_SNAPSHOT_PATH, "utf8");
+    return isValidSitemapXml(xml) ? xml : null;
   } catch {
     return null;
   }
+}
+
+function isValidSitemapXml(xml: string) {
+  const normalized = xml.trim();
+
+  return (
+    normalized.startsWith(`<?xml version="1.0" encoding="UTF-8"?>`) &&
+    normalized.includes(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`) &&
+    normalized.endsWith(`</urlset>`)
+  );
 }
 
 async function persistSitemapSnapshot(xml: string) {
@@ -426,15 +444,34 @@ async function persistSitemapSnapshot(xml: string) {
   }
 }
 
+export async function refreshSitemapSnapshot(): Promise<SitemapRefreshResult> {
+  if (!refreshSitemapPromise) {
+    refreshSitemapPromise = (async () => {
+      const entries = await getSitemapEntries();
+      const xml = serializeSitemap(entries);
+
+      lastSuccessfulSitemapXml = xml;
+      await persistSitemapSnapshot(xml);
+
+      return {
+        entryCount: entries.length,
+        generatedAt: new Date().toISOString(),
+        xml,
+      };
+    })();
+
+    refreshSitemapPromise.finally(() => {
+      refreshSitemapPromise = null;
+    });
+  }
+
+  return refreshSitemapPromise;
+}
+
 export async function generateSitemapXml() {
   try {
-    const entries = await getSitemapEntries();
-    const xml = serializeSitemap(entries);
-
-    lastSuccessfulSitemapXml = xml;
-    await persistSitemapSnapshot(xml);
-
-    return xml;
+    const result = await refreshSitemapSnapshot();
+    return result.xml;
   } catch (error) {
     console.error("Fresh sitemap generation failed, trying last successful snapshot:", error);
 

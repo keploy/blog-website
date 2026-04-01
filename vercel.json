@@ -1,4 +1,10 @@
 {
+  "crons": [
+    {
+      "path": "/blog/api/cron/refresh-sitemap",
+      "schedule": "0 0 * * *"
+    }
+  ],
   "redirects": [
     {
       "source": "/blog/community/everything-you-need-to-know-about-api-testing",
@@ -37,6 +43,10 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
       "source": "/blog/(.*)",
       "headers": [
         {
