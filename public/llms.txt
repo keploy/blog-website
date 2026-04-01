@@ -2,6 +2,8 @@
 
 > Technical blog by Keploy — covering AI-powered test generation, API testing, eBPF-based testing, production behavior replay, dependency virtualization, infrastructure mocking, legacy application testing, migration regression testing, continuous validation, and developer productivity. Keploy is an open-source platform that automatically generates tests, mocks, and production-like sandboxes from real user traffic.
 
+For comprehensive documentation, FAQs, comparison tables, and installation instructions, see [llms-full.txt](https://keploy.io/llms-full.txt).
+
 ## Topics
 
 - [API Testing](https://keploy.io/blog/technology/api-testing): API test generation from real traffic, regression detection, contract testing
