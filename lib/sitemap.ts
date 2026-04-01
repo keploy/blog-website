@@ -1,3 +1,5 @@
+import { promises as fs } from "fs";
+import path from "path";
 import { SITE_URL } from "./structured-data";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
 
@@ -6,7 +8,15 @@ const WP_API_URL =
   process.env.NEXT_PUBLIC_WORDPRESS_API_URL ||
   "https://wp.keploy.io/graphql";
 
+const SITEMAP_SNAPSHOT_PATH = path.join("/tmp", "keploy-blog-sitemap.xml");
+const FETCH_RETRY_LIMIT = 6;
+const FETCH_RETRY_DELAY_MS = 2000;
+const FETCH_TIMEOUT_MS = 25000;
+const POSTS_PAGE_SIZE = 50;
+const PAGE_SETTLE_DELAY_MS = 250;
+
 type SitemapChangeFrequency = "daily" | "weekly" | "monthly";
+type CategoryRoute = "technology" | "community";
 
 export type SitemapEntry = {
   url: string;
@@ -15,21 +25,20 @@ export type SitemapEntry = {
   priority?: number;
 };
 
-type CategoryRoute = "technology" | "community";
+type GraphQLResponse<T> = {
+  data?: T;
+  errors?: Array<{ message?: string }>;
+};
 
 type SitemapPost = {
   slug: string;
   modified?: string;
   authorName?: string;
   tags: string[];
+  routes: CategoryRoute[];
 };
 
-type GraphQLResponse<T> = {
-  data?: T;
-  errors?: Array<{ message?: string }>;
-};
-
-type PostsQueryResponse = {
+type AllPostsQueryResponse = {
   posts?: {
     edges?: Array<{
       node?: {
@@ -40,6 +49,14 @@ type PostsQueryResponse = {
           edges?: Array<{
             node?: {
               name?: string;
+            };
+          }>;
+        };
+        categories?: {
+          edges?: Array<{
+            node?: {
+              name?: string;
+              slug?: string;
             };
           }>;
         };
@@ -62,47 +79,98 @@ const STATIC_ROUTES: Array<Omit<SitemapEntry, "lastModified">> = [
   { url: `${SITE_URL}/community/search`, changeFrequency: "weekly", priority: 0.6 },
 ];
 
-async function fetchGraphQL<T>(query: string, variables: Record<string, unknown> = {}) {
-  const response = await fetch(WP_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ query, variables }),
-  });
+let lastSuccessfulSitemapXml: string | null = null;
 
-  if (!response.ok) {
-    throw new Error(`WordPress GraphQL request failed: ${response.status} ${response.statusText}`);
-  }
-
-  const json = (await response.json()) as GraphQLResponse<T>;
-
-  if (json.errors?.length) {
-    const message = json.errors.map((error) => error.message).filter(Boolean).join(", ");
-    throw new Error(message || "WordPress GraphQL returned errors");
-  }
-
-  if (!json.data) {
-    throw new Error("WordPress GraphQL returned no data");
-  }
-
-  return json.data;
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function fetchAllPostsByCategory(categoryName: CategoryRoute) {
+function isRetryableStatus(status: number) {
+  return [408, 429, 500, 502, 503, 504].includes(status);
+}
+
+async function fetchGraphQL<T>(query: string, variables: Record<string, unknown> = {}) {
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= FETCH_RETRY_LIMIT; attempt += 1) {
+    try {
+      const response = await fetch(WP_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query, variables }),
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      });
+
+      if (!response.ok) {
+        if (isRetryableStatus(response.status) && attempt < FETCH_RETRY_LIMIT) {
+          await sleep(FETCH_RETRY_DELAY_MS * attempt);
+          continue;
+        }
+
+        throw new Error(`WordPress GraphQL request failed: ${response.status} ${response.statusText}`);
+      }
+
+      const json = (await response.json()) as GraphQLResponse<T>;
+
+      if (json.errors?.length) {
+        const message = json.errors.map((error) => error.message).filter(Boolean).join(", ");
+        throw new Error(message || "WordPress GraphQL returned errors");
+      }
+
+      if (!json.data) {
+        throw new Error("WordPress GraphQL returned no data");
+      }
+
+      return json.data;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+
+      if (attempt < FETCH_RETRY_LIMIT) {
+        await sleep(FETCH_RETRY_DELAY_MS * attempt);
+        continue;
+      }
+    }
+  }
+
+  throw lastError || new Error("WordPress GraphQL request failed");
+}
+
+function mapCategoriesToRoutes(
+  categories?: AllPostsQueryResponse["posts"]["edges"][number]["node"]["categories"]
+) {
+  const routes = new Set<CategoryRoute>();
+
+  for (const edge of categories?.edges || []) {
+    const slug = edge?.node?.slug?.trim()?.toLowerCase();
+    const name = edge?.node?.name?.trim()?.toLowerCase();
+
+    if (slug === "technology" || name === "technology") {
+      routes.add("technology");
+    }
+
+    if (slug === "community" || name === "community") {
+      routes.add("community");
+    }
+  }
+
+  return Array.from(routes);
+}
+
+async function fetchAllPosts() {
   const posts: SitemapPost[] = [];
   let hasNextPage = true;
   let after: string | null = null;
 
   while (hasNextPage) {
-    const data = await fetchGraphQL<PostsQueryResponse>(
+    const data = await fetchGraphQL<AllPostsQueryResponse>(
       `
-        query SitemapPosts($categoryName: String!, $after: String) {
+        query SitemapPosts($after: String) {
           posts(
-            first: 100
+            first: ${POSTS_PAGE_SIZE}
             after: $after
             where: {
-              categoryName: $categoryName
               orderby: { field: MODIFIED, order: DESC }
             }
           ) {
@@ -118,6 +186,14 @@ async function fetchAllPostsByCategory(categoryName: CategoryRoute) {
                     }
                   }
                 }
+                categories {
+                  edges {
+                    node {
+                      name
+                      slug
+                    }
+                  }
+                }
               }
             }
             pageInfo {
@@ -127,7 +203,7 @@ async function fetchAllPostsByCategory(categoryName: CategoryRoute) {
           }
         }
       `,
-      { after, categoryName }
+      { after }
     );
 
     const edges = data.posts?.edges || [];
@@ -138,10 +214,16 @@ async function fetchAllPostsByCategory(categoryName: CategoryRoute) {
         continue;
       }
 
+      const routes = mapCategoriesToRoutes(node.categories);
+      if (!routes.length) {
+        continue;
+      }
+
       posts.push({
         slug: node.slug,
         modified: node.modified,
         authorName: node.ppmaAuthorName,
+        routes,
         tags:
           node.tags?.edges
             ?.map((tagEdge) => tagEdge?.node?.name?.trim())
@@ -151,18 +233,13 @@ async function fetchAllPostsByCategory(categoryName: CategoryRoute) {
 
     hasNextPage = Boolean(data.posts?.pageInfo?.hasNextPage);
     after = data.posts?.pageInfo?.endCursor || null;
+
+    if (hasNextPage) {
+      await sleep(PAGE_SETTLE_DELAY_MS);
+    }
   }
 
   return posts;
-}
-
-async function safeFetchAllPostsByCategory(categoryName: CategoryRoute) {
-  try {
-    return await fetchAllPostsByCategory(categoryName);
-  } catch (error) {
-    console.error(`Sitemap fetch failed for category "${categoryName}":`, error);
-    return [];
-  }
 }
 
 function toIsoDate(value?: string) {
@@ -214,18 +291,18 @@ function getLatestModified(posts: SitemapPost[]) {
   }, undefined);
 }
 
-function buildPostEntries(posts: SitemapPost[], route: CategoryRoute): SitemapEntry[] {
-  return posts
-    .filter((post) => Boolean(post.slug))
-    .map((post) => ({
+function buildPostEntries(posts: SitemapPost[]) {
+  return posts.flatMap((post) =>
+    post.routes.map((route) => ({
       url: `${SITE_URL}/${route}/${encodeURIComponent(post.slug)}`,
       lastModified: toIsoDate(post.modified),
       changeFrequency: "weekly" as const,
       priority: isRecent(post.modified) ? 0.8 : 0.5,
-    }));
+    }))
+  );
 }
 
-function buildAuthorEntries(posts: SitemapPost[]): SitemapEntry[] {
+function buildAuthorEntries(posts: SitemapPost[]) {
   const authorMap = new Map<string, string | undefined>();
 
   for (const post of posts) {
@@ -250,12 +327,12 @@ function buildAuthorEntries(posts: SitemapPost[]): SitemapEntry[] {
   return Array.from(authorMap.entries()).map(([authorSlug, lastModified]) => ({
     url: `${SITE_URL}/authors/${authorSlug}`,
     lastModified,
-    changeFrequency: "weekly",
+    changeFrequency: "weekly" as const,
     priority: 0.7,
   }));
 }
 
-function buildTagEntries(posts: SitemapPost[]): SitemapEntry[] {
+function buildTagEntries(posts: SitemapPost[]) {
   const tagMap = new Map<string, string | undefined>();
 
   for (const post of posts) {
@@ -277,33 +354,42 @@ function buildTagEntries(posts: SitemapPost[]): SitemapEntry[] {
   return Array.from(tagMap.entries()).map(([tagName, lastModified]) => ({
     url: `${SITE_URL}/tag/${encodeURIComponent(tagName)}`,
     lastModified,
-    changeFrequency: "weekly",
+    changeFrequency: "weekly" as const,
     priority: 0.7,
   }));
 }
 
+function assertFullSitemap(posts: SitemapPost[]) {
+  if (!posts.length) {
+    throw new Error("Sitemap generation returned zero posts");
+  }
+
+  const technologyCount = posts.filter((post) => post.routes.includes("technology")).length;
+  const communityCount = posts.filter((post) => post.routes.includes("community")).length;
+
+  if (!technologyCount || !communityCount) {
+    throw new Error(
+      `Sitemap generation incomplete: technology=${technologyCount}, community=${communityCount}`
+    );
+  }
+}
+
 export async function getSitemapEntries() {
-  // Fetch sequentially to reduce burst pressure on WPGraphQL and keep sitemap generation resilient.
-  const technologyPosts = await safeFetchAllPostsByCategory("technology");
-  const communityPosts = await safeFetchAllPostsByCategory("community");
+  const posts = await fetchAllPosts();
+  assertFullSitemap(posts);
 
-  const allPosts = [...technologyPosts, ...communityPosts];
-  const latestPostModified = getLatestModified(allPosts) || new Date().toISOString();
-
+  const latestPostModified = getLatestModified(posts) || new Date().toISOString();
   const staticEntries = STATIC_ROUTES.map((entry) => ({
     ...entry,
     lastModified: latestPostModified,
   }));
 
-  const entries = [
+  return dedupeEntries([
     ...staticEntries,
-    ...buildPostEntries(technologyPosts, "technology"),
-    ...buildPostEntries(communityPosts, "community"),
-    ...buildAuthorEntries(allPosts),
-    ...buildTagEntries(allPosts),
-  ];
-
-  return dedupeEntries(entries);
+    ...buildPostEntries(posts),
+    ...buildAuthorEntries(posts),
+    ...buildTagEntries(posts),
+  ]);
 }
 
 export function serializeSitemap(entries: SitemapEntry[]) {
@@ -324,7 +410,44 @@ export function serializeSitemap(entries: SitemapEntry[]) {
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</urlset>`;
 }
 
+async function readPersistedSitemapSnapshot() {
+  try {
+    return await fs.readFile(SITEMAP_SNAPSHOT_PATH, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+async function persistSitemapSnapshot(xml: string) {
+  try {
+    await fs.writeFile(SITEMAP_SNAPSHOT_PATH, xml, "utf8");
+  } catch (error) {
+    console.error("Failed to persist sitemap snapshot:", error);
+  }
+}
+
 export async function generateSitemapXml() {
-  const entries = await getSitemapEntries();
-  return serializeSitemap(entries);
+  try {
+    const entries = await getSitemapEntries();
+    const xml = serializeSitemap(entries);
+
+    lastSuccessfulSitemapXml = xml;
+    await persistSitemapSnapshot(xml);
+
+    return xml;
+  } catch (error) {
+    console.error("Fresh sitemap generation failed, trying last successful snapshot:", error);
+
+    if (lastSuccessfulSitemapXml) {
+      return lastSuccessfulSitemapXml;
+    }
+
+    const persistedSnapshot = await readPersistedSitemapSnapshot();
+    if (persistedSnapshot) {
+      lastSuccessfulSitemapXml = persistedSnapshot;
+      return persistedSnapshot;
+    }
+
+    throw error;
+  }
 }
