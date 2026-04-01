@@ -1,0 +1,32 @@
+# Keploy Blog
+
+> Technical blog by Keploy — covering AI-powered test generation, API testing, eBPF-based testing, production behavior replay, dependency virtualization, infrastructure mocking, legacy application testing, migration regression testing, continuous validation, and developer productivity. Keploy is an open-source platform that automatically generates tests, mocks, and production-like sandboxes from real user traffic.
+
+## Topics
+
+- [API Testing](https://keploy.io/blog/technology/api-testing): API test generation from real traffic, regression detection, contract testing
+- [Unit Testing](https://keploy.io/blog/technology/unit-testing): Auto-generated unit tests, AI-powered mock generation, coverage strategies
+- [Integration Testing](https://keploy.io/blog/technology/integration-testing): Dependency virtualization, production sandbox testing, microservices validation
+- [eBPF](https://keploy.io/blog/technology/ebpf): eBPF-based testing, kernel-level traffic capture, system observability
+- [CI/CD](https://keploy.io/blog/technology/ci-cd): Continuous validation, pipeline integration, release confidence
+- [Mocking](https://keploy.io/blog/technology/mocking): Infrastructure mocking, dependency virtualization, production behavior replay
+- [Legacy Testing](https://keploy.io/blog/technology): Legacy application testing, brownfield system testing, migration regression
+- [AI-Driven Testing](https://keploy.io/blog/technology): Testing at AI code velocity, flaky test elimination, noise detection
+
+## Key Themes
+
+- Production Behavior Replay: Replaying real user traffic as test cases for production-fidelity validation
+- Dependency Virtualization: Automatically mocking databases, APIs, and message queues from recorded traffic
+- Legacy Application Testing: Testing legacy monoliths without code changes using eBPF kernel capture
+- Migration Regression Testing: Validating microservices migrations and Kubernetes transitions with production baselines
+- Continuous Validation: Running production-like tests on every commit in CI/CD pipelines
+- Infrastructure Mocking: Replacing staging environments with production-like sandboxes
+- Flaky Test Elimination: AI noise detection for non-deterministic data filtering
+- AI Code Velocity: Keeping test generation aligned with AI-assisted code output
+
+## About Keploy
+
+- [Keploy Homepage](https://keploy.io): AI-powered testing agent and sandboxing platform
+- [Keploy Documentation](https://keploy.io/docs): Technical docs, quickstart guides, and API reference
+- [GitHub Repository](https://github.com/keploy/keploy): Open-source code (Apache 2.0)
+- [Cloud Platform](https://app.keploy.io): Managed Keploy cloud

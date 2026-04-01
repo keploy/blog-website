@@ -6,6 +6,7 @@ import Script from 'next/script';
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
+import { trackAiReferral } from '@/utils/aiReferralTracker';
  
 const PageLoader = dynamic(() => import('../components/PageLoader'), {
   ssr: false,
@@ -29,6 +30,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       Router.events.off("routeChangeComplete", stopLoader);
       Router.events.off("routeChangeError", stopLoader);
     };
+  }, []);
+
+  useEffect(() => {
+    trackAiReferral();
   }, []);
 
   return (
