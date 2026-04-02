@@ -12,6 +12,7 @@ export default function Layout({
   Title,
   Description,
   structuredData = [],
+  canonicalUrl,
 }: {
   preview: any;
   Description: any;
@@ -19,6 +20,7 @@ export default function Layout({
   Title: Post["title"];
   children: React.ReactNode;
   structuredData?: Record<string, unknown>[];
+  canonicalUrl?: string;
 }) {
   return (
     <>
@@ -27,6 +29,7 @@ export default function Layout({
         Title={Title}
         Description={Description}
         structuredData={structuredData}
+        canonicalUrl={canonicalUrl}
       />
       <motion.div
         initial={{ opacity: 0 }}

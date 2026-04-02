@@ -168,6 +168,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       Title={post?.seo.title || "Loading..."}
       Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
       structuredData={structuredData}
+      canonicalUrl={postUrl}
     >
       <Header readProgress={readProgress} />
       <Container>

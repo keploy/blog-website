@@ -7,11 +7,13 @@ export default function Meta({
   Title,
   Description,
   structuredData = [],
+  canonicalUrl,
 }: {
   featuredImage: Post["featuredImage"]["node"]["sourceUrl"];
   Title: Post["title"];
   Description: string;
   structuredData?: Record<string, unknown>[];
+  canonicalUrl?: string;
 }) {
   return (
     <Head>
@@ -50,8 +52,15 @@ export default function Meta({
       <meta name="theme-color" content="#000" />
       <link rel="alternate" type="application/rss+xml" href="blog/feed.xml" />
       <meta name="description" content={Description} />
+      <meta property="og:type" content="article" />
       <meta property="og:title" content={Title} />
       <meta property="og:description" content={Description} />
+      {canonicalUrl && (
+        <>
+          <link rel="canonical" href={canonicalUrl} />
+          <meta property="og:url" content={canonicalUrl} />
+        </>
+      )}
       {featuredImage && (
         <>
           <meta property="og:image" content={featuredImage} />
