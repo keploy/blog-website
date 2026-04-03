@@ -8,12 +8,14 @@ export default function Meta({
   Description,
   structuredData = [],
   canonicalUrl,
+  ogType = "article",
 }: {
   featuredImage: Post["featuredImage"]["node"]["sourceUrl"];
   Title: Post["title"];
   Description: string;
   structuredData?: Record<string, unknown>[];
   canonicalUrl?: string;
+  ogType?: "article" | "website";
 }) {
   return (
     <Head>
@@ -52,7 +54,7 @@ export default function Meta({
       <meta name="theme-color" content="#000" />
       <link rel="alternate" type="application/rss+xml" href="blog/feed.xml" />
       <meta name="description" content={Description} />
-      <meta property="og:type" content="article" />
+      <meta property="og:type" content={ogType} />
       <meta property="og:title" content={Title} />
       <meta property="og:description" content={Description} />
       {canonicalUrl && (

@@ -34,6 +34,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     trackAiReferral();
+    const handleRouteChange = () => trackAiReferral();
+    Router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      Router.events.off("routeChangeComplete", handleRouteChange);
+    };
   }, []);
 
   return (

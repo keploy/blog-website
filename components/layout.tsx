@@ -13,6 +13,7 @@ export default function Layout({
   Description,
   structuredData = [],
   canonicalUrl,
+  ogType = "article",
 }: {
   preview: any;
   Description: any;
@@ -21,6 +22,7 @@ export default function Layout({
   children: React.ReactNode;
   structuredData?: Record<string, unknown>[];
   canonicalUrl?: string;
+  ogType?: "article" | "website";
 }) {
   return (
     <>
@@ -30,6 +32,7 @@ export default function Layout({
         Description={Description}
         structuredData={structuredData}
         canonicalUrl={canonicalUrl}
+        ogType={ogType}
       />
       <motion.div
         initial={{ opacity: 0 }}

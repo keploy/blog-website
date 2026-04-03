@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    dataLayer?: Array<Record<string, unknown>>;
+  }
+}
+
 export function trackAiReferral(): void {
   if (typeof window === "undefined") return;
 
@@ -16,35 +22,50 @@ export function trackAiReferral(): void {
   };
 
   // Explicit utm_source tokens → AI source name
-  // Exact match only — no substring matching to avoid false positives.
   const aiUtmTokens: Record<string, string> = {
-    "chatgpt": "ChatGPT",
-    "openai": "ChatGPT",
-    "perplexity": "Perplexity",
-    "claude": "Claude",
-    "anthropic": "Claude",
-    "gemini": "Gemini",
-    "copilot": "Copilot",
-    "bing_chat": "Copilot",
-    "meta_ai": "MetaAI",
-    "youchat": "YouChat",
-    "phind": "Phind",
-    "poe": "Poe",
+    chatgpt: "ChatGPT",
+    openai: "ChatGPT",
+    perplexity: "Perplexity",
+    claude: "Claude",
+    anthropic: "Claude",
+    gemini: "Gemini",
+    copilot: "Copilot",
+    bing_chat: "Copilot",
+    meta_ai: "MetaAI",
+    youchat: "YouChat",
+    phind: "Phind",
+    poe: "Poe",
   };
 
-  const referrer = document.referrer.toLowerCase();
+  // Parse referrer hostname safely
+  let referrerHostname = "";
+  if (document.referrer) {
+    try {
+      const referrerUrl = new URL(document.referrer);
+      referrerHostname = referrerUrl.hostname.toLowerCase();
+    } catch {
+      // Invalid referrer URL; skip referrer-based attribution
+    }
+  }
+
   const urlParams = new URLSearchParams(window.location.search);
   const utmSource = (urlParams.get("utm_source") || "").toLowerCase().trim();
 
   let aiSource: string | null = null;
   let attributionMethod: "referrer" | "utm" | null = null;
 
-  // 1. Check referrer against known AI domains
-  for (const [domain, name] of Object.entries(aiReferrerDomains)) {
-    if (referrer.includes(domain)) {
-      aiSource = name;
-      attributionMethod = "referrer";
-      break;
+  // 1. Check referrer hostname against known AI domains (exact or subdomain match)
+  if (referrerHostname) {
+    for (const [domain, name] of Object.entries(aiReferrerDomains)) {
+      const domainLower = domain.toLowerCase();
+      if (
+        referrerHostname === domainLower ||
+        referrerHostname.endsWith("." + domainLower)
+      ) {
+        aiSource = name;
+        attributionMethod = "referrer";
+        break;
+      }
     }
   }
 
@@ -58,11 +79,14 @@ export function trackAiReferral(): void {
   }
 
   if (aiSource && attributionMethod) {
-    (window as any).dataLayer = (window as any).dataLayer || [];
-    (window as any).dataLayer.push({
+    const dataLayer = (window.dataLayer ??= []);
+    dataLayer.push({
       event: "ai_referral",
       ai_source: aiSource,
-      ai_citation_type: attributionMethod === "referrer" ? "direct_citation" : "utm_attributed",
+      ai_citation_type:
+        attributionMethod === "referrer"
+          ? "direct_citation"
+          : "utm_attributed",
       ai_landing_content: window.location.pathname,
     });
   }
