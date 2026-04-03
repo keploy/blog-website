@@ -168,6 +168,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       Title={post?.seo.title || "Loading..."}
       Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
       structuredData={structuredData}
+      canonicalUrl={!router.isFallback && post?.slug ? postUrl : undefined}
+      ogType="article"
     >
       <Header readProgress={readProgress} />
       <Container>
