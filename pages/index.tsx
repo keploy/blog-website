@@ -12,7 +12,6 @@ import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import {
   getBreadcrumbListSchema,
-  getOrganizationSchema,
   getWebSiteSchema,
   SITE_URL,
 } from "../lib/structured-data";

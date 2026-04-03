@@ -33,12 +33,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   useEffect(() => {
+    // Track AI referral only on initial landing — document.referrer
+    // doesn't change on SPA navigations, so re-firing would duplicate events.
     trackAiReferral();
-    const handleRouteChange = () => trackAiReferral();
-    Router.events.on("routeChangeComplete", handleRouteChange);
-    return () => {
-      Router.events.off("routeChangeComplete", handleRouteChange);
-    };
   }, []);
 
   return (
