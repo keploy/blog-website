@@ -13,7 +13,7 @@ export default function Layout({
   Description,
   structuredData = [],
   canonicalUrl,
-  ogType = "article",
+  ogType = "website",
 }: {
   preview: any;
   Description: any;
