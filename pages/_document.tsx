@@ -1,20 +1,46 @@
 import { Html, Head, Main, NextScript } from 'next/document';
 import Script from 'next/script';
+import {
+  getOrganizationSchema,
+  SITE_URL,
+  ORG_NAME,
+  MAIN_SITE_URL,
+} from '../lib/structured-data';
 
 export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Google AdSense Script */}
-        {/* <Script
-          id="adsbygoogle-init"
-          strategy="afterInteractive"
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3485005084287002`}
-          crossOrigin="anonymous"
-          onError={(e) => {
-            console.error('AdSense script failed to load', e);
+        {/* Organization Schema — single source from lib/structured-data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(getOrganizationSchema())
           }}
-        /> */}
+        />
+
+        {/* Blog Schema — uses shared constants */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Blog",
+              "name": `${ORG_NAME} Blog`,
+              "url": SITE_URL,
+              "description": "Technical blog covering AI-powered API test generation, eBPF-based testing, production behavior replay, dependency virtualization, infrastructure mocking, legacy application testing, migration regression testing, continuous validation, flaky test elimination, and developer productivity by Keploy.",
+              "publisher": {
+                "@type": "Organization",
+                "name": ORG_NAME,
+                "url": MAIN_SITE_URL,
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": `${MAIN_SITE_URL}/images/keploy-logo-full.svg`
+                }
+              }
+            })
+          }}
+        />
       </Head>
       <body>
         <Main />

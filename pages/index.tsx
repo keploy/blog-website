@@ -12,13 +12,12 @@ import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import {
   getBreadcrumbListSchema,
-  getOrganizationSchema,
   getWebSiteSchema,
   SITE_URL,
 } from "../lib/structured-data";
 export default function Index({ communityPosts, technologyPosts, preview }) {
+  // Organization schema is in _document.tsx (global) — not duplicated here
   const structuredData = [
-    getOrganizationSchema(),
     getWebSiteSchema(),
     getBreadcrumbListSchema([{ name: "Home", url: SITE_URL }]),
   ];
@@ -31,6 +30,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       Title={`Blog - Keploy`}
       Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}
       structuredData={structuredData}
+      ogType="website"
     >
       <Head>
         <title>{`Engineering | Keploy Blog`}</title>
