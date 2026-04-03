@@ -20,9 +20,11 @@ type BlogPostingInput = {
   title: string;
   url: string;
   datePublished: string;
+  dateModified?: string;
   description?: string;
   imageUrl?: string;
   authorName?: string;
+  articleSection?: string;
 };
 
 export const getOrganizationSchema = () => ({
@@ -72,10 +74,15 @@ export const getBlogPostingSchema = ({
   title,
   url,
   datePublished,
+  dateModified,
   description,
   imageUrl,
   authorName,
+  articleSection,
 }: BlogPostingInput) => {
+  const resolvedAuthorName = authorName || ORG_NAME;
+  const authorSlug = encodeURIComponent(resolvedAuthorName);
+
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -85,10 +92,11 @@ export const getBlogPostingSchema = ({
       "@id": url,
     },
     datePublished,
-    dateModified: datePublished,
+    dateModified: dateModified || datePublished,
     author: {
       "@type": "Person",
-      name: authorName || ORG_NAME,
+      name: resolvedAuthorName,
+      url: `${SITE_URL}/authors/${authorSlug}`,
     },
     publisher: {
       "@type": "Organization",
@@ -96,6 +104,8 @@ export const getBlogPostingSchema = ({
       logo: {
         "@type": "ImageObject",
         url: ORG_LOGO_URL,
+        width: 200,
+        height: 200,
       },
     },
     isPartOf: {
@@ -104,6 +114,10 @@ export const getBlogPostingSchema = ({
       url: SITE_URL,
     },
   };
+
+  if (articleSection) {
+    schema.articleSection = articleSection;
+  }
 
   if (description) {
     schema.description = description;
@@ -115,3 +129,21 @@ export const getBlogPostingSchema = ({
 
   return schema;
 };
+
+export const getBlogSchema = () => ({
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: BLOG_NAME,
+  url: SITE_URL,
+  description:
+    "Articles on API testing, test automation, mocking, CI/CD, and developer tooling from the Keploy team and community.",
+  publisher: {
+    "@type": "Organization",
+    name: ORG_NAME,
+    url: MAIN_SITE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: ORG_LOGO_URL,
+    },
+  },
+});

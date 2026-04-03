@@ -147,9 +147,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         title: post?.title || "Keploy Blog Post",
         url: postUrl,
         datePublished: post?.date,
+        dateModified: post?.modified || post?.date,
         description: post?.seo?.metaDesc,
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
+        articleSection: post?.categories?.edges?.[0]?.node?.name || "Technology",
       })
     );
   } else {
