@@ -44,6 +44,31 @@ test.describe('SEO and Meta Tags Configuration', () => {
         await expect(twitterCard).toHaveAttribute('content', 'summary_large_image');
     });
 
+    test('Post page should have canonical URL and og:url meta tags', async ({ page, baseURL }) => {
+        await page.goto(`${baseURL!}/technology/understanding-api-testing-with-keploy`);
+        await page.waitForLoadState('domcontentloaded');
+
+        const canonical = page.locator('link[rel="canonical"]');
+        await expect(canonical).toBeAttached();
+        const canonicalHref = await canonical.getAttribute('href');
+        expect(canonicalHref).toMatch(/^https:\/\/keploy\.io\/blog\//);
+
+        const ogUrl = page.locator('meta[property="og:url"]');
+        await expect(ogUrl).toBeAttached();
+        const ogUrlContent = await ogUrl.getAttribute('content');
+        expect(ogUrlContent).toMatch(/^https:\/\/keploy\.io\/blog\//);
+
+        const ogType = page.locator('meta[property="og:type"]');
+        await expect(ogType).toHaveAttribute('content', 'article');
+    });
+
+    test('Homepage should have og:type website', async ({ page, baseURL }) => {
+        await page.goto(baseURL!);
+
+        const ogType = page.locator('meta[property="og:type"]');
+        await expect(ogType).toHaveAttribute('content', 'website');
+    });
+
     test('JSON-LD Structured Data should be injected for SEO parsing', async ({ page, baseURL }) => {
         await page.goto(baseURL!);
 
@@ -71,5 +96,17 @@ test.describe('SEO and Meta Tags Configuration', () => {
         }
 
         expect(foundValidSchema).toBe(true);
+    });
+
+    test('AI referral tracker should push event to dataLayer on UTM-attributed landing', async ({ page, baseURL }) => {
+        await page.goto(`${baseURL!}/?utm_source=chatgpt`);
+
+        await page.waitForFunction(() => {
+            const dl = (window as any).dataLayer || [];
+            return dl.some((e: any) =>
+                (e?.[0] === 'event' && e?.[1] === 'ai_referral') ||
+                e?.event === 'ai_referral'
+            );
+        }, { timeout: 10000 });
     });
 });
