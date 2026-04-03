@@ -100,14 +100,13 @@ test.describe('SEO and Meta Tags Configuration', () => {
 
     test('AI referral tracker should push event to dataLayer on UTM-attributed landing', async ({ page, baseURL }) => {
         await page.goto(`${baseURL!}/?utm_source=chatgpt`);
-        await page.waitForLoadState('domcontentloaded');
 
-        const aiEvent = await page.evaluate(() => {
+        await page.waitForFunction(() => {
             const dl = (window as any).dataLayer || [];
-            return dl.find((e: any) => e?.[0] === 'event' && e?.[1] === 'ai_referral')
-                || dl.find((e: any) => e?.event === 'ai_referral');
-        });
-
-        expect(aiEvent).toBeTruthy();
+            return dl.some((e: any) =>
+                (e?.[0] === 'event' && e?.[1] === 'ai_referral') ||
+                e?.event === 'ai_referral'
+            );
+        }, { timeout: 10000 });
     });
 });
