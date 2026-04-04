@@ -137,7 +137,7 @@ export const getBlogPostingSchema = ({
 export const getBlogSchema = () => ({
   "@context": "https://schema.org",
   "@type": "Blog",
-  name: `${ORG_NAME} Blog`,
+  name: BLOG_NAME,
   url: SITE_URL,
   description:
     "Technical blog covering AI-powered API test generation, eBPF-based testing, production behavior replay, dependency virtualization, and developer productivity by Keploy.",
@@ -145,9 +145,6 @@ export const getBlogSchema = () => ({
     "@type": "Organization",
     name: ORG_NAME,
     url: MAIN_SITE_URL,
-    logo: {
-      "@type": "ImageObject",
-      url: `${MAIN_SITE_URL}/images/keploy-logo-full.svg`,
-    },
+    logo: `${MAIN_SITE_URL}/images/keploy-logo-full.svg`,
   },
 });

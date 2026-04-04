@@ -6,6 +6,7 @@ export interface Post {
   excerpt: string;
   slug: string;
   date: string;
+  modified?: string;
   postId: Number;
   featuredImage: {
     node: {
