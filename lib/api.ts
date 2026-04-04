@@ -623,6 +623,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       excerpt
       slug
       date
+      modified
       ppmaAuthorName
       featuredImage {
         node {
@@ -668,6 +669,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
               title
               excerpt
               content
+              modified
               author {
                 node {
                   ...AuthorFields

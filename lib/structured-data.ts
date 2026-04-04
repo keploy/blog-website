@@ -1,3 +1,5 @@
+import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+
 export const SITE_URL = "https://keploy.io/blog";
 export const MAIN_SITE_URL = "https://keploy.io";
 export const ORG_NAME = "Keploy";
@@ -20,9 +22,11 @@ type BlogPostingInput = {
   title: string;
   url: string;
   datePublished: string;
+  dateModified?: string;
   description?: string;
   imageUrl?: string;
-  authorName?: string;
+  authorName?: string | string[];
+  articleSection?: string;
 };
 
 export const getOrganizationSchema = () => ({
@@ -72,10 +76,17 @@ export const getBlogPostingSchema = ({
   title,
   url,
   datePublished,
+  dateModified,
   description,
   imageUrl,
   authorName,
+  articleSection,
 }: BlogPostingInput) => {
+  const resolvedAuthorName = Array.isArray(authorName)
+    ? (authorName[0] || ORG_NAME)
+    : (authorName || ORG_NAME);
+  const authorSlug = sanitizeAuthorSlug(resolvedAuthorName);
+
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -85,10 +96,13 @@ export const getBlogPostingSchema = ({
       "@id": url,
     },
     datePublished,
-    dateModified: datePublished,
+    dateModified: dateModified || datePublished,
     author: {
       "@type": "Person",
-      name: authorName || ORG_NAME,
+      name: resolvedAuthorName,
+      ...(resolvedAuthorName !== ORG_NAME && authorSlug
+        ? { url: `${SITE_URL}/authors/${authorSlug}` }
+        : {}),
     },
     publisher: {
       "@type": "Organization",
@@ -96,6 +110,8 @@ export const getBlogPostingSchema = ({
       logo: {
         "@type": "ImageObject",
         url: ORG_LOGO_URL,
+        width: 462,
+        height: 539,
       },
     },
     isPartOf: {
@@ -104,6 +120,10 @@ export const getBlogPostingSchema = ({
       url: SITE_URL,
     },
   };
+
+  if (articleSection) {
+    schema.articleSection = articleSection;
+  }
 
   if (description) {
     schema.description = description;
@@ -115,3 +135,21 @@ export const getBlogPostingSchema = ({
 
   return schema;
 };
+
+export const getBlogSchema = () => ({
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: BLOG_NAME,
+  url: SITE_URL,
+  description:
+    "Technical blog covering AI-powered API test generation, eBPF-based testing, production behavior replay, dependency virtualization, and developer productivity by Keploy.",
+  publisher: {
+    "@type": "Organization",
+    name: ORG_NAME,
+    url: MAIN_SITE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: ORG_LOGO_URL,
+    },
+  },
+});
