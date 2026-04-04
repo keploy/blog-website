@@ -21,7 +21,9 @@ const BlogSidebar = dynamic(() => import("./BlogSidebar"), {
 const JsonDiffViewer = dynamic(() => import("./json-diff-viewer"), {
   ssr: false,
 });
-/* Language extensions and theme — imported lazily alongside CodeMirror */
+/* Language extensions and theme — bundled with this PostBody chunk
+   (PostBody is dynamically imported via next/dynamic in page files,
+   so these imports are code-split from the main bundle) */
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { python } from "@codemirror/lang-python";

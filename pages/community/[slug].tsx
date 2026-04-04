@@ -143,6 +143,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     }
   }, [router, router.isFallback, post]);
 
+  const safeTitle = post?.title || 'Loading...';
+  const safeDescription = (!router.isFallback && post?.seo?.metaDesc && post.seo.metaDesc.length >= 60)
+    ? post.seo.metaDesc
+    : `Learn about ${safeTitle} — practical guide with examples and best practices from the Keploy engineering blog.`;
+
   const postUrl = post?.slug ? `${SITE_URL}/community/${post.slug}` : `${SITE_URL}/community`;
   const structuredData = [];
   if (post?.slug) {
@@ -150,14 +155,14 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       getBreadcrumbListSchema([
         { name: "Home", url: SITE_URL },
         { name: "Community", url: `${SITE_URL}/community` },
-        { name: post?.title || "Post", url: postUrl },
+        { name: safeTitle || "Post", url: postUrl },
       ]),
       getBlogPostingSchema({
-        title: post?.title || "Keploy Blog Post",
+        title: safeTitle || "Keploy Blog Post",
         url: postUrl,
         datePublished: post?.date,
         dateModified: post?.modified,
-        description: post?.seo?.metaDesc,
+        description: safeDescription,
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Community",
@@ -176,8 +181,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     <Layout
       preview={preview}
       featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
-      Title={post?.seo.title || "Loading..."}
-      Description={post?.seo?.metaDesc && post.seo.metaDesc.length > 60 ? post.seo.metaDesc : `Learn about ${post?.title} — an in-depth guide from the Keploy engineering blog covering best practices, examples, and expert insights.`}
+      Title={post?.seo?.title || "Loading..."}
+      Description={safeDescription}
       structuredData={structuredData}
       canonicalUrl={!router.isFallback && post?.slug ? postUrl : undefined}
       ogType="article"
@@ -291,7 +296,10 @@ export const getStaticProps: GetStaticProps = async ({
     ) || [];
     if (!postCategories.includes("community")) {
       // Post exists but belongs to a different category — redirect to it
-      const correctCategory = postCategories[0] || "technology";
+      const validCategories = ['community', 'technology'];
+      const correctCategory = validCategories.includes(postCategories[0]?.toLowerCase())
+        ? postCategories[0].toLowerCase()
+        : 'technology'; // fallback to technology for unknown categories
       return {
         redirect: {
           destination: `/${correctCategory}/${slug}`,

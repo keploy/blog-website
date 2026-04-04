@@ -11,24 +11,25 @@ import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 export default function PostByTags({ postsByTags,preview}) {
   const posts = postsByTags?.edges || [];
   const router = useRouter();
-  const {slug} = router.query;
+  const tagSlug = Array.isArray(router.query.slug) ? router.query.slug[0] : (router.query.slug || '');
+  const tagDisplay = tagSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) || 'All Topics';
   return (
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`${slug} posts`}
-      Description={`Browse all Keploy blog posts tagged "${slug}" — tutorials, guides, and expert insights on ${slug} for developers and QA engineers.`}
+      Title={`${tagDisplay} posts`}
+      Description={`Browse all Keploy blog posts tagged "${tagDisplay}" — tutorials, guides, and expert insights on ${tagDisplay} for developers and QA engineers.`}
       structuredData={[
         getBreadcrumbListSchema([
           { name: "Home", url: SITE_URL },
           { name: "Tags", url: `${SITE_URL}/tag` },
-          { name: `${slug || "Tag"}`, url: `${SITE_URL}/tag/${slug || ""}` },
+          { name: `${tagDisplay || "Tag"}`, url: `${SITE_URL}/tag/${tagSlug || ""}` },
         ]),
       ]}
-      canonicalUrl={slug ? `${SITE_URL}/tag/${slug}` : `${SITE_URL}/tag`}
+      canonicalUrl={tagSlug ? `${SITE_URL}/tag/${tagSlug}` : `${SITE_URL}/tag`}
     >
       <Head>
-        <title>{`${slug} posts`}</title>
+        <title>{`${tagDisplay} posts`}</title>
       </Head>
       <Header />
       <Container>

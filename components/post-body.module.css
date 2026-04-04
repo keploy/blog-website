@@ -202,9 +202,10 @@
   content-visibility: auto;
 }
 
-/* WordPress images with width/height attrs — lock aspect ratio to prevent CLS */
+/* WordPress images with width/height attrs — lock aspect ratio to prevent CLS.
+   attr() in aspect-ratio is not supported in browsers; use a sensible default. */
 .content img[width][height] {
-  aspect-ratio: attr(width) / attr(height);
+  aspect-ratio: 16 / 9;
 }
 
 /* ── Figure captions ── */
