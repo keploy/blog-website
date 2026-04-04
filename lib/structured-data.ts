@@ -25,7 +25,7 @@ type BlogPostingInput = {
   dateModified?: string;
   description?: string;
   imageUrl?: string;
-  authorName?: string;
+  authorName?: string | string[];
   articleSection?: string;
 };
 
