@@ -145,6 +145,9 @@ export const getBlogSchema = () => ({
     "@type": "Organization",
     name: ORG_NAME,
     url: MAIN_SITE_URL,
-    logo: `${MAIN_SITE_URL}/images/keploy-logo-full.svg`,
+    logo: {
+      "@type": "ImageObject",
+      url: `${MAIN_SITE_URL}/images/keploy-logo-full.svg`,
+    },
   },
 });
