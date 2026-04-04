@@ -9,14 +9,14 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Organization structured data */}
+        {/* Organization Schema — single source from lib/structured-data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(organizationSchema),
           }}
         />
-        {/* Blog structured data */}
+        {/* Blog Schema — single source from lib/structured-data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
