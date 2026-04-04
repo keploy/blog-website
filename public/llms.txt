@@ -59,7 +59,8 @@ contributors, and guest writers.
 
 ## Author Pages
 
-Author profiles are available at: https://keploy.io/blog/authors/{name}/
+Author profiles are available at: https://keploy.io/blog/authors/{slug}/
+(Slugs are lowercase, hyphen-separated — e.g., "John Doe" becomes "john-doe")
 
 ## Related Resources
 

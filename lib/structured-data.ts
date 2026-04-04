@@ -82,7 +82,7 @@ export const getBlogPostingSchema = ({
   authorName,
   articleSection,
 }: BlogPostingInput) => {
-  const resolvedAuthorName = authorName || ORG_NAME;
+  const resolvedAuthorName = Array.isArray(authorName) ? authorName[0] : (authorName || ORG_NAME);
   const authorSlug = sanitizeAuthorSlug(resolvedAuthorName);
 
   const schema: Record<string, unknown> = {
