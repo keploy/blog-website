@@ -10,7 +10,6 @@ import { getExcerpt } from "../../utils/excerpt";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
-  console.log("tech posts: ", edges.length)
   const heroPost = edges[0]?.node;
   const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
   const morePosts = edges.slice(1);
