@@ -149,7 +149,7 @@ export const getBlogSchema = () => ({
     url: MAIN_SITE_URL,
     logo: {
       "@type": "ImageObject",
-      url: `${MAIN_SITE_URL}/images/keploy-logo-full.svg`,
+      url: ORG_LOGO_URL,
     },
   },
 });
