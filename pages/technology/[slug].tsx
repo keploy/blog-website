@@ -168,7 +168,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       preview={preview}
       featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
       Title={post?.seo.title || "Loading..."}
-      Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
+      Description={post?.seo?.metaDesc && post.seo.metaDesc.length > 60 ? post.seo.metaDesc : `Learn about ${post?.title} — an in-depth guide from the Keploy engineering blog covering best practices, examples, and expert insights.`}
       structuredData={structuredData}
       canonicalUrl={!router.isFallback && post?.slug ? postUrl : undefined}
       ogType="article"

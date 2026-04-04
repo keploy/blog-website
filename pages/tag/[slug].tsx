@@ -17,7 +17,7 @@ export default function PostByTags({ postsByTags,preview}) {
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
       Title={`${slug} posts`}
-      Description={`Posts by tag-${slug}`}
+      Description={`Browse all Keploy blog posts tagged "${slug}" — tutorials, guides, and expert insights on ${slug} for developers and QA engineers.`}
       structuredData={[
         getBreadcrumbListSchema([
           { name: "Home", url: SITE_URL },

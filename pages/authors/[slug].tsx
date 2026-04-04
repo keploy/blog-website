@@ -30,7 +30,7 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
         preview={preview}
         featuredImage={HOME_OG_IMAGE_URL}
         Title={`${authorName} Page`}
-        Description={`Posts by ${authorName}`}
+        Description={`Read all articles by ${authorName} on the Keploy blog — covering software testing, API development, automation, and engineering best practices.`}
         structuredData={[
           getBreadcrumbListSchema([
             { name: "Home", url: SITE_URL },

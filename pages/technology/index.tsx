@@ -26,7 +26,7 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       preview={preview}
       featuredImage={heroPost?.featuredImage?.node.sourceUrl}
       Title={heroPost?.title}
-      Description={`Blog from the Technology Page`}
+      Description={`Read in-depth Keploy technology articles on API testing, test automation, CI/CD pipelines, eBPF-based testing, and modern software quality engineering.`}
       structuredData={structuredData}
     >
       <Head>
