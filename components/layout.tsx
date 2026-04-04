@@ -3,8 +3,8 @@ import Alert from "./alert";
 import Footer from "./footer";
 import Meta from "./meta";
 import Script from "next/script";
-import { motion } from "framer-motion";
 import ScrollToTop from "./ScrollToTop";
+
 export default function Layout({
   preview,
   children,
@@ -34,30 +34,30 @@ export default function Layout({
         canonicalUrl={canonicalUrl}
         ogType={ogType}
       />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 20,
-        }}
-        className="min-h-screen"
+      {/* Replaced framer-motion's motion.div with CSS animation to remove
+          ~30-40 kB of framer-motion from every page's critical JS bundle.
+          The fade-in is now handled by a pure CSS @keyframes animation. */}
+      <div
+        className="min-h-screen animate-[fadeIn_0.3s_ease-out]"
       >
         {/* <Alert preview={preview} /> */}
         <main className="pt-20 md:pt-24">{children}</main>
-      </motion.div>
+      </div>
       <Footer />
       <ScrollToTop />
 
+      {/* ── Analytics & third-party scripts ──
+           All non-essential scripts use lazyOnload to keep TBT/TTI low.
+           They fire after the page is fully interactive. */}
+
       <Script
-        async
+        id="gtag-loader"
         src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS"
+        strategy="lazyOnload"
       />
       <Script
         id="google-ga"
-        type="text/javascript"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
           window.dataLayer = window.dataLayer || [];
@@ -70,7 +70,7 @@ export default function Layout({
 
       <Script
         id="msclarity"
-        type="text/javascript"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
           (function(c,l,a,r,i,t,y){
@@ -82,20 +82,16 @@ export default function Layout({
         }}
       />
 
-      {/* publisher Script */}
-
+      {/* Google News SWG — lazyOnload since it's non-critical */}
       <Script
-        async
-        type="application/javascript"
         id="swg-basic"
         src="https://news.google.com/swg/js/v1/swg-basic.js"
-      ></Script>
-
-
+        strategy="lazyOnload"
+      />
 
       <Script
         id="publisher"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
               (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
@@ -110,10 +106,10 @@ export default function Layout({
         }}
       />
 
-      {/* Apollo Tracking Script */}
+      {/* Apollo Tracking Script — lazyOnload */}
       <Script
         id="apollo-tracker"
-        type="text/javascript"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
             function initApollo() {

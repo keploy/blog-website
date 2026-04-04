@@ -34,6 +34,7 @@ export default function SearchPage({ allPosts }: { allPosts: { node: Post }[] })
     >
       <Head>
         <title>{pageTitle}</title>
+        <meta name="robots" content="noindex, follow" />
       </Head>
       <Container>
         <div className="mt-10 mb-20">

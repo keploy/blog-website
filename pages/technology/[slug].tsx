@@ -14,7 +14,6 @@ import {
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
-import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
 import { useRef, useState, useEffect } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
@@ -180,17 +179,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           <PostTitle>Loading…</PostTitle>
         ) : (
           <>
-            <PrismLoader /> {/* Load Prism.js here */}
             <article>
               <Head>
                 <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
-                {/* DM Sans — scoped to this page only */}
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-                <link
-                  href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap"
-                  rel="stylesheet"
-                />
+                {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
               </Head>
               <PostHeader
                 title={post?.title || "Loading..."}
@@ -276,18 +268,36 @@ export const getStaticProps: GetStaticProps = async ({
       };
     }
 
+    // Validate that this post belongs to the "technology" category.
+    // Without this check, posts from "community" are also accessible at
+    // /technology/SLUG (duplicate content). If the post is not in the
+    // "technology" category, redirect to the correct category URL.
+    const postCategories = data.post?.categories?.edges?.map(
+      (edge: { node: { name: string } }) => edge.node.name.toLowerCase()
+    ) || [];
+    if (!postCategories.includes("technology")) {
+      // Post exists but belongs to a different category — redirect to it
+      const correctCategory = postCategories[0] || "community";
+      return {
+        redirect: {
+          destination: `/${correctCategory}/${data.post.slug}`,
+          permanent: true,
+        },
+      };
+    }
+
     const moreStories = await getMoreStoriesForSlugs(data.post?.tags, data.post?.slug);
     const authorDetails = await Promise.all([
       getReviewAuthorDetails("neha"),
       getReviewAuthorDetails("Jain"),
     ]);
 
-    // If we resolved a redirect slug, send a proper redirect response
+    // If we resolved a redirect slug, send a proper 301 redirect response
     if (redirectSlug) {
       return {
         redirect: {
           destination: `/technology/${redirectSlug}`,
-          permanent: false,
+          permanent: true,
         },
       };
     }

@@ -41,6 +41,7 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
             },
           ]),
         ]}
+        canonicalUrl={`${SITE_URL}/authors/${sanitizeAuthorSlug(authorName || "")}`}
       >
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -153,6 +154,14 @@ export const getStaticProps: GetStaticProps = async ({
       console.error("authors/[slug] fallback to getAllPosts failed:", error);
       filteredPosts = [];
     }
+  }
+
+  // Return a proper 404 instead of rendering a page with empty content (soft 404)
+  if (!filteredPosts.length) {
+    return {
+      notFound: true,
+      revalidate: 60,
+    };
   }
 
   let content = null;

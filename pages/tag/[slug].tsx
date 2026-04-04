@@ -25,6 +25,7 @@ export default function PostByTags({ postsByTags,preview}) {
           { name: `${slug || "Tag"}`, url: `${SITE_URL}/tag/${slug || ""}` },
         ]),
       ]}
+      canonicalUrl={slug ? `${SITE_URL}/tag/${slug}` : `${SITE_URL}/tag`}
     >
       <Head>
         <title>{`${slug} posts`}</title>

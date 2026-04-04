@@ -198,6 +198,13 @@
   height: auto;
   border-radius: 0.75rem;
   margin: 1.5rem auto;
+  /* Reduce CLS from WP images that lack explicit width/height */
+  content-visibility: auto;
+}
+
+/* WordPress images with width/height attrs — lock aspect ratio to prevent CLS */
+.content img[width][height] {
+  aspect-ratio: attr(width) / attr(height);
 }
 
 /* ── Figure captions ── */

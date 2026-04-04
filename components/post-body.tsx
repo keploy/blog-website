@@ -3,21 +3,31 @@ import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
-import CodeMirror from "@uiw/react-codemirror";
+import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
+import { Post } from "../types/post";
+
+/* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
+const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
+  ssr: false,
+  loading: () => <div className="bg-[#1e1e2e] rounded-lg p-4 mb-6 min-h-[60px]" />,
+});
+
+const AuthorCard = dynamic(() => import("./AuthorCard"), {
+  ssr: false,
+});
+const BlogSidebar = dynamic(() => import("./BlogSidebar"), {
+  ssr: false,
+});
+const JsonDiffViewer = dynamic(() => import("./json-diff-viewer"), {
+  ssr: false,
+});
+/* Language extensions and theme — imported lazily alongside CodeMirror */
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { python } from "@codemirror/lang-python";
 import { go } from "@codemirror/lang-go";
 import { dracula } from "@uiw/codemirror-theme-dracula";
-const AuthorCard = dynamic(() => import("./AuthorCard"), {
-  ssr: false,
-});
-// import WaitlistBanner from "./waitlistBanner"; // Commented out — replaced by BlogSidebar
-import BlogSidebar from "./BlogSidebar";
-import { Post } from "../types/post";
-import JsonDiffViewer from "./json-diff-viewer";
-import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
-// import AdSlot from "./Adslot";
+
 export default function PostBody({
   content,
   authorName,

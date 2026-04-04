@@ -71,6 +71,7 @@ export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }
     >
       <Head>
         <title>Keploy Community Search</title>
+        <meta name="robots" content="noindex, follow" />
       </Head>
       
       <Header />

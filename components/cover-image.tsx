@@ -6,6 +6,8 @@ interface Props extends Partial<Pick<Post, "title" | "slug">> {
   coverImage: Post["featuredImage"];
   isCommunity?: boolean;
   imgClassName?: string;
+  /** Set true only for the LCP image (post header). Defaults to false. */
+  priority?: boolean;
 }
 
 export default function CoverImage({
@@ -14,6 +16,7 @@ export default function CoverImage({
   slug,
   isCommunity,
   imgClassName,
+  priority = false,
 }: Props) {
   const basePath = isCommunity ? "/community/" : "/technology/";
 
@@ -24,7 +27,9 @@ export default function CoverImage({
       alt={`Cover Image for ${title}`}
       src={coverImage?.node.sourceUrl}
       className={`w-full h-auto object-cover${imgClassName ? ` ${imgClassName}` : ""}${slug ? " transition-transform duration-300 hover:scale-[1.01]" : ""}`}
-      priority
+      priority={priority}
+      loading={priority ? "eager" : "lazy"}
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 780px, 780px"
     />
   );
 

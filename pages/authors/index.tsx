@@ -34,6 +34,7 @@ export default function Authors({
             { name: "Authors", url: `${SITE_URL}/authors` },
           ]),
         ]}
+        canonicalUrl={`${SITE_URL}/authors`}
       >
         <Header />
         <Container>

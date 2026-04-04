@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import {
   FaFacebook,
@@ -119,11 +120,14 @@ function SidebarAdBanner() {
           aria-label="Sign up for Keploy"
           style={{ display: 'block', width: '100%' }}
         >
-          <img
+          <Image
             src="/blog/images/keploy-ad-banner.jpg"
             alt="Keploy Ad Banner"
+            width={320}
+            height={400}
             className="transition-shadow duration-200 ease-in-out cursor-pointer hover:shadow-lg"
             style={{ borderRadius: '16px', width: '100%', height: 'auto', display: 'block', transition: 'box-shadow 0.2s' }}
+            loading="lazy"
             onError={() => setImgError(true)}
           />
         </Link>

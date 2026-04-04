@@ -81,6 +81,7 @@ import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
           { name: "Tags", url: `${SITE_URL}/tag` },
         ]),
       ]}
+      canonicalUrl={`${SITE_URL}/tag`}
     >
       <Head>
         <title>{`Tags`}</title>
