@@ -82,7 +82,9 @@ export const getBlogPostingSchema = ({
   authorName,
   articleSection,
 }: BlogPostingInput) => {
-  const resolvedAuthorName = Array.isArray(authorName) ? authorName[0] : (authorName || ORG_NAME);
+  const resolvedAuthorName = Array.isArray(authorName)
+    ? (authorName[0] || ORG_NAME)
+    : (authorName || ORG_NAME);
   const authorSlug = sanitizeAuthorSlug(resolvedAuthorName);
 
   const schema: Record<string, unknown> = {
@@ -106,8 +108,6 @@ export const getBlogPostingSchema = ({
       logo: {
         "@type": "ImageObject",
         url: ORG_LOGO_URL,
-        width: 60,
-        height: 60,
       },
     },
     isPartOf: {
