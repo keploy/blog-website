@@ -110,6 +110,8 @@ export const getBlogPostingSchema = ({
       logo: {
         "@type": "ImageObject",
         url: ORG_LOGO_URL,
+        width: 462,
+        height: 539,
       },
     },
     isPartOf: {
