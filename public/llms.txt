@@ -39,7 +39,7 @@ contributors, and guest writers.
 ## About Keploy
 
 - Website: https://keploy.io
-- GitHub: https://github.com/keploy/keploy (17,000+ stars)
+- GitHub: https://github.com/keploy/keploy
 - Docs: https://keploy.io/docs
 - License: Apache 2.0
 

@@ -100,7 +100,9 @@ export const getBlogPostingSchema = ({
     author: {
       "@type": "Person",
       name: resolvedAuthorName,
-      url: authorSlug ? `${SITE_URL}/authors/${authorSlug}` : undefined,
+      ...(resolvedAuthorName !== ORG_NAME && authorSlug
+        ? { url: `${SITE_URL}/authors/${authorSlug}` }
+        : {}),
     },
     publisher: {
       "@type": "Organization",

@@ -5,6 +5,7 @@
             "excerpt": "<p>Learn how Keploy simplifies API testing by automatically generating test cases from real traffic.</p>",
             "slug": "understanding-api-testing-with-keploy",
             "date": "2024-06-15T10:00:00",
+                "modified": "2024-06-15T10:00:00",
             "ppmaAuthorName": "Tech Author One",
             "featuredImage": {
                 "node": {
@@ -58,6 +59,7 @@
                         "excerpt": "<p>A comprehensive guide to writing effective unit tests in Go.</p>",
                         "slug": "getting-started-unit-testing-go",
                         "date": "2024-06-10T09:00:00",
+                "modified": "2024-06-10T09:00:00",
                         "ppmaAuthorName": "Tech Author Two",
                         "featuredImage": {
                             "node": {
