@@ -1,3 +1,5 @@
+import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+
 export const SITE_URL = "https://keploy.io/blog";
 export const MAIN_SITE_URL = "https://keploy.io";
 export const ORG_NAME = "Keploy";
@@ -81,7 +83,7 @@ export const getBlogPostingSchema = ({
   articleSection,
 }: BlogPostingInput) => {
   const resolvedAuthorName = authorName || ORG_NAME;
-  const authorSlug = encodeURIComponent(resolvedAuthorName);
+  const authorSlug = sanitizeAuthorSlug(resolvedAuthorName);
 
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",

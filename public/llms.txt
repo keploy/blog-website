@@ -12,7 +12,7 @@ and developer tooling. Content is authored by Keploy engineers, community
 contributors, and guest writers.
 
 - URL: https://keploy.io/blog
-- Feed: https://keploy.io/blog/sitemap.xml
+- Sitemap: https://keploy.io/blog/sitemap.xml
 - CMS: Headless WordPress with WPGraphQL (content API at wp.keploy.io/graphql)
 - Framework: Next.js (Pages Router) with server-side rendering and ISR
 
