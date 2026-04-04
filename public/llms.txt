@@ -13,7 +13,7 @@ contributors, and guest writers.
 
 - URL: https://keploy.io/blog
 - Sitemap: https://keploy.io/blog/sitemap.xml
-- CMS: Headless WordPress with WPGraphQL (content API at wp.keploy.io/graphql)
+- CMS: Headless WordPress with WPGraphQL (content API at https://wp.keploy.io/graphql)
 - Framework: Next.js (Pages Router) with server-side rendering and ISR
 
 ## Top Categories
