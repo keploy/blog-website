@@ -283,11 +283,20 @@ export const getStaticProps: GetStaticProps = async ({
       (edge: { node: { name: string } }) => edge.node.name.toLowerCase()
     ) || [];
     if (!postCategories.includes("technology")) {
-      // Post belongs to a different category — return 404 so the correct
-      // category page is the canonical URL. Using notFound instead of redirect
-      // because redirect cannot be returned during prerendering (next build).
-      // At runtime (ISR fallback), the post will be served from its correct
-      // category path (e.g. /community/SLUG).
+      // Post belongs to a different category — 301 redirect to preserve SEO signals.
+      // This only runs at ISR runtime (fallback: true), not during next build,
+      // because getStaticPaths only returns paths from the technology category query.
+      const correctCategory = postCategories.find((c: string) =>
+        ['community', 'technology'].includes(c)
+      );
+      if (correctCategory) {
+        return {
+          redirect: {
+            destination: `/${correctCategory}/${data.post.slug}`,
+            permanent: true,
+          },
+        };
+      }
       return {
         notFound: true,
         revalidate: 60,
