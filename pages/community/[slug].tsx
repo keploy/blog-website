@@ -28,6 +28,7 @@ import {
   getBreadcrumbListSchema,
   SITE_URL,
 } from "../../lib/structured-data";
+import { sanitizeTitle, getSafeDescription } from "../../utils/seo";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -143,12 +144,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     }
   }, [router, router.isFallback, post]);
 
-  const safeTitle = (post?.title || 'Loading...').replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#8217;/g, "'").replace(/&#8216;/g, "'").replace(/&#8220;/g, '"').replace(/&#8221;/g, '"').replace(/&#8211;/g, '–').replace(/&#8212;/g, '—');
-  const safeDescription = router.isFallback
-    ? 'Keploy engineering blog — practical guides, tutorials, and best practices for developers and QA engineers.'
-    : (post?.seo?.metaDesc && post.seo.metaDesc.length >= 60)
-      ? post.seo.metaDesc
-      : `Learn about ${safeTitle} — practical guide with examples and best practices from the Keploy engineering blog.`;
+  const safeTitle = sanitizeTitle(post?.title);
+  const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
 
   const postUrl = post?.slug ? `${SITE_URL}/community/${post.slug}` : `${SITE_URL}/community`;
   const structuredData = [];

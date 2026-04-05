@@ -49,7 +49,7 @@
                 "metaDesc": "Community-driven testing playbooks and best practices for API testing with Keploy.",
                 "title": "Keploy Community Testing Playbooks | Keploy Blog"
             },
-            "content": "<h2>Introduction</h2><p>Community testing playbooks help teams adopt API testing best practices. Learn from the Keploy community how to build robust test suites.</p><h2>Getting Started</h2><p>Follow these playbooks to get started with community-driven testing patterns.</p><h3>Example</h3><pre><code class=\"language-javascript\">console.log('Hello Community');</code></pre><h2>Best Practices</h2><p>Share your testing patterns with the community to help others improve their workflows.</p><div class='pp-author-boxes-avatar'><img src='/blog/favicon/Group.png' /></div><p class='pp-author-boxes-description'>An author for Keploy's blog.</p>"
+            "content": "<h2>Introduction</h2><p>Community testing playbooks help teams adopt API testing best practices. Learn from the Keploy community how to build robust test suites.</p><h2>Getting Started</h2><p>Follow these playbooks to get started with community-driven testing patterns.</p><h3>Example</h3><pre><code class=\"language-javascript\">console.log('Hello Community');</code></pre><h2>Best Practices</h2><p>Share your testing patterns with the community to help others improve their workflows.</p><div class=\"pp-author-boxes-avatar\"><img src=\"/blog/favicon/Group.png\" /></div><p class=\"pp-author-boxes-description\">An author for Keploy's blog.</p>"
         },
         "posts": {
             "edges": [

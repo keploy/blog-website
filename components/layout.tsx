@@ -38,7 +38,7 @@ export default function Layout({
           animation so this fade-in no longer depends on framer-motion here.
           The effect is now handled by a pure CSS @keyframes animation. */}
       <div
-        className="min-h-screen animate-[fadeIn_0.3s_ease-out]"
+        className="min-h-screen animate-[fadeIn_0.3s_ease-out] motion-reduce:animate-none"
       >
         {/* <Alert preview={preview} /> */}
         <main className="pt-20 md:pt-24">{children}</main>
