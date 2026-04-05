@@ -30,7 +30,7 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
         preview={preview}
         featuredImage={HOME_OG_IMAGE_URL}
         Title={`${authorName} Page`}
-        Description={`Posts by ${authorName}`}
+        Description={`Read all articles by ${authorName} on the Keploy blog — covering software testing, API development, automation, and engineering best practices.`}
         structuredData={[
           getBreadcrumbListSchema([
             { name: "Home", url: SITE_URL },
@@ -41,6 +41,7 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
             },
           ]),
         ]}
+        canonicalUrl={`${SITE_URL}/authors/${sanitizeAuthorSlug(authorName || "")}`}
       >
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -93,11 +94,7 @@ export const getStaticProps: GetStaticProps = async ({
 
   if (typeof slugParam !== "string" || slugParam.trim().length === 0) {
     return {
-      props: {
-        preview,
-        filteredPosts: [],
-        content: null,
-      },
+      notFound: true,
       revalidate: 60,
     };
   }
@@ -153,6 +150,14 @@ export const getStaticProps: GetStaticProps = async ({
       console.error("authors/[slug] fallback to getAllPosts failed:", error);
       filteredPosts = [];
     }
+  }
+
+  // Return a proper 404 instead of rendering a page with empty content (soft 404)
+  if (!filteredPosts.length) {
+    return {
+      notFound: true,
+      revalidate: 60,
+    };
   }
 
   let content = null;

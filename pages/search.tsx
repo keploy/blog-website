@@ -28,12 +28,13 @@ export default function SearchPage({ allPosts }: { allPosts: { node: Post }[] })
     <Layout
       preview={false} // Required prop
       Title={pageTitle} // Required prop
-      Description={`Search results for ${query} on the Keploy Blog.`} // Required prop
+      Description={query ? `Search results for "${query}" on the Keploy Blog — find articles on testing, automation, and developer tools.` : `Search the Keploy Blog for articles on API testing, test automation, CI/CD, developer tools, and software quality engineering.`}
       featuredImage={HOME_OG_IMAGE_URL || "/blog/images/blog-bunny.png"} // Fallback to string if constant fails
       structuredData={structuredData}
     >
       <Head>
         <title>{pageTitle}</title>
+        <meta name="robots" content="noindex, follow" />
       </Head>
       <Container>
         <div className="mt-10 mb-20">

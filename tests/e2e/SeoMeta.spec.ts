@@ -29,7 +29,7 @@ test.describe('SEO and Meta Tags Configuration', () => {
         await expect(ogTitle.first()).toBeAttached();
 
         const ogDesc = page.locator('meta[property="og:description"]');
-        await expect(ogDesc).toHaveAttribute('content', /Blog from the Technology Page/);
+        await expect(ogDesc).toHaveAttribute('content', /Keploy technology articles/);
     });
 
     test('Individual Post page should have dynamic SEO meta tags', async ({ page, baseURL }) => {

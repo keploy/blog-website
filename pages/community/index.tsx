@@ -36,8 +36,9 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
       preview={preview}
       featuredImage={heroPost?.featuredImage?.node.sourceUrl}
       Title={heroPost?.title}
-      Description={`Blog from the Technology Page`}
+      Description={`Explore the Keploy community blog for developer stories, open-source contributions, API testing tutorials, and hands-on engineering guides.`}
       structuredData={structuredData}
+      canonicalUrl={`${SITE_URL}/community`}
     >
       <Head>
         <title>{`Keploy Blog`}</title>

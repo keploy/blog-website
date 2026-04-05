@@ -27,13 +27,14 @@ export default function Authors({
         preview={preview}
         featuredImage={HOME_OG_IMAGE_URL}
         Title={`Authors Page`}
-        Description={`Giving the List of all the Authors`}
+        Description={`Meet the authors behind the Keploy blog — engineers, developers, and QA experts sharing insights on testing, automation, and software quality.`}
         structuredData={[
           getBreadcrumbListSchema([
             { name: "Home", url: SITE_URL },
             { name: "Authors", url: `${SITE_URL}/authors` },
           ]),
         ]}
+        canonicalUrl={`${SITE_URL}/authors`}
       >
         <Header />
         <Container>
