@@ -8,10 +8,10 @@ import { getAllPostsFromTags, getAllTags } from "../../lib/api";
 import TagsStories from "../../components/TagsStories";
 import { useRouter } from "next/router";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
-export default function PostByTags({ postsByTags,preview}) {
+export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp }) {
   const posts = postsByTags?.edges || [];
   const router = useRouter();
-  const tagSlug = Array.isArray(router.query.slug) ? router.query.slug[0] : (router.query.slug || '');
+  const tagSlug = tagSlugProp || (Array.isArray(router.query.slug) ? router.query.slug[0] : (router.query.slug || ''));
   const tagDisplay = tagSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) || 'All Topics';
   return (
     <Layout
@@ -68,7 +68,7 @@ export const getStaticProps: GetStaticProps = async ({
     const postsByTags = await getAllPostsFromTags(slug.toString(), preview);
 
     return {
-      props: { postsByTags: postsByTags || { edges: [] }, preview },
+      props: { postsByTags: postsByTags || { edges: [] }, preview, tagSlug: slug },
       revalidate: 10,
     };
   } catch (error) {
