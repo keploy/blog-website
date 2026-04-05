@@ -202,11 +202,8 @@
   content-visibility: auto;
 }
 
-/* WordPress images with width/height attrs — lock aspect ratio to prevent CLS.
-   attr() in aspect-ratio is not supported in browsers; use a sensible default. */
-.content img[width][height] {
-  aspect-ratio: 16 / 9;
-}
+/* WordPress images with width/height HTML attributes already expose an
+   intrinsic aspect ratio to browsers, so no explicit CSS aspect-ratio needed. */
 
 /* ── Figure captions ── */
 .content figcaption {

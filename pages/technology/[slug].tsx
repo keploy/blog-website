@@ -134,9 +134,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   }, [router, router.isFallback, post]);
 
   const safeTitle = post?.title || 'Loading...';
-  const safeDescription = (!router.isFallback && post?.seo?.metaDesc && post.seo.metaDesc.length >= 60)
-    ? post.seo.metaDesc
-    : `Learn about ${safeTitle} — practical guide with examples and best practices from the Keploy engineering blog.`;
+  const safeDescription = router.isFallback
+    ? 'Keploy engineering blog — practical guides, tutorials, and best practices for developers and QA engineers.'
+    : (post?.seo?.metaDesc && post.seo.metaDesc.length >= 60)
+      ? post.seo.metaDesc
+      : `Learn about ${safeTitle} — practical guide with examples and best practices from the Keploy engineering blog.`;
 
   const postUrl = post?.slug ? `${SITE_URL}/technology/${post.slug}` : `${SITE_URL}/technology`;
   const structuredData = [];
@@ -282,15 +284,21 @@ export const getStaticProps: GetStaticProps = async ({
     ) || [];
     if (!postCategories.includes("technology")) {
       // Post exists but belongs to a different category — redirect to it
-      const validCategories = ['community', 'technology'];
-      const correctCategory = validCategories.includes(postCategories[0]?.toLowerCase())
-        ? postCategories[0].toLowerCase()
-        : 'community'; // fallback to community for unknown categories
+      const correctCategory = postCategories.find((c: string) =>
+        ['community', 'technology'].includes(c)
+      );
+      if (correctCategory) {
+        return {
+          redirect: {
+            destination: `/${correctCategory}/${data.post.slug}`,
+            permanent: true,
+          },
+        };
+      }
+      // Unknown category (e.g. "Uncategorized") — return 404
       return {
-        redirect: {
-          destination: `/${correctCategory}/${data.post.slug}`,
-          permanent: true,
-        },
+        notFound: true,
+        revalidate: 60,
       };
     }
 

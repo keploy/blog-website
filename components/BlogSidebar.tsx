@@ -125,6 +125,7 @@ function SidebarAdBanner() {
             alt="Keploy Ad Banner"
             width={320}
             height={400}
+            sizes="320px"
             className="transition-shadow duration-200 ease-in-out cursor-pointer hover:shadow-lg"
             style={{ borderRadius: '16px', width: '100%', height: 'auto', display: 'block', transition: 'box-shadow 0.2s' }}
             loading="lazy"
