@@ -30,6 +30,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       Title={`Blog - Keploy`}
       Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}
       structuredData={structuredData}
+      canonicalUrl={SITE_URL}
       ogType="website"
     >
       <Head>
