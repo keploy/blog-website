@@ -1,9 +1,9 @@
 /**
- * Strip HTML tags and decode common WordPress HTML entities from a title string.
+ * Strip HTML tags, decode common WordPress HTML entities, and normalize whitespace.
  * Used for meta descriptions and JSON-LD where raw HTML/entities hurt SEO quality.
  */
-export function sanitizeTitle(rawTitle: string | undefined | null): string {
-  return (rawTitle || 'Loading...')
+function decodeEntities(text: string): string {
+  return text
     .replace(/<[^>]*>/g, '')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
@@ -14,7 +14,14 @@ export function sanitizeTitle(rawTitle: string | undefined | null): string {
     .replace(/&#8220;/g, '\u201c')
     .replace(/&#8221;/g, '\u201d')
     .replace(/&#8211;/g, '\u2013')
-    .replace(/&#8212;/g, '\u2014');
+    .replace(/&#8212;/g, '\u2014')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function sanitizeTitle(rawTitle: string | undefined | null): string {
+  if (!rawTitle) return '';
+  return decodeEntities(rawTitle);
 }
 
 /**
@@ -29,8 +36,14 @@ export function getSafeDescription(
   if (isFallback) {
     return 'Keploy engineering blog — practical guides, tutorials, and best practices for developers and QA engineers.';
   }
-  if (metaDesc && metaDesc.length >= 60) {
-    return metaDesc;
+  if (metaDesc) {
+    const clean = decodeEntities(metaDesc);
+    if (clean.length >= 60) {
+      return clean;
+    }
+  }
+  if (!safeTitle) {
+    return 'Keploy engineering blog — practical guides, tutorials, and best practices for developers and QA engineers.';
   }
   return `Learn about ${safeTitle} — practical guide with examples and best practices from the Keploy engineering blog.`;
 }
