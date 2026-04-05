@@ -13,6 +13,11 @@ function loadFixture(name) {
 const technologyPosts = loadFixture('technology-posts.json');
 const communityPosts = loadFixture('community-posts.json');
 const singlePost = loadFixture('single-post.json');
+const singleCommunityPost = loadFixture('single-community-post.json');
+
+const communitySlugs = new Set(
+    communityPosts.data.posts.edges.map(e => e.node.slug)
+);
 const searchSuccess = loadFixture('search-success-response.json');
 const errorResponse = loadFixture('error-response.json');
 
@@ -213,6 +218,10 @@ function handleGraphQL(body) {
     }
 
     if (query.includes('PostBySlug')) {
+        const slug = variables.id || variables.slug || '';
+        if (communitySlugs.has(slug)) {
+            return singleCommunityPost;
+        }
         return singlePost;
     }
 
