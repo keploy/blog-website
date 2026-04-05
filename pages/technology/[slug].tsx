@@ -133,7 +133,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     }
   }, [router, router.isFallback, post]);
 
-  const safeTitle = (post?.title || 'Loading...').replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#?\w+;/g, '');
+  const safeTitle = (post?.title || 'Loading...').replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#8217;/g, "'").replace(/&#8216;/g, "'").replace(/&#8220;/g, '"').replace(/&#8221;/g, '"').replace(/&#8211;/g, '–').replace(/&#8212;/g, '—');
   const safeDescription = router.isFallback
     ? 'Keploy engineering blog — practical guides, tutorials, and best practices for developers and QA engineers.'
     : (post?.seo?.metaDesc && post.seo.metaDesc.length >= 60)
