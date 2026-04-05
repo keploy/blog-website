@@ -34,9 +34,9 @@ export default function Layout({
         canonicalUrl={canonicalUrl}
         ogType={ogType}
       />
-      {/* Replaced framer-motion's motion.div with CSS animation to remove
-          ~30-40 kB of framer-motion from every page's critical JS bundle.
-          The fade-in is now handled by a pure CSS @keyframes animation. */}
+      {/* Replaced the Layout wrapper's framer-motion animation with a CSS
+          animation so this fade-in no longer depends on framer-motion here.
+          The effect is now handled by a pure CSS @keyframes animation. */}
       <div
         className="min-h-screen animate-[fadeIn_0.3s_ease-out]"
       >

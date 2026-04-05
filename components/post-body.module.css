@@ -198,8 +198,9 @@
   height: auto;
   border-radius: 0.75rem;
   margin: 1.5rem auto;
-  /* Reduce CLS from WP images that lack explicit width/height */
+  /* Defer rendering offscreen images while reserving a stable fallback size to avoid CLS */
   content-visibility: auto;
+  contain-intrinsic-size: 800px 450px;
 }
 
 /* WordPress images with width/height HTML attributes already expose an

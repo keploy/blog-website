@@ -94,11 +94,7 @@ export const getStaticProps: GetStaticProps = async ({
 
   if (typeof slugParam !== "string" || slugParam.trim().length === 0) {
     return {
-      props: {
-        preview,
-        filteredPosts: [],
-        content: null,
-      },
+      notFound: true,
       revalidate: 60,
     };
   }
