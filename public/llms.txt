@@ -1,0 +1,76 @@
+# Keploy Blog — llms.txt
+# https://keploy.io/blog
+
+> Keploy is an open-source, eBPF-based API testing platform that converts real
+> user traffic into reusable integration tests with auto-generated mocks and
+> stubs — no code changes required.
+
+## About This Site
+
+The Keploy Blog publishes 500+ articles on software testing, API development,
+and developer tooling. Content is authored by Keploy engineers, community
+contributors, and guest writers.
+
+- URL: https://keploy.io/blog
+- Sitemap: https://keploy.io/blog/sitemap.xml
+- CMS: Headless WordPress with WPGraphQL (content API at https://wp.keploy.io/graphql)
+- Framework: Next.js (Pages Router) with server-side rendering and ISR
+
+## Top Categories
+
+- **Technology** — Deep dives on testing frameworks, CI/CD, language-specific
+  guides, and developer tools.
+- **Community** — Open-source updates, contributor spotlights, release notes,
+  and event recaps.
+
+## Popular Topics
+
+- API testing and test automation
+- Unit testing, integration testing, and end-to-end testing
+- Test-driven development (TDD) and behavior-driven development (BDD)
+- Mocking, stubbing, and service virtualization
+- Code coverage analysis and best practices
+- CI/CD pipeline optimization
+- eBPF for network-level traffic capture
+- Language guides: Go, Java, Python, Node.js, TypeScript, Rust
+- Framework guides: Spring Boot, Django, Express, FastAPI, NestJS
+- Tool comparisons: Jest vs Mocha, Cypress vs Playwright, Postman vs Keploy
+
+## About Keploy
+
+- Website: https://keploy.io
+- GitHub: https://github.com/keploy/keploy
+- Docs: https://keploy.io/docs
+- License: Apache 2.0
+
+### Recognition
+
+- API World 2023 — Best in API Infrastructure
+- CNCF Landscape — listed under API Testing
+- Google for Startups Accelerator alumnus
+
+### Products
+
+1. **Integration Testing (OSS)** — Record-replay engine using eBPF to capture
+   API calls and generate test suites with deterministic replay.
+2. **Test Agent** — AI-powered unit test generation from PR diffs.
+3. **API Test Generation** — Generate tests from OpenAPI specs, Postman
+   collections, or cURL commands.
+
+## Author Pages
+
+Author profiles are available at: https://keploy.io/blog/authors/{slug}/
+(Slugs are lowercase, hyphen-separated — e.g., "John Doe" becomes "john-doe")
+
+## Related Resources
+
+- Main site LLM context: https://keploy.io/llms-full.txt
+- Documentation: https://keploy.io/docs
+- Comparisons: https://keploy.io/compare
+
+## Contact
+
+- Twitter/X: https://twitter.com/Keployio
+- LinkedIn: https://www.linkedin.com/company/keploy/
+- YouTube: https://www.youtube.com/@keploy
+- Discord: https://discord.gg/keploy
