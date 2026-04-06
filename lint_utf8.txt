@@ -1,0 +1,22 @@
+﻿
+> lint
+> next lint
+
+
+./components/more-stories.tsx
+65:6  Warning: React Hook useEffect has a missing dependency: 'localSearchTerm'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+151:6  Warning: React Hook useEffect has missing dependencies: 'buffer.length', 'initialPageInfo?.hasNextPage', and 'loadMoreInBackground'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./components/navbar/FloatingNavbarClient.tsx
+202:6  Warning: React Hook useEffect has missing dependencies: 'communityState.length', 'router.basePath', and 'techState.length'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+764:6  Warning: React Hook useEffect has a missing dependency: 'router?.basePath'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+784:6  Warning: React Hook useEffect has missing dependencies: 'communityLatest' and 'techLatest'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./components/post-body.tsx
+152:6  Warning: React Hook useEffect has a missing dependency: 'isUserEnteredURL'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+221:6  Warning: React Hook useEffect has a missing dependency: 'handleHeadingCopyClick'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./components/testimonials.tsx
+31:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
