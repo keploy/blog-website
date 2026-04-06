@@ -58,13 +58,13 @@ const TwitterTestimonials = () => {
 
         <Marquee pauseOnHover repeat={2} className="[--duration:17s]">
           {firstRow.map((tweet) => (
-            <ReviewCard key={tweet.id} {...tweet} />
+            <ReviewCard key={`${tweet.id}-${tweet.post}`} {...tweet} />
           ))}
         </Marquee>
 
         <Marquee reverse pauseOnHover repeat={2} className="[--duration:17s]">
           {secondRow.map((tweet) => (
-            <ReviewCard key={tweet.id} {...tweet} />
+            <ReviewCard key={`${tweet.id}-${tweet.post}`} {...tweet} />
           ))}
         </Marquee>
 
