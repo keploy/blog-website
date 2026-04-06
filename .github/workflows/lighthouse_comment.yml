@@ -39,7 +39,6 @@ jobs:
           urls: |
             https://your-live-site-url.com
           uploadArtifacts: true
-          temporaryPublicStorage: true
 
       # 6. Generate comment file
       - name: Create Lighthouse comment
