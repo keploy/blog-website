@@ -16,7 +16,6 @@ import {
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
-import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
 import { useEffect, useRef, useState } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
@@ -29,6 +28,7 @@ import {
   getBreadcrumbListSchema,
   SITE_URL,
 } from "../../lib/structured-data";
+import { sanitizeTitle, getSafeDescription } from "../../utils/seo";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -144,6 +144,9 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     }
   }, [router, router.isFallback, post]);
 
+  const safeTitle = sanitizeTitle(post?.title);
+  const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
+
   const postUrl = post?.slug ? `${SITE_URL}/community/${post.slug}` : `${SITE_URL}/community`;
   const structuredData = [];
   if (post?.slug) {
@@ -151,15 +154,17 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       getBreadcrumbListSchema([
         { name: "Home", url: SITE_URL },
         { name: "Community", url: `${SITE_URL}/community` },
-        { name: post?.title || "Post", url: postUrl },
+        { name: safeTitle || "Post", url: postUrl },
       ]),
       getBlogPostingSchema({
-        title: post?.title || "Keploy Blog Post",
+        title: safeTitle || "Keploy Blog Post",
         url: postUrl,
         datePublished: post?.date,
-        description: post?.seo?.metaDesc,
+        dateModified: post?.modified,
+        description: safeDescription,
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
+        articleSection: post?.categories?.edges?.[0]?.node?.name || "Community",
       })
     );
   } else {
@@ -175,9 +180,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     <Layout
       preview={preview}
       featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
-      Title={post?.seo.title || "Loading..."}
-      Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
+      Title={post?.seo?.title || "Loading..."}
+      Description={safeDescription}
       structuredData={structuredData}
+      canonicalUrl={!router.isFallback && post?.slug ? postUrl : undefined}
+      ogType="article"
     >
       <Header readProgress={readProgress} />
       <Container>
@@ -186,17 +193,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           <PostTitle>Loading…</PostTitle>
         ) : (
           <>
-            <PrismLoader /> {/* Load Prism.js here */}
             <article>
               <Head>
                 <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
-                {/* DM Sans — scoped to this page only */}
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-                <link
-                  href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap"
-                  rel="stylesheet"
-                />
+                {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
               </Head>
               <PostHeader
                 title={post?.title || "Loading..."}
@@ -280,6 +280,34 @@ export const getStaticProps: GetStaticProps = async ({
     const data = await getPostAndMorePosts(slug, preview, previewData);
 
     if (!data?.post) {
+      return {
+        notFound: true,
+        revalidate: 60,
+      };
+    }
+
+    // Validate that this post belongs to the "community" category.
+    // Without this check, posts from "technology" are also accessible at
+    // /community/SLUG (duplicate content). If the post is not in the
+    // "community" category, redirect to the correct category URL.
+    const postCategories = data.post?.categories?.edges?.map(
+      (edge: { node: { name: string } }) => edge.node.name.toLowerCase()
+    ) || [];
+    if (!postCategories.includes("community")) {
+      // Post belongs to a different category — 301 redirect to preserve SEO signals.
+      // This only runs at ISR runtime (fallback: true), not during next build,
+      // because getStaticPaths only returns paths from the community category query.
+      const correctCategory = postCategories.find((c: string) =>
+        ['community', 'technology'].includes(c)
+      );
+      if (correctCategory) {
+        return {
+          redirect: {
+            destination: `/${correctCategory}/${data.post.slug}`,
+            permanent: true,
+          },
+        };
+      }
       return {
         notFound: true,
         revalidate: 60,

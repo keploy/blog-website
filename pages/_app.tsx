@@ -3,10 +3,10 @@ import '../styles/index.css';
 import Router from "next/router";
 import Script from 'next/script';
 
-import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
- 
+import { trackAiReferral } from '@/utils/aiReferralTracker';
+
 const PageLoader = dynamic(() => import('../components/PageLoader'), {
   ssr: false,
 })
@@ -31,6 +31,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
   }, []);
 
+  useEffect(() => {
+    // Track AI referral only on initial landing — document.referrer
+    // doesn't change on SPA navigations, so re-firing would duplicate events.
+    trackAiReferral();
+  }, []);
+
   return (
     <>
       <Script
@@ -40,9 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         data-source="blog"
         strategy="lazyOnload"
       />
-      <AnimatePresence>
-        {loading ? <PageLoader /> : <Component {...pageProps} />}
-      </AnimatePresence>
+      {loading ? <PageLoader /> : <Component {...pageProps} />}
     </>
   );
 }
