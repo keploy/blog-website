@@ -8,7 +8,7 @@ export function GitHubStars({ className = "" }) {
 
   return (
     <div className="relative group">
-      <Link
+      <a
         href="https://github.com/keploy/keploy"
         target="_blank"
         rel="noopener noreferrer"
@@ -17,7 +17,7 @@ export function GitHubStars({ className = "" }) {
         <GitHubIcon />
         <span className="tracking-wider font-medium text-[1rem]">{stars}</span>
         <div className="absolute inset-0 -translate-x-full group-hover/link:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-orange-400/20 to-transparent" />
-      </Link>
+      </a>
     </div>
   );
 }

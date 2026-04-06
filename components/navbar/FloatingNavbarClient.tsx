@@ -395,31 +395,77 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       { href: "https://www.writers.keploy.io/", title: "Writers Program", desc: "Be a part of the blog writing for Keploy", cta: true },
                     ].map((item, idx) => (
                       <div key={idx} className="rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all">
-                        <Link
-                          href={item.href}
-                          target={item.href.startsWith("http") ? "_blank" : undefined}
-                          rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                          className={`group relative block rounded-[calc(0.75rem-3px)] p-4 transition-all ${
-                            item.cta
-                              ? 'overflow-hidden bg-gradient-to-br from-orange-100 to-red-100 hover:from-orange-200 hover:to-red-200 ring-2 ring-orange-400/70 hover:ring-orange-500/90 shadow-[0_10px_24px_rgba(0,0,0,0.16)] hover:shadow-[0_26px_54px_rgba(0,0,0,0.26)] hover:-translate-y-[1.5px]'
-                              : 'bg-white shadow-[0_6px_14px_rgba(0,0,0,0.10)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)]'
-                          }`}
-                        >
-                          {/* CTA wavy overlay */}
-                          {item.cta && (
-                            <>
-                              <span className="pointer-events-none absolute inset-0 opacity-75 [mask-image:radial-gradient(60%_60%_at_50%_50%,black,transparent)]">
-                                <span className="absolute -inset-16 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(255,138,76,0.14),rgba(255,71,87,0.12),rgba(255,138,76,0.14))] blur-3xl rounded-[inherit] animate-[spin_12s_linear_infinite]" />
-                              </span>
-                              {/* Hover sheen sweep */}
-                              <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                            </>
-                          )}
-                          <div className="relative z-[1]">
-                            <div className="text-[15px] font-semibold transition-colors group-hover:text-orange-600">{item.title}</div>
-                            <div className={`${item.cta ? 'text-[12px] text-neutral-700' : 'text-[12px] text-neutral-600'} mt-1`}>{item.desc}</div>
-                          </div>
-                        </Link>
+                        {item.href.startsWith("http") ? (
+                          <a
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`group relative block rounded-[calc(0.75rem-3px)] p-4 transition-all ${
+                              item.cta
+                                ? "overflow-hidden bg-gradient-to-br from-orange-100 to-red-100 hover:from-orange-200 hover:to-red-200 ring-2 ring-orange-400/70 hover:ring-orange-500/90 shadow-[0_10px_24px_rgba(0,0,0,0.16)] hover:shadow-[0_26px_54px_rgba(0,0,0,0.26)] hover:-translate-y-[1.5px]"
+                                : "bg-white shadow-[0_6px_14px_rgba(0,0,0,0.10)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
+                            }`}
+                          >
+                            {/* CTA wavy overlay */}
+                            {item.cta && (
+                              <>
+                                <span className="pointer-events-none absolute inset-0 opacity-75 [mask-image:radial-gradient(60%_60%_at_50%_50%,black,transparent)]">
+                                  <span className="absolute -inset-16 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(255,138,76,0.14),rgba(255,71,87,0.12),rgba(255,138,76,0.14))] blur-3xl rounded-[inherit] animate-[spin_12s_linear_infinite]" />
+                                </span>
+                                {/* Hover sheen sweep */}
+                                <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                              </>
+                            )}
+                            <div className="relative z-[1]">
+                              <div className="text-[15px] font-semibold transition-colors group-hover:text-orange-600">
+                                {item.title}
+                              </div>
+                              <div
+                                className={`${
+                                  item.cta
+                                    ? "text-[12px] text-neutral-700"
+                                    : "text-[12px] text-neutral-600"
+                                } mt-1`}
+                              >
+                                {item.desc}
+                              </div>
+                            </div>
+                          </a>
+                        ) : (
+                          <Link
+                            href={item.href}
+                            className={`group relative block rounded-[calc(0.75rem-3px)] p-4 transition-all ${
+                              item.cta
+                                ? "overflow-hidden bg-gradient-to-br from-orange-100 to-red-100 hover:from-orange-200 hover:to-red-200 ring-2 ring-orange-400/70 hover:ring-orange-500/90 shadow-[0_10px_24px_rgba(0,0,0,0.16)] hover:shadow-[0_26px_54px_rgba(0,0,0,0.26)] hover:-translate-y-[1.5px]"
+                                : "bg-white shadow-[0_6px_14px_rgba(0,0,0,0.10)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
+                            }`}
+                          >
+                            {/* CTA wavy overlay */}
+                            {item.cta && (
+                              <>
+                                <span className="pointer-events-none absolute inset-0 opacity-75 [mask-image:radial-gradient(60%_60%_at_50%_50%,black,transparent)]">
+                                  <span className="absolute -inset-16 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(255,138,76,0.14),rgba(255,71,87,0.12),rgba(255,138,76,0.14))] blur-3xl rounded-[inherit] animate-[spin_12s_linear_infinite]" />
+                                </span>
+                                {/* Hover sheen sweep */}
+                                <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                              </>
+                            )}
+                            <div className="relative z-[1]">
+                              <div className="text-[15px] font-semibold transition-colors group-hover:text-orange-600">
+                                {item.title}
+                              </div>
+                              <div
+                                className={`${
+                                  item.cta
+                                    ? "text-[12px] text-neutral-700"
+                                    : "text-[12px] text-neutral-600"
+                                } mt-1`}
+                              >
+                                {item.desc}
+                              </div>
+                            </div>
+                          </Link>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -432,9 +478,9 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       { href: "https://keploy.io/about#careers", title: "Careers" },
                     ].map((link, idx) => (
                       <div key={idx} className="rounded-xl p-[1.25px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all">
-                        <Link href={link.href} target="_blank" rel="noopener noreferrer" className="group block rounded-[calc(0.75rem-3px)] bg-white p-3 shadow-[0_4px_10px_rgba(0,0,0,0.10)] hover:shadow-[0_10px_22px_rgba(0,0,0,0.18)] transition-all">
+                        <a href={link.href} target="_blank" rel="noopener noreferrer" className="group block rounded-[calc(0.75rem-3px)] bg-white p-3 shadow-[0_4px_10px_rgba(0,0,0,0.10)] hover:shadow-[0_10px_22px_rgba(0,0,0,0.18)] transition-all">
                           <div className="text-[13px] font-semibold transition-colors group-hover:text-orange-600">{link.title}</div>
-                        </Link>
+                        </a>
                       </div>
                     ))}
                   </div>
@@ -464,9 +510,9 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             <GitHubStars />
           </div>
           <Button asChild>
-          <Link href="https://app.keploy.io/signin" target="_blank" rel="noopener noreferrer">
+          <a href="https://app.keploy.io/signin" target="_blank" rel="noopener noreferrer">
             Sign in
-          </Link>
+          </a>
           </Button>
         </div>
       </div>
@@ -556,23 +602,23 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                     <CollapsibleContent className="mt-2.5 space-y-2">
                       {/* Nested sub-items with visual hierarchy */}
                       <div className="space-y-2 border-l-2 border-neutral-200/40 pl-4 ml-2">
-                      <Link 
-                          href="/tag" 
-                          onClick={()=>setMobileMenuOpen(false)} 
-                        className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
+                        <Link
+                          href="/tag"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
                         >
                           <span className="font-medium text-sm text-black/75">Tags</span>
                           <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
                         </Link>
-                        <Link 
-                          href="/authors" 
-                          onClick={()=>setMobileMenuOpen(false)} 
-                        className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
+                        <Link
+                          href="/authors"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
                         >
                           <span className="font-medium text-sm text-black/75">Authors</span>
                           <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
                         </Link>
-                      <Link 
+                      <a 
                         href="https://github.com/keploy" 
                         target="_blank"
                         rel="noopener noreferrer"
@@ -581,8 +627,8 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       >
                         <span className="font-medium text-sm text-black/75">Keploy Integration Testing</span>
                         <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                      </Link>
-                      <Link 
+                      </a>
+                      <a 
                         href="https://app.keploy.io" 
                         target="_blank"
                         rel="noopener noreferrer"
@@ -591,8 +637,8 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       >
                         <span className="font-medium text-sm text-black/75">Keploy API Testing Console</span>
                         <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                      </Link>
-                      <Link 
+                      </a>
+                      <a 
                         href="https://keploy.io/unit-test-generator" 
                         target="_blank"
                         rel="noopener noreferrer"
@@ -601,8 +647,8 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       >
                         <span className="font-medium text-sm text-black/75">Keploy Unit Testing Extension</span>
                         <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                      </Link>
-                      <Link 
+                      </a>
+                      <a 
                         href="https://keploy.io/docs/concepts/what-is-keploy/#step-1--record-unique-network-interactions-as-test-case" 
                         target="_blank"
                         rel="noopener noreferrer"
@@ -611,8 +657,8 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       >
                         <span className="font-medium text-sm text-black/75">Keploy Test Recorder</span>
                         <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                      </Link>
-                      <Link 
+                      </a>
+                      <a 
                         href="https://keploy.io/docs" 
                         target="_blank"
                         rel="noopener noreferrer"
@@ -621,10 +667,10 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       >
                         <span className="font-medium text-sm text-black/75">Keploy Documentation</span>
                         <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                      </Link>
+                      </a>
                       {/* Writers Program CTA - desktop-like card styling */}
                       <div className="rounded-xl p-[1.5px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] hover:p-[2px] transition-all">
-                        <Link 
+                        <a 
                           href="https://www.writers.keploy.io/" 
                           target="_blank"
                           rel="noopener noreferrer"
@@ -640,7 +686,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                             <div className="mt-2 text-[12px] font-semibold text-orange-600">Enroll →</div>
                           </div>
                           <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                        </Link>
+                        </a>
                       </div>
                       {/* Bottom compact 1x4 row */}
                       <div className="grid grid-cols-4 gap-2 pt-1 pb-2">
@@ -650,7 +696,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                           { href: "https://keploy.io/privacy-policy", label: "Privacy" },
                           { href: "https://keploy.io/about#careers", label: "Careers" },
                         ].map((l, i) => (
-                          <Link
+                          <a
                             key={i}
                             href={l.href}
                             target="_blank"
@@ -659,7 +705,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                             className="text-center rounded-lg bg-white/60 ring-[0.5px] ring-neutral-300/60 px-2 py-2 text-[12px] font-medium text-black/75 hover:bg-white/80 hover:ring-[0.5px] hover:ring-orange-400/50 transition-all shadow-none hover:shadow-none"
                           >
                             {l.label}
-                          </Link>
+                          </a>
                         ))}
                       </div>
                       </div>
@@ -680,7 +726,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
 
               {/* Fixed Bottom Section - Sign In Button */}
               <div className="relative z-10 flex-shrink-0 px-5 py-4 border-t border-white/40 bg-white/30 backdrop-blur-sm">
-                <Link 
+                <a 
                 href="https://app.keploy.io/signin" 
                 target="_blank" 
                 rel="noopener noreferrer" 
@@ -688,7 +734,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                 className="w-full inline-flex items-center justify-center bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-full py-3.5 text-[15px] font-semibold shadow-lg hover:shadow-xl transition-all duration-200 ring-1 ring-orange-300/50 min-h-[52px]"
               >
                   Sign in
-                </Link>
+                </a>
               </div>
             </div>
           </div>

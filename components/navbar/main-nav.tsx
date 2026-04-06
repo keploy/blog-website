@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { cn } from "../../lib/utils/utils";
+import { cn, isExternal } from "../../lib/utils/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -50,93 +50,171 @@ const ResponsiveBlock = ({
   item,
   className = "",
 }: BlockProps & { className?: string }) => (
-  <Link
-    href={item.href}
-    target={item.target || "_blank"}
-    className={`group block w-full h-full ${className}`}
-    rel="noopener noreferrer"
-  >
-    <div className="relative h-full w-full rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all duration-200 group-hover:scale-[1.01]">
-      {" "}
-      {/* Gradient border, scale/transition moved here */}
-      <Card className="relative h-full w-full overflow-hidden rounded-[calc(0.75rem-3px)] bg-card shadow-[0_6px_14px_rgba(0,0,0,0.10)] group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)] transition-shadow duration-200">
-        <CardContent className="relative w-full h-full p-0">
-          <div className="absolute inset-x-0 top-0 h-1/3  pointer-events-none z-[1]" />
+  isExternal(item.href) ? (
+    <a
+      href={item.href}
+      target={item.target || "_blank"}
+      className={`group block w-full h-full ${className}`}
+      rel="noopener noreferrer"
+    >
+      <div className="relative h-full w-full rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all duration-200 group-hover:scale-[1.01]">
+        {/* Gradient border, scale/transition moved here */}
+        <Card className="relative h-full w-full overflow-hidden rounded-[calc(0.75rem-3px)] bg-card shadow-[0_6px_14px_rgba(0,0,0,0.10)] group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)] transition-shadow duration-200">
+          <CardContent className="relative w-full h-full p-0">
+            <div className="absolute inset-x-0 top-0 h-1/3  pointer-events-none z-[1]" />
 
-          {item.image && (
-            <Image
-              src={item.image}
-              alt={item.title}
-              fill
-              className="object-cover w-full h-full transition-all duration-300 group-hover:blur-[1px]" // Blur effect remains on image
-              priority
-            />
-          )}
-          {/* Text content */}
-          <div className="absolute z-10 text-left px-3 py-2 backdrop-blur-sm bg-white/10 rounded-lg">
-            {" "}
-            {/* Keep backdrop blur if desired */}
-            <h3
-              className={cn(
-                "text-sm font-medium whitespace-nowrap truncate",
-                item.fontColor || "text-gray-900/80" // Use appropriate text color for contrast
-              )}
-            >
-              {item.title}
-            </h3>
-            {item.description && (
-              <p className="text-[.75em] text-[#737373]">
-                {item.description}
-              </p>
+            {item.image && (
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                className="object-cover w-full h-full transition-all duration-300 group-hover:blur-[1px]" // Blur effect remains on image
+                priority
+              />
             )}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  </Link>
+            {/* Text content */}
+            <div className="absolute z-10 text-left px-3 py-2 backdrop-blur-sm bg-white/10 rounded-lg">
+              {/* Keep backdrop blur if desired */}
+              <h3
+                className={cn(
+                  "text-sm font-medium whitespace-nowrap truncate",
+                  item.fontColor || "text-gray-900/80" // Use appropriate text color for contrast
+                )}
+              >
+                {item.title}
+              </h3>
+              {item.description && (
+                <p className="text-[.75em] text-[#737373]">
+                  {item.description}
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </a>
+  ) : (
+    <Link
+      href={item.href}
+      className={`group block w-full h-full ${className}`}
+    >
+      <div className="relative h-full w-full rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all duration-200 group-hover:scale-[1.01]">
+        {/* Gradient border, scale/transition moved here */}
+        <Card className="relative h-full w-full overflow-hidden rounded-[calc(0.75rem-3px)] bg-card shadow-[0_6px_14px_rgba(0,0,0,0.10)] group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)] transition-shadow duration-200">
+          <CardContent className="relative w-full h-full p-0">
+            <div className="absolute inset-x-0 top-0 h-1/3  pointer-events-none z-[1]" />
+
+            {item.image && (
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                className="object-cover w-full h-full transition-all duration-300 group-hover:blur-[1px]" // Blur effect remains on image
+                priority
+              />
+            )}
+            {/* Text content */}
+            <div className="absolute z-10 text-left px-3 py-2 backdrop-blur-sm bg-white/10 rounded-lg">
+              {/* Keep backdrop blur if desired */}
+              <h3
+                className={cn(
+                  "text-sm font-medium whitespace-nowrap truncate",
+                  item.fontColor || "text-gray-900/80" // Use appropriate text color for contrast
+                )}
+              >
+                {item.title}
+              </h3>
+              {item.description && (
+                <p className="text-[.75em] text-[#737373]">
+                  {item.description}
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </Link>
+  )
 );
 const FeaturedCard = ({ content }: { content: FeaturedCardContent }) => (
   // Outer div for gradient border
-  <div className="rounded-lg p-[1.5px] ">
+  <div className="rounded-lg p-[1.5px]">
     {" "}
     {/* Gradient border */}
     {/* Inner Link/Content Area */}
-    <Link
-      href={content.href}
-      className="group relative block w-full overflow-hidden rounded-[calc(0.5rem-1.5px)] p-2 transition-all duration-200 bg-[#FFFCFA]" // Inner background
-      target="_blank" // Assuming it opens in a new tab based on config
-      rel="noopener noreferrer"
-    >
-      <div className="flex items-center gap-3">
-        {" "}
-        {/* Flex container for logo and text */}
-        {/* Logo container */}
-        <div
-          className={cn(
-            "relative w-10 h-10 flex-shrink-0 border border-orange-100 rounded-md flex items-center justify-center", // Adjusted border color
-            content.logoBg || "bg-white" // Default white background for logo area
-          )}
-        >
-          <content.logo className="w-6 h-6 text-primary/80" /> {/* Logo */}
-        </div>
-        {/* Text container */}
-        <div className="flex flex-col">
-          <p className="text-[12px] font-medium leading-snug text-primary/90 group-hover:text-primary transition-colors">
-            {" "}
-            {/* Title */}
-            {content.title}
-          </p>
-          {/* Subtitle (conditionally rendered) */}
-          {content.subtitle && (
-            <p className="text-[10px] text-[#737373] leading-snug mt-0.5">
+    {isExternal(content.href) ? (
+      <a
+        href={content.href}
+        className="group relative block w-full overflow-hidden rounded-[calc(0.5rem-1.5px)] p-2 transition-all duration-200 bg-[#FFFCFA]" // Inner background
+        target="_blank" // Assuming it opens in a new tab based on config
+        rel="noopener noreferrer"
+      >
+        <div className="flex items-center gap-3">
+          {" "}
+          {/* Flex container for logo and text */}
+          {/* Logo container */}
+          <div
+            className={cn(
+              "relative w-10 h-10 flex-shrink-0 border border-orange-100 rounded-md flex items-center justify-center", // Adjusted border color
+              content.logoBg || "bg-white" // Default white background for logo area
+            )}
+          >
+            <content.logo className="w-6 h-6 text-primary/80" /> {/* Logo */}
+          </div>
+          {/* Text container */}
+          <div className="flex flex-col">
+            <p className="text-[12px] font-medium leading-snug text-primary/90 group-hover:text-primary transition-colors">
               {" "}
-              {/* Subtitle styling */}
-              {content.subtitle}
+              {/* Title */}
+              {content.title}
             </p>
-          )}
+            {/* Subtitle (conditionally rendered) */}
+            {content.subtitle && (
+              <p className="text-[10px] text-[#737373] leading-snug mt-0.5">
+                {" "}
+                {/* Subtitle styling */}
+                {content.subtitle}
+              </p>
+            )}
+          </div>
         </div>
-      </div>
-    </Link>
+      </a>
+    ) : (
+      <Link
+        href={content.href}
+        className="group relative block w-full overflow-hidden rounded-[calc(0.5rem-1.5px)] p-2 transition-all duration-200 bg-[#FFFCFA]" // Inner background
+      >
+        <div className="flex items-center gap-3">
+          {" "}
+          {/* Flex container for logo and text */}
+          {/* Logo container */}
+          <div
+            className={cn(
+              "relative w-10 h-10 flex-shrink-0 border border-orange-100 rounded-md flex items-center justify-center", // Adjusted border color
+              content.logoBg || "bg-white" // Default white background for logo area
+            )}
+          >
+            <content.logo className="w-6 h-6 text-primary/80" /> {/* Logo */}
+          </div>
+          {/* Text container */}
+          <div className="flex flex-col">
+            <p className="text-[12px] font-medium leading-snug text-primary/90 group-hover:text-primary transition-colors">
+              {" "}
+              {/* Title */}
+              {content.title}
+            </p>
+            {/* Subtitle (conditionally rendered) */}
+            {content.subtitle && (
+              <p className="text-[10px] text-[#737373] leading-snug mt-0.5">
+                {" "}
+                {/* Subtitle styling */}
+                {content.subtitle}
+              </p>
+            )}
+          </div>
+        </div>
+      </Link>
+    )}
   </div>
 );
 
@@ -153,7 +231,7 @@ const QuickLinks = ({
     )}
     <div className="grid gap-1">
       {links.map((link, index) => (
-        <Link
+        <a
           key={index}
           href={link.href}
           className="group flex items-center text-sm hover:text-primary p-1"
@@ -162,7 +240,7 @@ const QuickLinks = ({
         >
           <span className="truncate text-[13px]">{link.title}</span>
           <ChevronRight className="h-3 w-3 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
-        </Link>
+        </a>
       ))}
     </div>
   </div>
@@ -259,14 +337,14 @@ export function MainNav() {
         </NavigationMenuItem>
         {/* Pricing */}
         <NavigationMenuItem>
-          <Link
+          <a
             href="https://keploy.io/pricing"
             className="inline-flex items-center text-black/80 justify-center rounded-md font-medium transition-colors hover:text-primary h-9 px-3 py-1.5 hover:underline text-[16px]"
             target="_blank"
             rel="noopener noreferrer"
           >
             Pricing
-          </Link>
+          </a>
         </NavigationMenuItem>
         {/* Resources */}
         <NavigationMenuItem>

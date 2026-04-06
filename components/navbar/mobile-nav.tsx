@@ -13,7 +13,7 @@ import {
   AccordionTrigger,
 } from "../../components/ui/accordion";
 import Link from "next/link";
-import { cn } from "../../lib/utils/utils";
+import { cn, isExternal } from "../../lib/utils/utils";
 import {
   productsNav,
   solutionsNav,
@@ -41,14 +41,23 @@ const MobileNavSection = ({
             <div key={idx}>
               <div className="mb-2">
                 {column.isClickable ? (
-                  <Link
-                    href={column.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-base font-medium text-[#737373] hover:text-primary"
-                  >
-                    {column.title}
-                  </Link>
+                  isExternal(column.href) ? (
+                    <a
+                      href={column.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-base font-medium text-[#737373] hover:text-primary"
+                    >
+                      {column.title}
+                    </a>
+                  ) : (
+                    <Link
+                      href={column.href}
+                      className="text-base font-medium text-[#737373] hover:text-primary"
+                    >
+                      {column.title}
+                    </Link>
+                  )
                 ) : (
                   <p className="text-base font-medium text-[#737373]">
                     {" "}
@@ -58,25 +67,45 @@ const MobileNavSection = ({
               </div>
               <div className="space-y-2">
                 {column.items.map((item: any, itemIdx: number) => (
-                  <Link
-                    key={itemIdx}
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-2 rounded-lg p-2 text-base hover:bg-accent"
-                  >
-                    <span
-                      className={cn(
-                        "p-1 rounded-md border border-muted-foreground/20",
-                        "group-hover:bg-orange-500/10"
-                      )}
+                  isExternal(item.href) ? (
+                    <a
+                      key={itemIdx}
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-2 rounded-lg p-2 text-base hover:bg-accent"
                     >
-                      <item.icon className={cn("h-4 w-4", item.iconColor)} />
-                    </span>
-                    <span className="font-medium text-black/90">
-                      {item.title}
-                    </span>
-                  </Link>
+                      <span
+                        className={cn(
+                          "p-1 rounded-md border border-muted-foreground/20",
+                          "group-hover:bg-orange-500/10"
+                        )}
+                      >
+                        <item.icon className={cn("h-4 w-4", item.iconColor)} />
+                      </span>
+                      <span className="font-medium text-black/90">
+                        {item.title}
+                      </span>
+                    </a>
+                  ) : (
+                    <Link
+                      key={itemIdx}
+                      href={item.href}
+                      className="group flex items-center gap-2 rounded-lg p-2 text-base hover:bg-accent"
+                    >
+                      <span
+                        className={cn(
+                          "p-1 rounded-md border border-muted-foreground/20",
+                          "group-hover:bg-orange-500/10"
+                        )}
+                      >
+                        <item.icon className={cn("h-4 w-4", item.iconColor)} />
+                      </span>
+                      <span className="font-medium text-black/90">
+                        {item.title}
+                      </span>
+                    </Link>
+                  )
                 ))}
               </div>
             </div>
@@ -86,26 +115,47 @@ const MobileNavSection = ({
               <p className="text-sm font-medium text-black/90 ">
                 {featuredContent.title}
               </p>
-              <Link
-                href={featuredContent.featuredCard.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-lg border p-3 hover:bg-accent"
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={cn(
-                      "w-12 h-12 rounded-lg flex items-center justify-center",
-                      featuredContent.featuredCard.logoBg
-                    )}
-                  >
-                    <featuredContent.featuredCard.logo />
+              {isExternal(featuredContent.featuredCard.href) ? (
+                <a
+                  href={featuredContent.featuredCard.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-lg border p-3 hover:bg-accent"
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={cn(
+                        "w-12 h-12 rounded-lg flex items-center justify-center",
+                        featuredContent.featuredCard.logoBg
+                      )}
+                    >
+                      <featuredContent.featuredCard.logo />
+                    </div>
+                    <p className="text-sm">
+                      {featuredContent.featuredCard.title}
+                    </p>
                   </div>
-                  <p className="text-sm">
-                    {featuredContent.featuredCard.title}
-                  </p>
-                </div>
-              </Link>
+                </a>
+              ) : (
+                <Link
+                  href={featuredContent.featuredCard.href}
+                  className="block rounded-lg border p-3 hover:bg-accent"
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={cn(
+                        "w-12 h-12 rounded-lg flex items-center justify-center",
+                        featuredContent.featuredCard.logoBg
+                      )}
+                    >
+                      <featuredContent.featuredCard.logo />
+                    </div>
+                    <p className="text-sm">
+                      {featuredContent.featuredCard.title}
+                    </p>
+                  </div>
+                </Link>
+              )}
             </div>
           )}
         </div>
@@ -150,14 +200,23 @@ export function MobileNav() {
             />
 
             <div className="py-4 border-t">
-              <Link
-                href="https://keploy.io/pricing"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full items-center justify-between py-2 font-medium hover:underline"
-              >
-                Pricing
-              </Link>
+              {isExternal("https://keploy.io/pricing") ? (
+                <a
+                  href="https://keploy.io/pricing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-between py-2 font-medium hover:underline"
+                >
+                  Pricing
+                </a>
+              ) : (
+                <Link
+                  href="https://keploy.io/pricing"
+                  className="flex w-full items-center justify-between py-2 font-medium hover:underline"
+                >
+                  Pricing
+                </Link>
+              )}
             </div>
           </Accordion>
         </div>
@@ -167,15 +226,22 @@ export function MobileNav() {
             asChild
             className="w-full text-white px-6 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-red-500 hover:to-orange-500 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out items-center justify-center relative overflow-hidden"
           >
-            <Link
-              href="https://app.keploy.io"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative"
-            >
-              Sign In
-              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-            </Link>
+            {isExternal("https://app.keploy.io") ? (
+              <a
+                href="https://app.keploy.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative"
+              >
+                Sign In
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+              </a>
+            ) : (
+              <Link href="https://app.keploy.io" className="relative">
+                Sign In
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+              </Link>
+            )}
           </Button>
         </div>
       </SheetContent>

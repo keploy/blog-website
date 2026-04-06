@@ -20,7 +20,7 @@ export function Vscode({ className = "" }) {
 
   return (
     <div className="relative group">
-      <Link
+      <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
@@ -31,7 +31,7 @@ export function Vscode({ className = "" }) {
           {vscodeInstalls}
         </span>
         <div className="absolute inset-0 -translate-x-full group-hover/link:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-orange-400/20 to-transparent" />
-      </Link>
+      </a>
     </div>
   );
 }
