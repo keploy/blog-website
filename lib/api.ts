@@ -477,7 +477,6 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
   const data = await fetchAPI(
     `
     ${FULL_POST_FRAGMENT}
-    ${AUTHOR_FIELDS_FRAGMENT}
 
     query PostBySlug($id: ID!, $idType: PostIdType!) {
       post(id: $id, idType: $idType) {
@@ -508,7 +507,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       posts(first: 3, where: { orderby: { field: DATE, order: DESC } }) {
         edges {
           node {
-            ...FullPostFields
+            ...PostPreviewFields
           }
         }
       }
@@ -590,7 +589,7 @@ export async function fetchMorePosts(
 // --- ADDED THIS FUNCTION FOR SEARCH ---
 export async function getAllPostsForSearch(preview = false) {
   // This query fetches ALL posts (up to 100) without a category filter
-  // It only fetches fields needed for the MoreStories card
+  // Uses PostPreviewFields which includes author, categories, and SEO data
   const data = await fetchAPI(
     `
     ${POST_PREVIEW_FRAGMENT}
