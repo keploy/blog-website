@@ -19,7 +19,7 @@ const ReviewCard = ({
   content: string;
 }) => {
   const { basePath } = useRouter();
-  const isExternal = /^https?:\/\//i.test(avatar);
+  const isExternal = /^(?:https?:)?\/\//i.test(avatar);
   const proxiedAvatar = isExternal
     ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
     : avatar;
