@@ -491,6 +491,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
               title
               excerpt
               content
+              modified
               author {
                 node {
                   ...AuthorFields

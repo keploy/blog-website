@@ -1,4 +1,5 @@
 import Layout from "../../components/layout";
+import Head from "next/head";
 import Header from "../../components/header";
 import Container from "../../components/container";
 import {
@@ -12,7 +13,7 @@ import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
-export default function AuthorPage({ preview, filteredPosts ,content }) {
+export default function AuthorPage({ preview, filteredPosts, content }) {
   if (!filteredPosts || filteredPosts.length === 0) {
     return (
       <div>
@@ -21,7 +22,7 @@ export default function AuthorPage({ preview, filteredPosts ,content }) {
     );
   }
 
-  const authorName  =  filteredPosts[0]?.node?.ppmaAuthorName;
+  const authorName = filteredPosts[0]?.node?.ppmaAuthorName;
 
   return (
     <div className="bg-accent-1">
@@ -29,7 +30,7 @@ export default function AuthorPage({ preview, filteredPosts ,content }) {
         preview={preview}
         featuredImage={HOME_OG_IMAGE_URL}
         Title={`${authorName} Page`}
-        Description={`Posts by ${authorName}`}
+        Description={`Read all articles by ${authorName} on the Keploy blog — covering software testing, API development, automation, and engineering best practices.`}
         structuredData={[
           getBreadcrumbListSchema([
             { name: "Home", url: SITE_URL },
@@ -40,20 +41,25 @@ export default function AuthorPage({ preview, filteredPosts ,content }) {
             },
           ]),
         ]}
+        canonicalUrl={`${SITE_URL}/authors/${sanitizeAuthorSlug(authorName || "")}`}
       >
+        <Head>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap"
+            rel="stylesheet"
+          />
+        </Head>
         <Header />
         <Container>
-          <h1 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-6xl sm:xl font-bold tracking-tighter leading-tight">
-            Author Details
-          </h1>
-
-          <PostByAuthorMapping filteredPosts={filteredPosts} Content={content}/>
+          <PostByAuthorMapping filteredPosts={filteredPosts} Content={content} />
         </Container>
       </Layout>
     </div>
   );
 }
-export const getStaticPaths: GetStaticPaths = async ({}) => {
+export const getStaticPaths: GetStaticPaths = async ({ }) => {
   try {
     const allPosts = await getAllPosts();
     const uniqueNames = new Set<string>();
@@ -88,11 +94,7 @@ export const getStaticProps: GetStaticProps = async ({
 
   if (typeof slugParam !== "string" || slugParam.trim().length === 0) {
     return {
-      props: {
-        preview,
-        filteredPosts: [],
-        content: null,
-      },
+      notFound: true,
       revalidate: 60,
     };
   }
@@ -150,6 +152,14 @@ export const getStaticProps: GetStaticProps = async ({
     }
   }
 
+  // Return a proper 404 instead of rendering a page with empty content (soft 404)
+  if (!filteredPosts.length) {
+    return {
+      notFound: true,
+      revalidate: 60,
+    };
+  }
+
   let content = null;
   const postId = filteredPosts[0]?.node?.postId;
   if (postId) {
@@ -169,3 +179,4 @@ export const getStaticProps: GetStaticProps = async ({
     revalidate: 60,
   };
 };
+
