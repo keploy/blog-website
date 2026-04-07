@@ -43,13 +43,13 @@ export default async function refreshSitemap(
     // and whether it succeeded, but it does not control the success of the sitemap refresh itself.
     let searchConsole:
       | {
-          submitted: boolean;
-          submittedAt?: string;
-          sitemapUrl?: string;
-          siteUrl?: string;
-          skipped?: boolean;
-          message?: string;
-        }
+        submitted: boolean;
+        submittedAt?: string;
+        sitemapUrl?: string;
+        siteUrl?: string;
+        skipped?: boolean;
+        message?: string;
+      }
       | undefined;
 
     // step 2: only after the refresh succeeds, try to submit the sitemap url to
