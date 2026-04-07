@@ -5,6 +5,7 @@ const GOOGLE_OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_WEBMASTERS_SCOPE = "https://www.googleapis.com/auth/webmasters";
 const GOOGLE_SITEMAPS_SUBMIT_BASE_URL = "https://www.googleapis.com/webmasters/v3/sites";
 const GOOGLE_TOKEN_LIFETIME_SECONDS = 3600;
+const GOOGLE_FETCH_TIMEOUT_MS = 25000;
 
 function getRequiredEnv(name: string) {
   const value = process.env[name]?.trim();
@@ -69,6 +70,7 @@ async function fetchGoogleAccessToken() {
       grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
       assertion,
     }),
+    signal: AbortSignal.timeout(GOOGLE_FETCH_TIMEOUT_MS),
   });
 
   if (!response.ok) {
@@ -97,8 +99,8 @@ function getSitemapUrl() {
 export function isSearchConsoleSubmissionConfigured() {
   return Boolean(
     process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL?.trim() &&
-      process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY?.trim() &&
-      process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL?.trim()
+    process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY?.trim() &&
+    process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL?.trim()
   );
 }
 
@@ -116,14 +118,14 @@ export async function submitSitemapToSearchConsole() {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
+      signal: AbortSignal.timeout(GOOGLE_FETCH_TIMEOUT_MS),
     }
   );
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => "");
     throw new Error(
-      `Google Search Console sitemap submission failed: ${response.status} ${response.statusText}${
-        errorBody ? ` - ${errorBody}` : ""
+      `Google Search Console sitemap submission failed: ${response.status} ${response.statusText}${errorBody ? ` - ${errorBody}` : ""
       }`
     );
   }
