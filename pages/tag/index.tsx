@@ -74,13 +74,14 @@ import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
       Title={`Tags`}
-      Description={`List of All the Tags`}
+      Description={`Browse all topic tags on the Keploy blog — find articles on API testing, test automation, CI/CD, developer tools, and software quality.`}
       structuredData={[
         getBreadcrumbListSchema([
           { name: "Home", url: SITE_URL },
           { name: "Tags", url: `${SITE_URL}/tag` },
         ]),
       ]}
+      canonicalUrl={`${SITE_URL}/tag`}
     >
       <Head>
         <title>{`Tags`}</title>

@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
+/* Baloo 2 font is now loaded via <link rel="preload"> in _document.tsx
+   to avoid render-blocking @import. */
 
 @tailwind base;
 
@@ -212,6 +213,17 @@ body {
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Page fade-in — replaces framer-motion in layout.tsx */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
 

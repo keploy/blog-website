@@ -1,34 +1,76 @@
-# Keploy Blog
+# Keploy Blog — llms.txt
+# https://keploy.io/blog
 
-> Technical blog by Keploy — covering AI-powered test generation, API testing, eBPF-based testing, production behavior replay, dependency virtualization, infrastructure mocking, legacy application testing, migration regression testing, continuous validation, and developer productivity. Keploy is an open-source platform that automatically generates tests, mocks, and production-like sandboxes from real user traffic.
+> Keploy is an open-source, eBPF-based API testing platform that converts real
+> user traffic into reusable integration tests with auto-generated mocks and
+> stubs — no code changes required.
 
-For comprehensive documentation, FAQs, comparison tables, and installation instructions, see [llms-full.txt](https://keploy.io/llms-full.txt) on the main site.
+## About This Site
 
-## Topics
+The Keploy Blog publishes 500+ articles on software testing, API development,
+and developer tooling. Content is authored by Keploy engineers, community
+contributors, and guest writers.
 
-- [API Testing](https://keploy.io/blog/technology/api-testing): API test generation from real traffic, regression detection, contract testing
-- [Unit Testing](https://keploy.io/blog/technology/unit-testing): Auto-generated unit tests, AI-powered mock generation, coverage strategies
-- [Integration Testing](https://keploy.io/blog/technology/integration-testing): Dependency virtualization, production sandbox testing, microservices validation
-- [eBPF](https://keploy.io/blog/technology/ebpf): eBPF-based testing, kernel-level traffic capture, system observability
-- [CI/CD](https://keploy.io/blog/technology/ci-cd): Continuous validation, pipeline integration, release confidence
-- [Mocking](https://keploy.io/blog/technology/mocking): Infrastructure mocking, dependency virtualization, production behavior replay
-- [Legacy Testing](https://keploy.io/blog/technology): Legacy application testing, brownfield system testing, migration regression
-- [AI-Driven Testing](https://keploy.io/blog/technology): Testing at AI code velocity, flaky test elimination, noise detection
+- URL: https://keploy.io/blog
+- Sitemap: https://keploy.io/blog/sitemap.xml
+- CMS: Headless WordPress with WPGraphQL (content API at https://wp.keploy.io/graphql)
+- Framework: Next.js (Pages Router) with server-side rendering and ISR
 
-## Key Themes
+## Top Categories
 
-- Production Behavior Replay: Replaying real user traffic as test cases for production-fidelity validation
-- Dependency Virtualization: Automatically mocking databases, APIs, and message queues from recorded traffic
-- Legacy Application Testing: Testing legacy monoliths without code changes using eBPF kernel capture
-- Migration Regression Testing: Validating microservices migrations and Kubernetes transitions with production baselines
-- Continuous Validation: Running production-like tests on every commit in CI/CD pipelines
-- Infrastructure Mocking: Replacing staging environments with production-like sandboxes
-- Flaky Test Elimination: AI noise detection for non-deterministic data filtering
-- AI Code Velocity: Keeping test generation aligned with AI-assisted code output
+- **Technology** — Deep dives on testing frameworks, CI/CD, language-specific
+  guides, and developer tools.
+- **Community** — Open-source updates, contributor spotlights, release notes,
+  and event recaps.
+
+## Popular Topics
+
+- API testing and test automation
+- Unit testing, integration testing, and end-to-end testing
+- Test-driven development (TDD) and behavior-driven development (BDD)
+- Mocking, stubbing, and service virtualization
+- Code coverage analysis and best practices
+- CI/CD pipeline optimization
+- eBPF for network-level traffic capture
+- Language guides: Go, Java, Python, Node.js, TypeScript, Rust
+- Framework guides: Spring Boot, Django, Express, FastAPI, NestJS
+- Tool comparisons: Jest vs Mocha, Cypress vs Playwright, Postman vs Keploy
 
 ## About Keploy
 
-- [Keploy Homepage](https://keploy.io): AI-powered testing agent and sandboxing platform
-- [Keploy Documentation](https://keploy.io/docs): Technical docs, quickstart guides, and API reference
-- [GitHub Repository](https://github.com/keploy/keploy): Open-source code (Apache 2.0)
-- [Cloud Platform](https://app.keploy.io): Managed Keploy cloud
+- Website: https://keploy.io
+- GitHub: https://github.com/keploy/keploy
+- Docs: https://keploy.io/docs
+- License: Apache 2.0
+
+### Recognition
+
+- API World 2023 — Best in API Infrastructure
+- CNCF Landscape — listed under API Testing
+- Google for Startups Accelerator alumnus
+
+### Products
+
+1. **Integration Testing (OSS)** — Record-replay engine using eBPF to capture
+   API calls and generate test suites with deterministic replay.
+2. **Test Agent** — AI-powered unit test generation from PR diffs.
+3. **API Test Generation** — Generate tests from OpenAPI specs, Postman
+   collections, or cURL commands.
+
+## Author Pages
+
+Author profiles are available at: https://keploy.io/blog/authors/{slug}/
+(Slugs are lowercase, hyphen-separated — e.g., "John Doe" becomes "john-doe")
+
+## Related Resources
+
+- Main site LLM context: https://keploy.io/llms-full.txt
+- Documentation: https://keploy.io/docs
+- Comparisons: https://keploy.io/compare
+
+## Contact
+
+- Twitter/X: https://twitter.com/Keployio
+- LinkedIn: https://www.linkedin.com/company/keploy/
+- YouTube: https://www.youtube.com/@keploy
+- Discord: https://discord.gg/keploy
