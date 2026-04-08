@@ -36,11 +36,14 @@ test.describe('404 Not Found Page - Component Availability', () => {
     await expect(footer).toHaveCount(0);
   });
 
-  test('should not throw client-side errors (null title/excerpt regression)', async ({ page }) => {
+  test('should not throw client-side errors (null title/excerpt regression)', async ({ page, baseURL }) => {
     const errors: string[] = [];
     page.on('pageerror', (err) => errors.push(err.message));
-    await page.goto(`${page.url()}`);
+    const notFoundUrl = baseURL ? `${baseURL}/this-page-does-not-exist-null-test` : 'http://localhost:3000/blog/this-page-does-not-exist-null-test';
+    await page.goto(notFoundUrl);
     await page.waitForLoadState('domcontentloaded');
+    const notFoundText = page.locator('text=/404|not found|page.*not.*exist/i');
+    await expect(notFoundText.first()).toBeVisible({ timeout: 10000 });
     expect(errors).toHaveLength(0);
   });
 });
