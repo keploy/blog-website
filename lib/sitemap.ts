@@ -109,6 +109,10 @@ type AllPostsQueryResponse = {
   };
 };
 
+type PostNode = NonNullable<
+  NonNullable<NonNullable<AllPostsQueryResponse["posts"]>["edges"]>[number]["node"]
+>;
+
 const STATIC_ROUTES: Array<Omit<SitemapEntry, "lastModified">> = [
   // top-level listing and navigation pages that should always be in the sitemap.
   { url: SITE_URL, changeFrequency: "daily", priority: 1.0 },
@@ -238,9 +242,7 @@ async function fetchGraphQL<T>(query: string, variables: Record<string, unknown>
   throw lastError || new Error("WordPress GraphQL request failed");
 }
 
-function mapCategoriesToRoutes(
-  categories?: AllPostsQueryResponse["posts"]["edges"][number]["node"]["categories"]
-) {
+function mapCategoriesToRoutes(categories?: PostNode["categories"]) {
   // use a set so one post cannot produce duplicate routes even if wordpress returns
   // the same category in multiple forms.
   const routes = new Set<CategoryRoute>();
@@ -515,12 +517,18 @@ function buildTagEntries(posts: SitemapPost[]) {
   }
 
   // convert the tag map into final sitemap entries.
-  return Array.from(tagMap.entries()).map(([tagName, lastModified]) => ({
-    url: `${SITE_URL}/tag/${sanitizeStringForURL(tagName)}`,
-    lastModified,
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
+  return Array.from(tagMap.entries()).flatMap(([tagName, lastModified]) => {
+    const tagSlug = sanitizeStringForURL(tagName);
+    if (!tagSlug) {
+      return [];
+    }
+    return [{
+      url: `${SITE_URL}/tag/${tagSlug}`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }];
+  });
 }
 
 // minimum number of posts required per category before the sitemap is considered
