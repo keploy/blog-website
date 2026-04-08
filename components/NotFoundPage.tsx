@@ -61,8 +61,8 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
 
   const normalizedSearchTerm = searchTerm.toLowerCase();
   const filteredAllPosts = allPosts.filter(({ node }) =>
-    (node.title || '').toLowerCase().includes(normalizedSearchTerm) ||
-    (node.excerpt || '').toLowerCase().includes(normalizedSearchTerm)
+    node.title.toLowerCase().includes(normalizedSearchTerm) ||
+    node.excerpt.toLowerCase().includes(normalizedSearchTerm)
   );
 
   return (

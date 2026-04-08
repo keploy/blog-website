@@ -35,4 +35,12 @@ test.describe('404 Not Found Page - Component Availability', () => {
     const footer = page.locator('[data-testid="site-footer"]');
     await expect(footer).toHaveCount(0);
   });
+
+  test('should not throw client-side errors (null title/excerpt regression)', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (err) => errors.push(err.message));
+    await page.goto(`${page.url()}`);
+    await page.waitForLoadState('domcontentloaded');
+    expect(errors).toHaveLength(0);
+  });
 });

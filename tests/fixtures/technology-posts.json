@@ -126,6 +126,7 @@
             "slug": "null-title-test-post",
             "date": "2024-01-01T00:00:00",
             "modified": "2024-01-01T00:00:00",
+            "postId": 2004,
             "ppmaAuthorName": "Test Author",
             "featuredImage": {
               "node": {
