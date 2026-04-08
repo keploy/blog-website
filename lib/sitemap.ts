@@ -107,15 +107,6 @@ type AllPostsQueryResponse = {
   };
 };
 
-export type PostCategoryConnection = {
-  edges?: Array<{
-    node?: {
-      name?: string | null;
-      slug?: string | null;
-    } | null;
-  } | null> | null;
-} | null;
-
 const STATIC_ROUTES: Array<Omit<SitemapEntry, "lastModified">> = [
   // top-level listing and navigation pages that should always be in the sitemap.
   { url: SITE_URL, changeFrequency: "daily", priority: 1.0 },
@@ -153,33 +144,6 @@ function isRetryableStatus(status: number) {
   return [408, 429, 500, 502, 503, 504].includes(status);
 }
 
-class RetryableFetchError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "RetryableFetchError";
-  }
-}
-
-function isRetryableRequestError(error: unknown) {
-  if (error instanceof RetryableFetchError) {
-    return true;
-  }
-
-  if (error instanceof Error) {
-    // fetch timeout via AbortSignal.timeout commonly surfaces as AbortError/TimeoutError.
-    if (error.name === "AbortError" || error.name === "TimeoutError") {
-      return true;
-    }
-
-    // fetch network failures in node commonly surface as TypeError("fetch failed").
-    if (error instanceof TypeError) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 async function fetchGraphQL<T>(query: string, variables: Record<string, unknown> = {}) {
   // remember the last seen error so the final thrown error is meaningful.
   let lastError: Error | null = null;
@@ -206,9 +170,8 @@ async function fetchGraphQL<T>(query: string, variables: Record<string, unknown>
         if (isRetryableStatus(response.status) && attempt < FETCH_RETRY_LIMIT) {
           // back off before retrying so wordpress has a chance to recover and so
           // we do not hammer the upstream on repeated transient failures.
-          throw new RetryableFetchError(
-            `WordPress GraphQL request failed with retryable status: ${response.status} ${response.statusText}`
-          );
+          await sleep(FETCH_RETRY_DELAY_MS * attempt);
+          continue;
         }
 
         // for non-retryable failures, or when retries are exhausted, fail immediately.
@@ -235,8 +198,8 @@ async function fetchGraphQL<T>(query: string, variables: Record<string, unknown>
       // normalize unknown thrown values into an Error instance.
       lastError = error instanceof Error ? error : new Error(String(error));
 
-      if (attempt < FETCH_RETRY_LIMIT && isRetryableRequestError(error)) {
-        // retry only transient failures (network/timeout/retryable upstream statuses).
+      if (attempt < FETCH_RETRY_LIMIT) {
+        // retry fetch/network/timeout errors too, not just bad http statuses.
         await sleep(FETCH_RETRY_DELAY_MS * attempt);
         continue;
       }
@@ -246,7 +209,9 @@ async function fetchGraphQL<T>(query: string, variables: Record<string, unknown>
   throw lastError || new Error("WordPress GraphQL request failed");
 }
 
-function mapCategoriesToRoutes(categories?: PostCategoryConnection) {
+function mapCategoriesToRoutes(
+  categories?: AllPostsQueryResponse["posts"]["edges"][number]["node"]["categories"]
+) {
   // use a set so one post cannot produce duplicate routes even if wordpress returns
   // the same category in multiple forms.
   const routes = new Set<CategoryRoute>();
@@ -388,7 +353,6 @@ function toIsoDate(value?: string) {
   }
 
   // convert the wordpress date string into a normalized iso string.
-  //
   // why this exists:
   // - wordpress may return a parseable date string format
   // - the sitemap should emit a consistent machine-readable timestamp
@@ -426,7 +390,7 @@ function dedupeEntries(entries: SitemapEntry[]) {
 
 function getLatestModified(posts: SitemapPost[]) {
   // find the newest modified timestamp across all included posts.
-  //
+
   // this value is later used for high-level listing pages like /blog, /technology,
   // and /community so those pages appear updated when the newest underlying post changes.
   return posts.reduce<string | undefined>((latest, post) => {
@@ -445,7 +409,7 @@ function getLatestModified(posts: SitemapPost[]) {
 
 function buildPostEntries(posts: SitemapPost[]) {
   // convert each included post into one or more sitemap entries.
-  //
+
   // a single wordpress post can produce multiple urls if it belongs to both
   // technology and community.
   return posts.flatMap((post) =>
@@ -534,7 +498,7 @@ function buildTagEntries(posts: SitemapPost[]) {
 
 function assertFullSitemap(posts: SitemapPost[]) {
   // enforce the "no partial publication" rule.
-  //
+
   // if wordpress returns an obviously incomplete crawl, fail the refresh so the
   // app can fall back to the last successful snapshot instead of publishing bad data.
   if (!posts.length) {
@@ -576,7 +540,7 @@ export async function getSitemapEntries() {
 
 export function serializeSitemap(entries: SitemapEntry[]) {
   // turn the structured entry objects into final sitemap xml.
-  //
+
   // this stays manual because:
   // - pages router does not use app router metadata routes
   // - we want full control over xml shape
@@ -627,10 +591,7 @@ async function persistSitemapSnapshot(xml: string) {
     await fs.writeFile(SITEMAP_SNAPSHOT_PATH, xml, "utf8");
   } catch (error) {
     // snapshot persistence is helpful but not critical enough to fail the whole refresh.
-    console.error(
-      `Failed to persist sitemap snapshot at ${SITEMAP_SNAPSHOT_PATH}. Next step: confirm this runtime can write to /tmp and check filesystem permissions and storage limits.`,
-      error
-    );
+    console.error("Failed to persist sitemap snapshot:", error);
   }
 }
 
@@ -673,10 +634,7 @@ export async function generateSitemapXml() {
     const result = await refreshSitemapSnapshot();
     return result.xml;
   } catch (error) {
-    console.error(
-      "Fresh sitemap generation failed, trying the last successful snapshot. If snapshot recovery also fails, verify WORDPRESS_API_URL or NEXT_PUBLIC_WORDPRESS_API_URL reachability, confirm /tmp is writable for sitemap snapshots, and trigger the sitemap snapshot refresh job.",
-      error
-    );
+    console.error("Fresh sitemap generation failed, trying last successful snapshot:", error);
 
     // first fallback: use the latest successful sitemap held in memory.
     if (lastSuccessfulSitemapXml) {

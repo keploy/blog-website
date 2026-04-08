@@ -116,6 +116,7 @@ export default defineConfig({
       env: {
         WORDPRESS_API_URL: GRAPHQL_API_URL,
         NEXT_PUBLIC_WORDPRESS_API_URL: GRAPHQL_API_URL,
+        CRON_SECRET: process.env.CRON_SECRET || 'test-secret',
       },
     },
   ],
