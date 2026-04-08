@@ -1,5 +1,5 @@
-export function getExcerpt(content, maxWords) {
-  // Split the content into an array of words
+export function getExcerpt(content: string | null | undefined, maxWords: number) {
+  if (!content) return '';
   const words = content.split(" ");
 
   // Ensure the excerpt does not exceed the maximum number of words
