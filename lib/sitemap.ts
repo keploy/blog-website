@@ -214,7 +214,16 @@ async function fetchGraphQL<T>(query: string, variables: Record<string, unknown>
       if (json.errors?.length) {
         // graphql can return application-level errors even when the http response is 200.
         const message = json.errors.map((error) => error.message).filter(Boolean).join(", ");
-        throw new Error(message || "WordPress GraphQL returned errors");
+        const graphqlErrorMessage = message || "WordPress GraphQL returned errors";
+
+        // treat graphql-level errors as retryable while attempts remain because
+        // wpgraphql can return transient errors (e.g. during plugin reload or db lock)
+        // with a 200 http response. failing immediately on first occurrence would miss
+        // these cases that the retry loop is specifically designed to handle.
+        if (attempt < FETCH_RETRY_LIMIT) {
+          throw new RetryableFetchError(graphqlErrorMessage);
+        }
+        throw new Error(graphqlErrorMessage);
       }
 
       if (!json.data) {
