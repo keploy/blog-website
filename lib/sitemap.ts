@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { SITE_URL } from "./structured-data";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 
 // choose the wordpress graphql endpoint in this order:
 // server-only env for production or local server use
@@ -514,12 +515,17 @@ function buildTagEntries(posts: SitemapPost[]) {
 
   // convert the tag map into final sitemap entries.
   return Array.from(tagMap.entries()).map(([tagName, lastModified]) => ({
-    url: `${SITE_URL}/tag/${encodeURIComponent(tagName)}`,
+    url: `${SITE_URL}/tag/${sanitizeStringForURL(tagName)}`,
     lastModified,
     changeFrequency: "weekly" as const,
     priority: 0.7,
   }));
 }
+
+// minimum number of posts required per category before the sitemap is considered
+// trustworthy enough to publish. this prevents a severely degraded wordpress
+// response (e.g. first page only, partial crawl) from replacing a good snapshot.
+const MIN_POSTS_PER_CATEGORY = 5;
 
 function assertFullSitemap(posts: SitemapPost[]) {
   // enforce the "no partial publication" rule.
@@ -532,9 +538,9 @@ function assertFullSitemap(posts: SitemapPost[]) {
   const technologyCount = posts.filter((post) => post.routes.includes("technology")).length;
   const communityCount = posts.filter((post) => post.routes.includes("community")).length;
 
-  if (!technologyCount || !communityCount) {
+  if (technologyCount < MIN_POSTS_PER_CATEGORY || communityCount < MIN_POSTS_PER_CATEGORY) {
     throw new Error(
-      `Sitemap generation incomplete: technology=${technologyCount}, community=${communityCount}`
+      `Sitemap generation incomplete: technology=${technologyCount}, community=${communityCount} (minimum ${MIN_POSTS_PER_CATEGORY} required per category)`
     );
   }
 }
