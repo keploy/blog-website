@@ -52,9 +52,12 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
     ...(latestPosts?.edges || []),
     ...(communityPosts?.edges || []),
     ...(technologyPosts?.edges || [])
-  ].filter((post, index, self) => 
+  ].filter((post, index, self) =>
     index === self.findIndex(p => p.node.slug === post.node.slug)
-  );
+  ).map(({ node, ...rest }) => ({
+    ...rest,
+    node: { ...node, title: node.title || '', excerpt: node.excerpt || '' },
+  }));
 
   const normalizedSearchTerm = searchTerm.toLowerCase();
   const filteredAllPosts = allPosts.filter(({ node }) =>
