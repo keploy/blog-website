@@ -734,7 +734,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
   if (isRevision && data.post.revisions) {
     const revision = data.post.revisions.edges[0]?.node;
 
-    if (revision) Object.assign(data.post, revision);
+    if (revision) Object.assign(data.post, normalizePostNode(revision));
     delete data.post.revisions;
   }
 
