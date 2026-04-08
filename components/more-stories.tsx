@@ -128,9 +128,10 @@ export default function MoreStories({
     ? fullPostsCache 
     : allPosts;
   
-  const filteredPosts = postsToDisplay.filter(({ node }) => 
-    node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+  const normalizedSearchTerm = searchTerm.toLowerCase();
+  const filteredPosts = postsToDisplay.filter(({ node }) =>
+    (node.title || '').toLowerCase().includes(normalizedSearchTerm) ||
+    (node.excerpt || '').toLowerCase().includes(normalizedSearchTerm)
   );
 
   // Reset visible count when search changes

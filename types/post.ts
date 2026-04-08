@@ -2,8 +2,8 @@ import { Author } from "./author";
 import { Tag } from "./tag";
 
 export interface Post {
-  title: string;
-  excerpt: string;
+  title: string | null;
+  excerpt: string | null;
   slug: string;
   date: string;
   modified?: string;

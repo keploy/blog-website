@@ -56,9 +56,10 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
     index === self.findIndex(p => p.node.slug === post.node.slug)
   );
 
+  const normalizedSearchTerm = searchTerm.toLowerCase();
   const filteredAllPosts = allPosts.filter(({ node }) =>
-    (node.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (node.excerpt || '').toLowerCase().includes(searchTerm.toLowerCase())
+    (node.title || '').toLowerCase().includes(normalizedSearchTerm) ||
+    (node.excerpt || '').toLowerCase().includes(normalizedSearchTerm)
   );
 
   return (
