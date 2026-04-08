@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import os from "os";
 import path from "path";
 import { SITE_URL } from "./structured-data";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
@@ -18,7 +19,7 @@ const WP_API_URL =
 // store the last successful xml in /tmp so a later failed refresh can fall back to it
 // this is runtime local storage, not durable database storage, so it helps during the
 // life of a runtime instance but is not guaranteed across instance replacement
-const SITEMAP_SNAPSHOT_PATH = path.join("/tmp", "keploy-blog-sitemap.xml");
+const SITEMAP_SNAPSHOT_PATH = path.join(os.tmpdir(), "keploy-blog-sitemap.xml");
 
 // how many times a single wordpress request can be retried before failing.
 const FETCH_RETRY_LIMIT = 6;
@@ -667,7 +668,10 @@ export async function generateSitemapXml() {
     const result = await refreshSitemapSnapshot();
     return result.xml;
   } catch (error) {
-    console.error("Fresh sitemap generation failed, trying last successful snapshot:", error);
+    console.error(
+      `Fresh sitemap generation failed; attempting the last successful snapshot. Next steps: verify WORDPRESS_API_URL or NEXT_PUBLIC_WORDPRESS_API_URL is configured correctly and reachable at ${WP_API_URL}, then retry the sitemap refresh once WordPress GraphQL connectivity is restored.`,
+      error,
+    );
 
     // first fallback: use the latest successful sitemap held in memory.
     if (lastSuccessfulSitemapXml) {

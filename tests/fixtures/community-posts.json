@@ -118,6 +118,90 @@
                             "title": "From Discord to Docs: Community-Led Quality Improvements | Keploy Blog"
                         }
                     }
+                },
+                {
+                    "node": {
+                        "title": "Open Source Contributions That Improved Keploy Testing",
+                        "excerpt": "<p>A look at community pull requests that made Keploy test generation more reliable.</p>",
+                        "slug": "open-source-contributions-keploy-testing",
+                        "date": "2024-05-28T10:00:00",
+                        "modified": "2024-05-28T10:00:00",
+                        "postId": 3004,
+                        "featuredImage": {
+                            "node": {
+                                "sourceUrl": "/blog/favicon/Group.png"
+                            }
+                        },
+                        "author": {
+                            "node": {
+                                "name": "Community Author Three",
+                                "firstName": "Community",
+                                "lastName": "Author Three",
+                                "avatar": {
+                                    "url": "/blog/favicon/Group.png"
+                                }
+                            }
+                        },
+                        "ppmaAuthorName": "Community Author Three",
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "community"
+                                    }
+                                }
+                            ]
+                        },
+                        "tags": {
+                            "edges": []
+                        },
+                        "seo": {
+                            "metaDesc": "Community pull requests that made Keploy test generation more reliable.",
+                            "title": "Open Source Contributions That Improved Keploy Testing | Keploy Blog"
+                        }
+                    }
+                },
+                {
+                    "node": {
+                        "title": "Writing Your First Keploy Test: A Community Guide",
+                        "excerpt": "<p>Step-by-step guidance from community members on getting started with Keploy test recording.</p>",
+                        "slug": "writing-first-keploy-test-community-guide",
+                        "date": "2024-05-15T09:00:00",
+                        "modified": "2024-05-15T09:00:00",
+                        "postId": 3005,
+                        "featuredImage": {
+                            "node": {
+                                "sourceUrl": "/blog/favicon/Group.png"
+                            }
+                        },
+                        "author": {
+                            "node": {
+                                "name": "Community Author Four",
+                                "firstName": "Community",
+                                "lastName": "Author Four",
+                                "avatar": {
+                                    "url": "/blog/favicon/Group.png"
+                                }
+                            }
+                        },
+                        "ppmaAuthorName": "Community Author Four",
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "community"
+                                    }
+                                }
+                            ]
+                        },
+                        "tags": {
+                            "edges": []
+                        },
+                        "seo": {
+                            "metaDesc": "Step-by-step guidance on getting started with Keploy test recording.",
+                            "title": "Writing Your First Keploy Test: A Community Guide | Keploy Blog"
+                        }
+                    }
                 }
             ],
             "pageInfo": {
