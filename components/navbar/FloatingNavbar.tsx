@@ -43,7 +43,7 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
     ? "relative top-0 mx-auto z-40"
     : "fixed top-6 left-1/2 -translate-x-1/2 z-40";
   const navWidthClasses = isScrolled
-    ? "w-[82%] md:max-w-5xl"
+    ? "w-[82%] md:max-w-7xl"
     : "w-[96%] md:max-w-6xl";
   const navPaddingClasses = isScrolled
     ? "px-4 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5"
