@@ -129,10 +129,15 @@ export default function MoreStories({
     : allPosts;
   
   const normalizedSearchTerm = searchTerm.toLowerCase();
-  const filteredPosts = postsToDisplay.filter(({ node }) =>
-    (node.title || '').toLowerCase().includes(normalizedSearchTerm) ||
-    (node.excerpt || '').toLowerCase().includes(normalizedSearchTerm)
-  );
+  const filteredPosts = postsToDisplay
+    .filter(({ node }) =>
+      (node.title || '').toLowerCase().includes(normalizedSearchTerm) ||
+      (node.excerpt || '').toLowerCase().includes(normalizedSearchTerm)
+    )
+    .map(({ node, ...rest }) => ({
+      ...rest,
+      node: { ...node, title: node.title || '', excerpt: node.excerpt || '' },
+    }));
 
   // Reset visible count when search changes
   useEffect(() => {
