@@ -144,6 +144,31 @@ function isRetryableStatus(status: number) {
   return [408, 429, 500, 502, 503, 504].includes(status);
 }
 
+class RetryableFetchError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "RetryableFetchError";
+  }
+}
+
+function isRetryableRequestError(error: unknown) {
+  if (error instanceof RetryableFetchError) {
+    return true;
+  }
+
+  if (error instanceof Error) {
+    if (error.name === "AbortError" || error.name === "TimeoutError") {
+      return true;
+    }
+
+    if (error instanceof TypeError) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 async function fetchGraphQL<T>(query: string, variables: Record<string, unknown> = {}) {
   // remember the last seen error so the final thrown error is meaningful.
   let lastError: Error | null = null;
@@ -168,10 +193,9 @@ async function fetchGraphQL<T>(query: string, variables: Record<string, unknown>
 
       if (!response.ok) {
         if (isRetryableStatus(response.status) && attempt < FETCH_RETRY_LIMIT) {
-          // back off before retrying so wordpress has a chance to recover and so
-          // we do not hammer the upstream on repeated transient failures.
-          await sleep(FETCH_RETRY_DELAY_MS * attempt);
-          continue;
+          throw new RetryableFetchError(
+            `WordPress GraphQL request failed with retryable status: ${response.status} ${response.statusText}`
+          );
         }
 
         // for non-retryable failures, or when retries are exhausted, fail immediately.
@@ -198,11 +222,14 @@ async function fetchGraphQL<T>(query: string, variables: Record<string, unknown>
       // normalize unknown thrown values into an Error instance.
       lastError = error instanceof Error ? error : new Error(String(error));
 
-      if (attempt < FETCH_RETRY_LIMIT) {
-        // retry fetch/network/timeout errors too, not just bad http statuses.
+      if (attempt < FETCH_RETRY_LIMIT && isRetryableRequestError(error)) {
+        // retry only transient failures (network/timeout/retryable upstream statuses).
         await sleep(FETCH_RETRY_DELAY_MS * attempt);
         continue;
       }
+
+      // fail fast for non-retryable errors and once retry attempts are exhausted.
+      throw lastError;
     }
   }
 
@@ -390,7 +417,6 @@ function dedupeEntries(entries: SitemapEntry[]) {
 
 function getLatestModified(posts: SitemapPost[]) {
   // find the newest modified timestamp across all included posts.
-
   // this value is later used for high-level listing pages like /blog, /technology,
   // and /community so those pages appear updated when the newest underlying post changes.
   return posts.reduce<string | undefined>((latest, post) => {
@@ -409,7 +435,6 @@ function getLatestModified(posts: SitemapPost[]) {
 
 function buildPostEntries(posts: SitemapPost[]) {
   // convert each included post into one or more sitemap entries.
-
   // a single wordpress post can produce multiple urls if it belongs to both
   // technology and community.
   return posts.flatMap((post) =>
@@ -498,7 +523,6 @@ function buildTagEntries(posts: SitemapPost[]) {
 
 function assertFullSitemap(posts: SitemapPost[]) {
   // enforce the "no partial publication" rule.
-
   // if wordpress returns an obviously incomplete crawl, fail the refresh so the
   // app can fall back to the last successful snapshot instead of publishing bad data.
   if (!posts.length) {
@@ -591,7 +615,10 @@ async function persistSitemapSnapshot(xml: string) {
     await fs.writeFile(SITEMAP_SNAPSHOT_PATH, xml, "utf8");
   } catch (error) {
     // snapshot persistence is helpful but not critical enough to fail the whole refresh.
-    console.error("Failed to persist sitemap snapshot:", error);
+    console.error(
+      `Failed to persist sitemap snapshot at ${SITEMAP_SNAPSHOT_PATH}. Check that the runtime allows writes to the temp directory and that sufficient permissions and storage are available:`,
+      error
+    );
   }
 }
 
