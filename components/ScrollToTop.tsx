@@ -72,6 +72,7 @@ const ScrollToTop = () => {
 
   return (
     <button
+      data-testid="scroll-to-top"
       className={`fixed right-5 bottom-5 w-12 h-12 rounded-full cursor-pointer z-50 flex items-center justify-center transition-all duration-500 ease-out ${
         isVisible
           ? "opacity-100 scale-100 visible"

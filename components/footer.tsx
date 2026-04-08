@@ -17,7 +17,7 @@ export default function Footer() {
         { text: "Unit Testing", url: "https://keploy.io/unit-test-generator/" },
         {
           text: "VS Code Extension",
-          url: "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio/",
+          url: "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio",
         },
       ],
     },
@@ -57,7 +57,7 @@ export default function Footer() {
     },
   ];
   return (
-    <footer className="border-t border-gray-200 bg-white">
+    <footer data-testid="site-footer" className="border-t border-gray-200 bg-white">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8 my-20">
         <div className="flex flex-col  lg:flex-row gap-4 ">
           <div className="max-lg:ml-10">
@@ -75,7 +75,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-gray-500 transition-colors"
-                href="https://twitter.com/keploy"
+                href="https://x.com/Keployio"
               >
                 <span className="sr-only">Twitter</span>
                 <svg
@@ -205,7 +205,7 @@ export default function Footer() {
         </div>
         <div className="my-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between max-lg:ml-10">
-            <p className="mt-8 text-sm text-gray-500 md:mt-0">Copyright © 2026 Keploy Inc</p>
+             <p className="mt-8 text-sm text-gray-500 md:mt-0"> Copyright © {new Date().getFullYear()} Keploy Inc</p>
           </div>
         </div>
       </div>

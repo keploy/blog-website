@@ -1,0 +1,57 @@
+{
+  "redirects": [
+    {
+      "source": "/blog/community/everything-you-need-to-know-about-api-testing",
+      "destination": "/blog/community/what-is-api-testing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/regression-testing-tools-rankings-2025",
+      "destination": "/blog/community/regression-testing-tools",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/everything-you-need-to-know-about-api-testing",
+      "destination": "/blog/technology/what-is-api-testing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/regression-testing-tools-rankings-2025",
+      "destination": "/blog/technology/regression-testing-tools",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/blog/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/blog/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/blog/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "connect-src 'self' https://px.ads.linkedin.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://rp.liadm.com https://idx.liadm.com https://pagead2.googlesyndication.com https://*.clarity.ms https://news.google.com https://assets.apollo.io https://wp.keploy.io https://cdn.hashnode.com https://keploy-websites.vercel.app https://blog-website-phi-eight.vercel.app https://docbot.keploy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://*.youtube.com https://*.googlevideo.com https://googleads.g.doubleclick.net https://marketplace.visualstudio.com https://api.github.com https://pro.ip-api.com https://api.vector.co https://aplo-evnt.com https://ep1.adtrafficquality.google https://ppptg.com https://telemetry.keploy.io; frame-src 'self' https://www.googletagmanager.com https://keploy-websites.vercel.app https://blog-website-phi-eight.vercel.app https://docbot.keploy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://*.youtube.com https://news.google.com https://googleads.g.doubleclick.net https://*.google.com https://ppptg.com; img-src 'self' https://c.bing.com https://ppptg.com https://pbs.twimg.com https://secure.gravatar.com https://wp.keploy.io https://keploy.io data:;"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+        }
+      ]
+    }
+  ]
+}

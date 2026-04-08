@@ -1,4 +1,3 @@
 export default function ContainerSlug({ children }) {
-  // return <div className="container  mx-auto px-5">{children}</div>
-  return <div className="max-w-10xl  mx-auto px-5 sm:px-6 ">{children}</div>;
+  return <div className="w-full mx-auto px-5 sm:px-6 lg:px-10 xl:px-16 2xl:px-20">{children}</div>;
 }
