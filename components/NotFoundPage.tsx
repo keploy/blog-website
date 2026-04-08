@@ -211,6 +211,7 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
                     excerpt={getExcerpt(post.excerpt, 20)}
                     author={post.ppmaAuthorName}
                     slug={post.slug}
+                    content={post.content}
                     isCommunity={post.categories?.edges?.some(edge => edge.node.name === 'community')}
                   />
                 ))}
@@ -234,6 +235,7 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
                       excerpt={getExcerpt(post.excerpt, 20)}
                       author={post.ppmaAuthorName}
                       slug={post.slug}
+                      content={post.content}
                       isCommunity={post.categories?.edges?.some(edge => edge.node.name === 'community')}
                     />
                   ))}
@@ -256,6 +258,7 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
                       excerpt={getExcerpt(post.excerpt, 20)}
                       author={post.ppmaAuthorName}
                       slug={post.slug}
+                      content={post.content}
                       isCommunity={true}
                     />
                   ))}
@@ -278,6 +281,7 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
                       excerpt={getExcerpt(post.excerpt, 20)}
                       author={post.ppmaAuthorName}
                       slug={post.slug}
+                      content={post.content}
                       isCommunity={false}
                     />
                   ))}
