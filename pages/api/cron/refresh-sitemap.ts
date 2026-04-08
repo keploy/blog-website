@@ -23,15 +23,27 @@ export default async function refreshSitemap(
   // this shared secret is how we decide whether the caller is allowed to trigger refreshes.
   const expectedSecret = process.env.CRON_SECRET;
 
-  // reject any request that does not provide the expected bearer token.
+  // fail with 500 if the deployment is missing CRON_SECRET entirely — this is a
+  // server misconfiguration, not a client auth problem, and should be diagnosed
+  // separately from a caller sending the wrong token.
+  if (!expectedSecret) {
+    console.error(
+      "CRON_SECRET is not configured. Next step: set CRON_SECRET in the Vercel environment variables, redeploy if required, then retry."
+    );
+    return res.status(500).json({
+      ok: false,
+      message: "Server misconfiguration - CRON_SECRET is not configured",
+    });
+  }
+
+  // reject callers that do not provide the expected bearer token.
   //
   // note: vercel cron automatically includes an "Authorization: Bearer <CRON_SECRET>"
-  // header if the CRON_SECRET environment variable is configured in the project.
-  // if this consistently returns 401, verify that CRON_SECRET is set in vercel.
-  if (!expectedSecret || authHeader !== `Bearer ${expectedSecret}`) {
+  // header when CRON_SECRET is configured in the project settings.
+  if (authHeader !== `Bearer ${expectedSecret}`) {
     return res.status(401).json({
       ok: false,
-      message: "Unauthorized - Check CRON_SECRET configuration",
+      message: "Unauthorized",
     });
   }
 

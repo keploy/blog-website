@@ -30,9 +30,13 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   // tell clients and edge caches this response is xml, not html or json.
   res.setHeader("Content-Type", "application/xml");
 
-  // cache at the edge for one day to reduce request-time load, while allowing stale
-  // responses during background revalidation.
-  res.setHeader("Cache-Control", "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400");
+  // only cache successful sitemaps at the edge for one day.
+  // do not cache degraded fallback responses so crawlers recover quickly once wordpress is back.
+  if (statusCode >= 500) {
+    res.setHeader("Cache-Control", "no-store");
+  } else {
+    res.setHeader("Cache-Control", "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400");
+  }
 
   res.statusCode = statusCode;
 
