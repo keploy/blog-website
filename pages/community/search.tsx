@@ -35,11 +35,7 @@ export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }
       .filter(({ node }) =>
         (node.title || '').toLowerCase().includes(term) ||
         (node.excerpt || '').toLowerCase().includes(term)
-      )
-      .map(({ node, ...rest }) => ({
-        ...rest,
-        node: { ...node, title: node.title || '', excerpt: node.excerpt || '' },
-      }));
+      );
     setFilteredPosts(results);
   }, [searchTerm, allPosts]);
 

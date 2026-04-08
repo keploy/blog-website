@@ -55,6 +55,8 @@ export default function Meta({
       <link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" />
       <meta name="description" content={Description} />
       <meta property="og:type" content={ogType} />
+      <meta property="og:site_name" content="Keploy Blog" />
+      <meta property="og:locale" content="en_US" />
       <meta property="og:title" content={Title} />
       <meta property="og:description" content={Description} />
       {canonicalUrl && (

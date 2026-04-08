@@ -5,6 +5,8 @@
 > user traffic into reusable integration tests with auto-generated mocks and
 > stubs — no code changes required.
 
+For comprehensive details, see: https://keploy.io/blog/llms-full.txt
+
 ## About This Site
 
 The Keploy Blog publishes 500+ articles on software testing, API development,
