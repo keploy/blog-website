@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Header from "./header";
 import Container from "./container";
 import Image from "next/image";
@@ -48,19 +48,21 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
     setSearchTerm(event.target.value);
   };
 
-  const allPosts = [
+  const allPosts = useMemo(() => [
     ...(latestPosts?.edges || []),
     ...(communityPosts?.edges || []),
     ...(technologyPosts?.edges || [])
   ].filter((post, index, self) =>
     index === self.findIndex(p => p.node.slug === post.node.slug)
-  );
+  ), [latestPosts, communityPosts, technologyPosts]);
 
-  const normalizedSearchTerm = searchTerm.toLowerCase();
-  const filteredAllPosts = allPosts.filter(({ node }) =>
-    (node.title || '').toLowerCase().includes(normalizedSearchTerm) ||
-    (node.excerpt || '').toLowerCase().includes(normalizedSearchTerm)
-  );
+  const filteredAllPosts = useMemo(() => {
+    const term = searchTerm.toLowerCase();
+    return allPosts.filter(({ node }) =>
+      (node.title || '').toLowerCase().includes(term) ||
+      (node.excerpt || '').toLowerCase().includes(term)
+    );
+  }, [allPosts, searchTerm]);
 
   return (
     <>
