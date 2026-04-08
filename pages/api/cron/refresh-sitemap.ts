@@ -108,7 +108,10 @@ export default async function refreshSitemap(
       searchConsole,
     });
   } catch (error) {
-    console.error("Scheduled sitemap refresh failed:", error);
+    console.error(
+      "Scheduled sitemap refresh failed. Next step: verify WordPress GraphQL reachability and WORDPRESS_API_URL, confirm CRON_SECRET is configured correctly, inspect preceding crawl logs, or rerun this endpoint manually:",
+      error
+    );
 
     // only core refresh failures should produce a 500 here.
     // google submission failures are handled above and should not reach this block.
