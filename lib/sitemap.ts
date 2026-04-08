@@ -610,6 +610,18 @@ export function serializeSitemap(entries: SitemapEntry[]) {
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</urlset>`;
 }
 
+export function getStaticFallbackXml() {
+  // generate a minimal sitemap from the hardcoded static routes only.
+  // this requires no wordpress data and is used as a last-resort response
+  // when all three generation tiers fail (fresh, in-memory, and /tmp snapshot).
+  // it ensures crawlers always receive valid xml at /sitemap.xml rather than
+  // an html error page from next.js.
+  const now = new Date().toISOString();
+  return serializeSitemap(
+    STATIC_ROUTES.map((route) => ({ ...route, lastModified: now }))
+  );
+}
+
 async function readPersistedSitemapSnapshot() {
   try {
     const xml = await fs.readFile(SITEMAP_SNAPSHOT_PATH, "utf8");
