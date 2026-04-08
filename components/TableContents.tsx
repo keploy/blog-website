@@ -55,7 +55,7 @@ export default function TOC({ headings, isList, setIsList }) {
     const container = tocRef.current;
 
     function resizeHandler() {
-      setIsList(container.clientHeight > window.innerHeight * 0.8);
+      setIsList(container.scrollHeight > container.clientHeight);
     }
 
     resizeHandler()
@@ -202,8 +202,8 @@ export default function TOC({ headings, isList, setIsList }) {
             ))}
           </select>
         ) : (
-          <nav ref={tocRef} className="max-h-[80vh] overflow-y-auto pr-2">
-            <ul className="pl-0 leading-5">
+          <nav className="max-h-[80vh] overflow-y-auto pr-2">
+            <ul ref={tocRef} className="pl-0 leading-5">
               {headings.map((item, index) => (
                 <TOCItem
                   key={index}
