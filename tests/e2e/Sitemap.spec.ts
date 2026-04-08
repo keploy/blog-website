@@ -6,7 +6,8 @@ test.describe('Sitemap Route', () => {
 
         expect(response.status()).toBe(200);
         expect(response.headers()['content-type']).toContain('application/xml');
-        expect(response.headers()['cache-control']).toContain('s-maxage=0');
+        expect(response.headers()['cache-control']).toContain('s-maxage=86400');
+        expect(response.headers()['cache-control']).toContain('max-age=0');
         expect(response.headers()['cache-control']).toContain('stale-while-revalidate=86400');
 
         const xml = await response.text();

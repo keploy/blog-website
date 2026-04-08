@@ -13,9 +13,9 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   // tell clients and edge caches this response is xml, not html or json.
   res.setHeader("Content-Type", "application/xml");
 
-  // force edge revalidation per request so refreshed sitemap content is served quickly,
-  // while still allowing stale responses during background revalidation.
-  res.setHeader("Cache-Control", "s-maxage=0, stale-while-revalidate=86400");
+  // cache at the edge for one day to reduce request-time load, while allowing stale
+  // responses during background revalidation.
+  res.setHeader("Cache-Control", "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400");
 
   // write the raw xml directly into the response body.
   res.write(sitemap);
