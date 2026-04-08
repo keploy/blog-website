@@ -74,7 +74,12 @@ async function fetchGoogleAccessToken() {
   });
 
   if (!response.ok) {
-    throw new Error(`Google OAuth token request failed: ${response.status} ${response.statusText}`);
+    const errorBody = await response.text().catch(() => "");
+    throw new Error(
+      `Google OAuth token request failed: ${response.status} ${response.statusText}${
+        errorBody ? ` - ${errorBody}` : ""
+      }`
+    );
   }
 
   const json = (await response.json()) as {
@@ -125,7 +130,8 @@ export async function submitSitemapToSearchConsole() {
   if (!response.ok) {
     const errorBody = await response.text().catch(() => "");
     throw new Error(
-      `Google Search Console sitemap submission failed: ${response.status} ${response.statusText}${errorBody ? ` - ${errorBody}` : ""
+      `Google Search Console sitemap submission failed: ${response.status} ${response.statusText}${
+        errorBody ? ` - ${errorBody}` : ""
       }`
     );
   }

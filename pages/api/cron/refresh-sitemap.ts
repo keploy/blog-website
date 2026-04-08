@@ -5,6 +5,14 @@ import {
 } from "../../../lib/google-search-console";
 import { refreshSitemapSnapshot } from "../../../lib/sitemap";
 
+export const config = {
+  maxDuration: 300,
+};
+
+const GOOGLE_SUBMISSION_HELP =
+  "Verify GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY, " +
+  "GOOGLE_SEARCH_CONSOLE_SITE_URL, and Search Console property access for the service account.";
+
 export default async function refreshSitemap(
   req: NextApiRequest,
   res: NextApiResponse
@@ -64,7 +72,7 @@ export default async function refreshSitemap(
           siteUrl: submission.siteUrl,
         };
       } catch (error) {
-        console.error("Google Search Console sitemap submission failed:", error);
+        console.error("Google Search Console sitemap submission failed:", error, GOOGLE_SUBMISSION_HELP);
 
         // do not fail the cron request here.
         // the sitemap refresh already succeeded, and google submission should remain
@@ -73,8 +81,8 @@ export default async function refreshSitemap(
           submitted: false,
           message:
             error instanceof Error
-              ? error.message
-              : "Google Search Console sitemap submission failed",
+              ? `${error.message} ${GOOGLE_SUBMISSION_HELP}`
+              : `Google Search Console sitemap submission failed. ${GOOGLE_SUBMISSION_HELP}`,
         };
       }
     } else {

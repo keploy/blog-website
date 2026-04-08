@@ -282,7 +282,7 @@ async function fetchAllPosts() {
                 modified
                 ppmaAuthorName
                 tags {
-                  edges {    
+                  edges {
                     node {
                       name
                     }
