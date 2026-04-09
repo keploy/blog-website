@@ -14,6 +14,7 @@ export default function Layout({
   structuredData = [],
   canonicalUrl,
   ogType = "website",
+  publishedDate,
 }: {
   preview: any;
   Description: any;
@@ -23,6 +24,7 @@ export default function Layout({
   structuredData?: Record<string, unknown>[];
   canonicalUrl?: string;
   ogType?: "article" | "website";
+  publishedDate?: string;
 }) {
   return (
     <>
@@ -33,6 +35,7 @@ export default function Layout({
         structuredData={structuredData}
         canonicalUrl={canonicalUrl}
         ogType={ogType}
+        publishedDate={publishedDate}
       />
       {/* Replaced the Layout wrapper's framer-motion animation with a CSS
           animation so this fade-in no longer depends on framer-motion here.
