@@ -1,5 +1,4 @@
 import Layout from "../../components/layout";
-import Head from "next/head";
 import Header from "../../components/header";
 import Container from "../../components/container";
 import {
@@ -43,14 +42,7 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
         ]}
         canonicalUrl={`${SITE_URL}/authors/${sanitizeAuthorSlug(authorName || "")}`}
       >
-        <Head>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          <link
-            href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap"
-            rel="stylesheet"
-          />
-        </Head>
+        {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
         <Header />
         <Container>
           <PostByAuthorMapping filteredPosts={filteredPosts} Content={content} />
