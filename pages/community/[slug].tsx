@@ -185,6 +185,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       structuredData={structuredData}
       canonicalUrl={!router.isFallback && post?.slug ? postUrl : undefined}
       ogType="article"
+      publishedDate={post?.date}
     >
       <Header readProgress={readProgress} />
       <Container>

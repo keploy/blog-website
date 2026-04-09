@@ -4,7 +4,7 @@ export const SITE_URL = "https://keploy.io/blog";
 export const MAIN_SITE_URL = "https://keploy.io";
 export const ORG_NAME = "Keploy";
 export const BLOG_NAME = "Keploy Blog";
-export const ORG_LOGO_URL = `${SITE_URL}/favicon/Group.png`;
+export const ORG_LOGO_URL = `${SITE_URL}/favicon/android-chrome-512x512.png`;
 export const SOCIAL_LINKS = [
   "https://twitter.com/Keployio",
   "https://www.linkedin.com/company/keploy/",
@@ -110,8 +110,8 @@ export const getBlogPostingSchema = ({
       logo: {
         "@type": "ImageObject",
         url: ORG_LOGO_URL,
-        width: 462,
-        height: 539,
+        width: 512,
+        height: 512,
       },
     },
     isPartOf: {
