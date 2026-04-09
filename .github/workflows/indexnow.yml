@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+  schedule:
+    # Run daily at 6 AM UTC — picks up new/updated WordPress posts
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   indexnow:
