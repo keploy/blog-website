@@ -5,8 +5,8 @@ on:
     branches:
       - main
   schedule:
-    # Run daily at 6 AM UTC — picks up new/updated WordPress posts
-    - cron: '0 6 * * *'
+    # Run every 12 hours — picks up daily WordPress edits and new posts
+    - cron: '0 6,18 * * *'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
