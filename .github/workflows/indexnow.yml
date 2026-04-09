@@ -1,0 +1,53 @@
+name: Submit to IndexNow
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # Run every 12 hours — picks up daily WordPress edits and new posts
+    - cron: '0 6,18 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch latest 100 blog URLs and submit to IndexNow
+        run: |
+          set -e
+
+          # Fetch 100 most recently modified posts from WordPress GraphQL
+          QUERY='{"query":"{ posts(first:100, where:{orderby:{field:MODIFIED,order:DESC}}) { edges { node { slug categories { edges { node { slug } } } } } } }"}'
+
+          RESPONSE=$(curl -s -X POST "https://wp.keploy.io/graphql" \
+            -H "Content-Type: application/json" \
+            -d "$QUERY")
+
+          # Build URLs from response — map category to route
+          URLS=$(echo "$RESPONSE" | jq -r '
+            .data.posts.edges[].node |
+            . as $post |
+            .categories.edges[].node.slug |
+            select(. == "community" or . == "technology") |
+            "https://keploy.io/blog/\(.)/\($post.slug)"
+          ' | sort -u | head -100)
+
+          if [ -z "$URLS" ]; then
+            echo "No URLs found from WordPress, submitting blog index"
+            URLS="https://keploy.io/blog/"
+          fi
+
+          URL_COUNT=$(echo "$URLS" | wc -l)
+          echo "Submitting $URL_COUNT URLs to IndexNow"
+
+          JSON_URLS=$(echo "$URLS" | jq -R -s 'split("\n") | map(select(length > 0))')
+
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json" \
+            -d "{\"host\":\"keploy.io\",\"key\":\"9ded60b43b8b40578588fc42b04c3e5d\",\"urlList\":$JSON_URLS}")
+
+          echo "IndexNow response: $HTTP_CODE"
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::warning::IndexNow submission returned HTTP $HTTP_CODE"
+          fi
