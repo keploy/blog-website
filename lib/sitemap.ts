@@ -8,7 +8,9 @@ import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 // choose the wordpress graphql endpoint in this order:
 // server-only env for production or local server use
 // public env as a fallback if the server env is missing
-// hardcoded endpoint so local development still works out of the box
+// hardcoded endpoint as a last resort (note: next.config.js throws at startup if
+// WORDPRESS_API_URL is absent, so this fallback is only reachable outside the
+// normal next.js dev/build lifecycle, e.g. direct ts-node invocation)
 
 // this value is the single source used for every wordpress fetch in the sitemap flow.
 const WP_API_URL =
