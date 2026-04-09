@@ -377,7 +377,18 @@ async function fetchAllPosts() {
     }
 
     hasNextPage = Boolean(data.posts?.pageInfo?.hasNextPage);
-    after = data.posts?.pageInfo?.endCursor || null;
+    const nextCursor = data.posts?.pageInfo?.endCursor || null;
+
+    // guard against a malformed wordpress response that claims more pages exist but
+    // returns no cursor to advance to — without this, after stays null and the loop
+    // re-fetches the first page indefinitely until the function is killed.
+    if (hasNextPage && !nextCursor) {
+      throw new Error(
+        "WordPress pagination returned hasNextPage: true with no endCursor — cannot safely continue"
+      );
+    }
+
+    after = nextCursor;
 
     if (hasNextPage) {
       // insert a small delay before fetching the next page to reduce pressure on wpgraphql.
