@@ -53,7 +53,9 @@ module.exports = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        // exclude sitemap.xml — xml documents do not use csp and vercel.json
+        // also excludes it, so keep both layers consistent.
+        source: '/((?!sitemap\\.xml$).*)',
         headers: [
           {
             key: 'Content-Security-Policy',

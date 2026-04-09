@@ -1,6 +1,13 @@
 import { GetServerSideProps } from "next";
 import { generateSitemapXml, getStaticFallbackXml } from "../lib/sitemap";
 
+// give this route enough time to complete a fresh wordpress crawl before timing out.
+// the cron handler has its own 300s budget; 60s is sufficient for user-facing requests
+// because the retry budget is smaller and the typical crawl completes in under 20s.
+export const config = {
+  maxDuration: 60,
+};
+
 function SitemapXml() {
   // pages router still expects a component export even though we end the response manually.
   return null;
