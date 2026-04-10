@@ -3,6 +3,33 @@ export const dynamic = 'force-dynamic';
 
 const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL
 
+/**
+ * Normalize a post node from WordPress — default null title/excerpt to empty
+ * strings so downstream consumers never hit null runtime crashes.
+ */
+function normalizePostNode(node: any): any {
+  if (!node) return node;
+  return {
+    ...node,
+    title: node.title ?? '',
+    excerpt: node.excerpt ?? '',
+  };
+}
+
+/** Normalize all post edges in a WPGraphQL response. */
+function normalizePostEdges(data: any): any {
+  if (data?.posts?.edges) {
+    data.posts.edges = data.posts.edges.map((edge: any) => ({
+      ...edge,
+      node: normalizePostNode(edge.node),
+    }));
+  }
+  if (data?.post) {
+    data.post = normalizePostNode(data.post);
+  }
+  return data;
+}
+
 async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   const headers = { "Content-Type": "application/json" };
 
@@ -26,7 +53,7 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
     console.error(json.errors);
     throw new Error("Failed to fetch API");
   }
-  return json.data;
+  return normalizePostEdges(json.data);
 }
 
 export async function getPreviewPost(id, idType = "DATABASE_ID") {
@@ -623,6 +650,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       excerpt
       slug
       date
+      modified
       ppmaAuthorName
       featuredImage {
         node {
@@ -668,6 +696,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
               title
               excerpt
               content
+              modified
               author {
                 node {
                   ...AuthorFields
@@ -705,7 +734,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
   if (isRevision && data.post.revisions) {
     const revision = data.post.revisions.edges[0]?.node;
 
-    if (revision) Object.assign(data.post, revision);
+    if (revision) Object.assign(data.post, normalizePostNode(revision));
     delete data.post.revisions;
   }
 
