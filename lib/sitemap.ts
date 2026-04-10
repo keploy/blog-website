@@ -42,11 +42,10 @@ export const STATIC_ROUTES: Array<Omit<SitemapEntry, "lastModified">> = [
 
 // minimum posts required per category before the sitemap is considered trustworthy.
 // prevents a degraded partial wordpress response from replacing a good cached version.
-// override via SITEMAP_MIN_POSTS_PER_CATEGORY — set to 1 in .env.test so
+// override via SITEMAP_MIN_POSTS_PER_CATEGORY — set to 1 in playwright.config.ts so
 // playwright fixtures (4 technology / 3 community posts) don't trigger the 503 fallback.
-const MIN_POSTS_PER_CATEGORY = process.env.SITEMAP_MIN_POSTS_PER_CATEGORY
-  ? parseInt(process.env.SITEMAP_MIN_POSTS_PER_CATEGORY, 10)
-  : 5;
+const _parsedMin = parseInt(process.env.SITEMAP_MIN_POSTS_PER_CATEGORY ?? "", 10);
+const MIN_POSTS_PER_CATEGORY = Number.isNaN(_parsedMin) ? 5 : _parsedMin;
 
 // maps wordpress category data to the two supported frontend route namespaces.
 // matches by both slug and name (lowercased) to handle editorial inconsistencies.

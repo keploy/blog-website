@@ -123,7 +123,7 @@ export async function getAllPostsForSitemap(): Promise<{ edges: any[] }> {
     );
 
     const edges = data?.posts?.edges ?? [];
-    allEdges = [...allEdges, ...edges];
+    allEdges.push(...edges);
     hasNextPage = data?.posts?.pageInfo?.hasNextPage ?? false;
     endCursor = data?.posts?.pageInfo?.endCursor ?? null;
   }

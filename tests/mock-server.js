@@ -249,6 +249,22 @@ function handleGraphQL(body) {
         return { data: { post: { databaseId: 1, slug: 'mock-post', status: 'publish' } } };
     }
 
+    // AllPostsForSitemap must be checked before the generic AllPosts guard below.
+    // It needs posts from both categories so assertFullSitemap() doesn't throw
+    // in the test environment (communityCount must be ≥ SITEMAP_MIN_POSTS_PER_CATEGORY).
+    if (query.includes('AllPostsForSitemap')) {
+        const techEdges = technologyPosts.data.posts.edges;
+        const commEdges = communityPosts.data.posts.edges;
+        return {
+            data: {
+                posts: {
+                    edges: [...techEdges, ...commEdges],
+                    pageInfo: { hasNextPage: false, endCursor: null },
+                },
+            },
+        };
+    }
+
     if (query.includes('AllPosts')) {
         return technologyPosts;
     }

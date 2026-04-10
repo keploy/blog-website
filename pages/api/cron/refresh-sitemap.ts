@@ -9,6 +9,10 @@ import {
 export const config = { maxDuration: 30 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Cron responses must never be cached — prevent any proxy or CDN from
+  // serving a stale 401/200 on subsequent Vercel cron invocations.
+  res.setHeader("Cache-Control", "no-store");
+
   const expectedSecret = process.env.CRON_SECRET;
 
   // distinguish a deployment misconfiguration (500) from a wrong token (401).
