@@ -14,6 +14,20 @@ const technologyPosts = loadFixture('technology-posts.json');
 const communityPosts = loadFixture('community-posts.json');
 const singlePost = loadFixture('single-post.json');
 const singleCommunityPost = loadFixture('single-community-post.json');
+const sitemapPostsResponse = {
+    data: {
+        posts: {
+            edges: [
+                ...(technologyPosts?.data?.posts?.edges || []),
+                ...(communityPosts?.data?.posts?.edges || []),
+            ],
+            pageInfo: {
+                hasNextPage: false,
+                endCursor: null,
+            },
+        },
+    },
+};
 
 const communitySlugs = new Set(
     communityPosts.data.posts.edges.map(e => e.node.slug)
@@ -207,6 +221,10 @@ function handleGraphQL(body) {
             return communityPosts;
         }
         return technologyPosts;
+    }
+
+    if (query.includes('query SitemapPosts')) {
+        return sitemapPostsResponse;
     }
 
     if (query.includes('categoryName: "technology"')) {

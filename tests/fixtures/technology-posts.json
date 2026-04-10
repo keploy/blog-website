@@ -121,6 +121,48 @@
         },
         {
           "node": {
+            "title": "Mocking vs Stubbing in API Tests",
+            "excerpt": "<p>A practical look at when to mock and when to stub in API testing pipelines.</p>",
+            "slug": "mocking-vs-stubbing-api-tests",
+            "date": "2024-05-20T08:00:00",
+            "modified": "2024-05-20T08:00:00",
+            "postId": 2005,
+            "featuredImage": {
+              "node": {
+                "sourceUrl": "/blog/favicon/Group.png"
+              }
+            },
+            "author": {
+              "node": {
+                "name": "Tech Author Three",
+                "firstName": "Tech",
+                "lastName": "Author Three",
+                "avatar": {
+                  "url": "/blog/favicon/Group.png"
+                }
+              }
+            },
+            "ppmaAuthorName": "Tech Author Three",
+            "categories": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "technology"
+                  }
+                }
+              ]
+            },
+            "tags": {
+              "edges": []
+            },
+            "seo": {
+              "metaDesc": "A practical look at when to mock and when to stub in API testing.",
+              "title": "Mocking vs Stubbing in API Tests | Keploy Blog"
+            }
+          }
+        },
+        {
+          "node": {
             "title": null,
             "excerpt": null,
             "slug": "null-title-test-post",

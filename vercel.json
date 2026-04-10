@@ -1,8 +1,19 @@
 {
+  "crons": [
+    {
+      "path": "/blog/api/cron/refresh-sitemap",
+      "schedule": "0 0 * * *"
+    }
+  ],
   "redirects": [
     {
       "source": "/blog/community/everything-you-need-to-know-about-api-testing",
       "destination": "/blog/community/what-is-api-testing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/end-to-end-testing-and-why-do-you-need-it",
+      "destination": "/blog/community/end-to-end-testing-guide",
       "permanent": true
     },
     {
@@ -41,7 +52,7 @@
       ]
     },
     {
-      "source": "/blog/(.*)",
+      "source": "/blog/((?!(?:sitemap\\.xml$|api/|_next/static/)).*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
