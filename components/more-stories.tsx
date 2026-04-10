@@ -40,7 +40,7 @@ export default function MoreStories({
   const [visibleCount, setVisibleCount] = useState(12);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialPageInfo?.hasNextPage ?? true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [endCursor, setEndCursor] = useState(initialPageInfo?.endCursor ?? null);
   const [buffer, setBuffer] = useState<{ node: Post }[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
