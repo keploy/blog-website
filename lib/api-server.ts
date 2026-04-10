@@ -13,6 +13,8 @@
  * does not exist in the browser. All client-side API calls go through
  * lib/api.ts which uses the standard fetch() API.
  */
+import "server-only";
+import http from "node:http";
 import https from "node:https";
 
 function getApiUrl(): string {
@@ -30,11 +32,16 @@ function fetchGraphQL(query: string, variables: Record<string, unknown> = {}): P
   const url = new URL(apiUrl);
   const body = JSON.stringify({ query, variables });
 
+  // Use http for local/test endpoints (e.g. http://localhost:4000/graphql),
+  // https for production. Determined by the protocol in the configured URL.
+  const transport = url.protocol === "https:" ? https : http;
+  const defaultPort = url.protocol === "https:" ? 443 : 80;
+
   return new Promise((resolve, reject) => {
-    const req = https.request(
+    const req = transport.request(
       {
         hostname: url.hostname,
-        port: url.port || 443,
+        port: url.port || defaultPort,
         path: url.pathname + url.search,
         method: "POST",
         headers: {

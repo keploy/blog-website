@@ -65,7 +65,7 @@ test.describe('Sitemap ISR Route', () => {
   test('/sitemap.xml URLs are deduplicated', async ({ request, baseURL }) => {
     const response = await request.get(`${baseURL}/sitemap.xml`);
     const xml = await response.text();
-    const locs = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(m => m[1]);
+    const locs = Array.from(xml.matchAll(/<loc>(.*?)<\/loc>/g)).map(m => m[1]);
     const unique = new Set(locs);
     expect(unique.size).toBe(locs.length);
   });
