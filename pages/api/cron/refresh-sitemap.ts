@@ -26,8 +26,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 
-  // auth is checked before method to avoid leaking valid HTTP methods to
-  // unauthenticated callers. vercel cron automatically injects this header.
+  // Auth is checked before method to avoid leaking valid HTTP methods to
+  // unauthenticated callers.
+  //
+  // Vercel's cron scheduler automatically adds "Authorization: Bearer <CRON_SECRET>"
+  // to every scheduled invocation — no manual header configuration is needed.
+  // See: https://vercel.com/docs/cron-jobs/manage-cron-jobs#securing-cron-jobs
   if (req.headers.authorization !== `Bearer ${expectedSecret}`) {
     return res.status(401).json({ ok: false, message: "Unauthorized" });
   }

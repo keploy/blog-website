@@ -37,6 +37,10 @@ function fetchGraphQL(query: string, variables: Record<string, unknown> = {}): P
   const transport = url.protocol === "https:" ? https : http;
   const defaultPort = url.protocol === "https:" ? 443 : 80;
 
+  // 25s per page request — well under Vercel's 30s ISR timeout and leaves
+  // headroom for the pagination loop to complete across ~10 pages.
+  const TIMEOUT_MS = 25_000;
+
   return new Promise((resolve, reject) => {
     const req = transport.request(
       {
@@ -68,6 +72,11 @@ function fetchGraphQL(query: string, variables: Record<string, unknown> = {}): P
         });
       }
     );
+    req.setTimeout(TIMEOUT_MS, () => {
+      req.destroy(
+        new Error(`GraphQL request timed out after ${TIMEOUT_MS}ms — WordPress may be slow or unreachable`)
+      );
+    });
     req.on("error", reject);
     req.write(body);
     req.end();

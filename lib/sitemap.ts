@@ -44,8 +44,12 @@ export const STATIC_ROUTES: Array<Omit<SitemapEntry, "lastModified">> = [
 // prevents a degraded partial wordpress response from replacing a good cached version.
 // override via SITEMAP_MIN_POSTS_PER_CATEGORY — set to 1 in playwright.config.ts so
 // playwright fixtures (4 technology / 3 community posts) don't trigger the 503 fallback.
-const _parsedMin = parseInt(process.env.SITEMAP_MIN_POSTS_PER_CATEGORY ?? "", 10);
-const MIN_POSTS_PER_CATEGORY = Number.isNaN(_parsedMin) ? 5 : _parsedMin;
+// Only accept explicit positive integers — rejects "", "0", "-1", "abc", "1.5".
+// Falls back to 5 so a misconfigured env var cannot silently disable the guard.
+const _rawMinPosts = process.env.SITEMAP_MIN_POSTS_PER_CATEGORY?.trim() ?? "";
+const _parsedMinPosts = /^\d+$/.test(_rawMinPosts) ? Number.parseInt(_rawMinPosts, 10) : NaN;
+const MIN_POSTS_PER_CATEGORY =
+  Number.isFinite(_parsedMinPosts) && _parsedMinPosts > 0 ? _parsedMinPosts : 5;
 
 // maps wordpress category data to the two supported frontend route namespaces.
 // matches by both slug and name (lowercased) to handle editorial inconsistencies.
