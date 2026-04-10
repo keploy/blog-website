@@ -81,7 +81,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       description: reviewAuthorDescription || "A Reviewer for keploy's blog",
     },
   ];
-  const postBodyRef = useRef<HTMLDivElement>();
+  const postBodyRef = useRef<HTMLDivElement>(null);
   const readProgress = useSpringValue(0);
   useScroll({
     onChange(v) {
@@ -138,7 +138,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
 
   const postUrl = post?.slug ? `${SITE_URL}/technology/${post.slug}` : `${SITE_URL}/technology`;
-  const structuredData = [];
+  const structuredData: any[] = [];
   if (post?.slug) {
     structuredData.push(
       getBreadcrumbListSchema([

@@ -6,7 +6,7 @@ import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 function TocTooltip({ text, children }: { text: string; children: React.ReactNode }) {
   const [show, setShow] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
-  const timeout = useRef<ReturnType<typeof setTimeout>>(null);
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleEnter = () => {
@@ -106,7 +106,7 @@ export default function TOC({ headings, isList, setIsList }) {
     const element = document.getElementById(sanitizedId);
     if (element) {
       window.scrollTo({ top: element.offsetTop - 80, behavior: "smooth" });
-      window.history.replaceState(null, null, `#${sanitizedId}`);
+      window.history.replaceState(null, "", `#${sanitizedId}`);
     }
   };
 

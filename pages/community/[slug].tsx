@@ -85,7 +85,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     },
   ];
 
-  const postBodyRef = useRef<HTMLDivElement>();
+  const postBodyRef = useRef<HTMLDivElement>(null);
   const readProgress = useSpringValue(0);
   useScroll({
     onChange(v) {
@@ -148,7 +148,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
 
   const postUrl = post?.slug ? `${SITE_URL}/community/${post.slug}` : `${SITE_URL}/community`;
-  const structuredData = [];
+  const structuredData: any[] = [];
   if (post?.slug) {
     structuredData.push(
       getBreadcrumbListSchema([

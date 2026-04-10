@@ -116,6 +116,10 @@ export default defineConfig({
       env: {
         WORDPRESS_API_URL: GRAPHQL_API_URL,
         NEXT_PUBLIC_WORDPRESS_API_URL: GRAPHQL_API_URL,
+        CRON_SECRET: 'test-secret',
+        // Playwright fixtures have fewer posts than production — lower the
+        // assertFullSitemap threshold so the ISR route returns 200, not 503.
+        SITEMAP_MIN_POSTS_PER_CATEGORY: '1',
       },
     },
   ],

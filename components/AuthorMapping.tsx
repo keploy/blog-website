@@ -13,8 +13,8 @@ export default function AuthorMapping({
 }) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const authorData = [];
-  const ppmaAuthorNameArray = [];
+  const authorData: Array<{ publishingAuthor: string; ppmaAuthorName: string; avatarUrl: string; slug: string }> = [];
+  const ppmaAuthorNameArray: string[] = [];
 
   AuthorArray.forEach((item) => {
     const ppmaAuthorName = formatAuthorName(item.ppmaAuthorName);

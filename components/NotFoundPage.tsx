@@ -219,13 +219,13 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
           </section>
         ) : (
           <>
-            {latestPosts?.edges?.length > 0 && (
+            {(latestPosts?.edges?.length ?? 0) > 0 && (
               <section className="py-4">
                 <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
                   Latest from Our Blog
                 </h2>
                 <PostGrid>
-                  {latestPosts.edges.slice(0, 6).map(({ node: post }) => (
+                  {(latestPosts?.edges ?? []).slice(0, 6).map(({ node: post }) => (
                     <PostCard
                       key={post.slug}
                       title={post.title}
@@ -241,13 +241,13 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
               </section>
             )}
 
-            {communityPosts?.edges?.length > 0 && (
+            {(communityPosts?.edges?.length ?? 0) > 0 && (
               <section className="py-4">
                 <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
                   Latest Community Blogs
                 </h2>
                 <PostGrid>
-                  {communityPosts.edges.slice(0, 6).map(({ node: post }) => (
+                  {(communityPosts?.edges ?? []).slice(0, 6).map(({ node: post }) => (
                     <PostCard
                       key={post.slug}
                       title={post.title}
@@ -263,13 +263,13 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
               </section>
             )}
 
-            {technologyPosts?.edges?.length > 0 && (
+            {(technologyPosts?.edges?.length ?? 0) > 0 && (
               <section className="py-4">
                 <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
                   Latest Technology Blogs
                 </h2>
                 <PostGrid>
-                  {technologyPosts.edges.slice(0, 6).map(({ node: post }) => (
+                  {(technologyPosts?.edges ?? []).slice(0, 6).map(({ node: post }) => (
                     <PostCard
                       key={post.slug}
                       title={post.title}
