@@ -35,9 +35,14 @@ test.describe('Sitemap ISR Route', () => {
   test('/sitemap.xml contains dynamic post URLs from WordPress', async ({ request, baseURL }) => {
     const response = await request.get(`${baseURL}/sitemap.xml`);
     const xml = await response.text();
-    // Dynamic posts are served from WordPress via ISR — should contain at least 1 post URL
-    const locMatches = xml.match(/<loc>/g) ?? [];
-    expect(locMatches.length).toBeGreaterThan(5);
+    // Verify at least one dynamic post URL exists under /technology or /community.
+    // A count-only check passes even on the static fallback (7 routes); asserting a
+    // pattern match proves the WordPress fixture data was actually included.
+    const locs = Array.from(xml.matchAll(/<loc>(.*?)<\/loc>/g)).map(m => m[1]);
+    const hasDynamicPostUrl = locs.some(loc =>
+      /^https:\/\/keploy\.io\/blog\/(technology|community)\/[^/]+$/.test(loc),
+    );
+    expect(hasDynamicPostUrl).toBe(true);
   });
 
   test('/sitemap.xml <url> entries have <lastmod> dates', async ({ request, baseURL }) => {
