@@ -39,12 +39,8 @@ export default function Meta({
         href="/blog/favicon/favicon-16x16.png"
       />
       <link rel="manifest" href="/blog/favicon/site.webmanifest" />
-      <link
-        rel="mask-icon"
-        href="/blog/favicon/safari-pinned-tab.svg"
-        color="#000000"
-      />
-      <link rel="shortcut icon" href="/blog/favicon/favicon.ico" />
+      <link rel="mask-icon" href="/blog/favicon/Group.svg" color="#000000" />
+      <link rel="shortcut icon" href="/blog/favicon/Group.png" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={Title} />

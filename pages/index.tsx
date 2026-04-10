@@ -33,9 +33,6 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       canonicalUrl={SITE_URL}
       ogType="website"
     >
-      <Head>
-        <title>{`Engineering | Keploy Blog`}</title>
-      </Head>
       <Header />
       <Container>
         <div className="">
@@ -85,7 +82,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
 
 export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   const allCommunityPosts = await getAllPostsForCommunity(preview);
-  const allTehcnologyPosts = await getAllPostsForTechnology(preview);
+  const allTechnologyPosts = await getAllPostsForTechnology(preview);
 
   return {
     props: {
@@ -94,9 +91,9 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
           ? allCommunityPosts?.edges?.slice(0, 3)
           : allCommunityPosts?.edges,
       technologyPosts:
-        allTehcnologyPosts?.edges?.length > 3
-          ? allTehcnologyPosts?.edges?.slice(0, 3)
-          : allTehcnologyPosts.edges,
+        allTechnologyPosts?.edges?.length > 3
+          ? allTechnologyPosts?.edges?.slice(0, 3)
+          : allTechnologyPosts.edges,
       preview,
     },
     revalidate: 10,
