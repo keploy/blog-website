@@ -1,7 +1,15 @@
 export const maxDuration = 300; // This can run Vercel Functions for a maximum of 300 seconds
 export const dynamic = 'force-dynamic';
 
-const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL
+const API_URL: string = (() => {
+  const url = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
+  if (!url) {
+    throw new Error(
+      "WordPress API URL is not configured. Set WORDPRESS_API_URL or NEXT_PUBLIC_WORDPRESS_API_URL in your environment variables."
+    );
+  }
+  return url;
+})();
 
 /**
  * Normalize a post node from WordPress — default null title/excerpt to empty
@@ -75,8 +83,8 @@ export async function getPreviewPost(id, idType = "DATABASE_ID") {
 
 export async function getAllTags() {
   let hasNextPage = true;
-  let endCursor = null;
-  let allTags = [];
+  let endCursor: string | null = null;
+  let allTags: any[] = [];
 
   while (hasNextPage) {
     const data = await fetchAPI(
@@ -159,9 +167,9 @@ export async function getAllPostsFromTags(tagName: String, preview) {
 }
 
 export async function getAllPosts() {
-  let allEdges = [];
+  let allEdges: any[] = [];
   let hasNextPage = true;
-  let endCursor = null;
+  let endCursor: string | null = null;
 
   while (hasNextPage) {
     const data = await fetchAPI(
@@ -174,6 +182,7 @@ export async function getAllPosts() {
               excerpt
               slug
               date
+              modified
               postId
               featuredImage {
                 node {
@@ -190,10 +199,22 @@ export async function getAllPosts() {
                 edges {
                   node {
                     name
+                    slug
+                  }
+                }
+              }
+              tags {
+                edges {
+                  node {
+                    name
                   }
                 }
               }
             }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
           }
         }
       }
@@ -406,9 +427,9 @@ export async function getAllPostsForCommunity(preview = false, after = null) {
 }
 
 export async function getAllAuthors() {
-  let allAuthors = [];
+  let allAuthors: any[] = [];
   let hasNextPage = true;
-  let endCursor = null;
+  let endCursor: string | null = null;
 
   while (hasNextPage) {
     const data = await fetchAPI(
@@ -452,9 +473,9 @@ export async function getAllAuthors() {
 }
 
 export async function getPostsByAuthor() {
-  let allPosts = [];
+  let allPosts: any[] = [];
   let hasNextPage = true;
-  let endCursor = null;
+  let endCursor: string | null = null;
 
   while (hasNextPage) {
     const data = await fetchAPI(
@@ -504,7 +525,7 @@ export async function getPostsByAuthor() {
 export async function getMoreStoriesForSlugs(tags, slug) {
   const tagFilter = tags?.edges?.length > 0;
   const variables = tagFilter ? { tags: tags.edges.map((edge) => edge.node.name) } : undefined;
-  let stories = [];
+  let stories: any[] = [];
   let data;
 
   const queryWithTags = `

@@ -47,9 +47,9 @@ export default function PostBody({
   slug: string | string[] | undefined;
   categories?: Post["categories"];
 }) {
-  const [tocItems, setTocItems] = useState([]);
-  const [copySuccessList, setCopySuccessList] = useState([]);
-  const [headingCopySuccessList, setHeadingCopySuccessList] = useState([]);
+  const [tocItems, setTocItems] = useState<{ id: string; title: string | null; type: string }[]>([]);
+  const [copySuccessList, setCopySuccessList] = useState<boolean[]>([]);
+  const [headingCopySuccessList, setHeadingCopySuccessList] = useState<boolean[]>([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [replacedContent, setReplacedContent] = useState(content || "");
   const [isList, setIsList] = useState(false);
