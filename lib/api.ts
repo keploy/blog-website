@@ -224,7 +224,10 @@ export async function getAllPosts() {
       }
     );
 
-    const edges = data?.posts?.edges;
+    const edges = data?.posts?.edges ?? [];
+    if (!data?.posts?.edges) {
+      console.warn("WordPress GraphQL response missing posts.edges in getAllPosts(); continuing with empty page");
+    }
     allEdges = [...allEdges, ...edges];
     const nextCursor = data?.posts?.pageInfo?.endCursor ?? null;
     hasNextPage = data?.posts?.pageInfo?.hasNextPage;
