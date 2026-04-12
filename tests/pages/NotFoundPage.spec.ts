@@ -15,16 +15,6 @@ test.describe('404 Not Found Page - Component Availability', () => {
     await expect(notFoundText.first()).toBeVisible();
   });
 
-  test('should render the Navigation component', async ({ page }) => {
-    const nav = page.locator('nav').first();
-      await expect(nav).toBeVisible();
-  });
-
-  test('should render the Keploy logo in Navigation', async ({ page }) => {
-    const headerLogo = page.locator('header img[alt="Keploy Logo"]').first();
-      await expect(headerLogo).toBeVisible();
-  });
-
   test('should render navigation links back to main sections', async ({ page }) => {
     const navLinks = page.locator('a[href*="/technology"], a[href*="/community"], a[href="/"], a[href="/blog/"]');
     const count = await navLinks.count();

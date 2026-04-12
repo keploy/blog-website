@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import FloatingNavbarClient from "./FloatingNavbarClient";
 
 const glassNavBase =
@@ -18,11 +18,11 @@ type FloatingNavbarProps = {
 };
 
 export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProps) {
-  const pathname = usePathname();
+  const router = useRouter();
   const derivedBlogReadingPage =
     typeof isBlogReadingPage === "boolean"
       ? isBlogReadingPage
-      : /^\/(technology|community)\/[^/]+$/.test(pathname ?? "");
+      : router.pathname === "/technology/[slug]" || router.pathname === "/community/[slug]";
   const [isScrolled, setIsScrolled] = useState(derivedBlogReadingPage);
 
   useEffect(() => {

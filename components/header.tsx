@@ -2,7 +2,7 @@
 
 import { SpringValue, animated } from "@react-spring/web";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import { cn } from "../lib/utils/utils";
 import FloatingNavbar from "./navbar/FloatingNavbar";
 
@@ -12,12 +12,10 @@ export default function Header({
   readProgress?: SpringValue<number>;
 }) {
   const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname();
+  const router = useRouter();
   const isBlogReadingPage =
-    // next/navigation pathname strips basePath, so match the dynamic segments directly
-    pathname === "/technology/[slug]" || pathname === "/community/[slug]" ||
-    // also match actual resolved paths like /technology/my-post
-    /^\/(technology|community)\/[^/]+$/.test(pathname ?? "");
+    router.pathname === "/technology/[slug]" ||
+    router.pathname === "/community/[slug]";
 
   useEffect(() => {
     const handleScroll = () => {
