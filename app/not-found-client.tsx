@@ -1,8 +1,5 @@
 "use client";
 
-// App Router 404 page — no header, just the 404 content.
-// Cannot import Header/FloatingNavbar — they use useRouter() from next/router
-// which throws in App Router context. Header intentionally omitted.
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -62,7 +59,7 @@ export default function NotFoundClient({ latestPosts, communityPosts, technology
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 pt-16">
-        <div className="flex flex-col lg:flex-row items-center justify-between pt-8 pb-8">
+        <div className="flex flex-col lg:flex-row items-center justify-between py-16">
           <div className="flex-1 lg:pr-12 mb-6 lg:mb-0">
             <h1 className="heading1 text-6xl lg:text-7xl font-bold mb-6 leading-tight max-w-lg">
               <span className="bg-gradient-to-r from-orange-300 via-orange-400 to-orange-500 bg-clip-text text-transparent">
@@ -90,7 +87,7 @@ export default function NotFoundClient({ latestPosts, communityPosts, technology
             </div>
           </div>
           <div className="flex-1 lg:pl-12">
-            <div className="w-full h-64 sm:h-80 lg:h-[500px] relative mt-8 lg:mt-0">
+            <div className="w-full h-80 lg:h-[500px] relative">
               <Image src="/blog/images/error404.png" alt="404 Error Illustration" fill className="object-contain" priority />
             </div>
           </div>
@@ -100,6 +97,7 @@ export default function NotFoundClient({ latestPosts, communityPosts, technology
           <div className="relative w-full mb-6">
             <input
               type="text"
+              aria-label="Search posts"
               placeholder="Search posts..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

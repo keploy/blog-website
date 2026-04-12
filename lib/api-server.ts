@@ -142,8 +142,17 @@ export async function getAllPostsForSitemap(): Promise<{ edges: any[] }> {
 
     const edges = data?.posts?.edges ?? [];
     allEdges.push(...edges);
+    const nextCursor = data?.posts?.pageInfo?.endCursor ?? null;
     hasNextPage = data?.posts?.pageInfo?.hasNextPage ?? false;
-    endCursor = data?.posts?.pageInfo?.endCursor ?? null;
+    // Guard: if WordPress claims there is a next page but returns no advancing cursor,
+    // the loop would re-fetch the same page forever and hang ISR regeneration.
+    if (hasNextPage && !nextCursor) {
+      throw new Error("WordPress pagination error: hasNextPage is true but endCursor is missing");
+    }
+    if (hasNextPage && nextCursor === endCursor) {
+      throw new Error("WordPress pagination error: endCursor did not advance between pages");
+    }
+    endCursor = nextCursor;
   }
 
   return { edges: allEdges };
