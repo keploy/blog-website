@@ -12,11 +12,6 @@
       "permanent": true
     },
     {
-      "source": "/blog/community/end-to-end-testing-and-why-do-you-need-it",
-      "destination": "/blog/community/end-to-end-testing-guide",
-      "permanent": true
-    },
-    {
       "source": "/blog/community/regression-testing-tools-rankings-2025",
       "destination": "/blog/community/regression-testing-tools",
       "permanent": true

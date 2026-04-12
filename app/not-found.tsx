@@ -2,10 +2,14 @@
 // Without this file, any unmatched App Router path shows a blank
 // "__next_error__" shell instead of a usable page.
 //
-// IMPORTANT: Do NOT call redirect() here — infinite loop.
-// IMPORTANT: Do NOT import Header/FloatingNavbar/NotFoundPage — they use
-// useRouter() from next/router which throws in App Router context.
-// Pages Router components are intentionally left unchanged.
+// This file renders a standalone 404 UI (NotFoundClient) — it does NOT redirect.
+// redirect() cannot be used here: it is an RSC soft-navigation, not a hard HTTP
+// redirect. Since /404 has no App Router page, calling redirect('/404') causes
+// the router to invoke this boundary again → infinite loop.
+//
+// Header/FloatingNavbar/NotFoundPage are intentionally not imported here because
+// they use useRouter() from next/router, which throws "NextRouter was not mounted"
+// in App Router context. Pages Router components are left completely unchanged.
 import { getAllPostsForTechnology, getAllPostsForCommunity } from "../lib/api";
 import NotFoundClient from "./not-found-client";
 

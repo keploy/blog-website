@@ -56,11 +56,12 @@ test.describe('Refresh Sitemap Cron API', () => {
   });
 
   test('Cache-Control header prevents caching of cron response', async ({ request, baseURL }) => {
-    // The /api/ prefix routes get Cache-Control: no-store via vercel.json headers rule.
+    // Cache-Control: no-store is set by the handler itself (res.setHeader in refresh-sitemap.ts).
+    // vercel.json also enforces it on /blog/api/* routes in production, but in local/CI
+    // Playwright runs against the Next.js dev server where vercel.json headers are not applied.
     const response = await request.get(`${baseURL}/api/cron/refresh-sitemap`, {
       headers: { Authorization: 'Bearer test-secret' },
     });
-    // Vercel injects no-store for all /blog/api/* routes
     const cc = response.headers()['cache-control'] ?? '';
     expect(cc).toContain('no-store');
   });
