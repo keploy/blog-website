@@ -224,9 +224,12 @@ export async function getAllPosts() {
       }
     );
 
-    const edges = data?.posts?.edges ?? [];
-    if (!data?.posts?.edges) {
-      console.warn("WordPress GraphQL response missing posts.edges in getAllPosts(); continuing with empty page");
+    const edges = data?.posts?.edges;
+    if (!Array.isArray(edges)) {
+      throw new Error(
+        "WordPress GraphQL response missing posts.edges for AllPosts query. " +
+          "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
+      );
     }
     allEdges = [...allEdges, ...edges];
     const nextCursor = data?.posts?.pageInfo?.endCursor ?? null;
