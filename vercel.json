@@ -47,7 +47,7 @@
       ]
     },
     {
-      "source": "/blog/((?!(?:sitemap\\.xml$|api/|_next/static/)).*)",
+      "source": "/blog/((?!(?:sitemap\\.xml$|api/|_next/)).*)",
       "headers": [
         {
           "key": "Content-Security-Policy",

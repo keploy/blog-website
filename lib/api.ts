@@ -79,15 +79,15 @@ export async function getPreviewPost(id, idType = "DATABASE_ID") {
     }
   );
   return data.post;
-}
+	}
 
-export async function getAllTags() {
-  let hasNextPage = true;
-  let endCursor: string | null = null;
-  let allTags: any[] = [];
+	export async function getAllTags() {
+	  let hasNextPage = true;
+	  let endCursor: string | null = null;
+	  let allTags: any[] = [];
 
-  while (hasNextPage) {
-    const data = await fetchAPI(
+	  while (hasNextPage) {
+	    const data = await fetchAPI(
       `
       query AllTags($first: Int!, $after: String) {
         tags(first: $first, after: $after) {
@@ -108,17 +108,24 @@ export async function getAllTags() {
           first: 100, // Adjust as needed
           after: endCursor,
         },
-      }
-    );
+	      }
+	    );
 
-    const tags = data?.tags?.edges.map((edge) => edge.node);
-    allTags = allTags.concat(tags);
+	    const edges = data?.tags?.edges;
+	    if (!Array.isArray(edges)) {
+	      throw new Error(
+	        "WordPress GraphQL response missing tags.edges for AllTags query. " +
+	          "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
+	      );
+	    }
+	    const tags = edges.map((edge) => edge.node);
+	    allTags = allTags.concat(tags);
 
-    hasNextPage = data?.tags?.pageInfo?.hasNextPage;
-    endCursor = data?.tags?.pageInfo?.endCursor;
-  }
-  return allTags;
-}
+	    hasNextPage = data?.tags?.pageInfo?.hasNextPage ?? false;
+	    endCursor = data?.tags?.pageInfo?.endCursor ?? null;
+	  }
+	  return allTags;
+	}
 
 export async function getAllPostsFromTags(tagName: String, preview) {
   const data = await fetchAPI(

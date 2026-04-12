@@ -61,10 +61,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         "GOOGLE_SEARCH_CONSOLE_SITE_URL, and Search Console property access for the service account.",
       error
     );
-    return res.status(500).json({
+    // Best-effort: sitemap generation/serving is independent of GSC availability.
+    // Return 200 so the cron job doesn't flap/alert; logs still preserve the failure signal.
+    return res.status(200).json({
       ok: false,
       message:
-        error instanceof Error ? error.message : "Google Search Console submission failed",
+        "Google Search Console submission failed (best-effort). " +
+        (error instanceof Error ? error.message : "Review server logs and configuration."),
     });
   }
 }
