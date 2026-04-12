@@ -13,16 +13,26 @@
 import { getAllPostsForTechnology, getAllPostsForCommunity } from "../lib/api";
 import NotFoundClient from "./not-found-client";
 
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`NotFound posts fetch timed out after ${timeoutMs}ms`)), timeoutMs)
+    ),
+  ]);
+}
+
 export default async function NotFound() {
   let latestPosts     = { edges: [] as any[] };
   let communityPosts  = { edges: [] as any[] };
   let technologyPosts = { edges: [] as any[] };
 
   try {
-    const [techPosts, commPosts] = await Promise.all([
+    // Posts are decorative; keep the 404 UI fast even if WordPress is slow/hung.
+    const [techPosts, commPosts] = await withTimeout(Promise.all([
       getAllPostsForTechnology(false, null),
       getAllPostsForCommunity(false, null),
-    ]);
+    ]), 3000);
     const allEdges = [...techPosts.edges, ...commPosts.edges].sort(
       (a, b) => new Date(b.node.date).getTime() - new Date(a.node.date).getTime()
     );

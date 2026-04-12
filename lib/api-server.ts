@@ -21,7 +21,8 @@ function getApiUrl(): string {
   const url = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
   if (!url) {
     throw new Error(
-      "WordPress API URL is not configured. Set WORDPRESS_API_URL or NEXT_PUBLIC_WORDPRESS_API_URL."
+      "WordPress API URL is not configured. Set WORDPRESS_API_URL in your environment. " +
+        "NEXT_PUBLIC_WORDPRESS_API_URL is derived from it in next.config.js (NEXT_PUBLIC is only a local/test fallback here)."
     );
   }
   return url;
