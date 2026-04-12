@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
+// useRouter removed — router.basePath replaced with literal "/blog" (next.config basePath)
 import sideBySideSvg from "../../public/images/sidebyside-transparent.svg";
 import { GitHubStars } from "./github-stars";
 import { Vscode } from "./vscode-number";
@@ -92,7 +92,6 @@ function MobileCategoryDropdown({
 }
 
 export default function FloatingNavbarClient({ techLatest = [], communityLatest = [] as any[], isScrolled = false }: { techLatest?: any[]; communityLatest?: any[]; isScrolled?: boolean }) {
-  const router = useRouter();
   const [showTechDropdown, setShowTechDropdown] = useState(false);
   const [showCommunityDropdown, setShowCommunityDropdown] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
@@ -161,7 +160,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         if (techState.length === 0 || communityState.length === 0) {
           const endpoint = process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string | undefined;
           if (!endpoint) {
-            const res = await fetch(`${router.basePath || ''}/api/nav-latest`, { cache: "no-store" });
+            const res = await fetch(`/blog/api/nav-latest`, { cache: "no-store" });
             if (!res.ok) throw new Error("Failed to fetch latest posts (no env, API 404)");
             const data = await res.json();
             if (!mounted) return;
@@ -740,7 +739,6 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
 }
 
 function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: { onClose: () => void; techLatest?: any[]; communityLatest?: any[] }) {
-  const router = useRouter();
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -751,7 +749,7 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
     let mounted = true;
     (async () => {
       try {
-        const base = (router?.basePath as string) || "";
+        const base = "/blog";
         const res = await fetch(`${base}/api/search-all`, { cache: "no-store" });
         if (!res.ok) throw new Error("Failed to load posts");
         const data = await res.json();
