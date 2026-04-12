@@ -79,15 +79,15 @@ export async function getPreviewPost(id, idType = "DATABASE_ID") {
     }
   );
   return data.post;
-	}
+}
 
-	export async function getAllTags() {
-	  let hasNextPage = true;
-	  let endCursor: string | null = null;
-	  let allTags: any[] = [];
+export async function getAllTags() {
+  let hasNextPage = true;
+  let endCursor: string | null = null;
+  let allTags: any[] = [];
 
-	  while (hasNextPage) {
-	    const data = await fetchAPI(
+  while (hasNextPage) {
+    const data = await fetchAPI(
       `
       query AllTags($first: Int!, $after: String) {
         tags(first: $first, after: $after) {
@@ -108,24 +108,24 @@ export async function getPreviewPost(id, idType = "DATABASE_ID") {
           first: 100, // Adjust as needed
           after: endCursor,
         },
-	      }
-	    );
+      }
+    );
 
-	    const edges = data?.tags?.edges;
-	    if (!Array.isArray(edges)) {
-	      throw new Error(
-	        "WordPress GraphQL response missing tags.edges for AllTags query. " +
-	          "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
-	      );
-	    }
-	    const tags = edges.map((edge) => edge.node);
-	    allTags = allTags.concat(tags);
+    const edges = data?.tags?.edges;
+    if (!Array.isArray(edges)) {
+      throw new Error(
+        "WordPress GraphQL response missing tags.edges for AllTags query. " +
+          "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
+      );
+    }
+    const tags = edges.map((edge) => edge.node);
+    allTags = allTags.concat(tags);
 
-	    hasNextPage = data?.tags?.pageInfo?.hasNextPage ?? false;
-	    endCursor = data?.tags?.pageInfo?.endCursor ?? null;
-	  }
-	  return allTags;
-	}
+    hasNextPage = data?.tags?.pageInfo?.hasNextPage ?? false;
+    endCursor = data?.tags?.pageInfo?.endCursor ?? null;
+  }
+  return allTags;
+}
 
 export async function getAllPostsFromTags(tagName: String, preview) {
   const data = await fetchAPI(
@@ -239,8 +239,17 @@ export async function getAllPosts() {
       );
     }
     allEdges = [...allEdges, ...edges];
-    const nextCursor = data?.posts?.pageInfo?.endCursor ?? null;
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
+
+    const pageInfo = data?.posts?.pageInfo;
+    if (!pageInfo) {
+      throw new Error(
+        "WordPress GraphQL response missing posts.pageInfo for AllPosts query. " +
+          "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
+      );
+    }
+
+    const nextCursor = pageInfo.endCursor ?? null;
+    hasNextPage = pageInfo.hasNextPage ?? false;
     // Guard: if WordPress claims there is a next page but returns no advancing cursor,
     // the loop would re-fetch the same page forever.
     if (hasNextPage && !nextCursor) {
@@ -487,9 +496,23 @@ export async function getAllAuthors() {
     );
 
     const edges = data?.posts?.edges;
+    if (!Array.isArray(edges)) {
+      throw new Error(
+        "WordPress GraphQL response missing posts.edges for getAllAuthors query. " +
+          "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
+      );
+    }
     allAuthors = [...allAuthors, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
-    endCursor = data?.posts?.pageInfo?.endCursor;
+
+    const pageInfo = data?.posts?.pageInfo;
+    if (!pageInfo) {
+      throw new Error(
+        "WordPress GraphQL response missing posts.pageInfo for getAllAuthors query. " +
+          "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
+      );
+    }
+    hasNextPage = pageInfo.hasNextPage ?? false;
+    endCursor = pageInfo.endCursor ?? null;
   }
   return { edges: allAuthors };
 }
@@ -537,9 +560,23 @@ export async function getPostsByAuthor() {
     );
 
     const edges = data?.posts?.edges;
+    if (!Array.isArray(edges)) {
+      throw new Error(
+        "WordPress GraphQL response missing posts.edges for getPostsByAuthor query. " +
+          "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
+      );
+    }
     allPosts = [...allPosts, ...edges];
-    hasNextPage = data?.posts?.pageInfo?.hasNextPage;
-    endCursor = data?.posts?.pageInfo?.endCursor;
+
+    const pageInfo = data?.posts?.pageInfo;
+    if (!pageInfo) {
+      throw new Error(
+        "WordPress GraphQL response missing posts.pageInfo for getPostsByAuthor query. " +
+          "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
+      );
+    }
+    hasNextPage = pageInfo.hasNextPage ?? false;
+    endCursor = pageInfo.endCursor ?? null;
   }
   return { edges: allPosts };
 }
