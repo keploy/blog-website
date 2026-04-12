@@ -111,7 +111,7 @@ export const getStaticProps: GetStaticProps = async ({
     candidateAuthorNames.add(slugWords[0]);
   }
 
-  let filteredPosts: any[] = [];
+  let filteredPosts: Awaited<ReturnType<typeof getPostsByAuthorName>>["edges"] = [];
 
   for (const candidate of Array.from(candidateAuthorNames)) {
     if (!candidate) continue;

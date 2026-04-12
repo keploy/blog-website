@@ -148,7 +148,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
 
   const postUrl = post?.slug ? `${SITE_URL}/community/${post.slug}` : `${SITE_URL}/community`;
-  const structuredData: any[] = [];
+  const structuredData: Array<ReturnType<typeof getBreadcrumbListSchema> | ReturnType<typeof getBlogPostingSchema>> = [];
   if (post?.slug) {
     structuredData.push(
       getBreadcrumbListSchema([

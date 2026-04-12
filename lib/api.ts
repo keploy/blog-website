@@ -5,7 +5,7 @@ const API_URL: string = (() => {
   const url = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
   if (!url) {
     throw new Error(
-      "WordPress API URL is not configured. Set WORDPRESS_API_URL or NEXT_PUBLIC_WORDPRESS_API_URL in your environment variables."
+      "WordPress API URL is not configured. Set WORDPRESS_API_URL in your environment variables (next.config.js requires it at startup and derives NEXT_PUBLIC_WORDPRESS_API_URL from it)."
     );
   }
   return url;
