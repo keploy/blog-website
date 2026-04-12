@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ ok: false, message: "Method not allowed" });
   }
 
-  // skip silently if google search console env vars are not all configured.
+  // return early if google search console env vars are not all configured.
   if (!isSearchConsoleSubmissionConfigured()) {
     return res.status(200).json({
       ok: true,
