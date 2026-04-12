@@ -22,7 +22,7 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
   const derivedBlogReadingPage =
     typeof isBlogReadingPage === "boolean"
       ? isBlogReadingPage
-      : pathname === "/technology/[slug]" || pathname === "/community/[slug]";
+      : /^\/(technology|community)\/[^/]+$/.test(pathname ?? "");
   const [isScrolled, setIsScrolled] = useState(derivedBlogReadingPage);
 
   useEffect(() => {

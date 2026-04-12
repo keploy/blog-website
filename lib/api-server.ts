@@ -58,6 +58,15 @@ function fetchGraphQL(query: string, variables: Record<string, unknown> = {}): P
         let data = "";
         res.on("data", (chunk) => (data += chunk));
         res.on("end", () => {
+          const status = res.statusCode ?? 0;
+          if (status < 200 || status >= 300) {
+            reject(
+              new Error(
+                `WordPress returned HTTP ${status}: ${data.slice(0, 120)}`
+              )
+            );
+            return;
+          }
           try {
             const json = JSON.parse(data);
             if (json.errors) reject(new Error(JSON.stringify(json.errors)));
@@ -65,7 +74,7 @@ function fetchGraphQL(query: string, variables: Record<string, unknown> = {}): P
           } catch {
             reject(
               new Error(
-                `WordPress returned non-JSON (HTTP ${res.statusCode}): ${data.slice(0, 120)}`
+                `WordPress returned non-JSON (HTTP ${status}): ${data.slice(0, 120)}`
               )
             );
           }
