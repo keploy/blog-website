@@ -17,7 +17,6 @@ import {
 // After first generation: every request is served from CDN (<10ms, no Lambda invoked).
 // After TTL expires: stale version served immediately, regeneration happens in background.
 // If WordPress is down during regen: Vercel keeps serving the previous good version automatically.
-// Cold-start / first request: mitigated by post-deploy warming via .github/workflows/prewarm-sitemap.yml.
 export const revalidate = 3600;
 
 export async function GET(): Promise<Response> {

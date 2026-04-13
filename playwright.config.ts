@@ -19,6 +19,9 @@ if (fs.existsSync(envTestPath)) {
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000/blog';
 const GRAPHQL_API_URL = process.env.PLAYWRIGHT_GRAPHQL_URL || 'http://localhost:4000/graphql';
+const baseUrl = new URL(BASE_URL);
+const BASE_PORT = baseUrl.port ? Number.parseInt(baseUrl.port, 10) : 3000;
+const BASE_HOST = baseUrl.hostname === 'localhost' ? '127.0.0.1' : baseUrl.hostname;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -107,16 +110,23 @@ export default defineConfig({
       stderr: 'pipe',
     },
     {
-      command: 'npm run build && npm start',
+      // E2E runs against Next dev server so it can run in sandboxed environments
+      // where `next start` may be blocked from binding to a port.
+      command: `next dev -p ${BASE_PORT} -H ${BASE_HOST}`,
       url: BASE_URL,
       reuseExistingServer: !process.env.CI,
       timeout: process.env.CI ? 180000 : 120000,
-      stdout: 'ignore',
+      stdout: 'pipe',
       stderr: 'pipe',
       env: {
         WORDPRESS_API_URL: GRAPHQL_API_URL,
         NEXT_PUBLIC_WORDPRESS_API_URL: GRAPHQL_API_URL,
         CRON_SECRET: 'test-secret',
+        // Make the cron tests deterministic even if the runner machine has these set.
+        GOOGLE_SERVICE_ACCOUNT_EMAIL: '',
+        GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: '',
+        GOOGLE_SEARCH_CONSOLE_SITE_URL: '',
+        SITEMAP_PUBLIC_URL: '',
         // Playwright fixtures have fewer posts than production — lower the
         // assertFullSitemap threshold so the ISR route returns 200, not 503.
         SITEMAP_MIN_POSTS_PER_CATEGORY: '1',
