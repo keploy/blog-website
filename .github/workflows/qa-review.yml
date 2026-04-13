@@ -1,0 +1,155 @@
+name: QA Review Agent
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+  issue_comment:
+    types: [created]
+
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: "PR number to review"
+        required: true
+      review-mode:
+        description: "full (with second-order analysis) or fast"
+        required: false
+        default: "full"
+
+  # Covers "commit pushed" cases. The job will try to resolve an associated PR and skip if none.
+  push:
+    branches:
+      - "**"
+
+jobs:
+  update-codebase-map:
+    name: Update codebase dependency map
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'push' &&
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') &&
+      github.actor != 'github-actions[bot]'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build codebase map
+        run: python qa-agent/scripts/build_codebase_map.py
+      - name: Commit updated map
+        run: |
+          git config user.name "qa-agent"
+          git config user.email "qa-agent@users.noreply.github.com"
+          git add qa-agent/codebase_map.json
+          git diff --staged --quiet || git commit -m "chore: update qa-agent codebase map"
+          git push
+
+  qa-review:
+    name: QA Review
+    runs-on: ubuntu-latest
+
+    if: |
+      github.event_name == 'pull_request' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request != null && contains(github.event.comment.body, '/qa-review')) ||
+      github.event_name == 'push'
+
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r qa-agent/requirements.txt
+
+      - name: Resolve PR number and review mode
+        id: context
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "pr_number=${{ github.event.inputs.pr-number }}" >> $GITHUB_OUTPUT
+            echo "mode=${{ github.event.inputs.review-mode }}" >> $GITHUB_OUTPUT
+            echo "skip=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          if [ "${{ github.event_name }}" = "issue_comment" ]; then
+            echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+            if echo "${{ github.event.comment.body }}" | grep -qiE "^/qa-review\\s+fast|/qa-review\\s+fast$"; then
+              echo "mode=fast" >> $GITHUB_OUTPUT
+            else
+              echo "mode=full" >> $GITHUB_OUTPUT
+            fi
+            echo "skip=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+            echo "mode=full" >> $GITHUB_OUTPUT
+            echo "skip=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # push event: attempt to resolve an associated PR for this commit
+          python - <<'PY' >> $GITHUB_OUTPUT
+          import json, os, sys, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          sha = os.environ["GITHUB_SHA"]
+          token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+          if not token:
+            print("skip=true")
+            sys.exit(0)
+          url = f"https://api.github.com/repos/{repo}/commits/{sha}/pulls"
+          req = urllib.request.Request(url)
+          req.add_header("Authorization", f"Bearer {token}")
+          req.add_header("Accept", "application/vnd.github+json")
+          # preview header required for commits/{sha}/pulls on some GitHub versions
+          req.add_header("Accept", "application/vnd.github.groot-preview+json")
+          try:
+            with urllib.request.urlopen(req, timeout=20) as resp:
+              data = json.loads(resp.read().decode("utf-8"))
+          except Exception:
+            print("skip=true")
+            sys.exit(0)
+          pr_number = None
+          for pr in data or []:
+            if pr.get("state") == "open":
+              pr_number = pr.get("number")
+              break
+          if not pr_number:
+            print("skip=true")
+            sys.exit(0)
+          print(f"pr_number={pr_number}")
+          print("mode=full")
+          print("skip=false")
+          PY
+
+      - name: Skip (no associated PR)
+        if: steps.context.outputs.skip == 'true'
+        run: echo "No open PR associated with this push; skipping QA review."
+
+      - name: Run QA review agent
+        if: steps.context.outputs.skip != 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.context.outputs.pr_number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          REVIEW_MODE: ${{ steps.context.outputs.mode }}
+        run: python qa-agent/scripts/qa_review.py
+

@@ -1,0 +1,356 @@
+{
+  "components/AuthorCard.tsx": [
+    "components/post-body.tsx"
+  ],
+  "components/AuthorHero.tsx": [
+    "components/postByAuthorMapping.tsx"
+  ],
+  "components/AuthorMapping.tsx": [
+    "pages/authors/index.tsx"
+  ],
+  "components/BlogSidebar.tsx": [
+    "components/post-body.tsx"
+  ],
+  "components/Marquee.tsx": [
+    "components/testimonials.tsx"
+  ],
+  "components/NotFoundPage.tsx": [
+    "pages/404.tsx"
+  ],
+  "components/PageLoader.tsx": [
+    "pages/_app.tsx"
+  ],
+  "components/PostHeaderAuthors.tsx": [
+    "components/post-header.tsx"
+  ],
+  "components/ScrollToTop.tsx": [
+    "components/layout.tsx"
+  ],
+  "components/TableContents.tsx": [
+    "components/post-body.tsx"
+  ],
+  "components/TagsStories.tsx": [
+    "pages/tag/[slug].tsx"
+  ],
+  "components/alert.tsx": [
+    "components/layout.tsx"
+  ],
+  "components/avatar.tsx": [
+    "components/TagsPostPreview.tsx",
+    "components/hero-post.tsx",
+    "components/latest-post.tsx",
+    "components/post-card.tsx",
+    "components/post-preview.tsx"
+  ],
+  "components/categories.tsx": [
+    "components/post-header.tsx"
+  ],
+  "components/container.tsx": [
+    "components/NotFoundPage.tsx",
+    "components/alert.tsx",
+    "pages/authors/[slug].tsx",
+    "pages/authors/index.tsx",
+    "pages/community/[slug].tsx",
+    "pages/community/index.tsx",
+    "pages/community/search.tsx",
+    "pages/index.tsx",
+    "pages/search.tsx",
+    "pages/tag/[slug].tsx",
+    "pages/tag/index.tsx",
+    "pages/technology/[slug].tsx",
+    "pages/technology/index.tsx"
+  ],
+  "components/containerSlug.tsx": [
+    "pages/community/[slug].tsx",
+    "pages/technology/[slug].tsx"
+  ],
+  "components/cover-image.tsx": [
+    "components/TagsPostPreview.tsx",
+    "components/hero-post.tsx",
+    "components/latest-post.tsx",
+    "components/post-card.tsx",
+    "components/post-header.tsx",
+    "components/post-preview.tsx"
+  ],
+  "components/date.tsx": [
+    "components/TagsPostPreview.tsx",
+    "components/hero-post.tsx",
+    "components/latest-post.tsx",
+    "components/post-card.tsx",
+    "components/post-preview.tsx"
+  ],
+  "components/footer.tsx": [
+    "components/layout.tsx"
+  ],
+  "components/header.tsx": [
+    "components/NotFoundPage.tsx",
+    "pages/authors/[slug].tsx",
+    "pages/authors/index.tsx",
+    "pages/community/[slug].tsx",
+    "pages/community/index.tsx",
+    "pages/community/search.tsx",
+    "pages/index.tsx",
+    "pages/tag/[slug].tsx",
+    "pages/tag/index.tsx",
+    "pages/technology/[slug].tsx",
+    "pages/technology/index.tsx"
+  ],
+  "components/hero-post.tsx": [
+    "pages/community/index.tsx",
+    "pages/community/search.tsx",
+    "pages/technology/index.tsx"
+  ],
+  "components/json-diff-viewer.tsx": [
+    "components/post-body.tsx"
+  ],
+  "components/layout.tsx": [
+    "pages/authors/[slug].tsx",
+    "pages/authors/index.tsx",
+    "pages/community/[slug].tsx",
+    "pages/community/index.tsx",
+    "pages/community/search.tsx",
+    "pages/index.tsx",
+    "pages/search.tsx",
+    "pages/tag/[slug].tsx",
+    "pages/tag/index.tsx",
+    "pages/technology/[slug].tsx",
+    "pages/technology/index.tsx"
+  ],
+  "components/meta.tsx": [
+    "components/layout.tsx"
+  ],
+  "components/more-stories.tsx": [
+    "pages/community/[slug].tsx",
+    "pages/community/index.tsx",
+    "pages/community/search.tsx",
+    "pages/search.tsx",
+    "pages/technology/[slug].tsx",
+    "pages/technology/index.tsx"
+  ],
+  "components/navbar/FloatingNavbar.tsx": [
+    "components/header.tsx"
+  ],
+  "components/navbar/FloatingNavbarClient.tsx": [
+    "components/navbar/FloatingNavbar.tsx"
+  ],
+  "components/navbar/github-stars.tsx": [
+    "components/navbar/FloatingNavbarClient.tsx"
+  ],
+  "components/navbar/icons.tsx": [
+    "config/nav.ts"
+  ],
+  "components/navbar/nav-card.tsx": [
+    "components/navbar/main-nav.tsx"
+  ],
+  "components/navbar/vscode-number.tsx": [
+    "components/navbar/FloatingNavbarClient.tsx"
+  ],
+  "components/post-body.tsx": [
+    "pages/community/[slug].tsx",
+    "pages/technology/[slug].tsx"
+  ],
+  "components/post-card.tsx": [
+    "components/NotFoundPage.tsx",
+    "components/TagsStories.tsx",
+    "components/more-stories.tsx",
+    "components/postByAuthorMapping.tsx",
+    "components/topBlogs.tsx"
+  ],
+  "components/post-grid.tsx": [
+    "components/NotFoundPage.tsx",
+    "components/TagsStories.tsx",
+    "components/more-stories.tsx",
+    "components/postByAuthorMapping.tsx",
+    "components/topBlogs.tsx"
+  ],
+  "components/post-header.tsx": [
+    "pages/community/[slug].tsx",
+    "pages/technology/[slug].tsx"
+  ],
+  "components/post-title.tsx": [
+    "components/post-header.tsx",
+    "pages/community/[slug].tsx",
+    "pages/technology/[slug].tsx"
+  ],
+  "components/postByAuthorMapping.tsx": [
+    "pages/authors/[slug].tsx"
+  ],
+  "components/section-separator.tsx": [
+    "pages/community/[slug].tsx",
+    "pages/technology/[slug].tsx"
+  ],
+  "components/tag.tsx": [
+    "pages/community/[slug].tsx",
+    "pages/technology/[slug].tsx"
+  ],
+  "components/testimonials.tsx": [
+    "pages/index.tsx"
+  ],
+  "components/topBlogs.tsx": [
+    "pages/index.tsx"
+  ],
+  "components/ui/accordion.tsx": [
+    "components/navbar/mobile-nav.tsx"
+  ],
+  "components/ui/button.tsx": [
+    "components/NotFoundPage.tsx",
+    "components/navbar/FloatingNavbarClient.tsx",
+    "components/navbar/mobile-nav.tsx"
+  ],
+  "components/ui/card.tsx": [
+    "components/navbar/main-nav.tsx",
+    "components/navbar/nav-card.tsx"
+  ],
+  "components/ui/collapsible.tsx": [
+    "components/navbar/FloatingNavbarClient.tsx"
+  ],
+  "components/ui/navigation-menu.tsx": [
+    "components/navbar/main-nav.tsx"
+  ],
+  "components/ui/sheet.tsx": [
+    "components/navbar/FloatingNavbarClient.tsx",
+    "components/navbar/mobile-nav.tsx"
+  ],
+  "config/nav.ts": [
+    "components/navbar/main-nav.tsx",
+    "components/navbar/mobile-nav.tsx"
+  ],
+  "config/redirect.ts": [
+    "pages/community/[slug].tsx",
+    "pages/technology/[slug].tsx"
+  ],
+  "hooks/useGithubStars.tsx": [
+    "components/navbar/github-stars.tsx"
+  ],
+  "hooks/useVSCodeInstalls.tsx": [
+    "components/navbar/vscode-number.tsx"
+  ],
+  "lib/api.ts": [
+    "components/more-stories.tsx",
+    "pages/404.tsx",
+    "pages/api/nav-latest.ts",
+    "pages/api/preview.ts",
+    "pages/api/search-all.ts",
+    "pages/authors/[slug].tsx",
+    "pages/authors/index.tsx",
+    "pages/community/[slug].tsx",
+    "pages/community/index.tsx",
+    "pages/community/search.tsx",
+    "pages/index.tsx",
+    "pages/search.tsx",
+    "pages/tag/[slug].tsx",
+    "pages/tag/index.tsx",
+    "pages/technology/[slug].tsx",
+    "pages/technology/index.tsx"
+  ],
+  "lib/constants.ts": [
+    "components/alert.tsx",
+    "components/intro.tsx",
+    "components/meta.tsx",
+    "pages/authors/[slug].tsx",
+    "pages/authors/index.tsx",
+    "pages/community/search.tsx",
+    "pages/index.tsx",
+    "pages/search.tsx",
+    "pages/tag/[slug].tsx",
+    "pages/tag/index.tsx"
+  ],
+  "lib/structured-data.ts": [
+    "pages/404.tsx",
+    "pages/_document.tsx",
+    "pages/authors/[slug].tsx",
+    "pages/authors/index.tsx",
+    "pages/community/[slug].tsx",
+    "pages/community/index.tsx",
+    "pages/community/search.tsx",
+    "pages/index.tsx",
+    "pages/search.tsx",
+    "pages/tag/[slug].tsx",
+    "pages/tag/index.tsx",
+    "pages/technology/[slug].tsx",
+    "pages/technology/index.tsx"
+  ],
+  "lib/utils/utils.ts": [
+    "components/header.tsx",
+    "components/navbar/main-nav.tsx",
+    "components/navbar/mobile-nav.tsx",
+    "components/ui/accordion.tsx",
+    "components/ui/button.tsx",
+    "components/ui/card.tsx",
+    "components/ui/collapsible.tsx",
+    "components/ui/navigation-menu.tsx",
+    "components/ui/sheet.tsx"
+  ],
+  "services/Tweets.tsx": [
+    "components/testimonials.tsx"
+  ],
+  "services/constants.ts": [
+    "components/subscribe-newsletter.tsx"
+  ],
+  "types/author.ts": [
+    "types/post.ts"
+  ],
+  "types/post.ts": [
+    "components/AuthorMapping.tsx",
+    "components/NotFoundPage.tsx",
+    "components/TagsPostPreview.tsx",
+    "components/avatar.tsx",
+    "components/cover-image.tsx",
+    "components/hero-post.tsx",
+    "components/latest-post.tsx",
+    "components/layout.tsx",
+    "components/meta.tsx",
+    "components/more-stories.tsx",
+    "components/post-body.tsx",
+    "components/post-card.tsx",
+    "components/post-preview.tsx",
+    "components/postByAuthorMapping.tsx",
+    "pages/authors/index.tsx",
+    "pages/community/search.tsx",
+    "pages/search.tsx"
+  ],
+  "types/tag.ts": [
+    "components/tag.tsx",
+    "types/post.ts"
+  ],
+  "utils/aiReferralTracker.ts": [
+    "pages/_app.tsx"
+  ],
+  "utils/calculateReadingTime.ts": [
+    "pages/community/[slug].tsx",
+    "pages/technology/[slug].tsx"
+  ],
+  "utils/excerpt.ts": [
+    "components/NotFoundPage.tsx",
+    "components/TagsStories.tsx",
+    "components/more-stories.tsx",
+    "components/topBlogs.tsx",
+    "pages/community/search.tsx",
+    "pages/technology/index.tsx"
+  ],
+  "utils/extractAuthorData.ts": [
+    "components/postByAuthorMapping.tsx"
+  ],
+  "utils/sanitizeAuthorSlug.ts": [
+    "components/AuthorCard.tsx",
+    "components/AuthorMapping.tsx",
+    "components/PostHeaderAuthors.tsx",
+    "components/ReviewingAuthor.tsx",
+    "components/author-description.jsx",
+    "lib/structured-data.ts",
+    "pages/authors/[slug].tsx"
+  ],
+  "utils/sanitizeStringForUrl.ts": [
+    "components/TableContents.tsx",
+    "components/post-body.tsx",
+    "utils/sanitizeAuthorSlug.ts"
+  ],
+  "utils/seo.ts": [
+    "pages/community/[slug].tsx",
+    "pages/technology/[slug].tsx"
+  ],
+  "utils/tagIcons.ts": [
+    "components/tag.tsx",
+    "pages/tag/index.tsx"
+  ]
+}
