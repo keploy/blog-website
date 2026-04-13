@@ -179,7 +179,7 @@ export default function Tag({
   return (
 
 
-    <div className="max-w-2xl w-full mx-auto px-4 md:px-0">
+    <div data-testid="tags-section" className="max-w-2xl w-full mx-auto px-4 md:px-0">
 
       {/* Left-aligned heading */}
       <h3 className="mt-12 mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100 text-left">
@@ -194,7 +194,7 @@ export default function Tag({
           const { IconComp, colorScheme } = renderTagButton(name, prev as string | undefined);
           
           return (
-            <Link key={index} href={`/tag/${name}`}>
+            <Link key={index} href={`/tag/${name}`} data-testid="tag-link">
               <button
                 className={`
                   group inline-flex items-center gap-1.5 md:gap-2.5

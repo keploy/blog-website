@@ -48,26 +48,6 @@
         <priority>0.80</priority>
     </url>
     <url>
-        <loc>https://keploy.io/gittogether</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/about</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/security</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/privacy-policy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
         <loc>https://keploy.io/blog/technology/automated-e2e-tests-using-property-based-testing-part-ii</loc>
         <lastmod>2024-03-07T09:25:36+00:00</lastmod>
         <priority>0.64</priority>
@@ -548,16 +528,6 @@
         <priority>0.64</priority>
     </url>
     <url>
-        <loc>https://keploy.io/blog/technology/canary-testing-a-comprehensive-guide-for-developers</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/mock-vs-stub-vs-fake-understand-the-difference</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.64</priority>
-    </url>
-    <url>
         <loc>https://keploy.io/blog/authors/Mehfooz</loc>
         <lastmod>2024-03-07T09:25:36+00:00</lastmod>
         <priority>0.64</priority>
@@ -661,16 +631,6 @@
         <loc>https://keploy.io/blog/tag/keploy</loc>
         <lastmod>2024-03-07T09:25:36+00:00</lastmod>
         <priority>0.64</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/reset-password</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/signup</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
     </url>
     <url>
         <loc>https://keploy.io/blog/authors/charan</loc>
@@ -1606,46 +1566,6 @@
         <loc>https://keploy.io/blog/tag/beginners</loc>
         <lastmod>2024-03-07T09:25:36+00:00</lastmod>
         <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/mongodb-in-mock-mode-acting-the-server-part</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/technology/writing-test-cases-for-cron-jobs-testing</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/capture-grpc-traffic-going-out-from-a-server</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/automated-e2e-tests-using-property-based-testing-part-ii</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/automated-end-to-end-tests-using-property-based-testing-part-i</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/integration-vs-e2e-testing-what-worked-for-me-as-a-charm</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/blog/community/go-mocks-and-stubs-made-easy</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.51</priority>
-    </url>
-    <url>
-        <loc>https://keploy.io/signin</loc>
-        <lastmod>2024-03-07T09:25:36+00:00</lastmod>
-        <priority>0.41</priority>
     </url>
 
 </urlset>

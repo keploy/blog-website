@@ -1,10 +1,46 @@
+# AI Crawler Allow Directives
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Block Bytespider
+User-agent: Bytespider
+Disallow: /
+
+# Default rules
 User-agent: *
-Disallow:
 Disallow: /cgi-bin/
-Disallow: /docs.keploy.io/
-Disallow: /community.keploy.io/
-Disallow: /blog.keploy.io/
-Disallow: /telemetry.keploy.io/
-Disallow: /student.keploy.io/
 Disallow: /wp/
-Sitemap: https://www.keploy.io/blog/sitemap.xml
+Sitemap: https://keploy.io/blog/sitemap.xml

@@ -8,26 +8,28 @@ import { getAllPostsFromTags, getAllTags } from "../../lib/api";
 import TagsStories from "../../components/TagsStories";
 import { useRouter } from "next/router";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
-export default function PostByTags({ postsByTags,preview}) {
+export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp }) {
   const posts = postsByTags?.edges || [];
   const router = useRouter();
-  const {slug} = router.query;
+  const tagSlug = tagSlugProp || (Array.isArray(router.query.slug) ? router.query.slug[0] : (router.query.slug || ''));
+  const tagDisplay = tagSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) || 'All Topics';
   return (
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`${slug} posts`}
-      Description={`Posts by tag-${slug}`}
+      Title={`${tagDisplay} posts`}
+      Description={`Browse all Keploy blog posts tagged "${tagDisplay}" — tutorials, guides, and expert insights on ${tagDisplay} for developers and QA engineers.`}
       structuredData={[
         getBreadcrumbListSchema([
           { name: "Home", url: SITE_URL },
           { name: "Tags", url: `${SITE_URL}/tag` },
-          { name: `${slug || "Tag"}`, url: `${SITE_URL}/tag/${slug || ""}` },
+          { name: `${tagDisplay || "Tag"}`, url: `${SITE_URL}/tag/${tagSlug || ""}` },
         ]),
       ]}
+      canonicalUrl={tagSlug ? `${SITE_URL}/tag/${tagSlug}` : `${SITE_URL}/tag`}
     >
       <Head>
-        <title>{`${slug} posts`}</title>
+        <title>{`${tagDisplay} posts`}</title>
       </Head>
       <Header />
       <Container>
@@ -66,7 +68,7 @@ export const getStaticProps: GetStaticProps = async ({
     const postsByTags = await getAllPostsFromTags(slug.toString(), preview);
 
     return {
-      props: { postsByTags: postsByTags || { edges: [] }, preview },
+      props: { postsByTags: postsByTags || { edges: [] }, preview, tagSlug: slug },
       revalidate: 10,
     };
   } catch (error) {

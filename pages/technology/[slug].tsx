@@ -14,7 +14,6 @@ import {
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
-import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
 import { useRef, useState, useEffect } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
@@ -27,6 +26,7 @@ import {
   getBreadcrumbListSchema,
   SITE_URL,
 } from "../../lib/structured-data";
+import { sanitizeTitle, getSafeDescription } from "../../utils/seo";
 
 const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
@@ -130,9 +130,12 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
   useEffect(() => {
     if (!router.isFallback && !post?.slug) {
-      router.push("/404"); 
+      router.push("/404");
     }
   }, [router, router.isFallback, post]);
+
+  const safeTitle = sanitizeTitle(post?.title);
+  const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
 
   const postUrl = post?.slug ? `${SITE_URL}/technology/${post.slug}` : `${SITE_URL}/technology`;
   const structuredData = [];
@@ -141,15 +144,17 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       getBreadcrumbListSchema([
         { name: "Home", url: SITE_URL },
         { name: "Technology", url: `${SITE_URL}/technology` },
-        { name: post?.title || "Post", url: postUrl },
+        { name: safeTitle || "Post", url: postUrl },
       ]),
       getBlogPostingSchema({
-        title: post?.title || "Keploy Blog Post",
+        title: safeTitle || "Keploy Blog Post",
         url: postUrl,
         datePublished: post?.date,
-        description: post?.seo?.metaDesc,
+        dateModified: post?.modified,
+        description: safeDescription,
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
+        articleSection: post?.categories?.edges?.[0]?.node?.name || "Technology",
       })
     );
   } else {
@@ -165,20 +170,24 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     <Layout
       preview={preview}
       featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
-      Title={post?.seo.title || "Loading..."}
-      Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
+      Title={post?.seo?.title || "Loading..."}
+      Description={safeDescription}
       structuredData={structuredData}
+      canonicalUrl={!router.isFallback && post?.slug ? postUrl : undefined}
+      ogType="article"
+      publishedDate={post?.date}
     >
       <Header readProgress={readProgress} />
       <Container>
+        <div className="-mt-16 md:-mt-20">
         {router.isFallback ? (
           <PostTitle>Loading…</PostTitle>
         ) : (
           <>
-            <PrismLoader /> {/* Load Prism.js here */}
             <article>
               <Head>
                 <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
+                {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
               </Head>
               <PostHeader
                 title={post?.title || "Loading..."}
@@ -189,38 +198,46 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 BlogWriter={blogwriter}
                 BlogReviewer={blogreviewer}
                 TimeToRead={time}
+                tags={post?.tags}
               />
             </article>
           </>
         )}
-      </Container>
-      <ContainerSlug>
-        <div ref={postBodyRef}>
-          <PostBody
-            content={
-              post?.content && postBody({ content: post?.content, post })
-            }
-            authorName={post?.ppmaAuthorName || ""}
-            slug={slug}
-            ReviewAuthorDetails={
-              reviewAuthorDetails &&
-              reviewAuthorDetails?.length > 0 &&
-              reviewAuthorDetails[postBodyReviewerAuthor]
-            }
-          />
         </div>
-      </ContainerSlug>
-      <Container>
-        <article>
-          <footer>
-            {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />}
-          </footer>
-          <SectionSeparator />
-          {morePosts?.length > 0 && (
-            <MoreStories isIndex={false} posts={morePosts} isCommunity={false} showSearch={true} />
-          )}
-        </article>
       </Container>
+      {/* DM Sans wrapper — scoped to blog article content only */}
+      <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        <ContainerSlug>
+          <div ref={postBodyRef}>
+            <PostBody
+              content={
+                post?.content && postBody({ content: post?.content, post })
+              }
+              authorName={post?.ppmaAuthorName || ""}
+              authorImageUrl={avatarImgSrc || "/blog/images/author.png"}
+              authorDescription={blogWriterDescription || "An author for keploy's blog."}
+              slug={slug}
+              ReviewAuthorDetails={
+                reviewAuthorDetails &&
+                reviewAuthorDetails?.length > 0 &&
+                reviewAuthorDetails[postBodyReviewerAuthor]
+              }
+              categories={post?.categories}
+            />
+          </div>
+        </ContainerSlug>
+        <Container>
+          <article>
+            <footer>
+              {post?.tags?.edges?.length > 0 && <Tags tags={post?.tags} />}
+            </footer>
+            <SectionSeparator />
+            {morePosts?.length > 0 && (
+              <MoreStories isIndex={false} posts={morePosts} isCommunity={false} showSearch={true} />
+            )}
+          </article>
+        </Container>
+      </div> {/* end DM Sans wrapper */}
     </Layout>
   );
 }
@@ -256,18 +273,46 @@ export const getStaticProps: GetStaticProps = async ({
       };
     }
 
+    // Validate that this post belongs to the "technology" category.
+    // Without this check, posts from "community" are also accessible at
+    // /technology/SLUG (duplicate content). If the post is not in the
+    // "technology" category, redirect to the correct category URL.
+    const postCategories = data.post?.categories?.edges?.map(
+      (edge: { node: { name: string } }) => edge.node.name.toLowerCase()
+    ) || [];
+    if (!postCategories.includes("technology")) {
+      // Post belongs to a different category — 301 redirect to preserve SEO signals.
+      // This only runs at ISR runtime (fallback: true), not during next build,
+      // because getStaticPaths only returns paths from the technology category query.
+      const correctCategory = postCategories.find((c: string) =>
+        ['community', 'technology'].includes(c)
+      );
+      if (correctCategory) {
+        return {
+          redirect: {
+            destination: `/${correctCategory}/${data.post.slug}`,
+            permanent: true,
+          },
+        };
+      }
+      return {
+        notFound: true,
+        revalidate: 60,
+      };
+    }
+
     const moreStories = await getMoreStoriesForSlugs(data.post?.tags, data.post?.slug);
     const authorDetails = await Promise.all([
       getReviewAuthorDetails("neha"),
       getReviewAuthorDetails("Jain"),
     ]);
 
-    // If we resolved a redirect slug, send a proper redirect response
+    // If we resolved a redirect slug, send a proper 301 redirect response
     if (redirectSlug) {
       return {
         redirect: {
           destination: `/technology/${redirectSlug}`,
-          permanent: false,
+          permanent: true,
         },
       };
     }

@@ -31,10 +31,11 @@ export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }
   // 3. Filtering Logic (This controls Hero vs List)
   useEffect(() => {
     const term = searchTerm.toLowerCase();
-    const results = allPosts.filter(({ node }) => 
-      node.title.toLowerCase().includes(term) ||
-      node.excerpt.toLowerCase().includes(term)
-    );
+    const results = allPosts
+      .filter(({ node }) =>
+        (node.title || '').toLowerCase().includes(term) ||
+        (node.excerpt || '').toLowerCase().includes(term)
+      );
     setFilteredPosts(results);
   }, [searchTerm, allPosts]);
 
@@ -66,11 +67,12 @@ export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }
       preview={false} 
       featuredImage={heroPost?.featuredImage?.node.sourceUrl || HOME_OG_IMAGE_URL} 
       Title={heroPost?.title || `Search: ${searchTerm}`} 
-      Description={`Search results for ${searchTerm}`}
+      Description={searchTerm ? `Search results for "${searchTerm}" in the Keploy community blog — developer stories, tutorials, and open-source guides.` : `Search the Keploy community blog for developer stories, open-source contributions, and hands-on engineering tutorials.`}
       structuredData={structuredData}
     >
       <Head>
         <title>Keploy Community Search</title>
+        <meta name="robots" content="noindex, follow" />
       </Head>
       
       <Header />
