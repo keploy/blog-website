@@ -17,11 +17,24 @@ if (fs.existsSync(envTestPath)) {
   );
 }
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:3000/blog';
-const GRAPHQL_API_URL = process.env.PLAYWRIGHT_GRAPHQL_URL || 'http://localhost:4000/graphql';
-const baseUrl = new URL(BASE_URL);
+function normalizeLocalhostUrl(value: string) {
+  const url = new URL(value);
+  // Playwright and Node may resolve "localhost" to IPv6 (::1) first.
+  // Bind and request consistently over IPv4 so webServer readiness checks never flake.
+  if (url.hostname === 'localhost') url.hostname = '127.0.0.1';
+  return url;
+}
+
+const rawBaseUrl = process.env.BASE_URL || 'http://localhost:3000/blog';
+const rawGraphqlUrl = process.env.PLAYWRIGHT_GRAPHQL_URL || 'http://localhost:4000/graphql';
+
+const baseUrl = normalizeLocalhostUrl(rawBaseUrl);
+const graphqlUrl = normalizeLocalhostUrl(rawGraphqlUrl);
+
+const BASE_URL = baseUrl.toString();
+const GRAPHQL_API_URL = graphqlUrl.toString();
 const BASE_PORT = baseUrl.port ? Number.parseInt(baseUrl.port, 10) : 3000;
-const BASE_HOST = baseUrl.hostname === 'localhost' ? '127.0.0.1' : baseUrl.hostname;
+const BASE_HOST = baseUrl.hostname;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
