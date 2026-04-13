@@ -212,7 +212,12 @@ module.exports = {
       // ──────────────────────────────────────────────────────────
       {
         source: '/community/end-to-end-testing-and-why-do-you-need-it',
-        destination: '/community/top-5-cypress-alternatives-for-web-testing-and-automation',
+        destination: '/community/end-to-end-testing-guide',
+        permanent: true,
+      },
+      {
+        source: '/community/rest-api-testing-guide',
+        destination: '/community/api-testing-strategies',
         permanent: true,
       },
       {
