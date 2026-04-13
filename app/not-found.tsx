@@ -14,12 +14,17 @@ import { getAllPostsForTechnology, getAllPostsForCommunity } from "../lib/api";
 import NotFoundClient from "./not-found-client";
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  return Promise.race([
-    promise,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(`NotFound posts fetch timed out after ${timeoutMs}ms`)), timeoutMs)
-    ),
-  ]);
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  const timeoutPromise = new Promise<T>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(`NotFound posts fetch timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+  });
+
+  return Promise.race([promise, timeoutPromise]).finally(() => {
+    if (timeoutId !== undefined) clearTimeout(timeoutId);
+  });
 }
 
 export default async function NotFound() {
