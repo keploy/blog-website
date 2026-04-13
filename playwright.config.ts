@@ -31,9 +31,32 @@ const rawGraphqlUrl = process.env.PLAYWRIGHT_GRAPHQL_URL || 'http://localhost:40
 const baseUrl = normalizeLocalhostUrl(rawBaseUrl);
 const graphqlUrl = normalizeLocalhostUrl(rawGraphqlUrl);
 
+// webServer spawns local processes, so we require an explicit port (or default one
+// for local loopback) to avoid mismatches between the URL being tested and the
+// port Next.js is started on.
+if (!baseUrl.port) {
+  if (baseUrl.hostname === '127.0.0.1') baseUrl.port = '3000';
+  else {
+    throw new Error(
+      `BASE_URL must include an explicit port when running Playwright locally (got "${rawBaseUrl}"). ` +
+        `Example: "http://127.0.0.1:3000/blog".`
+    );
+  }
+}
+
+if (!graphqlUrl.port) {
+  if (graphqlUrl.hostname === '127.0.0.1') graphqlUrl.port = '4000';
+  else {
+    throw new Error(
+      `PLAYWRIGHT_GRAPHQL_URL must include an explicit port when running Playwright locally (got "${rawGraphqlUrl}"). ` +
+        `Example: "http://127.0.0.1:4000/graphql".`
+    );
+  }
+}
+
 const BASE_URL = baseUrl.toString();
 const GRAPHQL_API_URL = graphqlUrl.toString();
-const BASE_PORT = baseUrl.port ? Number.parseInt(baseUrl.port, 10) : 3000;
+const BASE_PORT = Number.parseInt(baseUrl.port, 10);
 const BASE_HOST = baseUrl.hostname;
 
 /**
