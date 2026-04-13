@@ -121,8 +121,25 @@ export async function getAllTags() {
     const tags = edges.map((edge) => edge.node);
     allTags = allTags.concat(tags);
 
-    hasNextPage = data?.tags?.pageInfo?.hasNextPage ?? false;
-    endCursor = data?.tags?.pageInfo?.endCursor ?? null;
+    const pageInfo = data?.tags?.pageInfo;
+    if (!pageInfo) {
+      throw new Error(
+        "WordPress GraphQL response missing tags.pageInfo for AllTags query. " +
+          "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
+      );
+    }
+
+    const nextCursor = pageInfo.endCursor ?? null;
+    hasNextPage = pageInfo.hasNextPage ?? false;
+    // Guard: if WordPress claims there is a next page but returns no advancing cursor,
+    // the loop would re-fetch the same page forever.
+    if (hasNextPage && !nextCursor) {
+      throw new Error("WordPress pagination error: hasNextPage is true but endCursor is missing (AllTags)");
+    }
+    if (hasNextPage && nextCursor === endCursor) {
+      throw new Error("WordPress pagination error: endCursor did not advance between pages (AllTags)");
+    }
+    endCursor = nextCursor;
   }
   return allTags;
 }
@@ -511,8 +528,18 @@ export async function getAllAuthors() {
           "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
       );
     }
+
+    const nextCursor = pageInfo.endCursor ?? null;
     hasNextPage = pageInfo.hasNextPage ?? false;
-    endCursor = pageInfo.endCursor ?? null;
+    // Guard: if WordPress claims there is a next page but returns no advancing cursor,
+    // the loop would re-fetch the same page forever.
+    if (hasNextPage && !nextCursor) {
+      throw new Error("WordPress pagination error: hasNextPage is true but endCursor is missing (getAllAuthors)");
+    }
+    if (hasNextPage && nextCursor === endCursor) {
+      throw new Error("WordPress pagination error: endCursor did not advance between pages (getAllAuthors)");
+    }
+    endCursor = nextCursor;
   }
   return { edges: allAuthors };
 }
@@ -575,8 +602,18 @@ export async function getPostsByAuthor() {
           "Verify WORDPRESS_API_URL is reachable and WPGraphQL is returning the expected schema."
       );
     }
+
+    const nextCursor = pageInfo.endCursor ?? null;
     hasNextPage = pageInfo.hasNextPage ?? false;
-    endCursor = pageInfo.endCursor ?? null;
+    // Guard: if WordPress claims there is a next page but returns no advancing cursor,
+    // the loop would re-fetch the same page forever.
+    if (hasNextPage && !nextCursor) {
+      throw new Error("WordPress pagination error: hasNextPage is true but endCursor is missing (getPostsByAuthor)");
+    }
+    if (hasNextPage && nextCursor === endCursor) {
+      throw new Error("WordPress pagination error: endCursor did not advance between pages (getPostsByAuthor)");
+    }
+    endCursor = nextCursor;
   }
   return { edges: allPosts };
 }
