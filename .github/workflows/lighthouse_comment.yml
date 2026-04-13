@@ -1,10 +1,9 @@
-name: Lighthouse – Comment
+name: Lighthouse CI
 
 on:
-  workflow_run:
-    workflows: ["Lighthouse – Run"]
-    types:
-      - completed
+ pull_request:
+  branches:
+    - main
 
 permissions:
   issues: write
@@ -13,7 +12,9 @@ permissions:
 jobs:
   comment:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Download Lighthouse comment artifact
         uses: actions/download-artifact@v4
