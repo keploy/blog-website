@@ -92,10 +92,19 @@ Disallow: /
 
 User-agent: *
 Allow: /
+# Allow /api/proxy-image so crawlers can render external avatars and
+# remote images used throughout the blog UI. All other /api/* endpoints
+# remain disallowed.
+Allow: /api/proxy-image
 Disallow: /cgi-bin/
 Disallow: /wp/
 Disallow: /api/
-Disallow: /search
+# /search is not disallowed here — pages/search.tsx already emits
+# <meta name="robots" content="noindex, follow" />. Blocking via
+# robots.txt would hide the noindex signal from crawlers and cause
+# "Indexed, though blocked by robots.txt" warnings. Pick one strategy;
+# we keep the page crawlable and rely on the meta tag. See
+# https://developers.google.com/search/docs/crawling-indexing/block-indexing
 
 # =============================================================================
 # Sitemaps
