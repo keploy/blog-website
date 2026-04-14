@@ -19,6 +19,147 @@
       "source": "/blog/technology/regression-testing-tools-rankings-2025",
       "destination": "/blog/technology/regression-testing-tools",
       "permanent": true
+    },
+
+    {
+      "source": "/blog/community/bitbucket-self-hosting-running-ebpfprivileged-programs",
+      "destination": "/blog/technology/bitbucket-self-hosting-running-ebpfprivileged-programs",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/building-a-cli-tool-in-go-with-cobra-and-viper",
+      "destination": "/blog/technology/building-a-cli-tool-in-go-with-cobra-and-viper",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/create-stunning-parallax-animations-on-your-website",
+      "destination": "/blog/technology/create-stunning-parallax-animations-on-your-website",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/gemini-pro-vs-openai-benchmark-ai-for-software-testing",
+      "destination": "/blog/technology/gemini-pro-vs-openai-benchmark-ai-for-software-testing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/how-to-use-covdata-for-better-code-coverage-in-go",
+      "destination": "/blog/technology/how-to-use-covdata-for-better-code-coverage-in-go",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/integration-of-e2e-testing-in-a-cicd-pipeline",
+      "destination": "/blog/technology/integration-of-e2e-testing-in-a-cicd-pipeline",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/mastering-nyc-enhance-javascript-typescript-test-coverage",
+      "destination": "/blog/technology/mastering-nyc-enhance-javascript-typescript-test-coverage",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/migration-guide-from-restassured-to-keploy",
+      "destination": "/blog/technology/migration-guide-from-restassured-to-keploy",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/protocol-parsing-guide",
+      "destination": "/blog/technology/protocol-parsing-guide",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/revolutionising-unit-test-generation-with-llms",
+      "destination": "/blog/technology/revolutionising-unit-test-generation-with-llms",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/scram-authentication-overcoming-mock-testing-challenges",
+      "destination": "/blog/technology/scram-authentication-overcoming-mock-testing-challenges",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/secure-your-database-communications-with-ssl-in-docker-containers-learn-to-set-up-ssl-for-mongodb-and-postgresql-efficiently",
+      "destination": "/blog/technology/secure-your-database-communications-with-ssl-in-docker-containers-learn-to-set-up-ssl-for-mongodb-and-postgresql-efficiently",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/using-tc-bpf-program-to-redirect-dns-traffic-in-docker-containers",
+      "destination": "/blog/technology/using-tc-bpf-program-to-redirect-dns-traffic-in-docker-containers",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/canary-testing-a-comprehensive-guide-for-developers",
+      "destination": "/blog/community/canary-testing-a-comprehensive-guide-for-developers",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/codium-vs-copilot-which-ai-coding-assistant-is-best-for-you",
+      "destination": "/blog/community/codium-vs-copilot-which-ai-coding-assistant-is-best-for-you",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/decoding-brd-a-devs-guide-to-functional-and-non-functional-requirements-in-testing",
+      "destination": "/blog/community/decoding-brd-a-devs-guide-to-functional-and-non-functional-requirements-in-testing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/decoding-http2-traffic-is-hard-but-ebpf-can-help",
+      "destination": "/blog/community/decoding-http2-traffic-is-hard-but-ebpf-can-help",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/how-to-generate-test-cases-with-automation-tools",
+      "destination": "/blog/community/how-to-generate-test-cases-with-automation-tools",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/mock-vs-stub-vs-fake-understand-the-difference",
+      "destination": "/blog/community/mock-vs-stub-vs-fake-understand-the-difference",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/performance-testing-guide-to-ensure-your-software-performs-at-its-best",
+      "destination": "/blog/community/performance-testing-guide-to-ensure-your-software-performs-at-its-best",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/python-get-current-directory",
+      "destination": "/blog/community/python-get-current-directory",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/top-5-cypress-alternatives-for-web-testing-and-automation",
+      "destination": "/blog/community/top-5-cypress-alternatives-for-web-testing-and-automation",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/understanding-branch-coverage-in-software-testing",
+      "destination": "/blog/community/understanding-branch-coverage-in-software-testing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/understanding-statement-coverage-in-software-testing",
+      "destination": "/blog/community/understanding-statement-coverage-in-software-testing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/what-is-postgres-wire-protocol",
+      "destination": "/blog/community/what-is-postgres-wire-protocol",
+      "permanent": true
+    },
+    {
+      "source": "/blog/technology/writing-test-cases-for-cron-jobs-testing",
+      "destination": "/blog/community/writing-test-cases-for-cron-jobs-testing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/end-to-end-testing-and-why-do-you-need-it",
+      "destination": "/blog/community/integration-of-e2e-testing-in-a-cicd-pipeline",
+      "permanent": true
+    },
+    {
+      "source": "/blog/community/https-keploy-io-blog-community-cursor-vs-github-copilot",
+      "destination": "/blog/community/cursor-vs-copilot",
+      "permanent": true
     }
   ],
   "headers": [
