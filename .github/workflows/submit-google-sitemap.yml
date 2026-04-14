@@ -16,49 +16,87 @@ jobs:
     steps:
       - name: Validate Google Search Console secrets
         env:
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
           GOOGLE_SEARCH_CONSOLE_SITE_URL: ${{ secrets.GOOGLE_SEARCH_CONSOLE_SITE_URL }}
         run: |
           set -euo pipefail
 
-          for name in GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET GOOGLE_REFRESH_TOKEN GOOGLE_SEARCH_CONSOLE_SITE_URL; do
+          for name in GOOGLE_SERVICE_ACCOUNT_EMAIL GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY GOOGLE_SEARCH_CONSOLE_SITE_URL; do
             if [ -z "${!name}" ]; then
               if [ "$name" = "GOOGLE_SEARCH_CONSOLE_SITE_URL" ]; then
                 echo "::error::Missing required secret: ${name}. Add it in GitHub Settings > Secrets and variables > Actions. Expected format: the exact Search Console property, for example sc-domain:keploy.io or https://keploy.io/."
+              elif [ "$name" = "GOOGLE_SERVICE_ACCOUNT_EMAIL" ]; then
+                echo "::error::Missing required secret: ${name}. Add the Google service account email in GitHub Settings > Secrets and variables > Actions, then re-run this workflow."
               else
-                echo "::error::Missing required secret: ${name}. Add it in GitHub Settings > Secrets and variables > Actions, then re-run this workflow."
+                echo "::error::Missing required secret: ${name}. Add the Google service account private key in GitHub Settings > Secrets and variables > Actions, then re-run this workflow."
               fi
               exit 1
             fi
           done
 
-      - name: Exchange refresh token for access token
+      - name: Exchange service account JWT for access token
         id: auth
         env:
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
         run: |
           set -euo pipefail
 
+          printf '%b' "${GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY}" > /tmp/google-service-account.pem
+          chmod 600 /tmp/google-service-account.pem
+
+          JWT_PARTS=$(python3 - <<'PY'
+          import base64
+          import json
+          import os
+          import time
+
+          def b64url(data: bytes) -> str:
+              return base64.urlsafe_b64encode(data).rstrip(b"=").decode("ascii")
+
+          now = int(time.time())
+          header = {"alg": "RS256", "typ": "JWT"}
+          claim_set = {
+              "iss": os.environ["GOOGLE_SERVICE_ACCOUNT_EMAIL"],
+              "scope": "https://www.googleapis.com/auth/webmasters",
+              "aud": "https://oauth2.googleapis.com/token",
+              "iat": now,
+              "exp": now + 3600,
+          }
+
+          print(b64url(json.dumps(header, separators=(",", ":")).encode("utf-8")))
+          print(b64url(json.dumps(claim_set, separators=(",", ":")).encode("utf-8")))
+          PY
+          )
+
+          JWT_HEADER=$(printf '%s\n' "$JWT_PARTS" | sed -n '1p')
+          JWT_PAYLOAD=$(printf '%s\n' "$JWT_PARTS" | sed -n '2p')
+          JWT_UNSIGNED="${JWT_HEADER}.${JWT_PAYLOAD}"
+
+          JWT_SIGNATURE=$(printf '%s' "$JWT_UNSIGNED" \
+            | openssl dgst -sha256 -sign /tmp/google-service-account.pem -binary \
+            | openssl base64 -A \
+            | tr '+/' '-_' \
+            | tr -d '=')
+
+          JWT_ASSERTION="${JWT_UNSIGNED}.${JWT_SIGNATURE}"
+
           TOKEN_RESPONSE=$(curl -sS --fail-with-body https://oauth2.googleapis.com/token \
-            -d client_id="${GOOGLE_CLIENT_ID}" \
-            -d client_secret="${GOOGLE_CLIENT_SECRET}" \
-            -d refresh_token="${GOOGLE_REFRESH_TOKEN}" \
-            -d grant_type=refresh_token)
+            -d grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer \
+            --data-urlencode assertion="${JWT_ASSERTION}")
 
           ACCESS_TOKEN=$(printf '%s' "$TOKEN_RESPONSE" | jq -r '.access_token')
 
           if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
-            echo "::error::Failed to retrieve Google access token. Next step: verify that the refresh token is still valid and not revoked, confirm the OAuth client ID and client secret match the token, and ensure the Google Search Console API is enabled for the Google Cloud project."
+            echo "::error::Failed to retrieve Google access token. Next step: verify that the service account email and private key match, ensure the Search Console API is enabled for the Google Cloud project, and confirm the service account has access to the Search Console property."
             printf '%s\n' "$TOKEN_RESPONSE"
             exit 1
           fi
 
           echo "::add-mask::$ACCESS_TOKEN"
           echo "access_token=$ACCESS_TOKEN" >> "$GITHUB_OUTPUT"
+          rm -f /tmp/google-service-account.pem
 
       - name: Submit sitemap to Google Search Console
         env:
