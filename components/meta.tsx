@@ -52,12 +52,12 @@ export default function Meta({
       {/* Twitter Summary card images must be at least 120x120px */}
       <meta name="twitter:image" content={featuredImage} />
 
-      <meta name="msapplication-TileColor" content="#000000" />
+      <meta name="msapplication-TileColor" content="#FF914D" />
       <meta
         name="msapplication-config"
         content="/blog/favicon/browserconfig.xml"
       />
-      <meta name="theme-color" content="#000" />
+      <meta name="theme-color" content="#FF914D" />
       <link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" />
       <meta name="description" content={Description} />
       <meta property="og:type" content={ogType} />
