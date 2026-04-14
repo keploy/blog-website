@@ -14,7 +14,7 @@ function requireMainSiteUrl() {
   if (!URL.canParse(configuredSiteUrl)) {
     throw new Error("MAIN_SITE_URL must be a valid absolute URL when provided.");
   }
-  return configuredSiteUrl.replace(/\/$/, "");
+  return new URL(configuredSiteUrl).origin;
 }
 
 function requireWordPressEndpoint() {
