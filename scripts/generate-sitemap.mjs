@@ -222,5 +222,8 @@ async function main() {
 
 main().catch((error) => {
   console.error("[generate-sitemap] Failed:", error);
+  console.error(
+    "[generate-sitemap] Next step: confirm WORDPRESS_API_URL is set, reachable, and returns WPGraphQL data; confirm MAIN_SITE_URL is a valid absolute URL when overridden."
+  );
   process.exitCode = 1;
 });
