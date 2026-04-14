@@ -19,6 +19,7 @@ type PostsPage = {
       pageInfo: { hasNextPage: boolean; endCursor: string | null };
     };
   };
+  errors?: { message: string }[];
 };
 
 async function fetchAllPosts(): Promise<PostNode[]> {
@@ -43,6 +44,14 @@ async function fetchAllPosts(): Promise<PostNode[]> {
       throw new Error(`WP GraphQL returned HTTP ${res.status}`);
     }
     const json = (await res.json()) as PostsPage;
+    // WPGraphQL can return HTTP 200 with a top-level errors array (and
+    // possibly partial data). Surface those as hard failures so the sitemap
+    // is never silently rendered with missing or partial post lists.
+    if (json.errors && json.errors.length > 0) {
+      throw new Error(
+        `WP GraphQL errors: ${json.errors.map((e) => e.message).join("; ")}`
+      );
+    }
     const page = json.data?.posts;
     if (!page) break;
     for (const edge of page.edges) all.push(edge.node);

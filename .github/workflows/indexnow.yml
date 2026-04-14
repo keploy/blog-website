@@ -30,6 +30,16 @@ jobs:
             -H "Content-Type: application/json" \
             -d "$QUERY")
 
+          # WPGraphQL can return HTTP 200 with a top-level errors array and
+          # partial/empty data. Treat that as a hard failure so the scheduled
+          # run surfaces CMS/query issues instead of silently submitting an
+          # incomplete URL list (or falling back to just the blog index).
+          if printf '%s' "$RESPONSE" | jq -e 'has("errors") and (.errors | length > 0)' >/dev/null; then
+            echo "::error::WordPress GraphQL returned errors:"
+            printf '%s' "$RESPONSE" | jq '.errors'
+            exit 1
+          fi
+
           # Map each post's category -> route. Only community/technology are
           # exposed as blog URLs (see pages/community/[slug].tsx and
           # pages/technology/[slug].tsx).

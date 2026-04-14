@@ -109,6 +109,20 @@ test.describe('SEO and Meta Tags Configuration', () => {
         expect(foundValidSchema).toBe(true);
     });
 
+    test('sitemap.xml endpoint should return XML with the static blog entries', async ({ request }) => {
+        const response = await request.get('/sitemap.xml');
+        expect(response.status()).toBe(200);
+        expect(response.headers()['content-type']).toMatch(/xml/);
+
+        const body = await response.text();
+        expect(body).toContain('<?xml');
+        expect(body).toContain('<urlset');
+        // Static entries are always present even if the WP fetch returns 0 posts.
+        expect(body).toContain('<loc>https://keploy.io/blog</loc>');
+        expect(body).toContain('<loc>https://keploy.io/blog/community</loc>');
+        expect(body).toContain('<loc>https://keploy.io/blog/technology</loc>');
+    });
+
     test('AI referral tracker should push event to dataLayer on UTM-attributed landing', async ({ page, baseURL }) => {
         await page.goto(`${baseURL!}/?utm_source=chatgpt`);
 
