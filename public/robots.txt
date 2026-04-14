@@ -88,18 +88,23 @@ Disallow: /
 
 # =============================================================================
 # DEFAULT — Googlebot, Bingbot, and all other crawlers
+#
+# The Next.js app is mounted under basePath: '/blog' (next.config.js), so
+# crawlers request /blog/api/*, /blog/wp/*, /blog/cgi-bin/*, etc. Paths
+# in robots.txt are matched against the exact request path the crawler
+# emits, so every Disallow/Allow here must include the /blog prefix.
 # =============================================================================
 
 User-agent: *
 Allow: /
-# Allow /api/proxy-image so crawlers can render external avatars and
-# remote images used throughout the blog UI. All other /api/* endpoints
-# remain disallowed.
-Allow: /api/proxy-image
-Disallow: /cgi-bin/
-Disallow: /wp/
-Disallow: /api/
-# /search is not disallowed here — pages/search.tsx already emits
+# Allow /blog/api/proxy-image so crawlers can render external avatars
+# and remote images used throughout the blog UI. All other /blog/api/*
+# endpoints remain disallowed below.
+Allow: /blog/api/proxy-image
+Disallow: /blog/cgi-bin/
+Disallow: /blog/wp/
+Disallow: /blog/api/
+# /blog/search is not disallowed here — pages/search.tsx already emits
 # <meta name="robots" content="noindex, follow" />. Blocking via
 # robots.txt would hide the noindex signal from crawlers and cause
 # "Indexed, though blocked by robots.txt" warnings. Pick one strategy;
