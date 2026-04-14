@@ -1,0 +1,201 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const MAIN_SITE_URL = "https://keploy.io";
+const PAGE_SIZE = 100;
+const VALID_CATEGORIES = new Set(["community", "technology"]);
+const STATIC_ENTRIES = [
+  { loc: `${MAIN_SITE_URL}/blog`, priority: "1.00" },
+  { loc: `${MAIN_SITE_URL}/blog/community`, priority: "0.80", category: "community" },
+  { loc: `${MAIN_SITE_URL}/blog/technology`, priority: "0.80", category: "technology" },
+];
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(__dirname, "..");
+const outputPath = path.join(repoRoot, "public", "sitemap.xml");
+
+function requireWordPressEndpoint() {
+  const endpoint = process.env.WORDPRESS_API_URL;
+  if (!endpoint || !URL.canParse(endpoint)) {
+    throw new Error(
+      "WORDPRESS_API_URL must be set to a valid WPGraphQL endpoint."
+    );
+  }
+  return endpoint;
+}
+
+function escapeXml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+}
+
+function normalizeLastmod(value) {
+  if (typeof value !== "string" || value.trim() === "") {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  if (trimmed.includes("T")) {
+    return trimmed.split("T")[0];
+  }
+
+  return trimmed;
+}
+
+async function fetchPostsPage(endpoint, cursor) {
+  const query = `
+    query SitemapPosts($after: String) {
+      posts(
+        first: ${PAGE_SIZE}
+        after: $after
+        where: { orderby: { field: MODIFIED, order: DESC } }
+      ) {
+        edges {
+          node {
+            slug
+            modified
+            categories {
+              edges {
+                node {
+                  slug
+                }
+              }
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+  `;
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, variables: { after: cursor } }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`WP GraphQL returned HTTP ${response.status}`);
+  }
+
+  const json = await response.json();
+  if (json.errors?.length) {
+    throw new Error(
+      `WP GraphQL errors: ${json.errors.map((item) => item.message).join("; ")}`
+    );
+  }
+
+  return json.data?.posts ?? null;
+}
+
+async function fetchAllPosts(endpoint) {
+  const posts = [];
+  let cursor = null;
+
+  while (true) {
+    const page = await fetchPostsPage(endpoint, cursor);
+    if (!page) {
+      break;
+    }
+
+    for (const edge of page.edges ?? []) {
+      if (edge?.node) {
+        posts.push(edge.node);
+      }
+    }
+
+    if (!page.pageInfo?.hasNextPage) {
+      break;
+    }
+
+    cursor = page.pageInfo.endCursor;
+  }
+
+  return posts;
+}
+
+function buildEntries(posts) {
+  const postEntries = [];
+  const latestByCategory = new Map();
+  let latestOverall = null;
+  const seen = new Set();
+
+  for (const post of posts) {
+    const categories = post.categories?.edges?.map((edge) => edge?.node?.slug).filter(Boolean) ?? [];
+    const category = categories.find((slug) => VALID_CATEGORIES.has(slug));
+    if (!category || !post.slug) {
+      continue;
+    }
+
+    const loc = `${MAIN_SITE_URL}/blog/${category}/${post.slug}`;
+    if (seen.has(loc)) {
+      continue;
+    }
+
+    seen.add(loc);
+    const lastmod = normalizeLastmod(post.modified);
+    postEntries.push({
+      loc,
+      lastmod: lastmod ?? "1970-01-01",
+      priority: "0.64",
+    });
+
+    if (lastmod) {
+      if (!latestByCategory.has(category) || lastmod > latestByCategory.get(category)) {
+        latestByCategory.set(category, lastmod);
+      }
+      if (!latestOverall || lastmod > latestOverall) {
+        latestOverall = lastmod;
+      }
+    }
+  }
+
+  const fallbackLastmod = latestOverall ?? new Date().toISOString().split("T")[0];
+  const staticEntries = STATIC_ENTRIES.map(({ loc, priority, category }) => ({
+    loc,
+    priority,
+    lastmod: category
+      ? latestByCategory.get(category) ?? fallbackLastmod
+      : fallbackLastmod,
+  }));
+
+  postEntries.sort((left, right) => left.loc.localeCompare(right.loc));
+  return [...staticEntries, ...postEntries];
+}
+
+function buildSitemapXml(entries) {
+  const body = entries
+    .map(
+      ({ loc, lastmod, priority }) =>
+        `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    <lastmod>${escapeXml(lastmod)}</lastmod>\n    <priority>${priority}</priority>\n  </url>`
+    )
+    .join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
+}
+
+async function main() {
+  const endpoint = requireWordPressEndpoint();
+  const posts = await fetchAllPosts(endpoint);
+  const xml = buildSitemapXml(buildEntries(posts));
+
+  await mkdir(path.dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, xml, "utf8");
+
+  console.log(
+    `Generated ${outputPath} with ${posts.length} WordPress posts as input.`
+  );
+}
+
+main().catch((error) => {
+  console.error("[generate-sitemap] Failed:", error);
+  process.exitCode = 1;
+});

@@ -1,0 +1,84 @@
+name: Submit Sitemap to Google
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - public/sitemap.xml
+  workflow_dispatch:
+
+jobs:
+  submit-google-sitemap:
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_SITEMAP_URL: https://keploy.io/blog/sitemap.xml
+    steps:
+      - name: Validate Google Search Console secrets
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          GOOGLE_SEARCH_CONSOLE_SITE_URL: ${{ secrets.GOOGLE_SEARCH_CONSOLE_SITE_URL }}
+        run: |
+          set -euo pipefail
+
+          for name in GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET GOOGLE_REFRESH_TOKEN GOOGLE_SEARCH_CONSOLE_SITE_URL; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing required secret: ${name}"
+              exit 1
+            fi
+          done
+
+      - name: Exchange refresh token for access token
+        id: auth
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          TOKEN_RESPONSE=$(curl -sS --fail-with-body https://oauth2.googleapis.com/token \
+            -d client_id="${GOOGLE_CLIENT_ID}" \
+            -d client_secret="${GOOGLE_CLIENT_SECRET}" \
+            -d refresh_token="${GOOGLE_REFRESH_TOKEN}" \
+            -d grant_type=refresh_token)
+
+          ACCESS_TOKEN=$(printf '%s' "$TOKEN_RESPONSE" | jq -r '.access_token')
+
+          if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
+            echo "::error::Failed to retrieve Google access token."
+            printf '%s\n' "$TOKEN_RESPONSE"
+            exit 1
+          fi
+
+          echo "::add-mask::$ACCESS_TOKEN"
+          echo "access_token=$ACCESS_TOKEN" >> "$GITHUB_OUTPUT"
+
+      - name: Submit sitemap to Google Search Console
+        env:
+          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          GOOGLE_SEARCH_CONSOLE_SITE_URL: ${{ secrets.GOOGLE_SEARCH_CONSOLE_SITE_URL }}
+        run: |
+          set -euo pipefail
+
+          ENCODED_SITE_URL=$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["GOOGLE_SEARCH_CONSOLE_SITE_URL"], safe=""))')
+          ENCODED_SITEMAP_URL=$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["GOOGLE_SITEMAP_URL"], safe=""))')
+
+          HTTP_CODE=$(curl -sS -o /tmp/google-sitemap-submit.txt -w "%{http_code}" \
+            -X PUT "https://www.googleapis.com/webmasters/v3/sites/${ENCODED_SITE_URL}/sitemaps/${ENCODED_SITEMAP_URL}" \
+            -H "Authorization: Bearer ${ACCESS_TOKEN}")
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "::error::Google Search Console sitemap submission failed with HTTP ${HTTP_CODE}."
+            cat /tmp/google-sitemap-submit.txt 2>/dev/null || true
+            exit 1
+          fi
+
+          echo "Submitted ${GOOGLE_SITEMAP_URL} to Google Search Console (HTTP ${HTTP_CODE})"
+
+      - name: Log changed sitemap URLs
+        run: |
+          echo "Sitemap submitted: ${GOOGLE_SITEMAP_URL}"
+          echo "Optional follow-up: add URL Inspection API calls here for a few recently changed URLs."
