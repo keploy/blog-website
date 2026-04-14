@@ -62,6 +62,17 @@ test.describe('SEO and Meta Tags Configuration', () => {
         await expect(ogType).toHaveAttribute('content', 'article');
     });
 
+    test('Post page should expose article:published_time as ISO-8601', async ({ page, baseURL }) => {
+        await page.goto(`${baseURL!}/technology/understanding-api-testing-with-keploy`);
+        await page.waitForLoadState('domcontentloaded');
+
+        const publishedTime = page.locator('meta[property="article:published_time"]');
+        await expect(publishedTime).toBeAttached();
+        const content = await publishedTime.getAttribute('content');
+        // ISO-8601 datetime: YYYY-MM-DDTHH:MM:SS with optional fractional seconds and timezone.
+        expect(content).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:?\d{2})?$/);
+    });
+
     test('Homepage should have og:type website', async ({ page, baseURL }) => {
         await page.goto(baseURL!);
 
