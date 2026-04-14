@@ -1,8 +1,9 @@
 import type { GetServerSideProps } from "next";
 import { MAIN_SITE_URL } from "../lib/structured-data";
 
-const WP_GRAPHQL_ENDPOINT =
-  process.env.WORDPRESS_API_URL || "https://wp.keploy.io/graphql";
+// WORDPRESS_API_URL is validated and required at startup by next.config.js,
+// so it's guaranteed to be defined and parseable in any running build.
+const WP_GRAPHQL_ENDPOINT = process.env.WORDPRESS_API_URL as string;
 const PAGE_SIZE = 100;
 const VALID_CATEGORIES = new Set(["community", "technology"]);
 
@@ -120,13 +121,12 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     // Structured log so on-call can diagnose from Vercel logs alone.
     console.error("[sitemap.xml] degraded: falling back to static entries", {
       endpoint: WP_GRAPHQL_ENDPOINT,
-      envVarSet: Boolean(process.env.WORDPRESS_API_URL),
       error: message,
       nextSteps: [
         `1. curl -sS -X POST ${WP_GRAPHQL_ENDPOINT} -H 'Content-Type: application/json' -d '{"query":"{ __typename }"}' — confirms WPGraphQL is up and accepting queries`,
         "2. If the curl returns 5xx or hangs, check wp.keploy.io host status and the WPGraphQL plugin (WP admin → Plugins)",
-        "3. If the curl returns 200 with an `errors` array, the Posts query changed — validate against the GraphiQL IDE in wp-admin",
-        "4. If Vercel's WORDPRESS_API_URL env var is unset or wrong, the endpoint logged above will be the default https://wp.keploy.io/graphql — set it in Vercel project settings and redeploy",
+        "3. If the curl returns 200 with a non-empty `errors` array, the Posts query changed — validate against the GraphiQL IDE in wp-admin",
+        "4. If the endpoint logged above is unexpected, double-check WORDPRESS_API_URL in Vercel project settings and redeploy",
         "5. Sitemap is served with a 5-minute edge cache during degradation (vs 24h on success), so it self-heals within ~5 min after WP recovers",
       ],
     });
