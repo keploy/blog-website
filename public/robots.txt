@@ -7,40 +7,28 @@
 
 # =============================================================================
 # ALLOW — AI search / answer engines
+# Each named User-agent group only reads rules from THAT group — it does NOT
+# fall through to `User-agent: *`. So the blog `basePath: '/blog'` Disallow
+# rules must be repeated inside this group to prevent AI search bots from
+# indexing /blog/wp/, /blog/api/, /blog/cgi-bin/.
 # =============================================================================
 
 User-agent: OAI-SearchBot
-Allow: /
-
 User-agent: ChatGPT-User
-Allow: /
-
 User-agent: Claude-SearchBot
-Allow: /
-
 User-agent: Claude-User
-Allow: /
-
 User-agent: PerplexityBot
-Allow: /
-
 User-agent: Perplexity-User
-Allow: /
-
 User-agent: Gemini-Deep-Research
-Allow: /
-
 User-agent: GoogleOther
-Allow: /
-
 User-agent: Applebot
-Allow: /
-
 User-agent: DuckAssistBot
-Allow: /
-
 User-agent: Amazonbot
 Allow: /
+Allow: /blog/api/proxy-image
+Disallow: /blog/cgi-bin/
+Disallow: /blog/wp/
+Disallow: /blog/api/
 
 # =============================================================================
 # DISALLOW — Training-only crawlers

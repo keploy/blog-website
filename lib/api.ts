@@ -636,15 +636,6 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
   const isRevision = isSamePost && postPreview?.status === "publish";
   const data = await fetchAPI(
     `
-    fragment AuthorFields on User {
-      name
-      firstName
-      lastName
-      avatar {
-        url
-      }
-    }
-
     fragment PostFields on Post {
       title
       excerpt
