@@ -2,18 +2,20 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const MAIN_SITE_URL = "https://keploy.io";
 const PAGE_SIZE = 100;
 const VALID_CATEGORIES = new Set(["community", "technology"]);
-const STATIC_ENTRIES = [
-  { loc: `${MAIN_SITE_URL}/blog`, priority: "1.00" },
-  { loc: `${MAIN_SITE_URL}/blog/community`, priority: "0.80", category: "community" },
-  { loc: `${MAIN_SITE_URL}/blog/technology`, priority: "0.80", category: "technology" },
-];
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const outputPath = path.join(repoRoot, "public", "sitemap.xml");
+
+function requireMainSiteUrl() {
+  const configuredSiteUrl = process.env.MAIN_SITE_URL ?? "https://keploy.io";
+  if (!URL.canParse(configuredSiteUrl)) {
+    throw new Error("MAIN_SITE_URL must be a valid absolute URL when provided.");
+  }
+  return configuredSiteUrl.replace(/\/$/, "");
+}
 
 function requireWordPressEndpoint() {
   const endpoint = process.env.WORDPRESS_API_URL;
@@ -116,16 +118,31 @@ async function fetchAllPosts(endpoint) {
       break;
     }
 
+    if (!page.pageInfo.endCursor) {
+      throw new Error(
+        "WP GraphQL indicated another posts page exists but did not return an endCursor."
+      );
+    }
+
     cursor = page.pageInfo.endCursor;
   }
 
   return posts;
 }
 
-function buildEntries(posts) {
+function buildEntries(posts, mainSiteUrl) {
+  const staticEntries = [
+    { loc: `${mainSiteUrl}/blog`, priority: "1.00" },
+    ...Array.from(VALID_CATEGORIES, (category) => ({
+      loc: `${mainSiteUrl}/blog/${category}`,
+      priority: "0.80",
+      category,
+    })),
+  ];
   const postEntries = [];
   const latestByCategory = new Map();
   let latestOverall = null;
+  const missingLastmodEntries = [];
   const seen = new Set();
 
   for (const post of posts) {
@@ -135,18 +152,19 @@ function buildEntries(posts) {
       continue;
     }
 
-    const loc = `${MAIN_SITE_URL}/blog/${category}/${post.slug}`;
+    const loc = `${mainSiteUrl}/blog/${category}/${post.slug}`;
     if (seen.has(loc)) {
       continue;
     }
 
     seen.add(loc);
     const lastmod = normalizeLastmod(post.modified);
-    postEntries.push({
+    const entry = {
       loc,
-      lastmod: lastmod ?? "1970-01-01",
+      lastmod,
       priority: "0.64",
-    });
+    };
+    postEntries.push(entry);
 
     if (lastmod) {
       if (!latestByCategory.has(category) || lastmod > latestByCategory.get(category)) {
@@ -155,11 +173,17 @@ function buildEntries(posts) {
       if (!latestOverall || lastmod > latestOverall) {
         latestOverall = lastmod;
       }
+    } else {
+      missingLastmodEntries.push(entry);
     }
   }
 
   const fallbackLastmod = latestOverall ?? new Date().toISOString().split("T")[0];
-  const staticEntries = STATIC_ENTRIES.map(({ loc, priority, category }) => ({
+  for (const entry of missingLastmodEntries) {
+    entry.lastmod = fallbackLastmod;
+  }
+
+  const resolvedStaticEntries = staticEntries.map(({ loc, priority, category }) => ({
     loc,
     priority,
     lastmod: category
@@ -168,7 +192,7 @@ function buildEntries(posts) {
   }));
 
   postEntries.sort((left, right) => left.loc.localeCompare(right.loc));
-  return [...staticEntries, ...postEntries];
+  return [...resolvedStaticEntries, ...postEntries];
 }
 
 function buildSitemapXml(entries) {
@@ -183,9 +207,10 @@ function buildSitemapXml(entries) {
 }
 
 async function main() {
+  const mainSiteUrl = requireMainSiteUrl();
   const endpoint = requireWordPressEndpoint();
   const posts = await fetchAllPosts(endpoint);
-  const xml = buildSitemapXml(buildEntries(posts));
+  const xml = buildSitemapXml(buildEntries(posts, mainSiteUrl));
 
   await mkdir(path.dirname(outputPath), { recursive: true });
   await writeFile(outputPath, xml, "utf8");
