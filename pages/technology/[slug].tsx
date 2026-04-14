@@ -155,6 +155,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Technology",
+        // GEO-13: mark this as TechArticle (more specific than BlogPosting
+        // for developer content). AI models weight TechArticle higher
+        // for technical queries.
+        categorySlug: "technology",
+        proficiencyLevel: "Intermediate",
       })
     );
   } else {

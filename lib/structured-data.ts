@@ -27,6 +27,23 @@ type BlogPostingInput = {
   imageUrl?: string;
   authorName?: string | string[];
   articleSection?: string;
+  /**
+   * WordPress category slug. When "technology", emit TechArticle
+   * instead of BlogPosting (GEO-13). AI models weight TechArticle
+   * higher for developer content because the schema.org type
+   * specifically denotes "a technical article — typically an
+   * on-line manual, describing how to accomplish a task."
+   */
+  categorySlug?: string;
+  /**
+   * Optional list of programming languages or frameworks the post
+   * discusses. Maps to TechArticle.dependencies.
+   */
+  dependencies?: string[];
+  /**
+   * TechArticle proficiencyLevel. "Beginner" | "Intermediate" | "Expert".
+   */
+  proficiencyLevel?: "Beginner" | "Intermediate" | "Expert";
 };
 
 export const getOrganizationSchema = () => ({
@@ -81,15 +98,23 @@ export const getBlogPostingSchema = ({
   imageUrl,
   authorName,
   articleSection,
+  categorySlug,
+  dependencies,
+  proficiencyLevel,
 }: BlogPostingInput) => {
   const resolvedAuthorName = Array.isArray(authorName)
     ? (authorName[0] || ORG_NAME)
     : (authorName || ORG_NAME);
   const authorSlug = sanitizeAuthorSlug(resolvedAuthorName);
 
+  // GEO-13: blog/technology posts render as TechArticle
+  // (more specific than BlogPosting for developer content).
+  // blog/community posts stay as BlogPosting.
+  const schemaType = categorySlug === "technology" ? "TechArticle" : "BlogPosting";
+
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": schemaType,
     headline: title,
     mainEntityOfPage: {
       "@type": "WebPage",
@@ -131,6 +156,17 @@ export const getBlogPostingSchema = ({
 
   if (imageUrl) {
     schema.image = [imageUrl];
+  }
+
+  // TechArticle-specific fields — only emit when set AND when we're
+  // actually rendering a TechArticle.
+  if (schemaType === "TechArticle") {
+    if (dependencies && dependencies.length > 0) {
+      schema.dependencies = dependencies.join(", ");
+    }
+    if (proficiencyLevel) {
+      schema.proficiencyLevel = proficiencyLevel;
+    }
   }
 
   return schema;
