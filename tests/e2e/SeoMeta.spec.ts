@@ -62,6 +62,17 @@ test.describe('SEO and Meta Tags Configuration', () => {
         await expect(ogType).toHaveAttribute('content', 'article');
     });
 
+    test('Post page should expose article:published_time as ISO-8601', async ({ page, baseURL }) => {
+        await page.goto(`${baseURL!}/technology/understanding-api-testing-with-keploy`);
+        await page.waitForLoadState('domcontentloaded');
+
+        const publishedTime = page.locator('meta[property="article:published_time"]');
+        await expect(publishedTime).toBeAttached();
+        const content = await publishedTime.getAttribute('content');
+        // ISO-8601 datetime: YYYY-MM-DDTHH:MM:SS with optional fractional seconds and timezone.
+        expect(content).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:?\d{2})?$/);
+    });
+
     test('Homepage should have og:type website', async ({ page, baseURL }) => {
         await page.goto(baseURL!);
 
@@ -96,6 +107,23 @@ test.describe('SEO and Meta Tags Configuration', () => {
         }
 
         expect(foundValidSchema).toBe(true);
+    });
+
+    test('sitemap.xml endpoint should return XML with the static blog entries', async ({ request, baseURL }) => {
+        // Use the full URL because Playwright's request.get resolves a
+        // leading-slash path against the host, not against baseURL's path,
+        // so '/sitemap.xml' would bypass Next.js's /blog basePath.
+        const response = await request.get(`${baseURL!}/sitemap.xml`);
+        expect(response.status()).toBe(200);
+        expect(response.headers()['content-type']).toMatch(/xml/);
+
+        const body = await response.text();
+        expect(body).toContain('<?xml');
+        expect(body).toContain('<urlset');
+        // Static entries are always present even if the WP fetch returns 0 posts.
+        expect(body).toContain('<loc>https://keploy.io/blog</loc>');
+        expect(body).toContain('<loc>https://keploy.io/blog/community</loc>');
+        expect(body).toContain('<loc>https://keploy.io/blog/technology</loc>');
     });
 
     test('AI referral tracker should push event to dataLayer on UTM-attributed landing', async ({ page, baseURL }) => {
