@@ -1,6 +1,6 @@
 import type { GetServerSideProps } from "next";
+import { MAIN_SITE_URL } from "../lib/structured-data";
 
-const SITE_URL = "https://keploy.io";
 const WP_GRAPHQL_ENDPOINT =
   process.env.WORDPRESS_API_URL || "https://wp.keploy.io/graphql";
 const PAGE_SIZE = 100;
@@ -73,9 +73,9 @@ function escapeXml(s: string): string {
 function buildSitemap(posts: PostNode[]): string {
   const today = new Date().toISOString().split("T")[0];
   const staticEntries = [
-    { loc: `${SITE_URL}/blog`, lastmod: today, priority: "1.00" },
-    { loc: `${SITE_URL}/blog/community`, lastmod: today, priority: "0.80" },
-    { loc: `${SITE_URL}/blog/technology`, lastmod: today, priority: "0.80" },
+    { loc: `${MAIN_SITE_URL}/blog`, lastmod: today, priority: "1.00" },
+    { loc: `${MAIN_SITE_URL}/blog/community`, lastmod: today, priority: "0.80" },
+    { loc: `${MAIN_SITE_URL}/blog/technology`, lastmod: today, priority: "0.80" },
   ];
 
   const postEntries: { loc: string; lastmod: string; priority: string }[] = [];
@@ -85,7 +85,7 @@ function buildSitemap(posts: PostNode[]): string {
       .map((e) => e.node.slug)
       .find((slug) => VALID_CATEGORIES.has(slug));
     if (!category) continue;
-    const loc = `${SITE_URL}/blog/${category}/${post.slug}`;
+    const loc = `${MAIN_SITE_URL}/blog/${category}/${post.slug}`;
     if (seen.has(loc)) continue;
     seen.add(loc);
     postEntries.push({
@@ -106,15 +106,32 @@ function buildSitemap(posts: PostNode[]): string {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const posts = await fetchAllPosts();
+  // Fall back to the static-only sitemap if WordPress is unreachable or
+  // WPGraphQL returns errors — a minimal but valid sitemap is strictly
+  // better than a 500 for crawler freshness, and the error still shows up
+  // in Vercel function logs for alerting.
+  let posts: PostNode[] = [];
+  let degraded = false;
+  try {
+    posts = await fetchAllPosts();
+  } catch (err) {
+    degraded = true;
+    console.error(
+      "[sitemap.xml] WP fetch failed, falling back to static entries only:",
+      err
+    );
+  }
   const xml = buildSitemap(posts);
 
   res.setHeader("Content-Type", "application/xml; charset=utf-8");
-  // Cache at the edge for 24h; serve stale while revalidating for 24h more.
+  // Cache at the edge for 24h on success; only 5 min on degraded fallback so
+  // a transient WP outage doesn't pin the stripped-down sitemap for a full day.
   // Bots hit this intermittently, so real WP GraphQL traffic is ~1 req/day per region.
   res.setHeader(
     "Cache-Control",
-    "public, s-maxage=86400, stale-while-revalidate=86400"
+    degraded
+      ? "public, s-maxage=300, stale-while-revalidate=300"
+      : "public, s-maxage=86400, stale-while-revalidate=86400"
   );
   res.write(xml);
   res.end();

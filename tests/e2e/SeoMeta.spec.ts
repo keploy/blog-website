@@ -113,7 +113,7 @@ test.describe('SEO and Meta Tags Configuration', () => {
         // Use the full URL because Playwright's request.get resolves a
         // leading-slash path against the host, not against baseURL's path,
         // so '/sitemap.xml' would bypass Next.js's /blog basePath.
-        const response = await request.get(`${baseURL}/sitemap.xml`);
+        const response = await request.get(`${baseURL!}/sitemap.xml`);
         expect(response.status()).toBe(200);
         expect(response.headers()['content-type']).toMatch(/xml/);
 

@@ -37,6 +37,11 @@ jobs:
           if printf '%s' "$RESPONSE" | jq -e 'has("errors") and (.errors | length > 0)' >/dev/null; then
             echo "::error::WordPress GraphQL returned errors:"
             printf '%s' "$RESPONSE" | jq '.errors'
+            echo ""
+            echo "Troubleshooting:"
+            echo "  1. Check WPGraphQL endpoint health: curl -sS https://wp.keploy.io/graphql -X POST -H 'Content-Type: application/json' -d '{\"query\":\"{ __typename }\"}'"
+            echo "  2. Validate the query against the schema at https://wp.keploy.io/wp-admin/admin.php?page=graphiql-ide (or open /graphql in the WP admin)"
+            echo "  3. Common causes: WPGraphQL plugin disabled/updated, rate-limiting on wp.keploy.io, or a field rename in the Posts type. Re-run this workflow via Actions -> Run workflow once resolved."
             exit 1
           fi
 
