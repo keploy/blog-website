@@ -25,7 +25,11 @@ jobs:
 
           for name in GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET GOOGLE_REFRESH_TOKEN GOOGLE_SEARCH_CONSOLE_SITE_URL; do
             if [ -z "${!name}" ]; then
-              echo "::error::Missing required secret: ${name}"
+              if [ "$name" = "GOOGLE_SEARCH_CONSOLE_SITE_URL" ]; then
+                echo "::error::Missing required secret: ${name}. Add it in GitHub Settings > Secrets and variables > Actions. Expected format: the exact Search Console property, for example sc-domain:keploy.io or https://keploy.io/."
+              else
+                echo "::error::Missing required secret: ${name}. Add it in GitHub Settings > Secrets and variables > Actions, then re-run this workflow."
+              fi
               exit 1
             fi
           done
@@ -48,7 +52,7 @@ jobs:
           ACCESS_TOKEN=$(printf '%s' "$TOKEN_RESPONSE" | jq -r '.access_token')
 
           if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
-            echo "::error::Failed to retrieve Google access token."
+            echo "::error::Failed to retrieve Google access token. Next step: verify that the refresh token is still valid and not revoked, confirm the OAuth client ID and client secret match the token, and ensure the Google Search Console API is enabled for the Google Cloud project."
             printf '%s\n' "$TOKEN_RESPONSE"
             exit 1
           fi
