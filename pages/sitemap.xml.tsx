@@ -116,10 +116,20 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     posts = await fetchAllPosts();
   } catch (err) {
     degraded = true;
-    console.error(
-      "[sitemap.xml] WP fetch failed, falling back to static entries only:",
-      err
-    );
+    const message = err instanceof Error ? err.message : String(err);
+    // Structured log so on-call can diagnose from Vercel logs alone.
+    console.error("[sitemap.xml] degraded: falling back to static entries", {
+      endpoint: WP_GRAPHQL_ENDPOINT,
+      envVarSet: Boolean(process.env.WORDPRESS_API_URL),
+      error: message,
+      nextSteps: [
+        `1. curl -sS -X POST ${WP_GRAPHQL_ENDPOINT} -H 'Content-Type: application/json' -d '{"query":"{ __typename }"}' — confirms WPGraphQL is up and accepting queries`,
+        "2. If the curl returns 5xx or hangs, check wp.keploy.io host status and the WPGraphQL plugin (WP admin → Plugins)",
+        "3. If the curl returns 200 with an `errors` array, the Posts query changed — validate against the GraphiQL IDE in wp-admin",
+        "4. If Vercel's WORDPRESS_API_URL env var is unset or wrong, the endpoint logged above will be the default https://wp.keploy.io/graphql — set it in Vercel project settings and redeploy",
+        "5. Sitemap is served with a 5-minute edge cache during degradation (vs 24h on success), so it self-heals within ~5 min after WP recovers",
+      ],
+    });
   }
   const xml = buildSitemap(posts);
 
