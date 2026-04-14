@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const PAGE_SIZE = 100;
+const FETCH_TIMEOUT_MS = 15000;
 const VALID_CATEGORIES = new Set(["community", "technology"]);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -79,11 +80,27 @@ async function fetchPostsPage(endpoint, cursor) {
     }
   `;
 
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query, variables: { after: cursor } }),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  let response;
+
+  try {
+    response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, variables: { after: cursor } }),
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error(
+        `WP GraphQL request timed out after ${FETCH_TIMEOUT_MS}ms.`
+      );
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     throw new Error(`WP GraphQL returned HTTP ${response.status}`);
