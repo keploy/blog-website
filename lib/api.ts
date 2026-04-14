@@ -634,6 +634,18 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
     : slug === postPreview.slug;
   const isDraft = isSamePost && postPreview?.status === "draft";
   const isRevision = isSamePost && postPreview?.status === "publish";
+  // NOTE on the fragment below: the raw WordPress `author { node { ... } }`
+  // field is intentionally omitted from slug-page queries. PublishPress
+  // Multiple Authors (ppmaAuthorName) is the authoritative display author;
+  // the native WP author is the system account that published the post and
+  // caused an author mismatch in __NEXT_DATA__ vs the rendered schema
+  // (reported 2026-04-14). AuthorMapping.tsx still needs raw author data —
+  // it uses a separate getAllAuthors query that preserves the field.
+  //
+  // This note lives in a JS comment, NOT inside the GraphQL template literal:
+  // the E2E mock server substring-matches on the query text, and an inline
+  // `#` comment that mentions "getAllAuthors" was routing PostBySlug requests
+  // to the mock's allAuthorsResponse branch at build time.
   const data = await fetchAPI(
     `
     fragment PostFields on Post {
@@ -649,13 +661,6 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
           sourceUrl
         }
       }
-      # NOTE: the raw WordPress author field is intentionally omitted from
-      # slug-page queries. PublishPress Multiple Authors (ppmaAuthorName)
-      # is the authoritative display author; the native WP author is the
-      # system account that published the post and caused an author
-      # mismatch in __NEXT_DATA__ vs the rendered schema (reported
-      # 2026-04-14). AuthorMapping.tsx still needs raw author data — it
-      # uses a separate getAllAuthors query that preserves the field.
       categories {
         edges {
           node {
