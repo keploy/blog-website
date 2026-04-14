@@ -49,36 +49,65 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const router = useRouter();
   const { slug } = router.query;
   const morePosts = posts?.edges;
-  const [avatarImgSrc, setAvatarImgSrc] = useState("");
   const time = 5 + calculateReadingTime(post?.content);
-  const [blogWriterDescription, setBlogWriterDescription] = useState("");
-  const [reviewAuthorName, setreviewAuthorName] = useState("");
-  const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
-  const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
-  const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
   const [updatedContent, setUpdatedContent] = useState("");
 
-  useEffect(() => {
-    if (reviewAuthorDetails && reviewAuthorDetails?.length > 0) {
-      const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
-      const authorNode = reviewAuthorDetails[authorIndex]?.edges[0]?.node;
-      if (authorNode) {
-        setpostBodyReviewerAuthor(authorIndex);
-        setreviewAuthorName(authorNode.name);
-        setreviewAuthorImageUrl(authorNode.avatar.url);
-        setreviewAuthorDescription(authorNode.description);
-      }
-    }
-  }, [post, reviewAuthorDetails]);
+  // Reviewer data — computed synchronously at render time so the reviewer
+  // name appears in the SSR HTML payload (not just after client hydration).
+  // Previously this was a useEffect that set state, which meant AI crawlers
+  // saw the literal placeholder "Reviewer" string in the initial HTML.
+  // Author mismatch + reviewer bugs reported 2026-04-14.
+  const reviewerIndex = post?.ppmaAuthorName === "Neha" ? 1 : 0;
+  const reviewerNode =
+    reviewAuthorDetails && reviewAuthorDetails.length > 0
+      ? reviewAuthorDetails[reviewerIndex]?.edges?.[0]?.node
+      : null;
+  const postBodyReviewerAuthor = reviewerIndex;
+  const reviewAuthorName = reviewerNode?.name || "";
+  const reviewAuthorImageUrl = reviewerNode?.avatar?.url || "";
+  const reviewAuthorDescription = reviewerNode?.description || "";
+
+  // Writer avatar — source of truth is post.ppmaAuthorImage from the
+  // PublishPress Multiple Authors plugin. Fall back to a safe placeholder
+  // only if that field is genuinely missing. Previously this was extracted
+  // from post.content via regex inside a useEffect which meant the SSR
+  // HTML used the /blog/images/author.png placeholder even when the real
+  // image was available in the data.
+  const ppmaImage =
+    typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
+      ? post.ppmaAuthorImage
+      : "";
+  const writerAvatarUrl = ppmaImage || "/blog/images/author.png";
+
+  // Writer description — pulled from the first paragraph with the
+  // pp-author-boxes-description class in the post content. Kept here as
+  // a one-time synchronous regex so the SSR HTML has the real bio. No
+  // state, no effect.
+  const writerDescriptionMatch =
+    post?.content?.match(
+      /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i,
+    );
+  const blogWriterDescription =
+    writerDescriptionMatch && writerDescriptionMatch[1]?.trim().length > 0
+      ? writerDescriptionMatch[1].trim()
+      : "An author for Keploy's blog.";
+
+  // Back-compat alias: other parts of this component previously used
+  // avatarImgSrc. Keep the name so references below continue to work.
+  const avatarImgSrc = writerAvatarUrl;
+
   const blogwriter = [
     {
       name: post?.ppmaAuthorName || "Author",
-      ImageUrl: avatarImgSrc || "/blog/images/author.png",
-      description: blogWriterDescription || "An author for keploy's blog.",
+      ImageUrl: writerAvatarUrl,
+      description: blogWriterDescription,
     },
   ];
   const blogreviewer = [
     {
+      // Only fall back to the generic "Reviewer" placeholder when we
+      // genuinely have no reviewer data. When the data is present the
+      // real name renders server-side and reaches AI crawlers.
       name: reviewAuthorName || "Reviewer",
       ImageUrl: reviewAuthorImageUrl || "/blog/images/author.png",
       description: reviewAuthorDescription || "A Reviewer for keploy's blog",
@@ -103,38 +132,18 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       readProgress.set(v.value.scrollY);
     },
   });
+  // Responsive table wrapper — kept in an effect because it touches
+  // post content only when the post changes on client-side navigation.
+  // The author extraction that previously lived alongside this effect
+  // has been moved to synchronous render-time computation above so the
+  // SSR HTML has the correct author + avatar + description.
   useEffect(() => {
     if (post && post.content) {
-
-      const content = post.content;
-      const avatarDivMatch = content.match(
-        /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
-      );
-      console.log(avatarDivMatch ? avatarDivMatch[1] : "No avatar match");
-      if (avatarDivMatch && avatarDivMatch[1]) {
-        setAvatarImgSrc(avatarDivMatch[1]);
-      } else {
-        setAvatarImgSrc("/blog/images/author.png");
-      }
-
-      // Match the <p> with class pp-author-boxes-description and extract its content
-      const authorDescriptionMatch = content.match(
-        /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i
-      );
-
-      // Apply table responsive wrapper
-      const newContent = content.replace(
+      const newContent = post.content.replace(
         /<table[^>]*>[\s\S]*?<\/table>/gm,
-        (table) => `<div class="overflow-x-auto">${table}</div>`
+        (table) => `<div class="overflow-x-auto">${table}</div>`,
       );
-
       setUpdatedContent(newContent);
-
-      if (authorDescriptionMatch && authorDescriptionMatch[1].trim()?.length > 0) {
-        setBlogWriterDescription(authorDescriptionMatch[1].trim());
-      } else {
-        setBlogWriterDescription("An author for Keploy's blog.");
-      }
     }
   }, [post]);
 
@@ -164,15 +173,24 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         description: safeDescription,
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
+        // LIVE-22: use PublishPress author image, not the /blog/images/author.png
+        // placeholder. The schema generator also filters the placeholder.
+        authorImage: ppmaImage || undefined,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Community",
-      })
+        // LIVE-22: emit reviewedBy Person schema when reviewer data is
+        // present. The schema generator skips the emit when the reviewer
+        // is "Reviewer" (placeholder) or equals the author (self-review).
+        reviewerName: reviewAuthorName || undefined,
+        reviewerImage: reviewAuthorImageUrl || undefined,
+        reviewerDescription: reviewAuthorDescription || undefined,
+      }),
     );
   } else {
     structuredData.push(
       getBreadcrumbListSchema([
         { name: "Home", url: SITE_URL },
         { name: "Community", url: `${SITE_URL}/community` },
-      ])
+      ]),
     );
   }
 

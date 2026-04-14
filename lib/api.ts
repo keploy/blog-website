@@ -652,16 +652,19 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       date
       modified
       ppmaAuthorName
+      ppmaAuthorImage
       featuredImage {
         node {
           sourceUrl
         }
       }
-      author {
-        node {
-          ...AuthorFields
-        }
-      }
+      # NOTE: the raw WordPress author field is intentionally omitted from
+      # slug-page queries. PublishPress Multiple Authors (ppmaAuthorName)
+      # is the authoritative display author; the native WP author is the
+      # system account that published the post and caused an author
+      # mismatch in __NEXT_DATA__ vs the rendered schema (reported
+      # 2026-04-14). AuthorMapping.tsx still needs raw author data — it
+      # uses a separate getAllAuthors query that preserves the field.
       categories {
         edges {
           node {
@@ -679,7 +682,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       seo{
         metaDesc
         title
-      }  
+      }
     }
 
     query PostBySlug($id: ID!, $idType: PostIdType!) {
@@ -697,12 +700,8 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
               excerpt
               content
               modified
-              author {
-                node {
-                  ...AuthorFields
-                }
-              }
               ppmaAuthorName
+              ppmaAuthorImage
             }
           }
         }
