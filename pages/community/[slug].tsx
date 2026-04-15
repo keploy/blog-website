@@ -35,8 +35,15 @@ const PostBody = dynamic(() => import("../../components/post-body"), {
 });
 
 // Apply all HTML transformations in one synchronous pass so the
-// transformed content is available at render time (SSR-friendly) and
-// no useEffect/setState round-trip is needed:
+// transformed content is ready on React's first client commit — no
+// useState/useEffect round-trip, no extra re-render after hydration.
+//
+// This only affects the *first client render*, not the SSR HTML.
+// PostBody is imported via dynamic(..., { ssr: false }), so its
+// content is never present in the server-rendered payload that
+// crawlers receive. The benefit of computing the transform up-front
+// is purely client-side: no wasted render pass between hydration
+// and the effect-driven state update that previously set updatedContent.
 //   1. Wrap every <table> in <div class="overflow-x-auto"> so wide
 //      tables scroll horizontally on narrow screens instead of
 //      breaking the page layout.
