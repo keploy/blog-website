@@ -107,9 +107,9 @@ compared against them.
 | `body` | `"Baloo 2", sans-serif` | legacy marketing/body copy | `styles/index.css` |
 | `baloo-2-600` | `"Baloo 2", sans-serif`, weight `600` | utility class | `styles/index.css` |
 | `footer-font` | `__Inter_aaf875`, fallback | footer-only utility | `styles/index.css` |
-| article/content font | `'DM Sans', sans-serif` | post title, article body, TOC, author cards | `post-body.module.css`, `post-title.tsx`, `AuthorCard.tsx`, `TableContents.tsx` |
-| inline monospace | `ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace` | code | `post-body.module.css` |
-| JSON diff font | `Arial, sans-serif` | legacy isolated component | `json-diff-viewer.module.css` |
+| article/content font | `'DM Sans', sans-serif` | post title, article body, TOC, author cards | `components/post-body.module.css`, `components/post-title.tsx`, `components/AuthorCard.tsx`, `components/TableContents.tsx` |
+| inline monospace | `ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace` | code | `components/post-body.module.css` |
+| JSON diff font | `Arial, sans-serif` | legacy isolated component | `components/json-diff-viewer.module.css` |
 
 ### Font Sizes and Line Heights
 

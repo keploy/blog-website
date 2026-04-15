@@ -33,8 +33,9 @@ shared Keploy commons.
 - [inferred] On blog surfaces, several repeated hardcoded values behave like
   de facto local tokens and should not be randomly changed in PRs:
   `#1D2022`, `#637277`, `#1e1e2e`, `#313244`, `#cdd6f4`, `#737373`, `#FFF4EE`.
-  Evidence: `post-card.tsx`, `BlogSidebar.tsx`, `post-body.tsx`,
-  `post-body.module.css`, `navbar/*`.
+  Evidence: `components/post-card.tsx`, `components/BlogSidebar.tsx`,
+  `components/post-body.tsx`, `components/post-body.module.css`,
+  `components/navbar/*`.
 - [inferred] The orange underline/highlight pattern is blog-specific and heavily
   reused for section headings and links:
   `bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px]`.
@@ -83,12 +84,13 @@ shared Keploy commons.
 
 - [inferred] Use `PostCard` for standard blog post cards across home, category,
   tag, author, and 404 surfaces.
-  Evidence: `topBlogs.tsx`, `more-stories.tsx`, `TagsStories.tsx`,
-  `NotFoundPage.tsx`, `postByAuthorMapping.tsx`.
+  Evidence: `components/topBlogs.tsx`, `components/more-stories.tsx`,
+  `components/TagsStories.tsx`, `components/NotFoundPage.tsx`,
+  `components/postByAuthorMapping.tsx`.
 - [inferred] Use `PostGrid` for standard multi-post layouts instead of
   rebuilding column grids per page.
-  Evidence: `topBlogs.tsx`, `more-stories.tsx`, `TagsStories.tsx`,
-  `NotFoundPage.tsx`.
+  Evidence: `components/topBlogs.tsx`, `components/more-stories.tsx`,
+  `components/TagsStories.tsx`, `components/NotFoundPage.tsx`.
 - [inferred] Use `HeroPost` for the first featured item on technology/community
   landing pages.
   Evidence: `pages/technology/index.tsx`, `pages/community/index.tsx`.
@@ -111,8 +113,10 @@ shared Keploy commons.
 - [inferred] This repo relies on explicit labels for nav/search/share/tag/blog
   actions more than some Keploy repos, so missing or changed labels are a real
   regression risk.
-  Evidence: `FloatingNavbarClient.tsx`, `BlogSidebar.tsx`, `tag.tsx`,
-  `ScrollToTop.tsx`, tests under `tests/responsive` and `tests/components`.
+  Evidence: `components/navbar/FloatingNavbarClient.tsx`,
+  `components/BlogSidebar.tsx`, `components/tag.tsx`,
+  `components/ScrollToTop.tsx`, tests under `tests/responsive` and
+  `tests/components`.
 - [explicit] Responsive tests assert specific accessibility hooks such as
   `aria-label="Open menu"`, `aria-label="Close menu"`,
   `aria-label="Open search"`, and search dialog labeling.
