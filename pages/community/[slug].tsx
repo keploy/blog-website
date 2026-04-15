@@ -17,7 +17,7 @@ import {
   getPostAndMorePosts,
 } from "../../lib/api";
 import ContainerSlug from "../../components/containerSlug";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
@@ -34,15 +34,26 @@ const PostBody = dynamic(() => import("../../components/post-body"), {
   ssr: false,
 });
 
-const postBody = ({ content, post }) => {
-  const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
-
-  const replacedContent = content.replace(
-    urlPattern,
-    `/blog/authors/${post.ppmaAuthorName}/`
-  );
-
-  return replacedContent;
+// Apply all HTML transformations in one synchronous pass so the
+// transformed content is available at render time (SSR-friendly) and
+// no useEffect/setState round-trip is needed:
+//   1. Wrap every <table> in <div class="overflow-x-auto"> so wide
+//      tables scroll horizontally on narrow screens instead of
+//      breaking the page layout.
+//   2. Rewrite /wp/author/<slug>/ links to /blog/authors/<ppma-name>/
+//      so clicking an author link in an embedded post stays inside
+//      the blog app and uses the PublishPress author slug.
+const transformPostContent = (content: string, ppmaAuthorName: string) => {
+  if (!content) return "";
+  return content
+    .replace(
+      /<table[^>]*>[\s\S]*?<\/table>/gm,
+      (table) => `<div class="overflow-x-auto">${table}</div>`,
+    )
+    .replace(
+      /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g,
+      `/blog/authors/${ppmaAuthorName}/`,
+    );
 };
 
 export default function Post({ post, posts, reviewAuthorDetails, preview }) {
@@ -50,7 +61,6 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const { slug } = router.query;
   const morePosts = posts?.edges;
   const time = 5 + calculateReadingTime(post?.content);
-  const [updatedContent, setUpdatedContent] = useState("");
 
   // Reviewer data — computed synchronously at render time so the reviewer
   // name appears in the SSR HTML payload (not just after client hydration).
@@ -132,20 +142,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       readProgress.set(v.value.scrollY);
     },
   });
-  // Responsive table wrapper — kept in an effect because it touches
-  // post content only when the post changes on client-side navigation.
-  // The author extraction that previously lived alongside this effect
-  // has been moved to synchronous render-time computation above so the
-  // SSR HTML has the correct author + avatar + description.
-  useEffect(() => {
-    if (post && post.content) {
-      const newContent = post.content.replace(
-        /<table[^>]*>[\s\S]*?<\/table>/gm,
-        (table) => `<div class="overflow-x-auto">${table}</div>`,
-      );
-      setUpdatedContent(newContent);
-    }
-  }, [post]);
+  // Table-wrap + author-link rewrite are applied synchronously via
+  // transformPostContent() at the PostBody call site below. No
+  // useState/useEffect is needed — the transformation is a pure
+  // string function so computing it at render time keeps the SSR
+  // HTML correct without an extra re-render round-trip.
 
   useEffect(() => {
     if (!router.isFallback && !post?.slug) {
@@ -239,9 +240,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           {/* PostBody component placed outside the Container */}
           <div ref={postBodyRef}>
             <PostBody
-              content={
-                post?.content && postBody({ content: post?.content, post })
-              }
+              content={transformPostContent(
+                post?.content,
+                post?.ppmaAuthorName,
+              )}
               authorName={post?.ppmaAuthorName || ""}
               authorImageUrl={avatarImgSrc || "/blog/images/author.png"}
               authorDescription={blogWriterDescription || "An author for keploy's blog."}
