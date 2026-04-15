@@ -72,11 +72,11 @@ override, that is marked as `[inferred]`.
 | `--border` | `0 0% 89.8%` | `0 0% 14.9%` | `border-border` | `styles/index.css` |
 | `--input` | `0 0% 89.8%` | `0 0% 14.9%` | `border-input` | `styles/index.css` |
 | `--ring` | `0 0% 3.9%` | `0 0% 83.1%` | `ring-ring` | `styles/index.css` |
-| `--chart-1` | `12 76% 61%` | `220 70% 50%` | `chart-1` | `styles/index.css` |
-| `--chart-2` | `173 58% 39%` | `160 60% 45%` | `chart-2` | `styles/index.css` |
-| `--chart-3` | `197 37% 24%` | `30 80% 55%` | `chart-3` | `styles/index.css` |
-| `--chart-4` | `43 74% 66%` | `280 65% 60%` | `chart-4` | `styles/index.css` |
-| `--chart-5` | `27 87% 67%` | `340 75% 55%` | `chart-5` | `styles/index.css` |
+| `--chart-1` | `12 76% 61%` | `220 70% 50%` | `text-chart-1`, `bg-chart-1`, `border-chart-1` | `styles/index.css` |
+| `--chart-2` | `173 58% 39%` | `160 60% 45%` | `text-chart-2`, `bg-chart-2`, `border-chart-2` | `styles/index.css` |
+| `--chart-3` | `197 37% 24%` | `30 80% 55%` | `text-chart-3`, `bg-chart-3`, `border-chart-3` | `styles/index.css` |
+| `--chart-4` | `43 74% 66%` | `280 65% 60%` | `text-chart-4`, `bg-chart-4`, `border-chart-4` | `styles/index.css` |
+| `--chart-5` | `27 87% 67%` | `340 75% 55%` | `text-chart-5`, `bg-chart-5`, `border-chart-5` | `styles/index.css` |
 
 ### Repeated Hardcoded Colors In Components
 
