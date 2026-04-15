@@ -1,0 +1,80 @@
+name: Submit Sitemap to Google
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - public/sitemap.xml
+  workflow_dispatch:
+
+jobs:
+  submit-google-sitemap:
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_SITEMAP_URL: https://keploy.io/blog/sitemap.xml
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install googleapis
+        run: npm install --no-save googleapis
+
+      - name: Validate Google Search Console secrets
+        env:
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
+          GOOGLE_SEARCH_CONSOLE_SITE_URL: ${{ secrets.GOOGLE_SEARCH_CONSOLE_SITE_URL }}
+        run: |
+          set -euo pipefail
+
+          for name in GOOGLE_SERVICE_ACCOUNT_EMAIL GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY GOOGLE_SEARCH_CONSOLE_SITE_URL; do
+            if [ -z "${!name}" ]; then
+              if [ "$name" = "GOOGLE_SEARCH_CONSOLE_SITE_URL" ]; then
+                echo "::error::Missing required secret: ${name}. Add it in GitHub Settings > Secrets and variables > Actions. Expected format: the exact Search Console property, for example sc-domain:keploy.io or https://keploy.io/."
+              elif [ "$name" = "GOOGLE_SERVICE_ACCOUNT_EMAIL" ]; then
+                echo "::error::Missing required secret: ${name}. Add the Google service account email in GitHub Settings > Secrets and variables > Actions, then re-run this workflow."
+              else
+                echo "::error::Missing required secret: ${name}. Add the Google service account private key in GitHub Settings > Secrets and variables > Actions, then re-run this workflow."
+              fi
+              exit 1
+            fi
+          done
+
+      - name: Submit sitemap to Google Search Console
+        env:
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
+          GOOGLE_SEARCH_CONSOLE_SITE_URL: ${{ secrets.GOOGLE_SEARCH_CONSOLE_SITE_URL }}
+        run: |
+          node - <<'EOF'
+          const { google } = require('googleapis');
+
+          // GH Actions stores multi-line secrets with literal \n — normalise them.
+          const key = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, '\n');
+
+          const auth = new google.auth.JWT(
+            process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+            null,
+            key,
+            ['https://www.googleapis.com/auth/webmasters']
+          );
+
+          const sc = google.webmasters({ version: 'v3', auth });
+
+          sc.sitemaps.submit({
+            siteUrl: process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL,
+            feedpath: process.env.GOOGLE_SITEMAP_URL,
+          }).then(() => {
+            console.log('Submitted', process.env.GOOGLE_SITEMAP_URL, 'to Google Search Console');
+          }).catch((err) => {
+            console.error('::error::Google Search Console submission failed:', err.message);
+            console.error('Next step: verify the service account email and private key match, ensure the Search Console API is enabled, and confirm the service account has access to the Search Console property.');
+            process.exit(1);
+          });
+          EOF

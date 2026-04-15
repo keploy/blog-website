@@ -1,0 +1,50 @@
+name: Sync Sitemap
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-sitemap:
+    runs-on: ubuntu-latest
+    env:
+      WORDPRESS_API_URL: ${{ vars.WORDPRESS_API_URL || 'https://wp.keploy.io/graphql' }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Generate sitemap.xml
+        run: node scripts/generate-sitemap.mjs
+
+      - name: Detect sitemap changes
+        id: diff
+        run: |
+          if git diff --quiet -- public/sitemap.xml; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/sync-sitemap
+          commit-message: "chore: sync sitemap.xml"
+          title: "chore: sync sitemap.xml"
+          body: |
+            Updates `public/sitemap.xml` from WordPress.
+
+            Includes new URLs and updated `<lastmod>` values when applicable.
+          add-paths: |
+            public/sitemap.xml
