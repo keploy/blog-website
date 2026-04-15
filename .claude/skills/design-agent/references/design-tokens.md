@@ -85,17 +85,17 @@ compared against them.
 
 | Value | Where It Appears | Source |
 | --- | --- | --- |
-| `#f97316` | links, bullets, role badges, active states, gradients, TOC active states | `components/post-body.module.css`, `AuthorCard.tsx`, `PostHeaderAuthors.tsx`, many components |
-| `#FF914D` | hero CTA/orange border accents | `tailwind.config.js`, `AuthorCard.tsx`, `BlogSidebar.tsx` |
-| `#1D2022` | DM Sans heading/body dark text | `PostCard.tsx`, `BlogSidebar.tsx`, `AuthorHero.tsx`, `post-body.module.css` |
-| `#637277` | muted body/meta text | `PostCard.tsx`, `AuthorHero.tsx`, `post-body.module.css` |
-| `#737373` | muted navbar helper text | `navbar/main-nav.tsx`, `navbar/nav-card.tsx` |
-| `#1e1e2e` | code block/editor background | `styles/index.css`, `post-body.tsx`, `post-body.module.css` |
-| `#313244` | code block border/header bg pair | `post-body.tsx`, `post-body.module.css` |
-| `#cdd6f4` | code text | `styles/index.css`, `post-body.tsx`, `post-body.module.css` |
-| `#FFF4EE` | sidebar CTA fallback/ad background | `BlogSidebar.tsx` |
-| `#0A66C2` | LinkedIn action color | `BlogSidebar.tsx`, `AuthorCard.tsx` |
-| `#0077B5` | LinkedIn hover for author hero icon | `AuthorHero.tsx` |
+| `#f97316` | links, bullets, role badges, active states, gradients, TOC active states | `components/post-body.module.css`, `components/AuthorCard.tsx`, `components/PostHeaderAuthors.tsx`, many components |
+| `#FF914D` | hero CTA/orange border accents | `tailwind.config.js`, `components/AuthorCard.tsx`, `components/BlogSidebar.tsx` |
+| `#1D2022` | DM Sans heading/body dark text | `components/post-card.tsx`, `components/BlogSidebar.tsx`, `components/AuthorHero.tsx`, `components/post-body.module.css` |
+| `#637277` | muted body/meta text | `components/post-card.tsx`, `components/AuthorHero.tsx`, `components/post-body.module.css` |
+| `#737373` | muted navbar helper text | `components/navbar/main-nav.tsx`, `components/navbar/nav-card.tsx` |
+| `#1e1e2e` | code block/editor background | `styles/index.css`, `components/post-body.tsx`, `components/post-body.module.css` |
+| `#313244` | code block border/header bg pair | `components/post-body.tsx`, `components/post-body.module.css` |
+| `#cdd6f4` | code text | `styles/index.css`, `components/post-body.tsx`, `components/post-body.module.css` |
+| `#FFF4EE` | sidebar CTA fallback/ad background | `components/BlogSidebar.tsx` |
+| `#0A66C2` | LinkedIn action color | `components/BlogSidebar.tsx`, `components/AuthorCard.tsx` |
+| `#0077B5` | LinkedIn hover for author hero icon | `components/AuthorHero.tsx` |
 
 ## Typography
 

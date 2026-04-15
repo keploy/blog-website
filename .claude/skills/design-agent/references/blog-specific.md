@@ -30,8 +30,8 @@ shared Keploy commons.
 - [explicit] The repo defines a global radius token `--radius: 0.5rem` mapped
   into Tailwind `borderRadius.lg/md/sm`.
   Evidence: `styles/index.css`, `tailwind.config.js`.
-- [inferred] On blog surfaces, several repeated hardcoded values behave like de
-  facto local tokens and should not be randomly changed in PRs:
+- [inferred] On blog surfaces, several repeated hardcoded values behave like
+  de facto local tokens and should not be randomly changed in PRs:
   `#1D2022`, `#637277`, `#1e1e2e`, `#313244`, `#cdd6f4`, `#737373`, `#FFF4EE`.
   Evidence: `post-card.tsx`, `BlogSidebar.tsx`, `post-body.tsx`,
   `post-body.module.css`, `navbar/*`.

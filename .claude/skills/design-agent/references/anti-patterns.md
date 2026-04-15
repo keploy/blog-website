@@ -211,7 +211,7 @@ From: `components/more-stories.tsx`, `pages/tag/index.tsx`, `NotFoundPage.tsx`
 ### Why it's wrong
 
 - Blue focus rings do not match the repo's tokenized `ring-ring` behavior in
-  `components/ui/button.tsx` and `sheet.tsx`.
+  `components/ui/button.tsx` and `components/ui/sheet.tsx`.
 - Some legacy controls remove outlines but do not add an equally visible state.
 
 ### Correct alternative

@@ -97,7 +97,7 @@ strict so PR review can push contributors toward existing patterns.
 | `PrismLoader` | `components/prism-loader.tsx` | Legacy Prism highlighter bootstrapper. | Only if Prism-based rendering is restored. | Current article code blocks use CodeMirror. | none. | `<PrismLoader />` |
 | `Alert` | `components/alert.tsx` | Preview/legacy example alert bar. | Preview mode only. | Normal production UI. | `preview`. | `<Alert preview={preview} />` |
 | `Intro` | `components/intro.tsx` | Minimal legacy blog intro section. | Legacy example/blog landing pages. | Current Keploy home page hero. | none. | `<Intro />` |
-| `waitlistBanner` | `components/waitlistBanner.jsx` | Waitlist image CTA link. | Specific campaign placements. | Standard buttons/cards. | none. | `<WaitlistBanner />` |
+| `WaitlistBanner` | `components/waitlistBanner.jsx` | Waitlist image CTA link. | Specific campaign placements. | Standard buttons/cards. | none. | `<WaitlistBanner />` |
 
 ## Usage Notes
 
