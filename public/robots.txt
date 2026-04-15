@@ -1,46 +1,106 @@
-# AI Crawler Allow Directives
-User-agent: GPTBot
-Allow: /
+# Keploy blog robots.txt
+# Policy: allow AI search/answer engines, block training-only crawlers,
+# block Bytespider. Search bots drive visibility in ChatGPT, Claude,
+# Perplexity, Copilot, Gemini answers. Training bots feed future model
+# weights and provide nothing back.
+# Reference: Speedscale / Katalon / Testsigma split policy (2026 competitor audit)
+
+# =============================================================================
+# ALLOW — AI search / answer engines
+# Each named User-agent group only reads rules from THAT group — it does NOT
+# fall through to `User-agent: *`. So the blog `basePath: '/blog'` Disallow
+# rules must be repeated inside this group to prevent AI search bots from
+# indexing /blog/wp/, /blog/api/, /blog/cgi-bin/.
+# =============================================================================
 
 User-agent: OAI-SearchBot
-Allow: /
-
 User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Gemini-Deep-Research
+User-agent: GoogleOther
+User-agent: Applebot
+User-agent: DuckAssistBot
+User-agent: Amazonbot
 Allow: /
+Allow: /blog/api/proxy-image
+Disallow: /blog/cgi-bin/
+Disallow: /blog/wp/
+Disallow: /blog/api/
+
+# =============================================================================
+# DISALLOW — Training-only crawlers
+# =============================================================================
+
+User-agent: GPTBot
+Disallow: /
 
 User-agent: ClaudeBot
-Allow: /
+Disallow: /
 
 User-agent: anthropic-ai
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Perplexity-User
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: GoogleOther
-Allow: /
-
-User-agent: Applebot-Extended
-Allow: /
-
-User-agent: Meta-ExternalAgent
-Allow: /
+Disallow: /
 
 User-agent: CCBot
-Allow: /
+Disallow: /
 
-# Block Bytespider
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+# Always-block scraper
 User-agent: Bytespider
 Disallow: /
 
-# Default rules
+# =============================================================================
+# DEFAULT — Googlebot, Bingbot, and all other crawlers
+#
+# The Next.js app is mounted under basePath: '/blog' (next.config.js), so
+# crawlers request /blog/api/*, /blog/wp/*, /blog/cgi-bin/*, etc. Paths
+# in robots.txt are matched against the exact request path the crawler
+# emits, so every Disallow/Allow here must include the /blog prefix.
+# =============================================================================
+
 User-agent: *
-Disallow: /cgi-bin/
-Disallow: /wp/
+Allow: /
+# Allow /blog/api/proxy-image so crawlers can render external avatars
+# and remote images used throughout the blog UI. All other /blog/api/*
+# endpoints remain disallowed below.
+Allow: /blog/api/proxy-image
+Disallow: /blog/cgi-bin/
+Disallow: /blog/wp/
+Disallow: /blog/api/
+# /blog/search is not disallowed here — pages/search.tsx already emits
+# <meta name="robots" content="noindex, follow" />. Blocking via
+# robots.txt would hide the noindex signal from crawlers and cause
+# "Indexed, though blocked by robots.txt" warnings. Pick one strategy;
+# we keep the page crawlable and rely on the meta tag. See
+# https://developers.google.com/search/docs/crawling-indexing/block-indexing
+
+# =============================================================================
+# Sitemaps
+# =============================================================================
+
 Sitemap: https://keploy.io/blog/sitemap.xml
