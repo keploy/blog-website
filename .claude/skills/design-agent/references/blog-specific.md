@@ -39,8 +39,9 @@ shared Keploy commons.
 - [inferred] The orange underline/highlight pattern is blog-specific and heavily
   reused for section headings and links:
   `bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px]`.
-  Evidence: `pages/tag/index.tsx`, `topBlogs.tsx`, `testimonials.tsx`,
-  `TagsStories.tsx`, `NotFoundPage.tsx`.
+  Evidence: `pages/tag/index.tsx`, `components/topBlogs.tsx`,
+  `components/testimonials.tsx`, `components/TagsStories.tsx`,
+  `components/NotFoundPage.tsx`.
 
 ## Typography overrides
 
@@ -49,12 +50,13 @@ shared Keploy commons.
 - [inferred] This repo uses a stricter role split than the shared commons:
   Baloo 2 is mainly for branded marketing/listing headings, while DM Sans is
   used for article title, body, TOC, author cards, and metadata.
-  Evidence: `styles/index.css`, `post-title.tsx`, `post-body.module.css`,
-  `AuthorCard.tsx`, `TableContents.tsx`.
+  Evidence: `styles/index.css`, `components/post-title.tsx`,
+  `components/post-body.module.css`, `components/AuthorCard.tsx`,
+  `components/TableContents.tsx`.
 - [inferred] New blog PRs should avoid introducing another typography mode on
   article surfaces, because this repo already mixes Baloo 2, DM Sans, Inter,
   and Arial in legacy pockets.
-  Evidence: `styles/index.css`, `json-diff-viewer.module.css`.
+  Evidence: `styles/index.css`, `components/json-diff-viewer.module.css`.
 
 ## Layout overrides
 
@@ -130,21 +132,24 @@ shared Keploy commons.
 
 - [inferred] Article/listing UI frequently uses inline style objects for color,
   font family, font size, and spacing instead of shared classes or components.
-  Evidence: `post-card.tsx`, `AuthorCard.tsx`, `AuthorHero.tsx`,
-  `BlogSidebar.tsx`, `post-title.tsx`.
+  Evidence: `components/post-card.tsx`, `components/AuthorCard.tsx`,
+  `components/AuthorHero.tsx`, `components/BlogSidebar.tsx`,
+  `components/post-title.tsx`.
 - [inferred] The repo has multiple overlapping blog-card implementations:
   `PostCard`, `PostPreview`, `TagsPostPreview`, `HeroPost`, `LatestPost`.
   New PRs should not add another near-duplicate card type.
   Evidence: `components/*post*.tsx`.
 - [inferred] The same pill search input is duplicated in several files instead
   of being formalized as a shared component.
-  Evidence: `more-stories.tsx`, `tag/index.tsx`, `NotFoundPage.tsx`.
+  Evidence: `components/more-stories.tsx`, `pages/tag/index.tsx`,
+  `components/NotFoundPage.tsx`.
 - [inferred] Arbitrary values are common in navbar and hero styling:
   arbitrary shadows, radii, gradient borders, and custom breakpoints.
   New PRs should avoid increasing that drift unless extending an existing local
   pattern in the same component family.
-  Evidence: `navbar/main-nav.tsx`, `navbar/FloatingNavbarClient.tsx`,
-  `hero-post.tsx`, `NotFoundPage.tsx`.
+  Evidence: `components/navbar/main-nav.tsx`,
+  `components/navbar/FloatingNavbarClient.tsx`,
+  `components/hero-post.tsx`, `components/NotFoundPage.tsx`.
 - [inferred] Nested interactive elements already exist, especially
   `Link`-wrapped buttons on tag surfaces, and should be flagged rather than
   copied.

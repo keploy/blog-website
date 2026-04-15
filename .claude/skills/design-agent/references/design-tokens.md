@@ -171,11 +171,11 @@ compared against them.
 | `shadow-sm` | Tailwind default `[inferred]` | cards, TOC, buttons | many components |
 | `shadow-md` | Tailwind default `[inferred]` | hero/list hover, sidebars | many components |
 | `shadow-lg` | Tailwind default `[inferred]` | CTA buttons, cards | many components |
-| `shadow-xl` | Tailwind default `[inferred]` | CTA hover | `ui/button.tsx`, nav |
-| navbar card shadow | `0 6px 14px rgba(0,0,0,0.10)` | nav cards | `navbar/main-nav.tsx`, `nav-card.tsx`, `FloatingNavbarClient.tsx` |
+| `shadow-xl` | Tailwind default `[inferred]` | CTA hover | `components/ui/button.tsx`, nav |
+| navbar card shadow | `0 6px 14px rgba(0,0,0,0.10)` | nav cards | `components/navbar/main-nav.tsx`, `components/navbar/nav-card.tsx`, `components/navbar/FloatingNavbarClient.tsx` |
 | navbar card hover shadow | `0 14px 30px rgba(0,0,0,0.18)` | nav card hover | same as above |
-| floating nav shell | `0 18px 44px rgba(15,23,42,0.18)` | glass nav | `FloatingNavbar.tsx` |
-| dropdown shell | `0 22px 54px rgba(15,23,42,0.22)` / `0 24px 72px rgba(0,0,0,0.24)` | glass dropdowns | `FloatingNavbarClient.tsx`, `ui/navigation-menu.tsx` |
+| floating nav shell | `0 18px 44px rgba(15,23,42,0.18)` | glass nav | `components/navbar/FloatingNavbar.tsx` |
+| dropdown shell | `0 22px 54px rgba(15,23,42,0.22)` / `0 24px 72px rgba(0,0,0,0.24)` | glass dropdowns | `components/navbar/FloatingNavbarClient.tsx`, `components/ui/navigation-menu.tsx` |
 | article code wrapper | `0 4px 12px rgba(0,0,0,0.12)` | post content wrapper | `styles/index.css` |
 | JSON diff viewer | `0 2px 8px rgba(0,0,0,0.1)` and `0 1px 3px rgba(0,0,0,0.1)` | isolated legacy surface | `json-diff-viewer.module.css` |
 
@@ -196,11 +196,11 @@ compared against them.
 
 | Token/Class | Value | Source |
 | --- | --- | --- |
-| `animate-marquee` | `marquee var(--duration) linear infinite` | `tailwind.config.js`, `Marquee.tsx` |
-| `animate-marquee-vertical` | `marquee-vertical var(--duration) linear infinite` | `tailwind.config.js`, `Marquee.tsx` |
+| `animate-marquee` | `marquee var(--duration) linear infinite` | `tailwind.config.js`, `components/Marquee.tsx` |
+| `animate-marquee-vertical` | `marquee-vertical var(--duration) linear infinite` | `tailwind.config.js`, `components/Marquee.tsx` |
 | `animate-accordion-down` | `0.2s ease-out` | `tailwind.config.js` |
 | `animate-accordion-up` | `0.2s ease-out` | `tailwind.config.js` |
-| page fade-in | `fadeIn 0.3s ease-out` | `styles/index.css`, `layout.tsx` |
+| page fade-in | `fadeIn 0.3s ease-out` | `styles/index.css`, `components/layout.tsx` |
 | custom spin | `5s linear infinite spin` | `styles/index.css` |
 
 ## Repeated Layout Widths
