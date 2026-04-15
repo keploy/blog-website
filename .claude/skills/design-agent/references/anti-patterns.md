@@ -23,8 +23,8 @@ From: `components/post-card.tsx`
 ### Why it's wrong
 
 - Typography rules become hard to audit and harder to reuse.
-- The repo already has clear article typography in `post-title.tsx` and
-  `post-body.module.css`.
+- The repo already has clear article typography in
+  `components/post-title.tsx` and `components/post-body.module.css`.
 - PRs that add more of this make the design system less extractable.
 
 ### Correct alternative
@@ -206,7 +206,7 @@ And separately:
 className="focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 ```
 
-From: `components/more-stories.tsx`, `pages/tag/index.tsx`, `NotFoundPage.tsx`
+From: `components/more-stories.tsx`, `pages/tag/index.tsx`, `components/NotFoundPage.tsx`
 
 ### Why it's wrong
 
@@ -270,7 +270,7 @@ Style the link directly:
 />
 ```
 
-Appears in: `MoreStories`, `pages/tag/index.tsx`, `NotFoundPage.tsx`
+Appears in: `components/more-stories.tsx`, `pages/tag/index.tsx`, `components/NotFoundPage.tsx`
 
 ### Why it's wrong
 

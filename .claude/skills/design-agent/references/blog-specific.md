@@ -157,8 +157,9 @@ shared Keploy commons.
 - [inferred] Focus treatment is inconsistent on legacy blog surfaces, with
   custom blue rings in some search inputs and tokenized `focus-visible` rings in
   `components/ui/*`. New blog work should not add another focus style variant.
-  Evidence: `more-stories.tsx`, `tag/index.tsx`, `NotFoundPage.tsx`,
-  `components/ui/button.tsx`, `components/ui/sheet.tsx`.
+  Evidence: `components/more-stories.tsx`, `pages/tag/index.tsx`,
+  `components/NotFoundPage.tsx`, `components/ui/button.tsx`,
+  `components/ui/sheet.tsx`.
 
 ## CMS and content constraints
 
@@ -181,4 +182,4 @@ shared Keploy commons.
   content, so author-card changes should account for malformed or missing avatar
   and description data.
   Evidence: `pages/technology/[slug].tsx`, `pages/community/[slug].tsx`,
-  `utils/extractAuthorData.ts`, `AuthorCard.tsx`.
+  `utils/extractAuthorData.ts`, `components/AuthorCard.tsx`.

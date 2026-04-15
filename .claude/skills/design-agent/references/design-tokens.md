@@ -160,9 +160,9 @@ compared against them.
 | `rounded-md` theme token | `calc(var(--radius) - 2px)` | `tailwind.config.js` |
 | `rounded-sm` theme token | `calc(var(--radius) - 4px)` | `tailwind.config.js` |
 | Repeated card radii | `rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-2xl`, `rounded-full` | component files |
-| Article images | `0.75rem` | `post-body.module.css` |
-| Blockquotes | `0 8px 8px 0` | `post-body.module.css` |
-| Inline code | `4px` | `post-body.module.css` |
+| Article images | `0.75rem` | `components/post-body.module.css` |
+| Blockquotes | `0 8px 8px 0` | `components/post-body.module.css` |
+| Inline code | `4px` | `components/post-body.module.css` |
 
 ## Shadows
 
@@ -177,7 +177,7 @@ compared against them.
 | floating nav shell | `0 18px 44px rgba(15,23,42,0.18)` | glass nav | `components/navbar/FloatingNavbar.tsx` |
 | dropdown shell | `0 22px 54px rgba(15,23,42,0.22)` / `0 24px 72px rgba(0,0,0,0.24)` | glass dropdowns | `components/navbar/FloatingNavbarClient.tsx`, `components/ui/navigation-menu.tsx` |
 | article code wrapper | `0 4px 12px rgba(0,0,0,0.12)` | post content wrapper | `styles/index.css` |
-| JSON diff viewer | `0 2px 8px rgba(0,0,0,0.1)` and `0 1px 3px rgba(0,0,0,0.1)` | isolated legacy surface | `json-diff-viewer.module.css` |
+| JSON diff viewer | `0 2px 8px rgba(0,0,0,0.1)` and `0 1px 3px rgba(0,0,0,0.1)` | isolated legacy surface | `components/json-diff-viewer.module.css` |
 
 ## Breakpoints
 
@@ -188,9 +188,9 @@ compared against them.
 | `lg` | `1024px` | Tailwind default `[inferred]` | class usage throughout repo |
 | `xl` | `1280px` | Tailwind default `[inferred]` | class usage throughout repo |
 | `2xl` | `1536px` | Tailwind default `[inferred]` | class usage throughout repo |
-| article/TOC desktop breakpoint | `1440px` | explicit arbitrary breakpoint | `post-body.tsx`, `TableContents.tsx` |
+| article/TOC desktop breakpoint | `1440px` | explicit arbitrary breakpoint | `components/post-body.tsx`, `components/TableContents.tsx` |
 | mobile article table tweak | `1024px` | explicit media query | `styles/index.css` |
-| article typography mobile tweak | `768px` | explicit media query | `post-body.module.css` |
+| article typography mobile tweak | `768px` | explicit media query | `components/post-body.module.css` |
 
 ## Motion and Animation Tokens
 
@@ -209,5 +209,5 @@ compared against them.
 | --- | --- | --- |
 | `max-w-7xl` | main page shell | `components/container.tsx` |
 | `max-w-[1200px]` | footer shell | `components/footer.tsx` |
-| `max-w-[780px]` | post header, TOC mobile wrapper, article body | `post-header.tsx`, `post-body.tsx`, `TableContents.tsx` |
-| `grid-cols-[minmax(200px,1fr)_minmax(0,780px)_minmax(200px,1fr)]` | article desktop layout | `post-body.tsx` |
+| `max-w-[780px]` | post header, TOC mobile wrapper, article body | `components/post-header.tsx`, `components/post-body.tsx`, `components/TableContents.tsx` |
+| `grid-cols-[minmax(200px,1fr)_minmax(0,780px)_minmax(200px,1fr)]` | article desktop layout | `components/post-body.tsx` |
