@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Container from "../../components/container";
@@ -11,7 +10,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
-import { getBreadcrumbListSchema, MAIN_SITE_URL, SITE_URL } from "../../lib/structured-data";
+import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
 
 export default function AuthorPage({ preview, filteredPosts, content }) {
   if (!filteredPosts || filteredPosts.length === 0) {
@@ -22,62 +21,26 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
     );
   }
 
-  const authorName = filteredPosts[0]?.node?.ppmaAuthorName || "Keploy Author";
-  const authorSlug = sanitizeAuthorSlug(authorName);
-  const authorUrl = `${SITE_URL}/authors/${authorSlug}`;
-  const pageTitle = `${authorName} — Keploy Blog Author`;
-  const pageDescription = `Read all articles by ${authorName} on the Keploy blog — covering software testing, API development, automation, and engineering best practices.`;
-
-  // Person JSON-LD for E-E-A-T author credibility (LIVE-11).
-  // AI models use Person.url + sameAs to resolve author identity and
-  // weight the authority of the pages they cite. worksFor.url points at
-  // MAIN_SITE_URL (https://keploy.io) — not the blog subpath — so the
-  // Organization entity is consistent across every JSON-LD payload.
-  const personSchema = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: authorName,
-    url: authorUrl,
-    jobTitle: "Contributor",
-    worksFor: {
-      "@type": "Organization",
-      name: "Keploy",
-      url: MAIN_SITE_URL,
-    },
-    knowsAbout: [
-      "API Testing",
-      "Test Automation",
-      "Software Engineering",
-      "Developer Tools",
-    ],
-  };
+  const authorName = filteredPosts[0]?.node?.ppmaAuthorName;
 
   return (
     <div className="bg-accent-1">
-      {/*
-        LIVE-11 fix. Previously the <title> tag was absent from author
-        pages because components/meta.tsx does not emit a <title>, and
-        this page never added one locally. Authors pages returned 200
-        with empty <title></title>, which kills CTR and AI extraction
-        signal.
-      */}
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
       <Layout
         preview={preview}
         featuredImage={HOME_OG_IMAGE_URL}
-        Title={pageTitle}
-        Description={pageDescription}
+        Title={`${authorName} Page`}
+        Description={`Read all articles by ${authorName} on the Keploy blog — covering software testing, API development, automation, and engineering best practices.`}
         structuredData={[
           getBreadcrumbListSchema([
             { name: "Home", url: SITE_URL },
             { name: "Authors", url: `${SITE_URL}/authors` },
-            { name: authorName, url: authorUrl },
+            {
+              name: authorName || "Author",
+              url: `${SITE_URL}/authors/${sanitizeAuthorSlug(authorName || "")}`,
+            },
           ]),
-          personSchema,
         ]}
-        canonicalUrl={authorUrl}
+        canonicalUrl={`${SITE_URL}/authors/${sanitizeAuthorSlug(authorName || "")}`}
       >
         {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
         <Header />

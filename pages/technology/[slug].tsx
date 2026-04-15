@@ -15,7 +15,7 @@ import {
   getPostAndMorePosts,
 } from "../../lib/api";
 import ContainerSlug from "../../components/containerSlug";
-import { useRef, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
@@ -48,49 +48,30 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const { slug } = router.query;
   const morePosts = posts?.edges;
   const time = 5 + calculateReadingTime(post?.content || "");
-
-  // Reviewer data — computed synchronously at render time so the reviewer
-  // name appears in the SSR HTML payload (not just after client hydration).
-  // Previously this was a useEffect that set state, which meant AI crawlers
-  // saw the literal placeholder "Reviewer" string in the initial HTML.
-  // Author mismatch + reviewer bugs reported 2026-04-14.
-  const reviewerIndex = post?.ppmaAuthorName === "Neha" ? 1 : 0;
-  const reviewerNode =
-    reviewAuthorDetails && reviewAuthorDetails.length > 0
-      ? reviewAuthorDetails[reviewerIndex]?.edges?.[0]?.node
-      : null;
-  const postBodyReviewerAuthor = reviewerIndex;
-  const reviewAuthorName = reviewerNode?.name || "";
-  const reviewAuthorImageUrl = reviewerNode?.avatar?.url || "";
-  const reviewAuthorDescription = reviewerNode?.description || "";
-
-  // Writer avatar — use ppmaAuthorImage directly (SSR). Previously this
-  // was extracted from post.content via regex inside a useEffect, which
-  // meant the SSR HTML rendered /blog/images/author.png as a placeholder.
-  const ppmaImage =
-    typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
-      ? post.ppmaAuthorImage
-      : "";
-  const writerAvatarUrl = ppmaImage || "/blog/images/author.png";
-
-  // Writer description — extract synchronously from post content (no effect).
-  const writerDescriptionMatch =
-    post?.content?.match(
-      /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i,
-    );
-  const blogWriterDescription =
-    writerDescriptionMatch && writerDescriptionMatch[1]?.trim().length > 0
-      ? writerDescriptionMatch[1].trim()
-      : "An author for Keploy's blog.";
-
-  // Back-compat alias for any downstream reference to avatarImgSrc.
-  const avatarImgSrc = writerAvatarUrl;
+  const [avatarImgSrc, setAvatarImgSrc] = useState("");
+  const [blogWriterDescription, setBlogWriterDescription] = useState("");
+  const [reviewAuthorName, setreviewAuthorName] = useState("");
+  const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
+  const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
+  const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
+  useEffect(() => {
+    if (reviewAuthorDetails && reviewAuthorDetails?.length > 0) {
+      const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
+      const authorNode = reviewAuthorDetails[authorIndex]?.edges[0]?.node;
+      if (authorNode) {
+        setpostBodyReviewerAuthor(authorIndex);
+        setreviewAuthorName(authorNode.name);
+        setreviewAuthorImageUrl(authorNode.avatar.url);
+        setreviewAuthorDescription(authorNode.description);
+      }
+    }
+  }, [post, reviewAuthorDetails]);
 
   const blogwriter = [
     {
       name: post?.ppmaAuthorName || "Author",
-      ImageUrl: writerAvatarUrl,
-      description: blogWriterDescription,
+      ImageUrl: avatarImgSrc || "/blog/images/author.png",
+      description: blogWriterDescription || "An author for keploy's blog.",
     },
   ];
   const blogreviewer = [
@@ -118,9 +99,34 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       readProgress.set(v.value.scrollY);
     },
   });
-  // Author + description extraction previously lived in a useEffect here
-  // and produced client-only state updates. Both are now computed
-  // synchronously above so the SSR HTML contains the correct data.
+  useEffect(() => {
+    if (post && post.content) {
+      const content = post.content;
+
+      const avatarDivMatch = content.match(
+        /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
+      );
+      if (avatarDivMatch && avatarDivMatch[1]) {
+        setAvatarImgSrc(avatarDivMatch[1]);
+      } else {
+        setAvatarImgSrc("/blog/images/author.png");
+      }
+
+      // Match the <p> with class pp-author-boxes-description and extract its content
+      const authorDescriptionMatch = content.match(
+        /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i
+      );
+
+      if (
+        authorDescriptionMatch &&
+        authorDescriptionMatch[1].trim()?.length > 0
+      ) {
+        setBlogWriterDescription(authorDescriptionMatch[1].trim());
+      } else {
+        setBlogWriterDescription("An author for Keploy's blog.");
+      }
+    }
+  }, [post]);
 
   useEffect(() => {
     if (!router.isFallback && !post?.slug) {
@@ -148,20 +154,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         description: safeDescription,
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
-        // LIVE-22: use PublishPress author image, not the placeholder.
-        authorImage: ppmaImage || undefined,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Technology",
-        // GEO-13: mark this as TechArticle (more specific than BlogPosting
-        // for developer content). AI models weight TechArticle higher
-        // for technical queries.
-        categorySlug: "technology",
-        proficiencyLevel: "Intermediate",
-        // LIVE-22: emit reviewedBy Person schema. Skipped by the
-        // generator when the reviewer equals the author or when the
-        // name falls back to the "Reviewer" placeholder.
-        reviewerName: reviewAuthorName || undefined,
-        reviewerImage: reviewAuthorImageUrl || undefined,
-        reviewerDescription: reviewAuthorDescription || undefined,
       })
     );
   } else {

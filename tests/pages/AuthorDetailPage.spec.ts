@@ -14,40 +14,7 @@ test.describe('Author Detail Page - Component Availability', () => {
   test('should load author detail page successfully', async ({ page }) => {
     await expect(page.locator('body')).toBeVisible();
     const title = await page.title();
-    // LIVE-11 regression guard: author pages previously rendered with
-    // an empty <title></title> because components/meta.tsx emits
-    // twitter:title and og:title but no actual <title> tag, and
-    // pages/authors/[slug].tsx passed Title to Layout without adding
-    // its own <title> to Head. Fixed by emitting <title> explicitly.
-    // This assertion catches any future regression that reintroduces
-    // the empty title.
     expect(title).toBeDefined();
-    expect(title.trim().length).toBeGreaterThan(0);
-    expect(title).not.toMatch(/^undefined/i);
-  });
-
-  test('should emit Person JSON-LD for E-E-A-T author credibility', async ({ page }) => {
-    // LIVE-11: author pages now include Person schema so AI models can
-    // resolve the author entity and weight the authority of the posts
-    // they cite. This test asserts the schema is present in the HTML
-    // payload so it reaches AI crawlers before any hydration.
-    const personSchemaCount = await page
-      .locator('script[type="application/ld+json"]')
-      .evaluateAll((els) =>
-        els.filter((el) => {
-          try {
-            const data = JSON.parse(el.textContent || '');
-            return (
-              data &&
-              (data['@type'] === 'Person' ||
-                (Array.isArray(data) && data.some((x: { '@type'?: string }) => x['@type'] === 'Person')))
-            );
-          } catch {
-            return false;
-          }
-        }).length,
-      );
-    expect(personSchemaCount).toBeGreaterThan(0);
   });
 
   test('should render the Navigation component', async ({ page }) => {
