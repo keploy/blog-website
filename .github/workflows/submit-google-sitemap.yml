@@ -14,6 +14,17 @@ jobs:
     env:
       GOOGLE_SITEMAP_URL: https://keploy.io/blog/sitemap.xml
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install googleapis
+        run: npm install --no-save googleapis
+
       - name: Validate Google Search Console secrets
         env:
           GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
@@ -35,92 +46,35 @@ jobs:
             fi
           done
 
-      - name: Exchange service account JWT for access token
-        id: auth
+      - name: Submit sitemap to Google Search Console
         env:
           GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
           GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
-        run: |
-          set -euo pipefail
-
-          printf '%b' "${GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY}" > /tmp/google-service-account.pem
-          chmod 600 /tmp/google-service-account.pem
-
-          JWT_PARTS=$(python3 - <<'PY'
-          import base64
-          import json
-          import os
-          import time
-
-          def b64url(data: bytes) -> str:
-              return base64.urlsafe_b64encode(data).rstrip(b"=").decode("ascii")
-
-          now = int(time.time())
-          header = {"alg": "RS256", "typ": "JWT"}
-          claim_set = {
-              "iss": os.environ["GOOGLE_SERVICE_ACCOUNT_EMAIL"],
-              "scope": "https://www.googleapis.com/auth/webmasters",
-              "aud": "https://oauth2.googleapis.com/token",
-              "iat": now,
-              "exp": now + 3600,
-          }
-
-          print(b64url(json.dumps(header, separators=(",", ":")).encode("utf-8")))
-          print(b64url(json.dumps(claim_set, separators=(",", ":")).encode("utf-8")))
-          PY
-          )
-
-          JWT_HEADER=$(printf '%s\n' "$JWT_PARTS" | sed -n '1p')
-          JWT_PAYLOAD=$(printf '%s\n' "$JWT_PARTS" | sed -n '2p')
-          JWT_UNSIGNED="${JWT_HEADER}.${JWT_PAYLOAD}"
-
-          JWT_SIGNATURE=$(printf '%s' "$JWT_UNSIGNED" \
-            | openssl dgst -sha256 -sign /tmp/google-service-account.pem -binary \
-            | openssl base64 -A \
-            | tr '+/' '-_' \
-            | tr -d '=')
-
-          JWT_ASSERTION="${JWT_UNSIGNED}.${JWT_SIGNATURE}"
-
-          TOKEN_RESPONSE=$(curl -sS --fail-with-body https://oauth2.googleapis.com/token \
-            -d grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer \
-            --data-urlencode assertion="${JWT_ASSERTION}")
-
-          ACCESS_TOKEN=$(printf '%s' "$TOKEN_RESPONSE" | jq -r '.access_token')
-
-          if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
-            echo "::error::Failed to retrieve Google access token. Next step: verify that the service account email and private key match, ensure the Search Console API is enabled for the Google Cloud project, and confirm the service account has access to the Search Console property."
-            printf '%s\n' "$TOKEN_RESPONSE"
-            exit 1
-          fi
-
-          echo "::add-mask::$ACCESS_TOKEN"
-          echo "access_token=$ACCESS_TOKEN" >> "$GITHUB_OUTPUT"
-          rm -f /tmp/google-service-account.pem
-
-      - name: Submit sitemap to Google Search Console
-        env:
-          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
           GOOGLE_SEARCH_CONSOLE_SITE_URL: ${{ secrets.GOOGLE_SEARCH_CONSOLE_SITE_URL }}
         run: |
-          set -euo pipefail
+          node - <<'EOF'
+          const { google } = require('googleapis');
 
-          ENCODED_SITE_URL=$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["GOOGLE_SEARCH_CONSOLE_SITE_URL"], safe=""))')
-          ENCODED_SITEMAP_URL=$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["GOOGLE_SITEMAP_URL"], safe=""))')
+          // GH Actions stores multi-line secrets with literal \n — normalise them.
+          const key = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, '\n');
 
-          HTTP_CODE=$(curl -sS -o /tmp/google-sitemap-submit.txt -w "%{http_code}" \
-            -X PUT "https://www.googleapis.com/webmasters/v3/sites/${ENCODED_SITE_URL}/sitemaps/${ENCODED_SITEMAP_URL}" \
-            -H "Authorization: Bearer ${ACCESS_TOKEN}")
+          const auth = new google.auth.JWT(
+            process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+            null,
+            key,
+            ['https://www.googleapis.com/auth/webmasters']
+          );
 
-          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
-            echo "::error::Google Search Console sitemap submission failed with HTTP ${HTTP_CODE}."
-            cat /tmp/google-sitemap-submit.txt 2>/dev/null || true
-            exit 1
-          fi
+          const sc = google.webmasters({ version: 'v3', auth });
 
-          echo "Submitted ${GOOGLE_SITEMAP_URL} to Google Search Console (HTTP ${HTTP_CODE})"
-
-      - name: Log sitemap submission
-        run: |
-          echo "Sitemap submitted: ${GOOGLE_SITEMAP_URL}"
-          echo "Optional follow-up: add URL Inspection API calls here for a few recently changed URLs."
+          sc.sitemaps.submit({
+            siteUrl: process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL,
+            feedpath: process.env.GOOGLE_SITEMAP_URL,
+          }).then(() => {
+            console.log('Submitted', process.env.GOOGLE_SITEMAP_URL, 'to Google Search Console');
+          }).catch((err) => {
+            console.error('::error::Google Search Console submission failed:', err.message);
+            console.error('Next step: verify the service account email and private key match, ensure the Search Console API is enabled, and confirm the service account has access to the Search Console property.');
+            process.exit(1);
+          });
+          EOF

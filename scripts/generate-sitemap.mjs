@@ -63,11 +63,18 @@ async function fetchPostsPage(endpoint, cursor) {
           node {
             slug
             modified
+            date
             categories {
               edges {
                 node {
                   slug
                 }
+              }
+            }
+            featuredImage {
+              node {
+                sourceUrl
+                altText
               }
             }
           }
@@ -149,6 +156,8 @@ async function fetchAllPosts(endpoint) {
 }
 
 function buildEntries(posts, mainSiteUrl) {
+  const today = new Date().toISOString().split("T")[0];
+
   const staticEntries = [
     { loc: `${mainSiteUrl}/blog`, priority: "1.00" },
     ...Array.from(VALID_CATEGORIES, (category) => ({
@@ -160,7 +169,6 @@ function buildEntries(posts, mainSiteUrl) {
   const postEntries = [];
   const latestByCategory = new Map();
   let latestOverall = null;
-  const missingLastmodEntries = [];
   const seen = new Set();
 
   for (const post of posts) {
@@ -176,30 +184,43 @@ function buildEntries(posts, mainSiteUrl) {
     }
 
     seen.add(loc);
-    const lastmod = normalizeLastmod(post.modified);
+
+    // Prefer modified date; fall back to publish date; last resort is today.
+    // Never assign latestOverall to a post — that would falsely signal a 2020
+    // post was updated recently, eroding Google's trust in lastmod signals.
+    const lastmod =
+      normalizeLastmod(post.modified) ??
+      normalizeLastmod(post.date) ??
+      today;
+
+    const imageUrl = post.featuredImage?.node?.sourceUrl ?? null;
+    const imageAlt = post.featuredImage?.node?.altText ?? null;
+
     const entry = {
       loc,
       lastmod,
-      priority: "0.64",
+      priority: "0.70",
+      ...(imageUrl ? { image: { loc: imageUrl, title: imageAlt || null } } : {}),
     };
     postEntries.push(entry);
 
-    if (lastmod) {
+    // Only track dates that came from WordPress (not our synthetic "today")
+    // to avoid inflating latestOverall when many posts lack both modified and date.
+    // A post modified today should still update latestByCategory/latestOverall.
+    const isFromWordPress =
+      normalizeLastmod(post.modified) !== null ||
+      normalizeLastmod(post.date) !== null;
+    if (isFromWordPress) {
       if (!latestByCategory.has(category) || lastmod > latestByCategory.get(category)) {
         latestByCategory.set(category, lastmod);
       }
       if (!latestOverall || lastmod > latestOverall) {
         latestOverall = lastmod;
       }
-    } else {
-      missingLastmodEntries.push(entry);
     }
   }
 
-  const fallbackLastmod = latestOverall ?? new Date().toISOString().split("T")[0];
-  for (const entry of missingLastmodEntries) {
-    entry.lastmod = fallbackLastmod;
-  }
+  const fallbackLastmod = latestOverall ?? today;
 
   const resolvedStaticEntries = staticEntries.map(({ loc, priority, category }) => ({
     loc,
@@ -214,14 +235,29 @@ function buildEntries(posts, mainSiteUrl) {
 }
 
 function buildSitemapXml(entries) {
+  const hasImages = entries.some((e) => e.image);
+
+  const namespaces = [
+    'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+    ...(hasImages ? ['xmlns:image="http://www.google.com/schemas/sitemap-image/0.9"'] : []),
+  ].join("\n        ");
+
   const body = entries
-    .map(
-      ({ loc, lastmod, priority }) =>
-        `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    <lastmod>${escapeXml(lastmod)}</lastmod>\n    <priority>${priority}</priority>\n  </url>`
-    )
+    .map(({ loc, lastmod, priority, image }) => {
+      let entry = `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    <lastmod>${escapeXml(lastmod)}</lastmod>\n    <priority>${priority}</priority>`;
+      if (image) {
+        entry += `\n    <image:image>\n      <image:loc>${escapeXml(image.loc)}</image:loc>`;
+        if (image.title) {
+          entry += `\n      <image:title>${escapeXml(image.title)}</image:title>`;
+        }
+        entry += `\n    </image:image>`;
+      }
+      entry += `\n  </url>`;
+      return entry;
+    })
     .join("\n");
 
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset ${namespaces}>\n${body}\n</urlset>\n`;
 }
 
 async function main() {
