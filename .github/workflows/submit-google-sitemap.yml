@@ -120,7 +120,7 @@ jobs:
 
           echo "Submitted ${GOOGLE_SITEMAP_URL} to Google Search Console (HTTP ${HTTP_CODE})"
 
-      - name: Log changed sitemap URLs
+      - name: Log sitemap submission
         run: |
           echo "Sitemap submitted: ${GOOGLE_SITEMAP_URL}"
           echo "Optional follow-up: add URL Inspection API calls here for a few recently changed URLs."
