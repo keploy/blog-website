@@ -225,6 +225,16 @@ module.exports = {
         destination: '/community/codium-vs-copilot-which-ai-coding-assistant-is-best-for-you',
         permanent: true,
       },
+      {
+        source: '/unit-test-generat',
+        destination: '/community/revolutionising-unit-test-generation-with-llms',
+        permanent: true,
+      },
+      {
+        source: '/test-case-generation',
+        destination: '/community/how-to-generate-test-cases-with-automation-tools',
+        permanent: true,
+      },
     ]
   },
 }
