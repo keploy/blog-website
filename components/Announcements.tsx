@@ -18,6 +18,8 @@ const setAnnouncementHeight = (value: string) => {
   document.documentElement.style.setProperty("--announcement-h", value);
 };
 
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 function MarqueeContent() {
   const items = [
     "Keploy is hosting a community meetup in San Francisco!",
@@ -57,9 +59,9 @@ export function Announcements() {
     setIsVisible(true);
   }, []);
 
-  // useLayoutEffect so --announcement-h is written before the browser paints,
+  // useLayoutEffect on the client so --announcement-h is written before paint,
   // preventing the one-frame flicker where the bar is visible but offsets are still 0.
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!isVisible || !containerRef.current) {
       setAnnouncementHeight("0px");
       return;
@@ -143,7 +145,7 @@ export function Announcements() {
   return (
     <div
       ref={containerRef}
-      role="banner"
+      role="region"
       aria-label="Event announcement"
       className="fixed inset-x-0 top-0 z-[60] border-b border-white/40 bg-cover bg-center bg-no-repeat shadow-[0_12px_30px_rgba(234,88,12,0.16)] backdrop-blur"
       onTouchStart={handleTouchStart}

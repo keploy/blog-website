@@ -1,4 +1,35 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+const announcementRegionSelector = '[role="region"][aria-label="Event announcement"]';
+
+const dispatchSyntheticTouch = async (
+  page: Page,
+  selector: string,
+  type: 'touchstart' | 'touchmove' | 'touchend',
+  touches: Array<{ clientX: number; clientY: number }>
+) => {
+  await page.evaluate(
+    ({ targetSelector, eventType, touchPoints }) => {
+      const el = document.querySelector(targetSelector);
+      if (!el) {
+        throw new Error(`Element not found for selector: ${targetSelector}`);
+      }
+
+      const event = new Event(eventType, { bubbles: true, cancelable: true });
+      Object.defineProperty(event, 'touches', {
+        configurable: true,
+        value: touchPoints,
+      });
+      Object.defineProperty(event, 'changedTouches', {
+        configurable: true,
+        value: touchPoints,
+      });
+
+      el.dispatchEvent(event);
+    },
+    { targetSelector: selector, eventType: type, touchPoints: touches }
+  );
+};
 
 test.describe('Announcements — Desktop', () => {
   test.beforeEach(async ({ page, baseURL }) => {
@@ -7,7 +38,7 @@ test.describe('Announcements — Desktop', () => {
   });
 
   test('should render with correct ARIA role and label', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
   });
 
@@ -47,7 +78,7 @@ test.describe('Announcements — Desktop', () => {
   });
 
   test('should display marquee event text', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
     await expect(banner).toContainText('GitTogether SF');
     await expect(banner).toContainText('San Francisco');
@@ -56,7 +87,7 @@ test.describe('Announcements — Desktop', () => {
   test('should set --announcement-h CSS variable to a non-zero value when visible', async ({
     page,
   }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
 
     const announcementH = await page.evaluate(() =>
@@ -69,7 +100,7 @@ test.describe('Announcements — Desktop', () => {
   });
 
   test('should hide the announcement bar when dismiss button is clicked', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
 
     const dismissBtn = page.locator('button[aria-label="Dismiss announcement"]');
@@ -81,7 +112,7 @@ test.describe('Announcements — Desktop', () => {
   });
 
   test('should set --announcement-h to 0px after dismiss', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
 
     const dismissBtn = page.locator('button[aria-label="Dismiss announcement"]');
@@ -95,7 +126,7 @@ test.describe('Announcements — Desktop', () => {
   });
 
   test('should be positioned at the top of the page (fixed)', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
 
     const box = await banner.boundingBox();
@@ -105,7 +136,7 @@ test.describe('Announcements — Desktop', () => {
   });
 
   test('should remain visible after scrolling the page', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
 
     await page.evaluate(() => window.scrollTo(0, 500));
@@ -117,7 +148,11 @@ test.describe('Announcements — Desktop', () => {
 });
 
 test.describe('Announcements — Mobile', () => {
-  test.use({ viewport: { width: 375, height: 812 } });
+  test.use({
+    viewport: { width: 375, height: 812 },
+    hasTouch: true,
+    isMobile: true,
+  });
 
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL!);
@@ -125,7 +160,7 @@ test.describe('Announcements — Mobile', () => {
   });
 
   test('should render the announcement bar on mobile', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
   });
 
@@ -137,7 +172,7 @@ test.describe('Announcements — Mobile', () => {
   });
 
   test('should display the compact mobile CTA button', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
 
     // The mobile CTA link is inside the mobile-only layout (shown below lg)
@@ -149,13 +184,13 @@ test.describe('Announcements — Mobile', () => {
   });
 
   test('should display marquee event text on mobile', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
     await expect(banner).toContainText('GitTogether SF');
   });
 
   test('should dismiss when swiped up past the threshold', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
 
     const box = await banner.boundingBox();
@@ -165,33 +200,20 @@ test.describe('Announcements — Mobile', () => {
     const startY = box!.y + box!.height / 2;
 
     // Simulate a swipe-up gesture: start in the banner, move up > 50px, then release
-    await page.touchscreen.tap(centerX, startY);
-    await page.evaluate(
-      ({ cx, sy }) => {
-        const el = document.querySelector('[role="banner"][aria-label="Event announcement"]')!;
-        el.dispatchEvent(
-          new TouchEvent('touchstart', {
-            bubbles: true,
-            touches: [new Touch({ identifier: 1, target: el, clientX: cx, clientY: sy })],
-          }),
-        );
-        el.dispatchEvent(
-          new TouchEvent('touchmove', {
-            bubbles: true,
-            touches: [new Touch({ identifier: 1, target: el, clientX: cx, clientY: sy - 70 })],
-          }),
-        );
-        el.dispatchEvent(new TouchEvent('touchend', { bubbles: true, touches: [] }));
-      },
-      { cx: centerX, sy: startY },
-    );
+    await dispatchSyntheticTouch(page, announcementRegionSelector, 'touchstart', [
+      { clientX: centerX, clientY: startY },
+    ]);
+    await dispatchSyntheticTouch(page, announcementRegionSelector, 'touchmove', [
+      { clientX: centerX, clientY: startY - 70 },
+    ]);
+    await dispatchSyntheticTouch(page, announcementRegionSelector, 'touchend', []);
 
     // After the swipe-up, the bar should animate out (220ms timeout in the component)
     await expect(banner).not.toBeVisible({ timeout: 2000 });
   });
 
   test('should not dismiss when swiped up below the threshold (< 50px)', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
 
     const box = await banner.boundingBox();
@@ -201,32 +223,20 @@ test.describe('Announcements — Mobile', () => {
     const startY = box!.y + box!.height / 2;
 
     // Swipe up only 20px — below the 50px dismiss threshold
-    await page.evaluate(
-      ({ cx, sy }) => {
-        const el = document.querySelector('[role="banner"][aria-label="Event announcement"]')!;
-        el.dispatchEvent(
-          new TouchEvent('touchstart', {
-            bubbles: true,
-            touches: [new Touch({ identifier: 1, target: el, clientX: cx, clientY: sy })],
-          }),
-        );
-        el.dispatchEvent(
-          new TouchEvent('touchmove', {
-            bubbles: true,
-            touches: [new Touch({ identifier: 1, target: el, clientX: cx, clientY: sy - 20 })],
-          }),
-        );
-        el.dispatchEvent(new TouchEvent('touchend', { bubbles: true, touches: [] }));
-      },
-      { cx: centerX, sy: startY },
-    );
+    await dispatchSyntheticTouch(page, announcementRegionSelector, 'touchstart', [
+      { clientX: centerX, clientY: startY },
+    ]);
+    await dispatchSyntheticTouch(page, announcementRegionSelector, 'touchmove', [
+      { clientX: centerX, clientY: startY - 20 },
+    ]);
+    await dispatchSyntheticTouch(page, announcementRegionSelector, 'touchend', []);
 
     // Bar should still be visible
     await expect(banner).toBeVisible({ timeout: 1000 });
   });
 
   test('should set --announcement-h CSS variable on mobile', async ({ page }) => {
-    const banner = page.locator('[role="banner"][aria-label="Event announcement"]');
+    const banner = page.locator(announcementRegionSelector);
     await expect(banner).toBeVisible({ timeout: 5000 });
 
     const announcementH = await page.evaluate(() =>
