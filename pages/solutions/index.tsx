@@ -92,10 +92,10 @@ export default function SolutionsHub({ preview }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getStaticProps({ preview = false }) {
   return {
     props: {
-      preview: false,
+      preview,
     },
     revalidate: 600,
   };

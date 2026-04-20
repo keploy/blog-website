@@ -124,6 +124,10 @@ test.describe('SEO and Meta Tags Configuration', () => {
         expect(body).toContain('<loc>https://keploy.io/blog</loc>');
         expect(body).toContain('<loc>https://keploy.io/blog/community</loc>');
         expect(body).toContain('<loc>https://keploy.io/blog/technology</loc>');
+        expect(body).toContain('<loc>https://keploy.io/blog/integrations</loc>');
+        expect(body).toContain('<loc>https://keploy.io/blog/solutions</loc>');
+        expect(body).toContain('<loc>https://keploy.io/blog/case-studies</loc>');
+        expect(body).toContain('<loc>https://keploy.io/blog/glossary</loc>');
     });
 
     test('AI referral tracker should push event to dataLayer on UTM-attributed landing', async ({ page, baseURL }) => {

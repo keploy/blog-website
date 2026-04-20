@@ -79,7 +79,11 @@ function buildSitemap(posts: PostNode[]): string {
     return /^\d{4}-\d{2}-\d{2}$/.test(dateOnly) ? dateOnly : null;
   };
 
-  const allPostDates = posts
+  const includedPosts = posts.filter((post) =>
+    post.categories.edges.some((edge) => VALID_CATEGORIES.has(edge.node.slug))
+  );
+
+  const allPostDates = includedPosts
     .map((post) => normalizeDate(post.modified))
     .filter((value): value is string => Boolean(value));
 
@@ -114,15 +118,15 @@ function buildSitemap(posts: PostNode[]): string {
       lastmod: latestByCategory("technology"),
       priority: "0.80",
     },
-    { loc: `${MAIN_SITE_URL}/blog/integrations`, lastmod: today, priority: "0.62" },
-    { loc: `${MAIN_SITE_URL}/blog/solutions`, lastmod: today, priority: "0.62" },
-    { loc: `${MAIN_SITE_URL}/blog/case-studies`, lastmod: today, priority: "0.62" },
-    { loc: `${MAIN_SITE_URL}/blog/glossary`, lastmod: today, priority: "0.62" },
+    { loc: `${MAIN_SITE_URL}/blog/integrations`, lastmod: latestPostDate, priority: "0.62" },
+    { loc: `${MAIN_SITE_URL}/blog/solutions`, lastmod: latestPostDate, priority: "0.62" },
+    { loc: `${MAIN_SITE_URL}/blog/case-studies`, lastmod: latestPostDate, priority: "0.62" },
+    { loc: `${MAIN_SITE_URL}/blog/glossary`, lastmod: latestPostDate, priority: "0.62" },
   ];
 
   const postEntries: { loc: string; lastmod: string; priority: string }[] = [];
   const seen = new Set<string>();
-  for (const post of posts) {
+  for (const post of includedPosts) {
     const category = post.categories.edges
       .map((e) => e.node.slug)
       .find((slug) => VALID_CATEGORIES.has(slug));
