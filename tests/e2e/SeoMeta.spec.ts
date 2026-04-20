@@ -130,6 +130,29 @@ test.describe('SEO and Meta Tags Configuration', () => {
         expect(body).toContain('<loc>https://keploy.io/blog/glossary</loc>');
     });
 
+    test('Glossary hub route should render with canonical metadata and DefinedTermSet schema', async ({ page, baseURL }) => {
+        const response = await page.goto(`${baseURL!}/glossary`);
+        expect(response?.status()).toBe(200);
+        await page.waitForLoadState('domcontentloaded');
+
+        const canonical = page.locator('link[rel="canonical"]');
+        await expect(canonical).toBeAttached();
+        await expect(canonical).toHaveAttribute('href', 'https://keploy.io/blog/glossary');
+
+        const schemas = page.locator('script[type="application/ld+json"]');
+        const contents = await schemas.allTextContents();
+        const hasDefinedTermSet = contents.some((content) => {
+            try {
+                const parsed = JSON.parse(content);
+                return parsed?.['@type'] === 'DefinedTermSet';
+            } catch {
+                return false;
+            }
+        });
+
+        expect(hasDefinedTermSet).toBe(true);
+    });
+
     test('AI referral tracker should push event to dataLayer on UTM-attributed landing', async ({ page, baseURL }) => {
         await page.goto(`${baseURL!}/?utm_source=chatgpt`);
 
