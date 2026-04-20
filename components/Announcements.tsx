@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, X } from "lucide-react";
 import { Marquee } from "./Marquee";
@@ -43,6 +43,7 @@ function MarqueeContent() {
 export function Announcements() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const touchStartY = useRef<number | null>(null);
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isMarqueePaused, setIsMarqueePaused] = useState(false);
   const [dragY, setDragY] = useState(0);
@@ -56,7 +57,9 @@ export function Announcements() {
     setIsVisible(true);
   }, []);
 
-  useEffect(() => {
+  // useLayoutEffect so --announcement-h is written before the browser paints,
+  // preventing the one-frame flicker where the bar is visible but offsets are still 0.
+  useLayoutEffect(() => {
     if (!isVisible || !containerRef.current) {
       setAnnouncementHeight("0px");
       return;
@@ -65,19 +68,43 @@ export function Announcements() {
     const node = containerRef.current;
     const syncHeight = () => setAnnouncementHeight(`${node.offsetHeight}px`);
 
+    // rAF-debounced handler so rapid resize events collapse into a single measurement.
+    let animationFrameId: number | null = null;
+    const scheduleSyncHeight = () => {
+      if (animationFrameId !== null) window.cancelAnimationFrame(animationFrameId);
+      animationFrameId = window.requestAnimationFrame(() => {
+        animationFrameId = null;
+        syncHeight();
+      });
+    };
+
     syncHeight();
 
-    const resizeObserver = new ResizeObserver(syncHeight);
-    resizeObserver.observe(node);
-    window.addEventListener("resize", syncHeight);
+    // ResizeObserver is widely supported but guard for SSR / older environments.
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(scheduleSyncHeight);
+      resizeObserver.observe(node);
+    }
+    window.addEventListener("resize", scheduleSyncHeight);
 
     return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener("resize", syncHeight);
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", scheduleSyncHeight);
+      if (animationFrameId !== null) window.cancelAnimationFrame(animationFrameId);
     };
   }, [isVisible]);
 
+  // Clear the swipe-dismiss timer if the component unmounts mid-animation.
+  useEffect(() => {
+    return () => {
+      if (dismissTimerRef.current !== null) clearTimeout(dismissTimerRef.current);
+    };
+  }, []);
+
   const handleDismiss = () => {
+    // Reset height immediately so the header/nav offsets collapse on the same frame.
+    setAnnouncementHeight("0px");
     setIsVisible(false);
   };
 
@@ -94,7 +121,7 @@ export function Announcements() {
   const handleTouchEnd = () => {
     if (dragY < -50) {
       setDismissing(true);
-      setTimeout(handleDismiss, 220);
+      dismissTimerRef.current = setTimeout(handleDismiss, 220);
     } else {
       setDragY(0);
     }
@@ -123,7 +150,7 @@ export function Announcements() {
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-white/10" />
 
-      <div className="relative mx-auto max-w-[1440px] px-3 py-1 sm:px-5 sm:pr-12 lg:px-12 lg:py-1.5">
+      <div className="relative mx-auto max-w-[1440px] pl-3 pr-12 py-1 sm:px-5 sm:pr-12 lg:px-12 lg:py-1.5">
         {/* Mobile: single row — marquee + compact CTA. Swipe up to dismiss. */}
         <div className="flex min-w-0 items-center gap-2 lg:hidden">
           <div
@@ -199,7 +226,7 @@ export function Announcements() {
         type="button"
         onClick={handleDismiss}
         aria-label="Dismiss announcement"
-        className="absolute right-3 top-1/2 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/75 bg-white/18 text-[#6f2b00] transition hover:bg-white/30 lg:right-4 lg:inline-flex"
+        className="absolute right-3 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/75 bg-white/18 text-[#6f2b00] transition hover:bg-white/30 lg:right-4"
       >
         <X className="h-4 w-4" />
       </button>

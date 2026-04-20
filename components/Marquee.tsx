@@ -30,7 +30,7 @@ export function Marquee({
           <div
             key={i}
             className={`flex shrink-0 justify-around [gap:var(--gap)] will-change-transform [backface-visibility:hidden] ${vertical ? 'animate-marquee-vertical flex-col' : 'animate-marquee flex-row'} ${pauseOnHover ? 'group-hover:[animation-play-state:paused]' : ''} ${reverse ? '[animation-direction:reverse]' : ''}`}
-            style={{ animationPlayState: paused ? 'paused' : 'running' }}
+            style={{ animationPlayState: paused ? 'paused' : undefined }}
           >
             {children}
           </div>
