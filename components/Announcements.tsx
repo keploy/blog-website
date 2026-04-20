@@ -103,8 +103,16 @@ export function Announcements() {
   }, []);
 
   const handleDismiss = () => {
+    if (dismissTimerRef.current !== null) {
+      clearTimeout(dismissTimerRef.current);
+      dismissTimerRef.current = null;
+    }
+
     // Reset height immediately so the header/nav offsets collapse on the same frame.
     setAnnouncementHeight("0px");
+    setDismissing(false);
+    setDragY(0);
+    touchStartY.current = null;
     setIsVisible(false);
   };
 
