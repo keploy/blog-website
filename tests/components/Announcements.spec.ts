@@ -57,24 +57,25 @@ test.describe('Announcements — Desktop', () => {
   });
 
   test('should display the CTA link with correct href', async ({ page }) => {
-    // Both mobile and desktop CTAs share the same href; grab the desktop one
-    const ctaLinks = page.locator('a[href="https://luma.com/lr79szro"]');
-    await expect(ctaLinks.first()).toBeVisible({ timeout: 5000 });
-    const href = await ctaLinks.first().getAttribute('href');
+    // Target the desktop CTA specifically — the mobile one (lg:hidden) is first in the DOM
+    // but hidden at desktop viewport, so we scope to the desktop layout container.
+    const ctaLink = page.locator('.hidden.lg\\:flex a[href="https://luma.com/lr79szro"]');
+    await expect(ctaLink).toBeVisible({ timeout: 5000 });
+    const href = await ctaLink.getAttribute('href');
     expect(href).toBe('https://luma.com/lr79szro');
   });
 
   test('should open CTA link in a new tab', async ({ page }) => {
-    const ctaLinks = page.locator('a[href="https://luma.com/lr79szro"]');
-    await expect(ctaLinks.first()).toBeVisible({ timeout: 5000 });
-    expect(await ctaLinks.first().getAttribute('target')).toBe('_blank');
-    expect(await ctaLinks.first().getAttribute('rel')).toContain('noopener');
+    const ctaLink = page.locator('.hidden.lg\\:flex a[href="https://luma.com/lr79szro"]');
+    await expect(ctaLink).toBeVisible({ timeout: 5000 });
+    expect(await ctaLink.getAttribute('target')).toBe('_blank');
+    expect(await ctaLink.getAttribute('rel')).toContain('noopener');
   });
 
   test('should display "Register NOW" CTA label', async ({ page }) => {
-    const ctaLinks = page.locator('a[href="https://luma.com/lr79szro"]');
-    await expect(ctaLinks.first()).toBeVisible({ timeout: 5000 });
-    await expect(ctaLinks.first()).toContainText('Register NOW');
+    const ctaLink = page.locator('.hidden.lg\\:flex a[href="https://luma.com/lr79szro"]');
+    await expect(ctaLink).toBeVisible({ timeout: 5000 });
+    await expect(ctaLink).toContainText('Register NOW');
   });
 
   test('should display marquee event text', async ({ page }) => {
