@@ -102,18 +102,38 @@ function SidebarShare() {
 }
 
 
-const AD_VIDEOS = [
-  "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/record+replay+k8s.mp4",
-  "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/coverage.mp4",
-  "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/load+testing.mp4",
+const AD_ITEMS = [
+  {
+    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/record+replay+k8s.mp4",
+    title: "AI-Powered Test Agent",
+    description: "Generate unit tests on every PR diff. Works in VS Code & JetBrains with 1M+ installs.",
+    primaryCTA: { label: "Start Free", href: "https://app.keploy.io/signin" },
+    secondaryCTA: { label: "Read Docs", href: "https://keploy.io/docs" },
+  },
+  {
+    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/coverage.mp4",
+    title: "Boost Your Test Coverage",
+    description: "Auto-generate tests from real traffic and increase coverage without writing a single line manually.",
+    primaryCTA: { label: "Try for Free", href: "https://app.keploy.io/signin" },
+    secondaryCTA: { label: "Learn More", href: "https://keploy.io/docs" },
+  },
+  {
+    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/load+testing.mp4",
+    title: "Stress-Free Load Testing",
+    description: "Simulate real-world traffic and catch performance bottlenecks before they hit production.",
+    primaryCTA: { label: "Get Started", href: "https://app.keploy.io/signin" },
+    secondaryCTA: { label: "Book a Demo", href: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ" },
+  },
 ];
 
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
   const [videoError, setVideoError] = React.useState(false);
-  const [videoSrc] = React.useState(
-    () => AD_VIDEOS[Math.floor(Math.random() * AD_VIDEOS.length)]
-  );
+  const [ad, setAd] = React.useState(AD_ITEMS[0]);
+
+  React.useEffect(() => {
+    setAd(AD_ITEMS[Math.floor(Math.random() * AD_ITEMS.length)]);
+  }, []);
 
   return (
     <div
@@ -122,17 +142,19 @@ function SidebarAdBanner() {
     >
       {!videoError ? (
         <video
-          src={videoSrc}
+          src={ad.src}
           autoPlay
           muted
           loop
           playsInline
+          preload="metadata"
+          poster="/blog/images/keploy-ad-banner.jpg"
           onError={() => setVideoError(true)}
           style={{ width: '100%', height: 'auto', display: 'block' }}
         />
       ) : (
         <Link
-          href="https://app.keploy.io/signin"
+          href={ad.primaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
           style={{ display: 'block', width: '100%' }}
@@ -156,44 +178,34 @@ function SidebarAdBanner() {
             className="font-bold text-base leading-snug mb-1"
             style={{ fontFamily: "'DM Sans', sans-serif", color: "#1D2022" }}
           >
-            AI-Powered Test Agent
+            {ad.title}
           </h4>
           <p
             className="text-sm leading-relaxed"
             style={{ fontFamily: "'DM Sans', sans-serif", color: "#4b5563" }}
           >
-            Generate test cases and data mocks with one click. Reduce unit test development time by 90%.
+            {ad.description}
           </p>
         </div>
 
         <Link
-          href="https://app.keploy.io/signin"
+          href={ad.primaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full text-center font-bold text-sm py-2.5 rounded-xl transition-opacity duration-150 hover:opacity-90"
           style={{ backgroundColor: "#E8622A", color: "#fff", fontFamily: "'DM Sans', sans-serif" }}
         >
-          Start Free
+          {ad.primaryCTA.label}
         </Link>
 
         <Link
-          href="https://keploy.io/docs"
+          href={ad.secondaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full text-center font-bold text-sm py-2.5 rounded-xl border border-gray-300 transition-colors duration-150 hover:bg-gray-50"
           style={{ color: "#1D2022", fontFamily: "'DM Sans', sans-serif" }}
         >
-          Read Docs
-        </Link>
-
-        <Link
-          href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-2.5 rounded-xl border border-gray-300 transition-colors duration-150 hover:bg-gray-50"
-          style={{ color: "#1D2022", fontFamily: "'DM Sans', sans-serif" }}
-        >
-          Book a Demo
+          {ad.secondaryCTA.label}
         </Link>
       </div>
     </div>
