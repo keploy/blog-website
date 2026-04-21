@@ -5,6 +5,22 @@
 
 /* Write your own custom base styles here */
 
+:root {
+  --announcement-h: 0px;
+}
+
+/* Main content padding that accounts for the fixed header + announcement bar.
+   Replaces the static pt-20 md:pt-24 so it adapts when the bar is visible. */
+.layout-content-padded {
+  padding-top: calc(var(--announcement-h) + 5rem);
+}
+
+@media (min-width: 768px) {
+  .layout-content-padded {
+    padding-top: calc(var(--announcement-h) + 6rem);
+  }
+}
+
 /* Start purging... */
 @tailwind components;
 /* Stop purging. */

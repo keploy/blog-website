@@ -41,7 +41,7 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
 
   const navPositionClasses = derivedBlogReadingPage
     ? "relative top-0 mx-auto z-40"
-    : "fixed top-6 left-1/2 -translate-x-1/2 z-40";
+    : "fixed left-1/2 -translate-x-1/2 z-40";
   const navWidthClasses = isScrolled
     ? "w-[82%] md:max-w-5xl"
     : "w-[96%] md:max-w-6xl";
@@ -61,7 +61,11 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
       : glassNavDefault;
 
   return (
-    <nav data-testid="navbar" className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}>
+    <nav
+      data-testid="navbar"
+      className={`${navPositionClasses} transition-all duration-300 ${navWidthClasses}`}
+      style={derivedBlogReadingPage ? undefined : { top: "calc(var(--announcement-h, 0px) + 1.5rem)" }}
+    >
         <div
           className={`${glassNavBase} ${navGlassClasses} overflow-visible ${navShadowClasses} ${navPaddingClasses}`}
         >
