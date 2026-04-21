@@ -102,64 +102,100 @@ function SidebarShare() {
 }
 
 
+const AD_VIDEOS = [
+  "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/record+replay+k8s.mp4",
+  "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/coverage.mp4",
+  "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/load+testing.mp4",
+];
+
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
-  // Image size (adjust as needed)
-  // Remove fixed width/height from container, let image set size
-  const [imgError, setImgError] = React.useState(false);
+  const [videoError, setVideoError] = React.useState(false);
+  const [videoSrc] = React.useState(
+    () => AD_VIDEOS[Math.floor(Math.random() * AD_VIDEOS.length)]
+  );
+
   return (
     <div
-      className="rounded-2xl flex items-center justify-center bg-[#FFF4EE] border border-[#FF914D]"
-      style={{ padding: 0, overflow: 'hidden', position: 'relative', maxWidth: 320, margin: '0 auto' }}
+      className="rounded-2xl bg-[#FFF4EE] border border-[#FF914D] flex flex-col overflow-hidden"
+      style={{ maxWidth: 320, margin: '0 auto' }}
     >
-      {!imgError ? (
+      {!videoError ? (
+        <video
+          src={videoSrc}
+          autoPlay
+          muted
+          loop
+          playsInline
+          onError={() => setVideoError(true)}
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      ) : (
         <Link
           href="https://app.keploy.io/signin"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Sign up for Keploy"
           style={{ display: 'block', width: '100%' }}
         >
           <Image
             src="/blog/images/keploy-ad-banner.jpg"
             alt="Keploy Ad Banner"
             width={320}
-            height={400}
+            height={200}
             sizes="320px"
             className="transition-shadow duration-200 ease-in-out cursor-pointer hover:shadow-lg"
-            style={{ borderRadius: '16px', width: '100%', height: 'auto', display: 'block', transition: 'box-shadow 0.2s' }}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
             loading="lazy"
-            onError={() => setImgError(true)}
           />
         </Link>
-      ) : (
-        <div
-          className="rounded-2xl p-5 w-full h-full flex flex-col justify-center"
-          style={{ backgroundColor: "#FFF4EE" }}
-        >
+      )}
+
+      <div className="p-4 flex flex-col gap-3">
+        <div>
           <h4
-            className="font-bold text-base leading-snug mb-1.5"
+            className="font-bold text-base leading-snug mb-1"
             style={{ fontFamily: "'DM Sans', sans-serif", color: "#1D2022" }}
           >
-            Try Keploy for free
+            AI-Powered Test Agent
           </h4>
           <p
-            className="text-sm leading-relaxed mb-3"
+            className="text-sm leading-relaxed"
             style={{ fontFamily: "'DM Sans', sans-serif", color: "#4b5563" }}
           >
             Generate test cases and data mocks with one click. Reduce unit test development time by 90%.
           </p>
-          <Link
-            href="https://app.keploy.io/signin"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 font-semibold text-sm transition-colors duration-150 hover:opacity-80"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "#FF6D41" }}
-          >
-            Sign up <span aria-hidden="true">→</span>
-          </Link>
         </div>
-      )}
+
+        <Link
+          href="https://app.keploy.io/signin"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full text-center font-bold text-sm py-2.5 rounded-xl transition-opacity duration-150 hover:opacity-90"
+          style={{ backgroundColor: "#E8622A", color: "#fff", fontFamily: "'DM Sans', sans-serif" }}
+        >
+          Start Free
+        </Link>
+
+        <Link
+          href="https://keploy.io/docs"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full text-center font-bold text-sm py-2.5 rounded-xl border border-gray-300 transition-colors duration-150 hover:bg-gray-50"
+          style={{ color: "#1D2022", fontFamily: "'DM Sans', sans-serif" }}
+        >
+          Read Docs
+        </Link>
+
+        <Link
+          href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full text-center font-bold text-sm py-2.5 rounded-xl border border-gray-300 transition-colors duration-150 hover:bg-gray-50"
+          style={{ color: "#1D2022", fontFamily: "'DM Sans', sans-serif" }}
+        >
+          Book a Demo
+        </Link>
+      </div>
     </div>
   );
 }
