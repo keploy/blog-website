@@ -24,7 +24,7 @@ function MarqueeContent() {
   const items = [
     "Keploy is hosting a community meetup in San Francisco!",
     "GitTogether SF • May 14, 2026 • San Francisco",
-    "Tickets are selling fast, limited seats available register now!",
+    "Tickets are selling fast, limited seats available-register now!",
   ];
 
   return (
