@@ -129,11 +129,13 @@ const AD_ITEMS = [
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
   const [videoError, setVideoError] = React.useState(false);
-  const [ad, setAd] = React.useState(AD_ITEMS[0]);
+  const [ad, setAd] = React.useState<typeof AD_ITEMS[0] | null>(null);
 
   React.useEffect(() => {
     setAd(AD_ITEMS[Math.floor(Math.random() * AD_ITEMS.length)]);
   }, []);
+
+  if (!ad) return null;
 
   return (
     <div
@@ -149,6 +151,7 @@ function SidebarAdBanner() {
           playsInline
           preload="metadata"
           poster="/blog/images/keploy-ad-banner.jpg"
+          aria-hidden="true"
           onError={() => setVideoError(true)}
           style={{ width: '100%', height: 'auto', display: 'block' }}
         />
