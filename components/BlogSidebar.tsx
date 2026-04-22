@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { Button } from "./ui/button";
 import {
   FaFacebook,
   FaLinkedin,
@@ -102,12 +103,18 @@ function SidebarShare() {
 }
 
 
+const DEMO_CTA = {
+  label: "Book a Demo",
+  href: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ",
+};
+
 const AD_ITEMS = [
   {
     src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/coverage.mp4",
     title: "Record API calls from real user flows.",
     description: "Auto-generated on every PR diff, from real behavior. VS Code & JetBrains, 1M+ installs.",
     primaryCTA: { label: "Start Free", href: "https://app.keploy.io/signin" },
+    demoCTA: DEMO_CTA,
     secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
   },
   {
@@ -115,6 +122,7 @@ const AD_ITEMS = [
     title: "Real traffic. Real tests. Zero manual effort.",
     description: "Captures live API calls and turns them into test cases. Coverage that reflects production.",
     primaryCTA: { label: "Try for Free", href: "https://app.keploy.io/signin" },
+    demoCTA: DEMO_CTA,
     secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
   },
   {
@@ -122,6 +130,7 @@ const AD_ITEMS = [
     title: "Replay captured traffic to instantly catch regressions.",
     description: "Replay production traffic at scale. No scripted scenarios, no guesswork.",
     primaryCTA: { label: "Get Started", href: "https://app.keploy.io/signin" },
+    demoCTA: DEMO_CTA,
     secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
   },
 ];
@@ -130,28 +139,23 @@ const AD_ITEMS = [
 function SidebarAdBanner() {
   const [videoError, setVideoError] = React.useState(false);
   const [ad, setAd] = React.useState<typeof AD_ITEMS[0] | null>(null);
+  const [prefersReduced, setPrefersReduced] = React.useState(false);
 
   React.useEffect(() => {
     setAd(AD_ITEMS[Math.floor(Math.random() * AD_ITEMS.length)]);
+    setPrefersReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }, []);
 
   if (!ad) return null;
 
   return (
-    <div
-      className="rounded-2xl bg-white border border-gray-200 flex flex-col overflow-hidden"
-      style={{
-        maxWidth: 320,
-        margin: '0 auto',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
-      }}
-    >
+    <div className="rounded-2xl bg-white border border-gray-200 flex flex-col overflow-hidden max-w-[320px] mx-auto shadow-md">
       {!videoError ? (
         <video
           src={ad.src}
-          autoPlay
+          autoPlay={!prefersReduced}
           muted
-          loop
+          loop={!prefersReduced}
           playsInline
           preload="metadata"
           poster="/blog/images/keploy-ad-banner.jpg"
@@ -164,6 +168,7 @@ function SidebarAdBanner() {
           href={ad.primaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`Sign up — ${ad.title}`}
           style={{ display: 'block', width: '100%' }}
         >
           <Image
@@ -188,48 +193,30 @@ function SidebarAdBanner() {
             {ad.title}
           </h4>
           <p
-            className="text-sm leading-relaxed"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "#4b5563" }}
+            className="text-sm leading-relaxed text-gray-600"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
             {ad.description}
           </p>
         </div>
 
-        <Link
-          href={ad.primaryCTA.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-3 rounded-xl transition-all duration-150 hover:brightness-90 active:scale-[0.98]"
-          style={{
-            background: '#ED5D0F',
-            color: '#fff',
-            boxShadow: '0 2px 10px rgba(232, 98, 42, 0.35)',
-            fontFamily: "'DM Sans', sans-serif",
-          }}
-        >
-          {ad.primaryCTA.label}
-        </Link>
+        <Button asChild variant="default" className="w-full">
+          <Link href={ad.primaryCTA.href} target="_blank" rel="noopener noreferrer">
+            {ad.primaryCTA.label}
+          </Link>
+        </Button>
 
-        <Link
-          href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-3 rounded-xl border transition-all duration-150 hover:bg-orange-50 active:scale-[0.98]"
-          style={{
-            background: 'transparent',
-            border: '1.5px solid #ED5D0F',
-            color: '#ED5D0F',
-            fontFamily: "'DM Sans', sans-serif",
-          }}
-        >
-          Book a Demo
-        </Link>
+        <Button asChild variant="outline" className="w-full rounded-full">
+          <Link href={ad.demoCTA.href} target="_blank" rel="noopener noreferrer">
+            {ad.demoCTA.label}
+          </Link>
+        </Button>
 
         <Link
           href={ad.secondaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-center text-sm font-medium hover:underline pt-1 text-[#20883d]"
+          className="text-center text-sm font-medium hover:underline pt-1 text-primary-300"
         >
           {ad.secondaryCTA.label}
         </Link>

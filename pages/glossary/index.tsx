@@ -77,8 +77,8 @@ export default function GlossaryHub({ preview }) {
       </Head>
       <Header />
       <Container>
-        <section className="max-w-4xl">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Glossary</h1>
+        <section className="max-w-4xl mx-auto">
+          <h1 className="heading1 text-4xl md:text-5xl tracking-tight mb-4">Glossary</h1>
           <p className="text-lg text-gray-700 mb-8">{pageDescription}</p>
           <dl className="space-y-5">
             {glossaryTerms.map((term) => (
