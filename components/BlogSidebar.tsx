@@ -129,7 +129,7 @@ const AD_ITEMS = [
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
   const [videoError, setVideoError] = React.useState(false);
-  const [ad, setAd] = React.useState<typeof AD_ITEMS[0] | null>(null);
+  const [ad, setAd] = React.useState<typeof AD_ITEMS[number] | null>(null);
 
   React.useEffect(() => {
     setAd(AD_ITEMS[Math.floor(Math.random() * AD_ITEMS.length)]);
