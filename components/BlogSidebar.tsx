@@ -135,7 +135,19 @@ function SidebarAdBanner() {
     setAd(AD_ITEMS[Math.floor(Math.random() * AD_ITEMS.length)]);
   }, []);
 
-  if (!ad) return null;
+  const reducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!ad) {
+    return (
+      <div
+        className="rounded-2xl bg-white border border-gray-200"
+        style={{ maxWidth: 320, margin: '0 auto', minHeight: 360, boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}
+        aria-hidden="true"
+      />
+    );
+  }
 
   return (
     <div
@@ -149,9 +161,9 @@ function SidebarAdBanner() {
       {!videoError ? (
         <video
           src={ad.src}
-          autoPlay
+          autoPlay={!reducedMotion}
           muted
-          loop
+          loop={!reducedMotion}
           playsInline
           preload="metadata"
           poster="/blog/images/keploy-ad-banner.jpg"
@@ -164,11 +176,12 @@ function SidebarAdBanner() {
           href={ad.primaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={ad.primaryCTA.label}
           style={{ display: 'block', width: '100%' }}
         >
           <Image
             src="/blog/images/keploy-ad-banner.jpg"
-            alt="Keploy Ad Banner"
+            alt={ad.title}
             width={320}
             height={200}
             sizes="320px"
