@@ -104,25 +104,25 @@ function SidebarShare() {
 
 const AD_ITEMS = [
   {
-    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/record+replay+k8s.mp4",
-    title: "Write code. Keploy writes the tests.",
+    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/coverage.mp4",
+    title: "Record API calls from real user flows.",
     description: "Auto-generated on every PR diff, from real behavior. VS Code & JetBrains, 1M+ installs.",
     primaryCTA: { label: "Start Free", href: "https://app.keploy.io/signin" },
     secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
   },
   {
-    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/coverage.mp4",
+    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/load+testing.mp4",
     title: "Real traffic. Real tests. Zero manual effort.",
     description: "Captures live API calls and turns them into test cases. Coverage that reflects production.",
     primaryCTA: { label: "Try for Free", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "See how it works →", href: "https://keploy.io/docs" },
+    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
   },
   {
-    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/load+testing.mp4",
-    title: "Find your breaking point before users do.",
+    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/api+test+generation+ai+powered+automation.mp4",
+    title: "Replay captured traffic to instantly catch regressions.",
     description: "Replay production traffic at scale. No scripted scenarios, no guesswork.",
     primaryCTA: { label: "Get Started", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "Book a demo →", href: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ" },
+    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
   },
 ];
 
@@ -179,10 +179,10 @@ function SidebarAdBanner() {
         </Link>
       )}
 
-      <div className="p-4 flex flex-col gap-3">
+      <div className="px-5 pt-5 pb-6 flex flex-col gap-4">
         <div>
           <h4
-            className="font-bold text-base leading-snug mb-1"
+            className="font-bold text-base leading-snug mb-2"
             style={{ fontFamily: "'DM Sans', sans-serif", color: "#1D2022" }}
           >
             {ad.title}
@@ -199,9 +199,9 @@ function SidebarAdBanner() {
           href={ad.primaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-2.5 rounded-xl transition-all duration-150 hover:opacity-90 active:scale-[0.98]"
+          className="w-full text-center font-bold text-sm py-3 rounded-xl transition-all duration-150 hover:brightness-90 active:scale-[0.98]"
           style={{
-            background: 'linear-gradient(135deg, #E8622A 0%, #FF914D 100%)',
+            background: '#ED5D0F',
             color: '#fff',
             boxShadow: '0 2px 10px rgba(232, 98, 42, 0.35)',
             fontFamily: "'DM Sans', sans-serif",
@@ -214,11 +214,11 @@ function SidebarAdBanner() {
           href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-2.5 rounded-xl border transition-all duration-150 hover:bg-orange-50 active:scale-[0.98]"
+          className="w-full text-center font-bold text-sm py-3 rounded-xl border transition-all duration-150 hover:bg-orange-50 active:scale-[0.98]"
           style={{
             background: 'transparent',
-            border: '1.5px solid #E8622A',
-            color: '#E8622A',
+            border: '1.5px solid #ED5D0F',
+            color: '#ED5D0F',
             fontFamily: "'DM Sans', sans-serif",
           }}
         >
@@ -229,8 +229,7 @@ function SidebarAdBanner() {
           href={ad.secondaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-center text-sm font-medium hover:underline"
-          style={{ color: '#6b7280', fontFamily: "'DM Sans', sans-serif" }}
+          className="text-center text-sm font-medium hover:underline pt-1 text-[#20883d]"
         >
           {ad.secondaryCTA.label}
         </Link>
