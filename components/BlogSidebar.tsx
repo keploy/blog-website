@@ -102,64 +102,138 @@ function SidebarShare() {
 }
 
 
+const AD_ITEMS = [
+  {
+    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/coverage.mp4",
+    title: "Record API calls from real user flows.",
+    description: "Auto-generated on every PR diff, from real behavior. VS Code & JetBrains, 1M+ installs.",
+    primaryCTA: { label: "Start Free", href: "https://app.keploy.io/signin" },
+    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
+  },
+  {
+    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/load+testing.mp4",
+    title: "Real traffic. Real tests. Zero manual effort.",
+    description: "Captures live API calls and turns them into test cases. Coverage that reflects production.",
+    primaryCTA: { label: "Try for Free", href: "https://app.keploy.io/signin" },
+    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
+  },
+  {
+    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/api+test+generation+ai+powered+automation.mp4",
+    title: "Replay captured traffic to instantly catch regressions.",
+    description: "Replay production traffic at scale. No scripted scenarios, no guesswork.",
+    primaryCTA: { label: "Get Started", href: "https://app.keploy.io/signin" },
+    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
+  },
+];
+
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
-  // Image size (adjust as needed)
-  // Remove fixed width/height from container, let image set size
-  const [imgError, setImgError] = React.useState(false);
+  const [videoError, setVideoError] = React.useState(false);
+  const [ad, setAd] = React.useState<typeof AD_ITEMS[0] | null>(null);
+
+  React.useEffect(() => {
+    setAd(AD_ITEMS[Math.floor(Math.random() * AD_ITEMS.length)]);
+  }, []);
+
+  if (!ad) return null;
+
   return (
     <div
-      className="rounded-2xl flex items-center justify-center bg-[#FFF4EE] border border-[#FF914D]"
-      style={{ padding: 0, overflow: 'hidden', position: 'relative', maxWidth: 320, margin: '0 auto' }}
+      className="rounded-2xl bg-white border border-gray-200 flex flex-col overflow-hidden"
+      style={{
+        maxWidth: 320,
+        margin: '0 auto',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+      }}
     >
-      {!imgError ? (
+      {!videoError ? (
+        <video
+          src={ad.src}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/blog/images/keploy-ad-banner.jpg"
+          aria-hidden="true"
+          onError={() => setVideoError(true)}
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      ) : (
         <Link
-          href="https://app.keploy.io/signin"
+          href={ad.primaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Sign up for Keploy"
           style={{ display: 'block', width: '100%' }}
         >
           <Image
             src="/blog/images/keploy-ad-banner.jpg"
             alt="Keploy Ad Banner"
             width={320}
-            height={400}
+            height={200}
             sizes="320px"
             className="transition-shadow duration-200 ease-in-out cursor-pointer hover:shadow-lg"
-            style={{ borderRadius: '16px', width: '100%', height: 'auto', display: 'block', transition: 'box-shadow 0.2s' }}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
             loading="lazy"
-            onError={() => setImgError(true)}
           />
         </Link>
-      ) : (
-        <div
-          className="rounded-2xl p-5 w-full h-full flex flex-col justify-center"
-          style={{ backgroundColor: "#FFF4EE" }}
-        >
+      )}
+
+      <div className="px-5 pt-5 pb-6 flex flex-col gap-4">
+        <div>
           <h4
-            className="font-bold text-base leading-snug mb-1.5"
+            className="font-bold text-base leading-snug mb-2"
             style={{ fontFamily: "'DM Sans', sans-serif", color: "#1D2022" }}
           >
-            Try Keploy for free
+            {ad.title}
           </h4>
           <p
-            className="text-sm leading-relaxed mb-3"
+            className="text-sm leading-relaxed"
             style={{ fontFamily: "'DM Sans', sans-serif", color: "#4b5563" }}
           >
-            Generate test cases and data mocks with one click. Reduce unit test development time by 90%.
+            {ad.description}
           </p>
-          <Link
-            href="https://app.keploy.io/signin"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 font-semibold text-sm transition-colors duration-150 hover:opacity-80"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "#FF6D41" }}
-          >
-            Sign up <span aria-hidden="true">→</span>
-          </Link>
         </div>
-      )}
+
+        <Link
+          href={ad.primaryCTA.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full text-center font-bold text-sm py-3 rounded-xl transition-all duration-150 hover:brightness-90 active:scale-[0.98]"
+          style={{
+            background: '#ED5D0F',
+            color: '#fff',
+            boxShadow: '0 2px 10px rgba(232, 98, 42, 0.35)',
+            fontFamily: "'DM Sans', sans-serif",
+          }}
+        >
+          {ad.primaryCTA.label}
+        </Link>
+
+        <Link
+          href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full text-center font-bold text-sm py-3 rounded-xl border transition-all duration-150 hover:bg-orange-50 active:scale-[0.98]"
+          style={{
+            background: 'transparent',
+            border: '1.5px solid #ED5D0F',
+            color: '#ED5D0F',
+            fontFamily: "'DM Sans', sans-serif",
+          }}
+        >
+          Book a Demo
+        </Link>
+
+        <Link
+          href={ad.secondaryCTA.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-center text-sm font-medium hover:underline pt-1 text-[#20883d]"
+        >
+          {ad.secondaryCTA.label}
+        </Link>
+      </div>
     </div>
   );
 }
