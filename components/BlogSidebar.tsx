@@ -105,24 +105,24 @@ function SidebarShare() {
 const AD_ITEMS = [
   {
     src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/record+replay+k8s.mp4",
-    title: "AI-Powered Test Agent",
-    description: "Generate unit tests on every PR diff. Works in VS Code & JetBrains with 1M+ installs.",
+    title: "Write code. Keploy writes the tests.",
+    description: "Auto-generated on every PR diff, from real behavior. VS Code & JetBrains, 1M+ installs.",
     primaryCTA: { label: "Start Free", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "Read Docs", href: "https://keploy.io/docs" },
+    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
   },
   {
     src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/coverage.mp4",
-    title: "Boost Your Test Coverage",
-    description: "Auto-generate tests from real traffic and increase coverage without writing a single line manually.",
+    title: "Real traffic. Real tests. Zero manual effort.",
+    description: "Captures live API calls and turns them into test cases. Coverage that reflects production.",
     primaryCTA: { label: "Try for Free", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "Learn More", href: "https://keploy.io/docs" },
+    secondaryCTA: { label: "See how it works →", href: "https://keploy.io/docs" },
   },
   {
     src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/load+testing.mp4",
-    title: "Stress-Free Load Testing",
-    description: "Simulate real-world traffic and catch performance bottlenecks before they hit production.",
+    title: "Find your breaking point before users do.",
+    description: "Replay production traffic at scale. No scripted scenarios, no guesswork.",
     primaryCTA: { label: "Get Started", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "Book a Demo", href: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ" },
+    secondaryCTA: { label: "Book a demo →", href: "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ" },
   },
 ];
 
@@ -139,8 +139,12 @@ function SidebarAdBanner() {
 
   return (
     <div
-      className="rounded-2xl bg-[#FFF4EE] border border-[#FF914D] flex flex-col overflow-hidden"
-      style={{ maxWidth: 320, margin: '0 auto' }}
+      className="rounded-2xl bg-white border border-gray-200 flex flex-col overflow-hidden"
+      style={{
+        maxWidth: 320,
+        margin: '0 auto',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+      }}
     >
       {!videoError ? (
         <video
@@ -195,18 +199,38 @@ function SidebarAdBanner() {
           href={ad.primaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-2.5 rounded-xl transition-opacity duration-150 hover:opacity-90"
-          style={{ backgroundColor: "#E8622A", color: "#fff", fontFamily: "'DM Sans', sans-serif" }}
+          className="w-full text-center font-bold text-sm py-2.5 rounded-xl transition-all duration-150 hover:opacity-90 active:scale-[0.98]"
+          style={{
+            background: 'linear-gradient(135deg, #E8622A 0%, #FF914D 100%)',
+            color: '#fff',
+            boxShadow: '0 2px 10px rgba(232, 98, 42, 0.35)',
+            fontFamily: "'DM Sans', sans-serif",
+          }}
         >
           {ad.primaryCTA.label}
+        </Link>
+
+        <Link
+          href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full text-center font-bold text-sm py-2.5 rounded-xl border transition-all duration-150 hover:bg-orange-50 active:scale-[0.98]"
+          style={{
+            background: 'transparent',
+            border: '1.5px solid #E8622A',
+            color: '#E8622A',
+            fontFamily: "'DM Sans', sans-serif",
+          }}
+        >
+          Book a Demo
         </Link>
 
         <Link
           href={ad.secondaryCTA.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-2.5 rounded-xl border border-gray-300 transition-colors duration-150 hover:bg-gray-50"
-          style={{ color: "#1D2022", fontFamily: "'DM Sans', sans-serif" }}
+          className="text-center text-sm font-medium hover:underline"
+          style={{ color: '#6b7280', fontFamily: "'DM Sans', sans-serif" }}
         >
           {ad.secondaryCTA.label}
         </Link>
