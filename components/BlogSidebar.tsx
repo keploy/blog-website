@@ -165,7 +165,7 @@ function SidebarAdBanner() {
           muted
           loop={!reducedMotion}
           playsInline
-          preload="metadata"
+          preload="none"
           poster="/blog/images/keploy-ad-banner.jpg"
           aria-hidden="true"
           onError={() => setVideoError(true)}
@@ -182,9 +182,9 @@ function SidebarAdBanner() {
           <Image
             src="/blog/images/keploy-ad-banner.jpg"
             alt={ad.title}
-            width={320}
+            width={260}
             height={200}
-            sizes="320px"
+            sizes="260px"
             className="transition-shadow duration-200 ease-in-out cursor-pointer hover:shadow-lg"
             style={{ width: '100%', height: 'auto', display: 'block' }}
             loading="lazy"
