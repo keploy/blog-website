@@ -99,6 +99,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   const [hoveredNav, setHoveredNav] = useState<null | 'tech' | 'community' | 'resources'>(null);
   const [linkHoverTech, setLinkHoverTech] = useState(false);
   const [linkHoverCommunity, setLinkHoverCommunity] = useState(false);
+  const [linkHoverResources, setLinkHoverResources] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileTechOpen, setMobileTechOpen] = useState(false);
   const [mobileCommunityOpen, setMobileCommunityOpen] = useState(false);
@@ -362,9 +363,9 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             onMouseLeave={() => { setResourcesOpen(false); setHoveredNav(null); }}
           >
             <button
-              onMouseEnter={() => { setHoveredNav('resources'); }}
-              onMouseLeave={() => { if (!resourcesOpen) { setHoveredNav(null); } }}
-              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !resourcesOpen ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle`}
+              onMouseEnter={() => { setHoveredNav('resources'); setLinkHoverResources(true); }}
+              onMouseLeave={() => { if (!resourcesOpen) { setHoveredNav(null); } setLinkHoverResources(false); }}
+              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !resourcesOpen ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverResources ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
             >
               <span>Resources</span>
               <ChevronDown className="w-3.5 h-3.5 opacity-80" />
