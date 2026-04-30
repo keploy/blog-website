@@ -14,6 +14,7 @@ export default function Layout({
   structuredData = [],
   canonicalUrl,
   ogType = "website",
+  publishedDate,
 }: {
   preview: any;
   Description: any;
@@ -23,6 +24,7 @@ export default function Layout({
   structuredData?: Record<string, unknown>[];
   canonicalUrl?: string;
   ogType?: "article" | "website";
+  publishedDate?: string;
 }) {
   return (
     <>
@@ -33,6 +35,7 @@ export default function Layout({
         structuredData={structuredData}
         canonicalUrl={canonicalUrl}
         ogType={ogType}
+        publishedDate={publishedDate}
       />
       {/* Replaced the Layout wrapper's framer-motion animation with a CSS
           animation so this fade-in no longer depends on framer-motion here.
@@ -41,7 +44,7 @@ export default function Layout({
         className="min-h-screen animate-[fadeIn_0.3s_ease-out] motion-reduce:animate-none"
       >
         {/* <Alert preview={preview} /> */}
-        <main className="pt-20 md:pt-24">{children}</main>
+        <main className="layout-content-padded">{children}</main>
       </div>
       <Footer />
       <ScrollToTop />

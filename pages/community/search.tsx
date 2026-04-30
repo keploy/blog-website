@@ -31,10 +31,11 @@ export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }
   // 3. Filtering Logic (This controls Hero vs List)
   useEffect(() => {
     const term = searchTerm.toLowerCase();
-    const results = allPosts.filter(({ node }) => 
-      node.title.toLowerCase().includes(term) ||
-      node.excerpt.toLowerCase().includes(term)
-    );
+    const results = allPosts
+      .filter(({ node }) =>
+        (node.title || '').toLowerCase().includes(term) ||
+        (node.excerpt || '').toLowerCase().includes(term)
+      );
     setFilteredPosts(results);
   }, [searchTerm, allPosts]);
 

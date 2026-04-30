@@ -120,7 +120,7 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
   return (
     <div className="flex flex-col" ref={bunnyRef}>
       <div className="hidden lg:block ">
-        <Image src={newsletterBunny} alt="Image" />
+        <Image src={newsletterBunny} alt="Subscribe to Keploy newsletter" />
       </div>
       <div className="overflow-x-hidden mt-2 lg:-mt-7 shadow-md border-b-primary-300 border-b-2 py-6 px-4 sticky ml-0 sm:ml-10 md:ml-0  w-full" ref={myComponent}>
         <div

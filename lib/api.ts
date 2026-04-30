@@ -3,6 +3,33 @@ export const dynamic = 'force-dynamic';
 
 const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL
 
+/**
+ * Normalize a post node from WordPress — default null title/excerpt to empty
+ * strings so downstream consumers never hit null runtime crashes.
+ */
+function normalizePostNode(node: any): any {
+  if (!node) return node;
+  return {
+    ...node,
+    title: node.title ?? '',
+    excerpt: node.excerpt ?? '',
+  };
+}
+
+/** Normalize all post edges in a WPGraphQL response. */
+function normalizePostEdges(data: any): any {
+  if (data?.posts?.edges) {
+    data.posts.edges = data.posts.edges.map((edge: any) => ({
+      ...edge,
+      node: normalizePostNode(edge.node),
+    }));
+  }
+  if (data?.post) {
+    data.post = normalizePostNode(data.post);
+  }
+  return data;
+}
+
 async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
   const headers = { "Content-Type": "application/json" };
 
@@ -26,7 +53,7 @@ async function fetchAPI(query = "", { variables }: Record<string, any> = {}) {
     console.error(json.errors);
     throw new Error("Failed to fetch API");
   }
-  return json.data;
+  return normalizePostEdges(json.data);
 }
 
 export async function getPreviewPost(id, idType = "DATABASE_ID") {
@@ -607,17 +634,20 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
     : slug === postPreview.slug;
   const isDraft = isSamePost && postPreview?.status === "draft";
   const isRevision = isSamePost && postPreview?.status === "publish";
+  // NOTE on the fragment below: the raw WordPress `author { node { ... } }`
+  // field is intentionally omitted from slug-page queries. PublishPress
+  // Multiple Authors (ppmaAuthorName) is the authoritative display author;
+  // the native WP author is the system account that published the post and
+  // caused an author mismatch in __NEXT_DATA__ vs the rendered schema
+  // (reported 2026-04-14). AuthorMapping.tsx still needs raw author data —
+  // it uses a separate getAllAuthors query that preserves the field.
+  //
+  // This note lives in a JS comment, NOT inside the GraphQL template literal:
+  // the E2E mock server substring-matches on the query text, and an inline
+  // `#` comment that mentions "getAllAuthors" was routing PostBySlug requests
+  // to the mock's allAuthorsResponse branch at build time.
   const data = await fetchAPI(
     `
-    fragment AuthorFields on User {
-      name
-      firstName
-      lastName
-      avatar {
-        url
-      }
-    }
-
     fragment PostFields on Post {
       title
       excerpt
@@ -625,14 +655,10 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       date
       modified
       ppmaAuthorName
+      ppmaAuthorImage
       featuredImage {
         node {
           sourceUrl
-        }
-      }
-      author {
-        node {
-          ...AuthorFields
         }
       }
       categories {
@@ -652,7 +678,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
       seo{
         metaDesc
         title
-      }  
+      }
     }
 
     query PostBySlug($id: ID!, $idType: PostIdType!) {
@@ -670,12 +696,8 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
               excerpt
               content
               modified
-              author {
-                node {
-                  ...AuthorFields
-                }
-              }
               ppmaAuthorName
+              ppmaAuthorImage
             }
           }
         }
@@ -707,7 +729,7 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
   if (isRevision && data.post.revisions) {
     const revision = data.post.revisions.edges[0]?.node;
 
-    if (revision) Object.assign(data.post, revision);
+    if (revision) Object.assign(data.post, normalizePostNode(revision));
     delete data.post.revisions;
   }
 
