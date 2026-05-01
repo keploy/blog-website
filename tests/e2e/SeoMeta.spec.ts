@@ -126,6 +126,29 @@ test.describe('SEO and Meta Tags Configuration', () => {
         expect(body).toContain('<loc>https://keploy.io/blog/technology</loc>');
     });
 
+    test('Post page article body should be in server-rendered HTML before JavaScript runs', async ({ request, baseURL }) => {
+        // GPTBot / ClaudeBot / PerplexityBot fetch raw HTML without executing JS.
+        // This test uses Playwright's HTTP client (no browser, no JS) to verify
+        // that the article prose appears in the initial SSR payload — not only
+        // inside the __NEXT_DATA__ JSON blob.
+        const response = await request.get(`${baseURL!}/technology/understanding-api-testing-with-keploy`);
+        expect(response.status()).toBe(200);
+
+        const html = await response.text();
+
+        // __NEXT_DATA__ always contains the full post JSON — strip it so we only
+        // check the server-rendered DOM markup.
+        const htmlWithoutNextData = html.replace(
+            /<script id="__NEXT_DATA__"[\s\S]*?<\/script>/i,
+            ''
+        );
+
+        // Prose from the mock fixture content must survive in the SSR HTML.
+        // If PostBody is still ssr:false this assertion fails — the text only
+        // exists inside the stripped __NEXT_DATA__ blob, not the rendered DOM.
+        expect(htmlWithoutNextData).toContain('API testing');
+    });
+
     test('AI referral tracker should push event to dataLayer on UTM-attributed landing', async ({ page, baseURL }) => {
         await page.goto(`${baseURL!}/?utm_source=chatgpt`);
 

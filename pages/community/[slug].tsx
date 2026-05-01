@@ -30,9 +30,7 @@ import {
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription } from "../../utils/seo";
 
-const PostBody = dynamic(() => import("../../components/post-body"), {
-  ssr: false,
-});
+const PostBody = dynamic(() => import("../../components/post-body"));
 
 // Apply all HTML transformations in one synchronous pass so the
 // transformed content is available at render time (SSR-friendly) and

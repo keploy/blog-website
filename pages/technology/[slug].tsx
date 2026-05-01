@@ -28,9 +28,7 @@ import {
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription } from "../../utils/seo";
 
-const PostBody = dynamic(() => import("../../components/post-body"), {
-  ssr: false,
-});
+const PostBody = dynamic(() => import("../../components/post-body"));
 
 const postBody = ({ content, post }) => {
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
