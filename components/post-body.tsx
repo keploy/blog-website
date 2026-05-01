@@ -250,7 +250,7 @@ export default function PostBody({
         .replace(/&quot;/g, '"')
         .replace(/&#039;/g, "'")
         .replace(/&#39;/g, "'")
-        .replace(/&nbsp;/g, " ");
+        .replace(/&nbsp;/g, "\u00A0");
     };
 
     return safeContent
