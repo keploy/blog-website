@@ -75,7 +75,8 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-gray-500 transition-colors"
-                href="https://x.com/Keployio"
+                href="https://x.com/keploy"
+                aria-label="Keploy on Twitter / X"
               >
                 <span className="sr-only">Twitter</span>
                 <svg
