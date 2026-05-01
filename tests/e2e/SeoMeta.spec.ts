@@ -143,10 +143,11 @@ test.describe('SEO and Meta Tags Configuration', () => {
             ''
         );
 
-        // Prose from the mock fixture content must survive in the SSR HTML.
-        // If PostBody is still ssr:false this assertion fails — the text only
-        // exists inside the stripped __NEXT_DATA__ blob, not the rendered DOM.
-        expect(htmlWithoutNextData).toContain('API testing');
+        // Scope the assertion to the rendered article body so title/SEO/schema
+        // text cannot satisfy the check when the prose itself is missing.
+        expect(htmlWithoutNextData).toMatch(
+            /<div[^>]*data-testid=["']post-content["'][^>]*>[\s\S]*<p>API testing is a critical part of the software development lifecycle\.[\s\S]*<\/p>/i
+        );
     });
 
     test('AI referral tracker should push event to dataLayer on UTM-attributed landing', async ({ page, baseURL }) => {
