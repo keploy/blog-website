@@ -237,9 +237,20 @@ export default function PostBody({
     }
 
     const decodeHtmlEntities = (str: string): string => {
-      const textarea = document.createElement("textarea");
-      textarea.innerHTML = str;
-      return textarea.value;
+      // document.createElement is browser-only; use a pure-JS fallback during SSR
+      if (typeof document !== "undefined") {
+        const textarea = document.createElement("textarea");
+        textarea.innerHTML = str;
+        return textarea.value;
+      }
+      return str
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'")
+        .replace(/&#39;/g, "'")
+        .replace(/&nbsp;/g, "\u00A0");
     };
 
     return safeContent
