@@ -6,6 +6,7 @@ import Script from 'next/script';
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
 import { trackAiReferral } from '@/utils/aiReferralTracker';
+import { Announcements } from '../components/Announcements';
 
 const PageLoader = dynamic(() => import('../components/PageLoader'), {
   ssr: false,
@@ -46,6 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         data-source="blog"
         strategy="lazyOnload"
       />
+      <Announcements />
       {loading ? <PageLoader /> : <Component {...pageProps} />}
     </>
   );

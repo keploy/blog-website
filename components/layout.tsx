@@ -44,7 +44,7 @@ export default function Layout({
         className="min-h-screen animate-[fadeIn_0.3s_ease-out] motion-reduce:animate-none"
       >
         {/* <Alert preview={preview} /> */}
-        <main className="pt-20 md:pt-24">{children}</main>
+        <main className="layout-content-padded">{children}</main>
       </div>
       <Footer />
       <ScrollToTop />
