@@ -1,9 +1,11 @@
 /**
  * HowTo JSON-LD builder for tutorial blog posts.
  *
- * A WordPress post is treated as a tutorial when it carries a tag whose name
- * (or slug) matches one of `HOWTO_TAG_NAMES`. Tags ride on the existing
- * GraphQL fragment, so this works without any WordPress-side schema changes.
+ * A WordPress post is treated as a tutorial when it carries a tag whose
+ * name normalizes to one of `HOWTO_TAG_NORMALIZED`. Tags ride on the
+ * existing GraphQL fragment (`tags.edges.node.name`), so this works without
+ * any WordPress-side schema changes. Slugs are not queried — name is the
+ * only signal we have here.
  *
  * Steps are extracted from the rendered post HTML — h2/h3 headings paired
  * with the first <p> that follows. If that yields < 2 usable steps, the
@@ -16,7 +18,6 @@
 type RawTagEdge = {
   node?: {
     name?: string;
-    slug?: string;
   };
 };
 
@@ -45,14 +46,26 @@ export type TutorialPostShape = {
   };
 };
 
-const HOWTO_TAG_NAMES = ["howto", "how-to", "tutorial"];
+// Normalized form used for tag matching. Keeping this kebab-cased+lowercased
+// means a WordPress tag named "How To" (display name with whitespace + caps)
+// matches the same bucket as "howto" / "how-to" / "tutorial".
+const HOWTO_TAG_NORMALIZED = new Set(["howto", "how-to", "tutorial"]);
+
+function normalizeTagName(raw: string): string {
+  return raw
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-");
+}
 
 function isTutorial(post: TutorialPostShape): boolean {
-  const tagNames =
-    post?.tags?.edges
-      ?.map((e) => (e?.node?.name || e?.node?.slug || "").toLowerCase())
-      .filter(Boolean) ?? [];
-  return tagNames.some((n) => HOWTO_TAG_NAMES.includes(n));
+  const edges = post?.tags?.edges ?? [];
+  for (const e of edges) {
+    const name = e?.node?.name;
+    if (!name) continue;
+    if (HOWTO_TAG_NORMALIZED.has(normalizeTagName(name))) return true;
+  }
+  return false;
 }
 
 function stripHtml(s: string): string {
@@ -114,12 +127,19 @@ export type HowToJsonLd = Record<string, unknown>;
 /**
  * Returns a HowTo JSON-LD object suitable for injecting via <script type="application/ld+json">,
  * or null if the post is not a tutorial / doesn't yield a valid step array.
+ *
+ * `safeTitle` and `safeDescription` MUST already be passed through
+ * `sanitizeTitle` / `getSafeDescription` (or equivalent) by the caller —
+ * matching the existing BlogPosting schema on these pages so JSON-LD
+ * doesn't ship raw Yoast HTML/entities.
  */
 export function getHowToSchema(
   post: TutorialPostShape | null | undefined,
   pageUrl: string,
+  safeTitle: string,
+  safeDescription: string,
 ): HowToJsonLd | null {
-  if (!post || !post.title) return null;
+  if (!post || !safeTitle) return null;
   if (!isTutorial(post)) return null;
 
   const steps: AuthoredHowToStep[] = post.content
@@ -132,7 +152,7 @@ export function getHowToSchema(
   const schema: HowToJsonLd = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: post.title,
+    name: safeTitle,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": pageUrl,
@@ -149,7 +169,7 @@ export function getHowToSchema(
     }),
   };
 
-  if (post.seo?.metaDesc) schema.description = post.seo.metaDesc;
+  if (safeDescription) schema.description = safeDescription;
   if (post.featuredImage?.node?.sourceUrl) {
     schema.image = [post.featuredImage.node.sourceUrl];
   }

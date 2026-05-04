@@ -163,7 +163,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         reviewerDescription: reviewAuthorDescription || undefined,
       })
     );
-    const howTo = getHowToSchema(post, postUrl);
+    const howTo = getHowToSchema(post, postUrl, safeTitle, safeDescription);
     if (howTo) {
       structuredData.push(howTo);
     }

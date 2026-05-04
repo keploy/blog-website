@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { GetStaticProps } from "next";
 import Container from "../components/container";
 import Layout from "../components/layout";
@@ -32,6 +33,13 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       canonicalUrl={SITE_URL}
       ogType="website"
     >
+      <Head>
+        {/* Meta.tsx renders og:title / twitter:title from Layout's `Title`
+            prop but does NOT emit a <title> tag (see LIVE-11 note in
+            authors/[slug].tsx). Without this <Head><title>, /blog ships
+            with no document title — same regression that hit author pages. */}
+        <title>{`Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives`}</title>
+      </Head>
       <Header />
       <Container>
         <div className="">
