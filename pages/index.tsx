@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { GetStaticProps } from "next";
 import Container from "../components/container";
 import Layout from "../components/layout";
@@ -27,15 +26,12 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`Blog - Keploy`}
+      Title={`Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives`}
       Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}
       structuredData={structuredData}
       canonicalUrl={SITE_URL}
       ogType="website"
     >
-      <Head>
-        <title>{`Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives`}</title>
-      </Head>
       <Header />
       <Container>
         <div className="">

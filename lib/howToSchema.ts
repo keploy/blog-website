@@ -1,17 +1,13 @@
 /**
  * HowTo JSON-LD builder for tutorial blog posts.
  *
- * A WordPress post is treated as a tutorial when EITHER:
- *   1. it has a tag named "howto" (case-insensitive), OR
- *   2. it carries a custom meta field `is_tutorial` set to true, OR
- *   3. an explicit `howto_steps` field is present in the post payload.
+ * A WordPress post is treated as a tutorial when it carries a tag whose name
+ * (or slug) matches one of `HOWTO_TAG_NAMES`. Tags ride on the existing
+ * GraphQL fragment, so this works without any WordPress-side schema changes.
  *
- * The `step` array is sourced (in priority order) from:
- *   1. an explicit `howto_steps` array on the post (preferred — authored), or
- *   2. h2/h3 headings + their first paragraph extracted from `post.content`.
- *
- * If neither source yields >= 2 steps, the helper returns null so the page
- * does NOT emit an invalid schema.
+ * Steps are extracted from the rendered post HTML — h2/h3 headings paired
+ * with the first <p> that follows. If that yields < 2 usable steps, the
+ * helper returns null so the page does not emit an invalid schema.
  *
  * The helper is purely string-based (does not touch the DOM, does not import
  * cheerio) so it is safe for both server-side and client-side rendering.
@@ -27,7 +23,6 @@ type RawTagEdge = {
 type AuthoredHowToStep = {
   name?: string;
   text?: string;
-  url?: string;
   image?: string;
 };
 
@@ -36,11 +31,6 @@ export type TutorialPostShape = {
   slug?: string;
   content?: string;
   date?: string;
-  // Optional explicit steps the author can ship from WordPress as a
-  // post-meta JSON array.
-  howto_steps?: AuthoredHowToStep[] | null;
-  // Optional flag the author can set in WordPress as a custom field.
-  is_tutorial?: boolean;
   // The blog uses WPGraphQL, so tags are nested as edges.
   tags?: {
     edges?: RawTagEdge[];
@@ -58,10 +48,6 @@ export type TutorialPostShape = {
 const HOWTO_TAG_NAMES = ["howto", "how-to", "tutorial"];
 
 function isTutorial(post: TutorialPostShape): boolean {
-  if (post?.is_tutorial === true) return true;
-  if (Array.isArray(post?.howto_steps) && post.howto_steps.length > 0) {
-    return true;
-  }
   const tagNames =
     post?.tags?.edges
       ?.map((e) => (e?.node?.name || e?.node?.slug || "").toLowerCase())
@@ -111,14 +97,13 @@ function extractStepsFromContent(html: string): AuthoredHowToStep[] {
     const text = pMatch ? stripHtml(pMatch[1]) : "";
     // Skip steps with no usable body — they aren't useful in JSON-LD.
     if (!text) continue;
-    const slug = h.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
+    // Intentionally NOT setting `step.url`: the rendered post doesn't carry
+    // server-side anchor ids on its h2/h3s — `components/post-body.tsx`
+    // attaches them in a client useEffect — so any `#slug` we emit here
+    // would point at a non-existent anchor in the SSR HTML that crawlers see.
     steps.push({
       name: h.name.length > 110 ? `${h.name.slice(0, 107)}...` : h.name,
       text: text.length > 480 ? `${text.slice(0, 477)}...` : text,
-      url: slug ? `#${slug}` : undefined,
     });
   }
   return steps;
@@ -137,19 +122,9 @@ export function getHowToSchema(
   if (!post || !post.title) return null;
   if (!isTutorial(post)) return null;
 
-  let steps: AuthoredHowToStep[] = [];
-  if (Array.isArray(post.howto_steps) && post.howto_steps.length > 0) {
-    steps = post.howto_steps
-      .map((s) => ({
-        name: (s?.name || "").trim(),
-        text: (s?.text || "").trim(),
-        url: s?.url,
-        image: s?.image,
-      }))
-      .filter((s) => s.name && s.text);
-  } else if (post.content) {
-    steps = extractStepsFromContent(post.content);
-  }
+  const steps: AuthoredHowToStep[] = post.content
+    ? extractStepsFromContent(post.content)
+    : [];
 
   // Google requires at least 2 steps for HowTo to render rich-result-style.
   if (steps.length < 2) return null;
@@ -169,9 +144,6 @@ export function getHowToSchema(
         name: s.name,
         text: s.text,
       };
-      if (s.url) {
-        step.url = s.url.startsWith("#") ? `${pageUrl}${s.url}` : s.url;
-      }
       if (s.image) step.image = s.image;
       return step;
     }),
