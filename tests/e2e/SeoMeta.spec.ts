@@ -8,8 +8,11 @@ test.describe('SEO and Meta Tags Configuration', () => {
         const metaDesc = page.locator('meta[name="description"]');
         await expect(metaDesc).toHaveAttribute('content', /The Keploy Blog offers in-depth articles/);
 
+        // og:title is rendered from Layout's `Title` prop (see components/meta.tsx);
+        // both that prop and <Head><title> on /blog now use the same canonical
+        // SEO string. The new title leads with "Keploy Blog —".
         const ogTitle = page.locator('meta[property="og:title"]');
-        await expect(ogTitle).toHaveAttribute('content', /Blog - Keploy/);
+        await expect(ogTitle).toHaveAttribute('content', /^Keploy Blog\b/);
 
         const ogDesc = page.locator('meta[property="og:description"]');
         await expect(ogDesc).toHaveAttribute('content', /The Keploy Blog offers in-depth articles/);
