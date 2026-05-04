@@ -34,16 +34,16 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       ogType="website"
     >
       <Head>
-        <title>{`Engineering | Keploy Blog`}</title>
+        <title>{`Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives`}</title>
       </Head>
       <Header />
       <Container>
         <div className="">
           <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
             <div className="content">
-              <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
-                Keploy Blog
-              </h2>
+              <h1 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
+                Keploy Engineering Blog
+              </h1>
               <p className="content-body body 2xl:text-2xl text-lg mt-6">
                 Empowering your tech journey with expert advice and analysis
               </p>
