@@ -68,6 +68,12 @@ function isTutorial(post: TutorialPostShape): boolean {
   return false;
 }
 
+// WordPress emits typographic punctuation as numeric HTML entities
+// (`&#8217;` curly apostrophe, `&#8211;` en dash, etc.), so the JSON-LD
+// would otherwise carry literal "It&#8217;s" strings — invalid markup that
+// search engines and the rich-results test treat as broken content.
+// Mirrors the decode list in utils/seo.ts so the HowTo schema and the meta
+// description stay in lockstep.
 function stripHtml(s: string): string {
   return s
     .replace(/<[^>]+>/g, "")
@@ -77,6 +83,12 @@ function stripHtml(s: string): string {
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
+    .replace(/&#8217;/g, "'")
+    .replace(/&#8216;/g, "'")
+    .replace(/&#8220;/g, "“")
+    .replace(/&#8221;/g, "”")
+    .replace(/&#8211;/g, "–")
+    .replace(/&#8212;/g, "—")
     .replace(/\s+/g, " ")
     .trim();
 }
