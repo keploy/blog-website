@@ -15,6 +15,8 @@
  * cheerio) so it is safe for both server-side and client-side rendering.
  */
 
+import { decodeEntities } from "../utils/seo";
+
 type RawTagEdge = {
   node?: {
     name?: string;
@@ -68,30 +70,12 @@ function isTutorial(post: TutorialPostShape): boolean {
   return false;
 }
 
-// WordPress emits typographic punctuation as numeric HTML entities
-// (`&#8217;` curly apostrophe, `&#8211;` en dash, etc.), so the JSON-LD
-// would otherwise carry literal "It&#8217;s" strings — invalid markup that
-// search engines and the rich-results test treat as broken content.
-// Mirrors the decode list in utils/seo.ts so the HowTo schema and the meta
-// description stay in lockstep.
-function stripHtml(s: string): string {
-  return s
-    .replace(/<[^>]+>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&#8217;/g, "'")
-    .replace(/&#8216;/g, "'")
-    .replace(/&#8220;/g, "“")
-    .replace(/&#8221;/g, "”")
-    .replace(/&#8211;/g, "–")
-    .replace(/&#8212;/g, "—")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+// Reuse the shared sanitizer that powers meta titles/descriptions so the
+// HowTo schema and the rest of the metadata pipeline can't drift on entity
+// handling. utils/seo.ts also carries the script-context safety note about
+// why `&lt;` / `&gt;` are intentionally NOT decoded into raw angle brackets
+// — important context for any future change to that list.
+const stripHtml = decodeEntities;
 
 /**
  * Walks the HTML body and pairs each h2/h3 with the first <p> that follows it,
