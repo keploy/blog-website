@@ -23,7 +23,7 @@ jobs:
           node-version: 18
 
       - name: Install googleapis
-        run: npm install --no-save googleapis
+        run: npm install --no-save googleapis@171.4.0
 
       - name: Validate Google Search Console secrets
         env:

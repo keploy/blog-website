@@ -14,10 +14,13 @@ const MAIN_SITE_URL = "https://keploy.io";
 
 function requireWordPressEndpoint() {
   const endpoint = process.env.WORDPRESS_API_URL;
-  if (!endpoint || !URL.canParse(endpoint)) {
-    throw new Error(
-      "WORDPRESS_API_URL must be set to a valid WPGraphQL endpoint."
-    );
+  if (!endpoint) {
+    throw new Error("WORDPRESS_API_URL must be set to a valid WPGraphQL endpoint.");
+  }
+  try {
+    new URL(endpoint);
+  } catch {
+    throw new Error("WORDPRESS_API_URL must be set to a valid WPGraphQL endpoint.");
   }
   return endpoint;
 }
