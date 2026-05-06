@@ -225,6 +225,13 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               href="/technology"
               onMouseEnter={() => { setHoveredNav('tech'); setLinkHoverTech(true); }}
               onMouseLeave={() => { setLinkHoverTech(false); setHoveredNav(null); }}
+              onClick={(e) => {
+                if (typeof window !== 'undefined' && window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+                  e.preventDefault();
+                  setShowTechDropdown(prev => !prev);
+                  setHoveredNav('tech');
+                }
+              }}
               className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showTechDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverTech ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
             >
               <span>Technology</span>
@@ -295,6 +302,13 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               href="/community"
               onMouseEnter={() => { setHoveredNav('community'); setLinkHoverCommunity(true); }}
               onMouseLeave={() => { setLinkHoverCommunity(false); setHoveredNav(null); }}
+              onClick={(e) => {
+                if (typeof window !== 'undefined' && window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+                  e.preventDefault();
+                  setShowCommunityDropdown(prev => !prev);
+                  setHoveredNav('community');
+                }
+              }}
               className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showCommunityDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[15px] font-medium py-2 px-1 inline-flex items-center gap-1.5 align-middle ${linkHoverCommunity ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
             >
               <span>Community</span>
