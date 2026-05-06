@@ -26,6 +26,9 @@ jobs:
       - name: Generate sitemap.xml
         run: node scripts/generate-sitemap.mjs
 
+      - name: Validate sitemap XML
+        run: xmllint --noout public/sitemap.xml
+
       - name: Detect sitemap changes
         id: diff
         run: |

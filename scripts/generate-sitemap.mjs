@@ -10,13 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const outputPath = path.join(repoRoot, "public", "sitemap.xml");
 
-function requireMainSiteUrl() {
-  const configuredSiteUrl = process.env.MAIN_SITE_URL ?? "https://keploy.io";
-  if (!URL.canParse(configuredSiteUrl)) {
-    throw new Error("MAIN_SITE_URL must be a valid absolute URL when provided.");
-  }
-  return new URL(configuredSiteUrl).origin;
-}
+const MAIN_SITE_URL = "https://keploy.io";
 
 function requireWordPressEndpoint() {
   const endpoint = process.env.WORDPRESS_API_URL;
@@ -235,11 +229,9 @@ function buildEntries(posts, mainSiteUrl) {
 }
 
 function buildSitemapXml(entries) {
-  const hasImages = entries.some((e) => e.image);
-
   const namespaces = [
     'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
-    ...(hasImages ? ['xmlns:image="http://www.google.com/schemas/sitemap-image/0.9"'] : []),
+    'xmlns:image="http://www.google.com/schemas/sitemap-image/0.9"',
   ].join("\n        ");
 
   const body = entries
@@ -261,10 +253,9 @@ function buildSitemapXml(entries) {
 }
 
 async function main() {
-  const mainSiteUrl = requireMainSiteUrl();
   const endpoint = requireWordPressEndpoint();
   const posts = await fetchAllPosts(endpoint);
-  const xml = buildSitemapXml(buildEntries(posts, mainSiteUrl));
+  const xml = buildSitemapXml(buildEntries(posts, MAIN_SITE_URL));
 
   await mkdir(path.dirname(outputPath), { recursive: true });
   await writeFile(outputPath, xml, "utf8");
@@ -277,7 +268,7 @@ async function main() {
 main().catch((error) => {
   console.error("[generate-sitemap] Failed:", error);
   console.error(
-    "[generate-sitemap] Next step: confirm WORDPRESS_API_URL is set, reachable, and returns WPGraphQL data; confirm MAIN_SITE_URL is a valid absolute URL when overridden."
+    "[generate-sitemap] Next step: confirm WORDPRESS_API_URL is set, reachable, and returns valid WPGraphQL data."
   );
   process.exitCode = 1;
 });
