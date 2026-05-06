@@ -12,6 +12,8 @@ import { Menu, X, ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
+import Fuse from "fuse.js";
 
 const glassDropdown =
   "relative overflow-hidden backdrop-blur-[60px] bg-gray-200/95 bg-gradient-to-br from-white/85 via-gray-200/95 to-gray-300/90 border border-gray-200/70 shadow-[0_22px_54px_rgba(15,23,42,0.22)]";
@@ -709,37 +711,18 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         />
       )}
 
-      {/* Search Modal */}
-      {searchOpen && typeof document !== 'undefined' && createPortal(
-        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/45 backdrop-blur-2xl p-4" onClick={() => setSearchOpen(false)}>
-          {/* Global top-right close */}
-          <button
-            aria-label="Close search"
-            onClick={() => setSearchOpen(false)}
-            className="fixed top-3 right-3 md:top-5 md:right-5 z-[95] inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/80 text-neutral-700 hover:text-neutral-900 hover:bg-white shadow"
-          >
-            <X className="w-5 h-5" />
-          </button>
-          <div className="w-[min(90vw,720px)] rounded-2xl border border-white/50 p-5 md:p-6 bg-neutral-100/70 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.30)]" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Search blogs">
-            <div className="flex items-center justify-between mb-3 relative">
-              <h3 className="text-base md:text-lg font-semibold text-neutral-800">Search blogs</h3>
-            </div>
-            <SearchBox onClose={() => setSearchOpen(false)} techLatest={techState} communityLatest={communityState} />
-            {/* Hide scrollbar via styled-jsx (scoped) */}
-            <style jsx>{`
-              :global(#search-results) { -ms-overflow-style: none; scrollbar-width: none; }
-              :global(#search-results::-webkit-scrollbar) { width: 0; height: 0; background: transparent; }
-              :global(#search-results::-webkit-scrollbar-thumb) { background: transparent; }
-              :global(#search-results::-webkit-scrollbar-track) { background: transparent; }
-            `}</style>
-          </div>
-        </div>, document.body)
-      }
+      {/* Search Modal uses CommandDialog rendered inside SearchBox component directly */}
+      <SearchBox 
+        isOpen={searchOpen} 
+        onClose={() => setSearchOpen(false)} 
+        techLatest={techState} 
+        communityLatest={communityState} 
+      />
     </div>
   );
 }
 
-function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: { onClose: () => void; techLatest?: any[]; communityLatest?: any[] }) {
+function SearchBox({ isOpen, onClose, techLatest = [], communityLatest = [] as any[] }: { isOpen: boolean; onClose: () => void; techLatest?: any[]; communityLatest?: any[] }) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
@@ -762,10 +745,10 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
       }
     })();
     return () => { mounted = false; };
-  }, []);
+  }, [router?.basePath]);
 
   useEffect(() => {
-    const term = q.trim().toLowerCase();
+    const term = q.trim();
     if (term.length < 2) {
       setResults([]);
       setError(null);
@@ -775,18 +758,27 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
     const pool = Array.isArray(allPosts) && allPosts.length
       ? allPosts
       : [...(techLatest || []), ...(communityLatest || [])];
+    
     setLoading(false);
     setError(null);
-    const filtered = pool.filter(({ node }) =>
-      (node?.title || "").toLowerCase().includes(term) ||
-      (node?.excerpt || "").toLowerCase().includes(term)
-    );
+    
+    // Initialise fuse.js for fuzzy search
+    const fuse = new Fuse(pool, {
+      keys: [
+        "node.title",
+        "node.excerpt",
+        "node.author.node.name",
+        "node.ppmaAuthorName",
+        "node.categories.edges.node.name",
+        "node.tags.edges.node.name"
+      ],
+      threshold: 0.3,
+      ignoreLocation: true,
+    });
+    
+    const filtered = fuse.search(term).map(res => res.item);
     setResults(filtered.slice(0, 20));
-  }, [q, allPosts]);
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
+  }, [q, allPosts, techLatest, communityLatest]);
 
   const toPath = (node: any) => {
     const cat = node?.categories?.edges?.[0]?.node?.name || "";
@@ -795,66 +787,39 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
   };
 
   return (
-    <form onSubmit={submit} className="space-y-3">
-      <div className="relative">
-        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500">
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        </span>
-        <input
-          autoFocus
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search blogs..."
-          className="w-full rounded-xl bg-white/90 outline-none pl-9 pr-9 py-3 text-[15px] text-neutral-800 shadow-sm"
-        />
-        {q && (
-          <button
-            type="button"
-            aria-label="Clear search"
-            onClick={() => setQ("")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-6 h-6 rounded-full text-neutral-500 hover:text-neutral-800 hover:bg-black/5"
-          >
-            <X className="w-4 h-4" />
-          </button>
+    <CommandDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <CommandInput 
+        placeholder="Search blogs by title, tags, or author..." 
+        value={q} 
+        onValueChange={setQ} 
+      />
+      <CommandList>
+        {q.trim().length >= 2 && results.length === 0 && !error && (
+          <CommandEmpty>No results found.</CommandEmpty>
         )}
-      </div>
-
-      {/* Results - thin glass/white cards, instant filter */}
-      <div id="search-results" className="max-h-[50vh] overflow-auto px-1 md:px-1.5">
-        {q.trim().length < 2 && (
-          <div className="text-xs text-neutral-500 px-1" />
-        )}
-        {!!error && (
-          <div className="text-sm text-red-600 px-1">{error}</div>
-        )}
-        {!error && results?.length > 0 && (
-          <ul className="space-y-2">
-            {results.map(({ node }) => (
-              <li key={node.slug}>
-                <Link href={toPath(node)} className="group flex w-full items-center gap-3 p-2 rounded-xl ring-1 ring-neutral-200/60 hover:ring-orange-400/60 transition-all bg-white/80 backdrop-blur-sm">
-                  <div className="relative w-16 h-12 flex-shrink-0 rounded-md overflow-hidden bg-white/40">
-                    {node?.featuredImage?.node?.sourceUrl && (
-                      <Image src={node.featuredImage.node.sourceUrl} alt={node?.title || "Blog post featured image"} fill className="object-cover" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[13px] font-semibold text-neutral-900 group-hover:text-orange-600 truncate">{node.title}</div>
-                    <div className="text-[11px] text-neutral-600 truncate">{new Date(node.date).toLocaleDateString()} • {node.ppmaAuthorName || "Keploy"}</div>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-orange-500 transition-colors" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-        {!error && q.trim().length >= 2 && results?.length === 0 && (
-          <div className="text-sm text-neutral-600 px-1">No results found.</div>
-        )}
-      </div>
-
-      <div className="flex items-center justify-end">
-        <button type="button" onClick={onClose} className="rounded-md px-3 py-2 text-sm text-neutral-700 hover:bg-black/5">Close</button>
-      </div>
-    </form>
+        <CommandGroup heading="Results">
+          {results.map(({ node }) => (
+            <CommandItem 
+              key={node.slug} 
+              onSelect={() => {
+                router.push(toPath(node));
+                onClose();
+              }}
+              className="group flex w-full items-center gap-3 p-2 rounded-xl hover:bg-orange-50 cursor-pointer transition-all"
+            >
+              <div className="relative w-12 h-9 flex-shrink-0 rounded-md overflow-hidden bg-neutral-100">
+                {node?.featuredImage?.node?.sourceUrl && (
+                  <Image src={node.featuredImage.node.sourceUrl} alt={node?.title || "Blog post"} fill className="object-cover" />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[14px] font-semibold text-neutral-900 group-hover:text-orange-600 truncate">{node.title}</div>
+                <div className="text-[12px] text-neutral-500 truncate">{new Date(node.date).toLocaleDateString()} • {node.ppmaAuthorName || "Keploy"}</div>
+              </div>
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </CommandDialog>
   );
 }
