@@ -56,11 +56,11 @@ export default function Layout({
       <Script
         id="gtag-loader"
         src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
       />
       <Script
         id="google-ga"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
           window.dataLayer = window.dataLayer || [];
