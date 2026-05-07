@@ -52,6 +52,9 @@ export default function Layout({
       {/* ── Analytics & third-party scripts ──
            All non-essential scripts use lazyOnload to keep TBT/TTI low.
            They fire after the page is fully interactive. */}
+      {/* update: changing this to afterInteractive since this is not a non essential script, due to lazyload on this we 
+           are losing on the important data becasue the script for analytics never gets loaded until the page is fully interavtive
+           and if the user navigates before the page is fully interactive, the script is never triggerred and hence we are losing data */}
 
       <Script
         id="gtag-loader"
