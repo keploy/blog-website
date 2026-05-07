@@ -8,11 +8,25 @@ test.describe('SEO and Meta Tags Configuration', () => {
         const metaDesc = page.locator('meta[name="description"]');
         await expect(metaDesc).toHaveAttribute('content', /The Keploy Blog offers in-depth articles/);
 
-        // og:title is rendered from Layout's `Title` prop (see components/meta.tsx);
-        // both that prop and <Head><title> on /blog now use the same canonical
-        // SEO string. The new title leads with "Keploy Blog —".
+        // The homepage SEO rewrite is the headline change of this PR, so the
+        // assertions below pin the *exact* values introduced — a prefix-match
+        // ("starts with Keploy Blog") would still pass if the keyword-rich
+        // suffix were dropped or the H1 copy disappeared, which would
+        // silently regress the rewrite. Both `Title` and the <Head><title> on
+        // pages/index.tsx feed this string, so the og:title and the document
+        // title must be identical.
+        const expectedTitle = 'Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives';
+
         const ogTitle = page.locator('meta[property="og:title"]');
-        await expect(ogTitle).toHaveAttribute('content', /^Keploy Blog\b/);
+        await expect(ogTitle).toHaveAttribute('content', expectedTitle);
+
+        await expect(page).toHaveTitle(expectedTitle);
+
+        // The visible H1 was rewritten to "Keploy Engineering Blog" alongside
+        // the title change. Assert the exact H1 text so a future refactor
+        // that drops the H1 (or reverts it to the old copy) trips this test.
+        const h1 = page.locator('h1').first();
+        await expect(h1).toHaveText('Keploy Engineering Blog');
 
         const ogDesc = page.locator('meta[property="og:description"]');
         await expect(ogDesc).toHaveAttribute('content', /The Keploy Blog offers in-depth articles/);
