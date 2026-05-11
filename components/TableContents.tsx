@@ -56,11 +56,18 @@ export default function TOC({ headings, isList, setIsList }) {
 
   // Detect screen size — show mobile dropdown below 1440px (matches grid breakpoint)
   useEffect(() => {
-    const check = () => setIsSmallScreen(window.innerWidth < 1440);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+    if (!tocRef.current) return;
+
+    const container = tocRef.current;
+
+    function resizeHandler() {
+      setIsList(container.scrollHeight > container.clientHeight);
+    }
+
+    resizeHandler()
+    window.addEventListener("resize", resizeHandler)
+
+    return () => { window.removeEventListener("resize", resizeHandler) }
 
   // isList fallback (collapse to select if extremely long)
   useEffect(() => {
@@ -71,7 +78,26 @@ export default function TOC({ headings, isList, setIsList }) {
     window.addEventListener("resize", handler);
     return () => window.removeEventListener("resize", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
+
+
+  const handleItemClick = (id) => {
+    const sanitizedId = sanitizeStringForURL(id, true);
+    const element = document.getElementById(sanitizedId);
+    if (element) {
+      const offset = 80;
+      const offsetPosition = element.offsetTop - offset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+
+      window.history.replaceState(null, null, `#${sanitizedId}`);
+    }
+  };
+
+  // State to track screen width
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   // Active section tracking
   useEffect(() => {
@@ -170,83 +196,22 @@ export default function TOC({ headings, isList, setIsList }) {
               <option key={index} value={item.id}>{item.title}</option>
             ))}
           </select>
-        </div>
-      ) : (
-        <nav ref={tocRef} data-testid="toc-nav">
-          {/* ─── TOC Card ─────────────────────────────── */}
-          <div className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden pb-3 w-full">
-
-            {/* Card header */}
-            <div className="px-4 py-3 border-b border-gray-200">
-              <p className="!text-[20px] font-bold tracking-widest text-gray-900">
-                Table of Contents
-              </p>
-            </div>
-
-            {/* Scrollable items */}
-            <div
-              ref={scrollContainerRef}
-              className="overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400"
-              style={{ maxHeight: "400px", scrollbarWidth: "thin", scrollbarColor: "#d1d5db transparent" }}
-            >
-              {(() => {
-                let h2Count = 0;
-                let h3Count = 0;
-                let h4Count = 0;
-
-                return headings.map((item, index) => {
-                  const sid = sanitizeStringForURL(item.id, true);
-                  const isAct = sid === activeId;
-                  const isH3Plus = item.type === "h3" || item.type === "h4";
-                  const isH4 = item.type === "h4";
-
-                  // Compute numbering
-                  let number = "";
-                  if (item.type === "h2" || item.type === "h1") {
-                    h2Count++;
-                    h3Count = 0;
-                    h4Count = 0;
-                    number = `${h2Count}.`;
-                  } else if (item.type === "h3") {
-                    h3Count++;
-                    h4Count = 0;
-                    number = `${h2Count}.${h3Count}`;
-                  } else if (item.type === "h4") {
-                    h4Count++;
-                    number = `${h2Count}.${h3Count}.${h4Count}`;
-                  }
-
-                  return (
-                    <div key={index} data-toc-id={sid}>
-                      <TocTooltip text={item.title}>
-                        <button
-                          onClick={() => handleItemClick(item.id)}
-                          className={`w-full text-left px-4 py-2 leading-snug transition-colors duration-150 truncate block ${isH4
-                            ? "pl-12 !text-[14px] font-normal text-gray-700 opacity-40"       /* H4 (sub-sub-heading) */
-                            : isH3Plus
-                              ? "pl-9 !text-[14px] font-normal text-gray-800 opacity-40"      /* H3 (sub-heading) */
-                              : "pl-6 !text-[16px] font-normal text-gray-900"                   /* H2 (main heading) */
-                            } ${isAct
-                              ? "!text-orange-500 !opacity-100 font-normal"
-                              : "hover:text-orange-500"
-                            }`}
-                        >
-                          {isAct && <span className="text-orange-500 mr-1.5">●</span>}
-                          {item.title}
-                        </button>
-                      </TocTooltip>
-                      {/* Separator between items */}
-                      {index < headings.length - 1 && (
-                        <hr className="border-gray-300 mx-4" />
-                      )}
-                    </div>
-                  );
-                });
-              })()}
-            </div>
-          </div>
-        </nav>
-      )}
-    </div>
+        ) : (
+          <nav className="max-h-[80vh] overflow-y-auto pr-2">
+            <ul ref={tocRef} className="pl-0 leading-5">
+              {headings.map((item, index) => (
+                <TOCItem
+                  key={index}
+                  id={item.id}
+                  title={item.title}
+                  type={item.type}
+                  onClick={handleItemClick}
+                />
+              ))}
+            </ul>
+          </nav>
+        )}
+      </div>
+    </>
   );
 }
