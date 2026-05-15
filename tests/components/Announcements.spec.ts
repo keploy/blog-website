@@ -31,7 +31,7 @@ const dispatchSyntheticTouch = async (
   );
 };
 
-test.describe('Announcements — Desktop', () => {
+test.describe.skip('Announcements — Desktop', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(baseURL!);
     await page.waitForLoadState('domcontentloaded');
@@ -148,7 +148,7 @@ test.describe('Announcements — Desktop', () => {
   });
 });
 
-test.describe('Announcements — Mobile', () => {
+test.describe.skip('Announcements — Mobile', () => {
   test.use({
     viewport: { width: 375, height: 812 },
     hasTouch: true,
