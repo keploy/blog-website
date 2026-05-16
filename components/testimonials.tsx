@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
 
@@ -81,14 +82,13 @@ const ReviewCard = ({
             {imgError ? (
               <FallbackAvatar name={name} />
             ) : (
-              <img
+              <Image
                 className="h-full w-full rounded-full object-cover ring-2 ring-primary-100"
                 width={40}
                 height={40}
                 alt={name ? `${name}'s avatar` : "Avatar"}
                 src={proxiedAvatar}
                 onError={() => setImgError(true)}
-                loading="lazy"
               />
             )}
           </div>
