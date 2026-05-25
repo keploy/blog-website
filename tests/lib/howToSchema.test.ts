@@ -101,9 +101,11 @@ test("returns null when fewer than 2 steps can be extracted", () => {
 
 test("decodes WordPress numeric entities in step text and headings", () => {
   // &#8217; (curly apostrophe), &#8211; (en dash), and the structural
-  // &lt;/&gt; pair WP emits for inline code blocks. Assert the entities
-  // are replaced with proper Unicode and that no `&lt;`/`&gt;` literals
-  // leak into the JSON-LD payload.
+  // &lt;/&gt; pair WP emits for inline code blocks. Assert that the
+  // numeric punctuation entities ARE replaced with proper Unicode while
+  // `&lt;`/`&gt;` are intentionally LEFT as entities — decodeEntities()
+  // in utils/seo.ts deliberately skips them so a literal `</script>` can
+  // never land inside the JSON-LD `<script>` body.
   const schema = getHowToSchema(
     makePost({
       content: `
@@ -127,8 +129,10 @@ test("decodes WordPress numeric entities in step text and headings", () => {
   assert.match(steps[0].text as string, /– then exercise/);
   // `&lt;` / `&gt;` are intentionally left as entities (script-context
   // safety: see utils/seo.ts decodeEntities note) — they must NOT be
-  // decoded into raw `<`/`>` in the JSON-LD body.
+  // decoded into raw `<`/`>` in the JSON-LD body, and the entity form
+  // must survive into the emitted payload.
   assert.doesNotMatch(steps[0].text as string, /<keploy record>/);
+  assert.match(steps[0].text as string, /&lt;keploy record&gt;/);
   assert.equal(steps[1].text, "Run “keploy test” to replay.");
 });
 
