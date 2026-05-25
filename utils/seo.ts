@@ -7,15 +7,24 @@
  * drift the next time WordPress surfaces a new typographic entity.
  *
  * Note: this function intentionally does NOT decode `&lt;` / `&gt;` to raw
- * angle brackets. The output is consumed inside <script> tags (meta tags,
- * JSON-LD payloads), where a literal `</script>` inside a string body would
- * terminate the script element and break the page. JSON.stringify does not
- * escape `<` or `>`, so once we let raw `<` into the value, downstream
- * `dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}` callers
- * have no defence. We strip tags via the regex above instead \u2014 angle
- * brackets that were entity-encoded in the source were never structural
- * markup, so leaving them as `&lt;` text in the script payload is safer
- * than decoding them.
+ * angle brackets. Callers fall into two buckets:
+ *   1. `<meta name="description" content="...">` / `<title>...</title>` \u2014
+ *      the output lands inside an HTML attribute or text node where React
+ *      escapes `<`/`>` for us, so leaving entities here is purely a
+ *      readability choice (no security impact).
+ *   2. JSON-LD payloads injected via
+ *      `<script type="application/ld+json" dangerouslySetInnerHTML={{
+ *        __html: JSON.stringify(schema) }} />` \u2014 this is the load-bearing
+ *      case. `JSON.stringify` does not escape `<` or `>`, so once raw `<`
+ *      enters the schema value a tutorial paragraph containing
+ *      `</script>` (or any markup) would terminate the surrounding
+ *      `<script>` element and break the page. Leaving angle brackets as
+ *      `&lt;` / `&gt;` makes that injection impossible.
+ *
+ * The regex above strips tag wrappers, so the only `<`/`>` that ever reach
+ * the JSON-LD body are ones the WordPress author entity-encoded on purpose
+ * (e.g. inline code like `&lt;keploy record&gt;`) \u2014 those were never
+ * structural markup and are safe to leave as text.
  */
 export function decodeEntities(text: string): string {
   return text
