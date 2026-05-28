@@ -37,7 +37,9 @@ const PAGE_URL = "https://keploy.io/blog/sample-howto-post";
 const SAFE_TITLE = "Sample HowTo Post";
 const SAFE_DESCRIPTION = "Walks through a minimal Keploy capture/replay cycle.";
 
-function makePost(overrides: Partial<TutorialPostShape> = {}): TutorialPostShape {
+function makePost(
+  overrides: Partial<TutorialPostShape> = {},
+): TutorialPostShape {
   return {
     title: "Sample HowTo Post",
     slug: "sample-howto-post",
@@ -49,7 +51,12 @@ function makePost(overrides: Partial<TutorialPostShape> = {}): TutorialPostShape
 }
 
 test("emits HowTo schema for tutorial-tagged posts with >= 2 usable steps", () => {
-  const schema = getHowToSchema(makePost(), PAGE_URL, SAFE_TITLE, SAFE_DESCRIPTION);
+  const schema = getHowToSchema(
+    makePost(),
+    PAGE_URL,
+    SAFE_TITLE,
+    SAFE_DESCRIPTION,
+  );
 
   assert.ok(schema, "expected a schema object");
   assert.equal(schema!["@context"], "https://schema.org");
@@ -137,7 +144,12 @@ test("decodes WordPress numeric entities in step text and headings", () => {
 });
 
 test("schema carries page url via mainEntityOfPage", () => {
-  const schema = getHowToSchema(makePost(), PAGE_URL, SAFE_TITLE, SAFE_DESCRIPTION);
+  const schema = getHowToSchema(
+    makePost(),
+    PAGE_URL,
+    SAFE_TITLE,
+    SAFE_DESCRIPTION,
+  );
   assert.ok(schema);
   const main = schema!.mainEntityOfPage as Record<string, unknown>;
   assert.equal(main["@type"], "WebPage");
@@ -145,7 +157,100 @@ test("schema carries page url via mainEntityOfPage", () => {
 });
 
 test("returns null on missing post or empty title", () => {
-  assert.equal(getHowToSchema(null, PAGE_URL, SAFE_TITLE, SAFE_DESCRIPTION), null);
-  assert.equal(getHowToSchema(undefined, PAGE_URL, SAFE_TITLE, SAFE_DESCRIPTION), null);
-  assert.equal(getHowToSchema(makePost(), PAGE_URL, "", SAFE_DESCRIPTION), null);
+  assert.equal(
+    getHowToSchema(null, PAGE_URL, SAFE_TITLE, SAFE_DESCRIPTION),
+    null,
+  );
+  assert.equal(
+    getHowToSchema(undefined, PAGE_URL, SAFE_TITLE, SAFE_DESCRIPTION),
+    null,
+  );
+  assert.equal(
+    getHowToSchema(makePost(), PAGE_URL, "", SAFE_DESCRIPTION),
+    null,
+  );
+});
+
+test("extracts step body from <ul>/<ol>/<blockquote> when no <p> follows the heading", () => {
+  // Authors often put a list or callout directly after a step heading
+  // instead of a paragraph; without the fallback the step would be
+  // silently dropped (Amaan's review on #383). Pin each tag.
+  const schema = getHowToSchema(
+    makePost({
+      content: `
+        <h2>Install dependencies</h2>
+        <ul><li>Run npm install</li><li>Verify versions</li></ul>
+        <h2>Configure environment</h2>
+        <ol><li>Copy .env.example</li><li>Set DATABASE_URL</li></ol>
+        <h2>Smoke test</h2>
+        <blockquote>Hit the /health endpoint and expect 200.</blockquote>
+      `,
+    }),
+    PAGE_URL,
+    SAFE_TITLE,
+    SAFE_DESCRIPTION,
+  );
+  assert.ok(schema, "expected schema even with no <p> bodies");
+  const steps = schema!.step as Array<Record<string, unknown>>;
+  assert.equal(steps.length, 3);
+  assert.match(steps[0].text as string, /Run npm install/);
+  assert.match(steps[1].text as string, /Copy \.env\.example/);
+  assert.match(steps[2].text as string, /\/health endpoint/);
+});
+
+test("truncates long step name/text at a word boundary, not mid-word", () => {
+  const longHeading =
+    "Configure the production-grade observability stack with Prometheus Grafana Loki Tempo Pyroscope and OpenTelemetry collectors end to end";
+  const longBody = "lorem ipsum ".repeat(60); // > 480 chars, with spaces
+  const schema = getHowToSchema(
+    makePost({
+      content: `<h2>${longHeading}</h2><p>${longBody}</p><h2>Second step</h2><p>OK.</p>`,
+    }),
+    PAGE_URL,
+    SAFE_TITLE,
+    SAFE_DESCRIPTION,
+  );
+  assert.ok(schema);
+  const steps = schema!.step as Array<Record<string, unknown>>;
+  const name = steps[0].name as string;
+  const text = steps[0].text as string;
+  // Both are truncated (...) and end on whitespace+ellipsis, not mid-word.
+  assert.ok(name.endsWith("..."), `name should end with ellipsis: ${name}`);
+  assert.ok(text.endsWith("..."), `text should end with ellipsis: ${text}`);
+  // The character before the "..." must not split a token — i.e. it must
+  // either be the end of a complete word from the source.
+  const namePrefix = name.slice(0, -3);
+  const textPrefix = text.slice(0, -3);
+  assert.ok(
+    longHeading.startsWith(namePrefix),
+    "truncated name must be a prefix of the original",
+  );
+  assert.ok(
+    longBody.trim().startsWith(textPrefix),
+    "truncated text must be a prefix of the original",
+  );
+  // And specifically, the next char in the source past the cut must be
+  // whitespace (proves we cut at a boundary, not mid-word).
+  assert.equal(
+    longHeading[namePrefix.length],
+    " ",
+    "name cut should land on a space",
+  );
+});
+
+test("featuredImage is emitted as an ImageObject, not a bare URL string", () => {
+  const schema = getHowToSchema(
+    makePost({
+      featuredImage: { node: { sourceUrl: "https://cdn.keploy.io/cover.png" } },
+    }),
+    PAGE_URL,
+    SAFE_TITLE,
+    SAFE_DESCRIPTION,
+  );
+  assert.ok(schema);
+  const image = schema!.image as Array<Record<string, unknown>>;
+  assert.equal(Array.isArray(image), true);
+  assert.equal(image.length, 1);
+  assert.equal(image[0]["@type"], "ImageObject");
+  assert.equal(image[0].url, "https://cdn.keploy.io/cover.png");
 });

@@ -1,51 +1,75 @@
 /**
- * Strip HTML tags, decode common WordPress HTML entities, and normalize whitespace.
- * Used for meta descriptions and JSON-LD where raw HTML/entities hurt SEO quality.
+ * WordPress-entity decoders — two variants depending on output context.
  *
- * Exported so JSON-LD builders (e.g. lib/howToSchema.ts) can reuse the same
- * decode list \u2014 keeping a second copy in those files lets entity handling
- * drift the next time WordPress surfaces a new typographic entity.
+ * Both share the same numeric/typographic decode list so callers cannot drift
+ * the next time WordPress surfaces a new entity. Where they diverge is on
+ * `&lt;` / `&gt;`:
  *
- * Note: this function intentionally does NOT decode `&lt;` / `&gt;` to raw
- * angle brackets. Callers fall into two buckets:
- *   1. `<meta name="description" content="...">` / `<title>...</title>` \u2014
- *      the output lands inside an HTML attribute or text node where React
- *      escapes `<`/`>` for us, so leaving entities here is purely a
- *      readability choice (no security impact).
- *   2. JSON-LD payloads injected via
- *      `<script type="application/ld+json" dangerouslySetInnerHTML={{
- *        __html: JSON.stringify(schema) }} />` \u2014 this is the load-bearing
- *      case. `JSON.stringify` does not escape `<` or `>`, so once raw `<`
- *      enters the schema value a tutorial paragraph containing
- *      `</script>` (or any markup) would terminate the surrounding
- *      `<script>` element and break the page. Leaving angle brackets as
- *      `&lt;` / `&gt;` makes that injection impossible.
+ * `decodeEntities` (script-safe — leaves `&lt;` / `&gt;` as entities) is
+ * used by JSON-LD builders (e.g. `lib/howToSchema.ts`). Those payloads ship
+ * inside `<script type="application/ld+json" dangerouslySetInnerHTML={{
+ * __html: JSON.stringify(schema) }} />`. `JSON.stringify` does not escape
+ * `<` or `>`, so a tutorial paragraph containing `</script>` would terminate
+ * the surrounding `<script>` element if we ever decoded entity brackets to
+ * raw ones. Keeping them as entities makes that injection impossible.
  *
- * The regex above strips tag wrappers, so the only `<`/`>` that ever reach
- * the JSON-LD body are ones the WordPress author entity-encoded on purpose
- * (e.g. inline code like `&lt;keploy record&gt;`) \u2014 those were never
- * structural markup and are safe to leave as text.
+ * `decodeEntitiesForAttribute` (full decode — converts `&lt;` / `&gt;` to
+ * `<` / `>`) is used by `sanitizeTitle` / `getSafeDescription`. Those values
+ * land in JSX attribute/text positions (`<meta content={safeDescription}>`,
+ * `<title>{safeTitle}</title>`) where React HTML-encodes `<` / `>` for us
+ * on render. Leaving them as `&lt;` here would cause React to encode the
+ * leading `&` and ship `&amp;lt;` in the final HTML source — wrong in SERP
+ * snippets and social previews. Restoring the decode on this path matches
+ * the pre-#383 behaviour from `3c89e73`.
+ *
+ * The leading `replace(/<[^>]*>/g, '')` in both strips structural tag
+ * wrappers, so the only `<` / `>` that ever reach either output are ones the
+ * WordPress author entity-encoded on purpose (e.g. inline code like
+ * `&lt;keploy record&gt;`).
  */
+const SHARED_DECODES: ReadonlyArray<[RegExp, string]> = [
+  [/&amp;/g, "&"],
+  [/&quot;/g, '"'],
+  [/&#8217;/g, "'"],
+  [/&#8216;/g, "'"],
+  [/&#8220;/g, "“"],
+  [/&#8221;/g, "”"],
+  [/&#8211;/g, "–"],
+  [/&#8212;/g, "—"],
+  [/&#39;/g, "'"],
+  [/&nbsp;/g, " "],
+];
+
+function applyDecodes(
+  text: string,
+  extra: ReadonlyArray<[RegExp, string]> = [],
+): string {
+  let out = text.replace(/<[^>]*>/g, "");
+  for (const [re, sub] of SHARED_DECODES) out = out.replace(re, sub);
+  for (const [re, sub] of extra) out = out.replace(re, sub);
+  return out.replace(/\s+/g, " ").trim();
+}
+
+/** Script-safe decoder. Use for JSON-LD payloads. Leaves `&lt;`/`&gt;` as entities. */
 export function decodeEntities(text: string): string {
-  return text
-    .replace(/<[^>]*>/g, '')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#8217;/g, "'")
-    .replace(/&#8216;/g, "'")
-    .replace(/&#8220;/g, '\u201c')
-    .replace(/&#8221;/g, '\u201d')
-    .replace(/&#8211;/g, '\u2013')
-    .replace(/&#8212;/g, '\u2014')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  return applyDecodes(text);
+}
+
+/**
+ * Attribute/text-context decoder. Use for `<meta>` / `<title>` values fed
+ * through JSX, where React re-escapes `<`/`>` for safe output. Decodes the
+ * full WP entity set including `&lt;`/`&gt;`.
+ */
+export function decodeEntitiesForAttribute(text: string): string {
+  return applyDecodes(text, [
+    [/&lt;/g, "<"],
+    [/&gt;/g, ">"],
+  ]);
 }
 
 export function sanitizeTitle(rawTitle: string | undefined | null): string {
-  if (!rawTitle) return '';
-  return decodeEntities(rawTitle);
+  if (!rawTitle) return "";
+  return decodeEntitiesForAttribute(rawTitle);
 }
 
 /**
@@ -55,19 +79,19 @@ export function sanitizeTitle(rawTitle: string | undefined | null): string {
 export function getSafeDescription(
   isFallback: boolean,
   metaDesc: string | undefined | null,
-  safeTitle: string
+  safeTitle: string,
 ): string {
   if (isFallback) {
-    return 'Keploy engineering blog — practical guides, tutorials, and best practices for developers and QA engineers.';
+    return "Keploy engineering blog — practical guides, tutorials, and best practices for developers and QA engineers.";
   }
   if (metaDesc) {
-    const clean = decodeEntities(metaDesc);
+    const clean = decodeEntitiesForAttribute(metaDesc);
     if (clean.length >= 60) {
       return clean;
     }
   }
   if (!safeTitle) {
-    return 'Keploy engineering blog — practical guides, tutorials, and best practices for developers and QA engineers.';
+    return "Keploy engineering blog — practical guides, tutorials, and best practices for developers and QA engineers.";
   }
   return `Learn about ${safeTitle} — practical guide with examples and best practices from the Keploy engineering blog.`;
 }
