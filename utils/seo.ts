@@ -67,6 +67,33 @@ export function decodeEntitiesForAttribute(text: string): string {
   ]);
 }
 
+/**
+ * Defensively serialize a value for injection inside
+ * `<script type="application/ld+json" dangerouslySetInnerHTML={{__html: ...}} />`.
+ *
+ * `JSON.stringify` does not escape `<`, `>`, `&`, or the JS-only line
+ * separators U+2028 / U+2029, so a field value containing `</script>` would
+ * close the surrounding script element. Now that `sanitizeTitle` /
+ * `getSafeDescription` legitimately decode `&lt;`/`&gt;` for the
+ * `<meta>` / `<title>` attribute path, those same strings can flow into
+ * JSON-LD on the post pages — so the safety guarantee has to live at the
+ * script boundary instead of relying on every upstream sanitizer to keep
+ * angle brackets encoded.
+ *
+ * The five replacements below produce JSON that is still valid (the escapes
+ * decode back to the original characters in JS) but cannot terminate the
+ * enclosing `<script>` tag, start an HTML comment, or trip JSONP / inline
+ * JS parsers on U+2028/U+2029.
+ */
+export function safeJsonLdStringify(value: unknown): string {
+  return JSON.stringify(value)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+}
+
 export function sanitizeTitle(rawTitle: string | undefined | null): string {
   if (!rawTitle) return "";
   return decodeEntitiesForAttribute(rawTitle);

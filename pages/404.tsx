@@ -5,6 +5,7 @@ import NotFoundPage from "../components/NotFoundPage";
 import { getAllPostsForTechnology, getAllPostsForCommunity } from "../lib/api";
 import { GetStaticProps } from "next";
 import { getBreadcrumbListSchema, SITE_URL } from "../lib/structured-data";
+import { safeJsonLdStringify } from "../utils/seo";
 
 interface Custom404Props {
   latestPosts: { edges: Array<{ node: any }> };
@@ -12,7 +13,11 @@ interface Custom404Props {
   technologyPosts: { edges: Array<{ node: any }> };
 }
 
-export default function Custom404({ latestPosts, communityPosts, technologyPosts }: Custom404Props) {
+export default function Custom404({
+  latestPosts,
+  communityPosts,
+  technologyPosts,
+}: Custom404Props) {
   const router = useRouter();
   const asPath = router.asPath;
   const structuredData = getBreadcrumbListSchema([
@@ -38,13 +43,22 @@ export default function Custom404({ latestPosts, communityPosts, technologyPosts
     <>
       <Head>
         <title>404 - Page Not Found | Keploy Blog</title>
-        <meta name="description" content="Oops! The page you're looking for doesn't exist. Explore our latest blog posts and featured articles." />
+        <meta
+          name="description"
+          content="Oops! The page you're looking for doesn't exist. Explore our latest blog posts and featured articles."
+        />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLdStringify(structuredData),
+          }}
         />
       </Head>
-      <NotFoundPage latestPosts={latestPosts} communityPosts={communityPosts} technologyPosts={technologyPosts} />
+      <NotFoundPage
+        latestPosts={latestPosts}
+        communityPosts={communityPosts}
+        technologyPosts={technologyPosts}
+      />
     </>
   );
 }
@@ -54,13 +68,14 @@ export const getStaticProps: GetStaticProps = async () => {
     // Fetch latest posts from both technology and community
     const [techPosts, communityPosts] = await Promise.all([
       getAllPostsForTechnology(false, null),
-      getAllPostsForCommunity(false, null)
+      getAllPostsForCommunity(false, null),
     ]);
 
     // Combine and sort by date to get the latest posts
     const allPosts = [...techPosts.edges, ...communityPosts.edges];
-    const sortedPosts = allPosts.sort((a, b) => 
-      new Date(b.node.date).getTime() - new Date(a.node.date).getTime()
+    const sortedPosts = allPosts.sort(
+      (a, b) =>
+        new Date(b.node.date).getTime() - new Date(a.node.date).getTime(),
     );
 
     // Get latest 6 posts for latest section
@@ -79,7 +94,7 @@ export const getStaticProps: GetStaticProps = async () => {
       revalidate: 60, // Revalidate every minute
     };
   } catch (error) {
-    console.error('Error fetching posts for 404 page:', error);
+    console.error("Error fetching posts for 404 page:", error);
     return {
       props: {
         latestPosts: { edges: [] },

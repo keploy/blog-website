@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { CMS_NAME, HOME_OG_IMAGE_URL } from "../lib/constants";
 import { Post } from "../types/post";
+import { safeJsonLdStringify } from "../utils/seo";
 
 export default function Meta({
   featuredImage,
@@ -94,7 +95,12 @@ export default function Meta({
         <script
           key={`jsonld-${index}`}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          // Use safeJsonLdStringify (not raw JSON.stringify) so that field
+          // values containing `<`/`>`/`&`/U+2028/U+2029 (e.g. a WP title
+          // decoded through sanitizeTitle, or an inline-code paragraph in
+          // HowTo step text) can't terminate this <script> tag or trip
+          // JSONP/inline-JS parsers.
+          dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(schema) }}
         />
       ))}
       {/* <link
