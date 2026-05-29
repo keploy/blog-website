@@ -6,12 +6,15 @@
  * `&lt;` / `&gt;`:
  *
  * `decodeEntities` (script-safe — leaves `&lt;` / `&gt;` as entities) is
- * used by JSON-LD builders (e.g. `lib/howToSchema.ts`). Those payloads ship
- * inside `<script type="application/ld+json" dangerouslySetInnerHTML={{
- * __html: JSON.stringify(schema) }} />`. `JSON.stringify` does not escape
- * `<` or `>`, so a tutorial paragraph containing `</script>` would terminate
- * the surrounding `<script>` element if we ever decoded entity brackets to
- * raw ones. Keeping them as entities makes that injection impossible.
+ * used by JSON-LD builders (e.g. `lib/howToSchema.ts`). Those payloads
+ * ultimately ship inside
+ * `<script type="application/ld+json" dangerouslySetInnerHTML={{__html: ...}} />`.
+ * The hard XSS guarantee against `</script>` termination lives in
+ * `safeJsonLdStringify` below — every injection site goes through it — so
+ * this decoder leaving entity brackets alone is now a *defence-in-depth*
+ * layer rather than the sole protection: even if a future caller forgets
+ * the script-safe stringify, the schema fields still don't carry raw `<` /
+ * `>` from this decoder's output.
  *
  * `decodeEntitiesForAttribute` (full decode — converts `&lt;` / `&gt;` to
  * `<` / `>`) is used by `sanitizeTitle` / `getSafeDescription`. Those values
@@ -84,9 +87,18 @@ export function decodeEntitiesForAttribute(text: string): string {
  * decode back to the original characters in JS) but cannot terminate the
  * enclosing `<script>` tag, start an HTML comment, or trip JSONP / inline
  * JS parsers on U+2028/U+2029.
+ *
+ * Edge case: `JSON.stringify` returns `undefined` (not a string) for
+ * `undefined`, function values, and bare symbols. Coerce that to the JSON
+ * literal `"null"` so the helper still returns a valid JSON payload (an
+ * empty schema slot is preferable to an SSR crash from `.replace` on
+ * `undefined`). Calling sites can also choose not to render the
+ * `<script>` tag when the value is missing.
  */
 export function safeJsonLdStringify(value: unknown): string {
-  return JSON.stringify(value)
+  const serialized = JSON.stringify(value);
+  if (typeof serialized !== "string") return "null";
+  return serialized
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026")

@@ -47,6 +47,20 @@ test("escapes U+2028 / U+2029 so JS parsers don't break on line separators", () 
   );
 });
 
+test('returns the JSON literal "null" when the value is unserializable', () => {
+  // `JSON.stringify` returns `undefined` (not a string) for `undefined`,
+  // bare function values, and bare symbols. The old implementation called
+  // `.replace` on that and threw TypeError at SSR. Pin the safe coercion.
+  assert.equal(safeJsonLdStringify(undefined), "null");
+  assert.equal(
+    safeJsonLdStringify(() => 42),
+    "null",
+  );
+  assert.equal(safeJsonLdStringify(Symbol("x")), "null");
+  // And the result still parses back to a valid JSON value (`null`).
+  assert.equal(JSON.parse(safeJsonLdStringify(undefined)), null);
+});
+
 test("leaves normal JSON characters intact (round-trips)", () => {
   const schema = {
     "@context": "https://schema.org",
