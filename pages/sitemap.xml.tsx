@@ -73,15 +73,60 @@ function escapeXml(s: string): string {
 
 function buildSitemap(posts: PostNode[]): string {
   const today = new Date().toISOString().split("T")[0];
+  const normalizeDate = (value?: string) => {
+    if (!value) return null;
+    const dateOnly = value.split("T")[0];
+    return /^\d{4}-\d{2}-\d{2}$/.test(dateOnly) ? dateOnly : null;
+  };
+
+  const includedPosts = posts.filter((post) =>
+    post.categories.edges.some((edge) => VALID_CATEGORIES.has(edge.node.slug))
+  );
+
+  const allPostDates = includedPosts
+    .map((post) => normalizeDate(post.modified))
+    .filter((value): value is string => Boolean(value));
+
+  const latestPostDate =
+    allPostDates.length > 0
+      ? allPostDates.reduce((max, current) => (current > max ? current : max), allPostDates[0])
+      : today;
+
+  const latestByCategory = (categorySlug: string) => {
+    const dates = posts
+      .filter((post) =>
+        post.categories.edges.some((edge) => edge.node.slug === categorySlug)
+      )
+      .map((post) => normalizeDate(post.modified))
+      .filter((value): value is string => Boolean(value));
+
+    if (dates.length === 0) {
+      return latestPostDate;
+    }
+    return dates.reduce((max, current) => (current > max ? current : max), dates[0]);
+  };
+
   const staticEntries = [
-    { loc: `${MAIN_SITE_URL}/blog`, lastmod: today, priority: "1.00" },
-    { loc: `${MAIN_SITE_URL}/blog/community`, lastmod: today, priority: "0.80" },
-    { loc: `${MAIN_SITE_URL}/blog/technology`, lastmod: today, priority: "0.80" },
+    { loc: `${MAIN_SITE_URL}/blog`, lastmod: latestPostDate, priority: "1.00" },
+    {
+      loc: `${MAIN_SITE_URL}/blog/community`,
+      lastmod: latestByCategory("community"),
+      priority: "0.80",
+    },
+    {
+      loc: `${MAIN_SITE_URL}/blog/technology`,
+      lastmod: latestByCategory("technology"),
+      priority: "0.80",
+    },
+    { loc: `${MAIN_SITE_URL}/blog/integrations`, lastmod: latestPostDate, priority: "0.62" },
+    { loc: `${MAIN_SITE_URL}/blog/solutions`, lastmod: latestPostDate, priority: "0.62" },
+    { loc: `${MAIN_SITE_URL}/blog/case-studies`, lastmod: latestPostDate, priority: "0.62" },
+    { loc: `${MAIN_SITE_URL}/blog/glossary`, lastmod: latestPostDate, priority: "0.62" },
   ];
 
   const postEntries: { loc: string; lastmod: string; priority: string }[] = [];
   const seen = new Set<string>();
-  for (const post of posts) {
+  for (const post of includedPosts) {
     const category = post.categories.edges
       .map((e) => e.node.slug)
       .find((slug) => VALID_CATEGORIES.has(slug));
@@ -91,7 +136,7 @@ function buildSitemap(posts: PostNode[]): string {
     seen.add(loc);
     postEntries.push({
       loc,
-      lastmod: post.modified.split("T")[0],
+      lastmod: normalizeDate(post.modified) || today,
       priority: "0.64",
     });
   }
