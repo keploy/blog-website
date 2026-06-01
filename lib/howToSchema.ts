@@ -83,6 +83,22 @@ const stripHtml = decodeEntities;
 // is by far the most common body element, then list/code/blockquote.
 const STEP_BODY_TAGS = ["p", "ul", "ol", "blockquote", "pre"] as const;
 
+// Decode a matched body element into plain step text. For list bodies the
+// raw inner HTML is "<li>A</li><li>B</li>" — feeding that straight to
+// `stripHtml` drops the tags with no separator and concatenates the items
+// into a run-on token ("AB"). Split on the list-item boundaries first and
+// join with ". " so each item stays a distinct clause in the JSON-LD.
+function decodeStepBody(tag: string, inner: string): string {
+  if (tag === "ul" || tag === "ol") {
+    return inner
+      .split(/<\/li\s*>/i)
+      .map((item) => stripHtml(item))
+      .filter(Boolean)
+      .join(". ");
+  }
+  return stripHtml(inner);
+}
+
 // Truncate at the last whitespace boundary at-or-before `limit` so a step
 // never ends mid-word. Falls back to a hard slice only if no whitespace
 // exists in the window (extremely rare — would mean a single ~110-char
@@ -139,7 +155,7 @@ function extractStepsFromContent(html: string): AuthoredHowToStep[] {
       const match = slice.match(re);
       if (!match || match.index === undefined) continue;
       if (match.index >= earliestIdx) continue;
-      const decoded = stripHtml(match[1]);
+      const decoded = decodeStepBody(tag, match[1]);
       if (!decoded) continue;
       earliestIdx = match.index;
       text = decoded;

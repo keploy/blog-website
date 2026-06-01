@@ -193,8 +193,11 @@ test("extracts step body from <ul>/<ol>/<blockquote> when no <p> follows the hea
   assert.ok(schema, "expected schema even with no <p> bodies");
   const steps = schema!.step as Array<Record<string, unknown>>;
   assert.equal(steps.length, 3);
-  assert.match(steps[0].text as string, /Run npm install/);
-  assert.match(steps[1].text as string, /Copy \.env\.example/);
+  // List items must be joined with a separator — not concatenated into a
+  // run-on token like "Run npm installVerify versions" (Copilot review on
+  // #383). Pin the ". " separator on both <ul> and <ol> bodies.
+  assert.equal(steps[0].text, "Run npm install. Verify versions");
+  assert.equal(steps[1].text, "Copy .env.example. Set DATABASE_URL");
   assert.match(steps[2].text as string, /\/health endpoint/);
 });
 
