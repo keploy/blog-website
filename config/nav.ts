@@ -375,7 +375,7 @@ export const developersNav = {
     links: [
       {
         title: "Slack",
-        href: "https://join.slack.com/t/keploy/shared_invite/zt-357qqm9b5-PbZRVu3Yt2rJIa6ofrwWNg",
+        href: "https://join.slack.com/t/keploy/shared_invite/zt-3zcnuqfgl-WYK1NMhslVHsCtNcA1ULwA",
         icon: MessageSquare,
         iconColor: "text-indigo-600",
       },
@@ -597,7 +597,7 @@ export const footerLinks = {
     { title: "Documentation", href: "https://keploy.io/docs" },
     {
       title: "Help Center",
-      href: "https://join.slack.com/t/keploy/shared_invite/zt-357qqm9b5-PbZRVu3Yt2rJIa6ofrwWNg",
+      href: "https://join.slack.com/t/keploy/shared_invite/zt-3zcnuqfgl-WYK1NMhslVHsCtNcA1ULwA",
     },
     // { title: "Status", href: "/status" },
     // { title: "Contact", href: "/contact" },
