@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, X } from "lucide-react";
 import { Marquee } from "./Marquee";
 
-const ANNOUNCEMENT_ENABLED = true;
+const ANNOUNCEMENT_ENABLED = false;
 
 const ANNOUNCEMENT = {
   enabled: ANNOUNCEMENT_ENABLED,
