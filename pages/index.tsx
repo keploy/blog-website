@@ -15,6 +15,12 @@ import {
   getWebSiteSchema,
   SITE_URL,
 } from "../lib/structured-data";
+// Canonical /blog title. Shared by Layout's `Title` prop (which Meta.tsx
+// turns into og:title / twitter:title) and the <Head><title>, so the
+// document title and social metadata can't drift apart.
+const BLOG_TITLE =
+  "Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives";
+
 export default function Index({ communityPosts, technologyPosts, preview }) {
   // Organization schema is in _document.tsx (global) — not duplicated here
   const structuredData = [
@@ -27,7 +33,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives`}
+      Title={BLOG_TITLE}
       Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}
       structuredData={structuredData}
       canonicalUrl={SITE_URL}
@@ -38,7 +44,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
             prop but does NOT emit a <title> tag (see LIVE-11 note in
             authors/[slug].tsx). Without this <Head><title>, /blog ships
             with no document title — same regression that hit author pages. */}
-        <title>{`Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives`}</title>
+        <title>{BLOG_TITLE}</title>
       </Head>
       <Header />
       <Container>

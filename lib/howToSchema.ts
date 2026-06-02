@@ -23,7 +23,7 @@ type RawTagEdge = {
   };
 };
 
-type AuthoredHowToStep = {
+type ExtractedHowToStep = {
   name?: string;
   text?: string;
   image?: string;
@@ -120,9 +120,9 @@ function truncateAtBoundary(value: string, limit: number): string {
  * element (see STEP_BODY_TAGS) that follows it, up to the next heading.
  * Caps step text length so the JSON-LD stays compact.
  */
-function extractStepsFromContent(html: string): AuthoredHowToStep[] {
+function extractStepsFromContent(html: string): ExtractedHowToStep[] {
   if (!html) return [];
-  const steps: AuthoredHowToStep[] = [];
+  const steps: ExtractedHowToStep[] = [];
   // Find every h2/h3, in order, with their text and source index.
   const headingRegex = /<h([23])(?:\s[^>]*)?>([\s\S]*?)<\/h\1>/gi;
   const headings: {
@@ -196,7 +196,7 @@ export function getHowToSchema(
   if (!post || !safeTitle) return null;
   if (!isTutorial(post)) return null;
 
-  const steps: AuthoredHowToStep[] = post.content
+  const steps: ExtractedHowToStep[] = post.content
     ? extractStepsFromContent(post.content)
     : [];
 
