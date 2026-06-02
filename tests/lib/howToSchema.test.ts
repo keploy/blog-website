@@ -220,6 +220,10 @@ test("truncates long step name/text at a word boundary, not mid-word", () => {
   // Both are truncated (...) and end on whitespace+ellipsis, not mid-word.
   assert.ok(name.endsWith("..."), `name should end with ellipsis: ${name}`);
   assert.ok(text.endsWith("..."), `text should end with ellipsis: ${text}`);
+  // The full result (text + ellipsis) must stay within the documented caps
+  // (110 for name, 480 for text) — the ellipsis must not push it over.
+  assert.ok(name.length <= 110, `name length ${name.length} exceeds 110`);
+  assert.ok(text.length <= 480, `text length ${text.length} exceeds 480`);
   // The character before the "..." must not split a token — i.e. it must
   // either be the end of a complete word from the source.
   const namePrefix = name.slice(0, -3);

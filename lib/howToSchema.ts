@@ -99,16 +99,20 @@ function decodeStepBody(tag: string, inner: string): string {
   return stripHtml(inner);
 }
 
-// Truncate at the last whitespace boundary at-or-before `limit` so a step
-// never ends mid-word. Falls back to a hard slice only if no whitespace
-// exists in the window (extremely rare — would mean a single ~110-char
-// unbroken token, e.g. a URL).
+// Truncate at the last whitespace boundary so a step never ends mid-word,
+// while keeping the FULL result (text + ellipsis) within `limit`. The "..."
+// is 3 chars, so the search window is `limit - 3`; cutting inside it then
+// appending the ellipsis lands the result at <= limit. Falls back to a hard
+// slice at `limit - 3` only if no whitespace exists in the window (extremely
+// rare — a single ~110-char unbroken token, e.g. a URL).
+const ELLIPSIS = "...";
 function truncateAtBoundary(value: string, limit: number): string {
   if (value.length <= limit) return value;
-  const window = value.slice(0, limit);
+  const max = limit - ELLIPSIS.length;
+  const window = value.slice(0, max);
   const boundary = window.lastIndexOf(" ");
-  const cut = boundary > 0 ? boundary : limit - 3;
-  return `${value.slice(0, cut).trimEnd()}...`;
+  const cut = boundary > 0 ? boundary : max;
+  return `${value.slice(0, cut).trimEnd()}${ELLIPSIS}`;
 }
 
 /**
