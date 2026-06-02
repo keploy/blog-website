@@ -94,7 +94,22 @@ export const getStaticProps: GetStaticProps = async () => {
       revalidate: 60, // Revalidate every minute
     };
   } catch (error) {
-    console.error("Error fetching posts for 404 page:", error);
+    const message = error instanceof Error ? error.message : String(error);
+    // Structured log mirroring pages/sitemap.xml.tsx so on-call can diagnose
+    // from Vercel logs alone. The 404 still renders (with empty post rails)
+    // rather than 500ing — these are supplementary "latest posts" widgets.
+    console.error("[404] degraded: latest-posts rails empty", {
+      endpoint:
+        process.env.WORDPRESS_API_URL ||
+        process.env.NEXT_PUBLIC_WORDPRESS_API_URL,
+      error: message,
+      nextSteps: [
+        "1. Verify WPGraphQL is up: curl -sS -X POST <endpoint> -H 'Content-Type: application/json' -d '{\"query\":\"{ __typename }\"}'",
+        "2. If the curl 5xx's or hangs, check wp.keploy.io host status and the WPGraphQL plugin (WP admin → Plugins)",
+        "3. If the endpoint logged above is unexpected, double-check WORDPRESS_API_URL in Vercel project settings and redeploy",
+        "4. Page is served with revalidate: 60, so the rails self-heal within ~1 min after WP recovers",
+      ],
+    });
     return {
       props: {
         latestPosts: { edges: [] },
