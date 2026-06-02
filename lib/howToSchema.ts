@@ -124,7 +124,6 @@ function extractStepsFromContent(html: string): AuthoredHowToStep[] {
   const headings: {
     start: number;
     end: number;
-    level: number;
     name: string;
   }[] = [];
   let m: RegExpExecArray | null;
@@ -134,7 +133,6 @@ function extractStepsFromContent(html: string): AuthoredHowToStep[] {
     headings.push({
       start: m.index,
       end: m.index + m[0].length,
-      level: Number(m[1]),
       name,
     });
   }
