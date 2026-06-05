@@ -102,10 +102,11 @@ export default function PostBody({
         const hrefMatch = attrs.match(/href\s*=\s*["']([^"']*)["']/i);
         if (!hrefMatch) return match;
         const href = hrefMatch[1];
+        const hrefLower = href.toLowerCase();
 
         // Only parse absolute/protocol-relative URLs — avoids throwing on /path, #anchor, mailto: etc.
         const isKeploy = (() => {
-          if (!href.startsWith('http') && !href.startsWith('//')) return false;
+          if (!hrefLower.startsWith('http') && !href.startsWith('//')) return false;
           try {
             const normalized = href.startsWith('//') ? `https:${href}` : href;
             const { hostname } = new URL(normalized);
@@ -119,28 +120,29 @@ export default function PostBody({
           (href.startsWith('/') && !href.startsWith('//')) ||
           href.startsWith('#') ||
           isKeploy ||
-          href.startsWith('mailto:') ||
-          href.startsWith('tel:');
+          hrefLower.startsWith('mailto:') ||
+          hrefLower.startsWith('tel:');
         if (isInternal) return match;
 
-        // Merge noopener/noreferrer into rel, handling quoted and unquoted values without losing existing tokens
+        // Merge noopener/noreferrer into rel, handling quoted and unquoted values without losing existing tokens.
+        // Uses (^|\s) boundary to avoid false-matching data-rel="..." attributes.
         const withHardenedRel = (a: string): string => {
-          if (!/\brel\s*=/i.test(a)) return `${a} rel="noopener noreferrer"`;
+          if (!/(^|\s)rel\s*=/i.test(a)) return `${a} rel="noopener noreferrer"`;
           const merged = a.replace(
-            /\brel\s*=\s*(["'])([^"']*)\1/i,
-            (_: string, q: string, val: string) => {
+            /(^|\s)rel\s*=\s*(["'])([^"']*)\2/i,
+            (_: string, space: string, q: string, val: string) => {
               const tokens = new Set(val.trim().split(/\s+/).filter(Boolean));
               tokens.add('noopener');
               tokens.add('noreferrer');
-              return `rel=${q}${Array.from(tokens).join(' ')}${q}`;
+              return `${space}rel=${q}${Array.from(tokens).join(' ')}${q}`;
             }
           );
           if (merged !== a) return merged;
           // Unquoted rel fallback — preserve existing tokens (nofollow/ugc/sponsored) and merge
-          const unquotedMatch = a.match(/\brel\s*=\s*([^\s"'>]+)/i);
-          const existing = unquotedMatch ? unquotedMatch[1].split(/\s+/).filter(Boolean) : [];
+          const unquotedMatch = a.match(/(^|\s)rel\s*=\s*([^\s"'>]+)/i);
+          const existing = unquotedMatch ? unquotedMatch[2].split(/\s+/).filter(Boolean) : [];
           const tokens = new Set([...existing, 'noopener', 'noreferrer']);
-          return a.replace(/\brel\s*=\s*[^\s"'>]+/i, `rel="${Array.from(tokens).join(' ')}"`);
+          return a.replace(/(^|\s)rel\s*=\s*[^\s"'>]+/i, (_: string, space: string) => `${space}rel="${Array.from(tokens).join(' ')}"`);
         };
 
         // Use (^|\s) to avoid false-positive on attributes like data-target="..."

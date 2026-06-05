@@ -123,8 +123,8 @@
 .content a[href*="keploy.io" i],
 .content a[href^="/"]:not([href^="//"]),
 .content a[href^="#"],
-.content a[href^="mailto:"],
-.content a[href^="tel:"] {
+.content a[href^="mailto:" i],
+.content a[href^="tel:" i] {
   color: #f97316;
   cursor: pointer;
   pointer-events: auto;
@@ -133,8 +133,8 @@
 .content a[href*="keploy.io" i]:hover,
 .content a[href^="/"]:not([href^="//"]):hover,
 .content a[href^="#"]:hover,
-.content a[href^="mailto:"]:hover,
-.content a[href^="tel:"]:hover {
+.content a[href^="mailto:" i]:hover,
+.content a[href^="tel:" i]:hover {
   color: #ea6d10;
 }
 
