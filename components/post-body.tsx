@@ -121,12 +121,11 @@ export default function PostBody({
           href.startsWith('mailto:') ||
           href.startsWith('tel:');
         if (isInternal) return match;
-        // Use (^|\s) to avoid false-positive on attributes like data-target="..."
-        if (/(^|\s)target\s*=/i.test(attrs)) return match;
-        const hasRel = /\brel\s*=/i.test(attrs);
-        if (hasRel) {
-          // Deduplicate tokens when merging into an existing quoted rel value
-          const merged = attrs.replace(
+
+        // Merge noopener/noreferrer into rel, handling quoted and unquoted values without losing existing tokens
+        const withHardenedRel = (a: string): string => {
+          if (!/\brel\s*=/i.test(a)) return `${a} rel="noopener noreferrer"`;
+          const merged = a.replace(
             /\brel\s*=\s*(["'])([^"']*)\1/i,
             (_: string, q: string, val: string) => {
               const tokens = new Set(val.trim().split(/\s+/).filter(Boolean));
@@ -135,15 +134,24 @@ export default function PostBody({
               return `rel=${q}${Array.from(tokens).join(' ')}${q}`;
             }
           );
-          if (merged !== attrs) return `<a${merged} target="_blank" data-external-link="true">`;
+          if (merged !== a) return merged;
           // Unquoted rel fallback — preserve existing tokens (nofollow/ugc/sponsored) and merge
-          const unquotedMatch = attrs.match(/\brel\s*=\s*([^\s"'>]+)/i);
-          const existingTokens = unquotedMatch ? unquotedMatch[1].split(/\s+/).filter(Boolean) : [];
-          const mergedTokens = new Set([...existingTokens, 'noopener', 'noreferrer']);
-          const fallback = attrs.replace(/\brel\s*=\s*[^\s"'>]+/i, `rel="${Array.from(mergedTokens).join(' ')}"`);
-          return `<a${fallback} target="_blank" data-external-link="true">`;
+          const unquotedMatch = a.match(/\brel\s*=\s*([^\s"'>]+)/i);
+          const existing = unquotedMatch ? unquotedMatch[1].split(/\s+/).filter(Boolean) : [];
+          const tokens = new Set([...existing, 'noopener', 'noreferrer']);
+          return a.replace(/\brel\s*=\s*[^\s"'>]+/i, `rel="${Array.from(tokens).join(' ')}"`);
+        };
+
+        // Use (^|\s) to avoid false-positive on attributes like data-target="..."
+        const hasTarget = /(^|\s)target\s*=/i.test(attrs);
+        if (hasTarget) {
+          // Pre-existing target — harden rel only, no data-external-link so mobile handler ignores it
+          const hardened = withHardenedRel(attrs);
+          return hardened !== attrs ? `<a${hardened}>` : match;
         }
-        return `<a${attrs} target="_blank" rel="noopener noreferrer" data-external-link="true">`;
+
+        // No target — inject target, hardened rel, and mobile-handler marker
+        return `<a${withHardenedRel(attrs)} target="_blank" data-external-link="true">`;
       }
     );
 
