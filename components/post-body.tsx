@@ -102,21 +102,41 @@ export default function PostBody({
         const hrefMatch = attrs.match(/href\s*=\s*["']([^"']*)["']/i);
         if (!hrefMatch) return match;
         const href = hrefMatch[1];
+
+        // Parse hostname to avoid substring spoofing (e.g. keploy.io.evil.com or ?next=keploy.io)
+        const isKeploy = (() => {
+          try {
+            const { hostname } = new URL(href);
+            return hostname === 'keploy.io' || hostname.endsWith('.keploy.io');
+          } catch {
+            return false;
+          }
+        })();
+
         const isInternal =
           href.startsWith('/') ||
           href.startsWith('#') ||
-          href.includes('keploy.io') ||
+          isKeploy ||
           href.startsWith('mailto:') ||
           href.startsWith('tel:');
         if (isInternal) return match;
-        if (/\btarget\b/i.test(attrs)) return match;
+        if (/\btarget\s*=/i.test(attrs)) return match;
         const hasRel = /\brel\s*=/i.test(attrs);
         if (hasRel) {
-          const mergedAttrs = attrs.replace(
+          // Deduplicate tokens when merging into an existing quoted rel value
+          const merged = attrs.replace(
             /\brel\s*=\s*(["'])([^"']*)\1/i,
-            (_: string, q: string, val: string) => `rel=${q}${val} noopener noreferrer${q}`
+            (_: string, q: string, val: string) => {
+              const tokens = new Set(val.trim().split(/\s+/).filter(Boolean));
+              tokens.add('noopener');
+              tokens.add('noreferrer');
+              return `rel=${q}${Array.from(tokens).join(' ')}${q}`;
+            }
           );
-          return `<a${mergedAttrs} target="_blank">`;
+          if (merged !== attrs) return `<a${merged} target="_blank">`;
+          // Unquoted rel fallback — replace the whole attribute with a safe quoted value
+          const fallback = attrs.replace(/\brel\s*=\s*\S+/i, 'rel="noopener noreferrer"');
+          return `<a${fallback} target="_blank">`;
         }
         return `<a${attrs} target="_blank" rel="noopener noreferrer">`;
       }
