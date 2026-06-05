@@ -225,6 +225,21 @@ module.exports = {
         destination: '/community/codium-vs-copilot-which-ai-coding-assistant-is-best-for-you',
         permanent: true,
       },
+      {
+        source: '/community/software-development-tools-in-2025',
+        destination: '/community/software-development-tools',
+        permanent: true,
+      },
+      {
+        source: '/community/guide-to-automated-testing-tools-in-2025',
+        destination: '/community/automated-software-testing-tools',
+        permanent: true,
+      },
+      {
+        source: '/community/top-7-test-automation-tools-boost-your-software-testing-efficiency',
+        destination: '/community/test-automation-tools',
+        permanent: true,
+      },
     ]
   },
 }
