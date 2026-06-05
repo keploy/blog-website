@@ -99,9 +99,10 @@ export default function PostBody({
     initialReplacedContent = initialReplacedContent.replace(
       /<a\b([^>]*)>/gi,
       (match, attrs) => {
-        const hrefMatch = attrs.match(/href\s*=\s*["']([^"']*)["']/i);
+        // Use (^|\s) boundary to avoid false-matching data-href="..." attributes
+        const hrefMatch = attrs.match(/(^|\s)href\s*=\s*["']([^"']*)["']/i);
         if (!hrefMatch) return match;
-        const href = hrefMatch[1];
+        const href = hrefMatch[2];
         const hrefLower = href.toLowerCase();
 
         // Only parse absolute/protocol-relative URLs — avoids throwing on /path, #anchor, mailto: etc.
@@ -123,6 +124,8 @@ export default function PostBody({
           hrefLower.startsWith('mailto:') ||
           hrefLower.startsWith('tel:');
         if (isInternal) return match;
+        // Only process http(s) and protocol-relative URLs — skip ftp:, slack:, and other custom schemes
+        if (!hrefLower.startsWith('http') && !href.startsWith('//')) return match;
 
         // Merge noopener/noreferrer into rel, handling quoted and unquoted values without losing existing tokens.
         // Uses (^|\s) boundary to avoid false-matching data-rel="..." attributes.
