@@ -103,10 +103,11 @@ export default function PostBody({
         if (!hrefMatch) return match;
         const href = hrefMatch[1];
 
-        // Parse hostname to avoid substring spoofing (e.g. keploy.io.evil.com or ?next=keploy.io)
+        // Normalize protocol-relative URLs before parsing so new URL() doesn't throw
         const isKeploy = (() => {
           try {
-            const { hostname } = new URL(href);
+            const normalized = href.startsWith('//') ? `https:${href}` : href;
+            const { hostname } = new URL(normalized);
             return hostname === 'keploy.io' || hostname.endsWith('.keploy.io');
           } catch {
             return false;
@@ -114,13 +115,14 @@ export default function PostBody({
         })();
 
         const isInternal =
-          href.startsWith('/') ||
+          (href.startsWith('/') && !href.startsWith('//')) ||
           href.startsWith('#') ||
           isKeploy ||
           href.startsWith('mailto:') ||
           href.startsWith('tel:');
         if (isInternal) return match;
-        if (/\btarget\s*=/i.test(attrs)) return match;
+        // Use (^|\s) to avoid false-positive on attributes like data-target="..."
+        if (/(^|\s)target\s*=/i.test(attrs)) return match;
         const hasRel = /\brel\s*=/i.test(attrs);
         if (hasRel) {
           // Deduplicate tokens when merging into an existing quoted rel value
@@ -133,12 +135,15 @@ export default function PostBody({
               return `rel=${q}${Array.from(tokens).join(' ')}${q}`;
             }
           );
-          if (merged !== attrs) return `<a${merged} target="_blank">`;
-          // Unquoted rel fallback — replace the whole attribute with a safe quoted value
-          const fallback = attrs.replace(/\brel\s*=\s*\S+/i, 'rel="noopener noreferrer"');
-          return `<a${fallback} target="_blank">`;
+          if (merged !== attrs) return `<a${merged} target="_blank" data-external-link="true">`;
+          // Unquoted rel fallback — preserve existing tokens (nofollow/ugc/sponsored) and merge
+          const unquotedMatch = attrs.match(/\brel\s*=\s*([^\s"'>]+)/i);
+          const existingTokens = unquotedMatch ? unquotedMatch[1].split(/\s+/).filter(Boolean) : [];
+          const mergedTokens = new Set([...existingTokens, 'noopener', 'noreferrer']);
+          const fallback = attrs.replace(/\brel\s*=\s*[^\s"'>]+/i, `rel="${Array.from(mergedTokens).join(' ')}"`);
+          return `<a${fallback} target="_blank" data-external-link="true">`;
         }
-        return `<a${attrs} target="_blank" rel="noopener noreferrer">`;
+        return `<a${attrs} target="_blank" rel="noopener noreferrer" data-external-link="true">`;
       }
     );
 
@@ -154,7 +159,7 @@ export default function PostBody({
     if (!postBodyEl) return;
 
     const handleExternalLinkClick = (e: MouseEvent) => {
-      const anchor = (e.target as HTMLElement).closest('a[target="_blank"]') as HTMLAnchorElement | null;
+      const anchor = (e.target as HTMLElement).closest('a[data-external-link="true"]') as HTMLAnchorElement | null;
       if (!anchor) return;
       const href = anchor.getAttribute('href');
       if (!href) return;
