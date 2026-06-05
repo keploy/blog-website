@@ -93,9 +93,9 @@ export default function PostBody({
       '<$1$2$4>'
     );
 
-    // Add target="_blank" to external links so they open in a new tab when CSS
-    // is stripped (print, accessibility tools). Internal links and links that
-    // already carry a target attribute are left untouched.
+    // For each external link: inject target="_blank", harden rel with noopener/noreferrer,
+    // and stamp data-external-link so the mobile click handler can identify injected links.
+    // Links with a pre-existing target get rel hardened only (no data-external-link marker).
     initialReplacedContent = initialReplacedContent.replace(
       /<a\b([^>]*)>/gi,
       (match, attrs) => {
@@ -103,8 +103,9 @@ export default function PostBody({
         if (!hrefMatch) return match;
         const href = hrefMatch[1];
 
-        // Normalize protocol-relative URLs before parsing so new URL() doesn't throw
+        // Only parse absolute/protocol-relative URLs — avoids throwing on /path, #anchor, mailto: etc.
         const isKeploy = (() => {
+          if (!href.startsWith('http') && !href.startsWith('//')) return false;
           try {
             const normalized = href.startsWith('//') ? `https:${href}` : href;
             const { hostname } = new URL(normalized);
