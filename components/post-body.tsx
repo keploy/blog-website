@@ -159,7 +159,9 @@ export default function PostBody({
     if (!postBodyEl) return;
 
     const handleExternalLinkClick = (e: MouseEvent) => {
-      const anchor = (e.target as HTMLElement).closest('a[data-external-link="true"]') as HTMLAnchorElement | null;
+      const node = e.target;
+      if (!(node instanceof Element)) return;
+      const anchor = node.closest('a[data-external-link="true"]') as HTMLAnchorElement | null;
       if (!anchor) return;
       const href = anchor.getAttribute('href');
       if (!href) return;
