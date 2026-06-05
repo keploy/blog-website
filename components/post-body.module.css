@@ -144,6 +144,14 @@
   color: inherit;
 }
 
+/* Keyboard focus affordance for external links — hidden visually but discoverable when tabbing */
+.content a[href^="http" i]:not([href*="keploy.io" i]):focus-visible,
+.content a[href^="//"]:not([href*="keploy.io" i]):focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* ── Lists ── */
 .content ul,
 .content ol {

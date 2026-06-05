@@ -175,7 +175,7 @@ export default function PostBody({
 
     postBodyEl.addEventListener('click', handleExternalLinkClick);
     return () => postBodyEl.removeEventListener('click', handleExternalLinkClick);
-  }, [replacedContent]);
+  }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
