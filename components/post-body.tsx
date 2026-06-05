@@ -93,6 +93,35 @@ export default function PostBody({
       '<$1$2$4>'
     );
 
+    // Add target="_blank" to external links so they open in a new tab when CSS
+    // is stripped (print, accessibility tools). Internal links and links that
+    // already carry a target attribute are left untouched.
+    initialReplacedContent = initialReplacedContent.replace(
+      /<a\b([^>]*)>/gi,
+      (match, attrs) => {
+        const hrefMatch = attrs.match(/href\s*=\s*["']([^"']*)["']/i);
+        if (!hrefMatch) return match;
+        const href = hrefMatch[1];
+        const isInternal =
+          href.startsWith('/') ||
+          href.startsWith('#') ||
+          href.includes('keploy.io') ||
+          href.startsWith('mailto:') ||
+          href.startsWith('tel:');
+        if (isInternal) return match;
+        if (/\btarget\b/i.test(attrs)) return match;
+        const hasRel = /\brel\s*=/i.test(attrs);
+        if (hasRel) {
+          const mergedAttrs = attrs.replace(
+            /\brel\s*=\s*(["'])([^"']*)\1/i,
+            (_: string, q: string, val: string) => `rel=${q}${val} noopener noreferrer${q}`
+          );
+          return `<a${mergedAttrs} target="_blank">`;
+        }
+        return `<a${attrs} target="_blank" rel="noopener noreferrer">`;
+      }
+    );
+
     setReplacedContent(initialReplacedContent);
 
     return () => {

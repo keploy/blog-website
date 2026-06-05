@@ -114,14 +114,31 @@
 
 /* ── Links ── */
 .content a {
-  color: #f97316;
   text-decoration: none;
   font-weight: inherit;
   transition: color 0.15s;
 }
 
-.content a:hover {
+/* keploy.io (absolute), relative paths, same-page anchors — orange and clickable */
+.content a[href*="keploy.io"],
+.content a[href^="/"],
+.content a[href^="#"] {
+  color: #f97316;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.content a[href*="keploy.io"]:hover,
+.content a[href^="/"]:hover,
+.content a[href^="#"]:hover {
   color: #ea6d10;
+}
+
+/* External http/https links — present in HTML for SEO, invisible as links to readers */
+.content a[href^="http"]:not([href*="keploy.io"]) {
+  color: inherit;
+  cursor: text;
+  pointer-events: none;
 }
 
 /* ── Lists ── */
