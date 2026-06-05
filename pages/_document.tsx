@@ -1,5 +1,6 @@
-import { Html, Head, Main, NextScript } from 'next/document';
-import { getOrganizationSchema, getBlogSchema } from '../lib/structured-data';
+import { Html, Head, Main, NextScript } from "next/document";
+import { getOrganizationSchema, getBlogSchema } from "../lib/structured-data";
+import { safeJsonLdStringify } from "../utils/seo";
 
 export default function Document() {
   return (
@@ -7,7 +8,11 @@ export default function Document() {
       <Head>
         {/* Preconnect to Google Fonts for faster font loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
 
         {/* Baloo 2 — preloaded then loaded as stylesheet (font-display:swap in the CSS handles FOUT) */}
         <link
@@ -35,14 +40,14 @@ export default function Document() {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(getOrganizationSchema()),
+            __html: safeJsonLdStringify(getOrganizationSchema()),
           }}
         />
         {/* Blog Schema — single source from lib/structured-data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(getBlogSchema()),
+            __html: safeJsonLdStringify(getBlogSchema()),
           }}
         />
       </Head>
