@@ -150,6 +150,27 @@ export default function PostBody({
   }, [content]);
 
   useEffect(() => {
+    const postBodyEl = document.getElementById('post-body-check');
+    if (!postBodyEl) return;
+
+    const handleExternalLinkClick = (e: MouseEvent) => {
+      const anchor = (e.target as HTMLElement).closest('a[target="_blank"]') as HTMLAnchorElement | null;
+      if (!anchor) return;
+      const href = anchor.getAttribute('href');
+      if (!href) return;
+      // On mobile, open in the same tab — opening a new tab on mobile means
+      // pressing back closes the browser rather than returning to the blog
+      if (window.innerWidth < 768) {
+        e.preventDefault();
+        window.location.href = href;
+      }
+    };
+
+    postBodyEl.addEventListener('click', handleExternalLinkClick);
+    return () => postBodyEl.removeEventListener('click', handleExternalLinkClick);
+  }, [replacedContent]);
+
+  useEffect(() => {
     const timeout = setTimeout(() => {
       const postBodyEl = document.getElementById('post-body-check');
       if (!postBodyEl) return;

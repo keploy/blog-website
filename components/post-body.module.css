@@ -134,12 +134,10 @@
   color: #ea6d10;
 }
 
-/* External http/https and protocol-relative links — present in HTML for SEO, invisible as links to readers */
+/* External http/https and protocol-relative links — present in HTML for SEO, unstyled to readers */
 .content a[href^="http" i]:not([href*="keploy.io" i]),
 .content a[href^="//"]:not([href*="keploy.io" i]) {
   color: inherit;
-  cursor: text;
-  pointer-events: none;
 }
 
 /* ── Lists ── */
