@@ -121,7 +121,7 @@
 
 /* keploy.io (absolute), relative paths, same-page anchors, mailto/tel — orange and clickable */
 .content a[href*="keploy.io" i],
-.content a[href^="/"]:not([href^="//"]),
+.content a[href^="/"],
 .content a[href^="#"],
 .content a[href^="mailto:" i],
 .content a[href^="tel:" i] {
@@ -131,16 +131,23 @@
 }
 
 .content a[href*="keploy.io" i]:hover,
-.content a[href^="/"]:not([href^="//"]):hover,
+.content a[href^="/"]:hover,
 .content a[href^="#"]:hover,
 .content a[href^="mailto:" i]:hover,
 .content a[href^="tel:" i]:hover {
   color: #ea6d10;
 }
 
-/* External http/https and protocol-relative links — present in HTML for SEO, unstyled to readers */
+/* External http/https and protocol-relative links — present in HTML for SEO, unstyled to readers.
+   These selectors have higher specificity (0,3,1) than the [href^="/"] internal rule (0,2,1),
+   so they correctly override color for protocol-relative external URLs like //example.com. */
 .content a[href^="http" i]:not([href*="keploy.io" i]),
 .content a[href^="//"]:not([href*="keploy.io" i]) {
+  color: inherit;
+}
+
+.content a[href^="http" i]:not([href*="keploy.io" i]):hover,
+.content a[href^="//"]:not([href*="keploy.io" i]):hover {
   color: inherit;
 }
 
