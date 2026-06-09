@@ -141,18 +141,21 @@
 /* External http/https and protocol-relative links — present in HTML for SEO, unstyled to readers.
    These selectors have higher specificity (0,3,1) than the [href^="/"] internal rule (0,2,1),
    so they correctly override color for protocol-relative external URLs like //example.com. */
-.content a[href^="http" i]:not([href*="keploy.io" i]),
+.content a[href^="http://" i]:not([href*="keploy.io" i]),
+.content a[href^="https://" i]:not([href*="keploy.io" i]),
 .content a[href^="//"]:not([href*="keploy.io" i]) {
   color: inherit;
 }
 
-.content a[href^="http" i]:not([href*="keploy.io" i]):hover,
+.content a[href^="http://" i]:not([href*="keploy.io" i]):hover,
+.content a[href^="https://" i]:not([href*="keploy.io" i]):hover,
 .content a[href^="//"]:not([href*="keploy.io" i]):hover {
   color: inherit;
 }
 
 /* Keyboard focus affordance for external links — hidden visually but discoverable when tabbing */
-.content a[href^="http" i]:not([href*="keploy.io" i]):focus-visible,
+.content a[href^="http://" i]:not([href*="keploy.io" i]):focus-visible,
+.content a[href^="https://" i]:not([href*="keploy.io" i]):focus-visible,
 .content a[href^="//"]:not([href*="keploy.io" i]):focus-visible {
   outline: 2px solid #f97316;
   outline-offset: 2px;

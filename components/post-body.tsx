@@ -105,9 +105,9 @@ export default function PostBody({
         const href = hrefMatch[2];
         const hrefLower = href.toLowerCase();
 
-        // Only parse absolute/protocol-relative URLs — avoids throwing on /path, #anchor, mailto: etc.
+        // Only parse http(s) and protocol-relative URLs — avoids throwing on /path, #anchor, mailto: etc.
         const isKeploy = (() => {
-          if (!hrefLower.startsWith('http') && !href.startsWith('//')) return false;
+          if (!hrefLower.startsWith('http://') && !hrefLower.startsWith('https://') && !href.startsWith('//')) return false;
           try {
             const normalized = href.startsWith('//') ? `https:${href}` : href;
             const { hostname } = new URL(normalized);
@@ -125,7 +125,7 @@ export default function PostBody({
           hrefLower.startsWith('tel:');
         if (isInternal) return match;
         // Only process http(s) and protocol-relative URLs — skip ftp:, slack:, and other custom schemes
-        if (!hrefLower.startsWith('http') && !href.startsWith('//')) return match;
+        if (!hrefLower.startsWith('http://') && !hrefLower.startsWith('https://') && !href.startsWith('//')) return match;
 
         // Merge noopener/noreferrer into rel, handling quoted and unquoted values without losing existing tokens.
         // Uses (^|\s) boundary to avoid false-matching data-rel="..." attributes.
