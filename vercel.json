@@ -19,6 +19,11 @@
       "source": "/blog/technology/regression-testing-tools-rankings-2025",
       "destination": "/blog/technology/regression-testing-tools",
       "permanent": true
+    },
+    {
+      "source": "/blog/community/essential-free-api-testing-tools-every-developer-should-know",
+      "destination": "/blog/community/api-testing-tools",
+      "permanent": true
     }
   ],
   "headers": [
