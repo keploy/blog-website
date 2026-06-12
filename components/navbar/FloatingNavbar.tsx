@@ -43,11 +43,11 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
     ? "relative top-0 mx-auto z-40"
     : "fixed left-1/2 -translate-x-1/2 z-40";
   const navWidthClasses = isScrolled
-    ? "w-[82%] md:max-w-5xl"
+    ? "w-[92%] md:w-[94%] lg:w-[82%] md:max-w-5xl"
     : "w-[96%] md:max-w-6xl";
   const navPaddingClasses = isScrolled
-    ? "px-4 py-1.5 md:px-4 md:py-2 lg:px-5 lg:py-2.5"
-    : "px-5 py-2 md:px-6 md:py-3 lg:px-8 lg:py-4";
+    ? "px-4 py-1.5 md:px-3 md:py-2 lg:px-5 lg:py-2.5"
+    : "px-5 py-2 md:px-4 md:py-2.5 lg:px-8 lg:py-4";
   const navShadowClasses = derivedBlogReadingPage
     ? ""
     : isScrolled
@@ -78,4 +78,3 @@ export default function FloatingNavbar({ isBlogReadingPage }: FloatingNavbarProp
     </nav>
   );
 }
-
