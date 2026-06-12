@@ -204,10 +204,10 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   return (
     <div className="flex items-center justify-between overflow-visible">
       {/* Logo */}
-      <Link href="https://keploy.io/" className="flex shrink-0 items-center gap-2 overflow-hidden z-50 w-[72px] md:w-[64px] lg:w-[80px]">
-        <div className="transition-all duration-300 w-[72px] md:w-[64px] lg:w-[80px]" style={{ height: '30px' }}>
-          <div className="transition-all duration-300 translate-x-0 w-[72px] md:w-[64px] lg:w-[80px]" style={{ height: '30px' }}>
-            <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[72px] md:w-[64px] lg:w-[80px]" />
+      <Link href="https://keploy.io/" className="flex items-center gap-2 overflow-hidden z-50 w-[80px]">
+        <div className={`transition-all duration-300 w-[80px]`} style={{ height: '30px' }}>
+          <div className={`transition-all duration-300 translate-x-0`} style={{ width: '80px', height: '30px' }}>
+            <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[80px]" />
           </div>
         </div>
       </Link>
@@ -225,7 +225,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               href="/technology"
               onMouseEnter={() => { setHoveredNav('tech'); setLinkHoverTech(true); }}
               onMouseLeave={() => { setLinkHoverTech(false); setHoveredNav(null); }}
-              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showTechDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[14px] lg:text-[15px] font-medium py-2 px-0.5 lg:px-1 inline-flex items-center gap-0.5 lg:gap-1.5 align-middle whitespace-nowrap ${linkHoverTech ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
+              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showTechDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[13px] lg:text-[15px] font-medium py-2 px-0.5 lg:px-1 inline-flex items-center gap-0.5 lg:gap-1.5 align-middle whitespace-nowrap ${linkHoverTech ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
             >
               <span>Technology</span>
               <ChevronDown className="w-3 h-3 lg:w-3.5 lg:h-3.5 opacity-80" />
@@ -295,7 +295,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               href="/community"
               onMouseEnter={() => { setHoveredNav('community'); setLinkHoverCommunity(true); }}
               onMouseLeave={() => { setLinkHoverCommunity(false); setHoveredNav(null); }}
-              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showCommunityDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[14px] lg:text-[15px] font-medium py-2 px-0.5 lg:px-1 inline-flex items-center gap-0.5 lg:gap-1.5 align-middle whitespace-nowrap ${linkHoverCommunity ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
+              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showCommunityDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[13px] lg:text-[15px] font-medium py-2 px-0.5 lg:px-1 inline-flex items-center gap-0.5 lg:gap-1.5 align-middle whitespace-nowrap ${linkHoverCommunity ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
             >
               <span>Community</span>
               <ChevronDown className="w-3 h-3 lg:w-3.5 lg:h-3.5 opacity-80" />
@@ -364,7 +364,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             <button
               onMouseEnter={() => { setHoveredNav('resources'); }}
               onMouseLeave={() => { if (!resourcesOpen) { setHoveredNav(null); } }}
-              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !resourcesOpen ? 'text-black/50' : 'text-foreground'} transition-colors text-[14px] lg:text-[15px] font-medium py-2 px-0.5 lg:px-1 inline-flex items-center gap-0.5 lg:gap-1.5 align-middle whitespace-nowrap`}
+              className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !resourcesOpen ? 'text-black/50' : 'text-foreground'} transition-colors text-[13px] lg:text-[15px] font-medium py-2 px-0.5 lg:px-1 inline-flex items-center gap-0.5 lg:gap-1.5 align-middle whitespace-nowrap`}
             >
               <span>Resources</span>
               <ChevronDown className="w-3.5 h-3.5 md:w-3 md:h-3 lg:w-3.5 lg:h-3.5 opacity-80" />
