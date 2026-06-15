@@ -204,7 +204,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   return (
     <div className="flex items-center justify-between overflow-visible">
       {/* Logo */}
-      <Link href="https://keploy.io/" className="flex items-center gap-2 overflow-hidden z-50 w-[80px]">
+      <Link href="https://keploy.io/" className="flex items-center gap-2 overflow-hidden z-50 w-[80px] shrink-0">
         <div className={`transition-all duration-300 w-[80px]`} style={{ height: '30px' }}>
           <div className={`transition-all duration-300 translate-x-0`} style={{ width: '80px', height: '30px' }}>
             <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[80px]" />
@@ -213,7 +213,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       </Link>
 
       {/* Desktop Navigation */}
-      <div className={`hidden md:flex items-center overflow-visible transition-all duration-300 ${isScrolled ? 'md:gap-1.5 md:ml-1.5 lg:gap-5 lg:ml-3' : 'md:gap-4 md:ml-2 lg:gap-7 lg:ml-5'}`}>
+      <div className={`hidden md:flex items-center overflow-visible transition-all duration-300 ${isScrolled ? 'md:gap-1.5 md:ml-1.5 lg:gap-3 lg:ml-2 xl:gap-5 xl:ml-3' : 'md:gap-4 md:ml-2 lg:gap-7 lg:ml-5'}`}>
         {/* Technology Dropdown */}
         <div className="relative">
           <div
@@ -445,7 +445,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       </div>
 
       {/* Desktop CTA */}
-      <div className={`hidden md:flex shrink-0 items-center transition-all duration-300 ${isScrolled ? 'md:gap-2 md:ml-1.5 lg:gap-2.5 lg:ml-3' : 'md:gap-3 md:ml-2 lg:gap-4 lg:ml-6'}`}>
+      <div className={`hidden md:flex shrink-0 items-center transition-all duration-300 ${isScrolled ? 'md:gap-2 md:ml-1.5 lg:gap-1.5 lg:ml-2 xl:gap-2.5 xl:ml-3' : 'md:gap-3 md:ml-2 lg:gap-4 lg:ml-6'}`}>
         {/* Oval search container */}
         <button
           onClick={() => setSearchOpen(true)}
@@ -455,14 +455,14 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           {!isScrolled && <span className="hidden lg:inline">Search</span>}
           <span className="font-mono text-[9px] lg:text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px] whitespace-nowrap">Ctrl + K</span>
         </button>
-        <div className="flex items-center md:gap-2 lg:gap-3 lg:ml-2">
+        <div className={`flex items-center ${isScrolled ? 'md:gap-2 lg:gap-2 lg:ml-1 xl:gap-3 xl:ml-2' : 'md:gap-2 lg:gap-3 lg:ml-2'}`}>
           <div className="hidden xl:flex xl:border-2 xl:border-orange-400/80 rounded-full">
             <Vscode />
           </div>
           <div className="hidden md:flex md:border md:border-orange-400/70 lg:border-2 lg:border-orange-400/80 rounded-full">
             <GitHubStars />
           </div>
-          <Button asChild className="md:w-[74px] md:h-8 md:px-3 md:py-2 md:text-[13px] lg:w-[96px] lg:h-10 lg:px-8 lg:py-4 lg:text-[16px]">
+          <Button asChild className="md:min-w-[74px] md:h-8 md:px-3 md:py-2 md:text-[13px] lg:w-[96px] lg:h-10 lg:px-8 lg:py-4 lg:text-[16px]">
             <Link href="https://app.keploy.io/signin" target="_blank" rel="noopener noreferrer">
               Sign in
             </Link>
