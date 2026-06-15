@@ -14,7 +14,8 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:codegen": "playwright codegen http://localhost:3000/blog",
     "test:e2e:chromium": "playwright test --project=chromium",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "test:unit": "tsx --test tests/lib/*.test.ts"
   },
   "dependencies": {
     "@codemirror/lang-go": "^6.0.1",
@@ -65,6 +66,7 @@
     "eslint": "8.56.0",
     "eslint-config-next": "14.1.0",
     "postcss": "8.4.31",
-    "tailwindcss": "^3.0.24"
+    "tailwindcss": "^3.0.24",
+    "tsx": "^4.21.0"
   }
 }

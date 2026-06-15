@@ -29,6 +29,7 @@ import {
   SITE_URL,
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription } from "../../utils/seo";
+import { getHowToSchema } from "../../lib/howToSchema";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
 
@@ -184,6 +185,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         reviewerDescription: reviewAuthorDescription || undefined,
       }),
     );
+    const howTo = getHowToSchema(post, postUrl, safeTitle, safeDescription);
+    if (howTo) {
+      structuredData.push(howTo);
+    }
   } else {
     structuredData.push(
       getBreadcrumbListSchema([

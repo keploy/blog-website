@@ -93,12 +93,103 @@ export default function PostBody({
       '<$1$2$4>'
     );
 
+    // For each external link: inject target="_blank", harden rel with noopener/noreferrer,
+    // and stamp data-external-link so the mobile click handler can identify injected links.
+    // Links with a pre-existing target get rel hardened only (no data-external-link marker).
+    initialReplacedContent = initialReplacedContent.replace(
+      /<a\b([^>]*)>/gi,
+      (match, attrs) => {
+        // Use (^|\s) boundary to avoid false-matching data-href="..." attributes
+        const hrefMatch = attrs.match(/(^|\s)href\s*=\s*["']([^"']*)["']/i);
+        if (!hrefMatch) return match;
+        const href = hrefMatch[2];
+        const hrefLower = href.toLowerCase();
+
+        // Only parse http(s) and protocol-relative URLs — avoids throwing on /path, #anchor, mailto: etc.
+        const isKeploy = (() => {
+          if (!hrefLower.startsWith('http://') && !hrefLower.startsWith('https://') && !href.startsWith('//')) return false;
+          try {
+            const normalized = href.startsWith('//') ? `https:${href}` : href;
+            const { hostname } = new URL(normalized);
+            return hostname === 'keploy.io' || hostname.endsWith('.keploy.io');
+          } catch {
+            return false;
+          }
+        })();
+
+        const isInternal =
+          (href.startsWith('/') && !href.startsWith('//')) ||
+          href.startsWith('#') ||
+          isKeploy ||
+          hrefLower.startsWith('mailto:') ||
+          hrefLower.startsWith('tel:');
+        if (isInternal) return match;
+        // Only process http(s) and protocol-relative URLs — skip ftp:, slack:, and other custom schemes
+        if (!hrefLower.startsWith('http://') && !hrefLower.startsWith('https://') && !href.startsWith('//')) return match;
+
+        // Merge noopener/noreferrer into rel, handling quoted and unquoted values without losing existing tokens.
+        // Uses (^|\s) boundary to avoid false-matching data-rel="..." attributes.
+        const withHardenedRel = (a: string): string => {
+          if (!/(^|\s)rel\s*=/i.test(a)) return `${a} rel="noopener noreferrer"`;
+          const merged = a.replace(
+            /(^|\s)rel\s*=\s*(["'])([^"']*)\2/i,
+            (_: string, space: string, q: string, val: string) => {
+              const tokens = new Set(val.trim().split(/\s+/).filter(Boolean));
+              tokens.add('noopener');
+              tokens.add('noreferrer');
+              return `${space}rel=${q}${Array.from(tokens).join(' ')}${q}`;
+            }
+          );
+          if (merged !== a) return merged;
+          // Unquoted rel fallback — preserve existing tokens (nofollow/ugc/sponsored) and merge
+          const unquotedMatch = a.match(/(^|\s)rel\s*=\s*([^\s"'>]+)/i);
+          const existing = unquotedMatch ? unquotedMatch[2].split(/\s+/).filter(Boolean) : [];
+          const tokens = new Set([...existing, 'noopener', 'noreferrer']);
+          return a.replace(/(^|\s)rel\s*=\s*[^\s"'>]+/i, (_: string, space: string) => `${space}rel="${Array.from(tokens).join(' ')}"`);
+        };
+
+        // Use (^|\s) to avoid false-positive on attributes like data-target="..."
+        const hasTarget = /(^|\s)target\s*=/i.test(attrs);
+        if (hasTarget) {
+          // Pre-existing target — harden rel only, no data-external-link so mobile handler ignores it
+          const hardened = withHardenedRel(attrs);
+          return hardened !== attrs ? `<a${hardened}>` : match;
+        }
+
+        // No target — inject target, hardened rel, and mobile-handler marker
+        return `<a${withHardenedRel(attrs)} target="_blank" data-external-link="true">`;
+      }
+    );
+
     setReplacedContent(initialReplacedContent);
 
     return () => {
       window.removeEventListener("resize", checkScreenSize);
     };
   }, [content]);
+
+  useEffect(() => {
+    const postBodyEl = document.getElementById('post-body-check');
+    if (!postBodyEl) return;
+
+    const handleExternalLinkClick = (e: MouseEvent) => {
+      const node = e.target;
+      if (!(node instanceof Element)) return;
+      const anchor = node.closest('a[data-external-link="true"]') as HTMLAnchorElement | null;
+      if (!anchor) return;
+      const href = anchor.getAttribute('href');
+      if (!href) return;
+      // On mobile, open in the same tab — opening a new tab on mobile means
+      // pressing back closes the browser rather than returning to the blog
+      if (window.innerWidth < 768) {
+        e.preventDefault();
+        window.location.href = href;
+      }
+    };
+
+    postBodyEl.addEventListener('click', handleExternalLinkClick);
+    return () => postBodyEl.removeEventListener('click', handleExternalLinkClick);
+  }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
