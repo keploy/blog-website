@@ -53,6 +53,24 @@ module.exports = {
   async headers() {
     return [
       {
+        source: '/sitemap.xml',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=300, stale-while-revalidate=300',
+          },
+        ],
+      },
+      {
+        source: '/robots.txt',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=86400, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           {
