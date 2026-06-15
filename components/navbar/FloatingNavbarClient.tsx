@@ -462,7 +462,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           <div className="hidden md:flex md:border md:border-orange-400/70 lg:border-2 lg:border-orange-400/80 rounded-full">
             <GitHubStars />
           </div>
-          <Button asChild className="md:min-w-[74px] md:h-8 md:px-3 md:py-2 md:text-[13px] lg:w-[96px] lg:h-10 lg:px-8 lg:py-4 lg:text-[16px]">
+          <Button asChild className="md:min-w-[74px] md:h-8 md:px-3 md:py-2 md:text-[13px] lg:min-w-[96px] lg:h-10 lg:px-8 lg:py-4 lg:text-[16px]">
             <Link href="https://app.keploy.io/signin" target="_blank" rel="noopener noreferrer">
               Sign in
             </Link>
