@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-18-black?logo=next.js" alt="Next.js"/></a>
+  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js" alt="Next.js"/></a>
   <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-4.7-blue?logo=typescript" alt="TypeScript"/></a>
   <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/TailwindCSS-3.x-38bdf8?logo=tailwindcss" alt="Tailwind"/></a>
   <a href="https://www.wpgraphql.com"><img src="https://img.shields.io/badge/WordPress-GraphQL-21759b?logo=wordpress" alt="WPGraphQL"/></a>
@@ -19,7 +19,7 @@
 
 ## What is this?
 
-A **Next.js (Pages Router)** blog application that powers the [Keploy Blog](https://keploy.io/blog). Content is authored in a headless **WordPress** instance and fetched at build time via the **WPGraphQL** plugin. The site is statically generated with **Incremental Static Regeneration (ISR)**, revalidating every 10 seconds for near-instant page loads and always-fresh content.
+A **Next.js (Pages Router)** blog application that powers the [Keploy Blog](https://keploy.io/blog). Content is authored in a headless **WordPress** instance and fetched at build time via the **WPGraphQL** plugin. The site is statically generated with **Incremental Static Regeneration (ISR)**, revalidating every 10–60 seconds depending on the route for near-instant page loads and fresh content.
 
 ---
 
@@ -27,7 +27,7 @@ A **Next.js (Pages Router)** blog application that powers the [Keploy Blog](http
 
 ### Prerequisites
 
-- **Node.js** ≥ 18
+- **Node.js** ≥ 18.17.0
 - **npm** or **yarn**
 - A WordPress instance with the [WPGraphQL](https://www.wpgraphql.com/) plugin installed and activated
 
@@ -84,7 +84,7 @@ npm start
 4. Push to your fork: `git push origin feat/my-change`
 5. Open a Pull Request — the PR template will guide you
 
-The CI pipeline will automatically run a build check and Lighthouse audits on your PR.
+The CI pipeline will automatically run a build check on your PR, and Lighthouse audits for code changes (not docs-only PRs).
 
 ---
 
@@ -111,14 +111,14 @@ All pages are served under the base path `https://keploy.io/blog` (locally at `h
 | 4 | **Community Listing** | [keploy.io/blog/community](https://keploy.io/blog/community) | `pages/community/index.tsx` | Featured hero post + paginated grid of all community category posts with infinite scroll |
 | 5 | **Community Post** | [keploy.io/blog/community/\[slug\]](https://keploy.io/blog/community/) | `pages/community/[slug].tsx` | Individual community blog post — same layout as technology posts (TOC, code blocks, related posts, etc.) |
 | | | _Example:_ [keploy.io/blog/community/state-transition-testing](https://keploy.io/blog/community/state-transition-testing) | | |
-| 6 | **Community Search** | [keploy.io/blog/community/search](https://keploy.io/blog/community/search) | `pages/community/search.tsx` | Full-text search scoped to community posts only |
+| 6 | **Community Search** | [keploy.io/blog/community/search](https://keploy.io/blog/community/search) | `pages/community/search.tsx` | Client-side search over title and excerpt, scoped to community posts only |
 | 7 | **Authors Listing** | [keploy.io/blog/authors](https://keploy.io/blog/authors) | `pages/authors/index.tsx` | Grid of all blog authors with avatars |
 | 8 | **Author Profile** | [keploy.io/blog/authors/\[slug\]](https://keploy.io/blog/authors/) | `pages/authors/[slug].tsx` | Author bio, avatar, and all posts written by that author |
 | | | _Example:_ [keploy.io/blog/authors/sancharini-panda](https://keploy.io/blog/authors/sancharini-panda) | | |
 | 9 | **Tags Listing** | [keploy.io/blog/tag](https://keploy.io/blog/tag) | `pages/tag/index.tsx` | All tags displayed as cards with category-specific icons |
 | 10 | **Tag Posts** | [keploy.io/blog/tag/\[slug\]](https://keploy.io/blog/tag/) | `pages/tag/[slug].tsx` | All posts filtered by a specific tag |
 | | | _Example:_ [keploy.io/blog/tag/a2a](https://keploy.io/blog/tag/a2a) | | |
-| 11 | **Global Search** | [keploy.io/blog/search](https://keploy.io/blog/search) | `pages/search.tsx` | Full-text search across all posts (technology + community) |
+| 11 | **Global Search** | [keploy.io/blog/search](https://keploy.io/blog/search) | `pages/search.tsx` | Client-side search across pre-fetched posts (technology + community) |
 | 12 | **404** | [keploy.io/blog/404](https://keploy.io/blog/404) | `pages/404.tsx` | Custom animated "not found" page with Lottie animation |
 
 ### URL Pattern Summary
@@ -143,7 +143,7 @@ https://keploy.io/blog/
 
 | S.No | Route | Live URL | File Location | Description |
 |------|-------|----------|---------------|-------------|
-| 1 | `/api/search-all` | `keploy.io/blog/api/search-all` | `pages/api/search-all.ts` | Server-side full-text search across all posts, returns JSON |
+| 1 | `/api/search-all` | `keploy.io/blog/api/search-all` | `pages/api/search-all.ts` | Returns all community and technology posts as JSON for client-side filtering |
 | 2 | `/api/nav-latest` | `keploy.io/blog/api/nav-latest` | `pages/api/nav-latest.ts` | Fetches latest posts for the navbar "Recent Posts" dropdown |
 | 3 | `/api/preview` | `keploy.io/blog/api/preview` | `pages/api/preview.ts` | Enters Next.js preview mode to render WordPress draft posts |
 | 4 | `/api/exit-preview` | `keploy.io/blog/api/exit-preview` | `pages/api/exit-preview.ts` | Exits preview mode and returns to static pages |
@@ -166,7 +166,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. Its full configu
 
 | Layer | Technology | Used In |
 |---|---|---|
-| **Framework** | Next.js 18 (Pages Router, SSG + ISR) | Entire app |
+| **Framework** | Next.js 14 (Pages Router, SSG + ISR) | Entire app |
 | **Language** | TypeScript 4.7 | Entire app |
 | **Styling** | Tailwind CSS 3 | All components |
 | **Animations** | Framer Motion | `layout.tsx`, `PageLoader.tsx` (page transitions, loading) |
@@ -255,8 +255,7 @@ blog-website/
 ├── .github/
 │   ├── workflows/
 │   │   ├── build.yml           # CI build verification
-│   │   ├── lighthouse_runner.yml   # Lighthouse audits runner
-│   │   └── lighthouse_comment.yml  # Posts Lighthouse results to PRs
+│   │   └── lighthouse_runner.yml   # Lighthouse audits runner
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── next.config.js          # Next.js config (basePath: /blog, CSP headers, image domains)
 ├── tailwind.config.js      # Tailwind theme extensions
@@ -285,7 +284,6 @@ blog-website/
 - **Lighthouse CI** — Automated performance, accessibility, and SEO audits on every PR
 
 ---
-
 
 ## License
 
