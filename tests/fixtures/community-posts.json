@@ -8,6 +8,7 @@
                         "excerpt": "<p>See how contributors document repeatable API testing workflows for real-world teams.</p>",
                         "slug": "keploy-community-testing-playbooks",
                         "date": "2024-06-14T10:00:00",
+                        "modified": "2024-06-14T10:00:00",
                         "postId": 3001,
                         "featuredImage": {
                             "node": {
@@ -46,6 +47,7 @@
                         "excerpt": "<p>Learn how reviewers in the Keploy community improve test quality with lightweight checklists.</p>",
                         "slug": "community-spotlight-api-test-reviews",
                         "date": "2024-06-09T09:30:00",
+                        "modified": "2024-06-09T09:30:00",
                         "postId": 3002,
                         "featuredImage": {
                             "node": {
@@ -84,6 +86,7 @@
                         "excerpt": "<p>Discover how support conversations in the Keploy community turn into practical documentation updates.</p>",
                         "slug": "discord-to-docs-community-quality-improvements",
                         "date": "2024-06-03T08:45:00",
+                        "modified": "2024-06-03T08:45:00",
                         "postId": 3003,
                         "featuredImage": {
                             "node": {

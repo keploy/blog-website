@@ -12,13 +12,18 @@ import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import {
   getBreadcrumbListSchema,
-  getOrganizationSchema,
   getWebSiteSchema,
   SITE_URL,
 } from "../lib/structured-data";
+// Canonical /blog title. Shared by Layout's `Title` prop (which Meta.tsx
+// turns into og:title / twitter:title) and the <Head><title>, so the
+// document title and social metadata can't drift apart.
+const BLOG_TITLE =
+  "Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives";
+
 export default function Index({ communityPosts, technologyPosts, preview }) {
+  // Organization schema is in _document.tsx (global) — not duplicated here
   const structuredData = [
-    getOrganizationSchema(),
     getWebSiteSchema(),
     getBreadcrumbListSchema([{ name: "Home", url: SITE_URL }]),
   ];
@@ -28,21 +33,27 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`Blog - Keploy`}
+      Title={BLOG_TITLE}
       Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}
       structuredData={structuredData}
+      canonicalUrl={SITE_URL}
+      ogType="website"
     >
       <Head>
-        <title>{`Engineering | Keploy Blog`}</title>
+        {/* Meta.tsx renders og:title / twitter:title from Layout's `Title`
+            prop but does NOT emit a <title> tag (see LIVE-11 note in
+            authors/[slug].tsx). Without this <Head><title>, /blog ships
+            with no document title — same regression that hit author pages. */}
+        <title>{BLOG_TITLE}</title>
       </Head>
       <Header />
       <Container>
         <div className="">
           <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
             <div className="content">
-              <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
-                Keploy Blog
-              </h2>
+              <h1 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
+                Keploy Engineering Blog
+              </h1>
               <p className="content-body body 2xl:text-2xl text-lg mt-6">
                 Empowering your tech journey with expert advice and analysis
               </p>

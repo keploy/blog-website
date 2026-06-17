@@ -1,0 +1,272 @@
+# Keploy Blog — llms-full.txt
+# https://keploy.io/blog
+
+> Comprehensive content reference for the Keploy Blog, a technical publication covering software testing, API development, developer tooling, and test automation. The blog publishes 500+ articles authored by Keploy engineers, community contributors, and guest writers. This document provides detailed topic coverage, popular article references, content categories, and product context for AI/LLM crawlers.
+
+For the short summary version, see: https://keploy.io/blog/llms.txt
+
+---
+
+## About This Site
+
+The Keploy Blog is the content hub for Keploy, an open-source AI-powered testing platform. It publishes technical articles, tutorials, comparisons, community updates, and thought leadership on software testing and developer productivity.
+
+- URL: https://keploy.io/blog
+- Sitemap: https://keploy.io/blog/sitemap.xml
+- CMS: Headless WordPress with WPGraphQL (content API at https://wp.keploy.io/graphql)
+- Framework: Next.js (Pages Router) with server-side rendering and Incremental Static Regeneration (ISR)
+- Publishing cadence: Multiple articles per week
+- Total articles: 500+
+- Content language: English
+
+---
+
+## About Keploy
+
+Keploy (founded 2021) is an open-source, AI-powered testing agent and sandboxing platform. It uses eBPF (extended Berkeley Packet Filter) kernel technology to capture real API traffic and replay it as auto-generated tests with dependency mocks and stubs. No code changes required. Keploy achieves 90% test coverage in minutes.
+
+### Recognition
+- API World 2023 Award: Best in API Infrastructure
+- CNCF Landscape member (listed under API Testing)
+- Google for Startups Accelerator alumnus
+- Google Summer of Code mentoring organization
+- 17,000+ GitHub stars (Apache 2.0 license)
+- 1,000,000+ VS Code extension installs
+- Gartner rated 4.6/5
+
+### Products
+1. **Integration Testing (OSS)** — Record-replay engine using eBPF to capture API calls and generate test suites with deterministic replay and automatic dependency mocking.
+2. **Test Agent** — AI-powered unit test generation from PR diffs and source code. Supports Go with Java and JavaScript coming soon.
+3. **API Test Generation** — Generate tests from OpenAPI specs, Postman collections, cURL commands, or real user traffic.
+
+### Links
+- Website: https://keploy.io
+- GitHub: https://github.com/keploy/keploy
+- Documentation: https://keploy.io/docs
+- Cloud Platform: https://app.keploy.io
+- License: Apache 2.0
+
+---
+
+## Content Categories
+
+### Technology
+Deep dives on testing frameworks, CI/CD pipelines, language-specific guides, developer tools, and software architecture. Covers practical tutorials with code examples, framework comparisons, and best practices for modern development workflows.
+
+### Community
+Open-source updates, contributor spotlights, release notes, event recaps, Google Summer of Code project reports, Hacktoberfest participation guides, and community growth milestones.
+
+---
+
+## Major Topic Areas with Descriptions
+
+### API Testing
+Articles covering API test automation strategies, REST API testing, GraphQL testing, gRPC testing, API security testing, and API performance testing. Includes comparisons of API testing tools, tutorials for setting up API test suites, and best practices for API-first development.
+
+### Unit Testing
+Guides on unit testing best practices across languages (Go, Java, Python, JavaScript, TypeScript), test framework comparisons, mocking strategies, code coverage measurement, and AI-powered test generation techniques.
+
+### Integration Testing
+Content on testing microservices interactions, database integration testing, service virtualization, contract testing, and end-to-end testing strategies. Covers real-world patterns for testing distributed systems.
+
+### Test-Driven Development (TDD)
+Articles explaining TDD methodology, TDD with different languages and frameworks, practical TDD examples, and the relationship between TDD and code quality.
+
+### Behavior-Driven Development (BDD)
+Guides on BDD practices, Cucumber testing, Gherkin syntax, and collaborative testing approaches between developers and stakeholders.
+
+### Mocking and Stubbing
+Technical articles on mock objects, stub implementations, service virtualization, dependency injection for testing, and comparison of mocking libraries across languages.
+
+### Code Coverage
+Analysis of code coverage metrics, tools, and best practices. Covers line coverage, branch coverage, mutation testing, and how to interpret coverage reports meaningfully.
+
+### CI/CD Pipeline Optimization
+Tutorials on integrating tests into CI/CD pipelines (GitHub Actions, GitLab CI, Jenkins, CircleCI), optimizing test execution time, parallelizing test suites, and continuous testing strategies.
+
+### eBPF for Testing
+Deep dives into eBPF technology, kernel-level traffic capture, network observability, and how eBPF enables zero-instrumentation testing. Explains the technical architecture behind Keploy's approach.
+
+### Language-Specific Guides
+Detailed testing guides organized by programming language:
+- **Go (Golang)**: Go testing package, table-driven tests, Go benchmarks, Go coverage, testify, gomock
+- **Java**: JUnit 5, Mockito, Spring Boot testing, TestContainers, integration testing with Java
+- **Python**: pytest, unittest, Django testing, Flask testing, FastAPI testing, mocking with Python
+- **Node.js / TypeScript**: Jest, Mocha, Chai, Supertest, Express testing, NestJS testing
+- **Rust**: Rust testing framework, integration tests in Rust
+- **C# / .NET**: xUnit, NUnit, MSTest, ASP.NET Core testing
+
+### Framework-Specific Guides
+Testing guides organized by web framework:
+- **Spring Boot**: Component testing, repository testing, controller testing, security testing
+- **Django**: Model testing, view testing, REST framework testing, Django test client
+- **Express**: Route testing, middleware testing, API testing with Supertest
+- **FastAPI**: Endpoint testing, dependency injection in tests, async testing
+- **NestJS**: Module testing, e2e testing, guard and interceptor testing
+- **Flask**: Application factory testing, blueprint testing, SQLAlchemy testing
+- **Gin**: Handler testing, middleware testing, database testing with Gin
+
+### Tool Comparisons
+Head-to-head comparisons of popular testing and development tools:
+- Jest vs Mocha: JavaScript test framework comparison
+- Cypress vs Playwright: End-to-end testing framework comparison
+- Postman vs Keploy: API testing approach comparison
+- JUnit vs TestNG: Java test framework comparison
+- pytest vs unittest: Python test framework comparison
+- REST Assured vs Postman: API testing tool comparison
+
+### Software Architecture and Testing
+Articles on testing patterns for microservices, monolith-to-microservice migrations, event-driven architectures, serverless testing, and database testing strategies.
+
+### Developer Productivity
+Content on reducing testing overhead, automating repetitive testing tasks, improving developer experience, and measuring the ROI of test automation investments.
+
+---
+
+## Popular Articles by Topic
+
+### API Testing
+- API Testing Best Practices: Strategies for comprehensive API validation
+- What is API Testing: Complete guide to API test types and methodologies
+- REST API Testing Guide: Step-by-step REST API testing with examples
+- GraphQL Testing Guide: Testing GraphQL queries, mutations, and subscriptions
+- API Test Automation: Automating API tests in CI/CD pipelines
+
+### eBPF and Kernel Technology
+- What is eBPF-Based Testing: Deep dive into kernel-level traffic capture
+- eBPF for Developers: Practical introduction to eBPF concepts
+- Network Observability with eBPF: Using eBPF for traffic monitoring
+
+### Unit Testing
+- Unit Testing vs Integration Testing: When to use each approach
+- Unit Testing Best Practices: Writing maintainable and effective unit tests
+- Go Unit Testing Guide: Complete guide to testing in Go
+- Java Unit Testing with JUnit 5: Modern JUnit testing patterns
+- Python Unit Testing with pytest: pytest fixtures, parametrize, and plugins
+
+### Integration Testing
+- Integration Testing Best Practices: Patterns for reliable integration tests
+- Testing Microservices: Strategies for distributed system testing
+- Database Integration Testing: Testing with real and mocked databases
+- Contract Testing Guide: Consumer-driven and provider-driven contracts
+
+### Mocking and Service Virtualization
+- Mocking Best Practices: When and how to use mocks effectively
+- Service Virtualization Guide: Virtualizing external dependencies for testing
+- Mock vs Stub vs Spy: Understanding test double terminology
+
+### CI/CD and DevOps
+- GitHub Actions for Testing: Setting up test automation with GitHub Actions
+- GitLab CI Testing Pipeline: Configuring test stages in GitLab CI
+- Jenkins Testing Best Practices: Optimizing test execution in Jenkins
+
+### Code Coverage
+- Code Coverage Best Practices: Beyond the percentage metric
+- Mutation Testing Guide: Evaluating test suite quality with mutation testing
+- Coverage Reports in CI/CD: Integrating coverage into pull request workflows
+
+### Test-Driven Development
+- TDD in Practice: Real-world TDD examples and workflows
+- TDD with Go: Test-driven development in Go applications
+- TDD vs BDD: Choosing the right development methodology
+
+### Framework Tutorials
+- Spring Boot Testing Guide: Complete testing strategy for Spring applications
+- Django Testing Guide: Testing Django applications end-to-end
+- Express.js Testing: Testing Node.js APIs with Express
+- FastAPI Testing: Async API testing with FastAPI and pytest
+
+### Comparisons and Tool Reviews
+- Postman vs Keploy: Comparing manual and automated API testing
+- Jest vs Mocha: Choosing the right JavaScript test runner
+- Cypress vs Playwright: Browser automation framework comparison
+- JUnit vs TestNG: Java testing framework decision guide
+
+---
+
+## Author Information
+
+The blog features articles from:
+- **Keploy Engineering Team**: Core team members writing about product features, technical architecture, and engineering practices
+- **Community Contributors**: Open-source community members sharing tutorials, use cases, and integration guides
+- **Guest Writers**: Industry experts contributing thought leadership on testing and development topics
+
+Author profiles are available at: https://keploy.io/blog/authors/{slug}/
+(Slugs are lowercase, hyphen-separated, e.g., "John Doe" becomes "john-doe")
+
+---
+
+## Content Format and Structure
+
+### Article Types
+1. **Tutorials**: Step-by-step guides with code examples, commands, and expected outputs
+2. **Concept Explainers**: Deep dives into testing concepts, methodologies, and architectures
+3. **Comparisons**: Feature-by-feature tool comparisons with recommendation guidance
+4. **How-To Guides**: Practical problem-solving articles for specific use cases
+5. **Release Notes**: Product updates, new features, and changelog summaries
+6. **Community Stories**: Contributor spotlights, event recaps, and adoption case studies
+
+### Typical Article Structure
+- Introduction and problem statement
+- Prerequisites and setup
+- Step-by-step instructions with code blocks
+- Visual aids (diagrams, screenshots, terminal output)
+- Summary and next steps
+- Related article links
+
+---
+
+## Technical Details
+
+### Site Architecture
+- Built with Next.js using Pages Router
+- Content served from headless WordPress via WPGraphQL
+- Server-side rendered with Incremental Static Regeneration
+- Deployed on Vercel
+- Accessible at https://keploy.io/blog (proxied from the main landing site)
+- Base path: /blog (all routes are prefixed)
+
+### Content Discovery
+- Sitemap: https://keploy.io/blog/sitemap.xml
+- Tag pages: https://keploy.io/blog/tag/{tag-slug}/
+- Technology category: https://keploy.io/blog/technology/
+- Author pages: https://keploy.io/blog/authors/{author-slug}/
+
+---
+
+## Keploy Product Context for Blog Content
+
+### How Keploy Works (Context for Blog Articles)
+Keploy uses eBPF to attach probes to Linux kernel socket syscalls, capturing all inbound API requests and outbound dependency calls (database queries, external API calls, message queue operations) without any code changes. Captured traffic is converted into YAML test cases with auto-generated mocks. During test replay, Keploy serves dependency responses from recorded mocks and compares application responses against expected outputs, using AI noise detection to filter non-deterministic differences.
+
+### Key Technical Terms Used in Blog Content
+- **eBPF**: Extended Berkeley Packet Filter, a Linux kernel technology for safe in-kernel program execution
+- **Record Mode**: Keploy mode that captures API traffic and generates test cases
+- **Test Mode**: Keploy mode that replays recorded tests and validates responses
+- **Noise Detection**: AI system that identifies non-deterministic fields in API responses
+- **Time Freezing**: Feature that rolls back system time during test replay for JWT/timestamp handling
+- **Dependency Virtualization**: Automatic mocking of external dependencies from recorded traffic
+- **Test Deduplication**: Coverage-aware removal of redundant test cases
+- **Mock Registry**: Cloud storage for mock files to keep git repositories lightweight
+- **Self-Healing Tests**: AI-powered automatic repair of failing test assertions
+
+---
+
+## Related Resources
+
+- Main site: https://keploy.io
+- Documentation: https://keploy.io/docs
+- Comparisons: https://keploy.io/compare
+- FAQ: https://keploy.io/faq
+- Cloud Platform: https://app.keploy.io
+- GitHub: https://github.com/keploy/keploy
+- Landing Site LLM Context: https://keploy.io/llms-full.txt
+- Documentation LLM Context: https://keploy.io/docs/llms-full.txt
+
+## Contact
+
+- Twitter/X: https://twitter.com/Keployio
+- LinkedIn: https://www.linkedin.com/company/keploy/
+- YouTube: https://www.youtube.com/@keploy
+- Discord: https://discord.gg/keploy
+- Email: support@keploy.io

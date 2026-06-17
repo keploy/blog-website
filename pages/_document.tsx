@@ -1,24 +1,60 @@
-import { Html, Head, Main, NextScript } from 'next/document';
-import Script from 'next/script';
+import { Html, Head, Main, NextScript } from "next/document";
+import { getOrganizationSchema, getBlogSchema } from "../lib/structured-data";
+import { safeJsonLdStringify } from "../utils/seo";
 
 export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Google AdSense Script */}
-        {/* <Script
-          id="adsbygoogle-init"
-          strategy="afterInteractive"
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3485005084287002`}
+        {/* Preconnect to Google Fonts for faster font loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
-          onError={(e) => {
-            console.error('AdSense script failed to load', e);
+        />
+
+        {/* Baloo 2 — preloaded then loaded as stylesheet (font-display:swap in the CSS handles FOUT) */}
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap"
+          rel="stylesheet"
+        />
+
+        {/* DM Sans — preloaded globally so individual pages don't re-request */}
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap"
+          rel="stylesheet"
+        />
+
+        {/* Organization Schema — single source from lib/structured-data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLdStringify(getOrganizationSchema()),
           }}
-        /> */}
+        />
+        {/* Blog Schema — single source from lib/structured-data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLdStringify(getBlogSchema()),
+          }}
+        />
       </Head>
       <body>
         <Main />
         <NextScript />
+        {/* Telemetry SDK is loaded in _app.tsx only — removed duplicate here */}
       </body>
     </Html>
   );

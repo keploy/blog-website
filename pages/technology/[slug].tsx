@@ -14,9 +14,8 @@ import {
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
 } from "../../lib/api";
-import PrismLoader from "../../components/prism-loader";
 import ContainerSlug from "../../components/containerSlug";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { getReviewAuthorDetails } from "../../lib/api";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
@@ -27,10 +26,10 @@ import {
   getBreadcrumbListSchema,
   SITE_URL,
 } from "../../lib/structured-data";
+import { sanitizeTitle, getSafeDescription } from "../../utils/seo";
+import { getHowToSchema } from "../../lib/howToSchema";
 
-const PostBody = dynamic(() => import("../../components/post-body"), {
-  ssr: false,
-});
+const PostBody = dynamic(() => import("../../components/post-body"));
 
 const postBody = ({ content, post }) => {
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
@@ -48,30 +47,49 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const { slug } = router.query;
   const morePosts = posts?.edges;
   const time = 5 + calculateReadingTime(post?.content || "");
-  const [avatarImgSrc, setAvatarImgSrc] = useState("");
-  const [blogWriterDescription, setBlogWriterDescription] = useState("");
-  const [reviewAuthorName, setreviewAuthorName] = useState("");
-  const [reviewAuthorImageUrl, setreviewAuthorImageUrl] = useState("");
-  const [reviewAuthorDescription, setreviewAuthorDescription] = useState("");
-  const [postBodyReviewerAuthor, setpostBodyReviewerAuthor] = useState(0);
-  useEffect(() => {
-    if (reviewAuthorDetails && reviewAuthorDetails?.length > 0) {
-      const authorIndex = post.ppmaAuthorName === "Neha" ? 1 : 0;
-      const authorNode = reviewAuthorDetails[authorIndex]?.edges[0]?.node;
-      if (authorNode) {
-        setpostBodyReviewerAuthor(authorIndex);
-        setreviewAuthorName(authorNode.name);
-        setreviewAuthorImageUrl(authorNode.avatar.url);
-        setreviewAuthorDescription(authorNode.description);
-      }
-    }
-  }, [post, reviewAuthorDetails]);
+
+  // Reviewer data — computed synchronously at render time so the reviewer
+  // name appears in the SSR HTML payload (not just after client hydration).
+  // Previously this was a useEffect that set state, which meant AI crawlers
+  // saw the literal placeholder "Reviewer" string in the initial HTML.
+  // Author mismatch + reviewer bugs reported 2026-04-14.
+  const reviewerIndex = post?.ppmaAuthorName === "Neha" ? 1 : 0;
+  const reviewerNode =
+    reviewAuthorDetails && reviewAuthorDetails.length > 0
+      ? reviewAuthorDetails[reviewerIndex]?.edges?.[0]?.node
+      : null;
+  const postBodyReviewerAuthor = reviewerIndex;
+  const reviewAuthorName = reviewerNode?.name || "";
+  const reviewAuthorImageUrl = reviewerNode?.avatar?.url || "";
+  const reviewAuthorDescription = reviewerNode?.description || "";
+
+  // Writer avatar — use ppmaAuthorImage directly (SSR). Previously this
+  // was extracted from post.content via regex inside a useEffect, which
+  // meant the SSR HTML rendered /blog/images/author.png as a placeholder.
+  const ppmaImage =
+    typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
+      ? post.ppmaAuthorImage
+      : "";
+  const writerAvatarUrl = ppmaImage || "/blog/images/author.png";
+
+  // Writer description — extract synchronously from post content (no effect).
+  const writerDescriptionMatch =
+    post?.content?.match(
+      /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i,
+    );
+  const blogWriterDescription =
+    writerDescriptionMatch && writerDescriptionMatch[1]?.trim().length > 0
+      ? writerDescriptionMatch[1].trim()
+      : "An author for Keploy's blog.";
+
+  // Back-compat alias for any downstream reference to avatarImgSrc.
+  const avatarImgSrc = writerAvatarUrl;
 
   const blogwriter = [
     {
       name: post?.ppmaAuthorName || "Author",
-      ImageUrl: avatarImgSrc || "/blog/images/author.png",
-      description: blogWriterDescription || "An author for keploy's blog.",
+      ImageUrl: writerAvatarUrl,
+      description: blogWriterDescription,
     },
   ];
   const blogreviewer = [
@@ -99,40 +117,18 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       readProgress.set(v.value.scrollY);
     },
   });
-  useEffect(() => {
-    if (post && post.content) {
-      const content = post.content;
-
-      const avatarDivMatch = content.match(
-        /<div[^>]*class="pp-author-boxes-avatar"[^>]*>\s*<img[^>]*src='([^']*)'[^>]*\/?>/
-      );
-      if (avatarDivMatch && avatarDivMatch[1]) {
-        setAvatarImgSrc(avatarDivMatch[1]);
-      } else {
-        setAvatarImgSrc("/blog/images/author.png");
-      }
-
-      // Match the <p> with class pp-author-boxes-description and extract its content
-      const authorDescriptionMatch = content.match(
-        /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i
-      );
-
-      if (
-        authorDescriptionMatch &&
-        authorDescriptionMatch[1].trim()?.length > 0
-      ) {
-        setBlogWriterDescription(authorDescriptionMatch[1].trim());
-      } else {
-        setBlogWriterDescription("An author for Keploy's blog.");
-      }
-    }
-  }, [post]);
+  // Author + description extraction previously lived in a useEffect here
+  // and produced client-only state updates. Both are now computed
+  // synchronously above so the SSR HTML contains the correct data.
 
   useEffect(() => {
     if (!router.isFallback && !post?.slug) {
       router.push("/404");
     }
   }, [router, router.isFallback, post]);
+
+  const safeTitle = sanitizeTitle(post?.title);
+  const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
 
   const postUrl = post?.slug ? `${SITE_URL}/technology/${post.slug}` : `${SITE_URL}/technology`;
   const structuredData = [];
@@ -141,17 +137,36 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       getBreadcrumbListSchema([
         { name: "Home", url: SITE_URL },
         { name: "Technology", url: `${SITE_URL}/technology` },
-        { name: post?.title || "Post", url: postUrl },
+        { name: safeTitle || "Post", url: postUrl },
       ]),
       getBlogPostingSchema({
-        title: post?.title || "Keploy Blog Post",
+        title: safeTitle || "Keploy Blog Post",
         url: postUrl,
         datePublished: post?.date,
-        description: post?.seo?.metaDesc,
+        dateModified: post?.modified,
+        description: safeDescription,
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
+        // LIVE-22: use PublishPress author image, not the placeholder.
+        authorImage: ppmaImage || undefined,
+        articleSection: post?.categories?.edges?.[0]?.node?.name || "Technology",
+        // GEO-13: mark this as TechArticle (more specific than BlogPosting
+        // for developer content). AI models weight TechArticle higher
+        // for technical queries.
+        categorySlug: "technology",
+        proficiencyLevel: "Intermediate",
+        // LIVE-22: emit reviewedBy Person schema. Skipped by the
+        // generator when the reviewer equals the author or when the
+        // name falls back to the "Reviewer" placeholder.
+        reviewerName: reviewAuthorName || undefined,
+        reviewerImage: reviewAuthorImageUrl || undefined,
+        reviewerDescription: reviewAuthorDescription || undefined,
       })
     );
+    const howTo = getHowToSchema(post, postUrl, safeTitle, safeDescription);
+    if (howTo) {
+      structuredData.push(howTo);
+    }
   } else {
     structuredData.push(
       getBreadcrumbListSchema([
@@ -165,9 +180,12 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     <Layout
       preview={preview}
       featuredImage={post?.featuredImage?.node?.sourceUrl || ""}
-      Title={post?.seo.title || "Loading..."}
-      Description={`${post?.seo.metaDesc || "Blog About " + `${post?.title}`}`}
+      Title={post?.seo?.title || "Loading..."}
+      Description={safeDescription}
       structuredData={structuredData}
+      canonicalUrl={!router.isFallback && post?.slug ? postUrl : undefined}
+      ogType="article"
+      publishedDate={post?.date}
     >
       <Header readProgress={readProgress} />
       <Container>
@@ -176,17 +194,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           <PostTitle>Loading…</PostTitle>
         ) : (
           <>
-            <PrismLoader /> {/* Load Prism.js here */}
             <article>
               <Head>
                 <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
-                {/* DM Sans — scoped to this page only */}
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-                <link
-                  href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap"
-                  rel="stylesheet"
-                />
+                {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
               </Head>
               <PostHeader
                 title={post?.title || "Loading..."}
@@ -272,18 +283,46 @@ export const getStaticProps: GetStaticProps = async ({
       };
     }
 
+    // Validate that this post belongs to the "technology" category.
+    // Without this check, posts from "community" are also accessible at
+    // /technology/SLUG (duplicate content). If the post is not in the
+    // "technology" category, redirect to the correct category URL.
+    const postCategories = data.post?.categories?.edges?.map(
+      (edge: { node: { name: string } }) => edge.node.name.toLowerCase()
+    ) || [];
+    if (!postCategories.includes("technology")) {
+      // Post belongs to a different category — 301 redirect to preserve SEO signals.
+      // This only runs at ISR runtime (fallback: true), not during next build,
+      // because getStaticPaths only returns paths from the technology category query.
+      const correctCategory = postCategories.find((c: string) =>
+        ['community', 'technology'].includes(c)
+      );
+      if (correctCategory) {
+        return {
+          redirect: {
+            destination: `/${correctCategory}/${data.post.slug}`,
+            permanent: true,
+          },
+        };
+      }
+      return {
+        notFound: true,
+        revalidate: 60,
+      };
+    }
+
     const moreStories = await getMoreStoriesForSlugs(data.post?.tags, data.post?.slug);
     const authorDetails = await Promise.all([
       getReviewAuthorDetails("neha"),
       getReviewAuthorDetails("Jain"),
     ]);
 
-    // If we resolved a redirect slug, send a proper redirect response
+    // If we resolved a redirect slug, send a proper 301 redirect response
     if (redirectSlug) {
       return {
         redirect: {
           destination: `/technology/${redirectSlug}`,
-          permanent: false,
+          permanent: true,
         },
       };
     }
