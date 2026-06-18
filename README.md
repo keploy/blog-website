@@ -149,7 +149,7 @@ https://keploy.io/blog/
 | 2 | `/api/nav-latest` | `keploy.io/blog/api/nav-latest` | `pages/api/nav-latest.ts` | Returns the latest 4 posts each for the Technology and Community navbar dropdowns |
 | 3 | `/api/preview` | `keploy.io/blog/api/preview` | `pages/api/preview.ts` | Enters Next.js preview mode to render WordPress draft posts |
 | 4 | `/api/exit-preview` | `keploy.io/blog/api/exit-preview` | `pages/api/exit-preview.ts` | Exits preview mode and returns to static pages |
-| 5 | `/api/proxy-image` | `keploy.io/blog/api/proxy-image` | `pages/api/proxy-image.ts` | Proxies WordPress-hosted images to avoid CORS/CSP issues |
+| 5 | `/api/proxy-image` | `keploy.io/blog/api/proxy-image` | `pages/api/proxy-image.ts` | Proxies external images (WordPress, Gravatar, Twitter/X) through an allowlist to avoid CORS/CSP issues |
 
 ### Navbar Structure
 
@@ -278,7 +278,7 @@ blog-website/
 
 - **Headless WordPress CMS** — Content managed in WordPress, fetched via GraphQL at build time
 - **ISR (Incremental Static Regeneration)** — Pages revalidate every 10–60 seconds depending on the route for fresh content without full rebuilds
-- **SEO-First** — JSON-LD structured data (Organization, WebSite, BlogPosting, BreadcrumbList), meta tags, Open Graph, sitemap, and robots.txt
+- **SEO-First** — JSON-LD structured data (Organization, WebSite, BlogPosting, TechArticle, BreadcrumbList), meta tags, Open Graph, sitemap, and robots.txt
 - **Mega-Menu Navbar** — Floating navbar with Technology, Community, and Resources dropdowns
 - **Search** — Client-side filtering over posts pre-fetched at build time via `getStaticProps`
 - **Pagination** — Posts load in batches of 9 via a Load More button; next batch is pre-fetched in the background to reduce wait time
