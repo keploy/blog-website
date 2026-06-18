@@ -108,7 +108,7 @@ All pages are served under the base path `https://keploy.io/blog` (locally at `h
 |------|------|----------|---------------|-------------|
 | 1 | **Home** | [keploy.io/blog](https://keploy.io/blog) | `pages/index.tsx` | Hero section with CTA buttons, top blogs (community + technology), testimonials marquee carousel |
 | 2 | **Technology Listing** | [keploy.io/blog/technology](https://keploy.io/blog/technology) | `pages/technology/index.tsx` | Featured hero post + paginated grid of all technology category posts with infinite scroll |
-| 3 | **Technology Post** | [keploy.io/blog/technology/\[slug\]](https://keploy.io/blog/technology/) | `pages/technology/[slug].tsx` | Individual technology blog post — includes sticky table of contents, syntax-highlighted code blocks, reading time, related posts, newsletter CTA |
+| 3 | **Technology Post** | [keploy.io/blog/technology/\[slug\]](https://keploy.io/blog/technology/) | `pages/technology/[slug].tsx` | Individual technology blog post — includes sticky table of contents, syntax-highlighted code blocks, reading time, and related posts |
 | | | _Example:_ [keploy.io/blog/technology/api-testing-tools](https://keploy.io/blog/technology/api-testing-tools) | | |
 | 4 | **Community Listing** | [keploy.io/blog/community](https://keploy.io/blog/community) | `pages/community/index.tsx` | Featured hero post + paginated grid of all community category posts with infinite scroll |
 | 5 | **Community Post** | [keploy.io/blog/community/\[slug\]](https://keploy.io/blog/community/) | `pages/community/[slug].tsx` | Individual community blog post — same layout as technology posts (TOC, code blocks, related posts, etc.) |
@@ -291,7 +291,6 @@ blog-website/
 - **Preview Mode** — Authenticated preview of WordPress draft posts via `/api/preview`
 - **Page Load Animation** — Framer Motion powered loading screen via `PageLoader.tsx`
 - **Spring Animations** — Scroll-based animations on post cards and headers via React Spring
-- **Newsletter Subscription** — Animated subscription form with GSAP bunny animation
 - **Responsive Design** — Mobile-first layout with dedicated mobile navigation drawer
 - **Lighthouse CI** — Automated performance, accessibility, and SEO audits on code PRs (skipped for docs-only changes)
 
