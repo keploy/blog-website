@@ -282,7 +282,7 @@ blog-website/
 - **ISR (Incremental Static Regeneration)** — Pages revalidate every 10–60 seconds depending on the route for fresh content without full rebuilds
 - **SEO-First** — JSON-LD structured data (Organization, WebSite, BlogPosting, BreadcrumbList), meta tags, Open Graph, sitemap, and robots.txt
 - **Mega-Menu Navbar** — Floating navbar with Technology, Community, and Resources dropdowns
-- **Search** — Client-side filtering over posts pre-fetched from `/api/search-all`
+- **Search** — Client-side filtering over posts pre-fetched at build time via `getStaticProps`
 - **Pagination / Infinite Scroll** — Posts load progressively as the user scrolls
 - **Syntax-Highlighted Code Blocks** — Prism.js for blog post code, CodeMirror for interactive JSON diffs
 - **Table of Contents** — Auto-generated sticky sidebar TOC for blog posts
