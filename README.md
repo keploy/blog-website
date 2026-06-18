@@ -291,7 +291,7 @@ blog-website/
 - **Spring Animations** — Scroll-based animations on post cards and headers via React Spring
 - **Newsletter Subscription** — Animated subscription form with GSAP bunny animation
 - **Responsive Design** — Mobile-first layout with dedicated mobile navigation drawer
-- **Lighthouse CI** — Automated performance, accessibility, and SEO audits on every PR
+- **Lighthouse CI** — Automated performance, accessibility, and SEO audits on code PRs (skipped for docs-only changes)
 
 ---
 
