@@ -108,7 +108,7 @@ All pages are served under the base path `https://keploy.io/blog` (locally at `h
 |------|------|----------|---------------|-------------|
 | 1 | **Home** | [keploy.io/blog](https://keploy.io/blog) | `pages/index.tsx` | Hero section with CTA buttons, top blogs (community + technology), testimonials marquee carousel |
 | 2 | **Technology Listing** | [keploy.io/blog/technology](https://keploy.io/blog/technology) | `pages/technology/index.tsx` | Featured hero post + paginated grid of all technology category posts with infinite scroll |
-| 3 | **Technology Post** | [keploy.io/blog/technology/\[slug\]](https://keploy.io/blog/technology/) | `pages/technology/[slug].tsx` | Individual technology blog post — includes sticky table of contents, syntax-highlighted code blocks, reading time, related posts, reviewing author, newsletter CTA |
+| 3 | **Technology Post** | [keploy.io/blog/technology/\[slug\]](https://keploy.io/blog/technology/) | `pages/technology/[slug].tsx` | Individual technology blog post — includes sticky table of contents, syntax-highlighted code blocks, reading time, related posts, newsletter CTA |
 | | | _Example:_ [keploy.io/blog/technology/api-testing-tools](https://keploy.io/blog/technology/api-testing-tools) | | |
 | 4 | **Community Listing** | [keploy.io/blog/community](https://keploy.io/blog/community) | `pages/community/index.tsx` | Featured hero post + paginated grid of all community category posts with infinite scroll |
 | 5 | **Community Post** | [keploy.io/blog/community/\[slug\]](https://keploy.io/blog/community/) | `pages/community/[slug].tsx` | Individual community blog post — same layout as technology posts (TOC, code blocks, related posts, etc.) |
@@ -121,7 +121,7 @@ All pages are served under the base path `https://keploy.io/blog` (locally at `h
 | 10 | **Tag Posts** | [keploy.io/blog/tag/\[slug\]](https://keploy.io/blog/tag/) | `pages/tag/[slug].tsx` | All posts filtered by a specific tag |
 | | | _Example:_ [keploy.io/blog/tag/a2a](https://keploy.io/blog/tag/a2a) | | |
 | 11 | **Global Search** | [keploy.io/blog/search](https://keploy.io/blog/search) | `pages/search.tsx` | Client-side search across pre-fetched posts (technology + community) |
-| 12 | **404** | [keploy.io/blog/404](https://keploy.io/blog/404) | `pages/404.tsx` | Custom animated "not found" page with Lottie animation |
+| 12 | **404** | [keploy.io/blog/404](https://keploy.io/blog/404) | `pages/404.tsx` | Custom not found page with auto-redirect countdown and latest post suggestions |
 
 ### URL Pattern Summary
 
