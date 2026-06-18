@@ -42,8 +42,8 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
       >
         {/* Report preview image */}
         <img
-          src={config.previewImageSrc}
-          alt={config.previewImageAlt}
+          src={config.preview.imageSrc}
+          alt={config.preview.alt}
           className="w-full block"
           loading="lazy"
         />

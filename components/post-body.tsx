@@ -7,6 +7,8 @@ import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
 import GatedReport from "./GatedReport";
 import { getGatedReportConfig } from "../config/gated-reports";
+import KeywordTooltipLayer from "./KeywordTooltipLayer";
+import { getTooltipsForSlug } from "../config/keyword-tooltips";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
@@ -62,6 +64,9 @@ export default function PostBody({
     reviewer &&
     authorName.split(" ")[0].toLowerCase() ===
     reviewer.name.split(" ")[0].toLowerCase();
+
+  const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
+  const tooltipConfigs = blogSlug ? getTooltipsForSlug(blogSlug) : [];
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -318,18 +323,37 @@ export default function PostBody({
   const renderCodeBlocks = () => {
     const safeContent = replacedContent || "";
 
-    const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
     const gatedConfig = blogSlug ? getGatedReportConfig(blogSlug) : null;
     let gatedInjected = false;
 
+    const injectedKeywords = new Set<string>();
+    const injectTooltipSpans = (html: string): string => {
+      if (!tooltipConfigs.length) return html;
+      let result = html;
+      for (const t of tooltipConfigs) {
+        if (injectedKeywords.has(t.key)) continue;
+        const escaped = t.keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(escaped);
+        if (regex.test(result)) {
+          injectedKeywords.add(t.key);
+          result = result.replace(
+            regex,
+            `<span class="keploy-tt" data-tt-key="${t.key}" style="border-bottom:1.5px dotted #f97316;cursor:help;">${t.keyword}</span>`
+          );
+        }
+      }
+      return result;
+    };
+
     const renderHtmlPart = (html: string, key: number | string) => {
+      const processedHtml = injectTooltipSpans(html);
       if (gatedConfig && !gatedInjected) {
         const escaped = gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         const splitRegex = new RegExp(
           `(<h[1-6][^>]*>[\\s\\S]*?${escaped}[\\s\\S]*?<\\/h[1-6]>)`,
           "i"
         );
-        const parts = html.split(splitRegex);
+        const parts = processedHtml.split(splitRegex);
         if (parts.length > 1) {
           gatedInjected = true;
           const beforeAndHeading = parts[0] + (parts[1] || "");
@@ -355,7 +379,7 @@ export default function PostBody({
         <div
           key={key}
           className={styles.content}
-          dangerouslySetInnerHTML={{ __html: html }}
+          dangerouslySetInnerHTML={{ __html: processedHtml }}
           suppressHydrationWarning
         />
       );
@@ -540,6 +564,7 @@ export default function PostBody({
       <div className="min-[1440px]:hidden flex justify-center mt-8 px-4">
         <BlogSidebar />
       </div>
+      <KeywordTooltipLayer tooltips={tooltipConfigs} />
     </div>
   );
 }

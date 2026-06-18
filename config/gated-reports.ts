@@ -1,8 +1,10 @@
 export interface GatedReportConfig {
   blogSlug: string;
   afterHeading: string;
-  previewImageSrc: string;
-  previewImageAlt: string;
+  preview: {
+    imageSrc: string;
+    alt: string;
+  };
   title: string;
   subtitle: string;
   reportId: string;
@@ -12,8 +14,10 @@ export const gatedReports: GatedReportConfig[] = [
   {
     blogSlug: "api-testing-tools",
     afterHeading: "How to Choose the Right API Testing Tool",
-    previewImageSrc: "/blog/report-preview.png",
-    previewImageAlt: "API Testing Tools Report — Preview",
+    preview: {
+      imageSrc: "/blog/report-preview.png",
+      alt: "API Testing Tools Report — Preview",
+    },
     title: "Get the Full API Testing Report",
     subtitle:
       "A comprehensive guide trusted by thousands of engineers. Delivered free to your inbox.",
