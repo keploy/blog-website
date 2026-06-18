@@ -171,7 +171,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. The Technology a
 | **Language** | TypeScript 4.7 | Entire app |
 | **Styling** | Tailwind CSS 3 | All components |
 | **Animations** | Framer Motion | `PageLoader.tsx` (loading animation) |
-| **Animations** | React Spring | `header.tsx`, `post-preview.tsx`, `post-card.tsx`, slug pages (scroll-based spring animations) |
+| **Animations** | React Spring | `header.tsx`, `post-card.tsx`, slug pages (scroll-based spring animations) |
 | **CMS** | WordPress + WPGraphQL | `lib/api.ts` (all data fetching) |
 | **Code Editor** | CodeMirror + Dracula theme | `json-diff-viewer.tsx` (interactive code comparison) |
 | **JSON Diffing** | json-diff-kit | `json-diff-viewer.tsx` |
