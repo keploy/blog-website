@@ -171,10 +171,8 @@ The floating navbar is a mega-menu with multi-column dropdowns. Its full configu
 | **Language** | TypeScript 4.7 | Entire app |
 | **Styling** | Tailwind CSS 3 | All components |
 | **Animations** | Framer Motion | `PageLoader.tsx` (loading animation) |
-| **Animations** | GSAP | `subscribe-newsletter.tsx` (bunny animation) |
 | **Animations** | React Spring | `header.tsx`, `post-preview.tsx`, `post-card.tsx`, slug pages (scroll-based spring animations) |
 | **CMS** | WordPress + WPGraphQL | `lib/api.ts` (all data fetching) |
-| **Code Highlighting** | Prism.js | `prism-loader.tsx` (syntax highlighting in blog posts) |
 | **Code Editor** | CodeMirror + Dracula theme | `json-diff-viewer.tsx` (interactive code comparison) |
 | **JSON Diffing** | json-diff-kit | `json-diff-viewer.tsx` |
 | **Lottie Animations** | @lottiefiles/react-lottie-player | `PageLoader.tsx` (loading animation) |
@@ -284,7 +282,7 @@ blog-website/
 - **Mega-Menu Navbar** — Floating navbar with Technology, Community, and Resources dropdowns
 - **Search** — Client-side filtering over posts pre-fetched at build time via `getStaticProps`
 - **Pagination / Infinite Scroll** — Posts load progressively as the user scrolls
-- **Syntax-Highlighted Code Blocks** — Prism.js for blog post code, CodeMirror for interactive JSON diffs
+- **Interactive JSON Diffs** — CodeMirror with Dracula theme for side-by-side JSON comparison in posts
 - **Table of Contents** — Auto-generated sticky sidebar TOC for blog posts
 - **Testimonials Carousel** — Animated marquee showcase of community testimonials
 - **Reading Time Estimates** — Calculated per-post reading duration
