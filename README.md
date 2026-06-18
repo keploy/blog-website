@@ -276,21 +276,21 @@ blog-website/
 
 ## Key Features
 
-- **Headless WordPress CMS** — Content managed in WordPress, fetched via GraphQL at build time
-- **ISR (Incremental Static Regeneration)** — Pages revalidate every 10–60 seconds depending on the route for fresh content without full rebuilds
-- **SEO-First** — JSON-LD structured data (Organization, WebSite, BlogPosting, TechArticle, BreadcrumbList), meta tags, Open Graph, sitemap, and robots.txt
-- **Mega-Menu Navbar** — Floating navbar with Technology, Community, and Resources dropdowns
-- **Search** — Client-side filtering over posts pre-fetched at build time via `getStaticProps`
-- **Pagination** — Posts load in batches of 9 via a Load More button; next batch is pre-fetched in the background to reduce wait time
-- **Interactive JSON Diffs** — CodeMirror with Dracula theme for side-by-side JSON comparison in posts
-- **Table of Contents** — Auto-generated sticky sidebar TOC for blog posts
-- **Testimonials Carousel** — Animated marquee showcase of community testimonials
-- **Reading Time Estimates** — Calculated per-post reading duration
-- **Preview Mode** — Authenticated preview of WordPress draft posts via `/api/preview`
-- **Page Load Animation** — Framer Motion powered loading screen via `PageLoader.tsx`
-- **Spring Animations** — Scroll-based animations on post cards and headers via React Spring
-- **Responsive Design** — Mobile-first layout with dedicated mobile navigation drawer
-- **Lighthouse CI** — Automated performance, accessibility, and SEO audits on code PRs (skipped for docs-only changes)
+- **Headless WordPress CMS** - Content managed in WordPress, fetched via GraphQL at build time
+- **ISR (Incremental Static Regeneration)** - Pages revalidate every 10–60 seconds depending on the route for fresh content without full rebuilds
+- **SEO-First** - JSON-LD structured data (Organization, WebSite, BlogPosting, TechArticle, BreadcrumbList), meta tags, Open Graph, sitemap, and robots.txt
+- **Mega-Menu Navbar** - Floating navbar with Technology, Community, and Resources dropdowns
+- **Search** - Client-side filtering over posts pre-fetched at build time via `getStaticProps`
+- **Pagination** - Posts load in batches of 9 via a Load More button; next batch is pre-fetched in the background to reduce wait time
+- **Interactive JSON Diffs** - CodeMirror with Dracula theme for side-by-side JSON comparison in posts
+- **Table of Contents** - Auto-generated sticky sidebar TOC for blog posts
+- **Testimonials Carousel** - Animated marquee showcase of community testimonials
+- **Reading Time Estimates** - Calculated per-post reading duration
+- **Preview Mode** - Authenticated preview of WordPress draft posts via `/api/preview`
+- **Page Load Animation** - Framer Motion powered loading screen via `PageLoader.tsx`
+- **Spring Animations** - Scroll-based animations on post cards and headers via React Spring
+- **Responsive Design** - Mobile-first layout with dedicated mobile navigation drawer
+- **Lighthouse CI** - Automated performance, accessibility, and SEO audits on code PRs (skipped for docs-only changes)
 
 ---
 
