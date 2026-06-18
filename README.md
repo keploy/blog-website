@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js" alt="Next.js"/></a>
-  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-4.7-blue?logo=typescript" alt="TypeScript"/></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-4.9-blue?logo=typescript" alt="TypeScript"/></a>
   <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/TailwindCSS-3.x-38bdf8?logo=tailwindcss" alt="Tailwind"/></a>
   <a href="https://www.wpgraphql.com"><img src="https://img.shields.io/badge/WordPress-GraphQL-21759b?logo=wordpress" alt="WPGraphQL"/></a>
 </p>
@@ -168,7 +168,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. The Technology a
 | Layer | Technology | Used In |
 |---|---|---|
 | **Framework** | Next.js 14 (Pages Router, SSG + ISR) | Entire app |
-| **Language** | TypeScript 4.7 | Entire app |
+| **Language** | TypeScript 4.9 | Entire app |
 | **Styling** | Tailwind CSS 3 | All components |
 | **Animations** | Framer Motion | `PageLoader.tsx` (loading animation) |
 | **Animations** | React Spring | `header.tsx`, `post-card.tsx`, slug pages (scroll-based spring animations) |
