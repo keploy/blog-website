@@ -173,7 +173,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. The Technology a
 | **Animations** | Framer Motion | `PageLoader.tsx` (loading animation) |
 | **Animations** | React Spring | `header.tsx`, `post-card.tsx`, slug pages (scroll-based spring animations) |
 | **CMS** | WordPress + WPGraphQL | `lib/api.ts` (all data fetching) |
-| **Code Editor** | CodeMirror + Dracula theme | `json-diff-viewer.tsx` (interactive code comparison) |
+| **Code Editor** | CodeMirror + Dracula theme | `post-body.tsx` (syntax-highlighted code blocks), `json-diff-viewer.tsx` (interactive JSON comparison) |
 | **JSON Diffing** | json-diff-kit | `json-diff-viewer.tsx` |
 | **Lottie Animations** | @lottiefiles/react-lottie-player | `PageLoader.tsx` (loading animation) |
 | **UI Primitives** | Radix UI | `ui/accordion.tsx`, `ui/sheet.tsx`, `ui/navigation-menu.tsx` |
