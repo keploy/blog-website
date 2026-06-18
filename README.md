@@ -159,7 +159,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. The Technology a
 |----------|-------------|-----------|
 | **Technology** | Latest technology blog posts, shown as cards in the dropdown | [keploy.io/blog/technology](https://keploy.io/blog/technology) |
 | **Community** | Latest community blog posts, shown as cards in the dropdown | [keploy.io/blog/community](https://keploy.io/blog/community) |
-| **Resources** | Links to the broader Keploy ecosystem (Products, Solutions, Developers, Docs) | [keploy.io/docs](https://keploy.io/docs), [github.com/keploy/keploy](https://github.com/keploy/keploy), [app.keploy.io](https://app.keploy.io) |
+| **Resources** | Links to the broader Keploy ecosystem (Products, Solutions, Developers, Docs) | [keploy.io/docs](https://keploy.io/docs), [github.com/keploy](https://github.com/keploy), [app.keploy.io](https://app.keploy.io) |
 
 ---
 
