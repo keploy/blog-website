@@ -234,7 +234,7 @@ blog-website/
 │   └── redirect.ts         # URL redirect mappings
 ├── hooks/                  # Custom React hooks
 │   ├── useGithubStars.tsx  # Fetches live GitHub star count
-│   ├── useHeaderScroll.tsx # Show/hide header on scroll direction
+│   ├── useHeaderScroll.tsx # Returns true when page is scrolled past 40px — triggers navbar style changes
 │   └── useVSCodeInstalls.tsx  # Fetches VS Code extension install count
 ├── services/
 │   ├── Tweets.tsx          # Twitter/X testimonial data
