@@ -27,7 +27,7 @@ A **Next.js (Pages Router)** blog application that powers the [Keploy Blog](http
 
 ### Prerequisites
 
-- **Node.js** ≥ 18.17.0
+- **Node.js** ≥ 18
 - **npm**
 - A WordPress instance with the [WPGraphQL](https://www.wpgraphql.com/) plugin installed and activated
 
@@ -265,7 +265,7 @@ blog-website/
 │   │   ├── playwright.yml           # E2E tests
 │   │   ├── indexnow.yml             # IndexNow pings for search engine indexing
 │   │   ├── submit-google-sitemap.yml  # Submits sitemap to Google Search Console
-│   │   └── sync-sitemap.yml         # Syncs sitemap on deploy
+│   │   └── sync-sitemap.yml         # Regenerates and commits sitemap on a daily schedule
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── next.config.js          # Next.js config (basePath: /blog, CSP headers, image domains)
 ├── tailwind.config.js      # Tailwind theme extensions
