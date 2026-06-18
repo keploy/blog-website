@@ -180,7 +180,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. Its full configu
 | **Icons** | Lucide React | `config/nav.ts`, navbar components |
 | **Icons** | React Icons | `post-body.tsx`, `more-stories.tsx`, `NotFoundPage.tsx`, `tagIcons.ts` |
 | **Date Formatting** | date-fns | `date.tsx` |
-| **SEO** | JSON-LD Structured Data | `lib/structured-data.ts` (Organization, WebSite, BlogPosting, BreadcrumbList schemas) |
+| **SEO** | JSON-LD Structured Data | `lib/structured-data.ts` (Organization, WebSite, BlogPosting, TechArticle, BreadcrumbList schemas) |
 | **SEO** | Sitemap + robots.txt | `public/sitemap.xml`, `public/robots.txt` |
 | **Analytics** | Google Analytics, Microsoft Clarity, Apollo | `layout.tsx` (tracking scripts) |
 | **Deployment** | Vercel + CloudFront | Production at `keploy.io/blog` |
@@ -217,7 +217,7 @@ blog-website/
 │   ├── testimonials.tsx    # Testimonials marquee carousel
 │   ├── topBlogs.tsx        # Top blogs section (community + technology)
 │   ├── TableContents.tsx   # Sticky table of contents sidebar
-│   ├── subscribe-newsletter.tsx  # Newsletter subscription with GSAP animation
+│   ├── subscribe-newsletter.tsx  # Newsletter subscription component (not currently wired into any page)
 │   ├── footer.tsx          # Global footer with site links and social icons
 │   ├── json-diff-viewer.tsx # Interactive JSON diff comparison (CodeMirror)
 │   └── ...
