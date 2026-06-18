@@ -146,7 +146,7 @@ https://keploy.io/blog/
 | S.No | Route | Live URL | File Location | Description |
 |------|-------|----------|---------------|-------------|
 | 1 | `/api/search-all` | `keploy.io/blog/api/search-all` | `pages/api/search-all.ts` | Returns all community and technology posts as JSON for client-side filtering |
-| 2 | `/api/nav-latest` | `keploy.io/blog/api/nav-latest` | `pages/api/nav-latest.ts` | Fetches latest posts for the navbar "Recent Posts" dropdown |
+| 2 | `/api/nav-latest` | `keploy.io/blog/api/nav-latest` | `pages/api/nav-latest.ts` | Returns the latest 4 posts each for the Technology and Community navbar dropdowns |
 | 3 | `/api/preview` | `keploy.io/blog/api/preview` | `pages/api/preview.ts` | Enters Next.js preview mode to render WordPress draft posts |
 | 4 | `/api/exit-preview` | `keploy.io/blog/api/exit-preview` | `pages/api/exit-preview.ts` | Exits preview mode and returns to static pages |
 | 5 | `/api/proxy-image` | `keploy.io/blog/api/proxy-image` | `pages/api/proxy-image.ts` | Proxies WordPress-hosted images to avoid CORS/CSP issues |
