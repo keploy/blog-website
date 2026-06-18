@@ -56,6 +56,7 @@
     "typescript": "^4.7.4"
   },
   "devDependencies": {
+    "@next/swc-darwin-arm64": "^16.2.9",
     "@playwright/test": "^1.58.2",
     "@types/node": "^18.19.130",
     "@types/prismjs": "^1.26.3",
