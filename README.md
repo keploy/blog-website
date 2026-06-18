@@ -28,7 +28,7 @@ A **Next.js (Pages Router)** blog application that powers the [Keploy Blog](http
 ### Prerequisites
 
 - **Node.js** ≥ 18.17.0
-- **npm** or **yarn**
+- **npm**
 - A WordPress instance with the [WPGraphQL](https://www.wpgraphql.com/) plugin installed and activated
 
 ### 1. Clone the repo
@@ -184,7 +184,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. Its full configu
 | **SEO** | Sitemap + robots.txt | `public/sitemap.xml`, `public/robots.txt` |
 | **Analytics** | Google Analytics, Microsoft Clarity, Apollo | `layout.tsx` (tracking scripts) |
 | **Deployment** | Vercel + CloudFront | Production at `keploy.io/blog` |
-| **CI/CD** | GitHub Actions | `.github/workflows/build.yml`, `lighthouse_runner.yml` |
+| **CI/CD** | GitHub Actions | `build.yml`, `lighthouse_runner.yml`, `playwright.yml`, `indexnow.yml`, `submit-google-sitemap.yml`, `sync-sitemap.yml` |
 
 ---
 
@@ -224,7 +224,7 @@ blog-website/
 │   ├── structured-data.ts  # JSON-LD schema generators
 │   └── constants.ts        # Site-wide constants (OG image URL, etc.)
 ├── config/
-│   ├── nav.ts              # Navbar mega-menu configuration (products, solutions, developers)
+│   ├── nav.ts              # Navbar mega-menu configuration (Technology, Community, Resources)
 │   └── redirect.ts         # URL redirect mappings
 ├── hooks/                  # Custom React hooks
 │   ├── useGithubStars.tsx  # Fetches live GitHub star count
@@ -270,17 +270,17 @@ blog-website/
 ## Key Features
 
 - **Headless WordPress CMS** — Content managed in WordPress, fetched via GraphQL at build time
-- **ISR (Incremental Static Regeneration)** — Pages revalidate every 10 seconds for fresh content without full rebuilds
+- **ISR (Incremental Static Regeneration)** — Pages revalidate every 10–60 seconds depending on the route for fresh content without full rebuilds
 - **SEO-First** — JSON-LD structured data (Organization, WebSite, BlogPosting, BreadcrumbList), meta tags, Open Graph, sitemap, and robots.txt
-- **Mega-Menu Navbar** — Multi-column floating navigation with product cards, solution links, and developer resources
-- **Full-Text Search** — Client-side search with server-side API backing (`/api/search-all`)
+- **Mega-Menu Navbar** — Floating navbar with Technology, Community, and Resources dropdowns
+- **Search** — Client-side filtering over posts pre-fetched from `/api/search-all`
 - **Pagination / Infinite Scroll** — Posts load progressively as the user scrolls
 - **Syntax-Highlighted Code Blocks** — Prism.js for blog post code, CodeMirror for interactive JSON diffs
 - **Table of Contents** — Auto-generated sticky sidebar TOC for blog posts
 - **Testimonials Carousel** — Animated marquee showcase of community testimonials
 - **Reading Time Estimates** — Calculated per-post reading duration
 - **Preview Mode** — Authenticated preview of WordPress draft posts via `/api/preview`
-- **Page Transitions** — Smooth fade-in animations via Framer Motion
+- **Page Load Animation** — Framer Motion powered loading screen via `PageLoader.tsx`
 - **Spring Animations** — Scroll-based animations on post cards and headers via React Spring
 - **Newsletter Subscription** — Animated subscription form with GSAP bunny animation
 - **Responsive Design** — Mobile-first layout with dedicated mobile navigation drawer
