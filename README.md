@@ -174,7 +174,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. Its full configu
 | **CMS** | WordPress + WPGraphQL | `lib/api.ts` (all data fetching) |
 | **Code Highlighting** | Prism.js | `prism-loader.tsx` (syntax highlighting in blog posts) |
 | **Code Editor** | CodeMirror + Dracula theme | `json-diff-viewer.tsx` (interactive code comparison) |
-| **JSON Diffing** | json-diff-kit | `json-diff-viewer.tsx`, `post-body.tsx` |
+| **JSON Diffing** | json-diff-kit | `json-diff-viewer.tsx` |
 | **Lottie Animations** | @lottiefiles/react-lottie-player | `PageLoader.tsx` (loading animation) |
 | **UI Primitives** | Radix UI | `ui/accordion.tsx`, `ui/sheet.tsx`, `ui/navigation-menu.tsx` |
 | **Icons** | Lucide React | `config/nav.ts`, navbar components |
@@ -194,7 +194,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. Its full configu
 blog-website/
 ├── pages/                  # Next.js page routes (see Site Map above)
 │   └── api/                # API routes
-├── components/             # 47+ React components
+├── components/             # 60+ React components
 │   ├── navbar/             # Floating navbar with mega-menu dropdowns
 │   │   ├── FloatingNavbar.tsx       # Navbar wrapper
 │   │   ├── FloatingNavbarClient.tsx # Client-side navbar logic
@@ -207,6 +207,8 @@ blog-website/
 │   ├── ui/                 # UI Components
 │   │   ├── accordion.tsx
 │   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── collapsible.tsx
 │   │   ├── navigation-menu.tsx
 │   │   └── sheet.tsx
 │   ├── layout.tsx          # Root layout: meta, footer, analytics, scroll-to-top
@@ -222,7 +224,9 @@ blog-website/
 ├── lib/
 │   ├── api.ts              # All WordPress GraphQL queries & data fetching
 │   ├── structured-data.ts  # JSON-LD schema generators
-│   └── constants.ts        # Site-wide constants (OG image URL, etc.)
+│   ├── howToSchema.ts      # HowTo JSON-LD builder for tutorial blog posts
+│   ├── constants.ts        # Site-wide constants (OG image URL, etc.)
+│   └── utils/utils.ts      # Shared utility helpers (cn, classname merging)
 ├── config/
 │   ├── nav.ts              # Navbar mega-menu configuration (Technology, Community, Resources)
 │   └── redirect.ts         # URL redirect mappings
@@ -242,7 +246,10 @@ blog-website/
 │   ├── tagIcons.ts              # Tag → icon mapping
 │   ├── sanitizeAuthorSlug.ts    # Author URL sanitization
 │   ├── sanitizeStringForUrl.ts  # Generic URL sanitization
-│   └── excerpt.ts               # Post excerpt truncation
+│   ├── excerpt.ts               # Post excerpt truncation
+│   ├── extractAuthorData.ts     # Author data extraction helpers
+│   ├── seo.ts                   # SEO utility helpers
+│   └── aiReferralTracker.ts     # AI referral source tracking
 ├── public/
 │   ├── images/             # Static images and illustrations
 │   ├── avatars/            # Testimonial avatars
