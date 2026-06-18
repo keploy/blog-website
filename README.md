@@ -153,7 +153,7 @@ https://keploy.io/blog/
 
 ### Navbar Structure
 
-The floating navbar is a mega-menu with multi-column dropdowns. Its full configuration lives in `config/nav.ts`.
+The floating navbar is a mega-menu with multi-column dropdowns. The Technology and Community dropdown cards are populated dynamically from the `/api/nav-latest` endpoint. The Resources dropdown links are hardcoded in `FloatingNavbarClient.tsx`.
 
 | Dropdown | Description | Key Links |
 |----------|-------------|-----------|
@@ -198,7 +198,7 @@ blog-website/
 │   ├── navbar/             # Floating navbar with mega-menu dropdowns
 │   │   ├── FloatingNavbar.tsx       # Navbar wrapper
 │   │   ├── FloatingNavbarClient.tsx # Client-side navbar logic
-│   │   ├── main-nav.tsx             # Desktop navigation
+│   │   ├── main-nav.tsx             # Desktop mega-menu (Products/Solutions/Developers/Resources — not currently wired into the blog)
 │   │   ├── mobile-nav.tsx           # Mobile navigation drawer
 │   │   ├── github-stars.tsx         # Live GitHub star counter
 │   │   ├── vscode-number.tsx        # VS Code installs counter
@@ -228,7 +228,7 @@ blog-website/
 │   ├── constants.ts        # Site-wide constants (OG image URL, etc.)
 │   └── utils/utils.ts      # Shared utility helpers (cn, classname merging)
 ├── config/
-│   ├── nav.ts              # Navbar mega-menu configuration (Technology, Community, Resources)
+│   ├── nav.ts              # Mega-menu configuration for the main keploy.io website navbar (Products, Solutions, Developers, Resources)
 │   └── redirect.ts         # URL redirect mappings
 ├── hooks/                  # Custom React hooks
 │   ├── useGithubStars.tsx  # Fetches live GitHub star count
