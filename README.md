@@ -107,10 +107,10 @@ All pages are served under the base path `https://keploy.io/blog` (locally at `h
 | S.No | Page | Live URL | File Location | Description |
 |------|------|----------|---------------|-------------|
 | 1 | **Home** | [keploy.io/blog](https://keploy.io/blog) | `pages/index.tsx` | Hero section with CTA buttons, top blogs (community + technology), testimonials marquee carousel |
-| 2 | **Technology Listing** | [keploy.io/blog/technology](https://keploy.io/blog/technology) | `pages/technology/index.tsx` | Featured hero post + paginated grid of all technology category posts with infinite scroll |
+| 2 | **Technology Listing** | [keploy.io/blog/technology](https://keploy.io/blog/technology) | `pages/technology/index.tsx` | Featured hero post + paginated grid of all technology category posts with a Load More button (background pre-fetching) |
 | 3 | **Technology Post** | [keploy.io/blog/technology/\[slug\]](https://keploy.io/blog/technology/) | `pages/technology/[slug].tsx` | Individual technology blog post — includes sticky table of contents, syntax-highlighted code blocks, reading time, and related posts |
 | | | _Example:_ [keploy.io/blog/technology/api-testing-tools](https://keploy.io/blog/technology/api-testing-tools) | | |
-| 4 | **Community Listing** | [keploy.io/blog/community](https://keploy.io/blog/community) | `pages/community/index.tsx` | Featured hero post + paginated grid of all community category posts with infinite scroll |
+| 4 | **Community Listing** | [keploy.io/blog/community](https://keploy.io/blog/community) | `pages/community/index.tsx` | Featured hero post + paginated grid of all community category posts with a Load More button (background pre-fetching) |
 | 5 | **Community Post** | [keploy.io/blog/community/\[slug\]](https://keploy.io/blog/community/) | `pages/community/[slug].tsx` | Individual community blog post — same layout as technology posts (TOC, code blocks, related posts, etc.) |
 | | | _Example:_ [keploy.io/blog/community/state-transition-testing](https://keploy.io/blog/community/state-transition-testing) | | |
 | 6 | **Community Search** | [keploy.io/blog/community/search](https://keploy.io/blog/community/search) | `pages/community/search.tsx` | Client-side search over title and excerpt across all posts, scoped to the community section UI |
@@ -213,7 +213,7 @@ blog-website/
 │   │   └── sheet.tsx
 │   ├── layout.tsx          # Root layout: meta, footer, analytics, scroll-to-top
 │   ├── post-body.tsx       # Blog post content renderer with code blocks
-│   ├── more-stories.tsx    # Paginated post grid with infinite scroll
+│   ├── more-stories.tsx    # Paginated post grid with Load More button and background pre-fetching
 │   ├── testimonials.tsx    # Testimonials marquee carousel
 │   ├── topBlogs.tsx        # Top blogs section (community + technology)
 │   ├── TableContents.tsx   # Sticky table of contents sidebar
@@ -281,7 +281,7 @@ blog-website/
 - **SEO-First** — JSON-LD structured data (Organization, WebSite, BlogPosting, BreadcrumbList), meta tags, Open Graph, sitemap, and robots.txt
 - **Mega-Menu Navbar** — Floating navbar with Technology, Community, and Resources dropdowns
 - **Search** — Client-side filtering over posts pre-fetched at build time via `getStaticProps`
-- **Pagination / Infinite Scroll** — Posts load progressively as the user scrolls
+- **Pagination** — Posts load in batches of 9 via a Load More button; next batch is pre-fetched in the background to reduce wait time
 - **Interactive JSON Diffs** — CodeMirror with Dracula theme for side-by-side JSON comparison in posts
 - **Table of Contents** — Auto-generated sticky sidebar TOC for blog posts
 - **Testimonials Carousel** — Animated marquee showcase of community testimonials
