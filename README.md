@@ -113,7 +113,7 @@ All pages are served under the base path `https://keploy.io/blog` (locally at `h
 | 4 | **Community Listing** | [keploy.io/blog/community](https://keploy.io/blog/community) | `pages/community/index.tsx` | Featured hero post + paginated grid of all community category posts with infinite scroll |
 | 5 | **Community Post** | [keploy.io/blog/community/\[slug\]](https://keploy.io/blog/community/) | `pages/community/[slug].tsx` | Individual community blog post — same layout as technology posts (TOC, code blocks, related posts, etc.) |
 | | | _Example:_ [keploy.io/blog/community/state-transition-testing](https://keploy.io/blog/community/state-transition-testing) | | |
-| 6 | **Community Search** | [keploy.io/blog/community/search](https://keploy.io/blog/community/search) | `pages/community/search.tsx` | Client-side search over title and excerpt, scoped to community posts only |
+| 6 | **Community Search** | [keploy.io/blog/community/search](https://keploy.io/blog/community/search) | `pages/community/search.tsx` | Client-side search over title and excerpt across all posts, scoped to the community section UI |
 | 7 | **Authors Listing** | [keploy.io/blog/authors](https://keploy.io/blog/authors) | `pages/authors/index.tsx` | Grid of all blog authors with avatars |
 | 8 | **Author Profile** | [keploy.io/blog/authors/\[slug\]](https://keploy.io/blog/authors/) | `pages/authors/[slug].tsx` | Author bio, avatar, and all posts written by that author |
 | | | _Example:_ [keploy.io/blog/authors/sancharini-panda](https://keploy.io/blog/authors/sancharini-panda) | | |
