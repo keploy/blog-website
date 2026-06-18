@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://keploy.io/docs/img/keploy-logo-dark.svg" alt="Keploy Logo" width="200"/>
+  <img src="public/images/sidebyside-transparent.svg" alt="Keploy Logo" width="200"/>
 </p>
 
 <h1 align="center">Keploy Blog</h1>
@@ -153,12 +153,11 @@ https://keploy.io/blog/
 
 The floating navbar is a mega-menu with multi-column dropdowns. Its full configuration lives in `config/nav.ts`.
 
-| Dropdown | Sections | Key Links |
-|----------|----------|-----------|
-| **Products** | Core Products, Key Features | Open Source Testing → [github.com/keploy/keploy](https://github.com/keploy/keploy), Enterprise Solution → [app.keploy.io](https://app.keploy.io), API Recording & Replay, Test Deduplication, Multi-Purpose Mocks |
-| **Solutions** | Testing Types, Testing Methods | Test Data Generation, API Testing, Code Coverage, CI Testing, Regression Testing, Contract Testing |
-| **Developers** | Documentation, Developer Resources | Getting Started → [keploy.io/docs](https://keploy.io/docs), API Reference, FAQs, Open Source Community, GitHub |
-| **Blog** _(this site)_ | Technology, Community | [keploy.io/blog/technology](https://keploy.io/blog/technology), [keploy.io/blog/community](https://keploy.io/blog/community) |
+| Dropdown | Description | Key Links |
+|----------|-------------|-----------|
+| **Technology** | Latest technology blog posts, shown as cards in the dropdown | [keploy.io/blog/technology](https://keploy.io/blog/technology) |
+| **Community** | Latest community blog posts, shown as cards in the dropdown | [keploy.io/blog/community](https://keploy.io/blog/community) |
+| **Resources** | Links to the broader Keploy ecosystem (Products, Solutions, Developers, Docs) | [keploy.io/docs](https://keploy.io/docs), [github.com/keploy/keploy](https://github.com/keploy/keploy), [app.keploy.io](https://app.keploy.io) |
 
 ---
 
@@ -169,7 +168,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. Its full configu
 | **Framework** | Next.js 14 (Pages Router, SSG + ISR) | Entire app |
 | **Language** | TypeScript 4.7 | Entire app |
 | **Styling** | Tailwind CSS 3 | All components |
-| **Animations** | Framer Motion | `layout.tsx`, `PageLoader.tsx` (page transitions, loading) |
+| **Animations** | Framer Motion | `PageLoader.tsx` (loading animation) |
 | **Animations** | GSAP | `subscribe-newsletter.tsx` (bunny animation) |
 | **Animations** | React Spring | `header.tsx`, `post-preview.tsx`, `post-card.tsx`, slug pages (scroll-based spring animations) |
 | **CMS** | WordPress + WPGraphQL | `lib/api.ts` (all data fetching) |
@@ -254,8 +253,12 @@ blog-website/
 │   └── index.css           # Global styles + Tailwind directives
 ├── .github/
 │   ├── workflows/
-│   │   ├── build.yml           # CI build verification
-│   │   └── lighthouse_runner.yml   # Lighthouse audits runner
+│   │   ├── build.yml                # CI build verification
+│   │   ├── lighthouse_runner.yml    # Lighthouse audits (skipped for docs-only PRs)
+│   │   ├── playwright.yml           # E2E tests
+│   │   ├── indexnow.yml             # IndexNow pings for search engine indexing
+│   │   ├── submit-google-sitemap.yml  # Submits sitemap to Google Search Console
+│   │   └── sync-sitemap.yml         # Syncs sitemap on deploy
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── next.config.js          # Next.js config (basePath: /blog, CSP headers, image domains)
 ├── tailwind.config.js      # Tailwind theme extensions
