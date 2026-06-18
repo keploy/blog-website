@@ -220,7 +220,7 @@ blog-website/
 │   ├── topBlogs.tsx        # Top blogs section (community + technology)
 │   ├── TableContents.tsx   # Sticky table of contents sidebar
 │   ├── subscribe-newsletter.tsx  # Newsletter subscription with GSAP animation
-│   ├── footer.tsx          # Global footer with links and badges
+│   ├── footer.tsx          # Global footer with site links and social icons
 │   ├── json-diff-viewer.tsx # Interactive JSON diff comparison (CodeMirror)
 │   └── ...
 ├── lib/
