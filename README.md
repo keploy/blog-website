@@ -199,10 +199,10 @@ blog-website/
 │   │   ├── FloatingNavbar.tsx       # Navbar wrapper
 │   │   ├── FloatingNavbarClient.tsx # Client-side navbar logic
 │   │   ├── main-nav.tsx             # Desktop mega-menu (Products/Solutions/Developers/Resources — not currently wired into the blog)
-│   │   ├── mobile-nav.tsx           # Mobile navigation drawer
+│   │   ├── mobile-nav.tsx           # Mobile navigation drawer (not currently used — mobile menu is built into FloatingNavbarClient.tsx)
 │   │   ├── github-stars.tsx         # Live GitHub star counter
 │   │   ├── vscode-number.tsx        # VS Code installs counter
-│   │   ├── nav-card.tsx             # Navbar dropdown card
+│   │   ├── nav-card.tsx             # Navbar dropdown card (not currently used — only referenced by main-nav.tsx)
 │   │   └── icons.tsx                # SVG icon components
 │   ├── ui/                 # UI Components
 │   │   ├── accordion.tsx
