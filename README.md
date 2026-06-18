@@ -117,7 +117,7 @@ All pages are served under the base path `https://keploy.io/blog` (locally at `h
 | 7 | **Authors Listing** | [keploy.io/blog/authors](https://keploy.io/blog/authors) | `pages/authors/index.tsx` | Grid of all blog authors with avatars |
 | 8 | **Author Profile** | [keploy.io/blog/authors/\[slug\]](https://keploy.io/blog/authors/) | `pages/authors/[slug].tsx` | Author bio, avatar, and all posts written by that author |
 | | | _Example:_ [keploy.io/blog/authors/sancharini-panda](https://keploy.io/blog/authors/sancharini-panda) | | |
-| 9 | **Tags Listing** | [keploy.io/blog/tag](https://keploy.io/blog/tag) | `pages/tag/index.tsx` | All tags displayed as cards with category-specific icons |
+| 9 | **Tags Listing** | [keploy.io/blog/tag](https://keploy.io/blog/tag) | `pages/tag/index.tsx` | All tags displayed as pill buttons with category-specific icons |
 | 10 | **Tag Posts** | [keploy.io/blog/tag/\[slug\]](https://keploy.io/blog/tag/) | `pages/tag/[slug].tsx` | All posts filtered by a specific tag |
 | | | _Example:_ [keploy.io/blog/tag/a2a](https://keploy.io/blog/tag/a2a) | | |
 | 11 | **Global Search** | [keploy.io/blog/search](https://keploy.io/blog/search) | `pages/search.tsx` | Client-side search across pre-fetched posts (technology + community) |
