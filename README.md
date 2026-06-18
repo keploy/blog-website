@@ -76,6 +76,8 @@ npm run build
 npm start
 ```
 
+---
+
 ## Contributing
 
 1. Fork the repository
