@@ -194,7 +194,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. Its full configu
 blog-website/
 ├── pages/                  # Next.js page routes (see Site Map above)
 │   └── api/                # API routes
-├── components/             # 60+ React components
+├── components/             # 60 React components
 │   ├── navbar/             # Floating navbar with mega-menu dropdowns
 │   │   ├── FloatingNavbar.tsx       # Navbar wrapper
 │   │   ├── FloatingNavbarClient.tsx # Client-side navbar logic
