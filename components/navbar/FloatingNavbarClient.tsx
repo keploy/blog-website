@@ -205,11 +205,12 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
     <div className="flex items-center justify-between overflow-visible">
       {/* Logo */}
       <Link href="https://keploy.io/" className="flex items-center gap-2 z-50 w-[80px] shrink-0">
-        <div className={`transition-all duration-300 w-[80px]`} style={{ height: '30px' }}>
-          <div className={`transition-all duration-300 translate-x-0`} style={{ width: '80px', height: '30px' }}>
-            <Image src={sideBySideSvg} alt="Keploy Logo" className="h-[30px] w-[80px]" />
-          </div>
-        </div>
+        <Image
+          src={sideBySideSvg}
+          alt="Keploy Logo"
+          width={80}
+          height={30}
+        />
       </Link>
 
       {/* Desktop Navigation */}
