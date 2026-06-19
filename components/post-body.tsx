@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
+import InlinePromoCard from "./InlinePromoCard";
+import { getInlinePromoForSlug } from "../config/inline-promos";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
@@ -315,16 +317,54 @@ export default function PostBody({
 
   const renderCodeBlocks = () => {
     const safeContent = replacedContent || "";
-    const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
-    if (!codeBlocks) {
+    const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
+    const inlinePromoConfig = blogSlug ? getInlinePromoForSlug(blogSlug) : null;
+    let promoInjected = false;
+
+    const renderHtmlPart = (html: string, key: number | string) => {
+      if (inlinePromoConfig && !promoInjected) {
+        const escaped = inlinePromoConfig.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const splitRegex = new RegExp(
+          `(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`,
+          "i"
+        );
+        const parts = html.split(splitRegex);
+        if (parts.length > 1) {
+          promoInjected = true;
+          const beforeAndBlock = parts[0] + (parts[1] || "");
+          const after = parts.slice(2).join("");
+          return (
+            <Fragment key={key}>
+              <div
+                className={styles.content}
+                dangerouslySetInnerHTML={{ __html: beforeAndBlock }}
+                suppressHydrationWarning
+              />
+              <InlinePromoCard promoId={inlinePromoConfig.promoId} />
+              <div
+                className={styles.content}
+                dangerouslySetInnerHTML={{ __html: after }}
+                suppressHydrationWarning
+              />
+            </Fragment>
+          );
+        }
+      }
       return (
         <div
+          key={key}
           className={styles.content}
-          dangerouslySetInnerHTML={{ __html: replacedContent }}
+          dangerouslySetInnerHTML={{ __html: html }}
           suppressHydrationWarning
         />
       );
+    };
+
+    const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
+
+    if (!codeBlocks) {
+      return renderHtmlPart(safeContent, 0);
     }
 
     const decodeHtmlEntities = (str: string): string => {
@@ -428,14 +468,7 @@ export default function PostBody({
           );
         }
 
-        return (
-          <div
-            key={index}
-            className={styles.content}
-            dangerouslySetInnerHTML={{ __html: part }}
-            suppressHydrationWarning
-          />
-        );
+        return renderHtmlPart(part, index);
       });
   };
 
