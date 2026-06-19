@@ -453,14 +453,14 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           className="inline-flex items-center gap-1 text-neutral-700 hover:text-neutral-900 transition-all text-[11px] lg:text-[14px] font-medium rounded-full border border-neutral-300/80 bg-white/60 hover:bg-white/80 px-2 py-1 md:px-1.5 md:py-1 lg:px-3 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-neutral-300/90 whitespace-nowrap"
         >
           <svg className="w-3 h-3 lg:w-4 lg:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          {!isScrolled && <span className="hidden lg:inline">Search</span>}
+          {!isScrolled && <span className="hidden md:inline">Search</span>}
           <span className="font-mono text-[8px] lg:text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px] whitespace-nowrap">Ctrl + K</span>
         </button>
         <div className={`flex items-center ${isScrolled ? 'md:gap-2 lg:ml-1 xl:gap-3 xl:ml-2' : 'md:gap-2 lg:gap-3 lg:ml-2'}`}>
           <div className="hidden xl:flex xl:border-2 xl:border-orange-400/80 rounded-full">
             <Vscode />
           </div>
-          <div className="hidden md:flex md:border md:border-orange-400/70 lg:border-2 lg:border-orange-400/80 rounded-full">
+          <div className="hidden lg:flex lg:border-2 lg:border-orange-400/80 rounded-full">
             <GitHubStars />
           </div>
           <Button asChild className="md:min-w-[74px] md:h-8 md:px-3 md:py-2 md:text-[13px] lg:min-w-[96px] lg:h-10 lg:px-8 lg:py-4 lg:text-[16px]">
