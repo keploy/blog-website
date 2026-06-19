@@ -450,11 +450,11 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         {/* Oval search container */}
         <button
           onClick={() => setSearchOpen(true)}
-          className="inline-flex items-center gap-1 text-neutral-700 hover:text-neutral-900 transition-all text-[11px] lg:text-[14px] font-medium rounded-full border border-neutral-300/80 bg-white/60 hover:bg-white/80 px-2 py-1 md:px-2 md:py-1.5 lg:px-3 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-neutral-300/90 whitespace-nowrap"
+          className="inline-flex items-center gap-1 text-neutral-700 hover:text-neutral-900 transition-all text-[11px] lg:text-[14px] font-medium rounded-full border border-neutral-300/80 bg-white/60 hover:bg-white/80 px-2 py-1 md:px-1.5 md:py-1 lg:px-3 shadow-sm hover:shadow-md ring-1 ring-transparent hover:ring-neutral-300/90 whitespace-nowrap"
         >
-          <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <svg className="w-3 h-3 lg:w-4 lg:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           {!isScrolled && <span className="hidden lg:inline">Search</span>}
-          <span className="font-mono text-[9px] lg:text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px] whitespace-nowrap">Ctrl + K</span>
+          <span className="font-mono text-[8px] lg:text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px] whitespace-nowrap">Ctrl + K</span>
         </button>
         <div className={`flex items-center ${isScrolled ? 'md:gap-2 lg:ml-1 xl:gap-3 xl:ml-2' : 'md:gap-2 lg:gap-3 lg:ml-2'}`}>
           <div className="hidden xl:flex xl:border-2 xl:border-orange-400/80 rounded-full">
