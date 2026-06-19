@@ -456,7 +456,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           {!isScrolled && <span className="hidden lg:inline">Search</span>}
           <span className="font-mono text-[9px] lg:text-[11px] bg-neutral-100 border border-neutral-300 rounded px-1 py-[1px] whitespace-nowrap">Ctrl + K</span>
         </button>
-        <div className={`flex items-center ${isScrolled ? 'md:gap-2 lg:gap-2 lg:ml-1 xl:gap-3 xl:ml-2' : 'md:gap-2 lg:gap-3 lg:ml-2'}`}>
+        <div className={`flex items-center ${isScrolled ? 'md:gap-2 lg:ml-1 xl:gap-3 xl:ml-2' : 'md:gap-2 lg:gap-3 lg:ml-2'}`}>
           <div className="hidden xl:flex xl:border-2 xl:border-orange-400/80 rounded-full">
             <Vscode />
           </div>
