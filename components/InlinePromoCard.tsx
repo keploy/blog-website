@@ -7,33 +7,44 @@ import type { InlinePromoId } from "../config/inline-promos";
 
 function LeadModal({ onClose }: { onClose: () => void }) {
   const firstInputRef = useRef<HTMLInputElement>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [countdown, setCountdown] = useState(3);
 
+  // Scroll lock + ESC key
   useEffect(() => {
-    // Lock scroll
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-
-    // ESC to close
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", onKey);
-
-    // Focus first field
-    firstInputRef.current?.focus();
-
+    if (!submitted) firstInputRef.current?.focus();
     return () => {
       document.body.style.overflow = prev;
       document.removeEventListener("keydown", onKey);
     };
-  }, [onClose]);
+  }, [onClose, submitted]);
 
+  // After submit: tick countdown, then redirect + close
+  useEffect(() => {
+    if (!submitted) return;
+    const interval = setInterval(() => setCountdown((c) => c - 1), 1000);
+    const timer = setTimeout(() => {
+      window.open("https://app.keploy.io/signin", "_blank", "noopener,noreferrer");
+      onClose();
+    }, 3000);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timer);
+    };
+  }, [submitted, onClose]);
+
+  // Backdrop click only dismisses when the form is still open
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) onClose();
+    if (!submitted && e.target === e.currentTarget) onClose();
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Backend wiring comes later — close for now
-    onClose();
+    setSubmitted(true);
   };
 
   return (
@@ -61,6 +72,22 @@ function LeadModal({ onClose }: { onClose: () => void }) {
           0%   { background-position: 0% 50%; }
           50%  { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
+        }
+        @keyframes k5y-circle-in {
+          from { stroke-dashoffset: 214; }
+          to   { stroke-dashoffset: 0; }
+        }
+        @keyframes k5y-check-in {
+          from { stroke-dashoffset: 53; }
+          to   { stroke-dashoffset: 0; }
+        }
+        @keyframes k5y-confirm-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes k5y-progress {
+          from { width: 100%; }
+          to   { width: 0%; }
         }
         .k5y-input {
           width: 100%;
@@ -159,7 +186,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
             animation: "k5y-modal-in 0.24s cubic-bezier(0.16,1,0.3,1) both",
           }}
         >
-          {/* Subtle warm noise texture overlay */}
+          {/* Warm radial glow */}
           <div
             style={{
               position: "absolute",
@@ -171,200 +198,310 @@ function LeadModal({ onClose }: { onClose: () => void }) {
             }}
           />
 
-          {/* Header row */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              marginBottom: 28,
-              gap: 12,
-            }}
-          >
-            <div>
-              {/* Badge */}
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                  background: "linear-gradient(90deg, #f59e0b, #f97316)",
-                  borderRadius: 20,
-                  padding: "3px 11px",
-                  fontSize: 10,
-                  fontWeight: 700,
-                  color: "white",
-                  letterSpacing: "0.09em",
-                  textTransform: "uppercase",
-                  marginBottom: 12,
-                }}
+          {submitted ? (
+            /* ── Confirmation screen ── */
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                padding: "12px 0 8px",
+                animation: "k5y-confirm-in 0.3s ease both",
+              }}
+            >
+              {/* Animated checkmark */}
+              <svg
+                width="88"
+                height="88"
+                viewBox="0 0 80 80"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ marginBottom: 24 }}
               >
-                ✦ 5 Years Anniversary
-              </span>
+                <defs>
+                  <linearGradient id="k5y-ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#f59e0b" />
+                    <stop offset="100%" stopColor="#f97316" />
+                  </linearGradient>
+                </defs>
+                {/* Outer glow ring */}
+                <circle cx="40" cy="40" r="38" fill="rgba(251,191,36,0.08)" />
+                {/* Animated circle stroke */}
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="34"
+                  stroke="url(#k5y-ring-grad)"
+                  strokeWidth="3"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray="214"
+                  strokeDashoffset="214"
+                  style={{
+                    animation: "k5y-circle-in 0.55s cubic-bezier(0.4,0,0.2,1) 0.05s forwards",
+                    transformOrigin: "center",
+                    transform: "rotate(-90deg)",
+                  }}
+                />
+                {/* Animated tick */}
+                <path
+                  d="M22 42 L34 54 L58 28"
+                  stroke="#f59e0b"
+                  strokeWidth="4.5"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray="53"
+                  strokeDashoffset="53"
+                  style={{
+                    animation: "k5y-check-in 0.38s cubic-bezier(0.4,0,0.2,1) 0.52s forwards",
+                  }}
+                />
+              </svg>
 
               {/* Heading */}
               <h2
                 style={{
                   color: "#1c0f00",
-                  fontSize: 21,
+                  fontSize: 22,
                   fontWeight: 800,
-                  margin: 0,
-                  lineHeight: 1.28,
+                  margin: "0 0 10px",
+                  lineHeight: 1.25,
                   letterSpacing: "-0.01em",
                 }}
               >
-                Claim Your Free Month
+                You&apos;re all set! 🎉
               </h2>
 
-              {/* Sub-heading */}
+              {/* Body */}
               <p
                 style={{
                   color: "#92400e",
-                  fontSize: 13.5,
-                  margin: "8px 0 0",
-                  lineHeight: 1.6,
-                  fontWeight: 400,
+                  fontSize: 14,
+                  margin: "0 0 28px",
+                  lineHeight: 1.7,
+                  maxWidth: 340,
                 }}
               >
-                One month of Keploy credits, on us. Fill in your details and
-                we'll get you set up.
+                Thanks for sharing your details. We&apos;ll get back to you
+                with your free Keploy credits{" "}
+                <strong style={{ color: "#b45309" }}>within 24 hours.</strong>
               </p>
-            </div>
 
-            {/* Close button */}
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close"
-              className="k5y-close-btn"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1 1L13 13M13 1L1 13"
-                  stroke="#92400e"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-          </div>
-
-          {/* Divider */}
-          <div
-            style={{
-              height: 1,
-              background:
-                "linear-gradient(90deg, transparent, #fde68a 30%, #fed7aa 70%, transparent)",
-              marginBottom: 28,
-            }}
-          />
-
-          {/* Form */}
-          <form onSubmit={handleSubmit}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-
-              {/* Name */}
-              <div>
-                <label className="k5y-label" htmlFor="k5y-name">
-                  Full Name
-                </label>
-                <input
-                  ref={firstInputRef}
-                  id="k5y-name"
-                  name="name"
-                  type="text"
-                  required
-                  placeholder="Ada Lovelace"
-                  className="k5y-input"
-                />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="k5y-label" htmlFor="k5y-email">
-                  Work Email
-                </label>
-                <input
-                  id="k5y-email"
-                  name="email"
-                  type="email"
-                  required
-                  placeholder="ada@company.com"
-                  className="k5y-input"
-                />
-              </div>
-
-              {/* Company + Designation — side by side on wider screens */}
+              {/* Divider */}
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 16,
+                  width: "100%",
+                  height: 1,
+                  background:
+                    "linear-gradient(90deg, transparent, #fde68a 30%, #fed7aa 70%, transparent)",
+                  marginBottom: 20,
                 }}
-                className="k5y-two-col"
+              />
+
+              {/* Countdown */}
+              <p
+                style={{
+                  fontSize: 12,
+                  color: "#c4996a",
+                  margin: "0 0 10px",
+                  letterSpacing: "0.02em",
+                }}
               >
-                <style>{`
-                  @media (max-width: 440px) {
-                    .k5y-two-col { grid-template-columns: 1fr !important; }
-                  }
-                `}</style>
+                Redirecting you to Keploy in{" "}
+                <strong style={{ color: "#f59e0b" }}>{countdown}s</strong>
+                &hellip;
+              </p>
 
-                <div>
-                  <label className="k5y-label" htmlFor="k5y-company">
-                    Company
-                  </label>
-                  <input
-                    id="k5y-company"
-                    name="company"
-                    type="text"
-                    required
-                    placeholder="Acme Corp"
-                    className="k5y-input"
-                  />
-                </div>
-
-                <div>
-                  <label className="k5y-label" htmlFor="k5y-designation">
-                    Designation
-                  </label>
-                  <input
-                    id="k5y-designation"
-                    name="designation"
-                    type="text"
-                    required
-                    placeholder="Software Engineer"
-                    className="k5y-input"
-                  />
-                </div>
-              </div>
-
-              {/* Submit */}
-              <div style={{ marginTop: 4 }}>
-                <button type="submit" className="k5y-submit-btn">
-                  Get 1 Month of Keploy Credits Free ✦
-                </button>
-
-                {/* Trust line */}
-                <p
+              {/* Progress bar */}
+              <div
+                style={{
+                  width: "100%",
+                  height: 3,
+                  background: "#fde68a",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                }}
+              >
+                <div
                   style={{
-                    textAlign: "center",
-                    fontSize: 11.5,
-                    color: "#b45309",
-                    margin: "12px 0 0",
-                    lineHeight: 1.5,
+                    height: "100%",
+                    background: "linear-gradient(90deg, #f59e0b, #f97316)",
+                    borderRadius: 2,
+                    animation: "k5y-progress 3s linear forwards",
                   }}
-                >
-                  No spam. We'll only reach out about your free credits.
-                </p>
+                />
               </div>
             </div>
-          </form>
+          ) : (
+            /* ── Form screen ── */
+            <>
+              {/* Header row */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  justifyContent: "space-between",
+                  marginBottom: 28,
+                  gap: 12,
+                }}
+              >
+                <div>
+                  {/* Badge */}
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 5,
+                      background: "linear-gradient(90deg, #f59e0b, #f97316)",
+                      borderRadius: 20,
+                      padding: "3px 11px",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: "white",
+                      letterSpacing: "0.09em",
+                      textTransform: "uppercase",
+                      marginBottom: 12,
+                    }}
+                  >
+                    ✦ 5 Years Of Keploy
+                  </span>
+
+                  <h2
+                    style={{
+                      color: "#1c0f00",
+                      fontSize: 21,
+                      fontWeight: 800,
+                      margin: 0,
+                      lineHeight: 1.28,
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    Claim Your Free Keploy Credits!
+                  </h2>
+
+                  <p
+                    style={{
+                      color: "#92400e",
+                      fontSize: 13.5,
+                      margin: "8px 0 0",
+                      lineHeight: 1.6,
+                      fontWeight: 400,
+                    }}
+                  >
+                    One month of Keploy credits, on us. Fill in your details
+                    and we&apos;ll get back to you with your free credits!
+                  </p>
+                </div>
+
+                {/* Close button */}
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Close"
+                  className="k5y-close-btn"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 1L13 13M13 1L1 13"
+                      stroke="#92400e"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Divider */}
+              <div
+                style={{
+                  height: 1,
+                  background:
+                    "linear-gradient(90deg, transparent, #fde68a 30%, #fed7aa 70%, transparent)",
+                  marginBottom: 28,
+                }}
+              />
+
+              {/* Form */}
+              <form onSubmit={handleSubmit}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+                  <div>
+                    <label className="k5y-label" htmlFor="k5y-name">Full Name</label>
+                    <input
+                      ref={firstInputRef}
+                      id="k5y-name"
+                      name="name"
+                      type="text"
+                      required
+                      placeholder="Enter Your Full Name"
+                      className="k5y-input"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="k5y-label" htmlFor="k5y-email">Work Email</label>
+                    <input
+                      id="k5y-email"
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="your.name@company.com"
+                      className="k5y-input"
+                    />
+                  </div>
+
+                  <div
+                    style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}
+                    className="k5y-two-col"
+                  >
+                    <style>{`
+                      @media (max-width: 440px) {
+                        .k5y-two-col { grid-template-columns: 1fr !important; }
+                      }
+                    `}</style>
+
+                    <div>
+                      <label className="k5y-label" htmlFor="k5y-company">Company</label>
+                      <input
+                        id="k5y-company"
+                        name="company"
+                        type="text"
+                        required
+                        placeholder="Company Name"
+                        className="k5y-input"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="k5y-label" htmlFor="k5y-designation">Designation</label>
+                      <input
+                        id="k5y-designation"
+                        name="designation"
+                        type="text"
+                        required
+                        placeholder="Designation / Role"
+                        className="k5y-input"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: 4 }}>
+                    <button type="submit" className="k5y-submit-btn">
+                      Get 1 Month of Keploy Credits For Free ✦
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </>
+          )}
         </div>
       </div>
     </div>
