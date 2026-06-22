@@ -1,9 +1,9 @@
 {
     "data": {
         "post": {
-            "title": "Understanding API Testing with Keploy",
-            "excerpt": "<p>Learn how Keploy simplifies API testing by automatically generating test cases from real traffic.</p>",
-            "slug": "understanding-api-testing-with-keploy",
+            "title": "Keploy Community Testing Playbooks",
+            "excerpt": "<p>Community-driven testing playbooks and best practices for API testing with Keploy.</p>",
+            "slug": "keploy-community-testing-playbooks",
             "date": "2024-06-15T10:00:00",
             "modified": "2024-06-15T10:00:00",
             "ppmaAuthorName": "Tech Author One",
@@ -26,7 +26,7 @@
                 "edges": [
                     {
                         "node": {
-                            "name": "technology"
+                            "name": "community"
                         }
                     }
                 ]
@@ -40,24 +40,24 @@
                     },
                     {
                         "node": {
-                            "name": "api"
+                            "name": "community"
                         }
                     }
                 ]
             },
             "seo": {
-                "metaDesc": "Learn how Keploy simplifies API testing by automatically generating test cases.",
-                "title": "Understanding API Testing with Keploy | Keploy Blog"
+                "metaDesc": "Community-driven testing playbooks and best practices for API testing with Keploy.",
+                "title": "Keploy Community Testing Playbooks | Keploy Blog"
             },
-            "content": "<h2>Introduction</h2><p>API testing is a critical part of the software development lifecycle. Keploy makes it easy by automatically generating test cases from real API traffic.</p><h2>Getting Started</h2><p>To get started with Keploy, install the CLI tool and point it at your running application. Keploy will record all incoming API calls and generate test cases automatically.</p><h3>Example Code</h3><pre><code class=\"language-go\">func TestFetch(t *testing.T) { /* ... */ }</code></pre><h2>Why Keploy?</h2><p>Unlike traditional testing tools, Keploy captures real-world traffic patterns, ensuring your tests reflect actual usage. This approach reduces the time spent writing manual test cases while improving coverage.</p><div class='pp-author-boxes-avatar'><img src='/blog/favicon/Group.png' /></div><p class='pp-author-boxes-description'>An author for Keploy's blog.</p>"
+            "content": "<h2>Introduction</h2><p>Community testing playbooks help teams adopt API testing best practices. Learn from the Keploy community how to build robust test suites.</p><h2>Getting Started</h2><p>Follow these playbooks to get started with community-driven testing patterns.</p><h3>Example</h3><pre><code class=\"language-javascript\">console.log('Hello Community');</code></pre><h2>Best Practices</h2><p>Share your testing patterns with the community to help others improve their workflows.</p><div class=\"pp-author-boxes-avatar\"><img src=\"/blog/favicon/Group.png\" /></div><p class=\"pp-author-boxes-description\">An author for Keploy's blog.</p>"
         },
         "posts": {
             "edges": [
                 {
                     "node": {
-                        "title": "Getting Started with Unit Testing in Go",
-                        "excerpt": "<p>A comprehensive guide to writing effective unit tests in Go.</p>",
-                        "slug": "getting-started-unit-testing-go",
+                        "title": "Community Spotlight: API Test Reviews",
+                        "excerpt": "<p>Highlights from community-contributed API test reviews.</p>",
+                        "slug": "community-spotlight-api-test-reviews",
                         "date": "2024-06-10T09:00:00",
                         "modified": "2024-06-10T09:00:00",
                         "ppmaAuthorName": "Tech Author Two",
@@ -80,7 +80,7 @@
                             "edges": [
                                 {
                                     "node": {
-                                        "name": "technology"
+                                        "name": "community"
                                     }
                                 }
                             ]
@@ -89,14 +89,14 @@
                             "edges": [
                                 {
                                     "node": {
-                                        "name": "golang"
+                                        "name": "community"
                                     }
                                 }
                             ]
                         },
                         "seo": {
-                            "metaDesc": "A guide to unit testing in Go.",
-                            "title": "Unit Testing in Go | Keploy Blog"
+                            "metaDesc": "Community spotlight on API test reviews.",
+                            "title": "Community Spotlight: API Test Reviews | Keploy Blog"
                         }
                     }
                 }

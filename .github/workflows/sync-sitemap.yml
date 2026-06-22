@@ -1,0 +1,47 @@
+name: Sync Sitemap
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-sitemap:
+    runs-on: ubuntu-latest
+    env:
+      WORDPRESS_API_URL: ${{ vars.WORDPRESS_API_URL || 'https://wp.keploy.io/graphql' }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Generate sitemap.xml
+        run: node scripts/generate-sitemap.mjs
+
+      - name: Validate sitemap XML
+        run: xmllint --noout public/sitemap.xml
+
+      - name: Detect sitemap changes
+        id: diff
+        run: |
+          if git diff --quiet -- public/sitemap.xml; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push sitemap to main
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/sitemap.xml
+          git commit -m "chore: sync sitemap.xml"
+          git push origin HEAD:main

@@ -16,9 +16,9 @@ export default function PostHeader({
 }) {
   return (
     <div className="max-w-[780px] mx-auto px-4 sm:px-6">
-      {/* 1. Cover image — top banner with rounded corners */}
+      {/* 1. Cover image — top banner with rounded corners (LCP element, priority=true) */}
       <div className="w-full rounded-xl overflow-hidden mb-8">
-        <CoverImage title={title} coverImage={coverImage} />
+        <CoverImage title={title} coverImage={coverImage} priority={true} />
       </div>
 
       {/* 2. Category labels */}
