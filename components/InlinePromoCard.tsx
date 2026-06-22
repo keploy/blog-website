@@ -7,8 +7,10 @@ import type { InlinePromoId } from "../config/inline-promos";
 
 function LeadModal({ onClose }: { onClose: () => void }) {
   const firstInputRef = useRef<HTMLInputElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const newTabRef = useRef<Window | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(10);
 
   // Scroll lock + ESC key
   useEffect(() => {
@@ -26,13 +28,24 @@ function LeadModal({ onClose }: { onClose: () => void }) {
   // After submit: tick countdown, then redirect + close
   useEffect(() => {
     if (!submitted) return;
-    const interval = setInterval(() => setCountdown((c) => c - 1), 1000);
+    intervalRef.current = setInterval(() => {
+      setCountdown((c) => {
+        const next = c - 1;
+        if (next <= 0 && intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        return Math.max(0, next);
+      });
+    }, 1000);
     const timer = setTimeout(() => {
-      window.open("https://app.keploy.io/signin", "_blank", "noopener,noreferrer");
+      if (newTabRef.current) {
+        newTabRef.current.location.href = "https://app.keploy.io/signin";
+      }
       onClose();
-    }, 3000);
+    }, 10000);
     return () => {
-      clearInterval(interval);
+      if (intervalRef.current) clearInterval(intervalRef.current);
       clearTimeout(timer);
     };
   }, [submitted, onClose]);
@@ -44,6 +57,9 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // Open a blank tab now (user gesture) — we'll assign the URL when the timer fires.
+    // window.open from inside setTimeout is silently blocked by all modern browsers.
+    newTabRef.current = window.open("", "_blank", "noopener,noreferrer");
     setSubmitted(true);
   };
 
@@ -221,12 +237,12 @@ function LeadModal({ onClose }: { onClose: () => void }) {
               >
                 <defs>
                   <linearGradient id="k5y-ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#f59e0b" />
-                    <stop offset="100%" stopColor="#f97316" />
+                    <stop offset="0%" stopColor="#22c55e" />
+                    <stop offset="100%" stopColor="#16a34a" />
                   </linearGradient>
                 </defs>
                 {/* Outer glow ring */}
-                <circle cx="40" cy="40" r="38" fill="rgba(251,191,36,0.08)" />
+                <circle cx="40" cy="40" r="38" fill="rgba(34,197,94,0.08)" />
                 {/* Animated circle stroke */}
                 <circle
                   cx="40"
@@ -247,7 +263,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                 {/* Animated tick */}
                 <path
                   d="M22 42 L34 54 L58 28"
-                  stroke="#f59e0b"
+                  stroke="#22c55e"
                   strokeWidth="4.5"
                   fill="none"
                   strokeLinecap="round"
@@ -329,7 +345,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                     height: "100%",
                     background: "linear-gradient(90deg, #f59e0b, #f97316)",
                     borderRadius: 2,
-                    animation: "k5y-progress 3s linear forwards",
+                    animation: "k5y-progress 10s linear forwards",
                   }}
                 />
               </div>
@@ -434,7 +450,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                 <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
                   <div>
-                    <label className="k5y-label" htmlFor="k5y-name">Full Name</label>
+                    <label className="k5y-label" htmlFor="k5y-name">Full Name <span style={{ color: "#f97316" }}>*</span></label>
                     <input
                       ref={firstInputRef}
                       id="k5y-name"
@@ -447,13 +463,13 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                   </div>
 
                   <div>
-                    <label className="k5y-label" htmlFor="k5y-email">Work Email</label>
+                    <label className="k5y-label" htmlFor="k5y-email">Work / Personal Email <span style={{ color: "#f97316" }}>*</span></label>
                     <input
                       id="k5y-email"
                       name="email"
                       type="email"
                       required
-                      placeholder="your.name@company.com"
+                      placeholder="your@email.com"
                       className="k5y-input"
                     />
                   </div>
@@ -474,8 +490,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                         id="k5y-company"
                         name="company"
                         type="text"
-                        required
-                        placeholder="Company Name"
+                        placeholder="Company Name (optional)"
                         className="k5y-input"
                       />
                     </div>
@@ -486,8 +501,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                         id="k5y-designation"
                         name="designation"
                         type="text"
-                        required
-                        placeholder="Designation / Role"
+                        placeholder="Designation / Role (optional)"
                         className="k5y-input"
                       />
                     </div>
