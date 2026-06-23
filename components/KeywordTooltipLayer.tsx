@@ -26,12 +26,13 @@ export default function KeywordTooltipLayer({ tooltips }: { tooltips: KeywordToo
     const onOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
 
-      // Mouse entered the tooltip panel — cancel any pending close, stay open
+      // Entering the panel — cancel any pending close, stay open
       if (target.closest?.("[data-tt-panel]")) {
         cancelClose();
         return;
       }
 
+      // Entering a keyword span — show tooltip immediately, no auto-close
       const el = target.closest("[data-tt-key]") as HTMLElement | null;
       if (!el) return;
       const config = map.get(el.dataset.ttKey!);
@@ -39,22 +40,24 @@ export default function KeywordTooltipLayer({ tooltips }: { tooltips: KeywordToo
 
       cancelClose();
       setActive({ config, rect: el.getBoundingClientRect() });
-
-      // Auto-close after 2s if mouse never reaches the panel
-      closeTimer = setTimeout(() => setActive(null), 2000);
     };
 
     const onOut = (e: MouseEvent) => {
       const from = e.target as HTMLElement;
       const to = e.relatedTarget as HTMLElement | null;
 
-      // Only trigger a close when leaving the tooltip panel itself
-      if (from.closest?.("[data-tt-panel]") && !to?.closest?.("[data-tt-panel]")) {
+      const leavingKeyword = !!from.closest?.("[data-tt-key]");
+      const leavingPanel = !!from.closest?.("[data-tt-panel]");
+      const goingToPanel = !!to?.closest?.("[data-tt-panel]");
+      const goingToKeyword = !!to?.closest?.("[data-tt-key]");
+
+      // Close only when leaving both the keyword and the panel.
+      // 100ms buffer lets the mouse cross the gap between keyword and panel
+      // without the tooltip blinking out.
+      if ((leavingKeyword || leavingPanel) && !goingToPanel && !goingToKeyword) {
         cancelClose();
-        closeTimer = setTimeout(() => setActive(null), 300);
+        closeTimer = setTimeout(() => setActive(null), 100);
       }
-      // Leaving the keyword span is intentionally ignored —
-      // the 2s auto-close timer above handles it, giving time to reach the panel
     };
 
     document.addEventListener("mouseover", onOver);
