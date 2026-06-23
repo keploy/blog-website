@@ -21,11 +21,16 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: trimmed, reportId: config.reportId }),
       });
-      if (!res.ok) throw new Error("Request failed");
+      const json = await res.json();
+      if (!res.ok) {
+        setStatus("error");
+        setErrorMsg(json.error || "Something went wrong. Please try again.");
+        return;
+      }
       setStatus("success");
     } catch {
       setStatus("error");
-      setErrorMsg("Something went wrong. Please try again.");
+      setErrorMsg("Network error. Please check your connection and try again.");
     }
   };
 
@@ -34,7 +39,21 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
       className="my-10 rounded-2xl border border-gray-200 shadow-lg overflow-hidden"
       style={{ height: "520px" }}
     >
-      <style>{`.gr-scroll::-webkit-scrollbar{display:none}`}</style>
+      <style>{`
+        .gr-scroll::-webkit-scrollbar { display: none; }
+        @keyframes gr-circle-in {
+          from { stroke-dashoffset: 214; }
+          to   { stroke-dashoffset: 0; }
+        }
+        @keyframes gr-check-in {
+          from { stroke-dashoffset: 53; }
+          to   { stroke-dashoffset: 0; }
+        }
+        @keyframes gr-confirm-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
 
       <div
         className="gr-scroll h-full overflow-y-auto"
@@ -52,8 +71,6 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
           Overlay sits 220px up into the image via negative margin.
           backdrop-filter blurs the image visible behind it.
           mask-image fades the whole overlay in gradually so there's no hard edge.
-          The background gradient goes transparent → near-white → white, giving
-          the frosted-glass locked-PDF look without a separate white block.
         */}
         <div
           style={{
@@ -72,14 +89,69 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
           }}
         >
           {status === "success" ? (
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">
-                ✓
-              </div>
-              <p className="text-sm font-bold text-gray-900 m-0">Check your inbox!</p>
-              <p className="text-gray-500 text-xs m-0">
-                Report sent to <strong>{email}</strong>.
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                animation: "gr-confirm-in 0.32s ease both",
+              }}
+            >
+              {/* Animated checkmark */}
+              <svg
+                width="72"
+                height="72"
+                viewBox="0 0 80 80"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ marginBottom: 14 }}
+              >
+                <defs>
+                  <linearGradient id="gr-ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#22c55e" />
+                    <stop offset="100%" stopColor="#16a34a" />
+                  </linearGradient>
+                </defs>
+                <circle cx="40" cy="40" r="38" fill="rgba(34,197,94,0.08)" />
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="34"
+                  stroke="url(#gr-ring-grad)"
+                  strokeWidth="3"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray="214"
+                  strokeDashoffset="214"
+                  style={{
+                    animation: "gr-circle-in 0.55s cubic-bezier(0.4,0,0.2,1) 0.05s forwards",
+                    transformOrigin: "center",
+                    transform: "rotate(-90deg)",
+                  }}
+                />
+                <path
+                  d="M22 42 L34 54 L58 28"
+                  stroke="#22c55e"
+                  strokeWidth="4.5"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray="53"
+                  strokeDashoffset="53"
+                  style={{
+                    animation: "gr-check-in 0.38s cubic-bezier(0.4,0,0.2,1) 0.52s forwards",
+                  }}
+                />
+              </svg>
+
+              <p style={{ fontSize: 16, fontWeight: 700, color: "#1c1917", margin: "0 0 6px" }}>
+                You&apos;re on the list!
               </p>
+              <p style={{ fontSize: 13, color: "#78716c", margin: "0 0 4px", lineHeight: 1.6 }}>
+                We&apos;ll send the full report to{" "}
+                <strong style={{ color: "#44403c" }}>{email}</strong> shortly.
+              </p>
+            
             </div>
           ) : (
             <>
@@ -95,6 +167,7 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
                   onChange={(e) => {
                     setEmail(e.target.value);
                     setErrorMsg("");
+                    if (status === "error") setStatus("idle");
                   }}
                   placeholder="your@email.com"
                   className="flex-1 px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-white"
@@ -111,7 +184,7 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
               {errorMsg && (
                 <p className="text-red-500 text-xs mt-2 mb-0">{errorMsg}</p>
               )}
-              <p className="text-gray-400 text-xs mt-2 mb-0">No spam. Unsubscribe anytime.</p>
+             
             </>
           )}
         </div>
