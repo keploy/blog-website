@@ -138,20 +138,21 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         .k5y-input {
           width: 100%;
           box-sizing: border-box;
-          background: #fff9f0;
-          border: 1.5px solid #fde68a;
+          background: #fafaf9;
+          border: 1.5px solid #e7e5e4;
           border-radius: 10px;
           padding: 12px 16px;
           font-size: 14px;
-          color: #1c0f00;
+          color: #1c1917;
           outline: none;
-          transition: border-color 0.18s ease, box-shadow 0.18s ease;
+          transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
           font-family: inherit;
         }
-        .k5y-input::placeholder { color: #c4996a; }
+        .k5y-input::placeholder { color: #a8a29e; }
         .k5y-input:focus {
+          background: #ffffff;
           border-color: #f59e0b;
-          box-shadow: 0 0 0 3.5px rgba(245,158,11,0.14);
+          box-shadow: 0 0 0 3.5px rgba(245,158,11,0.10);
         }
         .k5y-label {
           display: block;
@@ -159,7 +160,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
           font-weight: 700;
           letter-spacing: 0.07em;
           text-transform: uppercase;
-          color: #92400e;
+          color: #57534e;
           margin-bottom: 7px;
         }
         .k5y-submit-btn {
@@ -187,8 +188,8 @@ function LeadModal({ onClose }: { onClose: () => void }) {
           opacity: 1;
         }
         .k5y-close-btn {
-          background: rgba(254,243,199,0.7);
-          border: 1.5px solid #fde68a;
+          background: rgba(245,244,242,0.9);
+          border: 1.5px solid #e7e5e4;
           border-radius: 50%;
           width: 34px;
           height: 34px;
@@ -196,14 +197,14 @@ function LeadModal({ onClose }: { onClose: () => void }) {
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          color: #92400e;
+          color: #78716c;
           transition: background 0.15s ease, transform 0.15s ease;
           flex-shrink: 0;
           padding: 0;
           font-family: inherit;
         }
         .k5y-close-btn:hover {
-          background: #fef3c7;
+          background: #f5f4f2;
           transform: scale(1.08);
         }
       `}</style>
@@ -225,7 +226,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         {/* Modal card */}
         <div
           style={{
-            background: "#fffcf7",
+            background: "#ffffff",
             borderRadius: "calc(22px - 1.5px)",
             padding: "36px 36px 32px",
             position: "relative",
@@ -239,7 +240,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
               inset: 0,
               borderRadius: "inherit",
               background:
-                "radial-gradient(ellipse at 80% 0%, rgba(251,191,36,0.08) 0%, transparent 60%)",
+                "radial-gradient(ellipse at 80% 0%, rgba(251,191,36,0.03) 0%, transparent 60%)",
               pointerEvents: "none",
             }}
           />
@@ -309,7 +310,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
               {/* Heading */}
               <h2
                 style={{
-                  color: "#1c0f00",
+                  color: "#1c1917",
                   fontSize: 22,
                   fontWeight: 800,
                   margin: "0 0 10px",
@@ -323,7 +324,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
               {/* Body */}
               <p
                 style={{
-                  color: "#92400e",
+                  color: "#78716c",
                   fontSize: 14,
                   margin: "0 0 28px",
                   lineHeight: 1.7,
@@ -332,7 +333,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
               >
                 Thanks for sharing your details. We&apos;ll get back to you
                 with your free Keploy credits{" "}
-                <strong style={{ color: "#b45309" }}>within 24 hours.</strong>
+                <strong style={{ color: "#44403c" }}>within 24 hours.</strong>
               </p>
 
               {/* Divider */}
@@ -341,7 +342,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                   width: "100%",
                   height: 1,
                   background:
-                    "linear-gradient(90deg, transparent, #fde68a 30%, #fed7aa 70%, transparent)",
+                    "linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)",
                   marginBottom: 20,
                 }}
               />
@@ -350,7 +351,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
               <p
                 style={{
                   fontSize: 12,
-                  color: "#c4996a",
+                  color: "#a8a29e",
                   margin: "0 0 10px",
                   letterSpacing: "0.02em",
                 }}
@@ -365,7 +366,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                 style={{
                   width: "100%",
                   height: 3,
-                  background: "#fde68a",
+                  background: "#e7e5e4",
                   borderRadius: 2,
                   overflow: "hidden",
                 }}
@@ -416,7 +417,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
                   <h2
                     style={{
-                      color: "#1c0f00",
+                      color: "#1c1917",
                       fontSize: 21,
                       fontWeight: 800,
                       margin: 0,
@@ -429,7 +430,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
                   <p
                     style={{
-                      color: "#92400e",
+                      color: "#78716c",
                       fontSize: 13.5,
                       margin: "8px 0 0",
                       lineHeight: 1.6,
@@ -457,7 +458,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                   >
                     <path
                       d="M1 1L13 13M13 1L1 13"
-                      stroke="#92400e"
+                      stroke="#78716c"
                       strokeWidth="2"
                       strokeLinecap="round"
                     />
@@ -470,7 +471,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                 style={{
                   height: 1,
                   background:
-                    "linear-gradient(90deg, transparent, #fde68a 30%, #fed7aa 70%, transparent)",
+                    "linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)",
                   marginBottom: 28,
                 }}
               />
@@ -520,7 +521,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                         id="k5y-company"
                         name="company"
                         type="text"
-                        placeholder="Company Name (optional)"
+                        placeholder="Company Name"
                         className="k5y-input"
                       />
                     </div>
@@ -531,7 +532,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                         id="k5y-designation"
                         name="designation"
                         type="text"
-                        placeholder="Designation / Role (optional)"
+                        placeholder="Designation / Role"
                         className="k5y-input"
                       />
                     </div>
