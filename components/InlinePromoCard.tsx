@@ -10,6 +10,8 @@ function LeadModal({ onClose }: { onClose: () => void }) {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const newTabRef = useRef<Window | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [countdown, setCountdown] = useState(10);
 
   // Scroll lock + ESC key
@@ -55,12 +57,40 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     if (!submitted && e.target === e.currentTarget) onClose();
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Open a blank tab now (user gesture) — we'll assign the URL when the timer fires.
-    // window.open from inside setTimeout is silently blocked by all modern browsers.
-    newTabRef.current = window.open("", "_blank", "noopener,noreferrer");
-    setSubmitted(true);
+    setSubmitError("");
+    setSubmitting(true);
+
+    const form = e.currentTarget;
+    const data = {
+      name: (form.elements.namedItem("name") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      company: (form.elements.namedItem("company") as HTMLInputElement).value,
+      designation: (form.elements.namedItem("designation") as HTMLInputElement).value,
+      source: "inline-promo-5years",
+      page: window.location.href,
+    };
+
+    try {
+      const res = await fetch("/api/mql-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setSubmitError(json.error || "Something went wrong. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+      // Open blank tab now (user gesture) — URL assigned when timer fires
+      newTabRef.current = window.open("", "_blank", "noopener,noreferrer");
+      setSubmitted(true);
+    } catch {
+      setSubmitError("Network error. Please check your connection and try again.");
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -508,9 +538,26 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                   </div>
 
                   <div style={{ marginTop: 4 }}>
-                    <button type="submit" className="k5y-submit-btn">
-                      Get 1 Month of Keploy Credits For Free ✦
+                    <button
+                      type="submit"
+                      className="k5y-submit-btn"
+                      disabled={submitting}
+                      style={{ opacity: submitting ? 0.7 : undefined, cursor: submitting ? "not-allowed" : undefined }}
+                    >
+                      {submitting ? "Submitting…" : "Get 1 Month of Keploy Credits For Free ✦"}
                     </button>
+
+                    {submitError && (
+                      <p style={{
+                        marginTop: 10,
+                        fontSize: 12.5,
+                        color: "#dc2626",
+                        textAlign: "center",
+                        lineHeight: 1.5,
+                      }}>
+                        {submitError}
+                      </p>
+                    )}
                   </div>
                 </div>
               </form>
