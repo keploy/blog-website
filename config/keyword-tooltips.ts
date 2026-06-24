@@ -177,7 +177,11 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     key: "strategies-regression-testing",
     blogSlug: "software-testing-strategies",
     keyword: "regression testing",
-    media: { type: "video", src: COVERAGE_VIDEO, alt: "Keploy regression testing" },
+    media: {
+      type: "image",
+      src: "/blog/images/regression-testing-tooltip.png",
+      alt: "Regression testing comparison catching changed behavior before release",
+    },
     heading: "Replay production traffic to catch every regression before release.",
     ctaText: "See It in Action →",
     ctaHref: "https://app.keploy.io/signin",
