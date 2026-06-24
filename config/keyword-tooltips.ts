@@ -37,7 +37,11 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     key: "white-box-quality-signals",
     blogSlug: "white-box-testing",
     keyword: "measurable quality signals",
-    media: { type: "video", src: COVERAGE_VIDEO, alt: "Keploy quality signals and coverage" },
+    media: {
+      type: "image",
+      src: "/blog/images/measurable-quality-signals-tooltip.png",
+      alt: "Quality signals dashboard showing coverage reliability and release confidence",
+    },
     heading: "Coverage that reflects real production behavior.",
     ctaText: "See it in action →",
     ctaHref: "https://app.keploy.io/signin",
