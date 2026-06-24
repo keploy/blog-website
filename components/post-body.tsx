@@ -328,12 +328,12 @@ export default function PostBody({
       for (const t of tooltipConfigs) {
         if (injectedKeywords.has(t.key)) continue;
         const escaped = t.keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const regex = new RegExp(escaped);
+        const regex = new RegExp(escaped, "i");
         if (regex.test(result)) {
           injectedKeywords.add(t.key);
           result = result.replace(
             regex,
-            `<span class="keploy-tt" data-tt-key="${t.key}" style="border-bottom:1.5px dotted #f97316;cursor:help;">${t.keyword}</span>`
+            (match) => `<span class="keploy-tt" data-tt-key="${t.key}" style="border-bottom:1.5px dotted #f97316;cursor:help;">${match}</span>`
           );
         }
       }
