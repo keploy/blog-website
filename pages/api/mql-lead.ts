@@ -96,8 +96,7 @@ function parseLeadPayload(body: unknown): { payload?: LeadPayload; error?: strin
   }
 
   // normalize everything in one place before creating the database document.
-  const name = getStringField(body, "name", { required: true });
-  if (name.error) return { error: "Name is required." };
+  const name = getStringField(body, "name");
 
   const email = getStringField(body, "email", { required: true });
   if (email.error) return { error: "Email is required." };
@@ -160,12 +159,9 @@ export default async function handler(
     return res.status(400).json({ error: error || "Invalid request body." });
   }
 
-  const now = new Date();
   const doc = {
     ...payload,
-    status: "new",
-    submittedAt: now,
-    updatedAt: now,
+    submittedAt: new Date(),
   };
 
   try {
