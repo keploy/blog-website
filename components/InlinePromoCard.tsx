@@ -1,7 +1,17 @@
 "use client";
 
+import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import type { InlinePromoId } from "../config/inline-promos";
+
+declare global {
+  interface Window {
+    grecaptcha: {
+      ready: (cb: () => void) => void;
+      execute: (siteKey: string, opts: { action: string }) => Promise<string>;
+    };
+  }
+}
 
 // ─── Lead capture modal ────────────────────────────────────────────────────────
 
@@ -63,7 +73,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     setSubmitting(true);
 
     const form = e.currentTarget;
-    const data = {
+    const data: Record<string, string> = {
       name: (form.elements.namedItem("name") as HTMLInputElement).value,
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
       company: (form.elements.namedItem("company") as HTMLInputElement).value,
@@ -71,6 +81,25 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       source: "inline-promo-5years",
       page: window.location.href,
     };
+
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+    if (siteKey && window.grecaptcha) {
+      try {
+        const token = await new Promise<string>((resolve, reject) => {
+          window.grecaptcha.ready(() => {
+            window.grecaptcha
+              .execute(siteKey, { action: "submit_lead" })
+              .then(resolve)
+              .catch(reject);
+          });
+        });
+        data.recaptchaToken = token;
+      } catch {
+        setSubmitError("Verification failed. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+    }
 
     try {
       const res = await fetch("/api/mql-lead", {
@@ -559,6 +588,13 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                         {submitError}
                       </p>
                     )}
+
+                    <p style={{ fontSize: 11, color: "#a8a29e", textAlign: "center", margin: "8px 0 0", lineHeight: 1.5 }}>
+                      Protected by reCAPTCHA &mdash;{" "}
+                      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#a8a29e", textDecoration: "underline" }}>Privacy</a>
+                      {" & "}
+                      <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#a8a29e", textDecoration: "underline" }}>Terms</a>
+                    </p>
                   </div>
                 </div>
               </form>
@@ -574,10 +610,18 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
 function Keploy5YearsBanner() {
   const [modalOpen, setModalOpen] = useState(false);
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
   return (
     <div className="my-8" style={{ width: "100%" }}>
+      {siteKey && (
+        <Script
+          src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
+          strategy="afterInteractive"
+        />
+      )}
       <style>{`
+        .grecaptcha-badge { visibility: hidden; }
         @keyframes k5y-border {
           0%   { background-position: 0% 50%; }
           50%  { background-position: 100% 50%; }

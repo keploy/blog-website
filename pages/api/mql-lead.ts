@@ -75,6 +75,21 @@ function getStringField(
   return { value };
 }
 
+async function verifyRecaptcha(token: string): Promise<{ ok: boolean; score: number }> {
+  const secret = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secret) {
+    console.warn("[mql-lead] RECAPTCHA_SECRET_KEY not set — skipping verification");
+    return { ok: true, score: 1 };
+  }
+  const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`,
+  });
+  const data = await res.json() as { success: boolean; score: number };
+  return { ok: data.success && data.score >= 0.5, score: data.score ?? 0 };
+}
+
 function parseLeadPayload(body: unknown): { payload?: LeadPayload; error?: string } {
   if (!isPlainObject(body)) {
     return { error: "Invalid request body." };
@@ -123,6 +138,21 @@ export default async function handler(
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const body = req.body as Record<string, unknown>;
+  const recaptchaToken = isPlainObject(body) && typeof body.recaptchaToken === "string"
+    ? body.recaptchaToken
+    : "";
+
+  if (process.env.RECAPTCHA_SECRET_KEY) {
+    if (!recaptchaToken) {
+      return res.status(400).json({ error: "Missing verification token." });
+    }
+    const { ok } = await verifyRecaptcha(recaptchaToken);
+    if (!ok) {
+      return res.status(400).json({ error: "Verification failed. Please try again." });
+    }
   }
 
   const { payload, error } = parseLeadPayload(req.body);
