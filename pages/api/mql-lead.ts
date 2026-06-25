@@ -86,8 +86,20 @@ async function verifyRecaptcha(token: string): Promise<{ ok: boolean; score: num
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`,
   });
-  const data = await res.json() as { success: boolean; score: number };
-  return { ok: data.success && data.score >= 0.5, score: data.score ?? 0 };
+  const data = await res.json() as {
+    success: boolean;
+    score: number;
+    action: string;
+    hostname: string;
+  };
+
+  const expectedHost = process.env.NEXT_PUBLIC_SITE_HOST;
+  const hostnameOk = !expectedHost || data.hostname === expectedHost;
+
+  return {
+    ok: data.success && data.score >= 0.5 && data.action === "submit_lead" && hostnameOk,
+    score: data.score ?? 0,
+  };
 }
 
 function parseLeadPayload(body: unknown): { payload?: LeadPayload; error?: string } {

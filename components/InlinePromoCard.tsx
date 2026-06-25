@@ -516,7 +516,6 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                       id="k5y-name"
                       name="name"
                       type="text"
-                      required
                       placeholder="Enter Your Full Name"
                       className="k5y-input"
                     />
@@ -589,7 +588,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                       </p>
                     )}
 
-                    <p style={{ fontSize: 11, color: "#a8a29e", textAlign: "center", margin: "8px 0 0", lineHeight: 1.5 }}>
+                    <p style={{ fontSize: 12, color: "#a8a29e", textAlign: "center", margin: "8px 0 0", lineHeight: 1.5 }}>
                       Protected by reCAPTCHA &mdash;{" "}
                       <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#a8a29e", textDecoration: "underline" }}>Privacy</a>
                       {" & "}
