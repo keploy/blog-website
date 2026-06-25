@@ -102,7 +102,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     }
 
     try {
-      const res = await fetch("/api/mql-lead", {
+      const res = await fetch("https://telemetry.keploy.io/blog-mql", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
