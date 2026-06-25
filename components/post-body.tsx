@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
+import GatedReport from "./GatedReport";
+import { getGatedReportConfig } from "../config/gated-reports";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
@@ -60,6 +62,8 @@ export default function PostBody({
     reviewer &&
     authorName.split(" ")[0].toLowerCase() ===
     reviewer.name.split(" ")[0].toLowerCase();
+
+  const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -315,16 +319,53 @@ export default function PostBody({
 
   const renderCodeBlocks = () => {
     const safeContent = replacedContent || "";
-    const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
-    if (!codeBlocks) {
+    const gatedConfig = blogSlug ? getGatedReportConfig(blogSlug) : null;
+    let gatedInjected = false;
+
+    const renderHtmlPart = (html: string, key: number | string) => {
+      if (gatedConfig && !gatedInjected) {
+        const escaped = gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const splitRegex = new RegExp(
+          `(<h[1-6][^>]*>[\\s\\S]*?${escaped}[\\s\\S]*?<\\/h[1-6]>)`,
+          "i"
+        );
+        const parts = html.split(splitRegex);
+        if (parts.length > 1) {
+          gatedInjected = true;
+          const beforeAndHeading = parts[0] + (parts[1] || "");
+          const after = parts.slice(2).join("");
+          return (
+            <Fragment key={key}>
+              <div
+                className={styles.content}
+                dangerouslySetInnerHTML={{ __html: beforeAndHeading }}
+                suppressHydrationWarning
+              />
+              <GatedReport config={gatedConfig} />
+              <div
+                className={styles.content}
+                dangerouslySetInnerHTML={{ __html: after }}
+                suppressHydrationWarning
+              />
+            </Fragment>
+          );
+        }
+      }
       return (
         <div
+          key={key}
           className={styles.content}
-          dangerouslySetInnerHTML={{ __html: replacedContent }}
+          dangerouslySetInnerHTML={{ __html: html }}
           suppressHydrationWarning
         />
       );
+    };
+
+    const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
+
+    if (!codeBlocks) {
+      return renderHtmlPart(safeContent, 0);
     }
 
     const decodeHtmlEntities = (str: string): string => {
@@ -428,14 +469,7 @@ export default function PostBody({
           );
         }
 
-        return (
-          <div
-            key={index}
-            className={styles.content}
-            dangerouslySetInnerHTML={{ __html: part }}
-            suppressHydrationWarning
-          />
-        );
+        return renderHtmlPart(part, index);
       });
   };
 
