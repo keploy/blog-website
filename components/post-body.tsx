@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
 import InlinePromoCard from "./InlinePromoCard";
-import { getInlinePromoForSlug } from "../config/inline-promos";
+import { getInlinePromosForSlug } from "../config/inline-promos";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
@@ -319,19 +319,21 @@ export default function PostBody({
     const safeContent = replacedContent || "";
 
     const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
-    const inlinePromoConfig = blogSlug ? getInlinePromoForSlug(blogSlug) : null;
-    let promoInjected = false;
+    const inlinePromoConfigs = blogSlug ? getInlinePromosForSlug(blogSlug) : [];
+    const injectedIndexes = new Set<number>();
 
-    const renderHtmlPart = (html: string, key: number | string) => {
-      if (inlinePromoConfig && !promoInjected) {
-        const escaped = inlinePromoConfig.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const applyPromos = (html: string, key: number | string, fromIndex: number): React.ReactNode => {
+      for (let i = fromIndex; i < inlinePromoConfigs.length; i++) {
+        if (injectedIndexes.has(i)) continue;
+        const config = inlinePromoConfigs[i];
+        const escaped = config.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         const splitRegex = new RegExp(
           `(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`,
           "i"
         );
         const parts = html.split(splitRegex);
         if (parts.length > 1) {
-          promoInjected = true;
+          injectedIndexes.add(i);
           const beforeAndBlock = parts[0] + (parts[1] || "");
           const after = parts.slice(2).join("");
           return (
@@ -341,12 +343,8 @@ export default function PostBody({
                 dangerouslySetInnerHTML={{ __html: beforeAndBlock }}
                 suppressHydrationWarning
               />
-              <InlinePromoCard promoId={inlinePromoConfig.promoId} />
-              <div
-                className={styles.content}
-                dangerouslySetInnerHTML={{ __html: after }}
-                suppressHydrationWarning
-              />
+              <InlinePromoCard promoId={config.promoId} />
+              {applyPromos(after, `${key}-r`, i + 1)}
             </Fragment>
           );
         }
@@ -360,6 +358,8 @@ export default function PostBody({
         />
       );
     };
+
+    const renderHtmlPart = (html: string, key: number | string) => applyPromos(html, key, 0);
 
     const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
 

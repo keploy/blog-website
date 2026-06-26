@@ -83,22 +83,25 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     };
 
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-    if (siteKey && window.grecaptcha) {
-      try {
-        const token = await new Promise<string>((resolve, reject) => {
-          window.grecaptcha.ready(() => {
-            window.grecaptcha
-              .execute(siteKey, { action: "submit_lead" })
-              .then(resolve)
-              .catch(reject);
-          });
+    if (!siteKey || !window.grecaptcha) {
+      setSubmitError("Verification unavailable. Please try again.");
+      setSubmitting(false);
+      return;
+    }
+    try {
+      const token = await new Promise<string>((resolve, reject) => {
+        window.grecaptcha.ready(() => {
+          window.grecaptcha
+            .execute(siteKey, { action: "submit_lead" })
+            .then(resolve)
+            .catch(reject);
         });
-        data.recaptchaToken = token;
-      } catch {
-        setSubmitError("Verification failed. Please try again.");
-        setSubmitting(false);
-        return;
-      }
+      });
+      data.recaptchaToken = token;
+    } catch {
+      setSubmitError("Verification failed. Please try again.");
+      setSubmitting(false);
+      return;
     }
 
     try {
