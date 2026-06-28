@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { InlinePromoId } from "../config/inline-promos";
 
 declare global {
@@ -16,6 +16,7 @@ declare global {
 // ─── Lead capture modal ────────────────────────────────────────────────────────
 
 function LeadModal({ onClose }: { onClose: () => void }) {
+  const gradId = useId();
   const firstInputRef = useRef<HTMLInputElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -66,8 +67,8 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       });
     }, 1000);
     const timer = setTimeout(() => {
-      window.location.href = "https://app.keploy.io/signin";
       onClose();
+      window.location.href = "https://app.keploy.io/signin";
     }, 10000);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -87,12 +88,12 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
     const form = e.currentTarget;
     const data: Record<string, string> = {
-      name: (form.elements.namedItem("name") as HTMLInputElement).value,
-      email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      company: (form.elements.namedItem("company") as HTMLInputElement).value,
-      designation: (form.elements.namedItem("designation") as HTMLInputElement).value,
+      name: (form.elements.namedItem("name") as HTMLInputElement).value.trim(),
+      email: (form.elements.namedItem("email") as HTMLInputElement).value.trim(),
+      company: (form.elements.namedItem("company") as HTMLInputElement).value.trim(),
+      designation: (form.elements.namedItem("designation") as HTMLInputElement).value.trim(),
       source: "inline-promo-5years",
-      page: window.location.href,
+      page: window.location.pathname,
     };
 
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
@@ -102,14 +103,19 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       return;
     }
     try {
-      const token = await new Promise<string>((resolve, reject) => {
-        window.grecaptcha.ready(() => {
-          window.grecaptcha
-            .execute(siteKey, { action: "submit_lead" })
-            .then(resolve)
-            .catch(reject);
-        });
-      });
+      const token = await Promise.race([
+        new Promise<string>((resolve, reject) => {
+          window.grecaptcha.ready(() => {
+            window.grecaptcha
+              .execute(siteKey, { action: "submit_lead" })
+              .then(resolve)
+              .catch(reject);
+          });
+        }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("reCAPTCHA timeout")), 10000)
+        ),
+      ]);
       data.recaptchaToken = token;
     } catch {
       setSubmitError("Verification failed. Please try again.");
@@ -122,6 +128,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        signal: AbortSignal.timeout(15000),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -129,6 +136,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         setSubmitting(false);
         return;
       }
+      setSubmitting(false);
       setSubmitted(true);
     } catch {
       setSubmitError("Network error. Please check your connection and try again.");
@@ -139,9 +147,6 @@ function LeadModal({ onClose }: { onClose: () => void }) {
   return (
     <div
       id="k5y-modal-dialog"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="k5y-modal-heading"
       onClick={handleBackdropClick}
       style={{
         position: "fixed",
@@ -177,10 +182,6 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         @keyframes k5y-confirm-in {
           from { opacity: 0; transform: translateY(10px); }
           to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes k5y-progress {
-          from { width: 100%; }
-          to   { width: 0%; }
         }
         .k5y-input {
           width: 100%;
@@ -275,6 +276,9 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       >
         {/* Modal card */}
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="k5y-modal-heading"
           style={{
             background: "#ffffff",
             borderRadius: "calc(22px - 1.5px)",
@@ -317,7 +321,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                 style={{ marginBottom: 24 }}
               >
                 <defs>
-                  <linearGradient id="k5y-ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#22c55e" />
                     <stop offset="100%" stopColor="#16a34a" />
                   </linearGradient>
@@ -329,7 +333,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                   cx="40"
                   cy="40"
                   r="34"
-                  stroke="url(#k5y-ring-grad)"
+                  stroke={`url(#${gradId})`}
                   strokeWidth="3"
                   fill="none"
                   strokeLinecap="round"
@@ -359,6 +363,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
               {/* Heading */}
               <h2
+                id="k5y-modal-heading"
                 style={{
                   color: "#1c1917",
                   fontSize: 22,
@@ -533,7 +538,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                 <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
                   <div>
-                    <label className="k5y-label" htmlFor="k5y-name">Full Name <span style={{ color: "#f97316" }}>*</span></label>
+                    <label className="k5y-label" htmlFor="k5y-name">Full Name <span aria-hidden="true" style={{ color: "#f97316" }}>*</span></label>
                     <input
                       ref={firstInputRef}
                       id="k5y-name"
@@ -546,7 +551,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                   </div>
 
                   <div>
-                    <label className="k5y-label" htmlFor="k5y-email">Work / Personal Email <span style={{ color: "#f97316" }}>*</span></label>
+                    <label className="k5y-label" htmlFor="k5y-email">Work / Personal Email <span aria-hidden="true" style={{ color: "#f97316" }}>*</span></label>
                     <input
                       id="k5y-email"
                       name="email"
@@ -595,7 +600,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                     </button>
 
                     {submitError && (
-                      <p style={{
+                      <p role="alert" style={{
                         marginTop: 10,
                         fontSize: 12.5,
                         color: "#dc2626",

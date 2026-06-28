@@ -320,11 +320,8 @@ export default function PostBody({
 
     const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
     const inlinePromoConfigs = blogSlug ? getInlinePromosForSlug(blogSlug) : [];
-    const injectedIndexes = new Set<number>();
-
     const applyPromos = (html: string, key: number | string, fromIndex: number): React.ReactNode => {
       for (let i = fromIndex; i < inlinePromoConfigs.length; i++) {
-        if (injectedIndexes.has(i)) continue;
         const config = inlinePromoConfigs[i];
         const escaped = config.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         const splitRegex = new RegExp(
@@ -333,7 +330,6 @@ export default function PostBody({
         );
         const parts = html.split(splitRegex);
         if (parts.length > 1) {
-          injectedIndexes.add(i);
           const beforeAndBlock = parts[0] + (parts[1] || "");
           const after = parts.slice(2).join("");
           return (
