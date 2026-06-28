@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { InlinePromoId } from "../config/inline-promos";
 
 declare global {
@@ -18,17 +18,32 @@ declare global {
 function LeadModal({ onClose }: { onClose: () => void }) {
   const firstInputRef = useRef<HTMLInputElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const newTabRef = useRef<Window | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [countdown, setCountdown] = useState(10);
 
-  // Scroll lock + ESC key
+  // Scroll lock + ESC key + focus trap
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { onClose(); return; }
+      if (e.key === "Tab") {
+        const modal = document.getElementById("k5y-modal-dialog");
+        if (!modal) return;
+        const focusable = Array.from(modal.querySelectorAll<HTMLElement>(
+          'button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
+        )).filter(el => !el.hasAttribute("disabled"));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last?.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first?.focus(); }
+        }
+      }
+    };
     document.addEventListener("keydown", onKey);
     if (!submitted) firstInputRef.current?.focus();
     return () => {
@@ -51,9 +66,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       });
     }, 1000);
     const timer = setTimeout(() => {
-      if (newTabRef.current) {
-        newTabRef.current.location.href = "https://app.keploy.io/signin";
-      }
+      window.location.href = "https://app.keploy.io/signin";
       onClose();
     }, 10000);
     return () => {
@@ -116,8 +129,6 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         setSubmitting(false);
         return;
       }
-      // Open blank tab now (user gesture) — URL assigned when timer fires
-      newTabRef.current = window.open("", "_blank", "noopener,noreferrer");
       setSubmitted(true);
     } catch {
       setSubmitError("Network error. Please check your connection and try again.");
@@ -127,6 +138,10 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
+      id="k5y-modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="k5y-modal-heading"
       onClick={handleBackdropClick}
       style={{
         position: "fixed",
@@ -238,6 +253,9 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         .k5y-close-btn:hover {
           background: #f5f4f2;
           transform: scale(1.08);
+        }
+        @media (max-width: 440px) {
+          .k5y-two-col { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
@@ -408,7 +426,8 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                     height: "100%",
                     background: "linear-gradient(90deg, #f59e0b, #f97316)",
                     borderRadius: 2,
-                    animation: "k5y-progress 10s linear forwards",
+                    width: `${countdown * 10}%`,
+                    transition: "width 1s linear",
                   }}
                 />
               </div>
@@ -448,6 +467,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                   </span>
 
                   <h2
+                    id="k5y-modal-heading"
                     style={{
                       color: "#1c1917",
                       fontSize: 21,
@@ -519,6 +539,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                       id="k5y-name"
                       name="name"
                       type="text"
+                      required
                       placeholder="Enter Your Full Name"
                       className="k5y-input"
                     />
@@ -540,12 +561,6 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                     style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}
                     className="k5y-two-col"
                   >
-                    <style>{`
-                      @media (max-width: 440px) {
-                        .k5y-two-col { grid-template-columns: 1fr !important; }
-                      }
-                    `}</style>
-
                     <div>
                       <label className="k5y-label" htmlFor="k5y-company">Company</label>
                       <input
@@ -613,6 +628,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 function Keploy5YearsBanner() {
   const [modalOpen, setModalOpen] = useState(false);
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+  const handleClose = useCallback(() => setModalOpen(false), []);
 
   return (
     <div className="my-8" style={{ width: "100%" }}>
@@ -792,7 +808,7 @@ function Keploy5YearsBanner() {
       </div>
 
       {/* Modal */}
-      {modalOpen && <LeadModal onClose={() => setModalOpen(false)} />}
+      {modalOpen && <LeadModal onClose={handleClose} />}
     </div>
   );
 }
