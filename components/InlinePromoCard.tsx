@@ -115,6 +115,17 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       return;
     }
 
+    if (!data.name) {
+      setSubmitError("Full name is required.");
+      setSubmitting(false);
+      return;
+    }
+    if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      setSubmitError("A valid email address is required.");
+      setSubmitting(false);
+      return;
+    }
+
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
     if (!siteKey || !window.grecaptcha) {
       setSubmitError("Verification unavailable. Please try again.");
@@ -581,6 +592,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                       name="name"
                       type="text"
                       required
+                      maxLength={100}
                       autoComplete="name"
                       placeholder="Enter Your Full Name"
                       className="k5y-input"
@@ -594,6 +606,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                       name="email"
                       type="email"
                       required
+                      maxLength={254}
                       autoComplete="email"
                       placeholder="your@email.com"
                       className="k5y-input"
@@ -610,6 +623,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                         id="k5y-company"
                         name="company"
                         type="text"
+                        maxLength={100}
                         autoComplete="organization"
                         placeholder="Company Name"
                         className="k5y-input"
@@ -622,6 +636,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                         id="k5y-designation"
                         name="designation"
                         type="text"
+                        maxLength={100}
                         autoComplete="organization-title"
                         placeholder="Designation / Role"
                         className="k5y-input"
@@ -676,6 +691,8 @@ function Keploy5YearsBanner() {
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
   const handleClose = useCallback(() => setModalOpen(false), []);
 
+  if (!siteKey) return null;
+
   return (
     <div className="my-8" style={{ width: "100%" }}>
       {siteKey && (
@@ -685,7 +702,6 @@ function Keploy5YearsBanner() {
         />
       )}
       <style>{`
-        .grecaptcha-badge { visibility: hidden; }
         @keyframes k5y-border {
           0%   { background-position: 0% 50%; }
           50%  { background-position: 100% 50%; }

@@ -3,6 +3,9 @@
 
 @tailwind base;
 
+/* reCAPTCHA badge is hidden site-wide; disclosure text is shown inline per Google ToS. */
+.grecaptcha-badge { visibility: hidden; }
+
 /* Write your own custom base styles here */
 
 :root {
