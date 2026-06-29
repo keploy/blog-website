@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Fragment } from "react";
+import { useState, useEffect, useRef, Fragment, useMemo } from "react";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
@@ -315,7 +315,7 @@ export default function PostBody({
 
 
 
-  const renderCodeBlocks = () => {
+  const renderedContent = useMemo(() => {
     const safeContent = replacedContent || "";
 
     const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
@@ -466,7 +466,7 @@ export default function PostBody({
 
         return renderHtmlPart(part, index);
       });
-  };
+  }, [replacedContent, slug]);
 
   const oldJson = {
     name: "John",
@@ -500,7 +500,7 @@ export default function PostBody({
         {/* Center — Article content (900px max, matching PostHeader) */}
         <div data-testid="post-content" className="max-w-[780px] w-full mx-auto px-4 sm:px-6 min-w-0" id="post-body-check">
           {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
-          <div className="post-content-wrapper">{renderCodeBlocks()}</div>
+          <div className="post-content-wrapper">{renderedContent}</div>
           <hr className="border-gray-300 mt-10 mb-10" />
 
           {/* Author card — Writer */}

@@ -17,6 +17,8 @@ declare global {
 
 function LeadModal({ onClose }: { onClose: () => void }) {
   const gradId = useId();
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const confirmRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -31,11 +33,12 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") { onClose(); return; }
       if (e.key === "Tab") {
-        const modal = document.getElementById("k5y-modal-dialog");
+        const modal = backdropRef.current;
         if (!modal) return;
         const focusable = Array.from(modal.querySelectorAll<HTMLElement>(
           'button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
         )).filter(el => !el.hasAttribute("disabled"));
+        if (focusable.length === 0) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
         if (e.shiftKey) {
@@ -46,7 +49,11 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       }
     };
     document.addEventListener("keydown", onKey);
-    if (!submitted) firstInputRef.current?.focus();
+    if (submitted) {
+      confirmRef.current?.focus();
+    } else {
+      firstInputRef.current?.focus();
+    }
     return () => {
       document.body.style.overflow = prev;
       document.removeEventListener("keydown", onKey);
@@ -87,14 +94,26 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     setSubmitting(true);
 
     const form = e.currentTarget;
-    const data: Record<string, string> = {
-      name: (form.elements.namedItem("name") as HTMLInputElement).value.trim(),
-      email: (form.elements.namedItem("email") as HTMLInputElement).value.trim(),
-      company: (form.elements.namedItem("company") as HTMLInputElement).value.trim(),
-      designation: (form.elements.namedItem("designation") as HTMLInputElement).value.trim(),
-      source: "inline-promo-5years",
-      page: window.location.pathname,
+    const getInput = (name: string): string => {
+      const el = form.elements.namedItem(name);
+      if (!(el instanceof HTMLInputElement)) throw new Error(`Missing input: ${name}`);
+      return el.value.trim();
     };
+    let data: Record<string, string>;
+    try {
+      data = {
+        name: getInput("name"),
+        email: getInput("email"),
+        company: getInput("company"),
+        designation: getInput("designation"),
+        source: "inline-promo-5years",
+        page: window.location.pathname,
+      };
+    } catch {
+      setSubmitError("Form error. Please refresh and try again.");
+      setSubmitting(false);
+      return;
+    }
 
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
     if (!siteKey || !window.grecaptcha) {
@@ -146,7 +165,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      id="k5y-modal-dialog"
+      ref={backdropRef}
       onClick={handleBackdropClick}
       style={{
         position: "fixed",
@@ -202,6 +221,12 @@ function LeadModal({ onClose }: { onClose: () => void }) {
           border-color: #f59e0b;
           box-shadow: 0 0 0 3.5px rgba(245,158,11,0.10);
         }
+        @media (forced-colors: active) {
+          .k5y-input:focus {
+            outline: 3px solid ButtonText;
+            outline-offset: 2px;
+          }
+        }
         .k5y-label {
           display: block;
           font-size: 11.5px;
@@ -235,6 +260,10 @@ function LeadModal({ onClose }: { onClose: () => void }) {
           transform: translateY(0);
           opacity: 1;
         }
+        .k5y-submit-btn:focus-visible {
+          outline: 3px solid #f59e0b;
+          outline-offset: 2px;
+        }
         .k5y-close-btn {
           background: rgba(245,244,242,0.9);
           border: 1.5px solid #e7e5e4;
@@ -254,6 +283,10 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         .k5y-close-btn:hover {
           background: #f5f4f2;
           transform: scale(1.08);
+        }
+        .k5y-close-btn:focus-visible {
+          outline: 3px solid #f59e0b;
+          outline-offset: 2px;
         }
         @media (max-width: 440px) {
           .k5y-two-col { grid-template-columns: 1fr !important; }
@@ -302,6 +335,8 @@ function LeadModal({ onClose }: { onClose: () => void }) {
           {submitted ? (
             /* ── Confirmation screen ── */
             <div
+              ref={confirmRef}
+              tabIndex={-1}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -309,6 +344,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                 textAlign: "center",
                 padding: "12px 0 8px",
                 animation: "k5y-confirm-in 0.3s ease both",
+                outline: "none",
               }}
             >
               {/* Animated checkmark */}
@@ -534,7 +570,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
               />
 
               {/* Form */}
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} noValidate>
                 <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
                   <div>
@@ -545,6 +581,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                       name="name"
                       type="text"
                       required
+                      autoComplete="name"
                       placeholder="Enter Your Full Name"
                       className="k5y-input"
                     />
@@ -557,6 +594,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                       name="email"
                       type="email"
                       required
+                      autoComplete="email"
                       placeholder="your@email.com"
                       className="k5y-input"
                     />
@@ -572,6 +610,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                         id="k5y-company"
                         name="company"
                         type="text"
+                        autoComplete="organization"
                         placeholder="Company Name"
                         className="k5y-input"
                       />
@@ -583,6 +622,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                         id="k5y-designation"
                         name="designation"
                         type="text"
+                        autoComplete="organization-title"
                         placeholder="Designation / Role"
                         className="k5y-input"
                       />
@@ -631,6 +671,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 // ─── Inline banner ─────────────────────────────────────────────────────────────
 
 function Keploy5YearsBanner() {
+  const bannerId = useId();
   const [modalOpen, setModalOpen] = useState(false);
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
   const handleClose = useCallback(() => setModalOpen(false), []);
@@ -688,6 +729,10 @@ function Keploy5YearsBanner() {
         .k5y-cta-btn:hover {
           opacity: 0.9;
           transform: translateY(-1px);
+        }
+        .k5y-cta-btn:focus-visible {
+          outline: 3px solid #f59e0b;
+          outline-offset: 2px;
         }
         @media (max-width: 600px) {
           .k5y-body { flex-direction: column; align-items: flex-start; gap: 14px; }
@@ -790,6 +835,7 @@ function Keploy5YearsBanner() {
               Keploy has completed its 5 years this month!
             </p>
             <p
+              id={`${bannerId}-desc`}
               style={{
                 color: "#92400e",
                 fontSize: 13.5,
@@ -806,6 +852,8 @@ function Keploy5YearsBanner() {
             type="button"
             onClick={() => setModalOpen(true)}
             className="k5y-cta-btn"
+            aria-label="Get 1 month of Keploy credits free"
+            aria-describedby={`${bannerId}-desc`}
           >
             Get 1 Month Free
           </button>
