@@ -5,6 +5,8 @@ import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
+import KeywordTooltipLayer from "./KeywordTooltipLayer";
+import { getTooltipsForSlug } from "../config/keyword-tooltips";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
@@ -60,6 +62,9 @@ export default function PostBody({
     reviewer &&
     authorName.split(" ")[0].toLowerCase() ===
     reviewer.name.split(" ")[0].toLowerCase();
+
+  const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
+  const tooltipConfigs = blogSlug ? getTooltipsForSlug(blogSlug) : [];
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -315,13 +320,33 @@ export default function PostBody({
 
   const renderCodeBlocks = () => {
     const safeContent = replacedContent || "";
+
+    const injectedKeywords = new Set<string>();
+    const injectTooltipSpans = (html: string): string => {
+      if (!tooltipConfigs.length) return html;
+      let result = html;
+      for (const t of tooltipConfigs) {
+        if (injectedKeywords.has(t.key)) continue;
+        const escaped = t.keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(escaped, "i");
+        if (regex.test(result)) {
+          injectedKeywords.add(t.key);
+          result = result.replace(
+            regex,
+            (match) => `<span class="keploy-tt" data-tt-key="${t.key}" style="border-bottom:1.5px dotted #f97316;cursor:help;">${match}</span>`
+          );
+        }
+      }
+      return result;
+    };
+
     const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
     if (!codeBlocks) {
       return (
         <div
           className={styles.content}
-          dangerouslySetInnerHTML={{ __html: replacedContent }}
+          dangerouslySetInnerHTML={{ __html: injectTooltipSpans(replacedContent || "") }}
           suppressHydrationWarning
         />
       );
@@ -432,7 +457,7 @@ export default function PostBody({
           <div
             key={index}
             className={styles.content}
-            dangerouslySetInnerHTML={{ __html: part }}
+            dangerouslySetInnerHTML={{ __html: injectTooltipSpans(part) }}
             suppressHydrationWarning
           />
         );
@@ -507,6 +532,7 @@ export default function PostBody({
       <div className="min-[1440px]:hidden flex justify-center mt-8 px-4">
         <BlogSidebar />
       </div>
+      <KeywordTooltipLayer tooltips={tooltipConfigs} />
     </div>
   );
 }
