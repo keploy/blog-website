@@ -1,0 +1,7 @@
+.bannerRoot {}
+
+/* reCAPTCHA badge is hidden while this banner is mounted.
+   Disclosure text is shown inline per Google ToS. */
+:global(.grecaptcha-badge) {
+  visibility: hidden;
+}

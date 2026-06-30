@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import bannerStyles from "./InlinePromoCard.module.css";
 import type { InlinePromoId } from "../config/inline-promos";
 
 declare global {
@@ -29,8 +30,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
   // Scroll lock + ESC key + focus trap
   useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.classList.add("overflow-hidden");
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") { onClose(); return; }
       if (e.key === "Tab") {
@@ -56,7 +56,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       firstInputRef.current?.focus();
     }
     return () => {
-      document.body.style.overflow = prev;
+      document.body.classList.remove("overflow-hidden");
       document.removeEventListener("keydown", onKey);
     };
   }, [onClose, submitted]);
@@ -164,7 +164,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         signal: controller.signal,
       });
       clearTimeout(fetchTimeout);
-      const json: Record<string, string> = await res.json().catch(() => ({}));
+      const json: { error?: string } = await res.json().catch(() => ({}));
       if (!res.ok) {
         setSubmitError(json.error || "Something went wrong. Please try again.");
         setSubmitting(false);
@@ -699,15 +699,12 @@ function Keploy5YearsBanner() {
   if (!siteKey) return null;
 
   return (
-    <div className="my-8" style={{ width: "100%" }}>
-      {siteKey && (
-        <Script
-          src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
-          strategy="afterInteractive"
-        />
-      )}
+    <div className={`my-8 ${bannerStyles.bannerRoot}`} style={{ width: "100%" }}>
+      <Script
+        src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
+        strategy="afterInteractive"
+      />
       <style>{`
-        .grecaptcha-badge { visibility: hidden; }
         @keyframes k5y-border {
           0%   { background-position: 0% 50%; }
           50%  { background-position: 100% 50%; }
