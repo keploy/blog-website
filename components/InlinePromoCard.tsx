@@ -17,6 +17,7 @@ declare global {
 
 function LeadModal({ onClose }: { onClose: () => void }) {
   const gradId = useId();
+  const headingId = useId();
   const backdropRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
@@ -91,7 +92,6 @@ function LeadModal({ onClose }: { onClose: () => void }) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitError("");
-    setSubmitting(true);
 
     const form = e.currentTarget;
     const getInput = (name: string): string => {
@@ -111,27 +111,24 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       };
     } catch {
       setSubmitError("Form error. Please refresh and try again.");
-      setSubmitting(false);
       return;
     }
 
     if (!data.name) {
       setSubmitError("Full name is required.");
-      setSubmitting(false);
       return;
     }
     if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
       setSubmitError("A valid email address is required.");
-      setSubmitting(false);
       return;
     }
 
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
     if (!siteKey || !window.grecaptcha) {
       setSubmitError("Verification unavailable. Please try again.");
-      setSubmitting(false);
       return;
     }
+    setSubmitting(true);
     try {
       const token = await Promise.race([
         new Promise<string>((resolve, reject) => {
@@ -153,14 +150,17 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       return;
     }
 
+    const controller = new AbortController();
+    const fetchTimeout = setTimeout(() => controller.abort(), 15000);
     try {
       const res = await fetch("https://telemetry.keploy.io/blog-mql", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
-        signal: AbortSignal.timeout(15000),
+        signal: controller.signal,
       });
-      const json = await res.json();
+      clearTimeout(fetchTimeout);
+      const json: Record<string, string> = await res.json().catch(() => ({}));
       if (!res.ok) {
         setSubmitError(json.error || "Something went wrong. Please try again.");
         setSubmitting(false);
@@ -169,6 +169,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       setSubmitting(false);
       setSubmitted(true);
     } catch {
+      clearTimeout(fetchTimeout);
       setSubmitError("Network error. Please check your connection and try again.");
       setSubmitting(false);
     }
@@ -322,7 +323,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         <div
           role="dialog"
           aria-modal="true"
-          aria-labelledby="k5y-modal-heading"
+          aria-labelledby={headingId}
           style={{
             background: "#ffffff",
             borderRadius: "calc(22px - 1.5px)",
@@ -410,7 +411,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
               {/* Heading */}
               <h2
-                id="k5y-modal-heading"
+                id={headingId}
                 style={{
                   color: "#1c1917",
                   fontSize: 22,
@@ -519,7 +520,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                   </span>
 
                   <h2
-                    id="k5y-modal-heading"
+                    id={headingId}
                     style={{
                       color: "#1c1917",
                       fontSize: 21,
@@ -702,6 +703,7 @@ function Keploy5YearsBanner() {
         />
       )}
       <style>{`
+        .grecaptcha-badge { visibility: hidden; }
         @keyframes k5y-border {
           0%   { background-position: 0% 50%; }
           50%  { background-position: 100% 50%; }

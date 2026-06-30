@@ -7,6 +7,8 @@ import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
 import InlinePromoCard from "./InlinePromoCard";
 import { getInlinePromosForSlug } from "../config/inline-promos";
+import KeywordTooltipLayer from "./KeywordTooltipLayer";
+import { getTooltipsForSlug } from "../config/keyword-tooltips";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
@@ -62,6 +64,9 @@ export default function PostBody({
     reviewer &&
     authorName.split(" ")[0].toLowerCase() ===
     reviewer.name.split(" ")[0].toLowerCase();
+
+  const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
+  const tooltipConfigs = blogSlug ? getTooltipsForSlug(blogSlug) : [];
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -318,7 +323,25 @@ export default function PostBody({
   const renderedContent = useMemo(() => {
     const safeContent = replacedContent || "";
 
-    const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
+    const injectedKeywords = new Set<string>();
+    const injectTooltipSpans = (html: string): string => {
+      if (!tooltipConfigs.length) return html;
+      let result = html;
+      for (const t of tooltipConfigs) {
+        if (injectedKeywords.has(t.key)) continue;
+        const escaped = t.keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(escaped, "i");
+        if (regex.test(result)) {
+          injectedKeywords.add(t.key);
+          result = result.replace(
+            regex,
+            (match) => `<span class="keploy-tt" data-tt-key="${t.key}" style="border-bottom:1.5px dotted #f97316;cursor:help;">${match}</span>`
+          );
+        }
+      }
+      return result;
+    };
+
     const inlinePromoConfigs = blogSlug ? getInlinePromosForSlug(blogSlug) : [];
     const applyPromos = (html: string, key: number | string, fromIndex: number): React.ReactNode => {
       for (let i = fromIndex; i < inlinePromoConfigs.length; i++) {
@@ -349,7 +372,7 @@ export default function PostBody({
         <div
           key={key}
           className={styles.content}
-          dangerouslySetInnerHTML={{ __html: html }}
+          dangerouslySetInnerHTML={{ __html: injectTooltipSpans(html) }}
           suppressHydrationWarning
         />
       );
@@ -466,7 +489,7 @@ export default function PostBody({
 
         return renderHtmlPart(part, index);
       });
-  }, [replacedContent, slug]);
+  }, [replacedContent, slug, blogSlug, tooltipConfigs]);
 
   const oldJson = {
     name: "John",
@@ -536,6 +559,7 @@ export default function PostBody({
       <div className="min-[1440px]:hidden flex justify-center mt-8 px-4">
         <BlogSidebar />
       </div>
+      <KeywordTooltipLayer tooltips={tooltipConfigs} />
     </div>
   );
 }
