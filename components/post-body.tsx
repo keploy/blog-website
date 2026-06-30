@@ -353,7 +353,7 @@ export default function PostBody({
         );
         const parts = html.split(splitRegex);
         if (parts.length > 1) {
-          const beforeAndBlock = parts[0] + (parts[1] || "");
+          const beforeAndBlock = injectTooltipSpans(parts[0] + (parts[1] || ""));
           const after = parts.slice(2).join("");
           return (
             <Fragment key={key}>
@@ -378,12 +378,10 @@ export default function PostBody({
       );
     };
 
-    const renderHtmlPart = (html: string, key: number | string) => applyPromos(html, key, 0);
-
     const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
     if (!codeBlocks) {
-      return renderHtmlPart(safeContent, 0);
+      return applyPromos(safeContent, 0, 0);
     }
 
     const decodeHtmlEntities = (str: string): string => {
@@ -487,7 +485,7 @@ export default function PostBody({
           );
         }
 
-        return renderHtmlPart(part, index);
+        return applyPromos(part, index, 0);
       });
   }, [replacedContent, slug, blogSlug, tooltipConfigs]);
 
