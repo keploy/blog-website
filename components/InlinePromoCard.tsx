@@ -133,10 +133,14 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       const token = await Promise.race([
         new Promise<string>((resolve, reject) => {
           window.grecaptcha.ready(() => {
-            window.grecaptcha
-              .execute(siteKey, { action: "submit_lead" })
-              .then(resolve)
-              .catch(reject);
+            try {
+              window.grecaptcha
+                .execute(siteKey, { action: "submit_lead" })
+                .then(resolve)
+                .catch(reject);
+            } catch (err) {
+              reject(err);
+            }
           });
         }),
         new Promise<never>((_, reject) =>
