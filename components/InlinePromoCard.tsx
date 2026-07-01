@@ -172,9 +172,14 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       }
       setSubmitting(false);
       setSubmitted(true);
-    } catch {
+    } catch (err) {
       clearTimeout(fetchTimeout);
-      setSubmitError("Network error. Please check your connection and try again.");
+      const isTimeout = err instanceof Error && err.name === "AbortError";
+      setSubmitError(
+        isTimeout
+          ? "Request timed out. Please try again."
+          : "Network error. Please check your connection and try again."
+      );
       setSubmitting(false);
     }
   };
@@ -877,6 +882,35 @@ function Keploy5YearsBanner() {
             Get 1 Month Free
           </button>
         </div>
+        <p
+          style={{
+            margin: "10px 0 0",
+            fontSize: 11,
+            color: "#78350f",
+            textAlign: "center" as const,
+            lineHeight: 1.5,
+          }}
+        >
+          Protected by reCAPTCHA.{" "}
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#78350f" }}
+          >
+            Privacy Policy
+          </a>{" "}
+          &amp;{" "}
+          <a
+            href="https://policies.google.com/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#78350f" }}
+          >
+            Terms of Service
+          </a>{" "}
+          apply.
+        </p>
       </div>
 
       {/* Modal */}
