@@ -5,13 +5,13 @@ import Link from "next/link";
 import { ArrowRight, X } from "lucide-react";
 import { Marquee } from "./Marquee";
 
-const ANNOUNCEMENT_ENABLED = false;
+const ANNOUNCEMENT_ENABLED = true;
 
 const ANNOUNCEMENT = {
   enabled: ANNOUNCEMENT_ENABLED,
-  eyebrow: "Event LIVE",
-  href: "https://luma.com/lr79szro",
-  ctaLabel: "Register NOW",
+  eyebrow: "5 Years ✦",
+  href: "https://app.keploy.io/signin",
+  ctaLabel: "Get 1 Month Free",
 };
 
 const setAnnouncementHeight = (value: string) => {
@@ -22,9 +22,9 @@ const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffec
 
 function MarqueeContent() {
   const items = [
-    "Keploy is hosting a community meetup in San Francisco!",
-    "GitTogether SF • May 14, 2026 • San Francisco",
-    "Tickets are selling fast, limited seats available-register now!",
+    "Keploy has completed 5 years this June!",
+    "To celebrate, we are giving away free Keploy credits for a month.",
+    "Grab your 1 month of free credits now!",
   ];
 
   return (

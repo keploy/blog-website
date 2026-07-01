@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import TOC from "./TableContents";
+import Keploy5YearsCard from "./Keploy5YearsCard";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
@@ -489,8 +490,9 @@ export default function PostBody({
       {/* ── Main layout: 3-col grid on wide screens, single centered column otherwise ── */}
       <div className="grid grid-cols-1 min-[1440px]:grid-cols-[minmax(200px,1fr)_minmax(0,780px)_minmax(200px,1fr)] gap-0">
         {/* Left — TOC (wide desktop only, ≥1440px) */}
-        <div data-testid="desktop-toc" className={`hidden min-[1440px]:flex justify-end pr-6 ${isList ? "" : "sticky top-24 self-start"}`}>
+        <div data-testid="desktop-toc" className={`hidden min-[1440px]:flex flex-col items-end pr-6 ${isList ? "" : "sticky top-24 self-start"}`}>
           <TOC headings={tocItems} isList={isList} setIsList={setIsList} />
+          <Keploy5YearsCard />
         </div>
 
         {/* Center — Article content (900px max, matching PostHeader) */}
