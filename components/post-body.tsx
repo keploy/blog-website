@@ -488,7 +488,7 @@ export default function PostBody({
 
         return applyPromos(part, index, 0);
       });
-  }, [replacedContent, slug, blogSlug]);
+  }, [replacedContent, slug, blogSlug, copySuccessList]);
 
   const oldJson = {
     name: "John",
