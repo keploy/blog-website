@@ -7,7 +7,7 @@ import type { InlinePromoId } from "../config/inline-promos";
 
 declare global {
   interface Window {
-    grecaptcha: {
+    grecaptcha?: {
       ready: (cb: () => void) => void;
       execute: (siteKey: string, opts: { action: string }) => Promise<string>;
     };
@@ -701,6 +701,7 @@ function Keploy5YearsBanner() {
   return (
     <div className={`my-8 ${bannerStyles.bannerRoot}`} style={{ width: "100%" }}>
       <Script
+        id="recaptcha-script"
         src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
         strategy="afterInteractive"
       />
