@@ -701,7 +701,6 @@ function Keploy5YearsBanner() {
   return (
     <div className={`my-8 ${bannerStyles.bannerRoot}`} style={{ width: "100%" }}>
       <Script
-        id="recaptcha-script"
         src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
         strategy="afterInteractive"
       />
