@@ -342,7 +342,8 @@ export default function PostBody({
       return result;
     };
 
-    const inlinePromoConfigs = blogSlug ? getInlinePromosForSlug(blogSlug) : [];
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+    const inlinePromoConfigs = (blogSlug && siteKey) ? getInlinePromosForSlug(blogSlug) : [];
     const applyPromos = (html: string, key: number | string, fromIndex: number): React.ReactNode => {
       for (let i = fromIndex; i < inlinePromoConfigs.length; i++) {
         const config = inlinePromoConfigs[i];
