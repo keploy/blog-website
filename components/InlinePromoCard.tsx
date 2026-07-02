@@ -22,11 +22,9 @@ function LeadModal({ onClose }: { onClose: () => void }) {
   const backdropRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const [countdown, setCountdown] = useState(10);
 
   // Scroll lock + ESC key + focus trap
   useEffect(() => {
@@ -61,28 +59,6 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     };
   }, [onClose, submitted]);
 
-  // After submit: tick countdown, then redirect + close
-  useEffect(() => {
-    if (!submitted) return;
-    intervalRef.current = setInterval(() => {
-      setCountdown((c) => {
-        const next = c - 1;
-        if (next <= 0 && intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-        }
-        return Math.max(0, next);
-      });
-    }, 1000);
-    const timer = setTimeout(() => {
-      onClose();
-      window.location.href = "https://app.keploy.io/signin";
-    }, 10000);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      clearTimeout(timer);
-    };
-  }, [submitted, onClose]);
 
   // Backdrop click only dismisses when the form is still open
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -459,40 +435,25 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                 }}
               />
 
-              {/* Countdown */}
-              <p
+              {/* Open Keploy CTA */}
+              <a
+                href="https://app.keploy.io/signin"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
-                  fontSize: 12,
-                  color: "#a8a29e",
-                  margin: "0 0 10px",
-                  letterSpacing: "0.02em",
+                  display: "inline-block",
+                  padding: "12px 28px",
+                  background: "linear-gradient(90deg, #f59e0b, #f97316)",
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: 15,
+                  borderRadius: 10,
+                  textDecoration: "none",
+                  letterSpacing: "0.01em",
                 }}
               >
-                Redirecting you to Keploy in{" "}
-                <strong style={{ color: "#f59e0b" }}>{countdown}s</strong>
-                &hellip;
-              </p>
-
-              {/* Progress bar */}
-              <div
-                style={{
-                  width: "100%",
-                  height: 3,
-                  background: "#e7e5e4",
-                  borderRadius: 2,
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    height: "100%",
-                    background: "linear-gradient(90deg, #f59e0b, #f97316)",
-                    borderRadius: 2,
-                    width: `${countdown * 10}%`,
-                    transition: "width 1s linear",
-                  }}
-                />
-              </div>
+                Open Keploy &rarr;
+              </a>
             </div>
           ) : (
             /* ── Form screen ── */
