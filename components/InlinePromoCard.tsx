@@ -60,9 +60,9 @@ function LeadModal({ onClose }: { onClose: () => void }) {
   }, [onClose, submitted]);
 
 
-  // Backdrop click only dismisses when the form is still open
+  // Backdrop click dismisses unless a submit is in flight
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!submitted && !submitting && e.target === e.currentTarget) onClose();
+    if (!submitting && e.target === e.currentTarget) onClose();
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
