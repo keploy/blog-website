@@ -40,6 +40,11 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         if (focusable.length === 0) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
+        if (!modal.contains(document.activeElement)) {
+          e.preventDefault();
+          (e.shiftKey ? last : first)?.focus();
+          return;
+        }
         if (e.shiftKey) {
           if (document.activeElement === first) { e.preventDefault(); last?.focus(); }
         } else {
