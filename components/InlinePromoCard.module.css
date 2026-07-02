@@ -1,0 +1,3 @@
+.bannerRoot :global(.grecaptcha-badge) {
+  visibility: hidden;
+}

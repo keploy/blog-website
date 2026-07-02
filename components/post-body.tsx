@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Fragment, useMemo } from "react";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
+import InlinePromoCard from "./InlinePromoCard";
+import { getInlinePromosForSlug } from "../config/inline-promos";
 import KeywordTooltipLayer from "./KeywordTooltipLayer";
 import { getTooltipsForSlug } from "../config/keyword-tooltips";
 
@@ -318,7 +320,7 @@ export default function PostBody({
 
 
 
-  const renderCodeBlocks = () => {
+  const renderedContent = useMemo(() => {
     const safeContent = replacedContent || "";
 
     const injectedKeywords = new Set<string>();
@@ -340,16 +342,47 @@ export default function PostBody({
       return result;
     };
 
-    const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
-
-    if (!codeBlocks) {
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+    const inlinePromoConfigs = (blogSlug && siteKey) ? getInlinePromosForSlug(blogSlug) : [];
+    const applyPromos = (html: string, key: number | string, fromIndex: number): React.ReactNode => {
+      for (let i = fromIndex; i < inlinePromoConfigs.length; i++) {
+        const config = inlinePromoConfigs[i];
+        const escaped = config.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const splitRegex = new RegExp(
+          `(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`,
+          "i"
+        );
+        const parts = html.split(splitRegex);
+        if (parts.length > 1) {
+          const beforeAndBlock = injectTooltipSpans(parts[0] + (parts[1] || ""));
+          const after = parts.slice(2).join("");
+          return (
+            <Fragment key={key}>
+              <div
+                className={styles.content}
+                dangerouslySetInnerHTML={{ __html: beforeAndBlock }}
+                suppressHydrationWarning
+              />
+              <InlinePromoCard promoId={config.promoId} />
+              {applyPromos(after, `${key}-r`, i + 1)}
+            </Fragment>
+          );
+        }
+      }
       return (
         <div
+          key={key}
           className={styles.content}
-          dangerouslySetInnerHTML={{ __html: injectTooltipSpans(replacedContent || "") }}
+          dangerouslySetInnerHTML={{ __html: injectTooltipSpans(html) }}
           suppressHydrationWarning
         />
       );
+    };
+
+    const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
+
+    if (!codeBlocks) {
+      return applyPromos(safeContent, 0, 0);
     }
 
     const decodeHtmlEntities = (str: string): string => {
@@ -453,16 +486,9 @@ export default function PostBody({
           );
         }
 
-        return (
-          <div
-            key={index}
-            className={styles.content}
-            dangerouslySetInnerHTML={{ __html: injectTooltipSpans(part) }}
-            suppressHydrationWarning
-          />
-        );
+        return applyPromos(part, index, 0);
       });
-  };
+  }, [replacedContent, slug, blogSlug, copySuccessList]);
 
   const oldJson = {
     name: "John",
@@ -496,7 +522,7 @@ export default function PostBody({
         {/* Center — Article content (900px max, matching PostHeader) */}
         <div data-testid="post-content" className="max-w-[780px] w-full mx-auto px-4 sm:px-6 min-w-0" id="post-body-check">
           {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
-          <div className="post-content-wrapper">{renderCodeBlocks()}</div>
+          <div className="post-content-wrapper">{renderedContent}</div>
           <hr className="border-gray-300 mt-10 mb-10" />
 
           {/* Author card — Writer */}
