@@ -34,7 +34,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     return () => { triggerRef.current?.focus(); };
   }, []);
 
-  // Scroll lock + ESC key + focus trap
+  // Scroll lock + ESC key + focus trap — mount/unmount only
   useEffect(() => {
     const hadOverflowHidden = document.body.classList.contains("overflow-hidden");
     document.body.classList.add("overflow-hidden");
@@ -62,16 +62,20 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       }
     };
     document.addEventListener("keydown", onKey);
+    return () => {
+      if (!hadOverflowHidden) document.body.classList.remove("overflow-hidden");
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
+  // Focus management — shift focus when submitted state changes
+  useEffect(() => {
     if (submitted) {
       confirmRef.current?.focus();
     } else {
       firstInputRef.current?.focus();
     }
-    return () => {
-      if (!hadOverflowHidden) document.body.classList.remove("overflow-hidden");
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [onClose, submitted]);
+  }, [submitted]);
 
 
   // Backdrop click dismisses unless a submit is in flight
