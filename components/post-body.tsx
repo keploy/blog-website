@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment, useMemo } from "react";
+import { useState, useEffect, Fragment, useMemo, ReactNode } from "react";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
@@ -321,7 +321,7 @@ export default function PostBody({
 
 
   type ParsedPart =
-    | { type: "text"; node: React.ReactNode }
+    | { type: "text"; node: ReactNode }
     | { type: "code"; index: number; cleanCode: string; language: string };
 
   // Expensive: HTML parsing, tooltip injection, promo splitting \u2014 no copySuccessList dep
