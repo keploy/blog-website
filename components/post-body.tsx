@@ -66,7 +66,10 @@ export default function PostBody({
     reviewer.name.split(" ")[0].toLowerCase();
 
   const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
-  const tooltipConfigs = blogSlug ? getTooltipsForSlug(blogSlug) : [];
+  const tooltipConfigs = useMemo(
+    () => (blogSlug ? getTooltipsForSlug(blogSlug) : []),
+    [blogSlug]
+  );
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -328,7 +331,6 @@ export default function PostBody({
   const parsedParts = useMemo((): ParsedPart[] => {
     const safeContent = replacedContent || "";
 
-    const tooltipConfigs = blogSlug ? getTooltipsForSlug(blogSlug) : [];
     const injectedKeywords = new Set<string>();
     const injectTooltipSpans = (html: string): string => {
       if (!tooltipConfigs.length) return html;
@@ -440,7 +442,7 @@ export default function PostBody({
         }
         return { type: "text", node: applyPromos(part, index, 0) };
       });
-  }, [replacedContent, blogSlug]);
+  }, [replacedContent, blogSlug, tooltipConfigs]);
 
   // Cheap: renders code blocks with current copy state \u2014 no HTML parsing
   const renderedContent = useMemo(() => {

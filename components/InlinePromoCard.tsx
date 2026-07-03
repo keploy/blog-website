@@ -85,6 +85,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (submittingRef.current) return;
     setSubmitError("");
 
     const form = e.currentTarget;
