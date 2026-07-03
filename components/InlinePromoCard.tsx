@@ -158,9 +158,11 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       const json: { error?: string } = await res.json().catch(() => ({}));
       if (!res.ok) {
         setSubmitError(json.error || "Something went wrong. Please try again.");
+        submittingRef.current = false;
         setSubmitting(false);
         return;
       }
+      submittingRef.current = false;
       setSubmitting(false);
       setSubmitted(true);
     } catch (err) {
@@ -171,6 +173,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
           ? "Request timed out. Please try again."
           : "Network error. Please check your connection and try again."
       );
+      submittingRef.current = false;
       setSubmitting(false);
     }
   };
