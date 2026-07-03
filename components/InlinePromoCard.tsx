@@ -95,10 +95,6 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       return;
     }
 
-    if (!data.name) {
-      setSubmitError("Full name is required.");
-      return;
-    }
     if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
       setSubmitError("A valid email address is required.");
       return;
@@ -562,13 +558,12 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                 <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
                   <div>
-                    <label className="k5y-label" htmlFor="k5y-name">Full Name <span aria-hidden="true" style={{ color: "#f97316" }}>*</span></label>
+                    <label className="k5y-label" htmlFor="k5y-name">Full Name</label>
                     <input
                       ref={firstInputRef}
                       id="k5y-name"
                       name="name"
                       type="text"
-                      required
                       maxLength={100}
                       autoComplete="name"
                       placeholder="Enter Your Full Name"
