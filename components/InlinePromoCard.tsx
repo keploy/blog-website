@@ -116,6 +116,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     }
     submittingRef.current = true;
     setSubmitting(true);
+    let recaptchaTimeoutId: ReturnType<typeof setTimeout> | undefined;
     try {
       const token = await Promise.race([
         new Promise<string>((resolve, reject) => {
@@ -130,14 +131,17 @@ function LeadModal({ onClose }: { onClose: () => void }) {
             }
           });
         }),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("reCAPTCHA timeout")), 10000)
-        ),
+        new Promise<never>((_, reject) => {
+          recaptchaTimeoutId = setTimeout(() => reject(new Error("reCAPTCHA timeout")), 10000);
+        }),
       ]);
+      clearTimeout(recaptchaTimeoutId);
       data.recaptchaToken = token;
     } catch {
+      clearTimeout(recaptchaTimeoutId);
       setSubmitError("Verification failed. Please try again.");
       setSubmitting(false);
+      submittingRef.current = false;
       return;
     }
 
