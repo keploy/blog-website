@@ -36,6 +36,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
   // Scroll lock + ESC key + focus trap
   useEffect(() => {
+    const hadOverflowHidden = document.body.classList.contains("overflow-hidden");
     document.body.classList.add("overflow-hidden");
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") { if (!submittingRef.current) onClose(); return; }
@@ -67,7 +68,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       firstInputRef.current?.focus();
     }
     return () => {
-      document.body.classList.remove("overflow-hidden");
+      if (!hadOverflowHidden) document.body.classList.remove("overflow-hidden");
       document.removeEventListener("keydown", onKey);
     };
   }, [onClose, submitted]);
