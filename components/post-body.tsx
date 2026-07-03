@@ -320,7 +320,12 @@ export default function PostBody({
 
 
 
-  const renderedContent = useMemo(() => {
+  type ParsedPart =
+    | { type: "text"; node: React.ReactNode }
+    | { type: "code"; index: number; cleanCode: string; language: string };
+
+  // Expensive: HTML parsing, tooltip injection, promo splitting \u2014 no copySuccessList dep
+  const parsedParts = useMemo((): ParsedPart[] => {
     const safeContent = replacedContent || "";
 
     const injectedKeywords = new Set<string>();
@@ -383,11 +388,10 @@ export default function PostBody({
     const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
     if (!codeBlocks) {
-      return applyPromos(safeContent, 0, 0);
+      return [{ type: "text", node: applyPromos(safeContent, 0, 0) }];
     }
 
     const decodeHtmlEntities = (str: string): string => {
-      // document.createElement is browser-only; use a pure-JS fallback during SSR
       if (typeof document !== "undefined") {
         const textarea = document.createElement("textarea");
         textarea.innerHTML = str;
@@ -405,18 +409,16 @@ export default function PostBody({
 
     return safeContent
       .split(/(<pre[\s\S]*?<\/pre>)/gm)
-      .map((part, index) => {
+      .map((part, index): ParsedPart => {
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
           const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
           const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : "";
 
-          // 1. Try language from <code class="language-X"> attribute
           const langFromClass =
             codeMatch && codeMatch[0].includes("language-")
               ? codeMatch[0].split("language-")[1].split('"')[0]
               : "";
 
-          // 2. If no class, check if the first line is a known language keyword (WP pattern)
           const knownLanguages = [
             "go", "javascript", "js", "typescript", "ts",
             "python", "bash", "sh", "java", "rust", "cpp",
@@ -424,10 +426,8 @@ export default function PostBody({
           ];
           const firstLine = code.trimStart().split("\n")[0].trim().toLowerCase();
           const langFromFirstLine = knownLanguages.includes(firstLine) ? firstLine : "";
-
           const language = langFromClass || langFromFirstLine || "bash";
 
-          // Strip language name from code if it was the first line
           const cleanCode =
             langFromFirstLine && !langFromClass
               ? code.trimStart().slice(firstLine.length + 1)
@@ -435,61 +435,57 @@ export default function PostBody({
                 ? code.trimStart().slice(langFromClass.length + 1)
                 : code;
 
-          const getLanguageExtension = (lang: string) => {
-            switch (lang) {
-              case "javascript":
-              case "js":
-                return javascript();
-              case "python":
-                return python();
-              case "markdown":
-                return markdown();
-              case "go":
-                return go();
-              default:
-                return javascript();
-            }
-          };
-
-          return (
-            <div key={index} data-testid="code-block" className="rounded-lg overflow-hidden mb-6 border border-[#313244] shadow-md">
-              {/* Header bar: language badge + copy button */}
-              <div className="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-[#313244]">
-                <span className="text-xs font-mono text-[#6c7086] uppercase tracking-widest select-none">
-                  {language}
-                </span>
-                <button
-                  data-testid="copy-button"
-                  onClick={() => handleCopyClick(cleanCode, index)}
-                  className="flex items-center gap-1 text-xs text-[#cdd6f4] bg-[#313244] hover:bg-[#45475a] px-2 py-1 rounded transition-colors duration-150"
-                >
-                  {copySuccessList[index] ? (
-                    <><IoCheckmarkOutline /> <span>Copied!</span></>
-                  ) : (
-                    <><IoCopyOutline /> <span>Copy</span></>
-                  )}
-                </button>
-              </div>
-              <CodeMirror
-                value={cleanCode}
-                extensions={[getLanguageExtension(language)]}
-                theme={dracula}
-                basicSetup={{
-                  lineNumbers: false,
-                  highlightActiveLine: true,
-                  tabSize: 4,
-                }}
-                editable={false}
-                readOnly={true}
-                indentWithTab={true}
-              />
-            </div>
-          );
+          return { type: "code", index, cleanCode, language };
         }
-
-        return applyPromos(part, index, 0);
+        return { type: "text", node: applyPromos(part, index, 0) };
       });
-  }, [replacedContent, slug, blogSlug, copySuccessList]);
+  }, [replacedContent, slug, blogSlug]);
+
+  // Cheap: renders code blocks with current copy state \u2014 no HTML parsing
+  const renderedContent = useMemo(() => {
+    const getLanguageExtension = (lang: string) => {
+      switch (lang) {
+        case "javascript": case "js": return javascript();
+        case "python": return python();
+        case "markdown": return markdown();
+        case "go": return go();
+        default: return javascript();
+      }
+    };
+    return parsedParts.map((part) => {
+      if (part.type === "text") return part.node;
+      const { index, cleanCode, language } = part;
+      return (
+        <div key={index} data-testid="code-block" className="rounded-lg overflow-hidden mb-6 border border-[#313244] shadow-md">
+          <div className="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-[#313244]">
+            <span className="text-xs font-mono text-[#6c7086] uppercase tracking-widest select-none">
+              {language}
+            </span>
+            <button
+              data-testid="copy-button"
+              onClick={() => handleCopyClick(cleanCode, index)}
+              className="flex items-center gap-1 text-xs text-[#cdd6f4] bg-[#313244] hover:bg-[#45475a] px-2 py-1 rounded transition-colors duration-150"
+            >
+              {copySuccessList[index] ? (
+                <><IoCheckmarkOutline /> <span>Copied!</span></>
+              ) : (
+                <><IoCopyOutline /> <span>Copy</span></>
+              )}
+            </button>
+          </div>
+          <CodeMirror
+            value={cleanCode}
+            extensions={[getLanguageExtension(language)]}
+            theme={dracula}
+            basicSetup={{ lineNumbers: false, highlightActiveLine: true, tabSize: 4 }}
+            editable={false}
+            readOnly={true}
+            indentWithTab={true}
+          />
+        </div>
+      );
+    });
+  }, [parsedParts, copySuccessList]);
 
   const oldJson = {
     name: "John",

@@ -21,12 +21,18 @@ function LeadModal({ onClose }: { onClose: () => void }) {
   const backdropRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const submittingRef = useRef(false);
 
   useEffect(() => { submittingRef.current = submitting; }, [submitting]);
+
+  useEffect(() => {
+    triggerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    return () => { triggerRef.current?.focus(); };
+  }, []);
 
   // Scroll lock + ESC key + focus trap
   useEffect(() => {
