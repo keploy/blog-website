@@ -24,12 +24,15 @@ function LeadModal({ onClose }: { onClose: () => void }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const submittingRef = useRef(false);
+
+  useEffect(() => { submittingRef.current = submitting; }, [submitting]);
 
   // Scroll lock + ESC key + focus trap
   useEffect(() => {
     document.body.classList.add("overflow-hidden");
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { onClose(); return; }
+      if (e.key === "Escape") { if (!submittingRef.current) onClose(); return; }
       if (e.key === "Tab") {
         const modal = backdropRef.current;
         if (!modal) return;
