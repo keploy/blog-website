@@ -2,7 +2,6 @@
 
 import Script from "next/script";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import bannerStyles from "./InlinePromoCard.module.css";
 import type { InlinePromoId } from "../config/inline-promos";
 
 declare global {
@@ -666,7 +665,7 @@ function Keploy5YearsBanner() {
   if (!siteKey) return null;
 
   return (
-    <div className={`my-8 ${bannerStyles.bannerRoot}`} style={{ width: "100%" }}>
+    <div className="my-8" style={{ width: "100%" }}>
       <Script
         src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
         strategy="afterInteractive"
