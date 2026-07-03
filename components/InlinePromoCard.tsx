@@ -76,7 +76,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 
   // Backdrop click dismisses unless a submit is in flight
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!submitting && e.target === e.currentTarget) onClose();
+    if (!submittingRef.current && e.target === e.currentTarget) onClose();
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -114,6 +114,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       setSubmitError("Verification unavailable. Please try again.");
       return;
     }
+    submittingRef.current = true;
     setSubmitting(true);
     try {
       const token = await Promise.race([

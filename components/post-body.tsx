@@ -439,7 +439,7 @@ export default function PostBody({
         }
         return { type: "text", node: applyPromos(part, index, 0) };
       });
-  }, [replacedContent, slug, blogSlug]);
+  }, [replacedContent, blogSlug]);
 
   // Cheap: renders code blocks with current copy state \u2014 no HTML parsing
   const renderedContent = useMemo(() => {
