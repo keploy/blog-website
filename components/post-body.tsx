@@ -344,7 +344,8 @@ export default function PostBody({
 
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
     const inlinePromoConfigs = (blogSlug && siteKey) ? getInlinePromosForSlug(blogSlug) : [];
-    const applyPromos = (html: string, key: number | string, fromIndex: number): React.ReactNode => {
+    const applyPromos = (html: string, key: number | string, fromIndex: number, isContinuation = false): React.ReactNode => {
+      const contentClass = isContinuation ? `${styles.content} ${styles.contentAfterPromo}` : styles.content;
       for (let i = fromIndex; i < inlinePromoConfigs.length; i++) {
         const config = inlinePromoConfigs[i];
         const escaped = config.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -359,12 +360,12 @@ export default function PostBody({
           return (
             <Fragment key={key}>
               <div
-                className={styles.content}
+                className={contentClass}
                 dangerouslySetInnerHTML={{ __html: beforeAndBlock }}
                 suppressHydrationWarning
               />
               <InlinePromoCard promoId={config.promoId} />
-              {applyPromos(after, `${key}-r`, i + 1)}
+              {applyPromos(after, `${key}-r`, i + 1, true)}
             </Fragment>
           );
         }
@@ -372,7 +373,7 @@ export default function PostBody({
       return (
         <div
           key={key}
-          className={styles.content}
+          className={contentClass}
           dangerouslySetInnerHTML={{ __html: injectTooltipSpans(html) }}
           suppressHydrationWarning
         />
