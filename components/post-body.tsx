@@ -328,6 +328,7 @@ export default function PostBody({
   const parsedParts = useMemo((): ParsedPart[] => {
     const safeContent = replacedContent || "";
 
+    const tooltipConfigs = blogSlug ? getTooltipsForSlug(blogSlug) : [];
     const injectedKeywords = new Set<string>();
     const injectTooltipSpans = (html: string): string => {
       if (!tooltipConfigs.length) return html;
@@ -349,7 +350,7 @@ export default function PostBody({
 
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
     const inlinePromoConfigs = (blogSlug && siteKey) ? getInlinePromosForSlug(blogSlug) : [];
-    const applyPromos = (html: string, key: number | string, fromIndex: number, isContinuation = false): React.ReactNode => {
+    const applyPromos = (html: string, key: number | string, fromIndex: number, isContinuation = false): ReactNode => {
       const contentClass = isContinuation ? `${styles.content} ${styles.contentAfterPromo}` : styles.content;
       for (let i = fromIndex; i < inlinePromoConfigs.length; i++) {
         const config = inlinePromoConfigs[i];
