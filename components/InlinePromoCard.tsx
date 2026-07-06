@@ -690,7 +690,6 @@ function Keploy5YearsBanner() {
   return (
     <div className="my-8" style={{ width: "100%" }}>
       <Script
-        id="recaptcha-v3"
         src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
         strategy="afterInteractive"
       />
