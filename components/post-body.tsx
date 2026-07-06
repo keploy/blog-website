@@ -353,6 +353,7 @@ export default function PostBody({
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
     const inlinePromoConfigs = (blogSlug && siteKey) ? getInlinePromosForSlug(blogSlug) : [];
     const applyPromos = (html: string, key: number | string, fromIndex: number, isContinuation = false): ReactNode => {
+      if (!html.trim()) return null;
       const contentClass = isContinuation ? `${styles.content} ${styles.contentAfterPromo}` : styles.content;
       for (let i = fromIndex; i < inlinePromoConfigs.length; i++) {
         const config = inlinePromoConfigs[i];
@@ -410,6 +411,7 @@ export default function PostBody({
         .replace(/&nbsp;/g, "\u00A0");
     };
 
+    let nextIsContinuation = false;
     return safeContent
       .split(/(<pre[\s\S]*?<\/pre>)/gm)
       .map((part, index): ParsedPart => {
@@ -440,7 +442,12 @@ export default function PostBody({
 
           return { type: "code", index, cleanCode, language };
         }
-        return { type: "text", node: applyPromos(part, index, 0) };
+        const isContinuation = nextIsContinuation;
+        nextIsContinuation = inlinePromoConfigs.some(config => {
+          const escaped = config.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          return new RegExp(`(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`, "i").test(part);
+        });
+        return { type: "text", node: applyPromos(part, index, 0, isContinuation) };
       });
   }, [replacedContent, blogSlug, tooltipConfigs]);
 
