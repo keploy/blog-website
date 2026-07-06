@@ -5,7 +5,7 @@ import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
-import InlinePromoCard from "./InlinePromoCard";
+const InlinePromoCard = dynamic(() => import("./InlinePromoCard"));
 import { getInlinePromosForSlug } from "../config/inline-promos";
 import KeywordTooltipLayer from "./KeywordTooltipLayer";
 import { getTooltipsForSlug } from "../config/keyword-tooltips";
