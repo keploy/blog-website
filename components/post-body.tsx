@@ -443,9 +443,14 @@ export default function PostBody({
           return { type: "code", index, cleanCode, language };
         }
         const isContinuation = nextIsContinuation;
+        // Only set if the promo lands at the tail of this chunk (no remaining content
+        // after the match) — if there is content after, applyPromos handles it recursively
+        // within the same chunk and the next chunk is not a continuation.
         nextIsContinuation = inlinePromoConfigs.some(config => {
           const escaped = config.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          return new RegExp(`(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`, "i").test(part);
+          const splitRegex = new RegExp(`(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`, "i");
+          const parts = part.split(splitRegex);
+          return parts.length > 1 && !parts.slice(2).join("").trim();
         });
         return { type: "text", node: applyPromos(part, index, 0, isContinuation) };
       });
