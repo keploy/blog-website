@@ -477,6 +477,23 @@ function LeadModal({ onClose }: { onClose: () => void }) {
               >
                 Open Keploy &rarr;
               </a>
+
+              {/* Close button */}
+              <button
+                onClick={onClose}
+                style={{
+                  marginTop: 16,
+                  background: "none",
+                  border: "none",
+                  color: "#78716c",
+                  fontSize: 14,
+                  cursor: "pointer",
+                  padding: "4px 8px",
+                  textDecoration: "underline",
+                }}
+              >
+                Close
+              </button>
             </div>
           ) : (
             /* ── Form screen ── */
