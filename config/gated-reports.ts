@@ -24,6 +24,17 @@ export const gatedReports: GatedReportConfig[] = [
     // TODO: replace with the real report page URL before merging
     redirectUrl: "https://keploy.io/ai-testing-in-saas",
   },
+  {
+    blogSlug: "api-testing-strategies",
+    afterHeading: "Set Up Test Environments with Realistic Data",
+    preview: {
+      imageSrc: "/blog/images/healthcare-api-testing-security-report-preview.webp",
+      alt: "Healthcare API Testing & Security Report — Preview",
+    },
+    title: "Get the Full Healthcare API Testing & Security Report",
+    subtitle: "In-depth data on securing and scaling healthcare APIs.",
+    redirectUrl: "https://keploy.io/healthcare-api-testing-security-report",
+  },
 ];
 
 export function getGatedReportConfig(slug: string): GatedReportConfig | null {
