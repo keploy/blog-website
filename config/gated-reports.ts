@@ -7,7 +7,8 @@ export interface GatedReportConfig {
   };
   title: string;
   subtitle: string;
-  reportId: string;
+  redirectUrl: string;
+  ctaText?: string;
 }
 
 export const gatedReports: GatedReportConfig[] = [
@@ -19,9 +20,9 @@ export const gatedReports: GatedReportConfig[] = [
       alt: "API Testing Tools Report — Preview",
     },
     title: "Get the Full API Testing Report",
-    subtitle:
-      "A comprehensive guide trusted by thousands of engineers. Delivered free to your inbox.",
-    reportId: "api-testing-report-2024",
+    subtitle: "A comprehensive guide trusted by thousands of engineers.",
+    // TODO: replace with the real report page URL before merging
+    redirectUrl: "",
   },
 ];
 
