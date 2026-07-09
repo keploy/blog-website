@@ -346,7 +346,7 @@ export default function PostBody({
     let gatedInjected = false;
     const gatedHeadingRegex = gatedConfig
       ? new RegExp(
-          `(<h([1-6])[^>]*>[\\s\\S]*?${gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[\\s\\S]*?<\\/h\\2>)`,
+          `<h([1-6])[^>]*>[\\s\\S]*?${gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[\\s\\S]*?<\\/h\\1>`,
           "i"
         )
       : null;
