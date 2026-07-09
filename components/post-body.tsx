@@ -346,7 +346,7 @@ export default function PostBody({
     let gatedInjected = false;
     const gatedSplitRegex = gatedConfig
       ? new RegExp(
-          `(<h[1-6][^>]*>[\\s\\S]*?${gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[\\s\\S]*?<\\/h[1-6]>)`,
+          `(<h([1-6])[^>]*>[\\s\\S]*?${gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[\\s\\S]*?<\\/h\\2>)`,
           "i"
         )
       : null;
@@ -357,7 +357,7 @@ export default function PostBody({
         if (parts.length > 1) {
           gatedInjected = true;
           const beforeAndHeading = parts[0] + (parts[1] || "");
-          const after = parts.slice(2).join("");
+          const after = parts.slice(3).join("");
           return (
             <Fragment key={key}>
               <div
