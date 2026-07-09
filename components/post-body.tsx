@@ -344,15 +344,16 @@ export default function PostBody({
 
     const gatedConfig = blogSlug ? getGatedReportConfig(blogSlug) : null;
     let gatedInjected = false;
+    const gatedSplitRegex = gatedConfig
+      ? new RegExp(
+          `(<h[1-6][^>]*>[\\s\\S]*?${gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[\\s\\S]*?<\\/h[1-6]>)`,
+          "i"
+        )
+      : null;
 
     const renderHtmlPart = (html: string, key: number | string) => {
-      if (gatedConfig && !gatedInjected) {
-        const escaped = gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const splitRegex = new RegExp(
-          `(<h[1-6][^>]*>[\\s\\S]*?${escaped}[\\s\\S]*?<\\/h[1-6]>)`,
-          "i"
-        );
-        const parts = html.split(splitRegex);
+      if (gatedConfig && gatedSplitRegex && !gatedInjected) {
+        const parts = html.split(gatedSplitRegex);
         if (parts.length > 1) {
           gatedInjected = true;
           const beforeAndHeading = parts[0] + (parts[1] || "");

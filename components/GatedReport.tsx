@@ -7,7 +7,7 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
       className="my-10 rounded-2xl border border-gray-200 shadow-lg overflow-hidden"
       style={{ height: "520px" }}
     >
-      <style>{`
+      <style jsx>{`
         .gr-scroll::-webkit-scrollbar { display: none; }
       `}</style>
 
