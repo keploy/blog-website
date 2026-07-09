@@ -344,7 +344,7 @@ export default function PostBody({
 
     const gatedConfig = blogSlug ? getGatedReportConfig(blogSlug) : null;
     let gatedInjected = false;
-    const gatedSplitRegex = gatedConfig
+    const gatedHeadingRegex = gatedConfig
       ? new RegExp(
           `(<h([1-6])[^>]*>[\\s\\S]*?${gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[\\s\\S]*?<\\/h\\2>)`,
           "i"
@@ -352,12 +352,13 @@ export default function PostBody({
       : null;
 
     const renderHtmlPart = (html: string, key: number | string) => {
-      if (gatedConfig && gatedSplitRegex && !gatedInjected) {
-        const parts = html.split(gatedSplitRegex);
-        if (parts.length > 1) {
+      if (gatedConfig && gatedHeadingRegex && !gatedInjected) {
+        const match = gatedHeadingRegex.exec(html);
+        if (match) {
           gatedInjected = true;
-          const beforeAndHeading = parts[0] + (parts[1] || "");
-          const after = parts.slice(3).join("");
+          const splitAt = match.index + match[0].length;
+          const beforeAndHeading = html.slice(0, splitAt);
+          const after = html.slice(splitAt);
           return (
             <Fragment key={key}>
               <div
