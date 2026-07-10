@@ -344,16 +344,25 @@ export default function PostBody({
 
     const gatedConfig = blogSlug ? getGatedReportConfig(blogSlug) : null;
     let gatedInjected = false;
-    const gatedHeadingRegex = gatedConfig
-      ? new RegExp(
-          `<h([1-6])[^>]*>[\\s\\S]*?${gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[\\s\\S]*?<\\/h\\1>`,
-          "i"
-        )
-      : null;
+
+    const buildGatedRegex = (): RegExp | null => {
+      if (!gatedConfig) return null;
+      if (gatedConfig.afterText) {
+        const esc = gatedConfig.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return new RegExp(`(${esc}[\\s\\S]*?<\\/(?:p|li|ul|ol|blockquote|div|h[1-6])>)`, "i");
+      }
+      if (gatedConfig.afterHeading) {
+        const esc = gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        // No backreference — avoids matching a prior <h2> and seeking </h2> past the target
+        return new RegExp(`<h[1-6][^>]*>[\\s\\S]*?${esc}[\\s\\S]*?<\\/h[1-6]>`, "i");
+      }
+      return null;
+    };
+    const gatedRegex = buildGatedRegex();
 
     const renderHtmlPart = (html: string, key: number | string) => {
-      if (gatedConfig && gatedHeadingRegex && !gatedInjected) {
-        const match = gatedHeadingRegex.exec(html);
+      if (gatedConfig && gatedRegex && !gatedInjected) {
+        const match = gatedRegex.exec(html);
         if (match) {
           gatedInjected = true;
           const splitAt = match.index + match[0].length;

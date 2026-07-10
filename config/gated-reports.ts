@@ -1,6 +1,7 @@
 export interface GatedReportConfig {
   blogSlug: string;
-  afterHeading: string;
+  afterHeading?: string;
+  afterText?: string;
   preview: {
     imageSrc: string;
     alt: string;
@@ -26,7 +27,7 @@ export const gatedReports: GatedReportConfig[] = [
   },
   {
     blogSlug: "api-testing-strategies",
-    afterHeading: "Set Up Test Environments with Realistic Data",
+    afterText: "Edge cases specific to your domain — business logic exceptions",
     preview: {
       imageSrc: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/healthcare-api-testing-security-report-preview.webp",
       alt: "Healthcare API Testing & Security Report — Preview",
