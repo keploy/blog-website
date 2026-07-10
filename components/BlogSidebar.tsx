@@ -161,11 +161,11 @@ function SidebarAdBanner() {
           href={CTA_HREF}
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full text-center font-bold text-sm py-3 rounded-xl transition-all duration-150 hover:brightness-90 active:scale-[0.98]"
+          className="block w-full text-center font-bold text-sm py-3 rounded-xl border transition-all duration-150 hover:bg-orange-50 active:scale-[0.98]"
           style={{
-            background: '#ED5D0F',
-            color: '#fff',
-            boxShadow: '0 2px 10px rgba(232, 98, 42, 0.35)',
+            background: 'transparent',
+            border: '1.5px solid #ED5D0F',
+            color: '#ED5D0F',
             fontFamily: "'DM Sans', sans-serif",
           }}
         >
