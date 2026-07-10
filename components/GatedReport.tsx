@@ -4,8 +4,8 @@ import type { GatedReportConfig } from "../config/gated-reports";
 export default function GatedReport({ config }: { config: GatedReportConfig }) {
   return (
     <div
-      className="my-10 rounded-2xl border border-gray-200 shadow-lg overflow-hidden"
-      style={{ height: "520px" }}
+      className="my-10 mx-auto rounded-2xl border border-gray-200 shadow-lg overflow-hidden max-w-md p-2"
+      style={{ height: "380px" }}
     >
       <style jsx>{`
         .gr-scroll::-webkit-scrollbar { display: none; }
@@ -19,7 +19,8 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
         <img
           src={config.preview.imageSrc}
           alt={config.preview.alt}
-          className="w-full block"
+          className="block"
+          style={{ width: "100%", maxWidth: "none", marginTop: 0, borderRadius: 0 }}
           loading="lazy"
         />
 
@@ -30,8 +31,8 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
         */}
         <div
           style={{
-            marginTop: "-220px",
-            paddingTop: "88px",
+            marginTop: "-160px",
+            paddingTop: "64px",
             paddingBottom: "32px",
             paddingLeft: "24px",
             paddingRight: "24px",

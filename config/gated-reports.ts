@@ -16,7 +16,7 @@ export const gatedReports: GatedReportConfig[] = [
     blogSlug: "api-testing-tools",
     afterHeading: "How to Choose the Right API Testing Tool",
     preview: {
-      imageSrc: "/blog/report-preview.png",
+      imageSrc: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/report-0-ai-saas.webp",
       alt: "API Testing Tools Report — Preview",
     },
     title: "Get the Full API Testing Report",
@@ -28,7 +28,7 @@ export const gatedReports: GatedReportConfig[] = [
     blogSlug: "api-testing-strategies",
     afterHeading: "Set Up Test Environments with Realistic Data",
     preview: {
-      imageSrc: "/blog/images/healthcare-api-testing-security-report-preview.webp",
+      imageSrc: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/healthcare-api-testing-security-report-preview.webp",
       alt: "Healthcare API Testing & Security Report — Preview",
     },
     title: "Get the Full Healthcare API Testing & Security Report",
