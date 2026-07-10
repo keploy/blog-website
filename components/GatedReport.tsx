@@ -1,21 +1,28 @@
+import { useRef } from "react";
 import Link from "next/link";
 import type { GatedReportConfig } from "../config/gated-reports";
 
 export default function GatedReport({ config }: { config: GatedReportConfig }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  };
+
   return (
     <div
-      className="my-10 mx-auto rounded-2xl border border-gray-200 shadow-lg overflow-hidden max-w-md p-2"
+      className="my-10 relative rounded-2xl border border-gray-200 shadow-lg overflow-hidden w-full p-2"
       style={{ height: "380px" }}
     >
-      <style jsx>{`
+      <style>{`
         .gr-scroll::-webkit-scrollbar { display: none; }
       `}</style>
 
       <div
+        ref={scrollRef}
         className="gr-scroll h-full overflow-y-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {/* Report preview image */}
         <img
           src={config.preview.imageSrc}
           alt={config.preview.alt}
@@ -24,11 +31,6 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
           loading="lazy"
         />
 
-        {/*
-          Overlay sits 220px up into the image via negative margin.
-          backdrop-filter blurs the image visible behind it.
-          mask-image fades the whole overlay in gradually so there's no hard edge.
-        */}
         <div
           style={{
             marginTop: "-160px",
@@ -55,6 +57,43 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
           </Link>
         </div>
       </div>
+
+      {/* Scroll hint — fixed at bottom-right, outside the scroll container */}
+      <button
+        onClick={scrollToBottom}
+        aria-label="Scroll down to read more"
+        style={{
+          position: "absolute",
+          bottom: 12,
+          right: 12,
+          background: "rgba(255,255,255,0.92)",
+          border: "1px solid #e5e7eb",
+          borderRadius: "50%",
+          width: 32,
+          height: 32,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
+          zIndex: 10,
+          padding: 0,
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#f97316"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
     </div>
   );
 }
