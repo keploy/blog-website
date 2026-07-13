@@ -22,7 +22,7 @@ export const gatedReports: GatedReportConfig[] = [
     },
     title: "Get the Full API Testing Report",
     subtitle: "A comprehensive guide trusted by thousands of engineers.",
-    // TODO: replace with the real report page URL before merging
+  
     redirectUrl: "https://keploy.io/ai-testing-in-saas",
   },
   {
