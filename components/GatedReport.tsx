@@ -4,14 +4,19 @@ import type { GatedReportConfig } from "../config/gated-reports";
 
 export default function GatedReport({ config }: { config: GatedReportConfig }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
   const [showBtn, setShowBtn] = useState(true);
 
   const checkScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 8;
-    const overflows = el.scrollHeight > el.clientHeight + 8;
-    setShowBtn(overflows && !atBottom);
+    if (rafRef.current !== null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      const el = scrollRef.current;
+      if (!el) return;
+      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 8;
+      const overflows = el.scrollHeight > el.clientHeight + 8;
+      setShowBtn(overflows && !atBottom);
+    });
   }, []);
 
   useEffect(() => { checkScroll(); }, [checkScroll]);
@@ -43,6 +48,7 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
           className="block"
           style={{ width: "100%", maxWidth: "none", marginTop: 0, borderRadius: 0 }}
           loading="lazy"
+          onLoad={checkScroll}
         />
 
         <div
