@@ -11,6 +11,18 @@ export const SOCIAL_LINKS = [
   "https://www.youtube.com/@keploy",
   "https://www.instagram.com/keploy.io/",
   "https://www.github.com/keploy/keploy",
+  // Authority / review profiles — kept in sync with keploy.io Organization
+  // sameAs so AI engines resolve one consistent Keploy entity across
+  // landing, blog, and docs (reduces entity fragmentation).
+  "https://discord.gg/keploy",
+  "https://community.keploy.io",
+  "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio",
+  "https://chromewebstore.google.com/detail/keploy-api-test-recorder/ohcclfkaidblnjnggclkiecgkpgldihe",
+  "https://www.crunchbase.com/organization/hybridk8s",
+  "https://www.gartner.com/reviews/product/keploy-618993540",
+  "https://www.g2.com/products/keploy/reviews",
+  "https://www.capterra.in/software/1070466/Keploy",
+  "https://aws.amazon.com/marketplace/reviews/reviews-list/prodview-xgwmdk4ivjjv4",
 ];
 
 type BreadcrumbItem = {
@@ -72,6 +84,24 @@ export const getOrganizationSchema = () => ({
   name: ORG_NAME,
   url: MAIN_SITE_URL,
   logo: ORG_LOGO_URL,
+  // Entity/E-E-A-T signals kept in sync with the keploy.io landing
+  // Organization node so all three properties resolve to one Keploy entity.
+  foundingDate: "2021-01-01",
+  knowsAbout: [
+    "API Testing",
+    "Test Automation",
+    "eBPF-based Testing",
+    "Dependency Virtualization",
+    "AI-Powered Testing",
+    "Production Behavior Replay",
+    "Unit Test Generation",
+  ],
+  award: [
+    "API World 2023 Award: Best in API Infrastructure",
+    "CNCF Landscape",
+    "Google for Startups Accelerator",
+    "Google Summer of Code Mentoring Organization",
+  ],
   sameAs: SOCIAL_LINKS,
   contactPoint: [
     {

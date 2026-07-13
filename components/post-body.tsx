@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
 import { getInlinePromosForSlug } from "../config/inline-promos";
+import { getGatedReportConfig } from "../config/gated-reports";
 import KeywordTooltipLayer from "./KeywordTooltipLayer";
 import { getTooltipsForSlug } from "../config/keyword-tooltips";
 
@@ -25,6 +26,7 @@ const BlogSidebar = dynamic(() => import("./BlogSidebar"), {
 const JsonDiffViewer = dynamic(() => import("./json-diff-viewer"), {
   ssr: false,
 });
+const GatedReport = dynamic(() => import("./GatedReport"), { ssr: false });
 /* Language extensions and theme are static imports within PostBody, but
    PostBody itself is dynamically imported (next/dynamic) in page files.
    This means these are code-split into the PostBody chunk, not the main bundle. */
@@ -283,22 +285,17 @@ export default function PostBody({
     }
   }, [tocItems]);
 
-  const handleCopyClick = (code, index) => {
+  const handleCopyClick = (code: string, index: number) => {
     navigator.clipboard
       .writeText(code)
       .then(() => {
-        const updatedList = [...copySuccessList];
-        updatedList[index] = true;
-        setCopySuccessList(updatedList);
+        setCopySuccessList((prev) => { const u = [...prev]; u[index] = true; return u; });
         setTimeout(() => {
-          updatedList[index] = false;
-          setCopySuccessList(updatedList);
+          setCopySuccessList((prev) => { const u = [...prev]; u[index] = false; return u; });
         }, 2000);
       })
       .catch(() => {
-        const updatedList = [...copySuccessList];
-        updatedList[index] = false;
-        setCopySuccessList(updatedList);
+        setCopySuccessList((prev) => { const u = [...prev]; u[index] = false; return u; });
       });
   };
 
@@ -327,7 +324,8 @@ export default function PostBody({
     | { type: "text"; node: ReactNode }
     | { type: "code"; index: number; cleanCode: string; language: string };
 
-  // Expensive: HTML parsing, tooltip injection, promo splitting \u2014 no copySuccessList dep
+  // Expensive: HTML parsing, tooltip injection, promo/gated splitting \u2014 no copySuccessList dep
+
   const parsedParts = useMemo((): ParsedPart[] => {
     const safeContent = replacedContent || "";
 
@@ -389,10 +387,44 @@ export default function PostBody({
       );
     };
 
+    const gatedConfig = blogSlug ? getGatedReportConfig(blogSlug) : null;
+    let gatedInjected = false;
+    const gatedRegex = (() => {
+      if (!gatedConfig) return null;
+      if (gatedConfig.afterText) {
+        const esc = gatedConfig.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return new RegExp(`(${esc}[\\s\\S]*?<\\/(?:p|li|ul|ol|blockquote|div|h[1-6])>)`, "i");
+      }
+      if (gatedConfig.afterHeading) {
+        const esc = gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return new RegExp(`<h[1-6][^>]*>[\\s\\S]*?${esc}[\\s\\S]*?<\\/h[1-6]>`, "i");
+      }
+      return null;
+    })();
+
+    // processHtmlPart: gated report injection layer on top of applyPromos
+    const processHtmlPart = (html: string, key: number, promoFromIndex: number, isContinuation = false): ReactNode => {
+      if (gatedConfig && gatedRegex && !gatedInjected) {
+        const match = gatedRegex.exec(html);
+        if (match) {
+          gatedInjected = true;
+          const splitAt = match.index + match[0].length;
+          return (
+            <Fragment key={key}>
+              {applyPromos(html.slice(0, splitAt), `${key}-b`, promoFromIndex, isContinuation)}
+              <GatedReport config={gatedConfig} />
+              {applyPromos(html.slice(splitAt), `${key}-a`, promoFromIndex, true)}
+            </Fragment>
+          );
+        }
+      }
+      return applyPromos(html, key, promoFromIndex, isContinuation);
+    };
+
     const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
     if (!codeBlocks) {
-      return [{ type: "text", node: applyPromos(safeContent, 0, 0) }];
+      return [{ type: "text", node: processHtmlPart(safeContent, 0, 0) }];
     }
 
     const decodeHtmlEntities = (str: string): string => {
@@ -411,7 +443,14 @@ export default function PostBody({
         .replace(/&nbsp;/g, "\u00A0");
     };
 
+    const knownLanguages = [
+      "go", "javascript", "js", "typescript", "ts",
+      "python", "bash", "sh", "java", "rust", "cpp",
+      "c", "yaml", "json", "markdown", "sql", "html", "css",
+    ];
+
     let nextIsContinuation = false;
+
     return safeContent
       .split(/(<pre[\s\S]*?<\/pre>)/gm)
       .map((part, index): ParsedPart => {
@@ -424,11 +463,7 @@ export default function PostBody({
               ? codeMatch[0].split("language-")[1].split('"')[0]
               : "";
 
-          const knownLanguages = [
-            "go", "javascript", "js", "typescript", "ts",
-            "python", "bash", "sh", "java", "rust", "cpp",
-            "c", "yaml", "json", "markdown", "sql", "html", "css",
-          ];
+          // 2. If no class, check if the first line is a known language keyword (WP pattern)
           const firstLine = code.trimStart().split("\n")[0].trim().toLowerCase();
           const langFromFirstLine = knownLanguages.includes(firstLine) ? firstLine : "";
           const language = langFromClass || langFromFirstLine || "bash";
@@ -452,7 +487,7 @@ export default function PostBody({
           const parts = part.split(splitRegex);
           return parts.length > 1 && !parts.slice(2).join("").trim();
         });
-        return { type: "text", node: applyPromos(part, index, 0, isContinuation) };
+        return { type: "text", node: processHtmlPart(part, index, 0, isContinuation) };
       });
   }, [replacedContent, blogSlug, tooltipConfigs]);
 
