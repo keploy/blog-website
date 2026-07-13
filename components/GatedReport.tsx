@@ -64,7 +64,8 @@ export default function GatedReport({ config }: { config: GatedReportConfig }) {
         style={{
           position: "absolute",
           bottom: 12,
-          right: 12,
+          left: "50%",
+          transform: "translateX(-50%)",
           background: "rgba(255,255,255,0.92)",
           border: "1px solid #e5e7eb",
           borderRadius: "50%",
