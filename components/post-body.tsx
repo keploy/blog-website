@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Fragment, useMemo, useCallback } from "react";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
+import { getGatedReportConfig, type GatedReportConfig } from "../config/gated-reports";
 import KeywordTooltipLayer from "./KeywordTooltipLayer";
 import { getTooltipsForSlug } from "../config/keyword-tooltips";
 
@@ -23,6 +24,7 @@ const BlogSidebar = dynamic(() => import("./BlogSidebar"), {
 const JsonDiffViewer = dynamic(() => import("./json-diff-viewer"), {
   ssr: false,
 });
+const GatedReport = dynamic(() => import("./GatedReport"), { ssr: false });
 /* Language extensions and theme are static imports within PostBody, but
    PostBody itself is dynamically imported (next/dynamic) in page files.
    This means these are code-split into the PostBody chunk, not the main bundle. */
@@ -64,7 +66,7 @@ export default function PostBody({
     reviewer.name.split(" ")[0].toLowerCase();
 
   const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
-  const tooltipConfigs = blogSlug ? getTooltipsForSlug(blogSlug) : [];
+  const tooltipConfigs = useMemo(() => blogSlug ? getTooltipsForSlug(blogSlug) : [], [blogSlug]);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -278,24 +280,19 @@ export default function PostBody({
     }
   }, [tocItems]);
 
-  const handleCopyClick = (code, index) => {
+  const handleCopyClick = useCallback((code: string, index: number) => {
     navigator.clipboard
       .writeText(code)
       .then(() => {
-        const updatedList = [...copySuccessList];
-        updatedList[index] = true;
-        setCopySuccessList(updatedList);
+        setCopySuccessList((prev) => { const u = [...prev]; u[index] = true; return u; });
         setTimeout(() => {
-          updatedList[index] = false;
-          setCopySuccessList(updatedList);
+          setCopySuccessList((prev) => { const u = [...prev]; u[index] = false; return u; });
         }, 2000);
       })
       .catch(() => {
-        const updatedList = [...copySuccessList];
-        updatedList[index] = false;
-        setCopySuccessList(updatedList);
+        setCopySuccessList((prev) => { const u = [...prev]; u[index] = false; return u; });
       });
-  };
+  }, []);
 
   const handleHeadingCopyClick = (id: string, index: number) => {
     const url = sanitizeStringForURL(id, true);
@@ -318,7 +315,12 @@ export default function PostBody({
 
 
 
-  const renderCodeBlocks = () => {
+  type ParsedPart =
+    | { type: "html"; key: number; html: string }
+    | { type: "html-with-gated"; key: number; before: string; after: string; gatedConfig: GatedReportConfig }
+    | { type: "code"; key: number; language: string; cleanCode: string };
+
+  const parsedParts = useMemo((): ParsedPart[] => {
     const safeContent = replacedContent || "";
 
     const injectedKeywords = new Set<string>();
@@ -340,16 +342,42 @@ export default function PostBody({
       return result;
     };
 
-    const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
+    const gatedConfig = blogSlug ? getGatedReportConfig(blogSlug) : null;
+    let gatedInjected = false;
+    const gatedRegex = (() => {
+      if (!gatedConfig) return null;
+      if (gatedConfig.afterText) {
+        const esc = gatedConfig.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return new RegExp(`(${esc}[\\s\\S]*?<\\/(?:p|li|ul|ol|blockquote|div|h[1-6])>)`, "i");
+      }
+      if (gatedConfig.afterHeading) {
+        const esc = gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        // No backreference — avoids matching a prior <h2> and seeking </h2> past the target
+        return new RegExp(`<h[1-6][^>]*>[\\s\\S]*?${esc}[\\s\\S]*?<\\/h[1-6]>`, "i");
+      }
+      return null;
+    })();
 
-    if (!codeBlocks) {
-      return (
-        <div
-          className={styles.content}
-          dangerouslySetInnerHTML={{ __html: injectTooltipSpans(replacedContent || "") }}
-          suppressHydrationWarning
-        />
-      );
+    const processHtmlPart = (html: string, key: number): ParsedPart => {
+      if (gatedConfig && gatedRegex && !gatedInjected) {
+        const match = gatedRegex.exec(html);
+        if (match) {
+          gatedInjected = true;
+          const splitAt = match.index + match[0].length;
+          return {
+            type: "html-with-gated",
+            key,
+            before: injectTooltipSpans(html.slice(0, splitAt)),
+            after: injectTooltipSpans(html.slice(splitAt)),
+            gatedConfig,
+          };
+        }
+      }
+      return { type: "html", key, html: injectTooltipSpans(html) };
+    };
+
+    if (!safeContent.match(/<pre[\s\S]*?<\/pre>/gm)) {
+      return [processHtmlPart(safeContent, 0)];
     }
 
     const decodeHtmlEntities = (str: string): string => {
@@ -369,9 +397,15 @@ export default function PostBody({
         .replace(/&nbsp;/g, "\u00A0");
     };
 
+    const knownLanguages = [
+      "go", "javascript", "js", "typescript", "ts",
+      "python", "bash", "sh", "java", "rust", "cpp",
+      "c", "yaml", "json", "markdown", "sql", "html", "css",
+    ];
+
     return safeContent
       .split(/(<pre[\s\S]*?<\/pre>)/gm)
-      .map((part, index) => {
+      .map((part, index): ParsedPart => {
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
           const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
           const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : "";
@@ -383,11 +417,6 @@ export default function PostBody({
               : "";
 
           // 2. If no class, check if the first line is a known language keyword (WP pattern)
-          const knownLanguages = [
-            "go", "javascript", "js", "typescript", "ts",
-            "python", "bash", "sh", "java", "rust", "cpp",
-            "c", "yaml", "json", "markdown", "sql", "html", "css",
-          ];
           const firstLine = code.trimStart().split("\n")[0].trim().toLowerCase();
           const langFromFirstLine = knownLanguages.includes(firstLine) ? firstLine : "";
 
@@ -401,68 +430,93 @@ export default function PostBody({
                 ? code.trimStart().slice(langFromClass.length + 1)
                 : code;
 
-          const getLanguageExtension = (lang: string) => {
-            switch (lang) {
-              case "javascript":
-              case "js":
-                return javascript();
-              case "python":
-                return python();
-              case "markdown":
-                return markdown();
-              case "go":
-                return go();
-              default:
-                return javascript();
-            }
-          };
-
-          return (
-            <div key={index} data-testid="code-block" className="rounded-lg overflow-hidden mb-6 border border-[#313244] shadow-md">
-              {/* Header bar: language badge + copy button */}
-              <div className="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-[#313244]">
-                <span className="text-xs font-mono text-[#6c7086] uppercase tracking-widest select-none">
-                  {language}
-                </span>
-                <button
-                  data-testid="copy-button"
-                  onClick={() => handleCopyClick(cleanCode, index)}
-                  className="flex items-center gap-1 text-xs text-[#cdd6f4] bg-[#313244] hover:bg-[#45475a] px-2 py-1 rounded transition-colors duration-150"
-                >
-                  {copySuccessList[index] ? (
-                    <><IoCheckmarkOutline /> <span>Copied!</span></>
-                  ) : (
-                    <><IoCopyOutline /> <span>Copy</span></>
-                  )}
-                </button>
-              </div>
-              <CodeMirror
-                value={cleanCode}
-                extensions={[getLanguageExtension(language)]}
-                theme={dracula}
-                basicSetup={{
-                  lineNumbers: false,
-                  highlightActiveLine: true,
-                  tabSize: 4,
-                }}
-                editable={false}
-                readOnly={true}
-                indentWithTab={true}
-              />
-            </div>
-          );
+          return { type: "code", key: index, language, cleanCode };
         }
+        return processHtmlPart(part, index);
+      });
+  }, [replacedContent, blogSlug, tooltipConfigs]);
 
-        return (
+  const getLanguageExtension = useCallback((lang: string) => {
+    switch (lang) {
+      case "javascript":
+      case "js":
+        return javascript();
+      case "python":
+        return python();
+      case "markdown":
+        return markdown();
+      case "go":
+        return go();
+      default:
+        return javascript();
+    }
+  }, []);
+
+  const renderedContent = useMemo(() => parsedParts.map((part) => {
+    if (part.type === "code") {
+      const { key, language, cleanCode } = part;
+      return (
+        <div key={key} data-testid="code-block" className="rounded-lg overflow-hidden mb-6 border border-[#313244] shadow-md">
+          <div className="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-[#313244]">
+            <span className="text-xs font-mono text-[#6c7086] uppercase tracking-widest select-none">
+              {language}
+            </span>
+            <button
+              data-testid="copy-button"
+              onClick={() => handleCopyClick(cleanCode, key)}
+              className="flex items-center gap-1 text-xs text-[#cdd6f4] bg-[#313244] hover:bg-[#45475a] px-2 py-1 rounded transition-colors duration-150"
+            >
+              {copySuccessList[key] ? (
+                <><IoCheckmarkOutline /> <span>Copied!</span></>
+              ) : (
+                <><IoCopyOutline /> <span>Copy</span></>
+              )}
+            </button>
+          </div>
+          <CodeMirror
+            value={cleanCode}
+            extensions={[getLanguageExtension(language)]}
+            theme={dracula}
+            basicSetup={{
+              lineNumbers: false,
+              highlightActiveLine: true,
+              tabSize: 4,
+            }}
+            editable={false}
+            readOnly={true}
+            indentWithTab={true}
+          />
+        </div>
+      );
+    }
+
+    if (part.type === "html-with-gated") {
+      return (
+        <Fragment key={part.key}>
           <div
-            key={index}
             className={styles.content}
-            dangerouslySetInnerHTML={{ __html: injectTooltipSpans(part) }}
+            dangerouslySetInnerHTML={{ __html: part.before }}
             suppressHydrationWarning
           />
-        );
-      });
-  };
+          <GatedReport config={part.gatedConfig} />
+          <div
+            className={styles.content}
+            dangerouslySetInnerHTML={{ __html: part.after }}
+            suppressHydrationWarning
+          />
+        </Fragment>
+      );
+    }
+
+    return (
+      <div
+        key={part.key}
+        className={styles.content}
+        dangerouslySetInnerHTML={{ __html: part.html }}
+        suppressHydrationWarning
+      />
+    );
+  }), [parsedParts, copySuccessList, handleCopyClick, getLanguageExtension]);
 
   const oldJson = {
     name: "John",
@@ -496,7 +550,7 @@ export default function PostBody({
         {/* Center — Article content (900px max, matching PostHeader) */}
         <div data-testid="post-content" className="max-w-[780px] w-full mx-auto px-4 sm:px-6 min-w-0" id="post-body-check">
           {slug === "how-to-compare-two-json-files" && <JsonDiffViewer />}
-          <div className="post-content-wrapper">{renderCodeBlocks()}</div>
+          <div className="post-content-wrapper">{renderedContent}</div>
           <hr className="border-gray-300 mt-10 mb-10" />
 
           {/* Author card — Writer */}
