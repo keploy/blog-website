@@ -25,7 +25,6 @@ function LeadModal({ onClose, captchaReady }: { onClose: () => void; captchaRead
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const [showSlackEscape, setShowSlackEscape] = useState(false);
   const submittingRef = useRef(false);
 
   useEffect(() => { submittingRef.current = submitting; }, [submitting]);
@@ -88,7 +87,6 @@ function LeadModal({ onClose, captchaReady }: { onClose: () => void; captchaRead
     e.preventDefault();
     if (submittingRef.current) return;
     setSubmitError("");
-    setShowSlackEscape(false);
 
     const form = e.currentTarget;
     const getInput = (name: string): string => {
@@ -107,7 +105,6 @@ function LeadModal({ onClose, captchaReady }: { onClose: () => void; captchaRead
         page: window.location.pathname,
       };
     } catch {
-      setShowSlackEscape(true);
       setSubmitError("Form error. Please refresh and try again.");
       return;
     }
@@ -147,7 +144,6 @@ function LeadModal({ onClose, captchaReady }: { onClose: () => void; captchaRead
       data.recaptchaToken = token;
     } catch {
       clearTimeout(recaptchaTimeoutId);
-      setShowSlackEscape(true);
       setSubmitError("Verification failed. Please try again.");
       setSubmitting(false);
       submittingRef.current = false;
@@ -166,7 +162,6 @@ function LeadModal({ onClose, captchaReady }: { onClose: () => void; captchaRead
       clearTimeout(fetchTimeout);
       const json: { error?: string } = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setShowSlackEscape(true);
         setSubmitError(json.error || "Something went wrong. Please try again.");
         submittingRef.current = false;
         setSubmitting(false);
@@ -178,7 +173,6 @@ function LeadModal({ onClose, captchaReady }: { onClose: () => void; captchaRead
     } catch (err) {
       clearTimeout(fetchTimeout);
       const isTimeout = err instanceof Error && err.name === "AbortError";
-      setShowSlackEscape(true);
       setSubmitError(
         isTimeout
           ? "Request timed out. Please try again."
@@ -680,19 +674,6 @@ function LeadModal({ onClose, captchaReady }: { onClose: () => void; captchaRead
                         lineHeight: 1.5,
                       }}>
                         {submitError}
-                        {showSlackEscape && (
-                          <>{" "}To claim your credits manually,{" "}
-                            <a
-                              href="https://keploy.io/slack"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{ color: "#dc2626", textDecoration: "underline" }}
-                            >
-                              reach out to us on Slack
-                            </a>
-                            .
-                          </>
-                        )}
                       </p>
                     )}
 
@@ -704,7 +685,7 @@ function LeadModal({ onClose, captchaReady }: { onClose: () => void; captchaRead
                     </p>
                     <p style={{ fontSize: 11.5, color: "#a8a29e", textAlign: "center", margin: "4px 0 0", lineHeight: 1.5 }}>
                       In case of failure,{" "}
-                      <a href="https://keploy.io/slack" target="_blank" rel="noopener noreferrer" style={{ color: "#a8a29e", textDecoration: "underline" }}>
+                      <a href="https://keploy.io/slack" target="_blank" rel="noopener noreferrer" style={{ color: submitError ? "#dc2626" : "#a8a29e", textDecoration: "underline" }}>
                         reach out to us on Slack
                       </a>
                       .
