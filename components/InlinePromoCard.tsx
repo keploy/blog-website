@@ -15,7 +15,7 @@ declare global {
 
 // ─── Lead capture modal ────────────────────────────────────────────────────────
 
-function LeadModal({ onClose }: { onClose: () => void }) {
+function LeadModal({ onClose, captchaReady }: { onClose: () => void; captchaReady: boolean }) {
   const gradId = useId();
   const headingId = useId();
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -25,6 +25,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [showSlackEscape, setShowSlackEscape] = useState(false);
   const submittingRef = useRef(false);
 
   useEffect(() => { submittingRef.current = submitting; }, [submitting]);
@@ -87,6 +88,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     if (submittingRef.current) return;
     setSubmitError("");
+    setShowSlackEscape(false);
 
     const form = e.currentTarget;
     const getInput = (name: string): string => {
@@ -105,6 +107,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
         page: window.location.pathname,
       };
     } catch {
+      setShowSlackEscape(true);
       setSubmitError("Form error. Please refresh and try again.");
       return;
     }
@@ -115,8 +118,8 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     }
 
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-    if (!siteKey || !window.grecaptcha) {
-      setSubmitError("Verification unavailable. Please try again.");
+    if (!siteKey || !captchaReady || !window.grecaptcha) {
+      setSubmitError("Security check still loading. Please wait a moment and try again.");
       return;
     }
     submittingRef.current = true;
@@ -144,6 +147,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       data.recaptchaToken = token;
     } catch {
       clearTimeout(recaptchaTimeoutId);
+      setShowSlackEscape(true);
       setSubmitError("Verification failed. Please try again.");
       setSubmitting(false);
       submittingRef.current = false;
@@ -162,6 +166,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
       clearTimeout(fetchTimeout);
       const json: { error?: string } = await res.json().catch(() => ({}));
       if (!res.ok) {
+        setShowSlackEscape(true);
         setSubmitError(json.error || "Something went wrong. Please try again.");
         submittingRef.current = false;
         setSubmitting(false);
@@ -173,6 +178,7 @@ function LeadModal({ onClose }: { onClose: () => void }) {
     } catch (err) {
       clearTimeout(fetchTimeout);
       const isTimeout = err instanceof Error && err.name === "AbortError";
+      setShowSlackEscape(true);
       setSubmitError(
         isTimeout
           ? "Request timed out. Please try again."
@@ -659,10 +665,10 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                     <button
                       type="submit"
                       className="k5y-submit-btn"
-                      disabled={submitting}
-                      style={{ opacity: submitting ? 0.7 : undefined, cursor: submitting ? "not-allowed" : undefined }}
+                      disabled={submitting || !captchaReady}
+                      style={{ opacity: (submitting || !captchaReady) ? 0.7 : undefined, cursor: (submitting || !captchaReady) ? "not-allowed" : undefined }}
                     >
-                      {submitting ? "Submitting…" : "Get 1 Month of Keploy Credits For Free ✦"}
+                      {submitting ? "Submitting…" : !captchaReady ? "Loading security check…" : "Get 1 Month of Keploy Credits For Free ✦"}
                     </button>
 
                     {submitError && (
@@ -674,6 +680,19 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                         lineHeight: 1.5,
                       }}>
                         {submitError}
+                        {showSlackEscape && (
+                          <>{" "}To claim your credits manually,{" "}
+                            <a
+                              href="https://keploy.io/slack"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: "#dc2626", textDecoration: "underline" }}
+                            >
+                              reach out to us on Slack
+                            </a>
+                            .
+                          </>
+                        )}
                       </p>
                     )}
 
@@ -682,6 +701,13 @@ function LeadModal({ onClose }: { onClose: () => void }) {
                       <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#a8a29e", textDecoration: "underline" }}>Privacy</a>
                       {" & "}
                       <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#a8a29e", textDecoration: "underline" }}>Terms</a>
+                    </p>
+                    <p style={{ fontSize: 11.5, color: "#a8a29e", textAlign: "center", margin: "4px 0 0", lineHeight: 1.5 }}>
+                      In case of failure,{" "}
+                      <a href="https://keploy.io/slack" target="_blank" rel="noopener noreferrer" style={{ color: "#a8a29e", textDecoration: "underline" }}>
+                        reach out to us on Slack
+                      </a>
+                      .
                     </p>
                   </div>
                 </div>
@@ -699,8 +725,15 @@ function LeadModal({ onClose }: { onClose: () => void }) {
 function Keploy5YearsBanner() {
   const bannerId = useId();
   const [modalOpen, setModalOpen] = useState(false);
+  const [captchaReady, setCaptchaReady] = useState(false);
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
   const handleClose = useCallback(() => setModalOpen(false), []);
+
+  // Handle re-navigation: Next.js deduplicates Script tags so onReady won't
+  // fire again if grecaptcha is already on window from a previous page load.
+  useEffect(() => {
+    if (!captchaReady && window.grecaptcha) setCaptchaReady(true);
+  }, [captchaReady]);
 
   if (!siteKey) return null;
 
@@ -709,6 +742,8 @@ function Keploy5YearsBanner() {
       <Script
         src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
         strategy="afterInteractive"
+        onReady={() => setCaptchaReady(true)}
+        onError={() => setCaptchaReady(true)}
       />
       <style>{`
         @keyframes k5y-border {
@@ -883,39 +918,40 @@ function Keploy5YearsBanner() {
             Get 1 Month Free
           </button>
         </div>
-        <p
-          style={{
-            margin: "10px 0 0",
-            fontSize: 11,
-            color: "#78350f",
-            textAlign: "center" as const,
-            lineHeight: 1.5,
-          }}
-        >
-          Protected by reCAPTCHA.{" "}
-          <a
-            href="https://policies.google.com/privacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "#78350f" }}
-          >
-            Privacy Policy
-          </a>{" "}
-          &amp;{" "}
-          <a
-            href="https://policies.google.com/terms"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "#78350f" }}
-          >
-            Terms of Service
-          </a>{" "}
-          apply.
-        </p>
       </div>
 
+      <p
+        style={{
+          margin: "8px 0 0",
+          fontSize: 11,
+          color: "#a8a29e",
+          textAlign: "center" as const,
+          lineHeight: 1.5,
+        }}
+      >
+        Protected by reCAPTCHA.{" "}
+        <a
+          href="https://policies.google.com/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "#a8a29e", textDecoration: "underline" }}
+        >
+          Privacy Policy
+        </a>{" "}
+        &amp;{" "}
+        <a
+          href="https://policies.google.com/terms"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "#a8a29e", textDecoration: "underline" }}
+        >
+          Terms of Service
+        </a>{" "}
+        apply.
+      </p>
+
       {/* Modal */}
-      {modalOpen && <LeadModal onClose={handleClose} />}
+      {modalOpen && <LeadModal onClose={handleClose} captchaReady={captchaReady} />}
     </div>
   );
 }
