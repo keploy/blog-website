@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./subscribe-newsletter.module.css";
 import { newsLetterSubscriptionUrl } from '../services/constants'
-import newsletterBunny from "../public/images/newsletterBunny.png"
-import Image from "next/image";
-import { gsap } from "gsap";
+import { useInvisibleRecaptcha, RecaptchaAttribution } from "../lib/use-invisible-recaptcha";
+import { sendBlogLead } from "../lib/blog-mql";
 
 export const subscribeMutation = (formData: { fullName: string, email: string, companyName: string, message: string }) => {
 
@@ -39,7 +38,7 @@ export const subscribeMutation = (formData: { fullName: string, email: string, c
 };
 
 
-export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
+export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) {
   const myComponent = useRef<HTMLDivElement>(null);
   const [isVisible, setVisible] = useState<boolean>(true);
   const [fullName, setFullName] = useState('');
@@ -48,6 +47,10 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [emailError, setEmailError] = useState('');
   const message = "NEWSLETTER"
+  // Don't load Google's script for every reader — only once someone actually
+  // interacts with the form (filling three fields leaves it ample time to load).
+  const [captchaActive, setCaptchaActive] = useState(false);
+  const { script: recaptchaScript, getToken } = useInvisibleRecaptcha(captchaActive);
   const isValidEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
@@ -89,40 +92,30 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
       message
     };
 
+    // Lead capture rides alongside the newsletter subscription, never gating
+    // it: token minting and the /blog-mql POST are fire-and-forget (fail-open,
+    // verified server-side via reCAPTCHA Enterprise).
+    const page = window.location.href;
+    getToken('submit_lead').then((recaptchaToken) => {
+      sendBlogLead({
+        email: email.trim().toLowerCase(),
+        name: fullName.trim(),
+        company: companyName.trim(),
+        source: 'blog-newsletter',
+        page,
+        assetType: 'newsletter',
+        recaptchaToken,
+      });
+    });
+
     handleSubscribe(payload)
   };
   const isSubscribeDisabled = ()=>{
     return Boolean(!email || !fullName || !companyName)    
   }
-  const bunnyRef = useRef(null);
-
-  useEffect(() => {
-    const currentBunnyRef = bunnyRef.current;
-    
-    const timer = setTimeout(() => {
-      if (!props.isSmallScreen) {
-        gsap.to(currentBunnyRef, { y: -180, duration: 1, yoyo: true, repeat: 1 })
-          .then(() => {
-            gsap.to(currentBunnyRef, { y: 140, duration: 0.4 }); 
-          });
-      } else {
-        gsap.to(currentBunnyRef, { y: 0 });
-      }
-    }, 1000);
-    
-    return () => {
-      clearTimeout(timer);
-      if (currentBunnyRef) {
-        gsap.killTweensOf(currentBunnyRef);
-      }
-    };
-}, [props.isSmallScreen]);
   return (
-    <div className="flex flex-col" ref={bunnyRef}>
-      <div className="hidden lg:block ">
-        <Image src={newsletterBunny} alt="Subscribe to Keploy newsletter" />
-      </div>
-      <div className="overflow-x-hidden mt-2 lg:-mt-7 shadow-md border-b-primary-300 border-b-2 py-6 px-4 sticky ml-0 sm:ml-10 md:ml-0  w-full" ref={myComponent}>
+    <div className="flex flex-col">
+      <div className="overflow-x-hidden mt-2 shadow-md rounded-lg border-b-primary-300 border-b-2 py-6 px-4 sticky ml-0 sm:ml-10 md:ml-0  w-full" ref={myComponent}>
         <div
           className={`${isVisible ? styles["slide-in"] : "translate-x-full opacity-0"
             }`}
@@ -131,7 +124,11 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
             <p className="text-sm text-black pb-2 text-center">
               To get the latest blogs and updates straight to your inbox.
             </p>
-            <form className="flex flex-col gap-y-4 text-sm" onSubmit={submitHandler}>
+            <form
+              className="flex flex-col gap-y-4 text-sm"
+              onSubmit={submitHandler}
+              onFocusCapture={() => setCaptchaActive(true)}
+            >
               <input
                 type="text"
                 className="rounded px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -170,7 +167,9 @@ export default function SubscribeNewsletter(props: { isSmallScreen: Boolean }) {
             <span className="text-xs mt-2 border-none mb-2 text-center block">
               *<strong>We won&#39;t spam you</strong> only one Email every month.
             </span>
+            <RecaptchaAttribution />
           </div>
+          {recaptchaScript}
           {emailError && <p className="text-sm text-red-500 text-center font-semibold mt-3">{emailError}</p>}
           {subscribed && <p className="text-sm text-green-800 text-center font-semibold mt-3">Thanks for subscribing!</p>}
         </div>

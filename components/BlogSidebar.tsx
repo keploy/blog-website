@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import SubscribeNewsletter from "./subscribe-newsletter";
 import {
   FaFacebook,
   FaLinkedin,
@@ -263,6 +264,12 @@ export default function BlogSidebar() {
 
       {/* Ad banner */}
       <SidebarAdBanner />
+
+      {/* Dashed divider */}
+      <hr className="border-0 border-t-2 border-dashed border-gray-300" />
+
+      {/* Newsletter + lead capture */}
+      <SubscribeNewsletter />
     </div>
   );
 }

@@ -10,7 +10,7 @@ const { protocol, hostname, port, pathname } = new URL(
 )
 
 const contentSecurityPolicy = `
-  connect-src 'self' https://px.ads.linkedin.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://rp.liadm.com https://idx.liadm.com https://pagead2.googlesyndication.com https://*.clarity.ms https://news.google.com https://assets.apollo.io https://wp.keploy.io https://cdn.hashnode.com https://keploy-websites.vercel.app https://blog-website-phi-eight.vercel.app https://docbot.keploy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://*.youtube.com https://*.googlevideo.com https://googleads.g.doubleclick.net https://marketplace.visualstudio.com https://api.github.com https://pro.ip-api.com https://api.vector.co https://aplo-evnt.com https://ep1.adtrafficquality.google https://ppptg.com https://telemetry.keploy.io;
+  connect-src 'self' https://telemetry.keploy.io https://www.google.com https://px.ads.linkedin.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://rp.liadm.com https://idx.liadm.com https://pagead2.googlesyndication.com https://*.clarity.ms https://news.google.com https://assets.apollo.io https://wp.keploy.io https://cdn.hashnode.com https://keploy-websites.vercel.app https://blog-website-phi-eight.vercel.app https://docbot.keploy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://*.youtube.com https://*.googlevideo.com https://googleads.g.doubleclick.net https://marketplace.visualstudio.com https://api.github.com https://pro.ip-api.com https://api.vector.co https://aplo-evnt.com https://ep1.adtrafficquality.google https://ppptg.com;
   frame-src 'self' https://www.googletagmanager.com https://keploy-websites.vercel.app https://blog-website-phi-eight.vercel.app https://docbot.keploy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://*.youtube.com https://news.google.com https://googleads.g.doubleclick.net https://*.google.com https://ppptg.com;
   img-src 'self' data: https://c.bing.com https://ppptg.com https://wp.keploy.io https://keploy.io https://secure.gravatar.com https://pbs.twimg.com https://*.wp.com https://*.wordpress.com *;
 `
@@ -26,6 +26,15 @@ module.exports = {
   // This exposes the server-side variable to the browser
   env: {
     NEXT_PUBLIC_WORDPRESS_API_URL: process.env.WORDPRESS_API_URL,
+    // Lead capture (blog-mql): both values are public (the site key ships in
+    // the JS bundle by design) and committed here as defaults so a clean
+    // checkout can never silently build without them — a missing key sends
+    // empty reCAPTCHA tokens and the telemetry server rejects every lead.
+    NEXT_PUBLIC_TELEMETRY_URL:
+      process.env.NEXT_PUBLIC_TELEMETRY_URL || 'https://telemetry.keploy.io',
+    NEXT_PUBLIC_RECAPTCHA_SITE_KEY:
+      process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
+      '6LcURVUtAAAAAL0lEReXR4kKj_SaLymm_0MQzJHB',
   },
   // ----------------------
 

@@ -24,8 +24,58 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # The reCAPTCHA site key ships as a committed default in next.config.js
+      # (it's a public value). Validate the EFFECTIVE key against Google before
+      # building: a stale or wrong-type key ships a frontend that sends empty
+      # tokens, so the telemetry server silently rejects every newsletter lead.
+      # Two probes, verified empirically: enterprise.js?render=<key> returns
+      # 400 for checkbox-type keys (the invisible flow needs a score-based
+      # key); the invisible anchor endpoint embeds "Invalid site key" /
+      # "Invalid domain for site key" for nonexistent or wrong-domain keys.
+      # Notes from hard-won debugging: curl prints exit-code-000 http_code on
+      # network failure (never rely on `|| echo` markers), and the anchor `co`
+      # param must be base64url WITHOUT padding — Google rejects padded input.
+      - name: Validate reCAPTCHA site key
+        env:
+          # next.config.js refuses to load without a WordPress URL
+          WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
+        run: |
+          key=$(node -e "console.log(require('./next.config.js').env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '')")
+          if [ -z "$key" ]; then
+            echo "ERROR: NEXT_PUBLIC_RECAPTCHA_SITE_KEY resolves empty in next.config.js; lead capture would be disabled." >&2
+            exit 1
+          fi
+          type_status=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "https://www.google.com/recaptcha/enterprise.js?render=$key" || true)
+          if [ -z "$type_status" ] || [ "$type_status" = "000" ]; then
+            echo "WARNING: could not reach www.google.com to validate the reCAPTCHA site key; continuing." >&2
+            exit 0
+          fi
+          if [ "$type_status" != "200" ]; then
+            echo "ERROR: the reCAPTCHA loader rejected the site key (enterprise.js?render=<key> returned $type_status)." >&2
+            echo "The frontend needs a SCORE-based Enterprise key — checkbox keys return 400 here." >&2
+            exit 1
+          fi
+          ver=$(curl -s --max-time 15 "https://www.google.com/recaptcha/enterprise.js" | grep -oE 'releases/[0-9A-Za-z_-]+' | head -1 | cut -d/ -f2 || true)
+          if [ -z "$ver" ]; then
+            echo "WARNING: could not extract the reCAPTCHA release version; anchor validation skipped." >&2
+            exit 0
+          fi
+          # The blog serves under keploy.io/blog (basePath), so tokens mint on
+          # the keploy.io origin — that is the origin to validate.
+          origin=$(printf 'https://keploy.io:443' | base64 | tr '+/' '-_' | tr -d '=')
+          body=$(curl -s --max-time 15 "https://www.google.com/recaptcha/enterprise/anchor?ar=1&k=$key&co=$origin&hl=en&v=$ver&size=invisible" || true)
+          if [ -z "$body" ]; then
+            echo "WARNING: reCAPTCHA anchor endpoint returned nothing; key validation skipped." >&2
+            exit 0
+          fi
+          if echo "$body" | grep -qE "Invalid site key|Invalid key type|Invalid domain for site key|ERROR for site owner"; then
+            echo "ERROR: Google rejected the reCAPTCHA site key for origin keploy.io." >&2
+            echo "Fix NEXT_PUBLIC_RECAPTCHA_SITE_KEY in next.config.js (reCAPTCHA Enterprise console -> key with keploy.io domain)." >&2
+            exit 1
+          fi
+
       - name: Build Next.js application
-        env: 
+        env:
           WORDPRESS_API_URL: "https://wp.keploy.io/graphql"
           NEXT_PUBLIC_WORDPRESS_API_URL : "https://wp.keploy.io/graphql"
         run: npm run build

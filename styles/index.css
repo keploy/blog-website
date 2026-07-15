@@ -448,3 +448,11 @@ td {
     --chart-5: 340 75% 55%;
   }
 }
+/* Hide the reCAPTCHA badge site-wide. The enterprise.js script (loaded by
+   the newsletter lead capture) appends the badge to <body> and outlives the
+   component, so a component-scoped style would leak it. Hiding it is allowed
+   by Google's terms only because the form shows the required
+   "Protected by reCAPTCHA" attribution (RecaptchaAttribution). */
+.grecaptcha-badge {
+  visibility: hidden;
+}
