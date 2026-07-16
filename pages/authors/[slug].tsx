@@ -104,13 +104,13 @@ export const getStaticPaths: GetStaticPaths = async ({ }) => {
 
     return {
       paths,
-      fallback: true,
+      fallback: "blocking",
     };
   } catch (error) {
     console.error("authors/[slug] getStaticPaths error:", error);
     return {
       paths: [],
-      fallback: true,
+      fallback: "blocking",
     };
   }
 };

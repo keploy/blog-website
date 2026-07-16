@@ -26,11 +26,24 @@ test.describe('Author Detail Page - Component Availability', () => {
     expect(title).not.toMatch(/^undefined/i);
   });
 
-  test('should emit Person JSON-LD for E-E-A-T author credibility', async ({ page }) => {
+  test('should emit Person JSON-LD for E-E-A-T author credibility', async ({ page, baseURL }) => {
     // LIVE-11: author pages now include Person schema so AI models can
     // resolve the author entity and weight the authority of the posts
     // they cite. This test asserts the schema is present in the HTML
     // payload so it reaches AI crawlers before any hydration.
+    //
+    // Do NOT rely on the beforeEach click: it is a client-side SPA
+    // transition that intermittently fails to navigate (hydration race
+    // on the Link), and crawlers do full loads anyway — the surface this
+    // assertion documents. Resolve the first author URL from the list
+    // and load it directly so the count runs against the
+    // server-rendered payload.
+    await page.goto(`${baseURL!}/authors`, { waitUntil: 'domcontentloaded' });
+    const authorLink = page.locator('a[href*="/authors/"]:not([href$="/authors"])').first();
+    await expect(authorLink).toBeVisible({ timeout: 15000 });
+    const href = await authorLink.getAttribute('href');
+    expect(href).toBeTruthy();
+    await page.goto(href!, { waitUntil: 'domcontentloaded' });
     const personSchemaCount = await page
       .locator('script[type="application/ld+json"]')
       .evaluateAll((els) =>
