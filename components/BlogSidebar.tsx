@@ -103,9 +103,7 @@ function SidebarShare() {
 
 
 const AD_IMAGES = [
-  "/blog/images/keploy-ad-cream.webp",
-  "/blog/images/keploy-ad-dark.webp",
-  "/blog/images/keploy-ad-orange.webp",
+  "/blog/images/keploy-ad-banner-v3.webp",
 ];
 
 const CTA_HREF = "https://app.keploy.io/signin";
@@ -121,8 +119,8 @@ function SidebarAdBanner() {
   if (!src) {
     return (
       <div
-        className="rounded-2xl bg-white border border-gray-200"
-        style={{ maxWidth: 320, margin: '0 auto', minHeight: 260, boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}
+        className="rounded-2xl"
+        style={{ maxWidth: 320, margin: '0 auto', aspectRatio: '781 / 1083', background: '#F3F4F6' }}
         aria-hidden="true"
       />
     );
@@ -130,48 +128,46 @@ function SidebarAdBanner() {
 
   return (
     <div
-      className="rounded-2xl bg-white border border-gray-200 flex flex-col overflow-hidden"
+      className="rounded-2xl overflow-hidden"
       style={{
+        position: 'relative',
         maxWidth: 320,
         margin: '0 auto',
         boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
       }}
     >
+      {/* Orange banner artwork (full card) — not clickable */}
+      <Image
+        src={src}
+        alt="Keploy — 300M+ mocks and 12.8M+ tests generated"
+        width={781}
+        height={1083}
+        sizes="320px"
+        style={{ width: '100%', height: 'auto', display: 'block' }}
+        loading="lazy"
+      />
+
+      {/* CTA button (built in code, overlaid on the artwork) */}
       <Link
         href={CTA_HREF}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Try Keploy for free"
-        style={{ display: 'block', width: '100%' }}
+        className="text-center font-bold rounded-xl transition-all duration-150 hover:brightness-95 active:scale-[0.98]"
+        style={{
+          position: 'absolute',
+          left: '8%',
+          right: '8%',
+          bottom: '7%',
+          padding: '13px 0',
+          background: '#fff',
+          color: '#ED5D0F',
+          fontSize: 16,
+          boxShadow: '0 2px 10px rgba(0,0,0,0.12)',
+          fontFamily: "'DM Sans', sans-serif",
+        }}
       >
-        <Image
-          src={src}
-          alt="Try Keploy for free"
-          width={720}
-          height={448}
-          sizes="320px"
-          className="cursor-pointer"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-          loading="lazy"
-        />
+        Try for Free!
       </Link>
-
-      <div className="px-5 pt-5 pb-6">
-        <Link
-          href={CTA_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full text-center font-bold text-sm py-3 rounded-xl border transition-all duration-150 hover:bg-orange-50 active:scale-[0.98]"
-          style={{
-            background: 'transparent',
-            border: '1.5px solid #ED5D0F',
-            color: '#ED5D0F',
-            fontFamily: "'DM Sans', sans-serif",
-          }}
-        >
-          Try for Free
-        </Link>
-      </div>
     </div>
   );
 }
