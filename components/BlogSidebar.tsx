@@ -102,48 +102,37 @@ function SidebarShare() {
 }
 
 
-const AD_ITEMS = [
-  {
-    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/coverage.mp4",
-    title: "Record API calls from real user flows.",
-    description: "Auto-generated on every PR diff, from real behavior. VS Code & JetBrains, 1M+ installs.",
-    primaryCTA: { label: "Start Free", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
-  },
-  {
-    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/load+testing.mp4",
-    title: "Real traffic. Real tests. Zero manual effort.",
-    description: "Captures live API calls and turns them into test cases. Coverage that reflects production.",
-    primaryCTA: { label: "Try for Free", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
-  },
-  {
-    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/api+test+generation+ai+powered+automation.mp4",
-    title: "Replay captured traffic to instantly catch regressions.",
-    description: "Replay production traffic at scale. No scripted scenarios, no guesswork.",
-    primaryCTA: { label: "Get Started", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
-  },
+// 4 static banner variants for A/B testing. The artwork is a full-card image
+// (button excluded from the artwork); the "Try for Free!" button is built in
+// code and overlaid in the empty bottom band, with per-variant button colors.
+// The artwork PNGs carry ~8.3% transparent drop-shadow padding, so button
+// positions are measured against the FULL image. btnCenter is the vertical
+// center of each card's empty band (as % from the top); the button is anchored
+// there via translateY(-50%) so it stays centered regardless of its height.
+const AD_BANNERS = [
+  { src: "/blog/images/keploy-ad-banner-1.png", btnBg: "#ffffff", btnText: "#ED5D0F", btnCenter: "77.8%" },
+  { src: "/blog/images/keploy-ad-banner-2.png", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "81.6%" },
+  { src: "/blog/images/keploy-ad-banner-3.png", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "82.0%" },
+  { src: "/blog/images/keploy-ad-banner-4.png", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "81.8%" },
 ];
+
+const CTA_HREF = "https://app.keploy.io/signin";
+const AD_W = 313;
+const AD_H = 413;
 
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
-  const [videoError, setVideoError] = React.useState(false);
-  const [ad, setAd] = React.useState<typeof AD_ITEMS[number] | null>(null);
+  const [banner, setBanner] = React.useState<(typeof AD_BANNERS)[number] | null>(null);
 
   React.useEffect(() => {
-    setAd(AD_ITEMS[Math.floor(Math.random() * AD_ITEMS.length)]);
+    setBanner(AD_BANNERS[Math.floor(Math.random() * AD_BANNERS.length)]);
   }, []);
 
-  const reducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (!ad) {
+  if (!banner) {
     return (
       <div
-        className="rounded-2xl bg-white border border-gray-200"
-        style={{ maxWidth: 320, margin: '0 auto', minHeight: 360, boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}
+        className="rounded-2xl"
+        style={{ width: '100%', maxWidth: 320, margin: '0 auto', aspectRatio: `${AD_W} / ${AD_H}`, background: '#F3F4F6' }}
         aria-hidden="true"
       />
     );
@@ -151,102 +140,53 @@ function SidebarAdBanner() {
 
   return (
     <div
-      className="rounded-2xl bg-white border border-gray-200 flex flex-col overflow-hidden"
       style={{
+        position: 'relative',
+        width: '100%',
         maxWidth: 320,
         margin: '0 auto',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+        // container-query context so the overlaid button scales with the card
+        containerType: 'inline-size',
       }}
     >
-      {!videoError ? (
-        <video
-          src={ad.src}
-          autoPlay={!reducedMotion}
-          muted
-          loop={!reducedMotion}
-          playsInline
-          preload="none"
-          poster="/blog/images/keploy-ad-banner.jpg"
-          aria-hidden="true"
-          onError={() => setVideoError(true)}
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      ) : (
-        <Link
-          href={ad.primaryCTA.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={ad.primaryCTA.label}
-          style={{ display: 'block', width: '100%' }}
-        >
-          <Image
-            src="/blog/images/keploy-ad-banner.jpg"
-            alt={ad.title}
-            width={260}
-            height={200}
-            sizes="260px"
-            className="transition-shadow duration-200 ease-in-out cursor-pointer hover:shadow-lg"
-            style={{ width: '100%', height: 'auto', display: 'block' }}
-            loading="lazy"
-          />
-        </Link>
-      )}
+      {/* Full banner artwork (button excluded from artwork) */}
+      <Image
+        src={banner.src}
+        alt="Keploy — 300M+ mocks and 12.8M+ tests generated"
+        width={AD_W}
+        height={AD_H}
+        sizes="320px"
+        style={{ width: '100%', height: 'auto', display: 'block' }}
+        loading="lazy"
+      />
 
-      <div className="px-5 pt-5 pb-6 flex flex-col gap-4">
-        <div>
-          <h4
-            className="font-bold text-base leading-snug mb-2"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "#1D2022" }}
-          >
-            {ad.title}
-          </h4>
-          <p
-            className="text-sm leading-relaxed"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "#4b5563" }}
-          >
-            {ad.description}
-          </p>
-        </div>
-
-        <Link
-          href={ad.primaryCTA.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-3 rounded-xl transition-all duration-150 hover:brightness-90 active:scale-[0.98]"
-          style={{
-            background: '#ED5D0F',
-            color: '#fff',
-            boxShadow: '0 2px 10px rgba(232, 98, 42, 0.35)',
-            fontFamily: "'DM Sans', sans-serif",
-          }}
-        >
-          {ad.primaryCTA.label}
-        </Link>
-
-        <Link
-          href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-3 rounded-xl border transition-all duration-150 hover:bg-orange-50 active:scale-[0.98]"
-          style={{
-            background: 'transparent',
-            border: '1.5px solid #ED5D0F',
-            color: '#ED5D0F',
-            fontFamily: "'DM Sans', sans-serif",
-          }}
-        >
-          Book a Demo
-        </Link>
-
-        <Link
-          href={ad.secondaryCTA.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-center text-sm font-medium hover:underline pt-1 text-[#20883d]"
-        >
-          {ad.secondaryCTA.label}
-        </Link>
-      </div>
+      {/* CTA button — built in code, overlaid in the artwork's empty bottom band */}
+      <Link
+        href={CTA_HREF}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Try for Free"
+        className="block text-center font-bold transition-all duration-150 hover:brightness-95 active:scale-[0.98]"
+        style={{
+          position: 'absolute',
+          zIndex: 2,
+          left: '13%',
+          right: '13%',
+          top: banner.btnCenter,
+          transform: 'translateY(-50%)',
+          // sized in cqw so the button scales with the card and always fits the band
+          padding: '3.4cqw 0',
+          borderRadius: '3.4cqw',
+          fontSize: '5.8cqw',
+          lineHeight: 1.2,
+          background: banner.btnBg,
+          color: banner.btnText,
+          boxShadow: '0 2px 10px rgba(0,0,0,0.12)',
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
+        Try for Free!
+      </Link>
     </div>
   );
 }
