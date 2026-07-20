@@ -111,10 +111,10 @@ function SidebarShare() {
 // center of each card's empty band (as % from the top); the button is anchored
 // there via translateY(-50%) so it stays centered regardless of its height.
 const AD_BANNERS = [
-  { src: "/blog/images/keploy-ad-banner-1.png", btnBg: "#ffffff", btnText: "#ED5D0F", btnCenter: "77.8%" },
-  { src: "/blog/images/keploy-ad-banner-2.png", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "81.6%" },
-  { src: "/blog/images/keploy-ad-banner-3.png", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "82.0%" },
-  { src: "/blog/images/keploy-ad-banner-4.png", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "81.8%" },
+  { src: "/blog/images/keploy-ad-banner-1.webp", btnBg: "#ffffff", btnText: "#ED5D0F", btnCenter: "77.8%" },
+  { src: "/blog/images/keploy-ad-banner-2.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "81.6%" },
+  { src: "/blog/images/keploy-ad-banner-3.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "82.0%" },
+  { src: "/blog/images/keploy-ad-banner-4.webp", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "81.8%" },
 ];
 
 const CTA_HREF = "https://app.keploy.io/signin";
