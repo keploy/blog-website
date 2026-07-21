@@ -349,16 +349,16 @@ export default function PostBody({
     };
 
     const inlinePromoConfigs = blogSlug ? getInlinePromosForSlug(blogSlug) : [];
+    const buildPromoSplitRegex = (afterText: string): RegExp => {
+      const escaped = afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return new RegExp(`(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`, "i");
+    };
     const applyPromos = (html: string, key: number | string, fromIndex: number, isContinuation = false): ReactNode => {
       if (!html.trim()) return null;
       const contentClass = isContinuation ? `${styles.content} ${styles.contentAfterPromo}` : styles.content;
       for (let i = fromIndex; i < inlinePromoConfigs.length; i++) {
         const config = inlinePromoConfigs[i];
-        const escaped = config.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const splitRegex = new RegExp(
-          `(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`,
-          "i"
-        );
+        const splitRegex = buildPromoSplitRegex(config.afterText);
         const parts = html.split(splitRegex);
         if (parts.length > 1) {
           const beforeAndBlock = injectTooltipSpans(parts[0] + (parts[1] || ""));
@@ -481,8 +481,7 @@ export default function PostBody({
         // after the match) — if there is content after, applyPromos handles it recursively
         // within the same chunk and the next chunk is not a continuation.
         nextIsContinuation = inlinePromoConfigs.some(config => {
-          const escaped = config.afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          const splitRegex = new RegExp(`(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`, "i");
+          const splitRegex = buildPromoSplitRegex(config.afterText);
           const parts = part.split(splitRegex);
           return parts.length > 1 && !parts.slice(2).join("").trim();
         });
