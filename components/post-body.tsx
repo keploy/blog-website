@@ -348,8 +348,7 @@ export default function PostBody({
       return result;
     };
 
-    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-    const inlinePromoConfigs = (blogSlug && siteKey) ? getInlinePromosForSlug(blogSlug) : [];
+    const inlinePromoConfigs = blogSlug ? getInlinePromosForSlug(blogSlug) : [];
     const applyPromos = (html: string, key: number | string, fromIndex: number, isContinuation = false): ReactNode => {
       if (!html.trim()) return null;
       const contentClass = isContinuation ? `${styles.content} ${styles.contentAfterPromo}` : styles.content;
