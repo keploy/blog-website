@@ -1,15 +1,17 @@
-import { useState, useEffect, useRef, Fragment, useMemo, useCallback } from "react";
+import { useState, useEffect, Fragment, useMemo, ReactNode } from "react";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
 import dynamic from "next/dynamic";
 import { sanitizeStringForURL } from "../utils/sanitizeStringForUrl";
 import { Post } from "../types/post";
-import { getGatedReportConfig, type GatedReportConfig } from "../config/gated-reports";
+import { getInlinePromosForSlug } from "../config/inline-promos";
+import { getGatedReportConfig } from "../config/gated-reports";
 import KeywordTooltipLayer from "./KeywordTooltipLayer";
 import { getTooltipsForSlug } from "../config/keyword-tooltips";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
+const InlinePromoCard = dynamic(() => import("./InlinePromoCard"));
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
   ssr: false,
   loading: () => <div className="bg-[#1e1e2e] rounded-lg p-4 mb-6 min-h-[60px]" />,
@@ -66,7 +68,10 @@ export default function PostBody({
     reviewer.name.split(" ")[0].toLowerCase();
 
   const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
-  const tooltipConfigs = useMemo(() => blogSlug ? getTooltipsForSlug(blogSlug) : [], [blogSlug]);
+  const tooltipConfigs = useMemo(
+    () => (blogSlug ? getTooltipsForSlug(blogSlug) : []),
+    [blogSlug]
+  );
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -280,7 +285,7 @@ export default function PostBody({
     }
   }, [tocItems]);
 
-  const handleCopyClick = useCallback((code: string, index: number) => {
+  const handleCopyClick = (code: string, index: number) => {
     navigator.clipboard
       .writeText(code)
       .then(() => {
@@ -292,7 +297,7 @@ export default function PostBody({
       .catch(() => {
         setCopySuccessList((prev) => { const u = [...prev]; u[index] = false; return u; });
       });
-  }, []);
+  };
 
   const handleHeadingCopyClick = (id: string, index: number) => {
     const url = sanitizeStringForURL(id, true);
@@ -316,9 +321,10 @@ export default function PostBody({
 
 
   type ParsedPart =
-    | { type: "html"; key: number; html: string }
-    | { type: "html-with-gated"; key: number; before: string; after: string; gatedConfig: GatedReportConfig }
-    | { type: "code"; key: number; language: string; cleanCode: string };
+    | { type: "text"; node: ReactNode }
+    | { type: "code"; index: number; cleanCode: string; language: string };
+
+  // Expensive: HTML parsing, tooltip injection, promo/gated splitting \u2014 no copySuccessList dep
 
   const parsedParts = useMemo((): ParsedPart[] => {
     const safeContent = replacedContent || "";
@@ -342,6 +348,44 @@ export default function PostBody({
       return result;
     };
 
+    const inlinePromoConfigs = blogSlug ? getInlinePromosForSlug(blogSlug) : [];
+    const buildPromoSplitRegex = (afterText: string): RegExp => {
+      const escaped = afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return new RegExp(`(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`, "i");
+    };
+    const applyPromos = (html: string, key: number | string, fromIndex: number, isContinuation = false): ReactNode => {
+      if (!html.trim()) return null;
+      const contentClass = isContinuation ? `${styles.content} ${styles.contentAfterPromo}` : styles.content;
+      for (let i = fromIndex; i < inlinePromoConfigs.length; i++) {
+        const config = inlinePromoConfigs[i];
+        const splitRegex = buildPromoSplitRegex(config.afterText);
+        const parts = html.split(splitRegex);
+        if (parts.length > 1) {
+          const beforeAndBlock = injectTooltipSpans(parts[0] + (parts[1] || ""));
+          const after = parts.slice(2).join("");
+          return (
+            <Fragment key={key}>
+              <div
+                className={contentClass}
+                dangerouslySetInnerHTML={{ __html: beforeAndBlock }}
+                suppressHydrationWarning
+              />
+              <InlinePromoCard promoId={config.promoId} />
+              {applyPromos(after, `${key}-r`, i + 1, true)}
+            </Fragment>
+          );
+        }
+      }
+      return (
+        <div
+          key={key}
+          className={contentClass}
+          dangerouslySetInnerHTML={{ __html: injectTooltipSpans(html) }}
+          suppressHydrationWarning
+        />
+      );
+    };
+
     const gatedConfig = blogSlug ? getGatedReportConfig(blogSlug) : null;
     let gatedInjected = false;
     const gatedRegex = (() => {
@@ -352,36 +396,37 @@ export default function PostBody({
       }
       if (gatedConfig.afterHeading) {
         const esc = gatedConfig.afterHeading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        // No backreference — avoids matching a prior <h2> and seeking </h2> past the target
         return new RegExp(`<h[1-6][^>]*>[\\s\\S]*?${esc}[\\s\\S]*?<\\/h[1-6]>`, "i");
       }
       return null;
     })();
 
-    const processHtmlPart = (html: string, key: number): ParsedPart => {
+    // processHtmlPart: gated report injection layer on top of applyPromos
+    const processHtmlPart = (html: string, key: number, promoFromIndex: number, isContinuation = false): ReactNode => {
       if (gatedConfig && gatedRegex && !gatedInjected) {
         const match = gatedRegex.exec(html);
         if (match) {
           gatedInjected = true;
           const splitAt = match.index + match[0].length;
-          return {
-            type: "html-with-gated",
-            key,
-            before: injectTooltipSpans(html.slice(0, splitAt)),
-            after: injectTooltipSpans(html.slice(splitAt)),
-            gatedConfig,
-          };
+          return (
+            <Fragment key={key}>
+              {applyPromos(html.slice(0, splitAt), `${key}-b`, promoFromIndex, isContinuation)}
+              <GatedReport config={gatedConfig} />
+              {applyPromos(html.slice(splitAt), `${key}-a`, promoFromIndex, true)}
+            </Fragment>
+          );
         }
       }
-      return { type: "html", key, html: injectTooltipSpans(html) };
+      return applyPromos(html, key, promoFromIndex, isContinuation);
     };
 
-    if (!safeContent.match(/<pre[\s\S]*?<\/pre>/gm)) {
-      return [processHtmlPart(safeContent, 0)];
+    const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
+
+    if (!codeBlocks) {
+      return [{ type: "text", node: processHtmlPart(safeContent, 0, 0) }];
     }
 
     const decodeHtmlEntities = (str: string): string => {
-      // document.createElement is browser-only; use a pure-JS fallback during SSR
       if (typeof document !== "undefined") {
         const textarea = document.createElement("textarea");
         textarea.innerHTML = str;
@@ -403,6 +448,8 @@ export default function PostBody({
       "c", "yaml", "json", "markdown", "sql", "html", "css",
     ];
 
+    let nextIsContinuation = false;
+
     return safeContent
       .split(/(<pre[\s\S]*?<\/pre>)/gm)
       .map((part, index): ParsedPart => {
@@ -410,7 +457,6 @@ export default function PostBody({
           const codeMatch = part.match(/<code[\s\S]*?>([\s\S]*?)<\/code>/);
           const code = codeMatch ? decodeHtmlEntities(codeMatch[1]) : "";
 
-          // 1. Try language from <code class="language-X"> attribute
           const langFromClass =
             codeMatch && codeMatch[0].includes("language-")
               ? codeMatch[0].split("language-")[1].split('"')[0]
@@ -419,10 +465,8 @@ export default function PostBody({
           // 2. If no class, check if the first line is a known language keyword (WP pattern)
           const firstLine = code.trimStart().split("\n")[0].trim().toLowerCase();
           const langFromFirstLine = knownLanguages.includes(firstLine) ? firstLine : "";
-
           const language = langFromClass || langFromFirstLine || "bash";
 
-          // Strip language name from code if it was the first line
           const cleanCode =
             langFromFirstLine && !langFromClass
               ? code.trimStart().slice(firstLine.length + 1)
@@ -430,43 +474,47 @@ export default function PostBody({
                 ? code.trimStart().slice(langFromClass.length + 1)
                 : code;
 
-          return { type: "code", key: index, language, cleanCode };
+          return { type: "code", index, cleanCode, language };
         }
-        return processHtmlPart(part, index);
+        const isContinuation = nextIsContinuation;
+        // Only set if the promo lands at the tail of this chunk (no remaining content
+        // after the match) — if there is content after, applyPromos handles it recursively
+        // within the same chunk and the next chunk is not a continuation.
+        nextIsContinuation = inlinePromoConfigs.some(config => {
+          const splitRegex = buildPromoSplitRegex(config.afterText);
+          const parts = part.split(splitRegex);
+          return parts.length > 1 && !parts.slice(2).join("").trim();
+        });
+        return { type: "text", node: processHtmlPart(part, index, 0, isContinuation) };
       });
   }, [replacedContent, blogSlug, tooltipConfigs]);
 
-  const getLanguageExtension = useCallback((lang: string) => {
-    switch (lang) {
-      case "javascript":
-      case "js":
-        return javascript();
-      case "python":
-        return python();
-      case "markdown":
-        return markdown();
-      case "go":
-        return go();
-      default:
-        return javascript();
-    }
-  }, []);
-
-  const renderedContent = useMemo(() => parsedParts.map((part) => {
-    if (part.type === "code") {
-      const { key, language, cleanCode } = part;
+  // Cheap: renders code blocks with current copy state \u2014 no HTML parsing
+  const renderedContent = useMemo(() => {
+    const getLanguageExtension = (lang: string) => {
+      switch (lang) {
+        case "javascript": case "js": return javascript();
+        case "python": return python();
+        case "markdown": return markdown();
+        case "go": return go();
+        default: return javascript();
+      }
+    };
+    return parsedParts.map((part) => {
+      if (part.type === "text") return part.node;
+      const { index, cleanCode, language } = part;
       return (
-        <div key={key} data-testid="code-block" className="rounded-lg overflow-hidden mb-6 border border-[#313244] shadow-md">
+        <div key={index} data-testid="code-block" className="rounded-lg overflow-hidden mb-6 border border-[#313244] shadow-md">
           <div className="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-[#313244]">
             <span className="text-xs font-mono text-[#6c7086] uppercase tracking-widest select-none">
               {language}
             </span>
             <button
               data-testid="copy-button"
-              onClick={() => handleCopyClick(cleanCode, key)}
+              onClick={() => handleCopyClick(cleanCode, index)}
               className="flex items-center gap-1 text-xs text-[#cdd6f4] bg-[#313244] hover:bg-[#45475a] px-2 py-1 rounded transition-colors duration-150"
             >
-              {copySuccessList[key] ? (
+              {copySuccessList[index] ? (
                 <><IoCheckmarkOutline /> <span>Copied!</span></>
               ) : (
                 <><IoCopyOutline /> <span>Copy</span></>
@@ -477,46 +525,15 @@ export default function PostBody({
             value={cleanCode}
             extensions={[getLanguageExtension(language)]}
             theme={dracula}
-            basicSetup={{
-              lineNumbers: false,
-              highlightActiveLine: true,
-              tabSize: 4,
-            }}
+            basicSetup={{ lineNumbers: false, highlightActiveLine: true, tabSize: 4 }}
             editable={false}
             readOnly={true}
             indentWithTab={true}
           />
         </div>
       );
-    }
-
-    if (part.type === "html-with-gated") {
-      return (
-        <Fragment key={part.key}>
-          <div
-            className={styles.content}
-            dangerouslySetInnerHTML={{ __html: part.before }}
-            suppressHydrationWarning
-          />
-          <GatedReport config={part.gatedConfig} />
-          <div
-            className={styles.content}
-            dangerouslySetInnerHTML={{ __html: part.after }}
-            suppressHydrationWarning
-          />
-        </Fragment>
-      );
-    }
-
-    return (
-      <div
-        key={part.key}
-        className={styles.content}
-        dangerouslySetInnerHTML={{ __html: part.html }}
-        suppressHydrationWarning
-      />
-    );
-  }), [parsedParts, copySuccessList, handleCopyClick, getLanguageExtension]);
+    });
+  }, [parsedParts, copySuccessList]);
 
   const oldJson = {
     name: "John",

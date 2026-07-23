@@ -63,6 +63,12 @@
   margin-top: 0;
 }
 
+.contentAfterPromo h2:first-child {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+  margin-top: 2.25rem;
+}
+
 .content h3 {
   font-family: 'DM Sans', sans-serif;
   font-size: 1.5rem;
