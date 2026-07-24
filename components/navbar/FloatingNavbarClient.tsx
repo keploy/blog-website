@@ -423,6 +423,19 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       </div>
                     ))}
                   </div>
+                  {/* Reports row: full external reports, above the About/Security bottom row */}
+                  <div className="col-span-2 grid grid-cols-2 gap-3">
+                    {[
+                      { href: "https://keploy.io/saas-api-testing", title: "SaaS API Testing Report" },
+                      { href: "https://keploy.io/healthcare-api-testing-security-report", title: "Healthcare API Security Report" },
+                    ].map((link, idx) => (
+                      <div key={idx} className="rounded-xl p-[1.25px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all">
+                        <Link href={link.href} target="_blank" rel="noopener noreferrer" className="group block rounded-[calc(0.75rem-3px)] bg-white p-3 shadow-[0_4px_10px_rgba(0,0,0,0.10)] hover:shadow-[0_10px_22px_rgba(0,0,0,0.18)] transition-all">
+                          <div className="text-[13px] font-semibold transition-colors group-hover:text-orange-600">{link.title}</div>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
                   {/* Bottom row: About/Security/Privacy/Careers as 1x4 under left two-column grid */}
                   <div className="col-span-2 grid grid-cols-4 gap-3">
                     {[
@@ -641,6 +654,24 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                             </div>
                             <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                           </Link>
+                        </div>
+                        {/* Reports row: full external reports, above the About/Security bottom row */}
+                        <div className="grid grid-cols-2 gap-2 pt-1">
+                          {[
+                            { href: "https://keploy.io/saas-api-testing", label: "SaaS API Testing Report" },
+                            { href: "https://keploy.io/healthcare-api-testing-security-report", label: "Healthcare API Security Report" },
+                          ].map((l, i) => (
+                            <Link
+                              key={i}
+                              href={l.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => setMobileMenuOpen(false)}
+                              className="text-center rounded-lg bg-white/60 ring-[0.5px] ring-neutral-300/60 px-2 py-2 text-[12px] font-medium text-black/75 hover:bg-white/80 hover:ring-[0.5px] hover:ring-orange-400/50 transition-all shadow-none hover:shadow-none"
+                            >
+                              {l.label}
+                            </Link>
+                          ))}
                         </div>
                         {/* Bottom compact 1x4 row */}
                         <div className="grid grid-cols-4 gap-2 pt-1 pb-2">
