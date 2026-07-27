@@ -120,6 +120,10 @@ const AD_BANNERS = [
 const CTA_HREF = "https://app.keploy.io/signin";
 const AD_W = 313;
 const AD_H = 413;
+// Displayed max width. Single source of truth: the placeholder, the live
+// banner, and next/image's `sizes` hint all read from this. Capped to match
+// the sidebar column (max-w-[260px]) so the 313px-wide artwork never upscales.
+const AD_MAX_W = 260;
 
 // Microsoft Clarity is loaded lazily in components/layout.tsx (id="msclarity").
 // Its snippet defines window.clarity as a queuing stub the moment it runs, so
@@ -169,7 +173,7 @@ function SidebarAdBanner() {
     return (
       <div
         className="rounded-2xl"
-        style={{ width: '100%', maxWidth: 320, margin: '0 auto', aspectRatio: `${AD_W} / ${AD_H}`, background: '#F3F4F6' }}
+        style={{ width: '100%', maxWidth: AD_MAX_W, margin: '0 auto', aspectRatio: `${AD_W} / ${AD_H}`, background: '#F3F4F6' }}
         aria-hidden="true"
       />
     );
@@ -182,7 +186,7 @@ function SidebarAdBanner() {
       style={{
         position: 'relative',
         width: '100%',
-        maxWidth: 320,
+        maxWidth: AD_MAX_W,
         margin: '0 auto',
         // container-query context so the overlaid button scales with the card
         containerType: 'inline-size',
@@ -194,7 +198,7 @@ function SidebarAdBanner() {
         alt="Keploy — 300M+ mocks and 12.8M+ tests generated"
         width={AD_W}
         height={AD_H}
-        sizes="320px"
+        sizes={`${AD_MAX_W}px`}
         style={{ width: '100%', height: 'auto', display: 'block' }}
         loading="lazy"
       />
