@@ -111,15 +111,51 @@ function SidebarShare() {
 // center of each card's empty band (as % from the top); the button is anchored
 // there via translateY(-50%) so it stays centered regardless of its height.
 const AD_BANNERS = [
-  { src: "/blog/images/keploy-ad-banner-1.webp", btnBg: "#ffffff", btnText: "#ED5D0F", btnCenter: "77.8%" },
-  { src: "/blog/images/keploy-ad-banner-2.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "81.6%" },
-  { src: "/blog/images/keploy-ad-banner-3.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "82.0%" },
-  { src: "/blog/images/keploy-ad-banner-4.webp", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "81.8%" },
+  { id: "banner_1", src: "/blog/images/keploy-ad-banner-1.webp", btnBg: "#ffffff", btnText: "#ED5D0F", btnCenter: "77.8%" },
+  { id: "banner_2", src: "/blog/images/keploy-ad-banner-2.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "81.6%" },
+  { id: "banner_3", src: "/blog/images/keploy-ad-banner-3.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "82.0%" },
+  { id: "banner_4", src: "/blog/images/keploy-ad-banner-4.webp", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "81.8%" },
 ];
 
 const CTA_HREF = "https://app.keploy.io/signin";
 const AD_W = 313;
 const AD_H = 413;
+
+// Microsoft Clarity is loaded lazily in components/layout.tsx (id="msclarity").
+// Its snippet defines window.clarity as a queuing stub the moment it runs, so
+// calls made after that are safely buffered until the real tag downloads. But
+// because it's lazyOnload, a very early click can land before the stub exists —
+// so we guard, and briefly retry if clarity isn't ready yet.
+declare global {
+  interface Window {
+    clarity?: (...args: unknown[]) => void;
+  }
+}
+
+function trackBannerClick(bannerId: string) {
+  // Visible in DevTools console so you can confirm clicks are detected.
+  console.log("[ad-banner] click detected → banner_clicked:", bannerId);
+
+  const send = () => window.clarity?.("set", "banner_clicked", bannerId);
+
+  if (typeof window !== "undefined" && typeof window.clarity === "function") {
+    send();
+    return;
+  }
+
+  // Clarity not ready yet (lazyOnload) — poll briefly, then give up.
+  let tries = 0;
+  const timer = setInterval(() => {
+    tries += 1;
+    if (typeof window !== "undefined" && typeof window.clarity === "function") {
+      clearInterval(timer);
+      send();
+    } else if (tries >= 20) {
+      clearInterval(timer); // ~5s elapsed; Clarity never loaded (blocked?)
+      console.warn("[ad-banner] Clarity not available; skipped banner_clicked:", bannerId);
+    }
+  }, 250);
+}
 
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
@@ -141,6 +177,8 @@ function SidebarAdBanner() {
 
   return (
     <div
+      data-banner-id={banner.id}
+      onClick={() => trackBannerClick(banner.id)}
       style={{
         position: 'relative',
         width: '100%',
