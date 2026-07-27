@@ -393,31 +393,43 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       { href: "https://keploy.io/unit-test-generator", title: "Keploy Unit Testing Extension", desc: "Generate unit tests with mocks" },
                       { href: "https://keploy.io/docs/concepts/what-is-keploy/#step-1--record-unique-network-interactions-as-test-case", title: "Keploy Test Recorder", desc: "Record and replay API calls" },
                       { href: "https://keploy.io/docs", title: "Keploy Documentation", desc: "Guides, references, tutorials" },
-                      { href: "https://www.writers.keploy.io/", title: "Writers Program", desc: "Be a part of the blog writing for Keploy", cta: true },
+                      { href: "https://www.writers.keploy.io/", title: "Writers Program", desc: "Be a part of the blog writing for Keploy" },
                     ].map((item, idx) => (
                       <div key={idx} className="rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all">
                         <Link
                           href={item.href}
                           target={item.href.startsWith("http") ? "_blank" : undefined}
                           rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                          className={`group relative block rounded-[calc(0.75rem-3px)] p-4 transition-all ${item.cta
-                            ? 'overflow-hidden bg-gradient-to-br from-orange-100 to-red-100 hover:from-orange-200 hover:to-red-200 ring-2 ring-orange-400/70 hover:ring-orange-500/90 shadow-[0_10px_24px_rgba(0,0,0,0.16)] hover:shadow-[0_26px_54px_rgba(0,0,0,0.26)] hover:-translate-y-[1.5px]'
-                            : 'bg-white shadow-[0_6px_14px_rgba(0,0,0,0.10)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)]'
-                            }`}
+                          className="group relative block rounded-[calc(0.75rem-3px)] p-4 transition-all bg-white shadow-[0_6px_14px_rgba(0,0,0,0.10)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
                         >
-                          {/* CTA wavy overlay */}
-                          {item.cta && (
-                            <>
-                              <span className="pointer-events-none absolute inset-0 opacity-75 [mask-image:radial-gradient(60%_60%_at_50%_50%,black,transparent)]">
-                                <span className="absolute -inset-16 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(255,138,76,0.14),rgba(255,71,87,0.12),rgba(255,138,76,0.14))] blur-3xl rounded-[inherit] animate-[spin_12s_linear_infinite]" />
-                              </span>
-                              {/* Hover sheen sweep */}
-                              <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                            </>
-                          )}
                           <div className="relative z-[1]">
                             <div className="text-[15px] font-semibold transition-colors group-hover:text-orange-600">{item.title}</div>
-                            <div className={`${item.cta ? 'text-[12px] text-neutral-700' : 'text-[12px] text-neutral-600'} mt-1`}>{item.desc}</div>
+                            <div className="text-[12px] text-neutral-600 mt-1">{item.desc}</div>
+                          </div>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Reports row: full external reports, above the About/Security bottom row */}
+                  <div className="col-span-2 grid grid-cols-2 gap-3">
+                    {[
+                      { href: "https://keploy.io/saas-api-testing", title: "SaaS API Testing Report", desc: "How SaaS teams approach API testing" },
+                      { href: "https://keploy.io/healthcare-api-testing-security-report", title: "Healthcare API Security Report", desc: "Healthcare API testing & security practices" },
+                    ].map((item, idx) => (
+                      <div key={idx} className="rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all">
+                        <Link
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group relative block rounded-[calc(0.75rem-3px)] p-4 overflow-hidden bg-gradient-to-br from-orange-100 to-red-100 hover:from-orange-200 hover:to-red-200 ring-2 ring-orange-400/70 hover:ring-orange-500/90 shadow-[0_10px_24px_rgba(0,0,0,0.16)] hover:shadow-[0_26px_54px_rgba(0,0,0,0.26)] hover:-translate-y-[1.5px] transition-all"
+                        >
+                          <span className="pointer-events-none absolute inset-0 opacity-75 [mask-image:radial-gradient(60%_60%_at_50%_50%,black,transparent)]">
+                            <span className="absolute -inset-16 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(255,138,76,0.14),rgba(255,71,87,0.12),rgba(255,138,76,0.14))] blur-3xl rounded-[inherit] animate-[spin_12s_linear_infinite]" />
+                          </span>
+                          <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                          <div className="relative z-[1]">
+                            <div className="text-[13px] font-semibold text-black/90 group-hover:text-orange-600 transition-colors">{item.title}</div>
+                            <div className="text-[12px] text-neutral-700 mt-1">{item.desc}</div>
                           </div>
                         </Link>
                       </div>
@@ -622,26 +634,34 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                           <span className="font-medium text-sm text-black/75">Keploy Documentation</span>
                           <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
                         </Link>
-                        {/* Writers Program CTA - desktop-like card styling */}
-                        <div className="rounded-xl p-[1.5px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] hover:p-[2px] transition-all">
-                          <Link
-                            href="https://www.writers.keploy.io/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="group relative block rounded-[calc(0.75rem-3px)] overflow-hidden bg-gradient-to-br from-orange-100 to-red-100 hover:from-orange-200 hover:to-red-200 ring-2 ring-orange-400/70 hover:ring-orange-500/90 shadow-none hover:shadow-none transition-all"
-                          >
-                            <span className="pointer-events-none absolute inset-0 opacity-75 [mask-image:radial-gradient(60%_60%_at_50%_50%,black,transparent)]">
-                              <span className="absolute -inset-16 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(255,138,76,0.14),rgba(255,71,87,0.12),rgba(255,138,76,0.14))] blur-3xl rounded-[inherit] animate-[spin_12s_linear_infinite]" />
-                            </span>
-                            <div className="relative z-[1] px-5 py-4">
-                              <div className="text-[15px] font-semibold text-black/90">Writers Program</div>
-                              <div className="text-[12px] text-neutral-700 mt-1">Be a part of the blog writing for Keploy</div>
-                              <div className="mt-2 text-[12px] font-semibold text-orange-600">Enroll →</div>
-                            </div>
-                            <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                          </Link>
-                        </div>
+                        <Link
+                          href="https://www.writers.keploy.io/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
+                        >
+                          <span className="font-medium text-sm text-black/75">Writers Program</span>
+                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+                        </Link>
+                        {/* Reports row: full external reports, above the About/Security bottom row */}
+                        {[
+                          { href: "https://keploy.io/saas-api-testing", title: "SaaS API Testing Report" },
+                          { href: "https://keploy.io/healthcare-api-testing-security-report", title: "Healthcare API Security Report" },
+                        ].map((item, i) => (
+                          <div key={i} className="rounded-xl p-[1.5px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] hover:p-[2px] transition-all">
+                            <Link
+                              href={item.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => setMobileMenuOpen(false)}
+                              className="flex items-center justify-between w-full px-4 py-3 rounded-[calc(0.75rem-3px)] bg-gradient-to-br from-orange-100 to-red-100 hover:from-orange-200 hover:to-red-200 transition-all duration-200 min-h-[48px]"
+                            >
+                              <span className="font-medium text-sm text-black/90">{item.title}</span>
+                              <ChevronRight className="w-3.5 h-3.5 text-orange-500" />
+                            </Link>
+                          </div>
+                        ))}
                         {/* Bottom compact 1x4 row */}
                         <div className="grid grid-cols-4 gap-2 pt-1 pb-2">
                           {[
