@@ -133,12 +133,20 @@ const AD_MAX_W = 260;
 declare global {
   interface Window {
     clarity?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
 function trackBannerClick(bannerId: string) {
   // Visible in DevTools console so you can confirm clicks are detected.
   console.log("[ad-banner] click detected → banner_clicked:", bannerId);
+
+  // Google Analytics (GA4) — loaded afterInteractive in components/layout.tsx.
+  // gtag() buffers into dataLayer even before the library finishes, so a plain
+  // optional-chained call is enough here; no retry needed (unlike Clarity).
+  // Gives an exact per-banner click COUNT in GA4 (Realtime / DebugView, and in
+  // reports once `banner_id` is registered as a custom dimension).
+  window.gtag?.("event", "banner_click", { banner_id: bannerId });
 
   const send = () => window.clarity?.("set", "banner_clicked", bannerId);
 
