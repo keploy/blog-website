@@ -118,17 +118,10 @@ const AD_BANNERS = [
 ];
 
 const CTA_HREF = "https://app.keploy.io/signin";
-// Aspect ratio (width / height) shared by all four banner artworks. Reserves
-// the banner's vertical space before the image loads so nothing below it jumps
-// (zero layout shift). It's the artwork's shape, not a fixed pixel size — the
-// banner stays fully fluid (width:100%).
+// Shared artwork shape (not a fixed size) — reserves space to avoid layout shift.
 const AD_ASPECT = "313 / 413";
 
-// Microsoft Clarity is loaded lazily in components/layout.tsx (id="msclarity").
-// Its snippet defines window.clarity as a queuing stub the moment it runs, so
-// calls made after that are safely buffered until the real tag downloads. But
-// because it's lazyOnload, a very early click can land before the stub exists —
-// so we guard, and briefly retry if clarity isn't ready yet.
+// Clarity (lazyOnload) + GA (afterInteractive) are set up in components/layout.tsx.
 declare global {
   interface Window {
     clarity?: (...args: unknown[]) => void;
@@ -140,11 +133,7 @@ function trackBannerClick(bannerId: string) {
   // Visible in DevTools console so you can confirm clicks are detected.
   console.log("[ad-banner] click detected → banner_clicked:", bannerId);
 
-  // Google Analytics (GA4) — loaded afterInteractive in components/layout.tsx.
-  // gtag() buffers into dataLayer even before the library finishes, so a plain
-  // optional-chained call is enough here; no retry needed (unlike Clarity).
-  // Gives an exact per-banner click COUNT in GA4 (Realtime / DebugView, and in
-  // reports once `banner_id` is registered as a custom dimension).
+  // GA4 event — gtag buffers into dataLayer, so no readiness guard needed.
   window.gtag?.("event", "banner_click", { banner_id: bannerId });
 
   const send = () => window.clarity?.("set", "banner_clicked", bannerId);
@@ -177,11 +166,8 @@ function SidebarAdBanner() {
     setBanner(AD_BANNERS[Math.floor(Math.random() * AD_BANNERS.length)]);
   }, []);
 
-  // The banner is picked on the client (avoids an SSR/client hydration
-  // mismatch), so its image can only start downloading after hydration. The
-  // container reserves the slot via aspectRatio and shows a skeleton shimmer
-  // until the image decodes, then the artwork + button fade in — so the
-  // unavoidable load reads as an intentional loading state, not a broken gap.
+  // Banner is picked client-side (avoids a hydration mismatch): reserve the
+  // slot, show a skeleton until the image decodes, then fade the artwork in.
   return (
     <div
       data-banner-id={banner?.id}
@@ -202,9 +188,7 @@ function SidebarAdBanner() {
 
       {banner && (
         <>
-          {/* Full banner artwork (button excluded from artwork). Fills the
-              aspect-ratio slot and fades in once decoded. eager + high priority
-              so it starts downloading as soon as it's picked. */}
+          {/* Banner artwork (CTA excluded); fills the slot and fades in on load. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={banner.src}
@@ -225,8 +209,7 @@ function SidebarAdBanner() {
             fetchPriority="high"
           />
 
-          {/* CTA button — overlaid in the artwork's empty bottom band. Fades in
-              with the artwork so it never floats over the bare skeleton. */}
+          {/* CTA overlaid in the artwork's empty band; fades in with the image. */}
           <Link
             href={CTA_HREF}
             target="_blank"
@@ -264,9 +247,7 @@ function SidebarAdBanner() {
 export default function BlogSidebar() {
   return (
     <>
-      {/* Warm up the connection to the S3 origin that serves the ad banners so
-          the image fetch starts without paying DNS/TLS latency. No crossOrigin
-          — a plain <img> loads without CORS, so this must match to be reused. */}
+      {/* Warm the S3 origin (no crossOrigin — matches the plain <img> fetch). */}
       <Head>
         <link
           rel="preconnect"
