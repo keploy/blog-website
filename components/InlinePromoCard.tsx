@@ -38,24 +38,28 @@ function Keploy5YearsBanner() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          padding: 12px 22px;
-          background: linear-gradient(135deg, #fb923c, #f97316);
+          padding: 12px 12px;
+          background: linear-gradient(180deg, #ff9d2e 0%, #ff6b00 100%);
           color: white;
           border: none;
           border-radius: 10px;
           font-size: 13.5px;
           font-weight: 700;
           text-decoration: none;
-          box-shadow: 0 4px 12px rgba(249,115,22,0.28);
+          box-shadow: 0 5px 14px rgba(255,107,0,0.16);
           letter-spacing: 0.01em;
           cursor: pointer;
           white-space: nowrap;
-          transition: box-shadow 0.15s ease, transform 0.15s ease;
+          transition: box-shadow 200ms ease, transform 200ms ease, filter 200ms ease;
           font-family: inherit;
         }
         .k5y-cta-btn:hover {
-          box-shadow: 0 6px 16px rgba(249,115,22,0.36);
+          box-shadow: 0 6px 16px rgba(255,107,0,0.20);
           transform: translateY(-1px);
+          filter: brightness(1.05);
+        }
+        .k5y-cta-btn:active {
+          transform: translateY(1px);
         }
         .k5y-cta-btn:focus-visible {
           outline: 3px solid #f59e0b;
@@ -74,7 +78,8 @@ function Keploy5YearsBanner() {
       <div
         className="k5y-body"
         style={{
-          background: "#ffffff",
+          background:
+            "radial-gradient(65% 110% at 0% 45%, rgba(255,140,32,0.12) 0%, rgba(255,157,46,0.06) 24%, rgba(255,255,255,0) 46%), #ffffff",
           borderRadius: 16,
           border: "1px solid #e5e7eb",
           boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
@@ -115,6 +120,7 @@ function Keploy5YearsBanner() {
             width: 1.5,
             alignSelf: "stretch",
             flexShrink: 0,
+            opacity: 0.7,
             background:
               "linear-gradient(to bottom, transparent, #fdba74 15%, #f97316 50%, #fdba74 85%, transparent)",
           }}
@@ -152,10 +158,10 @@ function Keploy5YearsBanner() {
           target="_blank"
           rel="noopener noreferrer"
           className="k5y-cta-btn"
-          aria-label="Claim your free 1 month of Keploy credits"
+          aria-label="Claim 1 month of free Keploy credits"
           aria-describedby={`${bannerId}-desc`}
         >
-          claim free 1 month credits
+          Claim 1 Month of Free Credits
         </a>
       </div>
     </div>
