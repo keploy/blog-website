@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import SubscribeNewsletter from "./subscribe-newsletter";
 import {
@@ -118,11 +117,13 @@ const AD_BANNERS = [
 ];
 
 const CTA_HREF = "https://app.keploy.io/signin";
-const AD_W = 313;
-const AD_H = 413;
-// Displayed max width. Single source of truth: the placeholder, the live
-// banner, and next/image's `sizes` hint all read from this. Capped to match
-// the sidebar column (max-w-[260px]) so the 313px-wide artwork never upscales.
+// Aspect ratio of the banner artwork (width / height). Reserves space before
+// the image loads so there's no layout shift — a plain <img> doesn't do this
+// on its own. It's the shape only, not fixed pixel dimensions, so the banner
+// stays fully fluid.
+const AD_ASPECT = "313 / 413";
+// Displayed max width. Shared by the placeholder and the live banner. Capped to
+// match the sidebar column (max-w-[260px]) so the artwork never upscales.
 const AD_MAX_W = 260;
 
 // Microsoft Clarity is loaded lazily in components/layout.tsx (id="msclarity").
@@ -181,7 +182,7 @@ function SidebarAdBanner() {
     return (
       <div
         className="rounded-2xl"
-        style={{ width: '100%', maxWidth: AD_MAX_W, margin: '0 auto', aspectRatio: `${AD_W} / ${AD_H}`, background: '#F3F4F6' }}
+        style={{ width: '100%', maxWidth: AD_MAX_W, margin: '0 auto', aspectRatio: AD_ASPECT, background: '#F3F4F6' }}
         aria-hidden="true"
       />
     );
@@ -200,14 +201,17 @@ function SidebarAdBanner() {
         containerType: 'inline-size',
       }}
     >
-      {/* Full banner artwork (button excluded from artwork) */}
-      <Image
+      {/* Full banner artwork (button excluded from artwork). Plain <img> — no
+          fixed width/height needed; the browser reads the intrinsic size and
+          aspectRatio reserves space to avoid layout shift. Intentional over
+          next/image: the artwork is already an optimized, small (~313px) .webp,
+          so next/image's resizing adds little; this also matches the existing
+          sidebar-banner convention (PR #350). */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src={banner.src}
         alt="Keploy — 300M+ mocks and 12.8M+ tests generated"
-        width={AD_W}
-        height={AD_H}
-        sizes={`${AD_MAX_W}px`}
-        style={{ width: '100%', height: 'auto', display: 'block' }}
+        style={{ width: '100%', height: 'auto', aspectRatio: AD_ASPECT, display: 'block' }}
         loading="lazy"
       />
 
