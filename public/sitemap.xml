@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/0.9">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-04-15</lastmod>
+    <lastmod>2026-07-28</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-04-15</lastmod>
+    <lastmod>2026-07-28</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/technology</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -27,7 +27,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/10-unit-testing-best-practices</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/10-Essential-Unit-Testing-Best-Practices-for-Bug-Free-Code.jpg</image:loc>
@@ -45,7 +45,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/4-ways-to-accelerate-your-software-testing-life-cycle</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/07/4-Ways-to-Accelerate-e1710137625882.webp</image:loc>
@@ -54,7 +54,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/4-ways-to-write-comments-in-json</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/06/My-Banner-1-e1742200656969.png</image:loc>
@@ -63,7 +63,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/5-best-open-source-api-testing-tools-in-2025</loc>
-    <lastmod>2025-10-07</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/5-Best-Open-Source-API-Testing-Tools-in-2025.webp</image:loc>
@@ -81,15 +81,25 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/7-best-test-data-management-tools-in-2024</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-07-28</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2024/07/My-Banner-e1721211434531.png</image:loc>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/Cover-Image-Test-Data-Management-Tools.webp</image:loc>
+      <image:title>Best Test Data Management Tools in 2026</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/7-principles-of-software-testing</loc>
+    <lastmod>2026-07-01</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Principles-of-Software-Testing.webp</image:loc>
+      <image:title>Principles of Software Testing</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://keploy.io/blog/community/a-guide-for-observing-go-process-with-ebpf</loc>
-    <lastmod>2025-06-18</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/08/A-Guide-for-Observing-e1709887192629.webp</image:loc>
@@ -98,16 +108,16 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/a-guide-to-test-cases-in-software-testing</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2024/08/A-Guide-to-Test-Cases-in-Software-Testing.webp</image:loc>
-      <image:title>Master software testing with our guide on writing effective test cases. Explore types, coverage, and edge cases to boost quality and reduce defects.</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2024/08/test-cases-in-software-testing-featured.webp</image:loc>
+      <image:title>Test cases in software testing guide covering types, examples and how to write test cases</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://keploy.io/blog/community/a-guide-to-testing-react-components-with-jest-and-react-testing-library</loc>
-    <lastmod>2025-10-31</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/08/testing-react.webp</image:loc>
@@ -116,7 +126,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/a-guide-to-various-api-architectures</loc>
-    <lastmod>2025-08-19</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/A-Comprehensive-Guide-to-REST-API-e1711609260330.webp</image:loc>
@@ -134,7 +144,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/a-test-strategy-is-critical-for-your-project-success</loc>
-    <lastmod>2025-07-18</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/Test-Strategy.webp</image:loc>
@@ -161,7 +171,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/agile-vs-waterfall-methodology-guide</loc>
-    <lastmod>2025-12-04</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/Agile-vs-Waterfall-Choosing-the-Right-Approach-for-Your-Project.webp</image:loc>
@@ -188,7 +198,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ai-code-checker</loc>
-    <lastmod>2025-09-04</lastmod>
+    <lastmod>2026-04-30</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/88f7b145-5e7d-41fa-83d7-7c49e3d7367f.jpeg</image:loc>
@@ -215,7 +225,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ai-for-coding</loc>
-    <lastmod>2025-12-01</lastmod>
+    <lastmod>2026-06-04</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/ai-for-coding-e1756188770536.webp</image:loc>
@@ -233,7 +243,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ai-model-testing</loc>
-    <lastmod>2025-09-01</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/AI-Model-Testing.webp</image:loc>
@@ -242,7 +252,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ai-powered-test-automation</loc>
-    <lastmod>2026-02-27</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/AI-powered-test-automation-e1742445888402.webp</image:loc>
@@ -269,16 +279,16 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ai-test-generator</loc>
-    <lastmod>2026-04-08</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/AI-Test-Generator-for-APIs.webp</image:loc>
-      <image:title>AI Test Generator for APIs: How It Works and Why It Matters</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/Cover-Image-AI-Test-Case-Generator.webp</image:loc>
+      <image:title>AI Test Case Generator: Workflow &amp; Use Cases</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ai-testing-prompt-engineering</loc>
-    <lastmod>2025-11-03</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/02/AI-Testing-Prompt-Engineering-e1740632841356.webp</image:loc>
@@ -287,7 +297,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ai-testing-tools</loc>
-    <lastmod>2026-02-09</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/best-ai-testing-tools-banner.webp</image:loc>
@@ -296,7 +306,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/all-about-api-testing-keploy</loc>
-    <lastmod>2025-08-27</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/11/All-about-API-testing-e1709285587703.webp</image:loc>
@@ -305,7 +315,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/all-about-load-testing-a-detailed-guide</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/10/load-testing.webp</image:loc>
@@ -314,7 +324,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/all-about-system-integration-testing-in-software-testing</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/01/All-about-System-Integration-Testing-e1705862897493.png</image:loc>
@@ -323,16 +333,16 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/alpha-vs-beta-testing</loc>
-    <lastmod>2025-03-31</lastmod>
+    <lastmod>2026-05-28</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/Alpha-vs-Beta-Testing-e1743167807317.webp</image:loc>
-      <image:title>Alpha vs Beta Testing</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/featured-dark1-scaled.webp</image:loc>
+      <image:title>Alpha vs beta testing key differences and best practices guide for QA engineers - Keploy 2026</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://keploy.io/blog/community/an-introduction-to-api-testing</loc>
-    <lastmod>2025-08-27</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/12/An-Introduction-To-API.webp</image:loc>
@@ -358,7 +368,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-automation-testing</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/API-Automation-Testing.webp</image:loc>
@@ -367,11 +377,20 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-automation-testing-pynt-keploy</loc>
-    <lastmod>2025-06-20</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/API-Automation-Testing-e1711026593111.webp</image:loc>
       <image:title>Pynt &amp; Keploy: API automated testing is critical for product quality and CI/CD processes. Unlike GUI tests, API tests can cope with short release cycles and frequent changes — without breaking the test outputs.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/api-design</loc>
+    <lastmod>2026-05-11</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/api-design-hero.webp</image:loc>
+      <image:title>api-design-hero</image:title>
     </image:image>
   </url>
   <url>
@@ -385,7 +404,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-functional-testing</loc>
-    <lastmod>2025-08-12</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/A-Complete-Guide-to-API-Functional-Testing.webp</image:loc>
@@ -394,7 +413,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-integration-importance-and-best-practices</loc>
-    <lastmod>2026-04-02</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/06/My-Banner-2-e1718602640671.png</image:loc>
@@ -412,7 +431,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-security-testing-101</loc>
-    <lastmod>2025-07-04</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/API-Security-Testing-101-scaled.webp</image:loc>
@@ -421,7 +440,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-testing-services</loc>
-    <lastmod>2026-04-06</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/api-testing-services.webp</image:loc>
@@ -430,7 +449,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-testing-strategies</loc>
-    <lastmod>2026-04-08</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/API-Testing-Strategies-1.webp</image:loc>
@@ -438,8 +457,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/api-testing-tools</loc>
+    <lastmod>2026-07-16</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/api_testing_tools_featured_image_v2-scaled.webp</image:loc>
+      <image:title>API testing tools comparison guide for developers in 2026</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/apis-vs-webhooks-make-a-github-webhook</loc>
-    <lastmod>2025-07-18</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/APIs-vs-Webhooks-e1711953980579.webp</image:loc>
@@ -448,7 +476,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/assertion-testing-techniques</loc>
-    <lastmod>2025-09-23</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/assertions.jpg</image:loc>
@@ -462,6 +490,24 @@
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/02/Automate-Testing-on-BitBucket-for-Golang-CRUD-App-with-Docker-e1740557583999.webp</image:loc>
       <image:title>Learn how to set up automated testing on Bitbucket for a Golang CRUD app using Docker, Docker Compose, and CI/CD for efficient DevOps workflows.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/automated-regression-testing</loc>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/Cover-Image-Automated-Regression-Testing.webp</image:loc>
+      <image:title>Automated Regression Testing - A Modern Perspective</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/automated-software-testing-tools</loc>
+    <lastmod>2026-07-17</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/Automated-Software-Testing-Tools-Cover-Image.webp</image:loc>
+      <image:title>Automated Software Testing Tools</image:title>
     </image:image>
   </url>
   <url>
@@ -484,7 +530,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/bdd-testing-with-cucumber</loc>
-    <lastmod>2025-06-18</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/01/BDD-Testing-with-Cucumber-js-e1705779818445.webp</image:loc>
@@ -493,7 +539,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/benchmark-testing-in-software-the-key-to-optimizing-performance</loc>
-    <lastmod>2025-07-31</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/10/Benchmark-Testing.webp</image:loc>
@@ -502,7 +548,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/benefits-of-test-automation</loc>
-    <lastmod>2026-03-26</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/03/Benefits-of-Test-Automation-That-Improve-Release-Confidence-1.png</image:loc>
@@ -510,7 +556,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/best-ai-coding-assistant-for-beginners-and-experts</loc>
-    <lastmod>2025-09-04</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/Best-AI-Coding-Assistant-for-Beginners-and-Experts.webp</image:loc>
@@ -519,7 +565,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/best-ai-coding-tools-in-2025-for-developers</loc>
-    <lastmod>2025-09-09</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Best-AI-Coding-Tools-in-2025-for-Developers.webp</image:loc>
@@ -546,7 +592,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/best-ci-tools-to-streamline-your-testing-workflow</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Best-CI-Tools-to-Streamline-Your-Testing-Workflow.webp</image:loc>
@@ -564,7 +610,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/best-devops-automation-tools-in-2025</loc>
-    <lastmod>2025-12-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/Best-DevOps-Automation-Tools-in-2025.webp</image:loc>
@@ -582,7 +628,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/best-free-code-testing-tools-for-web-software-developers</loc>
-    <lastmod>2025-04-01</lastmod>
+    <lastmod>2026-04-30</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/04/Best-Free-Code-Tester-Tools-for-Web-Software-Developers-e1743492106855.webp</image:loc>
@@ -600,16 +646,16 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/best-open-source-test-management-tools</loc>
-    <lastmod>2025-11-26</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/Best-Open-Source-Test-Management-Tools-Their-Features.webp</image:loc>
-      <image:title>Best Open Source Test Management Tools &amp; Their Features</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/Open-Source-Test-Management-Tools-in-2026.webp</image:loc>
+      <image:title>Best Open Source Test Management Tools in 2026</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://keploy.io/blog/community/best-opensource-coding-ai</loc>
-    <lastmod>2025-07-22</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/04/Best-OpenSource-Coding-AI-e1744953387281.webp</image:loc>
@@ -635,6 +681,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/best-uat-testing-software-tools</loc>
+    <lastmod>2026-06-30</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/UAT-Testing-Software-Top-Picks-That-Work-in-2026.webp</image:loc>
+      <image:title>UAT Testing Software: Top Picks That Work in 2026</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/beta-testing-guide</loc>
     <lastmod>2025-12-30</lastmod>
     <priority>0.70</priority>
@@ -645,16 +700,25 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/black-box-testing-and-white-box-testing-a-complete-guide</loc>
-    <lastmod>2026-04-07</lastmod>
+    <lastmod>2026-07-03</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Black-Box-Testing-and-White-Box-Testing.webp</image:loc>
-      <image:title>Black Box Testing and White Box Testing</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Black-box-Testing-and-White-Box-Testing.webp</image:loc>
+      <image:title>Black box Testing and White Box Testing</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/black-box-testing-techniques</loc>
+    <lastmod>2026-07-03</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/Black-Box-Testing-Techniques-A-Practical-Guide-2026.webp</image:loc>
+      <image:title>Black Box Testing Techniques: A Practical Guide (2026)</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://keploy.io/blog/community/boost-unit-test-efficiency-using-ai-powered-extensions-for-vs-code</loc>
-    <lastmod>2025-07-16</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/ai-unit-test.webp</image:loc>
@@ -672,11 +736,20 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/bug-bashing-guide</loc>
-    <lastmod>2025-12-10</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/Bug-Bashing.webp</image:loc>
       <image:title>Bug Bashing</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/bug-life-cycle</loc>
+    <lastmod>2026-07-08</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/bug-life-cycle-featured11.webp</image:loc>
+      <image:title>Bug life cycle in software testing featured image showing defect workflow stages</image:title>
     </image:image>
   </url>
   <url>
@@ -708,7 +781,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/building-a-crud-application-from-scratch-using-golang</loc>
-    <lastmod>2025-07-03</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/Building-a-GO-CRUD-Rest-API-from-scratch-1-e1710438485136.webp</image:loc>
@@ -726,7 +799,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/building-reliable-ai-writing-tools-lessons-from-developing-textero</loc>
-    <lastmod>2026-02-17</lastmod>
+    <lastmod>2026-07-20</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/ChatGPT-Image-Feb-17-2026-03_48_23-PM.png</image:loc>
@@ -735,7 +808,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/canary-testing-a-comprehensive-guide-for-developers</loc>
-    <lastmod>2025-10-03</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/02/Canary-Testing-e1708416778307.webp</image:loc>
@@ -753,7 +826,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/chaos-testing-explained-a-comprehensive-guide</loc>
-    <lastmod>2025-01-09</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Chaos-Testing.webp</image:loc>
@@ -779,6 +852,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/ci-cd-testing-guide</loc>
+    <lastmod>2026-07-10</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/CICD-Testing-Complete-Guide-to-Continuous-Testing.webp</image:loc>
+      <image:title>CI/CD Testing: Complete Guide to Continuous Testing (2026)</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/cline-vs-cursor-ai-coding-tools-comparison</loc>
     <lastmod>2025-07-16</lastmod>
     <priority>0.70</priority>
@@ -789,7 +871,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/code-integrity-explained-building-trust-in-software</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/08/Code-Integrity-Explained-e1706078363557.webp</image:loc>
@@ -807,7 +889,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/codium-vs-copilot-which-ai-coding-assistant-is-best-for-you</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/04/Codium-vs-Copilot.webp</image:loc>
@@ -816,7 +898,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/comparing-github-copilot-vs-chatgpt-for-unit-testing</loc>
-    <lastmod>2025-07-03</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/ChatGPT-and-GitHub-Copilot.webp</image:loc>
@@ -825,7 +907,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/complete-guide-to-ci-testing</loc>
-    <lastmod>2025-12-15</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/A-Complete-Guide-to-CI-Testing-Benefits-Tools-Workflow.webp</image:loc>
@@ -860,7 +942,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/connecting-a-hosted-ui-website-to-an-aws-ec2-instance</loc>
-    <lastmod>2025-05-14</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/04/How-to-Change-Your-AWS-EC2-Instance-Type-for-a-Seamless-Hosted-UI-to-Backend-Integration.jpg</image:loc>
@@ -868,11 +950,20 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/continuous-ui-testing-pipeline-browserstack-with-github-actions</loc>
-    <lastmod>2024-12-25</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/UI-Testing.webp</image:loc>
       <image:title>ui testing</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/contract-testing-tools</loc>
+    <lastmod>2026-07-09</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/12-Best-Contract-Testing-Tools-in-2026.webp</image:loc>
+      <image:title>12 Best Contract Testing Tools in 2026</image:title>
     </image:image>
   </url>
   <url>
@@ -893,7 +984,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/creating-the-balance-between-end-to-end-and-unit-testing</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/12/Creating-the-Balance-e1709193664986.webp</image:loc>
@@ -902,7 +993,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/cross-browser-testing-a-complete-guide</loc>
-    <lastmod>2025-07-02</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/Cross-Browser-Testing.webp</image:loc>
@@ -956,7 +1047,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/decoding-http2-traffic-is-hard-but-ebpf-can-help</loc>
-    <lastmod>2023-12-15</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/12/Simple-Technology-Blog-Banner.png</image:loc>
@@ -965,7 +1056,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/defect-management-in-software-testing</loc>
-    <lastmod>2025-07-23</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/06/Defect-Management-in-Software-Testing.webp</image:loc>
@@ -974,11 +1065,20 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/demystifying-cron-job-testing</loc>
-    <lastmod>2025-06-18</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/02/Demystifying-Cron-Job-Testing-e1706869354805.webp</image:loc>
       <image:title>The importance of cron job testing is beyond description. Ensure your automated tasks run flawlessly with proper cron job testing procedures.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/deployment-strategies</loc>
+    <lastmod>2026-06-26</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/Deployment-Strategies-Every-Developer-Should-Know.webp</image:loc>
+      <image:title>Deployment Strategies Every Developer Should Know</image:title>
     </image:image>
   </url>
   <url>
@@ -1000,7 +1100,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/devrel-at-keploy-experience-2</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/06/DevRel-at-Keploy - Experience-e1712564447236.webp</image:loc>
@@ -1018,7 +1118,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/difficulties-of-api-testing</loc>
-    <lastmod>2025-08-27</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/06/Difficulties-of-API-Testing-e1711957945545.webp</image:loc>
@@ -1027,7 +1127,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/dignify-your-test-automation-with-concise-code-documentation</loc>
-    <lastmod>2026-02-27</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/01/Dignify-Your-Test-Automation-with-Concise-Code-Documentation.webp</image:loc>
@@ -1036,7 +1136,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/diverse-test-data-boosting-regression-testing-efficiency</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/Diverse-Test-Data-e1710398063194.webp</image:loc>
@@ -1063,7 +1163,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ebpf-for-tls-traffic-tracing-secure-efficient-observability</loc>
-    <lastmod>2025-07-16</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/eBPF-for-TLS-Traffic-Tracing.webp</image:loc>
@@ -1081,7 +1181,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/end-to-end-testing-guide</loc>
-    <lastmod>2026-03-24</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/A-Complete-Guide-to-End-to-End-Testing-with-Keploy.webp</image:loc>
@@ -1090,7 +1190,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/essential-free-api-testing-tools-every-developer-should-know</loc>
-    <lastmod>2025-10-24</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/10/My-Banner-3.png</image:loc>
@@ -1099,7 +1199,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/essential-functional-testing-tools-for-mobile-development</loc>
-    <lastmod>2025-01-13</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/mobile.webp</image:loc>
@@ -1117,7 +1217,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/everything-you-need-to-know-about-unit-testing</loc>
-    <lastmod>2025-07-01</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/12/Everything-You-Need.webp</image:loc>
@@ -1125,7 +1225,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/executing-ebpf-in-github-actions</loc>
-    <lastmod>2025-06-25</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/04/Executing-EBPF-in-Github-Actions.webp</image:loc>
@@ -1143,7 +1243,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/exploring-cypress-and-keploy-streamlining-test-automation</loc>
-    <lastmod>2026-02-27</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/05/Exploring-Cypress-and-Keploy.webp</image:loc>
@@ -1161,7 +1261,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/exploring-graphql-api-development</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/Exploring-GraphQL-e1710484822335.webp</image:loc>
@@ -1170,7 +1270,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/exploring-the-effectiveness-of-e2e-testing-in-comparison-with-integration-testing</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/12/Exploring-the-Effectiveness-of-E2E-Testing-e1706774363181.webp</image:loc>
@@ -1188,7 +1288,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/faster-testing-guide</loc>
-    <lastmod>2026-01-09</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/Faster-Testing-How-Modern-Teams-Ship-High-Quality-Software-Quickly.webp</image:loc>
@@ -1197,7 +1297,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/frustrations-of-api-testing</loc>
-    <lastmod>2025-08-27</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/08/Frustrations-of-API-Testing-e1712046485653.webp</image:loc>
@@ -1206,7 +1306,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/fun-facts-about-apis</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/Fun-Facts-About-APIs-e1711948422583.webp</image:loc>
@@ -1215,11 +1315,11 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/functional-testing-an-in-depth-overview</loc>
-    <lastmod>2026-02-17</lastmod>
+    <lastmod>2026-06-30</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2024/11/Functional-Testing.webp</image:loc>
-      <image:title>Functional Testing: An in-depth overview</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2024/11/ChatGPT-Image-Jun-30-2026-05_08_45-PM.webp</image:loc>
+      <image:title>Functional testing illustration showing software feature validation across web and mobile applications with automated test checklist, UI verification, and quality assurance workflow</image:title>
     </image:image>
   </url>
   <url>
@@ -1260,7 +1360,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/generative-ai-testing-tools</loc>
-    <lastmod>2025-12-01</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/Generative-AI-Testing-Tools-The-Next-Evolution-of-Test-Automation.webp</image:loc>
@@ -1269,7 +1369,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/getting-started-with-keploy</loc>
-    <lastmod>2025-07-03</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/10/Getting-Started-with-Keploy-e1709834931653.webp</image:loc>
@@ -1278,7 +1378,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/getting-started-with-microservices-testing</loc>
-    <lastmod>2025-06-27</lastmod>
+    <lastmod>2026-07-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/06/Getting-Started-with-Microservices-Testing.webp</image:loc>
@@ -1296,7 +1396,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/github-copilot-for-software-testing</loc>
-    <lastmod>2026-01-21</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/How-to-Use-Copilot-in-Software-Testing-A-Practical-Guide-for-Testers-scaled-e1768987600200.webp</image:loc>
@@ -1350,7 +1450,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/guide-to-automated-testing-tools-in-2025</loc>
-    <lastmod>2026-04-15</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/Guide-to-Automated-Testing-Tools-in-2025.webp</image:loc>
@@ -1395,7 +1495,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-cicd-is-changing-the-future-of-software-development</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/How-CICD-is-Changing-the-Future-of-Software-Development-e1741588628556.webp</image:loc>
@@ -1404,7 +1504,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-did-i-get-to-know-about-apis</loc>
-    <lastmod>2024-11-20</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/06/How-did-I-get-to.webp</image:loc>
@@ -1430,7 +1530,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-i-simulated-a-response-from-a-third-party-app</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/04/How-I-simulate-a-response-from-a-Third-Party-e1714026688253.webp</image:loc>
@@ -1447,7 +1547,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-check-network-latency</loc>
-    <lastmod>2025-09-17</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/How-to-Check-Network-Latency.png</image:loc>
@@ -1456,7 +1556,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-choose-your-api-performance-testing-tool-a-guide</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/01/API-Performance-testing-e1705516202665.webp</image:loc>
@@ -1474,7 +1574,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-compare-two-json-files</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/06/My-Banner-3.png</image:loc>
@@ -1492,7 +1592,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-create-a-pandas-pivot-table-in-python</loc>
-    <lastmod>2025-07-09</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/How-to-Create-a-Pandas-Pivot-Table-in-Python.webp</image:loc>
@@ -1527,7 +1627,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-download-and-install-intellij-idea-community-edition</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/intellij.jpg</image:loc>
@@ -1545,7 +1645,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-generate-test-cases-with-automation-tools</loc>
-    <lastmod>2025-10-31</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/11/How-to-Generate-Test-Cases-e1709842279536.webp</image:loc>
@@ -1563,11 +1663,11 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-improve-dora-metrics</loc>
-    <lastmod>2026-03-25</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/How-to-Improve-DORA-Metrics-in-Modern-DevOps-Pipelines.webp</image:loc>
-      <image:title>dora metrics</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/Dora-Metrics-Benchmarks-Tools-Strategies.webp</image:loc>
+      <image:title>Dora Metrics: Benchmarks, Tools &amp; Strategies to Improve</image:title>
     </image:image>
   </url>
   <url>
@@ -1598,7 +1698,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-run-pytest-program</loc>
-    <lastmod>2025-05-08</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/How-to-Run-Pytest-Program.webp</image:loc>
@@ -1669,7 +1769,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-use-junit-on-vs-code-a-comprehensive-guide</loc>
-    <lastmod>2025-07-29</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/How-to-Use-JUnit-on-VS-Code.webp</image:loc>
@@ -1695,6 +1795,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/in-depth-testing</loc>
+    <lastmod>2026-06-02</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/In-Depth-Testing-Stop-Shipping-Bugs-Your-Tests-Missed.webp</image:loc>
+      <image:title>In-Depth Testing: Stop Shipping Bugs Your Tests Missed</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/infrastructure-automation-future</loc>
     <lastmod>2025-12-23</lastmod>
     <priority>0.70</priority>
@@ -1714,10 +1823,11 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/integration-testing-a-comprehensive-guide</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/ChatGPT-Image-Sep-3-2025-03_48_37-PM.webp</image:loc>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/ChatGPT-Image-Jun-30-2026-04_35_54-PM.webp</image:loc>
+      <image:title>Integration testing illustration showing APIs, frontend, backend services, databases, and microservices connected to validate communication and data flow</image:title>
     </image:image>
   </url>
   <url>
@@ -1731,7 +1841,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/introduction-to-database-testing</loc>
-    <lastmod>2025-09-15</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/Introduction-to-Database-testing.webp</image:loc>
@@ -1758,7 +1868,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/introduction-to-selenium-software-testing</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/Introduction-To-Selenium-Software-Testing.webp</image:loc>
@@ -1767,7 +1877,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/introduction-to-shift-left-testing</loc>
-    <lastmod>2025-09-04</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/08/Shift-Left-Testing-e1722919942749.webp</image:loc>
@@ -1785,7 +1895,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/is-your-copilot-ai-slow-heres-what-you-can-do</loc>
-    <lastmod>2025-03-12</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/copilot.jpg</image:loc>
@@ -1856,7 +1966,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/key-extraction-by-uprobe-attachment-on-openssl-for-ssl-inspection</loc>
-    <lastmod>2025-04-11</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/04/ChatGPT-Image-Apr-11-2025-10_45_18-AM.png</image:loc>
@@ -1865,7 +1975,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/know-about-record-and-replay-testing</loc>
-    <lastmod>2025-07-16</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/Know-about-Record-e1711083608287.webp</image:loc>
@@ -1890,8 +2000,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/levels-of-software-testing</loc>
+    <lastmod>2026-07-02</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/levels-of-software-testing-feature.png</image:loc>
+      <image:title>Level of software testing</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/llm-txt-generator</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/06/LLM-TXT-Generator-e1749093741167.webp</image:loc>
@@ -1918,7 +2037,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mastering-api-test-automation-best-practices-and-tools</loc>
-    <lastmod>2026-01-13</lastmod>
+    <lastmod>2026-07-23</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/10/Mastering-API-Test-Automation-e1709840517552.webp</image:loc>
@@ -1927,7 +2046,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mastering-mcp-to-a2a</loc>
-    <lastmod>2025-09-25</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/MCP-A2A-Guide-for-Developers.webp</image:loc>
@@ -1945,7 +2064,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mastering-node-js-backend-testing-with-mocha-and-chai</loc>
-    <lastmod>2025-06-18</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/10/Node.js-Backend-Testing.webp</image:loc>
@@ -1954,7 +2073,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mastering-stress-testing-breaking-systems-to-build-better-ones</loc>
-    <lastmod>2024-12-23</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/Stress-Testing.webp</image:loc>
@@ -1963,7 +2082,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mastering-test-coverage-quality-over-quantity-in-software-testing</loc>
-    <lastmod>2025-07-03</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/11/Mastering-Test-Coverage-e1709278854282.webp</image:loc>
@@ -1972,7 +2091,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mastering-the-redo-shortcut-key-a-guide-for-efficient-workflows</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/keploy_92635_redo_shortcut_key_add_tech_guy_using_ctrl__Y_on__2c8fbd03-757f-4d7f-901d-83e060f45e2b_2.webp</image:loc>
@@ -1989,8 +2108,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/mock-testing</loc>
+    <lastmod>2026-07-09</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/Mock-Testing-A-Complete-Guide-for-Developers-2026.webp</image:loc>
+      <image:title>Mock Testing</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/mock-vs-stub-vs-fake-understand-the-difference</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/02/Mock-vs-Stub-vs-Fake-e1708339991637.webp</image:loc>
@@ -1999,7 +2127,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mocking-httpx-requests-with-respx-a-comprehensive-guide</loc>
-    <lastmod>2025-06-18</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/How-to-mock-with-respx.png</image:loc>
@@ -2017,7 +2145,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/model-based-testing</loc>
-    <lastmod>2026-02-26</lastmod>
+    <lastmod>2026-07-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/Model-Based-Testing-Benefits-Use-Cases-Best-Practices.webp</image:loc>
@@ -2043,7 +2171,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/my-journey-of-automating-test-cases</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/My-journey-of-Automating-e1710746518795.webp</image:loc>
@@ -2061,7 +2189,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/my-journey-of-keploy-fellowship-program</loc>
-    <lastmod>2024-10-08</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/12/My-Journey-of-Keploy-e1711545090970.png</image:loc>
@@ -2070,7 +2198,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/my-keploy-api-fellowship-journey</loc>
-    <lastmod>2024-10-08</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/08/API-Fellowship-Journey-e1712312597509.png</image:loc>
@@ -2079,7 +2207,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/my-keploy-api-fellowship-journey-2</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/12/API-Fellowship-Journey.png</image:loc>
@@ -2087,7 +2215,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/no-code-api-testing-tools</loc>
-    <lastmod>2025-07-03</lastmod>
+    <lastmod>2026-07-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/No-Code-API-Testing-Frameworks.png</image:loc>
@@ -2096,7 +2224,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/open-source-load-testing-tools-for-devops</loc>
-    <lastmod>2025-11-26</lastmod>
+    <lastmod>2026-07-09</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/11/Open-Source-Load-Testing-Tools.webp</image:loc>
@@ -2132,7 +2260,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/performance-testing-guide-to-ensure-your-software-performs-at-its-best</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-07-20</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/01/performance-testing.webp</image:loc>
@@ -2159,7 +2287,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/playwright-vs-cypress-choosing-the-best-e2e-testing-framework</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/11/Playwright-vs-Cypress.webp</image:loc>
@@ -2168,7 +2296,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/playwright-vs-selenium</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-04-30</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/Playwright-vs-Selenium.webp</image:loc>
@@ -2177,7 +2305,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/podman-vs-docker</loc>
-    <lastmod>2025-07-22</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/Podman-vs-Docker-e1741159944866.webp</image:loc>
@@ -2186,7 +2314,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/postman-alternative</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/Postman-Alternative-The-Best-API-Testing-Tools-to-Use-in-2026.webp</image:loc>
@@ -2203,8 +2331,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/production-testing</loc>
+    <lastmod>2026-06-05</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Production-Testing-Methods-Best-Practices-Tools-2026.webp</image:loc>
+      <image:title>Production Testing Methods, Best Practices &amp; Tools (2026)</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/prompt-engineering-for-python-code-generation-with-keploy</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/02/Prompt-Engineering-for-Python-Code-Generation-with-Keploy.webp</image:loc>
@@ -2222,7 +2359,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/python-automation-testing-guide</loc>
-    <lastmod>2025-09-16</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/Python-Automation-Testing-Guide.webp</image:loc>
@@ -2249,7 +2386,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/python-testing-with-pytest-features-best-practices</loc>
-    <lastmod>2025-06-26</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Python-Testing-with-Pytest.webp</image:loc>
@@ -2267,7 +2404,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/qa-automation-engineers-overcoming-testing-limitations</loc>
-    <lastmod>2025-06-20</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/09/QA-Automation-Engineers-1-e1706077706505.png</image:loc>
@@ -2284,7 +2421,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/quality-assurance-testing</loc>
-    <lastmod>2026-02-08</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/Quality-Assurance-Testing.webp</image:loc>
@@ -2302,7 +2439,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/react-devtools-complete</loc>
-    <lastmod>2025-08-04</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/React-DevTools.webp</image:loc>
@@ -2311,7 +2448,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/react-testing-on-vs-code</loc>
-    <lastmod>2025-03-11</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/React-Testing-on-VS-Code.webp</image:loc>
@@ -2328,8 +2465,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/reduce-test-maintenance</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/How-to-Reduce-Test-Maintenance-Without-Losing-Coverage.webp</image:loc>
+      <image:title>How to Reduce Test Maintenance Without Losing Coverage</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/regression-testing-an-introductory-guide</loc>
-    <lastmod>2026-03-13</lastmod>
+    <lastmod>2026-06-15</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/03/Regression-Testing-Guide-Tools-Best-Practices.webp</image:loc>
@@ -2338,11 +2484,11 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/regression-testing-tools</loc>
-    <lastmod>2026-04-13</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/Top-Regression-Testing-Tools-for-2026-Cover-Image.webp</image:loc>
-      <image:title>Regression Testing Tools for 2026</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Top-Regression-Testing-Tools-for-2026-Compared.png</image:loc>
+      <image:title>Top Regression Testing Tools for 2026- Compared</image:title>
     </image:image>
   </url>
   <url>
@@ -2356,7 +2502,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/reliability-testing-a-complete-guide</loc>
-    <lastmod>2025-07-29</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/Reliability-Testing-A-Complete-Guide.webp</image:loc>
@@ -2383,7 +2529,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/rest-assured-alternatives-for-api-testing</loc>
-    <lastmod>2026-04-03</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/Screenshot-2025-03-22-101148.png</image:loc>
@@ -2428,11 +2574,20 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/running-react-code-in-visual-studio-code-and-online</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/Running-React-Code-in-Visual-Studio-Code-and-Online.webp</image:loc>
       <image:title>Running React Code in Visual Studio Code and Online</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/sandbox-testing</loc>
+    <lastmod>2026-07-14</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/What-Is-Sandbox-Testing.webp</image:loc>
+      <image:title>What Is Sandbox Testing</image:title>
     </image:image>
   </url>
   <url>
@@ -2455,7 +2610,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/securing-data-protocols-tls-application</loc>
-    <lastmod>2025-07-03</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/02/Exploring-the-World-of-Internet-Protocols-e1707141831979.webp</image:loc>
@@ -2464,11 +2619,19 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/security-testing-guide</loc>
-    <lastmod>2026-02-10</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/Security-Testing-Explained-Protecting-Modern-Applications-and-APIs.webp</image:loc>
       <image:title>Security Testing Explained Protecting Modern Applications and APIs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/self-healing-test-automation</loc>
+    <lastmod>2026-05-27</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/ChatGPT-Image-May-27-2026-05_14_26-PM.webp</image:loc>
     </image:image>
   </url>
   <url>
@@ -2482,7 +2645,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/simplifying-junit-test-stubs-and-mocking</loc>
-    <lastmod>2025-06-17</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/05/Simplifying-JUnit-Test-e1707855950424.webp</image:loc>
@@ -2490,7 +2653,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/smoke-testing-vs-regression-testing</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/06/Smoke-Testing-vs-Regression-Testing.webp</image:loc>
@@ -2499,7 +2662,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/soap-api-testing</loc>
-    <lastmod>2025-09-14</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/SOAP-API-Testing-Made-Simple.webp</image:loc>
@@ -2508,7 +2671,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/soap-vs-rest-choosing-the-right-api-protocol</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/SOAP-vs.-REST-e1711093088961.webp</image:loc>
@@ -2526,7 +2689,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-deployment</loc>
-    <lastmod>2026-04-07</lastmod>
+    <lastmod>2026-06-22</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/Software-Deployment-in-2026.webp</image:loc>
@@ -2544,7 +2707,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-development-phases</loc>
-    <lastmod>2024-10-08</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/10/Software-Development-Phases-e1709664592421.webp</image:loc>
@@ -2552,8 +2715,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/software-development-tools</loc>
+    <lastmod>2026-07-16</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/Top-Software-Development-Tools-in-2025.webp</image:loc>
+      <image:title>Software Development Tools</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/software-development-tools-in-2025</loc>
-    <lastmod>2026-04-13</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/Top-Software-Development-Tools-in-2025.webp</image:loc>
@@ -2562,7 +2734,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-egg-explained</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/software-egg-e1742297354261.png</image:loc>
@@ -2571,7 +2743,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-quality-assurance-services</loc>
-    <lastmod>2025-10-03</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/10/Software-Quality-Assurance-Service.webp</image:loc>
@@ -2580,7 +2752,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-quality-assurance-tools</loc>
-    <lastmod>2026-02-08</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/Top-Advanced-Software-Quality-Assurance-Tools-for-Modern-Teams.webp</image:loc>
@@ -2589,7 +2761,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-quality-gates</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/Software-Quality-Gates-How-Do-They-Work.webp</image:loc>
@@ -2598,11 +2770,20 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-regression-testing-services</loc>
-    <lastmod>2025-08-08</lastmod>
+    <lastmod>2026-06-12</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/Regression-Testing-Services-for-Teams.webp</image:loc>
       <image:title>Regression Testing Services</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/software-release-life-cycle</loc>
+    <lastmod>2026-05-06</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/Software-Release-Life-Cycle.png</image:loc>
+      <image:title>Software Release Life Cycle: Process &amp; Best Practices</image:title>
     </image:image>
   </url>
   <url>
@@ -2616,7 +2797,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-testing-basics</loc>
-    <lastmod>2026-04-15</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/Software-Testing-Basics-Simplified-A-Guide-for-Beginners.webp</image:loc>
@@ -2625,7 +2806,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-testing-life-cycle</loc>
-    <lastmod>2026-03-18</lastmod>
+    <lastmod>2026-07-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/03/software-testing-life-cycle-1.webp</image:loc>
@@ -2634,7 +2815,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-testing-metrics-for-qa</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-07-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/11/How-to-Use-Software-Testing-Metrics-to-Drive-Better-QA-Decisions.webp</image:loc>
@@ -2643,7 +2824,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-testing-strategies</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/software-testing-Strategies.webp</image:loc>
@@ -2670,7 +2851,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ssl-problem-unable-to-get-local-issuer-certificate</loc>
-    <lastmod>2025-10-02</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/06/Unable-to-get-Local-Issuer-Certificate.webp</image:loc>
@@ -2697,7 +2878,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/stateful-vs-stateless</loc>
-    <lastmod>2026-01-14</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/Stateful-vs-Stateless-A-Developers-Real-World-Guide-2026.webp</image:loc>
@@ -2706,7 +2887,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/strategies-handling-edge-cases-e2e-tests</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/09/E2E-Testing-Strategies.webp</image:loc>
@@ -2758,7 +2939,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/system-testing-vs-integration-testing</loc>
-    <lastmod>2025-07-18</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Keploy-banner-2.png</image:loc>
@@ -2767,7 +2948,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/teleport-into-tech-space-through-api-gateways</loc>
-    <lastmod>2025-06-20</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/08/Teleport-into-tech-space.webp</image:loc>
@@ -2775,7 +2956,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/terminologies-around-api</loc>
-    <lastmod>2024-10-08</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/03/Terminologies-Around-API-e1711959967703.webp</image:loc>
@@ -2784,7 +2965,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/test-automation-best-practices</loc>
-    <lastmod>2026-03-26</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/03/Top-Test-Automation-Best-Practices-Every-Team-Should-Follow.webp</image:loc>
@@ -2793,7 +2974,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/test-automation-pricing-comparison</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/10/ChatGPT-Image-Oct-13-2025-12_53_18-PM.webp</image:loc>
@@ -2801,8 +2982,17 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/test-automation-tools</loc>
+    <lastmod>2026-07-21</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Best-Test-Automation-Tools-Comparison-Cover-Image.webp</image:loc>
+      <image:title>Best Test Automation Tools Comparison - Keploy</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/test-case-generation-for-faster-api-testing</loc>
-    <lastmod>2025-10-24</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/How-to-Automate-Test-Case-Generation-for-Faster-API-Testing-scaled-e1741956899445.webp</image:loc>
@@ -2820,16 +3010,16 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/test-data-management</loc>
-    <lastmod>2026-04-13</lastmod>
+    <lastmod>2026-05-27</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/Test-Data-Management-1.webp</image:loc>
-      <image:title>Test Data Management</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/ChatGPT-Image-May-27-2026-05_23_46-PM.webp</image:loc>
+      <image:title>Modern SaaS illustration of test data management in software testing showing a centralized data hub connected to API testing, databases, masked data, and automated provisioning workflows with Keploy logo.</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://keploy.io/blog/community/test-data-management-best-practices</loc>
-    <lastmod>2025-12-22</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/Efficient-Test-Data-Strategies-for-Testing.webp</image:loc>
@@ -2856,7 +3046,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/test-recorder-guide</loc>
-    <lastmod>2025-11-14</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/11/Test-Recorder.webp</image:loc>
@@ -2882,7 +3072,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/testing-in-production-with-keploy</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/11/Exploring-Testing-in-Production-e1709277092461.webp</image:loc>
@@ -2891,7 +3081,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/testing-library-react-hooks</loc>
-    <lastmod>2025-08-06</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/Testing-Library-React-Hooks.webp</image:loc>
@@ -2900,7 +3090,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/testing-methodologies-in-software-testing</loc>
-    <lastmod>2026-04-14</lastmod>
+    <lastmod>2026-07-20</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/Testing-Methodologies-in-Software-Testing.webp</image:loc>
@@ -2936,7 +3126,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/testng-vs-junit-performance-ease-of-use-and-flexibility-compared</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/12/TestNG-vs-JUnit-e1707036217326.webp</image:loc>
@@ -2945,7 +3135,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/the-game-of-shadow-testing-the-core-of-test-generation</loc>
-    <lastmod>2025-06-18</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/The-Game-of-Shadow-Testing-e1711086649127.webp</image:loc>
@@ -2972,7 +3162,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/tools-for-software-unit-testing</loc>
-    <lastmod>2025-07-28</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/api-unit-test.webp</image:loc>
@@ -2981,7 +3171,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-10-ai-tools-transforming-software-quality-assurance</loc>
-    <lastmod>2025-10-29</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/02/Top-10-AI-Tools-Transforming-Software-Quality-Assurance-e1739359461637.webp</image:loc>
@@ -2990,7 +3180,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-10-futuristic-open-source-testing-tools</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/Top-10-Futuristic-Open-Source-Testing-Tools-for-Software-Testing.webp</image:loc>
@@ -2999,7 +3189,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-10-open-source-automation-tools</loc>
-    <lastmod>2026-02-18</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/Top-10-Open-Source-Automation-Tools-for-Modern-Software-Testing.webp</image:loc>
@@ -3043,7 +3233,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-5-cypress-alternatives-for-web-testing-and-automation</loc>
-    <lastmod>2026-04-03</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/01/top-5-Cypress-Alternatives-for-Web-Testing-and-Automation-1.webp</image:loc>
@@ -3070,7 +3260,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-5-tools-for-performance-testing-boost-your-applications-speed</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/10/performance-tools.webp</image:loc>
@@ -3079,11 +3269,11 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-7-test-automation-tools-boost-your-software-testing-efficiency</loc>
-    <lastmod>2026-04-07</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2024/09/Top-7-Test-Automation-Tools-e1725519797532.webp</image:loc>
-      <image:title>Explore top test automation tools and learn how to streamline your testing processes to elevate your software testing strategy by discovering the right tool</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Best-Test-Automation-Tools-Comparison-Cover-Image.webp</image:loc>
+      <image:title>Best Test Automation Tools Comparison - Keploy</image:title>
     </image:image>
   </url>
   <url>
@@ -3133,7 +3323,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-integration-testing-tools</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-14</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/Top-10-Tools-for-Integration-Testing-in-2026.webp</image:loc>
@@ -3142,7 +3332,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-open-source-ai-agents</loc>
-    <lastmod>2025-10-18</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/02/Open-Source-AI-Agents-e1740037037444.webp</image:loc>
@@ -3160,7 +3350,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-test-automation-frameworks</loc>
-    <lastmod>2026-02-19</lastmod>
+    <lastmod>2026-07-20</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/Top-10-Test-Automation-Frameworks-in-2026-Compared.webp</image:loc>
@@ -3169,7 +3359,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-tools-for-static-analysis-in-python</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/Top-Tools-for-Static-Analysis-Help-in-Your-Python-Projects.webp</image:loc>
@@ -3178,11 +3368,20 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/tracing-tls-data-with-ethical-and-secure-practices</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Tracing-TLS-Data-with-Ethical-and-Secure-Practices.webp</image:loc>
       <image:title>tracing tls</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/types-of-api-testing</loc>
+    <lastmod>2026-04-17</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/api_testing_feature_image-e1776413750405.webp</image:loc>
+      <image:title>api_testing_feature_image</image:title>
     </image:image>
   </url>
   <url>
@@ -3205,7 +3404,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/types-of-software-testing</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/Types-of-Software-Testing-Explained-2026-Guide.webp</image:loc>
@@ -3232,7 +3431,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/uft-testing-guide</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/UFT-Testing.webp</image:loc>
@@ -3241,7 +3440,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/understand-the-role-of-continuous-testing-in-ci-cd</loc>
-    <lastmod>2025-06-20</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/02/The-Continuous-Testing-Way-e1707464129272.webp</image:loc>
@@ -3268,7 +3467,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/understanding-code-coverage-in-software-testing</loc>
-    <lastmod>2025-12-17</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/12/Code-Coverage-in-the-Software-Testing.webp</image:loc>
@@ -3295,7 +3494,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/understanding-http-and-https-as-a-beginner</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/06/Understanding-HTTP-and-HTTPS.webp</image:loc>
@@ -3321,7 +3520,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/understanding-statement-coverage-in-software-testing</loc>
-    <lastmod>2025-07-18</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/12/Understanding-Statement-Coverage-in-Software-Testing-1-e1709233614711.webp</image:loc>
@@ -3339,7 +3538,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/understanding-testing-in-production</loc>
-    <lastmod>2024-10-08</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/02/Understanding-Testing-in-production-e1707311923165.webp</image:loc>
@@ -3348,7 +3547,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/understanding-the-components-of-apis-2</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2022/06/Understanding-the-components-1-e1707137675544.webp</image:loc>
@@ -3357,7 +3556,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/understanding-the-difference-between-test-scenarios-and-test-cases</loc>
-    <lastmod>2025-10-31</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/09/Test-Scenarios-and-Test-Cases-e1709873337435.webp</image:loc>
@@ -3375,7 +3574,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/understanding-the-different-levels-of-the-software-testing-pyramid</loc>
-    <lastmod>2026-02-17</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/05/Understanding-the-different-levels-of-the-Software-Testing-Pyramid-1-e1721305001528.webp</image:loc>
@@ -3384,7 +3583,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/unit-testing-in-python</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/06/Unit-Testing-in-Python-is-way-more-convenient-than-youve-thought.webp</image:loc>
@@ -3393,7 +3592,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/unit-testing-vs-end-to-end-testing</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/02/Unit-Testing-vs.-End-to-End-Testing.webp</image:loc>
@@ -3411,7 +3610,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/unit-testing-vs-integration-testing-a-comprehensive-guide</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/Unit-Testing-vs-Integration-Testing.webp</image:loc>
@@ -3420,7 +3619,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/unit-testing-vs-regression-testing</loc>
-    <lastmod>2026-02-02</lastmod>
+    <lastmod>2026-04-20</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/06/Unit-Testing-vs-Regression-Testing.webp</image:loc>
@@ -3429,7 +3628,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/using-ebpf-for-tracing-go-function-arguments-in-production</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/Tracing-Go-Function-Argument-e1710138175467.webp</image:loc>
@@ -3438,7 +3637,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/using-grpc-error-codes</loc>
-    <lastmod>2025-08-30</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/Understanding-and-Using-gRPC-Error-Codes.webp</image:loc>
@@ -3456,7 +3655,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/verification-vs-validation</loc>
-    <lastmod>2026-02-18</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/Verification-vs-Validation-for-API-first-Software-Development.webp</image:loc>
@@ -3491,6 +3690,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/vibe-testing</loc>
+    <lastmod>2026-07-21</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/df4ce261-c29a-42ff-b5e5-bd517a7fc97e.webp</image:loc>
+      <image:title>What Is Vibe Testing? A Practical Guide for Developers</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/visual-regression-testing</loc>
     <lastmod>2026-03-02</lastmod>
     <priority>0.70</priority>
@@ -3501,7 +3709,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/visual-scripting-guide</loc>
-    <lastmod>2025-08-27</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/Visual-Scripting.webp</image:loc>
@@ -3510,7 +3718,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/volume-testing-a-comprehensive-guide</loc>
-    <lastmod>2024-12-26</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/Volume-Testing.webp</image:loc>
@@ -3564,7 +3772,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-does-extensible-mean</loc>
-    <lastmod>2025-12-25</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/c2d15a64-4108-4214-a85f-e4a3b690.webp</image:loc>
@@ -3582,7 +3790,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-a-flaky-test</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-07-09</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/What-is-a-Flaky-Test.webp</image:loc>
@@ -3600,7 +3808,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-a-test-environment</loc>
-    <lastmod>2025-11-17</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/11/20251117_1336_Testing-Setup_simple_compose_01ka8dhnnrfmdvh9sacv67yevf.webp</image:loc>
@@ -3609,7 +3817,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-a-test-script-in-software-testing</loc>
-    <lastmod>2025-11-24</lastmod>
+    <lastmod>2026-07-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/11/What-is-a-Test-Script-in-Software-Testing.webp</image:loc>
@@ -3627,7 +3835,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-acceptance-testing</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-23</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/09/Acceptance-Testing.webp</image:loc>
@@ -3663,7 +3871,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-an-api-endpoint</loc>
-    <lastmod>2025-11-03</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/11/What-Is-an-API-Endpoint.webp</image:loc>
@@ -3681,7 +3889,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-api-mocking</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/10/API-Mocking-Benefits-Tools-and-Guide.webp</image:loc>
@@ -3690,7 +3898,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-api-testing</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/What-Is-API-Testing.webp</image:loc>
@@ -3753,7 +3961,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-delta-testing</loc>
-    <lastmod>2026-04-08</lastmod>
+    <lastmod>2026-04-22</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/What-Is-Delta-Testing-How-It-Works-Benefits-Best-Practices.webp</image:loc>
@@ -3771,7 +3979,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-grey-box-testing</loc>
-    <lastmod>2025-10-14</lastmod>
+    <lastmod>2026-04-23</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/10/what-is-grey-testing.webp</image:loc>
@@ -3798,7 +4006,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-low-code-and-no-code</loc>
-    <lastmod>2025-08-12</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/What-is-Low-code-and-No-code.webp</image:loc>
@@ -3812,6 +4020,15 @@
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/10/What-is-Monkey-Testing-in-Software-Testing.webp</image:loc>
       <image:title>What Is Monkey Testing In Software Testing? Types, Tools &amp; More</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/what-is-mttr</loc>
+    <lastmod>2026-07-14</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/What-Is-MTTR-Definition-Formula-Benchmarks-2026.webp</image:loc>
+      <image:title>What Is MTTR</image:title>
     </image:image>
   </url>
   <url>
@@ -3869,7 +4086,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-sanity-testing</loc>
-    <lastmod>2025-09-08</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/Sanity-Testing.webp</image:loc>
@@ -3878,7 +4095,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-scenario-testing</loc>
-    <lastmod>2025-11-20</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/11/ChatGPT-Image-Nov-12-2025-03_02_58-PM.png</image:loc>
@@ -3896,7 +4113,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-service-mesh</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/01/eBPF-Service-Mesh-and-Sidecar-e1708633569650.webp</image:loc>
@@ -3914,7 +4131,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-spiral-model-in-software-engineering</loc>
-    <lastmod>2026-02-09</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/What-is-Spiral-Model-in-Software-Engineering.webp</image:loc>
@@ -3932,7 +4149,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-test-automation</loc>
-    <lastmod>2026-03-26</lastmod>
+    <lastmod>2026-06-09</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/Test-Automation-Cover-Image.webp</image:loc>
@@ -3940,7 +4157,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-test-planning</loc>
-    <lastmod>2026-04-15</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/02/What-is-Test-Planning-e1739267542953.webp</image:loc>
@@ -3958,7 +4175,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-unit-testing</loc>
-    <lastmod>2025-07-22</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/What-is-unit-testing-e1746507328551.png</image:loc>
@@ -4000,6 +4217,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/white-box-testing</loc>
+    <lastmod>2026-06-16</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/White-Box-Testing-Techniques-Examples-Best-Practices-2026.webp</image:loc>
+      <image:title>White Box Testing: Techniques, Examples &amp; Best Practices (2026)</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/why-apps-crash-and-how-resilience-testing-can-help</loc>
     <lastmod>2025-09-03</lastmod>
     <priority>0.70</priority>
@@ -4010,7 +4236,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/why-developers-should-care-about-uat</loc>
-    <lastmod>2025-07-04</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/Why-Developers-Should-Care-About-UAT.webp</image:loc>
@@ -4019,7 +4245,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/why-do-i-need-a-unit-testing-tool</loc>
-    <lastmod>2025-06-20</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/01/Why-do-I-need-a-unit-testing-e1706090406688.webp</image:loc>
@@ -4028,7 +4254,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/why-i-love-end-to-end-e2e-testing</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/11/Simple-Technology-Blog-Banner-1-e1709271109432.png</image:loc>
@@ -4037,7 +4263,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/why-i-switched-from-rest-assured-to-keploy-for-microservices-testing</loc>
-    <lastmod>2026-04-03</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/Why-I-Switched-from-Rest-Assured-to-Keploy-for-Microservices-Testing.webp</image:loc>
@@ -4046,7 +4272,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/why-manual-testing-matters-a-ultimate-guide-to-software-testing</loc>
-    <lastmod>2026-03-20</lastmod>
+    <lastmod>2026-05-11</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/09/Manual-Testing.webp</image:loc>
@@ -4063,7 +4289,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/write-clean-and-efficient-unit-tests-in-go</loc>
-    <lastmod>2025-06-18</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/04/Write-Clean-and-Efficient-Unit-Tests-in-Go-e1713346999614.webp</image:loc>
@@ -4080,7 +4306,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/writing-test-cases-for-cron-jobs-testing</loc>
-    <lastmod>2025-06-18</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/02/Writing-test-cases-for-Cron-Job-Testing-e1707744217899.webp</image:loc>
@@ -4107,7 +4333,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/adding-colour-to-the-log-output-of-logging-libraries-in-go</loc>
-    <lastmod>2025-07-03</lastmod>
+    <lastmod>2026-04-30</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/05/Adding-colour-to-the-log-output-of-logging-libraries-in-Go.webp</image:loc>
@@ -4115,7 +4341,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/automated-e2e-tests-using-property-based-testing-part-ii</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-06-07</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/08/Automated-E2E-tests-using-e1709118384887.webp</image:loc>
@@ -4124,7 +4350,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/automated-end-to-end-tests-using-property-based-testing-part-i</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/08/Automated-End-to-Part-I-e1709056278625.webp</image:loc>
@@ -4133,7 +4359,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/bitbucket-self-hosting-running-ebpfprivileged-programs</loc>
-    <lastmod>2025-06-17</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/08/BitBucket-e1723016950468.webp</image:loc>
@@ -4151,7 +4377,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/capture-grpc-traffic-going-out-from-a-server</loc>
-    <lastmod>2024-10-08</lastmod>
+    <lastmod>2026-06-07</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/11/Capture-gRPC-Traffic-going-out-from-a-Server-e1708513972680.webp</image:loc>
@@ -4221,7 +4447,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/getting-code-coverage-data-for-each-request-coming-to-a-python-web-server</loc>
-    <lastmod>2025-06-20</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/04/Getting-code-coverage-e1713524276625.webp</image:loc>
@@ -4248,7 +4474,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/how-to-test-traffic-with-a-custom-kubernetes-controller</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-30</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/How-to-Test-Traffic-with-a-Custom-Kubernetes-Controller.webp</image:loc>
@@ -4275,7 +4501,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/integration-vs-e2e-testing-what-worked-for-me-as-a-charm</loc>
-    <lastmod>2025-11-19</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/09/Integration-vs-E2E-Testing-e1706171839573.webp</image:loc>
@@ -4292,7 +4518,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/managing-go-processes</loc>
-    <lastmod>2024-10-08</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/04/Managing-Go-Processes-e1714306695146.webp</image:loc>
@@ -4336,7 +4562,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/playwright-alternative-for-api-testing</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-04-30</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/Playwright-Alternative-for-API-Testing.webp</image:loc>
@@ -4363,7 +4589,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/scram-authentication-overcoming-mock-testing-challenges</loc>
-    <lastmod>2025-06-18</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/05/SCRAM-Authentication-1.webp</image:loc>
@@ -4371,7 +4597,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/secure-your-database-communications-with-ssl-in-docker-containers-learn-to-set-up-ssl-for-mongodb-and-postgresql-efficiently</loc>
-    <lastmod>2025-06-17</lastmod>
+    <lastmod>2026-04-30</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/11/Docker-Containers.webp</image:loc>
