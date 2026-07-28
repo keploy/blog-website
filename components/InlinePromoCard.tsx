@@ -15,24 +15,39 @@ function Keploy5YearsBanner() {
           0%        { transform: translateX(-120%) skewX(-12deg); }
           65%, 100% { transform: translateX(600%) skewX(-12deg); }
         }
-        .k5y-body { display: flex; align-items: center; gap: 26px; }
+        .k5y-body { display: flex; align-items: center; gap: 20px; }
+        .k5y-card { padding: 22px 28px; }
         .k5y-badge-wrap {
           position: relative;
-          width: 88px;
-          height: 90px;
+          width: 84px;
+          height: 85px;
           flex-shrink: 0;
           overflow: hidden;
+          transform: translateY(-7px);
         }
         .k5y-badge-img {
           position: absolute;
           top: 50%;
           left: 50%;
-          height: 130px;
+          height: 124px;
           width: auto;
           max-width: none;
           transform: translate(-50%, -50%);
         }
         .k5y-divider { display: block; }
+        .k5y-heading {
+          color: #171412;
+          font-size: 16px;
+          font-weight: 700;
+          margin: 0 0 2px;
+          line-height: 1.35;
+        }
+        .k5y-desc {
+          color: #92400e;
+          font-size: 13.5px;
+          margin: 0;
+          line-height: 1.65;
+        }
         .k5y-cta-btn {
           flex-shrink: 0;
           display: inline-flex;
@@ -46,7 +61,7 @@ function Keploy5YearsBanner() {
           font-size: 13.5px;
           font-weight: 700;
           text-decoration: none;
-          box-shadow: 0 5px 14px rgba(255,107,0,0.16);
+          box-shadow: 0 5px 14px rgba(255,107,0,0.14);
           letter-spacing: 0.01em;
           cursor: pointer;
           white-space: nowrap;
@@ -54,7 +69,7 @@ function Keploy5YearsBanner() {
           font-family: inherit;
         }
         .k5y-cta-btn:hover {
-          box-shadow: 0 6px 16px rgba(255,107,0,0.20);
+          box-shadow: 0 6px 16px rgba(255,107,0,0.18);
           transform: translateY(-1px);
           filter: brightness(1.05);
         }
@@ -66,24 +81,33 @@ function Keploy5YearsBanner() {
           outline-offset: 2px;
         }
         @media (max-width: 600px) {
-          .k5y-body { flex-direction: column; align-items: flex-start; gap: 16px; }
-          .k5y-badge-wrap { width: 70px; height: 72px; }
-          .k5y-badge-img { height: 104px; }
+          .k5y-body { flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+          .k5y-badge-wrap { width: 150px; height: 155px; transform: none; margin: 0 auto; }
+          .k5y-badge-img { height: 224px; }
           .k5y-divider { display: none; }
-          .k5y-cta-btn { width: 100%; text-align: center; white-space: normal; }
+          .k5y-content { text-align: center; }
+          .k5y-heading { font-size: 21px; margin: 0 0 8px; }
+          .k5y-desc { font-size: 14px; line-height: 1.5; }
+          .k5y-card { padding: 20px 18px; }
+          .k5y-cta-btn {
+            width: 100%;
+            white-space: normal;
+            padding: 15px 20px;
+            border-radius: 16px;
+            font-size: 15.5px;
+          }
         }
       `}</style>
 
       {/* Card body */}
       <div
-        className="k5y-body"
+        className="k5y-body k5y-card"
         style={{
           background:
-            "radial-gradient(65% 110% at 0% 45%, rgba(255,140,32,0.12) 0%, rgba(255,157,46,0.06) 24%, rgba(255,255,255,0) 46%), #ffffff",
+            "radial-gradient(85% 140% at 0% 45%, rgba(255,140,32,0.10) 0%, rgba(255,150,40,0.06) 20%, rgba(255,160,50,0.025) 38%, rgba(255,255,255,0) 64%), #ffffff",
           borderRadius: 16,
           border: "1px solid #e5e7eb",
           boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-          padding: "22px 28px",
           position: "relative",
           overflow: "hidden",
         }}
@@ -120,35 +144,19 @@ function Keploy5YearsBanner() {
             width: 1.5,
             alignSelf: "stretch",
             flexShrink: 0,
-            opacity: 0.7,
+            opacity: 0.35,
             background:
               "linear-gradient(to bottom, transparent, #fdba74 15%, #f97316 50%, #fdba74 85%, transparent)",
           }}
         />
 
         {/* Text */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p
-            style={{
-              color: "#171412",
-              fontSize: 16,
-              fontWeight: 700,
-              margin: "0 0 6px",
-              lineHeight: 1.35,
-            }}
-          >
-            Keploy turned 5 this month!
-          </p>
-          <p
-            id={`${bannerId}-desc`}
-            style={{
-              color: "#92400e",
-              fontSize: 13.5,
-              margin: 0,
-              lineHeight: 1.65,
-            }}
-          >
-            To celebrate our 5 years, we are giving away one month of Keploy credits for free!
+        <div className="k5y-content" style={{ flex: 1, minWidth: 0 }}>
+          <p className="k5y-heading">Keploy Turns 5 This Month!</p>
+          <p id={`${bannerId}-desc`} className="k5y-desc">
+            To celebrate our 5 years, we&apos;re giving away
+            <br />
+            one month of Keploy credits for free.
           </p>
         </div>
 
