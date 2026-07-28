@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import SubscribeNewsletter from "./subscribe-newsletter";
@@ -117,14 +118,11 @@ const AD_BANNERS = [
 ];
 
 const CTA_HREF = "https://app.keploy.io/signin";
-// Aspect ratio of the banner artwork (width / height). Reserves space before
-// the image loads so there's no layout shift — a plain <img> doesn't do this
-// on its own. It's the shape only, not fixed pixel dimensions, so the banner
-// stays fully fluid.
+// Aspect ratio (width / height) shared by all four banner artworks. Reserves
+// the banner's vertical space before the image loads so nothing below it jumps
+// (zero layout shift). It's the artwork's shape, not a fixed pixel size — the
+// banner stays fully fluid (width:100%).
 const AD_ASPECT = "313 / 413";
-// Displayed max width. Shared by the placeholder and the live banner. Capped to
-// match the sidebar column (max-w-[260px]) so the artwork never upscales.
-const AD_MAX_W = 260;
 
 // Microsoft Clarity is loaded lazily in components/layout.tsx (id="msclarity").
 // Its snippet defines window.clarity as a queuing stub the moment it runs, so
@@ -173,75 +171,91 @@ function trackBannerClick(bannerId: string) {
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
   const [banner, setBanner] = React.useState<(typeof AD_BANNERS)[number] | null>(null);
+  const [loaded, setLoaded] = React.useState(false);
 
   React.useEffect(() => {
     setBanner(AD_BANNERS[Math.floor(Math.random() * AD_BANNERS.length)]);
   }, []);
 
-  if (!banner) {
-    return (
-      <div
-        className="rounded-2xl"
-        style={{ width: '100%', maxWidth: AD_MAX_W, margin: '0 auto', aspectRatio: AD_ASPECT, background: '#F3F4F6' }}
-        aria-hidden="true"
-      />
-    );
-  }
-
+  // The banner is picked on the client (avoids an SSR/client hydration
+  // mismatch), so its image can only start downloading after hydration. The
+  // container reserves the slot via aspectRatio and shows a skeleton shimmer
+  // until the image decodes, then the artwork + button fade in — so the
+  // unavoidable load reads as an intentional loading state, not a broken gap.
   return (
     <div
-      data-banner-id={banner.id}
-      onClick={() => trackBannerClick(banner.id)}
+      data-banner-id={banner?.id}
+      onClick={() => { if (banner) trackBannerClick(banner.id); }}
+      className="rounded-2xl overflow-hidden"
       style={{
         position: 'relative',
         width: '100%',
-        maxWidth: AD_MAX_W,
-        margin: '0 auto',
+        aspectRatio: AD_ASPECT,
         // container-query context so the overlaid button scales with the card
         containerType: 'inline-size',
       }}
     >
-      {/* Full banner artwork (button excluded from artwork). Plain <img> — no
-          fixed width/height needed; the browser reads the intrinsic size and
-          aspectRatio reserves space to avoid layout shift. Intentional over
-          next/image: the artwork is already an optimized, small (~313px) .webp,
-          so next/image's resizing adds little; this also matches the existing
-          sidebar-banner convention (PR #350). */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={banner.src}
-        alt="Keploy — 300M+ mocks and 12.8M+ tests generated"
-        style={{ width: '100%', height: 'auto', aspectRatio: AD_ASPECT, display: 'block' }}
-        loading="lazy"
-      />
+      {/* Skeleton shown until the banner image has loaded (or errored). */}
+      {!loaded && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse" aria-hidden="true" />
+      )}
 
-      {/* CTA button — built in code, overlaid in the artwork's empty bottom band */}
-      <Link
-        href={CTA_HREF}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Try for Free"
-        className="block text-center font-bold transition-all duration-150 hover:brightness-95 active:scale-[0.98]"
-        style={{
-          position: 'absolute',
-          zIndex: 2,
-          left: '13%',
-          right: '13%',
-          top: banner.btnCenter,
-          transform: 'translateY(-50%)',
-          // sized in cqw so the button scales with the card and always fits the band
-          padding: '3.4cqw 0',
-          borderRadius: '3.4cqw',
-          fontSize: '5.8cqw',
-          lineHeight: 1.2,
-          background: banner.btnBg,
-          color: banner.btnText,
-          boxShadow: '0 2px 10px rgba(0,0,0,0.12)',
-          fontFamily: "'DM Sans', sans-serif",
-        }}
-      >
-        Try for Free!
-      </Link>
+      {banner && (
+        <>
+          {/* Full banner artwork (button excluded from artwork). Fills the
+              aspect-ratio slot and fades in once decoded. eager + high priority
+              so it starts downloading as soon as it's picked. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={banner.src}
+            alt="Keploy — 300M+ mocks and 12.8M+ tests generated"
+            onLoad={() => setLoaded(true)}
+            onError={() => setLoaded(true)}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+              opacity: loaded ? 1 : 0,
+              transition: 'opacity 0.3s ease',
+            }}
+            loading="eager"
+            fetchPriority="high"
+          />
+
+          {/* CTA button — overlaid in the artwork's empty bottom band. Fades in
+              with the artwork so it never floats over the bare skeleton. */}
+          <Link
+            href={CTA_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Try for Free"
+            className="block text-center font-bold transition-all duration-300 hover:brightness-95 active:scale-[0.98]"
+            style={{
+              position: 'absolute',
+              zIndex: 2,
+              left: '13%',
+              right: '13%',
+              top: banner.btnCenter,
+              transform: 'translateY(-50%)',
+              // sized in cqw so the button scales with the card and always fits the band
+              padding: '3.4cqw 0',
+              borderRadius: '3.4cqw',
+              fontSize: '5.8cqw',
+              lineHeight: 1.2,
+              background: banner.btnBg,
+              color: banner.btnText,
+              boxShadow: '0 2px 10px rgba(0,0,0,0.12)',
+              fontFamily: "'DM Sans', sans-serif",
+              opacity: loaded ? 1 : 0,
+            }}
+          >
+            Try for Free!
+          </Link>
+        </>
+      )}
     </div>
   );
 }
@@ -249,7 +263,17 @@ function SidebarAdBanner() {
 /* ── Composed Sidebar ── */
 export default function BlogSidebar() {
   return (
-    <div className="w-full max-w-[260px] flex flex-col gap-5">
+    <>
+      {/* Warm up the connection to the S3 origin that serves the ad banners so
+          the image fetch starts without paying DNS/TLS latency. No crossOrigin
+          — a plain <img> loads without CORS, so this must match to be reused. */}
+      <Head>
+        <link
+          rel="preconnect"
+          href="https://keploy-devrel.s3.us-west-2.amazonaws.com"
+        />
+      </Head>
+      <div className="w-full max-w-[260px] flex flex-col gap-5">
       {/* Share */}
       <SidebarShare />
 
@@ -264,6 +288,7 @@ export default function BlogSidebar() {
 
       {/* Newsletter + lead capture */}
       <SubscribeNewsletter />
-    </div>
+      </div>
+    </>
   );
 }
