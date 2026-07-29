@@ -155,10 +155,37 @@ function trackBannerClick(bannerId: string) {
 function SidebarAdBanner() {
   const [banner, setBanner] = React.useState<(typeof AD_BANNERS)[number] | null>(null);
   const [loaded, setLoaded] = React.useState(false);
+  const [errored, setErrored] = React.useState(false);
 
   React.useEffect(() => {
     setBanner(AD_BANNERS[Math.floor(Math.random() * AD_BANNERS.length)]);
   }, []);
+
+  // Text fallback so the ad slot is never blank if the artwork fails to load
+  // (content blocker, S3 hiccup, etc.). Keeps a working CTA + click tracking.
+  if (banner && errored) {
+    return (
+      <div className="rounded-2xl p-5 flex flex-col justify-center" style={{ backgroundColor: '#FFF4EE' }}>
+        <h4 className="font-bold text-base leading-snug mb-1.5" style={{ fontFamily: "'DM Sans', sans-serif", color: '#1D2022' }}>
+          Try Keploy for free
+        </h4>
+        <p className="text-sm leading-relaxed mb-3" style={{ fontFamily: "'DM Sans', sans-serif", color: '#4b5563' }}>
+          Generate test cases and data mocks with one click. Reduce unit test development time by 90%.
+        </p>
+        <Link
+          href={CTA_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-banner-id={banner.id}
+          onClick={() => trackBannerClick(banner.id)}
+          className="inline-flex items-center gap-1 font-semibold text-sm transition-colors duration-150 hover:opacity-80"
+          style={{ fontFamily: "'DM Sans', sans-serif", color: '#FF6D41' }}
+        >
+          Sign up <span aria-hidden="true">→</span>
+        </Link>
+      </div>
+    );
+  }
 
   // Banner is picked client-side (avoids a hydration mismatch): reserve the
   // slot, show a skeleton until the image decodes, then fade the artwork in.
@@ -186,7 +213,7 @@ function SidebarAdBanner() {
             src={banner.src}
             alt="Keploy — 300M+ mocks and 12.8M+ tests generated"
             onLoad={() => setLoaded(true)}
-            onError={() => setLoaded(true)}
+            onError={() => setErrored(true)}
             style={{
               position: 'absolute',
               inset: 0,
