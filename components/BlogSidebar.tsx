@@ -147,9 +147,6 @@ function whenReady(get: () => unknown, use: () => void) {
 }
 
 function trackBannerClick(bannerId: string) {
-  if (process.env.NODE_ENV !== "production") {
-    console.log("[ad-banner] click → banner_clicked:", bannerId);
-  }
   whenReady(() => window.gtag, () => window.gtag!("event", "banner_click", { banner_id: bannerId }));
   whenReady(() => window.clarity, () => window.clarity!("set", "banner_clicked", bannerId));
 }
