@@ -15,50 +15,52 @@ function Keploy5YearsBanner() {
           0%        { transform: translateX(-120%) skewX(-12deg); }
           65%, 100% { transform: translateX(600%) skewX(-12deg); }
         }
-        .k5y-body { display: flex; align-items: center; gap: 20px; }
-        .k5y-card { padding: 22px 28px; }
+        /* Desktop: bigger centered card, single vertical column (same shape as mobile, scaled up) */
+        .k5y-body { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+        .k5y-card { max-width: 460px; margin: 0 auto; padding: 44px 40px; border-radius: 24px; }
         .k5y-badge-wrap {
           position: relative;
-          width: 84px;
-          height: 85px;
+          width: 190px;
+          height: 196px;
           flex-shrink: 0;
           overflow: hidden;
-          transform: translateY(-7px);
+          margin: 0 auto;
         }
         .k5y-badge-img {
           position: absolute;
           top: 50%;
           left: 50%;
-          height: 124px;
+          height: 282px;
           width: auto;
           max-width: none;
           transform: translate(-50%, -50%);
         }
-        .k5y-divider { display: block; }
+        .k5y-content { text-align: center; }
         .k5y-heading {
           color: #171412;
-          font-size: 16px;
+          font-size: 24px;
           font-weight: 700;
-          margin: 0 0 2px;
+          margin: 0 0 10px;
           line-height: 1.35;
         }
         .k5y-desc {
           color: #92400e;
-          font-size: 13.5px;
+          font-size: 15.5px;
           margin: 0;
-          line-height: 1.65;
+          line-height: 1.6;
         }
         .k5y-cta-btn {
           flex-shrink: 0;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          padding: 12px 12px;
+          margin-top: 24px;
+          padding: 14px 28px;
           background: linear-gradient(180deg, #ff9d2e 0%, #ff6b00 100%);
           color: white;
           border: none;
-          border-radius: 10px;
-          font-size: 13.5px;
+          border-radius: 12px;
+          font-size: 15px;
           font-weight: 700;
           text-decoration: none;
           box-shadow: 0 5px 14px rgba(255,107,0,0.14);
@@ -80,18 +82,18 @@ function Keploy5YearsBanner() {
           outline: 3px solid #f59e0b;
           outline-offset: 2px;
         }
+        /* Mobile: same vertical shape, scaled back down, full-width thumb-friendly button */
         @media (max-width: 600px) {
-          .k5y-body { flex-direction: column; align-items: center; text-align: center; gap: 14px; }
-          .k5y-badge-wrap { width: 150px; height: 155px; transform: none; margin: 0 auto; }
+          .k5y-body { gap: 14px; }
+          .k5y-card { max-width: 100%; padding: 20px 18px; border-radius: 16px; }
+          .k5y-badge-wrap { width: 150px; height: 155px; }
           .k5y-badge-img { height: 224px; }
-          .k5y-divider { display: none; }
-          .k5y-content { text-align: center; }
           .k5y-heading { font-size: 21px; margin: 0 0 8px; }
           .k5y-desc { font-size: 14px; line-height: 1.5; }
-          .k5y-card { padding: 20px 18px; }
           .k5y-cta-btn {
             width: 100%;
             white-space: normal;
+            margin-top: 14px;
             padding: 15px 20px;
             border-radius: 16px;
             font-size: 15.5px;
@@ -122,7 +124,7 @@ function Keploy5YearsBanner() {
             height: "100%",
             background:
               "linear-gradient(105deg, transparent 30%, rgba(251,191,36,0.10) 50%, transparent 70%)",
-            animation: "k5y-sweep 4.5s ease-in-out infinite",
+            animation: "k5y-sweep 3s ease-in-out infinite",
             pointerEvents: "none",
           }}
         />
@@ -137,40 +139,25 @@ function Keploy5YearsBanner() {
           />
         </div>
 
-        {/* Vertical divider */}
-        <div
-          className="k5y-divider"
-          style={{
-            width: 1.5,
-            alignSelf: "stretch",
-            flexShrink: 0,
-            opacity: 0.35,
-            background:
-              "linear-gradient(to bottom, transparent, #fdba74 15%, #f97316 50%, #fdba74 85%, transparent)",
-          }}
-        />
-
-        {/* Text */}
-        <div className="k5y-content" style={{ flex: 1, minWidth: 0 }}>
+        {/* Text + CTA, grouped together as one section */}
+        <div className="k5y-content" style={{ minWidth: 0 }}>
           <p className="k5y-heading">Keploy Turns 5 This Month!</p>
           <p id={`${bannerId}-desc`} className="k5y-desc">
             To celebrate our 5 years, we&apos;re giving away
             <br />
             one month of Keploy credits for free.
           </p>
+          <a
+            href="https://keploy.io/credits-form"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="k5y-cta-btn"
+            aria-label="Claim 1 month of free Keploy credits"
+            aria-describedby={`${bannerId}-desc`}
+          >
+            Claim 1 Month of Free Credits
+          </a>
         </div>
-
-        {/* CTA */}
-        <a
-          href="https://keploy.io/credits-form"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="k5y-cta-btn"
-          aria-label="Claim 1 month of free Keploy credits"
-          aria-describedby={`${bannerId}-desc`}
-        >
-          Claim 1 Month of Free Credits
-        </a>
       </div>
     </div>
   );
