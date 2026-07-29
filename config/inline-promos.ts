@@ -10,7 +10,7 @@ export const inlinePromos: InlinePromoConfig[] = [
   {
     // https://keploy.io/blog/community/software-testing-basics
     blogSlug: "software-testing-basics",
-    afterText: "Software testing is the process of evaluating a software",
+    afterText: "There is no doubt that having a strong foundation",
     promoId: "keploy-5years",
   },
   {
