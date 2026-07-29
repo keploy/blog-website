@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import SubscribeNewsletter from "./subscribe-newsletter";
@@ -106,7 +105,7 @@ function SidebarShare() {
 // 4 static banner variants for A/B testing. The artwork is a full-card image
 // (button excluded from the artwork); the "Try for Free!" button is built in
 // code and overlaid in the empty bottom band, with per-variant button colors.
-// The artwork PNGs carry ~8.3% transparent drop-shadow padding, so button
+// The .webp artwork carries ~8.3% transparent drop-shadow padding, so button
 // positions are measured against the FULL image. btnCenter is the vertical
 // center of each card's empty band (as % from the top); the button is anchored
 // there via translateY(-50%) so it stays centered regardless of its height.
@@ -129,32 +128,30 @@ declare global {
   }
 }
 
-function trackBannerClick(bannerId: string) {
-  // Visible in DevTools console so you can confirm clicks are detected.
-  console.log("[ad-banner] click detected → banner_clicked:", bannerId);
-
-  // GA4 event — gtag buffers into dataLayer, so no readiness guard needed.
-  window.gtag?.("event", "banner_click", { banner_id: bannerId });
-
-  const send = () => window.clarity?.("set", "banner_clicked", bannerId);
-
-  if (typeof window !== "undefined" && typeof window.clarity === "function") {
-    send();
-    return;
-  }
-
-  // Clarity not ready yet (lazyOnload) — poll briefly, then give up.
+// Both Clarity (lazyOnload) and GA (afterInteractive) can be undefined when an
+// early click lands, so run each call once its global exists — poll briefly,
+// then give up. This keeps A/B data intact for fast clickers.
+function whenReady(get: () => unknown, use: () => void) {
+  if (typeof window === "undefined") return;
+  if (typeof get() === "function") { use(); return; }
   let tries = 0;
   const timer = setInterval(() => {
     tries += 1;
-    if (typeof window !== "undefined" && typeof window.clarity === "function") {
+    if (typeof get() === "function") {
       clearInterval(timer);
-      send();
+      use();
     } else if (tries >= 20) {
-      clearInterval(timer); // ~5s elapsed; Clarity never loaded (blocked?)
-      console.warn("[ad-banner] Clarity not available; skipped banner_clicked:", bannerId);
+      clearInterval(timer); // ~5s elapsed; script never loaded (blocked?)
     }
   }, 250);
+}
+
+function trackBannerClick(bannerId: string) {
+  if (process.env.NODE_ENV !== "production") {
+    console.log("[ad-banner] click → banner_clicked:", bannerId);
+  }
+  whenReady(() => window.gtag, () => window.gtag!("event", "banner_click", { banner_id: bannerId }));
+  whenReady(() => window.clarity, () => window.clarity!("set", "banner_clicked", bannerId));
 }
 
 /* ── Ad / CTA Banner ── */
@@ -170,8 +167,6 @@ function SidebarAdBanner() {
   // slot, show a skeleton until the image decodes, then fade the artwork in.
   return (
     <div
-      data-banner-id={banner?.id}
-      onClick={() => { if (banner) trackBannerClick(banner.id); }}
       className="rounded-2xl overflow-hidden"
       style={{
         position: 'relative',
@@ -205,16 +200,18 @@ function SidebarAdBanner() {
               opacity: loaded ? 1 : 0,
               transition: 'opacity 0.3s ease',
             }}
-            loading="eager"
-            fetchPriority="high"
+            loading="lazy"
           />
 
-          {/* CTA overlaid in the artwork's empty band; fades in with the image. */}
+          {/* CTA overlaid in the artwork's empty band; fades in with the image.
+              Tracking lives here (not the card) so only real clickthroughs count. */}
           <Link
             href={CTA_HREF}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Try for Free"
+            data-banner-id={banner.id}
+            onClick={() => trackBannerClick(banner.id)}
             className="block text-center font-bold transition-all duration-300 hover:brightness-95 active:scale-[0.98]"
             style={{
               position: 'absolute',
@@ -246,15 +243,7 @@ function SidebarAdBanner() {
 /* ── Composed Sidebar ── */
 export default function BlogSidebar() {
   return (
-    <>
-      {/* Warm the S3 origin (no crossOrigin — matches the plain <img> fetch). */}
-      <Head>
-        <link
-          rel="preconnect"
-          href="https://keploy-devrel.s3.us-west-2.amazonaws.com"
-        />
-      </Head>
-      <div className="w-full max-w-[260px] flex flex-col gap-5">
+    <div className="w-full max-w-[260px] flex flex-col gap-5">
       {/* Share */}
       <SidebarShare />
 
@@ -269,7 +258,6 @@ export default function BlogSidebar() {
 
       {/* Newsletter + lead capture */}
       <SubscribeNewsletter />
-      </div>
-    </>
+    </div>
   );
 }
