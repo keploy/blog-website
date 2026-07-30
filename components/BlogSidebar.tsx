@@ -165,7 +165,10 @@ function SidebarAdBanner() {
   // (content blocker, S3 hiccup, etc.). Keeps a working CTA + click tracking.
   if (banner && errored) {
     return (
-      <div className="rounded-2xl p-5 flex flex-col justify-center" style={{ backgroundColor: '#FFF4EE' }}>
+      <div
+        className="rounded-2xl p-5 flex flex-col justify-center"
+        style={{ width: '100%', aspectRatio: AD_ASPECT, backgroundColor: '#FFF4EE' }}
+      >
         <h4 className="font-bold text-base leading-snug mb-1.5" style={{ fontFamily: "'DM Sans', sans-serif", color: '#1D2022' }}>
           Try Keploy for free
         </h4>
@@ -179,7 +182,7 @@ function SidebarAdBanner() {
           data-banner-id={banner.id}
           onClick={() => trackBannerClick(banner.id)}
           className="inline-flex items-center gap-1 font-semibold text-sm transition-colors duration-150 hover:opacity-80"
-          style={{ fontFamily: "'DM Sans', sans-serif", color: '#FF6D41' }}
+          style={{ fontFamily: "'DM Sans', sans-serif", color: '#ED5D0F' }}
         >
           Sign up <span aria-hidden="true">→</span>
         </Link>
