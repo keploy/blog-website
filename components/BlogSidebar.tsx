@@ -119,6 +119,11 @@ const AD_BANNERS = [
 const CTA_HREF = "https://app.keploy.io/signin";
 // Shared artwork shape (not a fixed size) — reserves space to avoid layout shift.
 const AD_ASPECT = "313 / 413";
+// The artwork has a baked-in frame/shadow around the card. Zoom the image+CTA
+// together by this factor (clipped by the container's overflow-hidden) so the
+// card fills its slot. Tuned to fill the height (no top clip) and leave only a
+// small even side inset, aligning the card with the other sidebar sections.
+const AD_CROP = 1.15;
 
 // Clarity (lazyOnload) + GA (afterInteractive) are set up in components/layout.tsx.
 declare global {
@@ -209,8 +214,18 @@ function SidebarAdBanner() {
       )}
 
       {banner && (
-        <>
-          {/* Banner artwork (CTA excluded); fills the slot and fades in on load. */}
+        // Zoom the artwork + CTA together so the baked frame is clipped and the
+        // card fills the width. Scaling as one unit keeps the CTA aligned.
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            transform: `scale(${AD_CROP})`,
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+          }}
+        >
+          {/* Banner artwork (CTA excluded); fills the slot. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={banner.src}
@@ -224,14 +239,12 @@ function SidebarAdBanner() {
               height: '100%',
               objectFit: 'cover',
               display: 'block',
-              opacity: loaded ? 1 : 0,
-              transition: 'opacity 0.3s ease',
             }}
             loading="lazy"
           />
 
-          {/* CTA overlaid in the artwork's empty band; fades in with the image.
-              Tracking lives here (not the card) so only real clickthroughs count. */}
+          {/* CTA overlaid in the artwork's empty band. Tracking lives here (not
+              the card) so only real clickthroughs count. */}
           <Link
             href={CTA_HREF}
             target="_blank"
@@ -256,12 +269,11 @@ function SidebarAdBanner() {
               color: banner.btnText,
               boxShadow: '0 2px 10px rgba(0,0,0,0.12)',
               fontFamily: "'DM Sans', sans-serif",
-              opacity: loaded ? 1 : 0,
             }}
           >
             Try for Free!
           </Link>
-        </>
+        </div>
       )}
     </div>
   );
