@@ -105,10 +105,10 @@ function SidebarShare() {
 // an empty bottom band; the CTA is built in code and overlaid there (per-variant
 // colors). btnCenter = that band's vertical center (% from the top).
 const AD_BANNERS = [
-  { id: "banner_1", src: "/blog/images/keploy-ad-banner-1-v2.png", btnBg: "#ffffff", btnText: "#ED5D0F", btnCenter: "88.5%" },
-  { id: "banner_2", src: "/blog/images/keploy-ad-banner-2-v2.png", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "88.5%" },
-  { id: "banner_3", src: "/blog/images/keploy-ad-banner-3-v2.png", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "88.5%" },
-  { id: "banner_4", src: "/blog/images/keploy-ad-banner-4-v2.png", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "88.5%" },
+  { id: "banner_1", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/banner1.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "88.5%" },
+  { id: "banner_2", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/banner2.webp", btnBg: "#ffffff", btnText: "#ED5D0F", btnCenter: "88.5%" },
+  { id: "banner_3", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/banner3.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "88.5%" },
+  { id: "banner_4", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/banner4.webp", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "88.5%" },
 ];
 
 const CTA_HREF = "https://app.keploy.io/signin";
