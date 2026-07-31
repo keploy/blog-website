@@ -101,31 +101,19 @@ function SidebarShare() {
   );
 }
 
-
-// 4 static banner variants for A/B testing. The artwork is a full-card image
-// (button excluded from the artwork); the "Try for Free!" button is built in
-// code and overlaid in the empty bottom band, with per-variant button colors.
-// The .webp artwork carries ~8.3% transparent drop-shadow padding, so button
-// positions are measured against the FULL image. btnCenter is the vertical
-// center of each card's empty band (as % from the top); the button is anchored
-// there via translateY(-50%) so it stays centered regardless of its height.
+// 4 banner variants for A/B rotation. Each artwork is an edge-to-edge card with
+// an empty bottom band; the CTA is built in code and overlaid there (per-variant
+// colors). btnCenter = that band's vertical center (% from the top).
 const AD_BANNERS = [
-  { id: "banner_1", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/keploy-ad-banner-1.webp", btnBg: "#ffffff", btnText: "#ED5D0F", btnCenter: "77.8%" },
-  { id: "banner_2", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/keploy-ad-banner-2.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "81.6%" },
-  { id: "banner_3", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/banner-3.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "82.0%" },
-  { id: "banner_4", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/keploy-ad-banner-4.webp", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "81.8%" },
+  { id: "banner_1", src: "/blog/images/keploy-ad-banner-1-v2.png", btnBg: "#ffffff", btnText: "#ED5D0F", btnCenter: "88.5%" },
+  { id: "banner_2", src: "/blog/images/keploy-ad-banner-2-v2.png", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "88.5%" },
+  { id: "banner_3", src: "/blog/images/keploy-ad-banner-3-v2.png", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "88.5%" },
+  { id: "banner_4", src: "/blog/images/keploy-ad-banner-4-v2.png", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "88.5%" },
 ];
 
 const CTA_HREF = "https://app.keploy.io/signin";
 // Shared artwork shape (not a fixed size) — reserves space to avoid layout shift.
-const AD_ASPECT = "313 / 413";
-// The artwork has a baked-in frame/shadow around the card, wider on the sides
-// (~8.5%) than top/bottom (~6.5%). Zoom the image+CTA together (clipped by the
-// container's overflow-hidden) so the card fills its slot with no frame sliver.
-// Slightly more X than Y so the sides are fully covered without clipping the
-// logo up top; the ~5% difference is imperceptible on this artwork.
-const AD_CROP_X = 1.22;
-const AD_CROP_Y = 1.15;
+const AD_ASPECT = "260 / 360";
 
 // Clarity (lazyOnload) + GA (afterInteractive) are set up in components/layout.tsx.
 declare global {
@@ -135,10 +123,8 @@ declare global {
   }
 }
 
-// Both Clarity (lazyOnload)
-//  and GA (afterInteractive) can be undefined when an
-// early click lands, so run each call once its global exists — poll briefly,
-// then give up. This keeps A/B data intact for fast clickers.
+// Clarity (lazyOnload) and GA (afterInteractive) may be undefined on an early
+// click, so run each call once its global exists — poll briefly, then give up.
 function whenReady(get: () => unknown, use: () => void) {
   if (typeof window === "undefined") return;
   if (typeof get() === "function") { use(); return; }
@@ -217,18 +203,8 @@ function SidebarAdBanner() {
       )}
 
       {banner && (
-        // Zoom the artwork + CTA together so the baked frame is clipped and the
-        // card fills the width. Scaling as one unit keeps the CTA aligned.
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            transform: `scale(${AD_CROP_X}, ${AD_CROP_Y})`,
-            opacity: loaded ? 1 : 0,
-            transition: 'opacity 0.3s ease',
-          }}
-        >
-          {/* Banner artwork (CTA excluded); fills the slot. */}
+        <>
+          {/* Banner artwork (CTA excluded); fills the slot and fades in on load. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={banner.src}
@@ -242,6 +218,8 @@ function SidebarAdBanner() {
               height: '100%',
               objectFit: 'cover',
               display: 'block',
+              opacity: loaded ? 1 : 0,
+              transition: 'opacity 0.3s ease',
             }}
             loading="lazy"
           />
@@ -259,24 +237,26 @@ function SidebarAdBanner() {
             style={{
               position: 'absolute',
               zIndex: 2,
-              left: '13%',
-              right: '13%',
+              left: '11%',
+              right: '11%',
               top: banner.btnCenter,
               transform: 'translateY(-50%)',
               // sized in cqw so the button scales with the card and always fits the band
-              padding: '3.4cqw 0',
-              borderRadius: '3.4cqw',
-              fontSize: '5.8cqw',
+              padding: '4.2cqw 0',
+              borderRadius: '4cqw',
+              fontSize: '6.6cqw',
               lineHeight: 1.2,
               background: banner.btnBg,
               color: banner.btnText,
               boxShadow: '0 2px 10px rgba(0,0,0,0.12)',
               fontFamily: "'DM Sans', sans-serif",
+              opacity: loaded ? 1 : 0,
+              transition: 'opacity 0.3s ease',
             }}
           >
             Try for Free!
           </Link>
-        </div>
+        </>
       )}
     </div>
   );
