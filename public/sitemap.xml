@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-07-29</lastmod>
+    <lastmod>2026-07-31</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-07-29</lastmod>
+    <lastmod>2026-07-31</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -822,6 +822,15 @@
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Brown-Minimalist-Helping-Value-Business-Blog-Banner.png</image:loc>
       <image:title>Cannot Use Import Statement Outside a Module</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/change-failure-rate</loc>
+    <lastmod>2026-07-31</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/Change-Failure-Rate-CFR-Formula-Benchmarks-Fixes-2026.webp</image:loc>
+      <image:title>Change Failure Rate (CFR): Formula, Benchmarks &amp; Fixes (2026)</image:title>
     </image:image>
   </url>
   <url>
