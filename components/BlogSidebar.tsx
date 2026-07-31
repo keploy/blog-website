@@ -119,11 +119,13 @@ const AD_BANNERS = [
 const CTA_HREF = "https://app.keploy.io/signin";
 // Shared artwork shape (not a fixed size) — reserves space to avoid layout shift.
 const AD_ASPECT = "313 / 413";
-// The artwork has a baked-in frame/shadow around the card. Zoom the image+CTA
-// together by this factor (clipped by the container's overflow-hidden) so the
-// card fills its slot. Tuned to fill the height (no top clip) and leave only a
-// small even side inset, aligning the card with the other sidebar sections.
-const AD_CROP = 1.15;
+// The artwork has a baked-in frame/shadow around the card, wider on the sides
+// (~8.5%) than top/bottom (~6.5%). Zoom the image+CTA together (clipped by the
+// container's overflow-hidden) so the card fills its slot with no frame sliver.
+// Slightly more X than Y so the sides are fully covered without clipping the
+// logo up top; the ~5% difference is imperceptible on this artwork.
+const AD_CROP_X = 1.22;
+const AD_CROP_Y = 1.15;
 
 // Clarity (lazyOnload) + GA (afterInteractive) are set up in components/layout.tsx.
 declare global {
@@ -133,7 +135,8 @@ declare global {
   }
 }
 
-// Both Clarity (lazyOnload) and GA (afterInteractive) can be undefined when an
+// Both Clarity (lazyOnload)
+//  and GA (afterInteractive) can be undefined when an
 // early click lands, so run each call once its global exists — poll briefly,
 // then give up. This keeps A/B data intact for fast clickers.
 function whenReady(get: () => unknown, use: () => void) {
@@ -220,7 +223,7 @@ function SidebarAdBanner() {
           style={{
             position: 'absolute',
             inset: 0,
-            transform: `scale(${AD_CROP})`,
+            transform: `scale(${AD_CROP_X}, ${AD_CROP_Y})`,
             opacity: loaded ? 1 : 0,
             transition: 'opacity 0.3s ease',
           }}
