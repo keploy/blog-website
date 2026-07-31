@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import SubscribeNewsletter from "./subscribe-newsletter";
 import {
@@ -102,152 +101,163 @@ function SidebarShare() {
   );
 }
 
-
-const AD_ITEMS = [
-  {
-    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/coverage.mp4",
-    title: "Record API calls from real user flows.",
-    description: "Auto-generated on every PR diff, from real behavior. VS Code & JetBrains, 1M+ installs.",
-    primaryCTA: { label: "Start Free", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
-  },
-  {
-    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/load+testing.mp4",
-    title: "Real traffic. Real tests. Zero manual effort.",
-    description: "Captures live API calls and turns them into test cases. Coverage that reflects production.",
-    primaryCTA: { label: "Try for Free", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
-  },
-  {
-    src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/api+test+generation+ai+powered+automation.mp4",
-    title: "Replay captured traffic to instantly catch regressions.",
-    description: "Replay production traffic at scale. No scripted scenarios, no guesswork.",
-    primaryCTA: { label: "Get Started", href: "https://app.keploy.io/signin" },
-    secondaryCTA: { label: "Read the docs →", href: "https://keploy.io/docs" },
-  },
+// 4 banner variants for A/B rotation. Each artwork is an edge-to-edge card with
+// an empty bottom band; the CTA is built in code and overlaid there (per-variant
+// colors). btnCenter = that band's vertical center (% from the top).
+const AD_BANNERS = [
+  { id: "banner_1", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/banner1.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "88.5%" },
+  { id: "banner_2", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/banner2.webp", btnBg: "#ffffff", btnText: "#ED5D0F", btnCenter: "88.5%" },
+  { id: "banner_3", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/banner3.webp", btnBg: "#ED5D0F", btnText: "#ffffff", btnCenter: "88.5%" },
+  { id: "banner_4", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/banner4.webp", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "88.5%" },
 ];
+
+const CTA_HREF = "https://app.keploy.io/signin";
+// Shared artwork shape (not a fixed size) — reserves space to avoid layout shift.
+const AD_ASPECT = "260 / 360";
+
+// Clarity (lazyOnload) + GA (afterInteractive) are set up in components/layout.tsx.
+declare global {
+  interface Window {
+    clarity?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+// Clarity (lazyOnload) and GA (afterInteractive) may be undefined on an early
+// click, so run each call once its global exists — poll briefly, then give up.
+function whenReady(get: () => unknown, use: () => void) {
+  if (typeof window === "undefined") return;
+  if (typeof get() === "function") { use(); return; }
+  let tries = 0;
+  const timer = setInterval(() => {
+    tries += 1;
+    if (typeof get() === "function") {
+      clearInterval(timer);
+      use();
+    } else if (tries >= 20) {
+      clearInterval(timer); // ~5s elapsed; script never loaded (blocked?)
+    }
+  }, 250);
+}
+
+function trackBannerClick(bannerId: string) {
+  whenReady(() => window.gtag, () => window.gtag!("event", "banner_click", { banner_id: bannerId }));
+  whenReady(() => window.clarity, () => window.clarity!("set", "banner_clicked", bannerId));
+}
 
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
-  const [videoError, setVideoError] = React.useState(false);
-  const [ad, setAd] = React.useState<typeof AD_ITEMS[number] | null>(null);
+  const [banner, setBanner] = React.useState<(typeof AD_BANNERS)[number] | null>(null);
+  const [loaded, setLoaded] = React.useState(false);
+  const [errored, setErrored] = React.useState(false);
 
   React.useEffect(() => {
-    setAd(AD_ITEMS[Math.floor(Math.random() * AD_ITEMS.length)]);
+    setBanner(AD_BANNERS[Math.floor(Math.random() * AD_BANNERS.length)]);
   }, []);
 
-  const reducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (!ad) {
+  // Text fallback so the ad slot is never blank if the artwork fails to load
+  // (content blocker, S3 hiccup, etc.). Keeps a working CTA + click tracking.
+  if (banner && errored) {
     return (
       <div
-        className="rounded-2xl bg-white border border-gray-200"
-        style={{ maxWidth: 320, margin: '0 auto', minHeight: 360, boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}
-        aria-hidden="true"
-      />
+        className="rounded-2xl p-5 flex flex-col justify-center"
+        style={{ width: '100%', aspectRatio: AD_ASPECT, backgroundColor: '#FFF4EE' }}
+      >
+        <h4 className="font-bold text-base leading-snug mb-1.5" style={{ fontFamily: "'DM Sans', sans-serif", color: '#1D2022' }}>
+          Try Keploy for free
+        </h4>
+        <p className="text-sm leading-relaxed mb-3" style={{ fontFamily: "'DM Sans', sans-serif", color: '#4b5563' }}>
+          Generate test cases and data mocks with one click. Reduce unit test development time by 90%.
+        </p>
+        <Link
+          href={CTA_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-banner-id={banner.id}
+          onClick={() => trackBannerClick(banner.id)}
+          className="inline-flex items-center gap-1 font-semibold text-sm transition-colors duration-150 hover:opacity-80"
+          style={{ fontFamily: "'DM Sans', sans-serif", color: '#ED5D0F' }}
+        >
+          Sign up <span aria-hidden="true">→</span>
+        </Link>
+      </div>
     );
   }
 
+  // Banner is picked client-side (avoids a hydration mismatch): reserve the
+  // slot, show a skeleton until the image decodes, then fade the artwork in.
   return (
     <div
-      className="rounded-2xl bg-white border border-gray-200 flex flex-col overflow-hidden"
+      className="rounded-2xl overflow-hidden"
       style={{
-        maxWidth: 320,
-        margin: '0 auto',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+        position: 'relative',
+        width: '100%',
+        aspectRatio: AD_ASPECT,
+        // container-query context so the overlaid button scales with the card
+        containerType: 'inline-size',
       }}
     >
-      {!videoError ? (
-        <video
-          src={ad.src}
-          autoPlay={!reducedMotion}
-          muted
-          loop={!reducedMotion}
-          playsInline
-          preload="none"
-          poster="/blog/images/keploy-ad-banner.jpg"
-          aria-hidden="true"
-          onError={() => setVideoError(true)}
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      ) : (
-        <Link
-          href={ad.primaryCTA.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={ad.primaryCTA.label}
-          style={{ display: 'block', width: '100%' }}
-        >
-          <Image
-            src="/blog/images/keploy-ad-banner.jpg"
-            alt={ad.title}
-            width={260}
-            height={200}
-            sizes="260px"
-            className="transition-shadow duration-200 ease-in-out cursor-pointer hover:shadow-lg"
-            style={{ width: '100%', height: 'auto', display: 'block' }}
-            loading="lazy"
-          />
-        </Link>
+      {/* Skeleton shown until the banner image has loaded (or errored). */}
+      {!loaded && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse" aria-hidden="true" />
       )}
 
-      <div className="px-5 pt-5 pb-6 flex flex-col gap-4">
-        <div>
-          <h4
-            className="font-bold text-base leading-snug mb-2"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "#1D2022" }}
+      {banner && (
+        <>
+          {/* Banner artwork (CTA excluded); fills the slot and fades in on load. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={banner.src}
+            alt="Keploy — 300M+ mocks and 12.8M+ tests generated"
+            onLoad={() => setLoaded(true)}
+            onError={() => setErrored(true)}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+              opacity: loaded ? 1 : 0,
+              transition: 'opacity 0.3s ease',
+            }}
+            loading="lazy"
+          />
+
+          {/* CTA overlaid in the artwork's empty band. Tracking lives here (not
+              the card) so only real clickthroughs count. */}
+          <Link
+            href={CTA_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Try for Free"
+            data-banner-id={banner.id}
+            onClick={() => trackBannerClick(banner.id)}
+            className="block text-center font-bold transition-all duration-300 hover:brightness-95 active:scale-[0.98]"
+            style={{
+              position: 'absolute',
+              zIndex: 2,
+              left: '11%',
+              right: '11%',
+              top: banner.btnCenter,
+              transform: 'translateY(-50%)',
+              // sized in cqw so the button scales with the card and always fits the band
+              padding: '4.2cqw 0',
+              borderRadius: '4cqw',
+              fontSize: '6.6cqw',
+              lineHeight: 1.2,
+              background: banner.btnBg,
+              color: banner.btnText,
+              boxShadow: '0 2px 10px rgba(0,0,0,0.12)',
+              fontFamily: "'DM Sans', sans-serif",
+              opacity: loaded ? 1 : 0,
+              transition: 'opacity 0.3s ease',
+            }}
           >
-            {ad.title}
-          </h4>
-          <p
-            className="text-sm leading-relaxed"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "#4b5563" }}
-          >
-            {ad.description}
-          </p>
-        </div>
-
-        <Link
-          href={ad.primaryCTA.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-3 rounded-xl transition-all duration-150 hover:brightness-90 active:scale-[0.98]"
-          style={{
-            background: '#ED5D0F',
-            color: '#fff',
-            boxShadow: '0 2px 10px rgba(232, 98, 42, 0.35)',
-            fontFamily: "'DM Sans', sans-serif",
-          }}
-        >
-          {ad.primaryCTA.label}
-        </Link>
-
-        <Link
-          href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2l-psdTCNCLYAJ-Jt5ESyGP7gi1_U70ySTjtFNr0Kmx5UagNJnyzg7lNjA3NKnaP6qFfpAgcdZ"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full text-center font-bold text-sm py-3 rounded-xl border transition-all duration-150 hover:bg-orange-50 active:scale-[0.98]"
-          style={{
-            background: 'transparent',
-            border: '1.5px solid #ED5D0F',
-            color: '#ED5D0F',
-            fontFamily: "'DM Sans', sans-serif",
-          }}
-        >
-          Book a Demo
-        </Link>
-
-        <Link
-          href={ad.secondaryCTA.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-center text-sm font-medium hover:underline pt-1 text-[#20883d]"
-        >
-          {ad.secondaryCTA.label}
-        </Link>
-      </div>
+            Try for Free!
+          </Link>
+        </>
+      )}
     </div>
   );
 }
