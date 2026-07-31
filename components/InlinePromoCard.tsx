@@ -115,7 +115,7 @@ function Keploy5YearsBanner() {
             transform: translateX(-50%);
           }
 
-          .k5y-heading { font-size: 15px; font-weight: 800; line-height: 1.35; margin: 0 0 22px; }
+          .k5y-heading { font-size: 12.5px; font-weight: 800; line-height: 1.35; margin: 0 0 22px; }
           .k5y-lb2 { display: none; }
 
           .k5y-cta-btn { padding: 4.8px 8.8px; font-size: 10px; gap: 3px; }
