@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import type { InlinePromoId } from "../config/inline-promos";
 
 // ─── Inline banner ─────────────────────────────────────────────────────────────
@@ -24,6 +25,7 @@ function ArrowIcon() {
 }
 
 function Keploy5YearsBanner() {
+  const descId = useId();
   return (
     <div className="my-8" style={{ width: "100%" }}>
       <style>{`
@@ -73,6 +75,7 @@ function Keploy5YearsBanner() {
           margin: 0 0 26px;
         }
         .k5y-accent { color: #f76b1c; }
+        .k5y-heading-mobile { display: none; }
 
         .k5y-cta-btn {
           display: inline-flex;
@@ -93,7 +96,7 @@ function Keploy5YearsBanner() {
         }
         .k5y-cta-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
         .k5y-cta-btn:active { transform: translateY(1px); }
-        .k5y-cta-btn:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+        .k5y-cta-btn:focus-visible { outline: 3px solid #f76b1c; outline-offset: 2px; }
         .k5y-cta-icon { width: 18px; height: 18px; flex-shrink: 0; }
 
         @media (max-width: 850px) {
@@ -113,8 +116,9 @@ function Keploy5YearsBanner() {
             margin: 32px auto 16px;
           }
 
-          .k5y-heading { font-size: 12px; font-weight: 800; line-height: 1.35; margin: 0 0 22px; }
-          .k5y-lb2 { display: none; }
+          .k5y-heading { font-size: 14px; font-weight: 800; line-height: 1.35; margin: 0 0 22px; }
+          .k5y-heading-desktop { display: none; }
+          .k5y-heading-mobile { display: block; }
 
           .k5y-cta-btn { padding: 5px 9px; font-size: 10px; gap: 3px; }
           .k5y-cta-icon { width: 10px; height: 10px; }
@@ -124,14 +128,14 @@ function Keploy5YearsBanner() {
       <div className="k5y-card">
         {/* Decorative blobs — desktop */}
         {/* eslint-disable @next/next/no-img-element */}
-        <img className="k5y-ellipse k5y-ellipse-tr" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-top-right.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-        <img className="k5y-ellipse k5y-ellipse-left" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-left-side.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-        <img className="k5y-ellipse k5y-ellipse-bottom" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-bottom.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        <img className="k5y-ellipse k5y-ellipse-tr" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-top-right.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={42} height={86} />
+        <img className="k5y-ellipse k5y-ellipse-left" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-left-side.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={33} height={123} />
+        <img className="k5y-ellipse k5y-ellipse-bottom" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-bottom.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={286} height={82} />
         {/* Decorative blobs — mobile */}
-        <img className="k5y-ellipse k5y-ellipse-tl-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-top-left-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-        <img className="k5y-ellipse k5y-ellipse-top-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-mobile-top.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-        <img className="k5y-ellipse k5y-ellipse-right-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-right-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-        <img className="k5y-ellipse k5y-ellipse-bottom-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-bottom-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        <img className="k5y-ellipse k5y-ellipse-tl-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-top-left-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={54} height={96} />
+        <img className="k5y-ellipse k5y-ellipse-top-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-mobile-top.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={61} height={28} />
+        <img className="k5y-ellipse k5y-ellipse-right-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-right-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={41} height={166} />
+        <img className="k5y-ellipse k5y-ellipse-bottom-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-bottom-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={53} height={33} />
 
         <img
           className="k5y-badge-img"
@@ -139,6 +143,8 @@ function Keploy5YearsBanner() {
           alt="Keploy 5 years anniversary badge"
           loading="lazy"
           decoding="async"
+          width={337}
+          height={337}
         />
         <img
           className="k5y-badge-img-mobile"
@@ -146,16 +152,25 @@ function Keploy5YearsBanner() {
           alt="Keploy 5 years anniversary badge"
           loading="lazy"
           decoding="async"
+          width={190}
+          height={180}
         />
 
         <div className="k5y-inner">
-          <p className="k5y-heading">
+          <p className="k5y-heading k5y-heading-desktop">
             Celebrate with us
             <br />
             Get <span className="k5y-accent">1 Month</span> of FREE
-            <br className="k5y-lb2" />
-            {" "}
+            <br />
             <span className="k5y-accent">Keploy</span> Credits
+          </p>
+          <p className="k5y-heading k5y-heading-mobile">
+            Celebrate with us
+            <br />
+            Get <span className="k5y-accent">1 Month</span> of FREE <span className="k5y-accent">Keploy</span> Credits
+          </p>
+          <p id={descId} className="sr-only">
+            Celebrating 5 years of Keploy — claim one month of free credits.
           </p>
 
           <a
@@ -164,6 +179,7 @@ function Keploy5YearsBanner() {
             rel="noopener noreferrer"
             className="k5y-cta-btn"
             aria-label="Claim 1 month of free Keploy credits"
+            aria-describedby={descId}
           >
             Claim 1 Month of Free Credits
             <ArrowIcon />
