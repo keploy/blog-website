@@ -8,6 +8,7 @@ import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { REVALIDATE_CONTENT, REVALIDATE_ERROR } from "../../lib/isr";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
   console.log("tech posts: ", edges.length)
@@ -63,13 +64,13 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
 
     return {
       props: { allPosts: allPosts ?? emptyData, preview },
-      revalidate: 10,
+      revalidate: REVALIDATE_CONTENT,
     };
   } catch (error) {
     console.error("technology/index getStaticProps error:", error);
     return {
       props: { allPosts: emptyData, preview },
-      revalidate: 60,
+      revalidate: REVALIDATE_ERROR,
     };
   }
 };

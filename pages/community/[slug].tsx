@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
-import { getRedirectSlug } from "../../config/redirect";
+import { getRedirectSlug, hasRedirect } from "../../config/redirect";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Container from "../../components/container";
 import MoreStories from "../../components/more-stories";
@@ -12,14 +12,15 @@ import Layout from "../../components/layout";
 import PostTitle from "../../components/post-title";
 import Tag from "../../components/tag";
 import {
-  getAllPostsForCommunity,
+  getAllSlugsForCategory,
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
+  getReviewAuthors,
 } from "../../lib/api";
 import ContainerSlug from "../../components/containerSlug";
 import { useEffect, useRef } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
-import { getReviewAuthorDetails } from "../../lib/api";
+import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
 import dynamic from "next/dynamic";
 import "./styles.module.css"
@@ -286,7 +287,7 @@ export const getStaticProps: GetStaticProps = async ({
   if (typeof slug !== "string") {
     return {
       notFound: true,
-      revalidate: 60,
+      revalidate: REVALIDATE_NOT_FOUND,
     };
   }
 
@@ -306,7 +307,7 @@ export const getStaticProps: GetStaticProps = async ({
     if (!data?.post) {
       return {
         notFound: true,
-        revalidate: 60,
+        revalidate: REVALIDATE_NOT_FOUND,
       };
     }
 
@@ -319,7 +320,7 @@ export const getStaticProps: GetStaticProps = async ({
     ) || [];
     if (!postCategories.includes("community")) {
       // Post belongs to a different category — 301 redirect to preserve SEO signals.
-      // This only runs at ISR runtime (fallback: true), not during next build,
+      // This only runs at ISR runtime (fallback: "blocking"), not during next build,
       // because getStaticPaths only returns paths from the community category query.
       const correctCategory = postCategories.find((c: string) =>
         ['community', 'technology'].includes(c)
@@ -334,15 +335,14 @@ export const getStaticProps: GetStaticProps = async ({
       }
       return {
         notFound: true,
-        revalidate: 60,
+        revalidate: REVALIDATE_NOT_FOUND,
       };
     }
 
     const moreStories = await getMoreStoriesForSlugs(data.post?.tags, data.post?.slug);
-    const authorDetails = await Promise.all([
-      getReviewAuthorDetails("neha"),
-      getReviewAuthorDetails("Jain"),
-    ]);
+    // Same two records for every post — memoized in lib/api so a build makes
+    // this request twice in total instead of twice per post.
+    const authorDetails = await getReviewAuthors();
 
     return {
       props: {
@@ -351,25 +351,36 @@ export const getStaticProps: GetStaticProps = async ({
         posts: moreStories?.communityMoreStories || { edges: [] },
         reviewAuthorDetails: authorDetails,
       },
-      revalidate: 60,
+      revalidate: REVALIDATE_CONTENT,
     };
   } catch (error) {
     console.error("community/[slug] getStaticProps error:", error);
+    // WordPress failed, the post may well exist — retry soon rather than
+    // pinning a real post as a 404 for a day.
     return {
       notFound: true,
-      revalidate: 60,
+      revalidate: REVALIDATE_ERROR,
     };
   }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const allPosts = await getAllPostsForCommunity(false);
-  const communityPosts =
-    allPosts?.edges
-      .map(({ node }) => `/community/${node?.slug}`) || [];
+  // getAllPostsForCommunity is capped at `first: 22`, so using it here left
+  // most posts un-prerendered and rendering on demand. Paginate for the full set.
+  const slugs = await getAllSlugsForCategory("community");
 
   return {
-    paths: communityPosts || [],
-    fallback: true,
+    // Slugs with a configured redirect must NOT be pre-rendered. getStaticProps
+    // returns `redirect` for them, and Next.js rejects that during prerendering
+    // ("`redirect` can not be returned from getStaticProps during prerendering").
+    // They were previously never hit at build time only because getStaticPaths
+    // was capped at 22 paths and happened to miss them. These URLs are already
+    // 301'd at the edge by vercel.json, so they never reach a function anyway.
+    paths: slugs.filter((slug) => !hasRedirect(slug)).map((slug) => `/community/${slug}`),
+    // 'blocking' rather than true: `true` served an empty skeleton with a 200
+    // for any unknown slug (soft 404 for crawlers) before resolving. 'blocking'
+    // returns the correct status on the first request. Real posts are all
+    // pre-rendered above, so this path is only hit by new posts and bad URLs.
+    fallback: "blocking",
   };
 };

@@ -8,6 +8,7 @@ import { getAllPostsFromTags, getAllTags } from "../../lib/api";
 import TagsStories from "../../components/TagsStories";
 import { useRouter } from "next/router";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp }) {
   const posts = postsByTags?.edges || [];
   const router = useRouter();
@@ -44,7 +45,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const paths = edgesAllTags.map((node) => `/tag/${node.name}`) || []; // Extract tag names from the nodes and create paths
   return {
     paths: paths,
-    fallback: true,
+    fallback: "blocking",
   };
 };
 
@@ -57,7 +58,7 @@ export const getStaticProps: GetStaticProps = async ({
   if (!paramSlug) {
     return {
       notFound: true,
-      revalidate: 60,
+      revalidate: REVALIDATE_NOT_FOUND,
     };
   }
 
@@ -69,13 +70,13 @@ export const getStaticProps: GetStaticProps = async ({
 
     return {
       props: { postsByTags: postsByTags || { edges: [] }, preview, tagSlug: slug },
-      revalidate: 10,
+      revalidate: REVALIDATE_CONTENT,
     };
   } catch (error) {
     console.error("tag/[slug] getStaticProps error:", error);
     return {
       notFound: true,
-      revalidate: 60,
+      revalidate: REVALIDATE_ERROR,
     };
   }
 };

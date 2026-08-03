@@ -28,7 +28,7 @@
   ],
   "headers": [
     {
-      "source": "/blog/api/(.*)",
+      "source": "/blog/api/(preview|exit-preview|revalidate)",
       "headers": [
         {
           "key": "Cache-Control",
