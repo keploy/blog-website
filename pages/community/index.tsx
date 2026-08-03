@@ -7,6 +7,7 @@ import Layout from "../../components/layout";
 import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
 import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { REVALIDATE_CONTENT } from "../../lib/isr";
 
 export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;
@@ -70,6 +71,6 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
 
   return {
     props: { allPosts, preview },
-    revalidate: 10,
+    revalidate: REVALIDATE_CONTENT,
   };
 };

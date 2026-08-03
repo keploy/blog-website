@@ -12,6 +12,7 @@ import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
 import { getBreadcrumbListSchema, MAIN_SITE_URL, SITE_URL } from "../../lib/structured-data";
+import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 
 export default function AuthorPage({ preview, filteredPosts, content }) {
   if (!filteredPosts || filteredPosts.length === 0) {
@@ -104,13 +105,13 @@ export const getStaticPaths: GetStaticPaths = async ({ }) => {
 
     return {
       paths,
-      fallback: true,
+      fallback: "blocking",
     };
   } catch (error) {
     console.error("authors/[slug] getStaticPaths error:", error);
     return {
       paths: [],
-      fallback: true,
+      fallback: "blocking",
     };
   }
 };
@@ -124,7 +125,7 @@ export const getStaticProps: GetStaticProps = async ({
   if (typeof slugParam !== "string" || slugParam.trim().length === 0) {
     return {
       notFound: true,
-      revalidate: 60,
+      revalidate: REVALIDATE_NOT_FOUND,
     };
   }
 
@@ -150,6 +151,13 @@ export const getStaticProps: GetStaticProps = async ({
 
   let filteredPosts = [];
 
+  // fetchAPI throws on GraphQL errors and on network failure, and every WP call
+  // below is individually caught — which makes "WordPress is down" look
+  // identical to "this author has no posts". They must not share a TTL: a
+  // genuine 404 should stick, but an outage must self-heal in a minute rather
+  // than pinning a real author page as a 404 for a day.
+  let wordpressFailed = false;
+
   for (const candidate of Array.from(candidateAuthorNames)) {
     if (!candidate) continue;
     try {
@@ -160,6 +168,7 @@ export const getStaticProps: GetStaticProps = async ({
         break;
       }
     } catch (error) {
+      wordpressFailed = true;
       console.error(`authors/[slug] failed to fetch posts for candidate "${candidate}":`, error);
     }
   }
@@ -176,6 +185,7 @@ export const getStaticProps: GetStaticProps = async ({
           return sanitizeAuthorSlug(candidateName) === sanitizeAuthorSlug(slugParam);
         }) || [];
     } catch (error) {
+      wordpressFailed = true;
       console.error("authors/[slug] fallback to getAllPosts failed:", error);
       filteredPosts = [];
     }
@@ -185,7 +195,7 @@ export const getStaticProps: GetStaticProps = async ({
   if (!filteredPosts.length) {
     return {
       notFound: true,
-      revalidate: 60,
+      revalidate: wordpressFailed ? REVALIDATE_ERROR : REVALIDATE_NOT_FOUND,
     };
   }
 
@@ -205,7 +215,7 @@ export const getStaticProps: GetStaticProps = async ({
       filteredPosts,
       content,
     },
-    revalidate: 60,
+    revalidate: REVALIDATE_CONTENT,
   };
 };
 

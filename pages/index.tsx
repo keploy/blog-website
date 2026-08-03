@@ -15,6 +15,7 @@ import {
   getWebSiteSchema,
   SITE_URL,
 } from "../lib/structured-data";
+import { REVALIDATE_CONTENT } from "../lib/isr";
 // Canonical /blog title. Shared by Layout's `Title` prop (which Meta.tsx
 // turns into og:title / twitter:title) and the <Head><title>, so the
 // document title and social metadata can't drift apart.
@@ -109,6 +110,6 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
           : allTehcnologyPosts.edges,
       preview,
     },
-    revalidate: 10,
+    revalidate: REVALIDATE_CONTENT,
   };
 };
