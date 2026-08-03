@@ -65,17 +65,35 @@ and the chart turns that into an `envFrom.secretRef` — so every key in that
 SealedSecret becomes a pod environment variable. Add the secret there and the
 plugin reads it with `getenv()`. No `wp-config.php` change is needed at all.
 
-Re-seal the existing secret with the new key (needs cluster access):
+Add the new key with `kubeseal --raw` and paste the output under
+`encryptedData`. Do **not** rebuild the whole SealedSecret: `kubeseal` cannot
+decrypt the existing `WORDPRESS_DB_PASSWORD`, so regenerating the resource from
+scratch would destroy it.
 
 ```bash
 kubectl -n prod get secret wordpress-secrets -o jsonpath='{.data}'   # existing keys
-kubeseal --controller-name sealed-secrets --controller-namespace kube-system \
-  --format yaml < updated-wordpress-secrets.yaml
+
+# The controller is `sealed-secrets-controller` in `flux-system`
+# (clusters/prod-azure/infra/sealed-secrets.yaml) — not the chart defaults.
+# The SealedSecret has no scope annotation, so it is strict-scoped and the
+# value is bound to this exact namespace + name.
+printf %s "$REVALIDATE_SECRET" | kubeseal --raw \
+  --namespace prod --name wordpress-secrets \
+  --controller-name sealed-secrets-controller \
+  --controller-namespace flux-system
 ```
 
-then commit the regenerated `SealedSecret` block in
-`clusters/prod-azure/prod/wordpress.yaml`. Use the same value as the Vercel
+Paste that blob under `encryptedData.KEPLOY_REVALIDATE_SECRET` in
+`clusters/prod-azure/prod/wordpress.yaml`, using the same value as the Vercel
 `REVALIDATE_SECRET`.
+
+**The pods will not pick it up on their own.** The deployment checksums only
+`secureconfig` and `extendedconfig`; nothing rolls pods when `wordpress-secrets`
+changes, and `envFrom` is read once at container start. Finish with:
+
+```bash
+kubectl -n prod rollout restart deployment/wordpress
+```
 
 **Outbound traffic.** The ingress `configuration-snippet` restricts `wp-admin`,
 `wp-login.php`, and REST *write* methods to the VPN allowlist. That is inbound
