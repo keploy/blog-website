@@ -161,7 +161,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         if (techState.length === 0 || communityState.length === 0) {
           const endpoint = process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string | undefined;
           if (!endpoint) {
-            const res = await fetch(`${router.basePath || ''}/api/nav-latest`, { cache: "no-store" });
+            const res = await fetch(`${router.basePath || ''}/api/nav-latest`);
             if (!res.ok) throw new Error("Failed to fetch latest posts (no env, API 404)");
             const data = await res.json();
             if (!mounted) return;
@@ -771,7 +771,10 @@ function SearchBox({ onClose, techLatest = [], communityLatest = [] as any[] }: 
     (async () => {
       try {
         const base = (router?.basePath as string) || "";
-        const res = await fetch(`${base}/api/search-all`, { cache: "no-store" });
+        // No `cache: "no-store"` — the post list is public and identical for
+        // everyone, so let the browser and edge cache serve it. Opening the
+        // search box previously forced a fresh serverless invocation each time.
+        const res = await fetch(`${base}/api/search-all`);
         if (!res.ok) throw new Error("Failed to load posts");
         const data = await res.json();
         if (!mounted) return;
