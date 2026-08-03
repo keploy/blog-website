@@ -78,7 +78,7 @@ function Keploy5YearsBanner() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 9.6px 18px;
+          padding: 10px 18px;
           background: #f76b1c;
           color: #ffffff;
           border-radius: 9999px;
@@ -96,29 +96,27 @@ function Keploy5YearsBanner() {
         .k5y-cta-btn:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
         .k5y-cta-icon { width: 18px; height: 18px; flex-shrink: 0; }
 
-        @media (max-width: 600px) {
+        @media (max-width: 850px) {
           .k5y-ellipse-tr, .k5y-ellipse-left, .k5y-ellipse-bottom { display: none; }
           .k5y-ellipse-tl-m { display: block; top: 0; left: 0; width: 54px; height: 96px; }
           .k5y-ellipse-top-m { display: block; top: 0; right: 46px; width: 61px; height: 28px; }
           .k5y-ellipse-right-m { display: block; top: 35px; right: 0; width: 41px; height: 166px; }
           .k5y-ellipse-bottom-m { display: block; left: 23px; bottom: 0; width: 53px; height: 33px; }
 
-          .k5y-inner { text-align: center; padding: 250px 16px 44px; }
+          .k5y-inner { text-align: center; padding: 0 16px 44px; }
           .k5y-badge-img { display: none; }
           .k5y-badge-img-mobile {
             display: block;
-            position: absolute;
-            top: 32px;
-            left: 50%;
+            position: static;
             width: 190px;
             height: auto;
-            transform: translateX(-50%);
+            margin: 32px auto 16px;
           }
 
-          .k5y-heading { font-size: 12.5px; font-weight: 800; line-height: 1.35; margin: 0 0 22px; }
+          .k5y-heading { font-size: 12px; font-weight: 800; line-height: 1.35; margin: 0 0 22px; }
           .k5y-lb2 { display: none; }
 
-          .k5y-cta-btn { padding: 4.8px 8.8px; font-size: 10px; gap: 3px; }
+          .k5y-cta-btn { padding: 5px 9px; font-size: 10px; gap: 3px; }
           .k5y-cta-icon { width: 10px; height: 10px; }
         }
       `}</style>
@@ -126,24 +124,28 @@ function Keploy5YearsBanner() {
       <div className="k5y-card">
         {/* Decorative blobs — desktop */}
         {/* eslint-disable @next/next/no-img-element */}
-        <img className="k5y-ellipse k5y-ellipse-tr" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-top-right.svg" alt="" aria-hidden="true" />
-        <img className="k5y-ellipse k5y-ellipse-left" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-left-side.svg" alt="" aria-hidden="true" />
-        <img className="k5y-ellipse k5y-ellipse-bottom" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-bottom.svg" alt="" aria-hidden="true" />
+        <img className="k5y-ellipse k5y-ellipse-tr" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-top-right.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        <img className="k5y-ellipse k5y-ellipse-left" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-left-side.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        <img className="k5y-ellipse k5y-ellipse-bottom" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-bottom.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
         {/* Decorative blobs — mobile */}
-        <img className="k5y-ellipse k5y-ellipse-tl-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-top-left-mobile.svg" alt="" aria-hidden="true" />
-        <img className="k5y-ellipse k5y-ellipse-top-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-mobile-top.svg" alt="" aria-hidden="true" />
-        <img className="k5y-ellipse k5y-ellipse-right-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-right-mobile.svg" alt="" aria-hidden="true" />
-        <img className="k5y-ellipse k5y-ellipse-bottom-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-bottom-mobile.svg" alt="" aria-hidden="true" />
+        <img className="k5y-ellipse k5y-ellipse-tl-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-top-left-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        <img className="k5y-ellipse k5y-ellipse-top-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-mobile-top.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        <img className="k5y-ellipse k5y-ellipse-right-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-right-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        <img className="k5y-ellipse k5y-ellipse-bottom-m" src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-bottom-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
 
         <img
           className="k5y-badge-img"
           src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/badge.png"
           alt="Keploy 5 years anniversary badge"
+          loading="lazy"
+          decoding="async"
         />
         <img
           className="k5y-badge-img-mobile"
           src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/badge-tight.png"
           alt="Keploy 5 years anniversary badge"
+          loading="lazy"
+          decoding="async"
         />
 
         <div className="k5y-inner">

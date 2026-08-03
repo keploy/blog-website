@@ -29,10 +29,10 @@ export default function Document() {
         <link
           rel="preload"
           as="style"
-          href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;700;800&display=swap"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;700;800&display=swap"
           rel="stylesheet"
         />
 
