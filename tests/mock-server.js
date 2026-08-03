@@ -202,6 +202,15 @@ function handleGraphQL(body) {
         return reviewAuthorResponse;
     }
 
+    // getAllSlugsForCategory (lib/api.ts) — powers getStaticPaths on the post
+    // pages, so without this branch the e2e build pre-renders zero posts and
+    // silently falls back to on-demand rendering instead of exercising the
+    // real path. Selects on the variable; the literal-category branches below
+    // don't match because this query passes categoryName as $categoryName.
+    if (query.includes('AllSlugsForCategory')) {
+        return variables.categoryName === 'community' ? communityPosts : technologyPosts;
+    }
+
     if (query.includes('AllPostsForCategory')) {
         if (variables.categoryName === 'community' || query.includes('categoryName: "community"')) {
             return communityPosts;

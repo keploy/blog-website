@@ -7,6 +7,7 @@ import { getAllPostsForSearch } from "../lib/api"; // This now exists
 import { Post } from "../types/post";
 import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import { getBreadcrumbListSchema, SITE_URL } from "../lib/structured-data";
+import { REVALIDATE_CONTENT } from "../lib/isr";
 
 export default function SearchPage({ allPosts }: { allPosts: { node: Post }[] }) {
   const router = useRouter();
@@ -57,6 +58,6 @@ export const getStaticProps = async () => {
   
   return {
     props: { allPosts },
-    revalidate: 60,
+    revalidate: REVALIDATE_CONTENT,
   };
 };

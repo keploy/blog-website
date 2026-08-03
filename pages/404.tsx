@@ -6,6 +6,7 @@ import { getAllPostsForTechnology, getAllPostsForCommunity } from "../lib/api";
 import { GetStaticProps } from "next";
 import { getBreadcrumbListSchema, SITE_URL } from "../lib/structured-data";
 import { safeJsonLdStringify } from "../utils/seo";
+import { REVALIDATE_CONTENT, REVALIDATE_ERROR } from "../lib/isr";
 
 interface Custom404Props {
   latestPosts: { edges: Array<{ node: any }> };
@@ -91,7 +92,7 @@ export const getStaticProps: GetStaticProps = async () => {
         communityPosts: latestCommunityPosts,
         technologyPosts: latestTechnologyPosts,
       },
-      revalidate: 60, // Revalidate every minute
+      revalidate: REVALIDATE_CONTENT,
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -107,7 +108,7 @@ export const getStaticProps: GetStaticProps = async () => {
         "1. Verify WPGraphQL is up: curl -sS -X POST <endpoint> -H 'Content-Type: application/json' -d '{\"query\":\"{ __typename }\"}'",
         "2. If the curl 5xx's or hangs, check wp.keploy.io host status and the WPGraphQL plugin (WP admin → Plugins)",
         "3. If the endpoint logged above is unexpected, double-check WORDPRESS_API_URL in Vercel project settings and redeploy",
-        "4. Page is served with revalidate: 60, so the rails self-heal within ~1 min after WP recovers",
+        "4. The degraded response uses REVALIDATE_ERROR (60s), so the rails self-heal within ~1 min after WP recovers",
       ],
     });
     return {
@@ -116,7 +117,7 @@ export const getStaticProps: GetStaticProps = async () => {
         communityPosts: { edges: [] },
         technologyPosts: { edges: [] },
       },
-      revalidate: 60,
+      revalidate: REVALIDATE_ERROR,
     };
   }
 };
