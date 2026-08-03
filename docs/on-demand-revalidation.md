@@ -43,17 +43,44 @@ is unset it returns 500 rather than allowing unauthenticated regeneration.
 
 ### 2. WordPress
 
-Save the file below as
-`wp-content/mu-plugins/keploy-revalidate.php` on `wp.keploy.io`. `mu-plugins`
-(must-use) load automatically and cannot be deactivated from the admin UI by
-accident.
+`wp.keploy.io` is **not** a hand-managed server. It runs on the `prod-azure`
+cluster in namespace `prod`, deployed by Flux from
+[`keploy/k8s-env`](https://github.com/keploy/k8s-env)
+(`clusters/prod-azure/prod/wordpress.yaml`) via a custom Helm chart at
+[`slayerjain/wordpress-helm-chart`](https://github.com/slayerjain/wordpress-helm-chart).
 
-Then add the matching secret to `wp-config.php`:
+So do **not** SSH in, drop a file into `wp-content/mu-plugins/`, or edit
+`wp-config.php`. `wp-content` is on a 200Gi PVC with `keepPvc: true`, so a
+hand-placed file would survive a pod restart and appear to work — which is
+exactly what makes it dangerous. It would be undeclared drift, invisible to
+anyone reading either repo, and lost the moment the PVC is recreated.
 
-```php
-define('KEPLOY_REVALIDATE_SECRET', '<the same value as REVALIDATE_SECRET>');
-define('KEPLOY_REVALIDATE_ENDPOINT', 'https://keploy.io/blog/api/revalidate');
+The chart already has a mu-plugin delivery mechanism. `rest-api-users-access.php`
+is stored as data in the `-extended` ConfigMap
+(`wordpress/templates/extendedconfig.yaml`) and mounted with `subPath` into
+`wp-content/mu-plugins/`. Ship this plugin the same way.
+
+**Secret injection.** `wordpress.yaml` sets `extraEnvSecrets: [wordpress-secrets]`,
+and the chart turns that into an `envFrom.secretRef` — so every key in that
+SealedSecret becomes a pod environment variable. Add the secret there and the
+plugin reads it with `getenv()`. No `wp-config.php` change is needed at all.
+
+Re-seal the existing secret with the new key (needs cluster access):
+
+```bash
+kubectl -n prod get secret wordpress-secrets -o jsonpath='{.data}'   # existing keys
+kubeseal --controller-name sealed-secrets --controller-namespace kube-system \
+  --format yaml < updated-wordpress-secrets.yaml
 ```
+
+then commit the regenerated `SealedSecret` block in
+`clusters/prod-azure/prod/wordpress.yaml`. Use the same value as the Vercel
+`REVALIDATE_SECRET`.
+
+**Outbound traffic.** The ingress `configuration-snippet` restricts `wp-admin`,
+`wp-login.php`, and REST *write* methods to the VPN allowlist. That is inbound
+only and does not affect this plugin, which makes an outbound POST to
+`keploy.io`.
 
 ```php
 <?php
@@ -78,8 +105,15 @@ function keploy_ping_revalidate($post) {
         return;
     }
 
-    if (!defined('KEPLOY_REVALIDATE_SECRET') || !defined('KEPLOY_REVALIDATE_ENDPOINT')) {
-        error_log('[keploy-revalidate] KEPLOY_REVALIDATE_SECRET / _ENDPOINT not defined in wp-config.php');
+    // Injected by envFrom.secretRef from the wordpress-secrets SealedSecret —
+    // NOT defined in wp-config.php, which this deployment does not hand-edit.
+    $secret = getenv('KEPLOY_REVALIDATE_SECRET');
+    $endpoint = getenv('KEPLOY_REVALIDATE_ENDPOINT');
+    if ($endpoint === false || $endpoint === '') {
+        $endpoint = 'https://keploy.io/blog/api/revalidate';
+    }
+    if ($secret === false || $secret === '') {
+        error_log('[keploy-revalidate] KEPLOY_REVALIDATE_SECRET missing from the pod environment');
         return;
     }
 
@@ -127,12 +161,12 @@ function keploy_ping_revalidate($post) {
         $body['author'] = $author;
     }
 
-    wp_remote_post(KEPLOY_REVALIDATE_ENDPOINT, array(
+    wp_remote_post($endpoint, array(
         'timeout'  => 5,
         'blocking' => false,
         'headers'  => array(
             'Content-Type'        => 'application/json',
-            'x-revalidate-secret' => KEPLOY_REVALIDATE_SECRET,
+            'x-revalidate-secret' => $secret,
         ),
         'body'     => wp_json_encode($body),
     ));
@@ -171,6 +205,65 @@ function keploy_revalidate_on_delete($post_id) {
 }
 add_action('before_delete_post', 'keploy_revalidate_on_delete');
 ```
+
+### 3. Wiring the plugin in (two repos)
+
+The chart currently hardcodes its one mu-plugin. Rather than hardcode a second
+Keploy-specific one into a shared chart, add a generic `extraMuPlugins` knob so
+the PHP itself lives in `k8s-env` alongside the rest of the Keploy config.
+
+**`slayerjain/wordpress-helm-chart`**
+
+`wordpress/values.yaml`:
+
+```yaml
+# Extra must-use plugins. Key = filename, value = PHP source. Rendered into the
+# -extended ConfigMap and mounted into wp-content/mu-plugins/.
+extraMuPlugins: {}
+```
+
+`wordpress/templates/extendedconfig.yaml` — append to `data:`:
+
+```yaml
+{{- range $name, $content := .Values.extraMuPlugins }}
+  {{ $name }}: |
+{{ $content | indent 4 }}
+{{- end }}
+```
+
+`wordpress/templates/deployment.yaml` — after the `rest-api-users-access.php`
+mount:
+
+```yaml
+            {{- range $name, $_ := .Values.extraMuPlugins }}
+            - mountPath: /var/www/html{{ if $.Values.settings.wordpressSubDirectory }}{{ $.Values.settings.wordpressSubDirectory }}{{ end }}/wp-content/mu-plugins/{{ $name }}
+              subPath: {{ $name }}
+              name: extended
+            {{- end }}
+```
+
+No image rebuild is required — this is ConfigMap data, not a layer. The
+deployment already carries a `checksum/extendedconfig` pod annotation, so
+changing the ConfigMap rolls the pods automatically.
+
+**`keploy/k8s-env`** — in `clusters/prod-azure/prod/wordpress.yaml`, under
+`spec.values`, add the plugin from the previous section:
+
+```yaml
+    extraMuPlugins:
+      keploy-revalidate.php: |
+        <?php
+        /**
+         * Plugin Name: Keploy Blog On-Demand Revalidation
+         */
+        ... (the PHP above)
+```
+
+and add `KEPLOY_REVALIDATE_SECRET` to the `wordpress-secrets` SealedSecret in
+the same file.
+
+Flux watches the chart repo on a 5m interval and the cluster repo continuously,
+so both land without a manual deploy.
 
 ## Verifying
 
