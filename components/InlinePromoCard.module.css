@@ -50,6 +50,13 @@
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+@media (forced-colors: active) {
+  .k5y-accent-gradient {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: currentColor;
+  }
+}
 .k5y-heading-mobile { display: none; }
 
 .k5y-cta-btn {

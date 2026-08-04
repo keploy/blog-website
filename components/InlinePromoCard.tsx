@@ -80,7 +80,6 @@ function Keploy5YearsBanner() {
             target="_blank"
             rel="noopener noreferrer"
             className={styles["k5y-cta-btn"]}
-            aria-label="Claim 1 month of free Keploy credits"
             aria-describedby={descId}
           >
             Claim 1 Month of Free Credits

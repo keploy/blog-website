@@ -11,7 +11,9 @@ import KeywordTooltipLayer from "./KeywordTooltipLayer";
 import { getTooltipsForSlug } from "../config/keyword-tooltips";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
-const InlinePromoCard = dynamic(() => import("./InlinePromoCard"));
+const InlinePromoCard = dynamic(() => import("./InlinePromoCard"), {
+  loading: () => <div className="my-8 w-full min-h-[300px]" />,
+});
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
   ssr: false,
   loading: () => <div className="bg-[#1e1e2e] rounded-lg p-4 mb-6 min-h-[60px]" />,
@@ -349,6 +351,10 @@ export default function PostBody({
     };
 
     const inlinePromoConfigs = blogSlug ? getInlinePromosForSlug(blogSlug) : [];
+    // Tracks which promoIds actually found their anchor somewhere in the post.
+    // If a promoId's anchor text never matches (e.g. the CMS copy changed), it would
+    // otherwise silently vanish from the page — appendMissedPromos below covers that case.
+    const promoIdInjected = new Set<string>();
     const buildPromoSplitRegex = (afterText: string): RegExp => {
       const escaped = afterText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       return new RegExp(`(${escaped}[\\s\\S]*?<\\/(?:p|blockquote|li|div|h[1-6])>)`, "i");
@@ -361,6 +367,7 @@ export default function PostBody({
         const splitRegex = buildPromoSplitRegex(config.afterText);
         const parts = html.split(splitRegex);
         if (parts.length > 1) {
+          promoIdInjected.add(config.promoId);
           const beforeAndBlock = injectTooltipSpans(parts[0] + (parts[1] || ""));
           const after = parts.slice(2).join("");
           return (
@@ -384,6 +391,21 @@ export default function PostBody({
           suppressHydrationWarning
         />
       );
+    };
+    // If a configured promo's anchor never matched anywhere in the post, render it once
+    // at the end instead of dropping it silently — a missing/changed anchor sentence
+    // should degrade to "shows at the bottom", not "never shows at all".
+    const appendMissedPromos = (parts: ParsedPart[]): ParsedPart[] => {
+      const uniquePromoIds = Array.from(new Set(inlinePromoConfigs.map((c) => c.promoId)));
+      const missed = uniquePromoIds.filter((id) => !promoIdInjected.has(id));
+      if (!missed.length) return parts;
+      return [
+        ...parts,
+        ...missed.map((promoId, i) => ({
+          type: "text" as const,
+          node: <InlinePromoCard key={`promo-fallback-${i}`} promoId={promoId} />,
+        })),
+      ];
     };
 
     const gatedConfig = blogSlug ? getGatedReportConfig(blogSlug) : null;
@@ -423,7 +445,7 @@ export default function PostBody({
     const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
     if (!codeBlocks) {
-      return [{ type: "text", node: processHtmlPart(safeContent, 0, 0) }];
+      return appendMissedPromos([{ type: "text", node: processHtmlPart(safeContent, 0, 0) }]);
     }
 
     const decodeHtmlEntities = (str: string): string => {
@@ -450,7 +472,7 @@ export default function PostBody({
 
     let nextIsContinuation = false;
 
-    return safeContent
+    const mappedParts = safeContent
       .split(/(<pre[\s\S]*?<\/pre>)/gm)
       .map((part, index): ParsedPart => {
         if (/<pre[\s\S]*?<\/pre>/.test(part)) {
@@ -487,6 +509,8 @@ export default function PostBody({
         });
         return { type: "text", node: processHtmlPart(part, index, 0, isContinuation) };
       });
+
+    return appendMissedPromos(mappedParts);
   }, [replacedContent, blogSlug, tooltipConfigs]);
 
   // Cheap: renders code blocks with current copy state \u2014 no HTML parsing
