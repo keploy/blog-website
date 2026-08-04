@@ -1,6 +1,3 @@
-export const maxDuration = 300; // This can run Vercel Functions for a maximum of 300 seconds
-export const dynamic = 'force-dynamic';
-
 const API_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL
 
 /**
@@ -262,6 +259,139 @@ export async function getReviewAuthorDetails(authorName) {
   return data?.users;
 }
 
+/**
+ * Process-local memo with a short TTL.
+ *
+ * Post renders repeat several byte-for-byte identical WordPress queries, and a
+ * single build shares one process across hundreds of pages — so memoizing
+ * removes almost all of that duplicate work.
+ *
+ * The TTL is the important part. A warm Vercel lambda is reused across many
+ * on-demand regenerations, so a memo with no expiry would serve every
+ * webhook-triggered rebuild whatever that lambda happened to cache when it
+ * first warmed — meaning a freshly published post could be missing from the
+ * "More Stories" rail on newly regenerated pages. Five minutes keeps the
+ * dedupe benefit (a build finishes well inside it) while bounding staleness.
+ */
+const MEMO_TTL_MS = 5 * 60 * 1000;
+
+/** Above this many live keys the memo resets rather than growing unbounded. */
+const MEMO_MAX_ENTRIES = 500;
+
+function createMemo<T>(ttlMs: number = MEMO_TTL_MS) {
+  type Entry = { value: Promise<T>; expiresAt: number };
+  const entries = new Map<string, Entry>();
+
+  return function memo(key: string, produce: () => Promise<T>): Promise<T> {
+    const now = Date.now();
+    const hit = entries.get(key);
+    if (hit && hit.expiresAt > now) return hit.value;
+
+    if (entries.size >= MEMO_MAX_ENTRIES) {
+      // forEach rather than for..of: this tsconfig targets below es2015, where
+      // iterating a Map needs --downlevelIteration. Deleting during forEach is
+      // well-defined for Map.
+      entries.forEach((entry, entryKey) => {
+        if (entry.expiresAt <= now) entries.delete(entryKey);
+      });
+      if (entries.size >= MEMO_MAX_ENTRIES) entries.clear();
+    }
+
+    // Cache the promise, not the result, so concurrent callers share one
+    // request. On failure evict, so the next caller retries instead of pinning
+    // a rejection for the whole TTL — but only if we're still the current
+    // entry, so a later attempt is never clobbered by an earlier failure.
+    const entry = { expiresAt: now + ttlMs } as Entry;
+    entry.value = produce().catch((error) => {
+      if (entries.get(key) === entry) entries.delete(key);
+      throw error;
+    });
+
+    entries.set(key, entry);
+    return entry.value;
+  };
+}
+
+/**
+ * The two reviewing authors are the same for every single post, but
+ * `getReviewAuthorDetails` was being called twice inside every post's
+ * getStaticProps — 1.27s of the ~3.5s render budget spent re-fetching two
+ * identical, never-changing records.
+ */
+const reviewAuthorMemo = createMemo<any>();
+
+export function getReviewAuthorDetailsCached(authorName: string) {
+  return reviewAuthorMemo(authorName, () => getReviewAuthorDetails(authorName));
+}
+
+/** Reviewing authors shown on every post page. */
+export const REVIEW_AUTHORS = ["neha", "Jain"];
+
+/** Fetch both reviewing authors, deduped and in parallel. */
+export function getReviewAuthors() {
+  return Promise.all(REVIEW_AUTHORS.map(getReviewAuthorDetailsCached));
+}
+
+/**
+ * Every slug in a category, paginating until WordPress runs out.
+ *
+ * `getAllPostsForTechnology`/`getAllPostsForCommunity` are capped at `first: 22`
+ * and were feeding getStaticPaths directly, so only 44 of ~520 posts were ever
+ * pre-rendered. The rest fell through to on-demand rendering. This query asks
+ * for slugs only, so pages are cheap and 100-at-a-time is safe.
+ */
+export async function getAllSlugsForCategory(categoryName: string): Promise<string[]> {
+  const slugs: string[] = [];
+  let after: string | null = null;
+  const wanted = categoryName.toLowerCase();
+
+  // Hard page ceiling so a malformed cursor can never spin forever.
+  for (let page = 0; page < 100; page++) {
+    const data = await fetchAPI(
+      `
+      query AllSlugsForCategory($after: String, $categoryName: String!) {
+        posts(
+          first: 100
+          after: $after
+          where: { orderby: { field: DATE, order: DESC }, categoryName: $categoryName }
+        ) {
+          edges { node { slug categories { edges { node { name } } } } }
+          pageInfo { hasNextPage endCursor }
+        }
+      }
+      `,
+      { variables: { after, categoryName } }
+    );
+
+    for (const edge of data?.posts?.edges || []) {
+      if (!edge?.node?.slug) continue;
+
+      // WPGraphQL's `categoryName` filter matches on the category SLUG, but the
+      // page's own guard in getStaticProps compares category NAMES. When those
+      // disagree for a post, getStaticProps returns a `redirect` — and Next.js
+      // throws "`redirect` can not be returned from getStaticProps during
+      // prerendering", failing the whole build.
+      //
+      // Filtering here on the *same* criterion the page uses makes that
+      // unreachable for pre-rendered paths by construction, instead of relying
+      // on the old accident that getStaticPaths only ever returned 22 slugs.
+      // Genuinely cross-filed posts fall through to fallback: "blocking" and
+      // get their 301 at runtime, where returning a redirect is legal.
+      const names = (edge.node.categories?.edges || []).map(
+        (c: any) => c?.node?.name?.toLowerCase()
+      );
+      if (!names.includes(wanted)) continue;
+
+      slugs.push(edge.node.slug);
+    }
+
+    const pageInfo = data?.posts?.pageInfo;
+    if (!pageInfo?.hasNextPage || !pageInfo?.endCursor) break;
+    after = pageInfo.endCursor;
+  }
+
+  return slugs;
+}
 
 
 // Function for fetching post with technology category
@@ -501,11 +631,13 @@ export async function getPostsByAuthor() {
   return { edges: allPosts };
 }
 
+/** Shared "more stories" results, keyed by tag set. See fetchNodes below. */
+const moreStoriesMemo = createMemo<any[]>();
+
 export async function getMoreStoriesForSlugs(tags, slug) {
   const tagFilter = tags?.edges?.length > 0;
   const variables = tagFilter ? { tags: tags.edges.map((edge) => edge.node.name) } : undefined;
   let stories = [];
-  let data;
 
   const queryWithTags = `
     query Posts($tags: [String!]) {
@@ -548,19 +680,31 @@ export async function getMoreStoriesForSlugs(tags, slug) {
     }
   `;
 
+  // Both queries depend only on the tag list — the current post is filtered out
+  // afterwards, in JS. So the network result is shareable across every post with
+  // the same tags, and the untagged fallback is shared by all posts outright.
+  // Memoizing collapses ~1000 queries per build into a handful. Callers only
+  // ever .filter()/.map() the result, so the cached arrays are never mutated.
+  const fetchNodes = (cacheKey: string, query: string, vars?: any) =>
+    moreStoriesMemo(cacheKey, () =>
+      fetchAPI(query, { variables: vars }).then(
+        (result) => result?.posts?.edges.map(({ node }) => node) || []
+      )
+    );
+
   // Fetch posts with tags if applicable
   if (tagFilter) {
-    data = await fetchAPI(queryWithTags, { variables });
-    stories = data?.posts?.edges.map(({ node }) => node) || [];
-    stories = stories.filter((story) => story.slug !== slug);
+    const tagKey = `tags:${[...variables.tags].sort().join("|")}`;
+    stories = (await fetchNodes(tagKey, queryWithTags, variables)).filter(
+      (story) => story.slug !== slug
+    );
   }
 
   // If no posts are found, fetch without tag filter
   if (!stories.length) {
-    data = await fetchAPI(fallbackQuery);
-    stories = data?.posts?.edges.map(({ node }) => node) || [];
-    stories = stories.filter((story) => story.slug !== slug);
-
+    stories = (await fetchNodes("recent", fallbackQuery)).filter(
+      (story) => story.slug !== slug
+    );
   }
 
   // Remove posts with the same slug
