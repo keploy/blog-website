@@ -1,189 +1,92 @@
-"use client";
-
 import { useId } from "react";
 import type { InlinePromoId } from "../config/inline-promos";
+import styles from "./InlinePromoCard.module.css";
 
 // ─── Inline banner ─────────────────────────────────────────────────────────────
 
-function Keploy5YearsBanner() {
-  const bannerId = useId();
+function ArrowIcon() {
+  return (
+    <svg
+      className={styles["k5y-cta-icon"]}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M7 17L17 7M17 7H8M17 7V16"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
+function Keploy5YearsBanner() {
+  const descId = useId();
   return (
     <div className="my-8" style={{ width: "100%" }}>
-      <style>{`
-        @keyframes k5y-border {
-          0%   { background-position: 0% 50%; }
-          50%  { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        @keyframes k5y-glow {
-          0%, 100% { box-shadow: 0 2px 16px rgba(0,0,0,0.06), 0 0 0 0 rgba(251,176,45,0); }
-          50%       { box-shadow: 0 2px 20px rgba(0,0,0,0.07), 0 0 20px 4px rgba(251,176,45,0.16); }
-        }
-        @keyframes k5y-sweep {
-          0%        { transform: translateX(-120%) skewX(-12deg); }
-          65%, 100% { transform: translateX(600%) skewX(-12deg); }
-        }
-        @keyframes k5y-sparkle {
-          0%, 100% { opacity: 0.55; transform: scale(1) rotate(0deg); }
-          50%       { opacity: 1;    transform: scale(1.25) rotate(18deg); }
-        }
-        .k5y-body { display: flex; align-items: center; gap: 24px; }
-        .k5y-badge { display: flex; flex-direction: column; align-items: center; gap: 7px; }
-        .k5y-divider { display: block; }
-        .k5y-cta-btn {
-          flex-shrink: 0;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          padding: 10px 20px;
-          background: linear-gradient(90deg, #f59e0b, #f97316);
-          color: white;
-          border: none;
-          border-radius: 10px;
-          font-size: 13px;
-          font-weight: 700;
-          text-decoration: none;
-          box-shadow: 0 3px 14px rgba(249,115,22,0.32);
-          letter-spacing: 0.02em;
-          cursor: pointer;
-          white-space: nowrap;
-          transition: opacity 0.15s ease, transform 0.15s ease;
-          font-family: inherit;
-        }
-        .k5y-cta-btn:hover {
-          opacity: 0.9;
-          transform: translateY(-1px);
-        }
-        .k5y-cta-btn:focus-visible {
-          outline: 3px solid #f59e0b;
-          outline-offset: 2px;
-        }
-        @media (max-width: 600px) {
-          .k5y-body { flex-direction: column; align-items: flex-start; gap: 14px; }
-          .k5y-badge { flex-direction: row; align-items: center; gap: 8px; }
-          .k5y-divider { display: none; }
-          .k5y-cta-btn { width: 100%; text-align: center; white-space: normal; }
-        }
-      `}</style>
+      <div className={styles["k5y-card"]}>
+        {/* Decorative blobs — desktop */}
+        {/* eslint-disable @next/next/no-img-element */}
+        <img className={`${styles["k5y-ellipse"]} ${styles["k5y-ellipse-tr"]}`} src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-top-right.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={42} height={86} />
+        <img className={`${styles["k5y-ellipse"]} ${styles["k5y-ellipse-left"]}`} src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-left-side.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={33} height={123} />
+        <img className={`${styles["k5y-ellipse"]} ${styles["k5y-ellipse-bottom"]}`} src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-bottom.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={286} height={82} />
+        {/* Decorative blobs — mobile */}
+        <img className={`${styles["k5y-ellipse"]} ${styles["k5y-ellipse-tl-m"]}`} src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-top-left-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={54} height={96} />
+        <img className={`${styles["k5y-ellipse"]} ${styles["k5y-ellipse-top-m"]}`} src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-mobile-top.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={61} height={28} />
+        <img className={`${styles["k5y-ellipse"]} ${styles["k5y-ellipse-right-m"]}`} src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-right-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={41} height={166} />
+        <img className={`${styles["k5y-ellipse"]} ${styles["k5y-ellipse-bottom-m"]}`} src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/ellipse-bottom-mobile.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" width={53} height={33} />
 
-      {/* Animated gradient border */}
-      <div
-        style={{
-          background:
-            "linear-gradient(135deg, #fbbf24, #f97316, #f59e0b, #fb923c, #fde68a, #f97316, #fbbf24)",
-          backgroundSize: "400% 400%",
-          animation: "k5y-border 4.5s ease infinite, k5y-glow 3s ease-in-out infinite",
-          padding: "1.5px",
-          borderRadius: 16,
-        }}
-      >
-        {/* Card body */}
-        <div
-          className="k5y-body"
-          style={{
-            background: "#fffcf7",
-            borderRadius: "calc(16px - 1.5px)",
-            padding: "22px 28px",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          {/* Shine sweep */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "25%",
-              height: "100%",
-              background:
-                "linear-gradient(105deg, transparent 30%, rgba(251,191,36,0.06) 50%, transparent 70%)",
-              animation: "k5y-sweep 4.5s ease-in-out infinite",
-              pointerEvents: "none",
-            }}
-          />
+        <img
+          className={styles["k5y-badge-img"]}
+          src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/badge.png"
+          alt="Keploy 5 years anniversary badge"
+          loading="eager"
+          decoding="async"
+          width={337}
+          height={337}
+        />
+        <img
+          className={styles["k5y-badge-img-mobile"]}
+          src="https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/5years/badge-tight.png"
+          alt="Keploy 5 years anniversary badge"
+          loading="eager"
+          decoding="async"
+          width={190}
+          height={180}
+        />
 
-          {/* Left: sparkle + badge */}
-          <div className="k5y-badge" style={{ flexShrink: 0 }}>
-            <span
-              style={{
-                fontSize: 22,
-                color: "#f59e0b",
-                display: "inline-block",
-                animation: "k5y-sparkle 2.5s ease-in-out infinite",
-                lineHeight: 1,
-              }}
-            >
-              ✦
-            </span>
-            <span
-              style={{
-                background: "linear-gradient(90deg, #f59e0b, #f97316)",
-                borderRadius: 20,
-                padding: "3px 10px",
-                fontSize: 10,
-                fontWeight: 700,
-                color: "white",
-                letterSpacing: "0.09em",
-                textTransform: "uppercase" as const,
-                whiteSpace: "nowrap" as const,
-              }}
-            >
-              5 Years ✨
-            </span>
-          </div>
+        <div className={styles["k5y-inner"]}>
+          <p className={`${styles["k5y-heading"]} ${styles["k5y-heading-desktop"]}`}>
+            Celebrate with us
+            <br />
+            Get <span className={styles["k5y-accent-gradient"]}>1 Month of FREE</span>
+            <br />
+            Keploy Credits
+          </p>
+          <p className={`${styles["k5y-heading"]} ${styles["k5y-heading-mobile"]}`}>
+            Celebrate with us
+            <br />
+            Get <span className={styles["k5y-accent-gradient"]}>1 Month of FREE</span> Keploy Credits
+          </p>
+          <p id={descId} className="sr-only">
+            Celebrating 5 years of Keploy - claim one month of free credits.
+          </p>
 
-          {/* Vertical divider */}
-          <div
-            className="k5y-divider"
-            style={{
-              width: 1,
-              alignSelf: "stretch",
-              flexShrink: 0,
-              background:
-                "linear-gradient(to bottom, transparent, #fde68a 30%, #fed7aa 70%, transparent)",
-            }}
-          />
-
-          {/* Text */}
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p
-              style={{
-                color: "#1c0f00",
-                fontSize: 16,
-                fontWeight: 700,
-                margin: "0 0 6px",
-                lineHeight: 1.35,
-              }}
-            >
-              Keploy has completed its 5 years this month!
-            </p>
-            <p
-              id={`${bannerId}-desc`}
-              style={{
-                color: "#92400e",
-                fontSize: 13.5,
-                margin: 0,
-                lineHeight: 1.65,
-              }}
-            >
-              To celebrate our 5 years, we are giving away one month of Keploy credits for free!
-            </p>
-          </div>
-
-          {/* CTA */}
           <a
             href="https://keploy.io/credits-form"
             target="_blank"
             rel="noopener noreferrer"
-            className="k5y-cta-btn"
-            aria-label="Get 1 month of Keploy credits free"
-            aria-describedby={`${bannerId}-desc`}
+            className={styles["k5y-cta-btn"]}
+            aria-describedby={descId}
           >
-            Get 1 Month Free
+            Claim 1 Month of Free Credits
+            <ArrowIcon />
           </a>
         </div>
+        {/* eslint-enable @next/next/no-img-element */}
       </div>
     </div>
   );

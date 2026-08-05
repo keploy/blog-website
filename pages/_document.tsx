@@ -25,6 +25,17 @@ export default function Document() {
           rel="stylesheet"
         />
 
+        {/* Lexend — used by the 5-years-of-Keploy inline promo banner (components/InlinePromoCard.tsx) */}
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;700;800&display=swap"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;700;800&display=swap"
+          rel="stylesheet"
+        />
+
         {/* DM Sans — preloaded globally so individual pages don't re-request */}
         <link
           rel="preload"

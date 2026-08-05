@@ -10,7 +10,7 @@ export const inlinePromos: InlinePromoConfig[] = [
   {
     // https://keploy.io/blog/community/software-testing-basics
     blogSlug: "software-testing-basics",
-    afterText: "Software testing is the process of evaluating a software",
+    afterText: "There is no doubt that having a strong foundation",
     promoId: "keploy-5years",
   },
   {
@@ -22,13 +22,13 @@ export const inlinePromos: InlinePromoConfig[] = [
   {
     // https://keploy.io/blog/community/software-testing-strategies
     blogSlug: "software-testing-strategies",
-    afterText: "Automation is typically used for repetitive tasks such as regression testing and CI/CD validation.",
+    afterText: "An automation strategy defines which test cases should be automated and how automation fits into the development pipeline.",
     promoId: "keploy-5years",
   },
   {
     // https://keploy.io/blog/community/software-testing-strategies
     blogSlug: "software-testing-strategies",
-    afterText: "I usually run these at defined milestones using tools like JMeter or k6 instead of on every build.",
+    afterText: "I usually run these at defined milestones using tools like JMeter or k6 instead of on every build, since they are expensive to execute and their results only change when architecture or traffic patterns change.",
     promoId: "keploy-5years",
   },
 ];
