@@ -101,7 +101,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
               color: roleColor,
               border: `1.5px solid ${roleColor}`,
               background: roleBg,
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: 'var(--font-dm-sans), sans-serif',
             }}
           >
             {role}
@@ -110,7 +110,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
           {/* Name */}
           <h3
             className="text-lg font-bold text-gray-900 mb-1"
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
+            style={{ fontFamily: 'var(--font-dm-sans), sans-serif' }}
           >
             {name}
           </h3>
@@ -118,7 +118,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
           {/* Description */}
           <p
             className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-3"
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
+            style={{ fontFamily: 'var(--font-dm-sans), sans-serif' }}
           >
             {descriptionText}
           </p>
@@ -130,7 +130,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
               href={profileHref}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold transition-colors duration-150"
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: 'var(--font-dm-sans), sans-serif',
                 color: roleColor,
                 border: `1.5px solid ${roleColor}`,
                 background: "transparent",
@@ -152,7 +152,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#0A66C2] transition-colors duration-150"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
+                style={{ fontFamily: 'var(--font-dm-sans), sans-serif' }}
               >
                 <LinkedInIcon /> LinkedIn
               </Link>

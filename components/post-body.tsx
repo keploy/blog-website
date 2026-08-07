@@ -175,6 +175,62 @@ export default function PostBody({
       }
     );
 
+    // Optimize WP body images: route through next/image + lazy/async decode.
+    // Cover image (above-fold LCP) is handled separately in cover-image.tsx.
+    const OPTIMIZABLE_IMG_HOSTS = new Set([
+      "wp.keploy.io",
+      "keploy.io",
+      "www.keploy.io",
+      "secure.gravatar.com",
+      "pbs.twimg.com",
+    ]);
+    initialReplacedContent = initialReplacedContent.replace(
+      /<img\b([^>]*)>/gi,
+      (match, attrs: string) => {
+        const srcMatch = attrs.match(/(^|\s)src\s*=\s*(["'])([^"']*)\2/i);
+        if (!srcMatch) return match;
+        const src = srcMatch[3];
+        if (
+          !src ||
+          src.startsWith("data:") ||
+          src.includes("/_next/image")
+        ) {
+          return match;
+        }
+
+        let nextAttrs = attrs;
+        try {
+          const absolute =
+            src.startsWith("//")
+              ? `https:${src}`
+              : src.startsWith("http://") || src.startsWith("https://")
+                ? src
+                : null;
+          if (absolute) {
+            const { hostname } = new URL(absolute);
+            if (OPTIMIZABLE_IMG_HOSTS.has(hostname)) {
+              const optimized = `/blog/_next/image?url=${encodeURIComponent(absolute)}&w=1200&q=75`;
+              nextAttrs = nextAttrs.replace(
+                /(^|\s)src\s*=\s*(["'])([^"']*)\2/i,
+                `$1src=$2${optimized}$2`
+              );
+            }
+          }
+        } catch {
+          // leave src unchanged on parse failure
+        }
+
+        if (!/(^|\s)loading\s*=/i.test(nextAttrs)) {
+          nextAttrs += ' loading="lazy"';
+        }
+        if (!/(^|\s)decoding\s*=/i.test(nextAttrs)) {
+          nextAttrs += ' decoding="async"';
+        }
+
+        return `<img${nextAttrs}>`;
+      }
+    );
+
     setReplacedContent(initialReplacedContent);
 
     return () => {

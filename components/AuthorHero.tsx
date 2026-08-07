@@ -67,7 +67,7 @@ const AuthorHero: React.FC<AuthorHeroProps> = ({
           <h1
             className="mb-5"
             style={{
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: 'var(--font-dm-sans), sans-serif',
               fontSize: "40px",
               lineHeight: "48px",
               fontWeight: 700,
@@ -81,7 +81,7 @@ const AuthorHero: React.FC<AuthorHeroProps> = ({
             <div
               className="max-w-2xl"
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: 'var(--font-dm-sans), sans-serif',
                 fontSize: "20px",
                 lineHeight: "32px",
                 fontWeight: 400,

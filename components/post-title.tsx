@@ -8,7 +8,7 @@ export default function PostTitle({ children }: { children: string }) {
   return (
     <h1
       style={{
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: 'var(--font-dm-sans), sans-serif',
         fontWeight: 800,
         fontSize: "clamp(1.375rem, 5vw, 2.625rem)",   /* 22px → 42px, smooth across all screens */
         lineHeight: "1.25",

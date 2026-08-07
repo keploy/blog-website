@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
 const firstRow = Tweets.slice(0, Tweets.length / 2);
@@ -17,23 +19,31 @@ const ReviewCard = ({
   id: string;
   content: string;
 }) => {
-  const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=64`;
+  const { basePath } = useRouter();
   const localPlaceholder = "/blog/avatars/avatar-placeholder.svg";
+  const isExternal = typeof avatar === "string" && /^https?:\/\//i.test(avatar);
+  const proxiedAvatar = isExternal
+    ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
+    : avatar;
+
+  const [src, setSrc] = useState(proxiedAvatar);
+  const [unoptimized, setUnoptimized] = useState(false);
+
   return (
-    <a href={post} target="_blank" rel="noopener noreferrer" className="lg:mx-2">
+    <a href={post} target="_blank" rel="noopener noreferrer" className="lg:mx-2" aria-label={`View tweet by ${name}`}>
       <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
         <div className="flex flex-row items-center gap-2">
-          <img
+          <Image
             className="rounded-full"
-            width="32"
-            height="32"
+            width={32}
+            height={32}
             alt={`${name}'s avatar`}
-            src={avatar}
-            onError={(e) => {
-              const img = e.target as HTMLImageElement;
-              if (img.src !== localPlaceholder) {
-                img.onerror = () => { img.src = localPlaceholder; };
-                img.src = fallbackAvatar;
+            src={src}
+            unoptimized={unoptimized}
+            onError={() => {
+              if (src !== localPlaceholder) {
+                setUnoptimized(true);
+                setSrc(localPlaceholder);
               }
             }}
           />
@@ -52,9 +62,9 @@ const ReviewCard = ({
 const TwitterTestimonials = () => {
   return (
     <div className="">
-      <h3 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
+      <h2 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
         What our community thinks
-      </h3>
+      </h2>
       <div className="relative flex mb-8 h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent marquee-mask">
 
         <Marquee pauseOnHover repeat={2} className="[--duration:17s]">

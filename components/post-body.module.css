@@ -1,7 +1,7 @@
 
 /* ── Base body text ── */
 .content {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: clamp(0.9375rem, 2vw, 1.25rem);
   /* 15px mobile → 20px desktop */
   line-height: 1.6;
@@ -34,7 +34,7 @@
 
 /* ── Headings ── */
 .content h1 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 2.25rem;
   font-weight: 700 !important;
   line-height: 1.35;
@@ -45,7 +45,7 @@
 }
 
 .content h2 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 1.875rem;
   font-weight: 700 !important;
   line-height: 1.4;    
@@ -70,7 +70,7 @@
 }
 
 .content h3 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 1.5rem;
   font-weight: 700 !important;
   line-height: 1.45;
@@ -81,7 +81,7 @@
 }
 
 .content h4 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 1.25rem;
   font-weight: 700 !important;
   line-height: 1.5;
@@ -91,7 +91,7 @@
 }
 
 .content h5 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 1.125rem;
   font-weight: 700 !important;
   line-height: 1.5;
@@ -101,7 +101,7 @@
 }
 
 .content h6 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 1rem;
   font-weight: 700 !important;
   font-style: italic;

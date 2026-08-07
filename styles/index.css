@@ -1,5 +1,4 @@
-/* Baloo 2 font is now loaded via <link rel="preload"> in _document.tsx
-   to avoid render-blocking @import. */
+/* Fonts (Baloo 2, DM Sans, Lexend) are self-hosted via next/font in _app.tsx. */
 
 @tailwind base;
 
@@ -61,6 +60,8 @@
 
 .wp-block-image img {
   @apply max-w-full mt-2;
+  height: auto;
+  max-width: 100%;
 }
 
 .wp-block-image.aligncenter {
@@ -139,18 +140,18 @@
 /* Custom CSS */
 
 .baloo-2-600 {
-  font-family: "Baloo 2", sans-serif;
+  font-family: var(--font-baloo), sans-serif;
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
 }
 
 .heading1 {
-  font-family: "Baloo 2", "bold", sans-serif;
+  font-family: var(--font-baloo), sans-serif;
 }
 
 .body {
-  font-family: "Baloo 2", sans-serif;
+  font-family: var(--font-baloo), sans-serif;
 }
 
 .marquee-mask {

@@ -6,47 +6,6 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Preconnect to Google Fonts for faster font loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-
-        {/* Baloo 2 — preloaded then loaded as stylesheet (font-display:swap in the CSS handles FOUT) */}
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap"
-          rel="stylesheet"
-        />
-
-        {/* Lexend — used by the 5-years-of-Keploy inline promo banner (components/InlinePromoCard.tsx) */}
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;700;800&display=swap"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;700;800&display=swap"
-          rel="stylesheet"
-        />
-
-        {/* DM Sans — preloaded globally so individual pages don't re-request */}
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap"
-          rel="stylesheet"
-        />
-
         {/* Organization Schema — single source from lib/structured-data */}
         <script
           type="application/ld+json"

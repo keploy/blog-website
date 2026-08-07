@@ -198,7 +198,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
             <article>
               <Head>
                 <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
-                {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
+                {/* Fonts self-hosted via next/font in _app.tsx */}
               </Head>
               <PostHeader
                 title={post?.title || "Loading..."}
@@ -217,7 +217,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         </div>
       </Container>
       {/* DM Sans wrapper — scoped to blog article content only */}
-      <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div style={{ fontFamily: 'var(--font-dm-sans), sans-serif' }}>
         <ContainerSlug>
           <div ref={postBodyRef}>
             <PostBody

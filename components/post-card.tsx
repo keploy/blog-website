@@ -66,7 +66,7 @@ export default function PostCard({
         <h3
           className="mb-3 leading-tight"
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: 'var(--font-dm-sans), sans-serif',
             fontSize: "20px",
             fontWeight: 700,
             color: "rgb(29, 32, 34)",
@@ -79,16 +79,16 @@ export default function PostCard({
           />
         </h3>
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-sm" style={{ fontFamily: "'DM Sans', sans-serif", color: "rgb(99, 114, 119)" }}>{author ? author : "Anonymous"}</span>
+          <span className="text-sm" style={{ fontFamily: 'var(--font-dm-sans), sans-serif', color: "rgb(99, 114, 119)" }}>{author ? author : "Anonymous"}</span>
           <span className="text-gray-300">•</span>
-          <span className="text-sm" style={{ fontFamily: "'DM Sans', sans-serif", color: "rgb(99, 114, 119)" }}>
+          <span className="text-sm" style={{ fontFamily: 'var(--font-dm-sans), sans-serif', color: "rgb(99, 114, 119)" }}>
             <Date dateString={date} />
           </span>
         </div>
         <div
           className="line-clamp-3"
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: 'var(--font-dm-sans), sans-serif',
             fontSize: "15px",
             lineHeight: "24px",
             color: "rgb(99, 114, 119)",

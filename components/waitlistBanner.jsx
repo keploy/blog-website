@@ -12,7 +12,7 @@ const waitlistBanner = () => {
           {" "}
           <Image
           className="rounded-tl-xl w-full !h-[350px]"
-          alt="Description of Image"
+          alt="Schedule a Keploy demo call"
           src={waitlistBannerImage}
         />
         </Link>

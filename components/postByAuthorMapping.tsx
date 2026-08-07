@@ -38,7 +38,7 @@ const PostByAuthorMapping = ({
         <h2
           className="mb-10 tracking-tight leading-tight"
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: 'var(--font-dm-sans), sans-serif',
             fontSize: "36px",
             fontWeight: 700,
             color: "rgb(29, 32, 34)",
