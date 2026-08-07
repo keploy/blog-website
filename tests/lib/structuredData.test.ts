@@ -16,7 +16,13 @@ import assert from "node:assert/strict";
 import {
   getBlogPostingSchema,
   getOrganizationSchema,
+  getBlogSchema,
+  getWebSiteSchema,
+  getCollectionPageSchema,
+  getSearchResultsPageSchema,
   ORG_ID,
+  BLOG_ID,
+  WEBSITE_ID,
   DEFAULT_ARTICLE_IMAGE_URL,
   AUTHOR_FALLBACK_NAME,
 } from "../../lib/structured-data";
@@ -96,6 +102,27 @@ test("publisher and the Organization node share one stable @id", () => {
   assert.equal(org["@id"], ORG_ID);
   const publisher = nullPost.publisher as Record<string, unknown>;
   assert.equal(publisher["@id"], ORG_ID);
+});
+
+test("the Blog node and every isPartOf reference share one stable @id", () => {
+  const blog = getBlogSchema();
+  assert.equal(blog["@id"], BLOG_ID);
+  const isPartOf = nullPost.isPartOf as Record<string, unknown>;
+  assert.equal(isPartOf["@id"], BLOG_ID, "a post's isPartOf must reference the Blog entity");
+  const collection = getCollectionPageSchema({
+    name: "Technology",
+    url: "https://keploy.io/blog/technology",
+    items: [],
+  });
+  const collectionIsPartOf = collection.isPartOf as Record<string, unknown>;
+  assert.equal(collectionIsPartOf["@id"], BLOG_ID, "a listing's isPartOf must reference it too");
+});
+
+test("the WebSite node and the search page's isPartOf share one stable @id", () => {
+  assert.equal(getWebSiteSchema()["@id"], WEBSITE_ID);
+  const search = getSearchResultsPageSchema({ url: "https://keploy.io/blog/search" });
+  const searchIsPartOf = search.isPartOf as Record<string, unknown>;
+  assert.equal(searchIsPartOf["@id"], WEBSITE_ID);
 });
 
 test("the author Person links to the same Organization @id via worksFor", () => {

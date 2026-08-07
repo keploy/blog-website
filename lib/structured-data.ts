@@ -11,6 +11,13 @@ export const ORG_LOGO_URL = `${SITE_URL}/favicon/android-chrome-512x512.png`;
 // at this same @id so AI/search engines resolve ONE Keploy entity instead of
 // treating each inline copy as a separate organization (entity fragmentation).
 export const ORG_ID = `${MAIN_SITE_URL}/#organization`;
+// Same reasoning as ORG_ID, for the two other site-level entities. Both are
+// emitted repeatedly — Blog as the global node plus every post's and listing's
+// `isPartOf`, WebSite as the home node plus every search page's `isPartOf` —
+// so without a shared @id a crawler sees one anonymous copy per page instead
+// of one blog and one site.
+export const BLOG_ID = `${SITE_URL}/#blog`;
+export const WEBSITE_ID = `${SITE_URL}/#website`;
 // Default article image when a post's WordPress featuredImage is null (common on
 // older/migrated posts). Mirrors HOME_OG_IMAGE_URL in lib/constants.ts so the
 // schema image matches the og:image the page actually renders.
@@ -137,6 +144,7 @@ export const getOrganizationSchema = () => ({
 export const getWebSiteSchema = (searchTarget = `${SITE_URL}/search?q={search_term_string}`) => ({
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": WEBSITE_ID,
   name: BLOG_NAME,
   url: SITE_URL,
   potentialAction: {
@@ -240,6 +248,7 @@ export const getCollectionPageSchema = ({
   ...(description ? { description } : {}),
   isPartOf: {
     "@type": "Blog",
+    "@id": BLOG_ID,
     name: BLOG_NAME,
     url: SITE_URL,
   },
@@ -332,6 +341,7 @@ export const getBlogPostingSchema = ({
     },
     isPartOf: {
       "@type": "Blog",
+      "@id": BLOG_ID,
       name: BLOG_NAME,
       url: SITE_URL,
     },
@@ -490,6 +500,7 @@ export const getSearchResultsPageSchema = ({
   name: query ? `Search results for "${query}"` : "Search the Keploy blog",
   isPartOf: {
     "@type": "WebSite",
+    "@id": WEBSITE_ID,
     name: BLOG_NAME,
     url: SITE_URL,
   },
@@ -498,6 +509,7 @@ export const getSearchResultsPageSchema = ({
 export const getBlogSchema = () => ({
   "@context": "https://schema.org",
   "@type": "Blog",
+  "@id": BLOG_ID,
   name: BLOG_NAME,
   url: SITE_URL,
   description:
