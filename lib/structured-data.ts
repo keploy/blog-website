@@ -150,6 +150,15 @@ export const getBreadcrumbListSchema = (items: BreadcrumbItem[]) => ({
   })),
 });
 
+// Coerce a possibly-null/malformed WordPress date into a valid ISO 8601 string,
+// or null if unparseable. Stops empty / "Invalid Date" values from reaching the
+// schema, which is a structured-data validation error.
+const toISODate = (value?: string): string | null => {
+  if (!value) return null;
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? null : d.toISOString();
+};
+
 export const getBlogPostingSchema = ({
   title,
   url,
@@ -188,6 +197,12 @@ export const getBlogPostingSchema = ({
     authorNode.image = authorImage;
   }
 
+  // Never emit an empty/invalid datePublished. Prefer the post's own date,
+  // then its modified date, and only as a last resort the current build time.
+  const resolvedPublished =
+    toISODate(datePublished) || toISODate(dateModified) || new Date().toISOString();
+  const resolvedModified = toISODate(dateModified) || resolvedPublished;
+
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": schemaType,
@@ -196,8 +211,8 @@ export const getBlogPostingSchema = ({
       "@type": "WebPage",
       "@id": url,
     },
-    datePublished,
-    dateModified: dateModified || datePublished,
+    datePublished: resolvedPublished,
+    dateModified: resolvedModified,
     author: authorNode,
     publisher: {
       "@type": "Organization",
