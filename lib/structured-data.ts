@@ -144,6 +144,29 @@ export const getWebSiteSchema = (searchTarget = `${SITE_URL}/search?q={search_te
   },
 });
 
+/**
+ * Reusable ImageObject node. Google/AI engines prefer a typed ImageObject over
+ * a bare URL string (it can carry caption + dimensions), and it's the shape the
+ * Article `image` field and listing/cover images should share.
+ */
+export const getImageObjectSchema = ({
+  url,
+  caption,
+  width,
+  height,
+}: {
+  url: string;
+  caption?: string;
+  width?: number;
+  height?: number;
+}) => ({
+  "@type": "ImageObject",
+  url,
+  ...(caption ? { caption } : {}),
+  ...(typeof width === "number" ? { width } : {}),
+  ...(typeof height === "number" ? { height } : {}),
+});
+
 export const getBreadcrumbListSchema = (items: BreadcrumbItem[]) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -277,11 +300,10 @@ export const getBlogPostingSchema = ({
   // image" validation error — WordPress returns a null featuredImage on many
   // older/migrated posts. Fall back to the site's default OG cover, and emit a
   // typed ImageObject (not a bare URL) so rich results can use its caption.
-  schema.image = {
-    "@type": "ImageObject",
+  schema.image = getImageObjectSchema({
     url: imageUrl || DEFAULT_ARTICLE_IMAGE_URL,
-    ...(title ? { caption: title } : {}),
-  };
+    caption: title,
+  });
 
   // TechArticle-specific fields — only emit when set AND when we're
   // actually rendering a TechArticle.
