@@ -10,6 +10,11 @@ export const ORG_LOGO_URL = `${SITE_URL}/favicon/android-chrome-512x512.png`;
 // at this same @id so AI/search engines resolve ONE Keploy entity instead of
 // treating each inline copy as a separate organization (entity fragmentation).
 export const ORG_ID = `${MAIN_SITE_URL}/#organization`;
+// Default article image when a post's WordPress featuredImage is null (common on
+// older/migrated posts). Mirrors HOME_OG_IMAGE_URL in lib/constants.ts so the
+// schema image matches the og:image the page actually renders.
+export const DEFAULT_ARTICLE_IMAGE_URL =
+  "https://wp.keploy.io/wp-content/uploads/2023/11/thumbnil-.png";
 export const SOCIAL_LINKS = [
   "https://twitter.com/Keployio",
   "https://www.linkedin.com/company/keploy/",
@@ -243,9 +248,15 @@ export const getBlogPostingSchema = ({
     schema.description = description;
   }
 
-  if (imageUrl) {
-    schema.image = [imageUrl];
-  }
+  // Always emit an image so the Article schema never trips the "missing field
+  // image" validation error — WordPress returns a null featuredImage on many
+  // older/migrated posts. Fall back to the site's default OG cover, and emit a
+  // typed ImageObject (not a bare URL) so rich results can use its caption.
+  schema.image = {
+    "@type": "ImageObject",
+    url: imageUrl || DEFAULT_ARTICLE_IMAGE_URL,
+    ...(title ? { caption: title } : {}),
+  };
 
   // TechArticle-specific fields — only emit when set AND when we're
   // actually rendering a TechArticle.
