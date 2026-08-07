@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import { FaSearch } from 'react-icons/fa';
 import { useEffect, useRef } from "react";
 import { getIconComponentForTag } from "../../utils/tagIcons";
-import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../../lib/isr";
  
  export default function Tags({ edgesAllTags, preview }) {
@@ -81,6 +81,17 @@ import { REVALIDATE_CONTENT } from "../../lib/isr";
           { name: "Home", url: SITE_URL },
           { name: "Tags", url: `${SITE_URL}/tag` },
         ]),
+        getCollectionPageSchema({
+          name: "Keploy Blog Tags",
+          url: `${SITE_URL}/tag`,
+          description:
+            "All topic tags on the Keploy blog — API testing, test automation, CI/CD, developer tools, and software quality.",
+          // Cap the directory at 150 entries so the JSON-LD payload stays lean.
+          items: (edgesAllTags || []).slice(0, 150).map(({ name }: { name: string }) => ({
+            url: `${SITE_URL}/tag/${name}`,
+            name,
+          })),
+        }),
       ]}
       canonicalUrl={`${SITE_URL}/tag`}
     >
