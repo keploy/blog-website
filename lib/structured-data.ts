@@ -5,6 +5,11 @@ export const MAIN_SITE_URL = "https://keploy.io";
 export const ORG_NAME = "Keploy";
 export const BLOG_NAME = "Keploy Blog";
 export const ORG_LOGO_URL = `${SITE_URL}/favicon/android-chrome-512x512.png`;
+// Stable @id for the Keploy Organization entity. Every place that emits an
+// Organization node (global node, per-post publisher, author worksFor) points
+// at this same @id so AI/search engines resolve ONE Keploy entity instead of
+// treating each inline copy as a separate organization (entity fragmentation).
+export const ORG_ID = `${MAIN_SITE_URL}/#organization`;
 export const SOCIAL_LINKS = [
   "https://twitter.com/Keployio",
   "https://www.linkedin.com/company/keploy/",
@@ -81,6 +86,7 @@ type BlogPostingInput = {
 export const getOrganizationSchema = () => ({
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": ORG_ID,
   name: ORG_NAME,
   url: MAIN_SITE_URL,
   logo: ORG_LOGO_URL,
@@ -190,6 +196,7 @@ export const getBlogPostingSchema = ({
     author: authorNode,
     publisher: {
       "@type": "Organization",
+      "@id": ORG_ID,
       name: ORG_NAME,
       logo: {
         "@type": "ImageObject",
@@ -263,6 +270,7 @@ export const getBlogSchema = () => ({
     "Technical blog covering AI-powered API test generation, eBPF-based testing, production behavior replay, dependency virtualization, and developer productivity by Keploy.",
   publisher: {
     "@type": "Organization",
+    "@id": ORG_ID,
     name: ORG_NAME,
     url: MAIN_SITE_URL,
     logo: {
