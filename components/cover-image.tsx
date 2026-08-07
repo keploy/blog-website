@@ -22,12 +22,15 @@ export default function CoverImage({
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 780px, 780px",
 }: Props) {
   const basePath = isCommunity ? "/community/" : "/technology/";
+  // Never let the link's accessible name or the image alt end up empty (some
+  // cards render without a title) — an empty aria-label is an anchor-less link.
+  const safeTitle = title || "Keploy blog article";
 
   const image = (
     <Image
       width={2000}
       height={1000}
-      alt={`Cover Image for ${title}`}
+      alt={`Cover Image for ${safeTitle}`}
       src={coverImage?.node.sourceUrl}
       className={`w-full h-auto object-cover${imgClassName ? ` ${imgClassName}` : ""}${slug ? " transition-transform duration-300 hover:scale-[1.01]" : ""}`}
       priority={priority}
@@ -39,7 +42,7 @@ export default function CoverImage({
   return (
     <div className="w-full overflow-hidden">
       {slug ? (
-        <Link href={`${basePath}${slug}`} aria-label={title}>
+        <Link href={`${basePath}${slug}`} aria-label={safeTitle}>
           {image}
         </Link>
       ) : (
