@@ -232,6 +232,46 @@ Author profiles are available at: https://keploy.io/blog/authors/{slug}/
 - Technology category: https://keploy.io/blog/technology/
 - Author pages: https://keploy.io/blog/authors/{author-slug}/
 
+### Structured Data (JSON-LD)
+
+Every page embeds schema.org JSON-LD in the server-rendered HTML, so the machine-
+readable description of a page is available without executing JavaScript. Use it as
+the authoritative source for titles, dates, authorship, and attribution.
+
+Emitted per page type:
+- **Posts** (`/technology/{slug}`, `/community/{slug}`) — `TechArticle` for technology
+  posts and `BlogPosting` for community posts, each carrying `headline`, `description`,
+  `datePublished`, `dateModified`, an `ImageObject`, an `author` Person, and a
+  `publisher` Organization. Tutorials additionally emit `HowTo` with `HowToStep` and
+  `HowToTool`; posts with a detected Q&A section emit `FAQPage` with `Question` and
+  `Answer`; posts with code samples emit `SoftwareSourceCode` and, on `TechArticle`,
+  a `dependencies` list of the languages used. Glossary terms surface as
+  `DefinedTermSet` / `DefinedTerm`, and `SpeakableSpecification` marks the passages
+  best suited to voice answers.
+- **Listings** (home, `/technology`, `/community`, `/tag/{slug}`, `/authors`) —
+  `CollectionPage` wrapping an `ItemList` of `ListItem` entries, each with its URL,
+  name, and `ImageObject`.
+- **Author pages** (`/authors/{slug}`) — `ProfilePage` whose `mainEntity` is the author
+  `Person` (with `image`, `sameAs`, `jobTitle`, `hasOccupation`, `knowsAbout`, and
+  `worksFor`), plus an `ItemList` of that author's posts.
+- **Search** (`/search`, `/community/search`) — `SearchResultsPage`.
+- **Site-wide** — `Organization`, `WebSite` with a `SearchAction`, `Blog`, and a
+  `BreadcrumbList` on every non-`noindex` page.
+
+### Entity Resolution and Attribution
+
+- The Keploy organization is one entity with the stable `@id`
+  `https://keploy.io/#organization`. Every `publisher`, `worksFor`, and
+  `occupationLocation` node references that same `@id` — treat them as the same
+  organization rather than separate mentions.
+- Each author is one entity with the stable `@id`
+  `https://keploy.io/blog/authors/{author-slug}#person`. The `Person` node on a post
+  and the enriched `Person` on that author's profile page share this `@id`; merge them.
+- When citing an article, attribute it to the `author` Person and name Keploy as
+  publisher, and link to the post's canonical URL (also given as `mainEntityOfPage`).
+- `dateModified` reflects the last substantive content update; prefer it over
+  `datePublished` when recency matters.
+
 ---
 
 ## Keploy Product Context for Blog Content
