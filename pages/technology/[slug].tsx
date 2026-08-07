@@ -25,10 +25,15 @@ import { getRedirectSlug, hasRedirect } from "../../config/redirect";
 import {
   getBlogPostingSchema,
   getBreadcrumbListSchema,
+  getFAQPageSchema,
+  getSoftwareSourceCodeSchema,
+  getDefinedTermSetSchema,
   SITE_URL,
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
 import { getHowToSchema } from "../../lib/howToSchema";
+import { detectCodeLanguages, extractFaqs } from "../../utils/contentSchema";
+import { getTooltipsForSlug } from "../../config/keyword-tooltips";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
 
@@ -132,6 +137,9 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
 
   const postUrl = post?.slug ? `${SITE_URL}/technology/${post.slug}` : `${SITE_URL}/technology`;
+  const codeLanguages = detectCodeLanguages(post?.content);
+  const faqs = extractFaqs(post?.content);
+  const tooltipTerms = post?.slug ? getTooltipsForSlug(post.slug) : [];
   const structuredData = [];
   if (post?.slug) {
     structuredData.push(
@@ -156,6 +164,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         // for technical queries.
         categorySlug: "technology",
         proficiencyLevel: "Intermediate",
+        // Populate TechArticle.dependencies from the code languages actually
+        // present in the post (was defined but never set).
+        dependencies: codeLanguages.length ? codeLanguages : undefined,
+        // Let a voice assistant read the post title as the spoken summary.
+        speakableSelectors: ["h1"],
         // LIVE-22: emit reviewedBy Person schema. Skipped by the
         // generator when the reviewer equals the author or when the
         // name falls back to the "Reviewer" placeholder.
@@ -167,6 +180,23 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     const howTo = getHowToSchema(post, postUrl, safeTitle, safeDescription);
     if (howTo) {
       structuredData.push(howTo);
+    }
+    if (faqs.length) {
+      structuredData.push(getFAQPageSchema(faqs));
+    }
+    for (const language of codeLanguages) {
+      structuredData.push(
+        getSoftwareSourceCodeSchema({ language, url: postUrl, name: `${safeTitle} — ${language} example` }),
+      );
+    }
+    if (tooltipTerms.length) {
+      structuredData.push(
+        getDefinedTermSetSchema({
+          name: `${safeTitle} — glossary`,
+          url: postUrl,
+          terms: tooltipTerms.map((t) => ({ term: t.keyword, description: t.heading })),
+        }),
+      );
     }
   } else {
     structuredData.push(
