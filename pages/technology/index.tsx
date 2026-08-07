@@ -36,6 +36,9 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       </Head>
       <Header />
       <Container>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-4 mb-8">
+          Keploy Technology Blog
+        </h1>
         {/* <Intro /> */}
         {heroPost && (
           <HeroPost

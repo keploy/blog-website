@@ -34,6 +34,9 @@ export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp 
       </Head>
       <Header />
       <Container>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-4 mb-8">
+          {tagDisplay} posts
+        </h1>
         <TagsStories posts={posts} />
       </Container>
     </Layout>
