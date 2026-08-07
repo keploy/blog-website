@@ -29,7 +29,7 @@ import {
   getBreadcrumbListSchema,
   SITE_URL,
 } from "../../lib/structured-data";
-import { sanitizeTitle, getSafeDescription } from "../../utils/seo";
+import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
 import { getHowToSchema } from "../../lib/howToSchema";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
@@ -219,7 +219,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           <>
             <article>
               <Head>
-                <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
+                <title>{buildPageTitle(post?.title)}</title>
                 {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
               </Head>
               <PostHeader
