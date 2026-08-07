@@ -17,7 +17,7 @@ const AuthorHero: React.FC<AuthorHeroProps> = ({
   description,
   linkedIn,
 }) => {
-  const resolvedAvatar = !avatarUrl || avatarUrl === "n/a" ? "/blog/images/author.png" : avatarUrl;
+  const resolvedAvatar = !avatarUrl || avatarUrl === "n/a" ? "/blog/images/author.webp" : avatarUrl;
 
   // Only show social links that actually exist
   const socialSlots = [linkedIn].filter(link => link && link !== "n/a");

@@ -66,12 +66,12 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
 
   // Writer avatar — use ppmaAuthorImage directly (SSR). Previously this
   // was extracted from post.content via regex inside a useEffect, which
-  // meant the SSR HTML rendered /blog/images/author.png as a placeholder.
+  // meant the SSR HTML rendered /blog/images/author.webp as a placeholder.
   const ppmaImage =
     typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
       ? post.ppmaAuthorImage
       : "";
-  const writerAvatarUrl = ppmaImage || "/blog/images/author.png";
+  const writerAvatarUrl = ppmaImage || "/blog/images/author.webp";
 
   // Writer description — extract synchronously from post content (no effect).
   const writerDescriptionMatch =
@@ -96,7 +96,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const blogreviewer = [
     {
       name: reviewAuthorName || "Reviewer",
-      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.png",
+      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.webp",
       description: reviewAuthorDescription || "A Reviewer for keploy's blog",
     },
   ];
@@ -225,7 +225,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 post?.content && postBody({ content: post?.content, post })
               }
               authorName={post?.ppmaAuthorName || ""}
-              authorImageUrl={avatarImgSrc || "/blog/images/author.png"}
+              authorImageUrl={avatarImgSrc || "/blog/images/author.webp"}
               authorDescription={blogWriterDescription || "An author for keploy's blog."}
               slug={slug}
               ReviewAuthorDetails={

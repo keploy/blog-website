@@ -76,7 +76,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
 
             <div className="blog-hero-img">
               <Image
-                src="/blog/images/blog-bunny.png"
+                src="/blog/images/blog-bunny.webp"
                 alt="hero image"
                 width={600}
                 height={600}

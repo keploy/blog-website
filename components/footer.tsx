@@ -1,8 +1,8 @@
 import Link from "next/link";
 import sideBySideSvg from "../public/images/sidebyside-transparent.svg";
 import Image from "next/image";
-import CNCF from "../public/images/cncf-landscape.png";
-import GSA from "../public/images/gsa.png";
+import CNCF from "../public/images/cncf-landscape.webp";
+import GSA from "../public/images/gsa.webp";
 
 export default function Footer() {
   const sections = [

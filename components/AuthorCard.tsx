@@ -58,7 +58,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
   /* Resolve avatar src (handle external URLs via proxy) */
   const resolvedSrc =
     !imageUrl || imageUrl === "n/a"
-      ? "/blog/images/author.png"
+      ? "/blog/images/author.webp"
       : /^https?:\/\//i.test(imageUrl) && basePath
         ? `${basePath}/api/proxy-image?url=${encodeURIComponent(imageUrl)}`
         : imageUrl;

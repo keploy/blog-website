@@ -42,7 +42,7 @@ const ReviewingAuthor = ({ name, avatar, description }) => {
           )}
           {avatar === "n/a" && (
             <Image
-              src={"/blog/images/author.png"}
+              src={"/blog/images/author.webp"}
               alt="Author Avatar"
               width={200}
               height={200}

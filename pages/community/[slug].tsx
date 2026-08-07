@@ -81,13 +81,13 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   // PublishPress Multiple Authors plugin. Fall back to a safe placeholder
   // only if that field is genuinely missing. Previously this was extracted
   // from post.content via regex inside a useEffect which meant the SSR
-  // HTML used the /blog/images/author.png placeholder even when the real
+  // HTML used the /blog/images/author.webp placeholder even when the real
   // image was available in the data.
   const ppmaImage =
     typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
       ? post.ppmaAuthorImage
       : "";
-  const writerAvatarUrl = ppmaImage || "/blog/images/author.png";
+  const writerAvatarUrl = ppmaImage || "/blog/images/author.webp";
 
   // Writer description — pulled from the first paragraph with the
   // pp-author-boxes-description class in the post content. Kept here as
@@ -119,7 +119,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       // genuinely have no reviewer data. When the data is present the
       // real name renders server-side and reaches AI crawlers.
       name: reviewAuthorName || "Reviewer",
-      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.png",
+      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.webp",
       description: reviewAuthorDescription || "A Reviewer for keploy's blog",
     },
   ];
@@ -174,7 +174,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         description: safeDescription,
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
-        // LIVE-22: use PublishPress author image, not the /blog/images/author.png
+        // LIVE-22: use PublishPress author image, not the /blog/images/author.webp
         // placeholder. The schema generator also filters the placeholder.
         authorImage: ppmaImage || undefined,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Community",
@@ -249,7 +249,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 post?.ppmaAuthorName,
               )}
               authorName={post?.ppmaAuthorName || ""}
-              authorImageUrl={avatarImgSrc || "/blog/images/author.png"}
+              authorImageUrl={avatarImgSrc || "/blog/images/author.webp"}
               authorDescription={blogWriterDescription || "An author for keploy's blog."}
               ReviewAuthorDetails={
                 reviewAuthorDetails &&

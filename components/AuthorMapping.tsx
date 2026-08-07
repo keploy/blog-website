@@ -77,7 +77,7 @@ export default function AuthorMapping({
                   />
                 ) : (
                   <Image
-                    src={`/blog/images/author.png`}
+                    src={`/blog/images/author.webp`}
                     alt={`${author.ppmaAuthorName}'s Avatar`}
                     className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
                     height={48}

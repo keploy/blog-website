@@ -168,7 +168,7 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
           <div className="flex-1 lg:pl-12">
             <div className="w-full h-80 lg:h-[500px] relative">
               <Image
-                src="/blog/images/error404.png"
+                src="/blog/images/error404.webp"
                 alt="404 Error Illustration"
                 fill
                 className="object-contain"
