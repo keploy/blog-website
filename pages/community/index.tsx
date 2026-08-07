@@ -8,6 +8,11 @@ import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
 import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../../lib/isr";
+import { buildPageTitle } from "../../utils/seo";
+
+// See the note in technology/index.tsx: the <title> was "Keploy Blog" while
+// og:title was the hero post's title.
+const PAGE_TITLE = "Community Stories & API Testing Tutorials";
 
 export default function Community({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;
@@ -47,13 +52,13 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
     <Layout
       preview={preview}
       featuredImage={heroPost?.featuredImage?.node.sourceUrl}
-      Title={heroPost?.title}
+      Title={PAGE_TITLE}
       Description={`Explore the Keploy community blog for developer stories, open-source contributions, API testing tutorials, and hands-on engineering guides.`}
       structuredData={structuredData}
       canonicalUrl={`${SITE_URL}/community`}
     >
       <Head>
-        <title>{`Keploy Blog`}</title>
+        <title>{buildPageTitle(PAGE_TITLE)}</title>
       </Head>
       <Header />
       <Container>

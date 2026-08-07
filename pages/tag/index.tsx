@@ -12,6 +12,10 @@ import { useEffect, useRef } from "react";
 import { getIconComponentForTag } from "../../utils/tagIcons";
 import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../../lib/isr";
+import { buildPageTitle } from "../../utils/seo";
+
+// "Tags" alone is a SEMrush "title too short".
+const PAGE_TITLE = "Browse All Blog Topics & Tags";
  
  export default function Tags({ edgesAllTags, preview }) {
    const [searchTerm, setSearchTerm] = useState("");
@@ -74,7 +78,7 @@ import { REVALIDATE_CONTENT } from "../../lib/isr";
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`Tags`}
+      Title={PAGE_TITLE}
       Description={`Browse all topic tags on the Keploy blog — find articles on API testing, test automation, CI/CD, developer tools, and software quality.`}
       structuredData={[
         getBreadcrumbListSchema([
@@ -96,7 +100,7 @@ import { REVALIDATE_CONTENT } from "../../lib/isr";
       canonicalUrl={`${SITE_URL}/tag`}
     >
       <Head>
-        <title>{`Tags`}</title>
+        <title>{buildPageTitle(PAGE_TITLE)}</title>
       </Head>
       <Header />
       <Container>

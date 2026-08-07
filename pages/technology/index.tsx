@@ -9,6 +9,12 @@ import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
 import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR } from "../../lib/isr";
+import { buildPageTitle } from "../../utils/seo";
+
+// Descriptive page title for this archive. Previously the <title> was the bare
+// string "Keploy" (SEMrush "title too short") while og:title was the hero post's
+// title, so the document title and social metadata described different things.
+const PAGE_TITLE = "Technology Articles & API Testing Guides";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
   const heroPost = edges[0]?.node;
@@ -36,13 +42,13 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
     <Layout
       preview={preview}
       featuredImage={heroPost?.featuredImage?.node.sourceUrl}
-      Title={heroPost?.title}
+      Title={PAGE_TITLE}
       Description={`Read in-depth Keploy technology articles on API testing, test automation, CI/CD pipelines, eBPF-based testing, and modern software quality engineering.`}
       structuredData={structuredData}
       canonicalUrl={`${SITE_URL}/technology`}
     >
       <Head>
-        <title>{`Keploy`}</title>
+        <title>{buildPageTitle(PAGE_TITLE)}</title>
       </Head>
       <Header />
       <Container>

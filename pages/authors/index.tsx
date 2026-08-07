@@ -9,6 +9,14 @@ import { Post } from "../../types/post";
 import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
 import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
 import { REVALIDATE_CONTENT } from "../../lib/isr";
+import Head from "next/head";
+import { buildPageTitle } from "../../utils/seo";
+
+// "Authors Page" is a SEMrush "title too short", and it only ever reached
+// og:title: this route had no <Head><title> at all, and components/meta.tsx
+// does not emit one, so /authors shipped an empty <title> — the same LIVE-11
+// bug already fixed on /authors/{slug}.
+const PAGE_TITLE = "Blog Authors & Contributors";
 
 export default function Authors({
   AllAuthors: { edges },
@@ -25,10 +33,13 @@ export default function Authors({
 
   return (
     <div className="bg-accent-1">
+      <Head>
+        <title>{buildPageTitle(PAGE_TITLE)}</title>
+      </Head>
       <Layout
         preview={preview}
         featuredImage={HOME_OG_IMAGE_URL}
-        Title={`Authors Page`}
+        Title={PAGE_TITLE}
         Description={`Meet the authors behind the Keploy blog — engineers, developers, and QA experts sharing insights on testing, automation, and software quality.`}
         structuredData={[
           getBreadcrumbListSchema([

@@ -9,16 +9,21 @@ import TagsStories from "../../components/TagsStories";
 import { useRouter } from "next/router";
 import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
+import { buildPageTitle } from "../../utils/seo";
 export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp }) {
   const posts = postsByTags?.edges || [];
   const router = useRouter();
   const tagSlug = tagSlugProp || (Array.isArray(router.query.slug) ? router.query.slug[0] : (router.query.slug || ''));
   const tagDisplay = tagSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) || 'All Topics';
+  // "{tag} posts" is a SEMrush "title too short" on the shorter tags (/tag/ai,
+  // /tag/go, /tag/qa ...). buildPageTitle caps the long end, so the only risk
+  // here is being too short.
+  const pageTitle = `${tagDisplay} Articles & Tutorials`;
   return (
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`${tagDisplay} posts`}
+      Title={pageTitle}
       Description={`Browse all Keploy blog posts tagged "${tagDisplay}" — tutorials, guides, and expert insights on ${tagDisplay} for developers and QA engineers.`}
       structuredData={[
         getBreadcrumbListSchema([
@@ -44,7 +49,7 @@ export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp 
       canonicalUrl={tagSlug ? `${SITE_URL}/tag/${tagSlug}` : `${SITE_URL}/tag`}
     >
       <Head>
-        <title>{`${tagDisplay} posts`}</title>
+        <title>{buildPageTitle(pageTitle)}</title>
       </Head>
       <Header />
       <Container>
