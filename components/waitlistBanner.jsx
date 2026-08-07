@@ -1,5 +1,5 @@
 import Image from "next/image";
-import waitlistBannerImage from "../public/images/waitlistedBanner-1.png";
+import waitlistBannerImage from "../public/images/waitlistedBanner-1.webp";
 import Link from "next/link";
 const waitlistBanner = () => {
   return (
