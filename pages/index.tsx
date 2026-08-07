@@ -12,7 +12,7 @@ import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import {
   getWebSiteSchema,
-  getItemListSchema,
+  getCollectionPageSchema,
   SITE_URL,
 } from "../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../lib/isr";
@@ -21,11 +21,15 @@ import { REVALIDATE_CONTENT } from "../lib/isr";
 // document title and social metadata can't drift apart.
 const BLOG_TITLE =
   "Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives";
+// Shared by Layout's `Description` prop and the CollectionPage schema below so
+// the rendered meta description and the structured data can't drift apart.
+const BLOG_DESCRIPTION =
+  "The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications.";
 
 export default function Index({ communityPosts, technologyPosts, preview }) {
   // Organization schema is in _document.tsx (global) — not duplicated here.
   // No BreadcrumbList: a single "Home" item is a no-op that SEMrush/Google flag,
-  // so the home route just carries WebSite + an ItemList of the featured posts.
+  // so the home route carries WebSite plus the CollectionPage below.
   const featuredItems = [
     ...(communityPosts || []).map(({ node }: any) => ({
       url: `${SITE_URL}/community/${node.slug}`,
@@ -38,9 +42,18 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       image: node.featuredImage?.node?.sourceUrl,
     })),
   ];
+  // The home route is a listing like /technology and /tag/{slug}, so it gets the
+  // same CollectionPage treatment. That also gives it a page-type node, which it
+  // previously lacked: WebSite describes the site and ItemList the cards, but
+  // neither says what this page is. The featured ItemList is the mainEntity.
   const structuredData = [
     getWebSiteSchema(),
-    getItemListSchema(featuredItems, "Recent Keploy blog posts"),
+    getCollectionPageSchema({
+      name: BLOG_TITLE,
+      url: SITE_URL,
+      description: BLOG_DESCRIPTION,
+      items: featuredItems,
+    }),
   ];
 
   return (
@@ -49,7 +62,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
       Title={BLOG_TITLE}
-      Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}
+      Description={BLOG_DESCRIPTION}
       structuredData={structuredData}
       canonicalUrl={SITE_URL}
       ogType="website"
