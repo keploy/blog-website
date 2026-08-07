@@ -187,6 +187,60 @@ const toISODate = (value?: string): string | null => {
   return isNaN(d.getTime()) ? null : d.toISOString();
 };
 
+type ListEntry = { url: string; name: string };
+
+const toListItems = (items: ListEntry[]) =>
+  items.map((it, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    url: it.url,
+    name: it.name,
+  }));
+
+/**
+ * ItemList for a grid/collection of posts. Emitted standalone (has @context) so
+ * AI/search engines can map the ordered set of links on listing pages, which
+ * currently ship zero collection schema.
+ */
+export const getItemListSchema = (items: ListEntry[], listName?: string) => ({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  ...(listName ? { name: listName } : {}),
+  itemListElement: toListItems(items),
+});
+
+/**
+ * CollectionPage for an archive/listing route (community, technology, tag,
+ * authors). Wraps the post/author grid as an ItemList mainEntity so the whole
+ * archive is a modeled collection rather than an unlabeled wall of cards.
+ */
+export const getCollectionPageSchema = ({
+  name,
+  url,
+  description,
+  items,
+}: {
+  name: string;
+  url: string;
+  description?: string;
+  items: ListEntry[];
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name,
+  url,
+  ...(description ? { description } : {}),
+  isPartOf: {
+    "@type": "Blog",
+    name: BLOG_NAME,
+    url: SITE_URL,
+  },
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: toListItems(items),
+  },
+});
+
 export const getBlogPostingSchema = ({
   title,
   url,
