@@ -68,6 +68,15 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
     name: authorName,
     url: authorUrl,
     jobTitle: "Author",
+    hasOccupation: {
+      "@type": "Occupation",
+      name: "Technical Author",
+      occupationLocation: {
+        "@type": "Organization",
+        "@id": ORG_ID,
+        name: "Keploy",
+      },
+    },
     worksFor: {
       "@type": "Organization",
       "@id": ORG_ID,

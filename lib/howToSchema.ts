@@ -211,6 +211,14 @@ export function getHowToSchema(
       "@type": "WebPage",
       "@id": pageUrl,
     },
+    // Keploy is the tool every Keploy tutorial walks the reader through — a
+    // real HowToTool, not fabricated supply/section metadata.
+    tool: [
+      {
+        "@type": "HowToTool",
+        name: "Keploy",
+      },
+    ],
     step: steps.map((s, i) => {
       const step: Record<string, unknown> = {
         "@type": "HowToStep",
