@@ -123,7 +123,8 @@ const MAX_TITLE_LENGTH = 60;
  * Entity-decoded via sanitizeTitle so WP entities don't inflate the length.
  */
 export function buildPageTitle(rawTitle: string | undefined | null): string {
-  const base = sanitizeTitle(rawTitle).trim() || "Keploy Blog";
+  const base = sanitizeTitle(rawTitle).trim();
+  if (!base) return "Keploy Blog";
   const withSuffix = `${base}${TITLE_SUFFIX}`;
   if (withSuffix.length <= MAX_TITLE_LENGTH) return withSuffix;
   if (base.length <= MAX_TITLE_LENGTH) return base;
