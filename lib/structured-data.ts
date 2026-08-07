@@ -16,6 +16,10 @@ export const ORG_ID = `${MAIN_SITE_URL}/#organization`;
 // schema image matches the og:image the page actually renders.
 export const DEFAULT_ARTICLE_IMAGE_URL =
   "https://wp.keploy.io/wp-content/uploads/2023/11/thumbnil-.png";
+// Author fallback when a post has no usable ppmaAuthorName. A named team
+// Person with its own profile URL is a valid author node; the previous
+// fallback ("Keploy") produced a URL-less Person, a weaker E-E-A-T signal.
+export const AUTHOR_FALLBACK_NAME = "Keploy Team";
 export const SOCIAL_LINKS = [
   "https://twitter.com/Keployio",
   "https://www.linkedin.com/company/keploy/",
@@ -177,9 +181,8 @@ export const getBlogPostingSchema = ({
   reviewerImage,
   reviewerDescription,
 }: BlogPostingInput) => {
-  const resolvedAuthorName = Array.isArray(authorName)
-    ? (authorName[0] || ORG_NAME)
-    : (authorName || ORG_NAME);
+  const resolvedAuthorName =
+    (Array.isArray(authorName) ? authorName[0] : authorName) || AUTHOR_FALLBACK_NAME;
   const authorSlug = sanitizeAuthorSlug(resolvedAuthorName);
 
   // GEO-13: blog/technology posts render as TechArticle
