@@ -91,6 +91,11 @@ type BlogPostingInput = {
    * Reviewer description / job title.
    */
   reviewerDescription?: string;
+  /**
+   * CSS selectors for the sections a voice assistant should read aloud
+   * (e.g. the intro + key-takeaways). Emits a SpeakableSpecification.
+   */
+  speakableSelectors?: string[];
 };
 
 export const getOrganizationSchema = () => ({
@@ -257,6 +262,7 @@ export const getBlogPostingSchema = ({
   reviewerName,
   reviewerImage,
   reviewerDescription,
+  speakableSelectors,
 }: BlogPostingInput) => {
   const resolvedAuthorName =
     (Array.isArray(authorName) ? authorName[0] : authorName) || AUTHOR_FALLBACK_NAME;
@@ -350,6 +356,13 @@ export const getBlogPostingSchema = ({
     }
   }
 
+  if (speakableSelectors && speakableSelectors.length > 0) {
+    schema.speakable = {
+      "@type": "SpeakableSpecification",
+      cssSelector: speakableSelectors,
+    };
+  }
+
   // Always emit an image so the Article schema never trips the "missing field
   // image" validation error — WordPress returns a null featuredImage on many
   // older/migrated posts. Fall back to the site's default OG cover, and emit a
@@ -372,6 +385,96 @@ export const getBlogPostingSchema = ({
 
   return schema;
 };
+
+/**
+ * FAQPage from extracted question/answer pairs in a post body. AI answer
+ * engines cite FAQ Q&A directly, so surfacing them as structured data is high
+ * leverage. Only call this when real Q&A pairs were detected.
+ */
+export const getFAQPageSchema = (faqs: { question: string; answer: string }[]) => ({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: f.answer,
+    },
+  })),
+});
+
+/**
+ * DefinedTermSet for a post's keyword-tooltip glossary. Each tooltip term is a
+ * DefinedTerm so AI engines can extract Keploy's canonical definitions.
+ */
+export const getDefinedTermSetSchema = ({
+  name,
+  url,
+  terms,
+}: {
+  name: string;
+  url: string;
+  terms: { term: string; description?: string }[];
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "DefinedTermSet",
+  name,
+  url,
+  hasDefinedTerm: terms.map((t) => ({
+    "@type": "DefinedTerm",
+    name: t.term,
+    ...(t.description ? { description: t.description } : {}),
+    inDefinedTermSet: url,
+  })),
+});
+
+/**
+ * One SoftwareSourceCode node per programming language present in a post's code
+ * blocks. Signals to AI engines that the article contains runnable code in
+ * those languages (developer-intent queries weight this).
+ */
+export const getSoftwareSourceCodeSchema = ({
+  language,
+  url,
+  name,
+}: {
+  language: string;
+  url: string;
+  name?: string;
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  programmingLanguage: language,
+  ...(name ? { name } : {}),
+  codeRepository: "https://github.com/keploy/keploy",
+  isPartOf: {
+    "@type": "WebPage",
+    "@id": url,
+  },
+});
+
+/**
+ * SearchResultsPage for the /search and /community/search routes, which render
+ * a filtered result grid but currently emit no page-type schema.
+ */
+export const getSearchResultsPageSchema = ({
+  url,
+  query,
+}: {
+  url: string;
+  query?: string;
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "SearchResultsPage",
+  url,
+  name: query ? `Search results for "${query}"` : "Search the Keploy blog",
+  isPartOf: {
+    "@type": "WebSite",
+    name: BLOG_NAME,
+    url: SITE_URL,
+  },
+});
 
 export const getBlogSchema = () => ({
   "@context": "https://schema.org",
