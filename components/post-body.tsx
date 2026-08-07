@@ -177,10 +177,11 @@ export default function PostBody({
 
     // Optimize WP body images: route through next/image + lazy/async decode.
     // Cover image (above-fold LCP) is handled separately in cover-image.tsx.
+    // Must stay a subset of next.config.js images (domains/remotePatterns) — routing an
+    // <img> through /_next/image for a host that isn't allowlisted there returns a 400.
     const OPTIMIZABLE_IMG_HOSTS = new Set([
       "wp.keploy.io",
       "keploy.io",
-      "www.keploy.io",
       "secure.gravatar.com",
       "pbs.twimg.com",
     ]);
