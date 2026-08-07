@@ -11,7 +11,28 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
-import { getBreadcrumbListSchema, MAIN_SITE_URL, SITE_URL } from "../../lib/structured-data";
+import {
+  getBreadcrumbListSchema,
+  getItemListSchema,
+  MAIN_SITE_URL,
+  SITE_URL,
+  ORG_ID,
+} from "../../lib/structured-data";
+
+// Server-safe author-box extraction. extractAuthorData (utils) relies on
+// `document`, so it can't run in getStaticProps/SSR — these regexes pull the
+// same fields from the raw PublishPress author-box HTML for the JSON-LD.
+function extractAuthorMeta(html: string): { avatarUrl?: string; linkedIn?: string } {
+  if (!html) return {};
+  const avatar = html.match(
+    /pp-author-boxes-avatar[\s\S]{0,200}?<img[^>]+src=["']([^"']+)["']/i,
+  );
+  const linkedIn = html.match(/href=["'](https?:\/\/[^"']*linkedin\.com[^"']*)["']/i);
+  return {
+    avatarUrl: avatar?.[1],
+    linkedIn: linkedIn?.[1],
+  };
+}
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 
 export default function AuthorPage({ preview, filteredPosts, content }) {
@@ -34,14 +55,22 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
   // weight the authority of the pages they cite. worksFor.url points at
   // MAIN_SITE_URL (https://keploy.io) — not the blog subpath — so the
   // Organization entity is consistent across every JSON-LD payload.
-  const personSchema = {
-    "@context": "https://schema.org",
+  const authorMeta = extractAuthorMeta(content || "");
+  const authoredItems = filteredPosts.map(({ node }) => ({
+    url: `${SITE_URL}/${node?.categories?.edges?.[0]?.node?.name === "community" ? "community" : "technology"}/${node.slug}`,
+    name: node.title,
+  }));
+
+  // Enriched Person node (no @context — it's nested as ProfilePage.mainEntity).
+  const personNode: Record<string, unknown> = {
     "@type": "Person",
+    "@id": `${authorUrl}#person`,
     name: authorName,
     url: authorUrl,
     jobTitle: "Contributor",
     worksFor: {
       "@type": "Organization",
+      "@id": ORG_ID,
       name: "Keploy",
       url: MAIN_SITE_URL,
     },
@@ -52,6 +81,18 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
       "Developer Tools",
     ],
   };
+  if (authorMeta.avatarUrl) personNode.image = authorMeta.avatarUrl;
+  if (authorMeta.linkedIn) personNode.sameAs = [authorMeta.linkedIn];
+
+  // Wrap the author identity in a ProfilePage (the route IS a profile), and
+  // model the author's posts as an ItemList so AI engines see the body of work.
+  const profilePageSchema = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    mainEntity: personNode,
+    mainEntityOfPage: authorUrl,
+  };
+  const authoredWorksSchema = getItemListSchema(authoredItems, `Posts by ${authorName}`);
 
   return (
     <div className="bg-accent-1">
@@ -76,7 +117,8 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
             { name: "Authors", url: `${SITE_URL}/authors` },
             { name: authorName, url: authorUrl },
           ]),
-          personSchema,
+          profilePageSchema,
+          authoredWorksSchema,
         ]}
         canonicalUrl={authorUrl}
       >
