@@ -1,4 +1,5 @@
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+import { decodeEntities } from "../utils/seo";
 
 export const SITE_URL = "https://keploy.io/blog";
 export const MAIN_SITE_URL = "https://keploy.io";
@@ -259,8 +260,14 @@ export const getBlogPostingSchema = ({
     schema.articleSection = articleSection;
   }
 
+  // Sanitize the WP excerpt before it enters the schema: strip HTML tags and
+  // decode entities (script-safe) so unescaped markup/entities can't produce a
+  // structured-data parse warning. Only emit when something survives.
   if (description) {
-    schema.description = description;
+    const cleanDescription = decodeEntities(description);
+    if (cleanDescription) {
+      schema.description = cleanDescription;
+    }
   }
 
   // Always emit an image so the Article schema never trips the "missing field
