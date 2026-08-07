@@ -98,6 +98,14 @@ test("publisher and the Organization node share one stable @id", () => {
   assert.equal(publisher["@id"], ORG_ID);
 });
 
+test("the author Person links to the same Organization @id via worksFor", () => {
+  const author = nullPost.author as Record<string, unknown>;
+  const worksFor = author.worksFor as Record<string, unknown>;
+  assert.ok(worksFor, "author must carry a worksFor affiliation");
+  assert.equal(worksFor["@type"], "Organization");
+  assert.equal(worksFor["@id"], ORG_ID);
+});
+
 test("core required Article fields are always present", () => {
   for (const field of ["@context", "@type", "headline", "author", "publisher", "image", "datePublished"]) {
     assert.ok(nullPost[field] !== undefined, `${field} must be present`);

@@ -282,10 +282,19 @@ export const getBlogPostingSchema = ({
     // Same @id as the enriched Person on /authors/{slug} (ProfilePage.mainEntity),
     // so engines merge the two into one entity instead of treating each post's
     // author as a separate stub. The full sameAs/image/knowsAbout live there.
+    // worksFor is repeated here rather than left to that merge because a crawler
+    // that only fetches this post never sees the author page, and the Keploy
+    // affiliation is the E-E-A-T signal we most need on the article itself.
     ...(resolvedAuthorName !== ORG_NAME && authorSlug
       ? {
           "@id": `${SITE_URL}/authors/${authorSlug}#person`,
           url: `${SITE_URL}/authors/${authorSlug}`,
+          worksFor: {
+            "@type": "Organization",
+            "@id": ORG_ID,
+            name: ORG_NAME,
+            url: MAIN_SITE_URL,
+          },
         }
       : {}),
   };
