@@ -56,9 +56,13 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
       </Head>
       <Header />
       <Container>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-4 mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-4 mb-4">
           Keploy Community Blog
         </h1>
+        <p className="text-gray-600 max-w-3xl mb-10">
+          Developer stories, open-source contributions, API testing tutorials, and
+          hands-on engineering guides from the Keploy community.
+        </p>
         {/* <Intro /> */}
         {heroPost && (
           <HeroPost

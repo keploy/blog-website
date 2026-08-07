@@ -47,9 +47,13 @@ export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp 
       </Head>
       <Header />
       <Container>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-4 mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-4 mb-4">
           {tagDisplay} posts
         </h1>
+        <p className="text-gray-600 max-w-3xl mb-10">
+          Browse all Keploy blog posts tagged &quot;{tagDisplay}&quot; — tutorials,
+          guides, and expert insights on {tagDisplay} for developers and QA engineers.
+        </p>
         <TagsStories posts={posts} />
       </Container>
     </Layout>
