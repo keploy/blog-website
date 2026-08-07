@@ -6,7 +6,8 @@ import Container from "../../components/container";
 import AuthorMapping from "../../components/AuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { Post } from "../../types/post";
-import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
+import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
 import { REVALIDATE_CONTENT } from "../../lib/isr";
 
 export default function Authors({
@@ -34,6 +35,18 @@ export default function Authors({
             { name: "Home", url: SITE_URL },
             { name: "Authors", url: `${SITE_URL}/authors` },
           ]),
+          getCollectionPageSchema({
+            name: "Keploy Blog Authors",
+            url: `${SITE_URL}/authors`,
+            description:
+              "Engineers, developers, and QA experts writing on the Keploy blog about testing, automation, and software quality.",
+            items: authorArray
+              .filter((node) => node.ppmaAuthorName)
+              .map((node) => ({
+                url: `${SITE_URL}/authors/${sanitizeAuthorSlug(node.ppmaAuthorName)}`,
+                name: node.ppmaAuthorName,
+              })),
+          }),
         ]}
         canonicalUrl={`${SITE_URL}/authors`}
       >

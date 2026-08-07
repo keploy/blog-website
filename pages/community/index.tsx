@@ -6,7 +6,7 @@ import HeroPost from "../../components/hero-post";
 import Layout from "../../components/layout";
 import { getAllPostsForCommunity } from "../../lib/api";
 import Header from "../../components/header";
-import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../../lib/isr";
 
 export default function Community({ allPosts: { edges, pageInfo }, preview }) {
@@ -18,6 +18,16 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
       { name: "Home", url: SITE_URL },
       { name: "Community", url: `${SITE_URL}/community` },
     ]),
+    getCollectionPageSchema({
+      name: "Keploy Community Blog",
+      url: `${SITE_URL}/community`,
+      description:
+        "Developer stories, open-source contributions, API testing tutorials, and hands-on engineering guides from the Keploy community.",
+      items: edges.map(({ node }) => ({
+        url: `${SITE_URL}/community/${node.slug}`,
+        name: node.title,
+      })),
+    }),
   ];
   function getExcerpt(content) {
     const maxWords = 50;

@@ -7,7 +7,7 @@ import Container from "../../components/container";
 import { getAllPostsFromTags, getAllTags } from "../../lib/api";
 import TagsStories from "../../components/TagsStories";
 import { useRouter } from "next/router";
-import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp }) {
   const posts = postsByTags?.edges || [];
@@ -26,6 +26,19 @@ export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp 
           { name: "Tags", url: `${SITE_URL}/tag` },
           { name: `${tagDisplay || "Tag"}`, url: `${SITE_URL}/tag/${tagSlug || ""}` },
         ]),
+        getCollectionPageSchema({
+          name: `${tagDisplay} posts`,
+          url: `${SITE_URL}/tag/${tagSlug || ""}`,
+          description: `Keploy blog posts tagged "${tagDisplay}".`,
+          items: posts.map(({ node }: any) => {
+            const isCommunity =
+              node.categories?.edges?.[0]?.node?.name === "community";
+            return {
+              url: `${SITE_URL}/${isCommunity ? "community" : "technology"}/${node.slug}`,
+              name: node.title,
+            };
+          }),
+        }),
       ]}
       canonicalUrl={tagSlug ? `${SITE_URL}/tag/${tagSlug}` : `${SITE_URL}/tag`}
     >

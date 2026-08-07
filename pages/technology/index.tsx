@@ -7,11 +7,10 @@ import Layout from "../../components/layout";
 import { getAllPostsForTechnology } from "../../lib/api";
 import Header from "../../components/header";
 import { getExcerpt } from "../../utils/excerpt";
-import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR } from "../../lib/isr";
 
 export default function Index({ allPosts: { edges, pageInfo }, preview }) {
-  console.log("tech posts: ", edges.length)
   const heroPost = edges[0]?.node;
   const excerpt = edges[0] ? getExcerpt(edges[0].node.excerpt, 50) : null;
   const morePosts = edges.slice(1);
@@ -20,6 +19,16 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       { name: "Home", url: SITE_URL },
       { name: "Technology", url: `${SITE_URL}/technology` },
     ]),
+    getCollectionPageSchema({
+      name: "Keploy Technology Blog",
+      url: `${SITE_URL}/technology`,
+      description:
+        "In-depth technology articles on API testing, test automation, CI/CD pipelines, eBPF-based testing, and modern software quality engineering.",
+      items: edges.map(({ node }) => ({
+        url: `${SITE_URL}/technology/${node.slug}`,
+        name: node.title,
+      })),
+    }),
   ];
 
   return (
