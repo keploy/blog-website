@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Post } from "../types/post";
+import { DEFAULT_ARTICLE_IMAGE_URL } from "../lib/structured-data";
 
 interface Props extends Partial<Pick<Post, "title" | "slug">> {
   coverImage: Post["featuredImage"];
@@ -31,7 +32,7 @@ export default function CoverImage({
       width={2000}
       height={1000}
       alt={`Cover Image for ${safeTitle}`}
-      src={coverImage?.node.sourceUrl}
+      src={coverImage?.node?.sourceUrl || DEFAULT_ARTICLE_IMAGE_URL}
       className={`w-full h-auto object-cover${imgClassName ? ` ${imgClassName}` : ""}${slug ? " transition-transform duration-300 hover:scale-[1.01]" : ""}`}
       priority={priority}
       loading={priority ? "eager" : "lazy"}
