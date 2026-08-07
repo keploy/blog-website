@@ -276,8 +276,14 @@ export const getBlogPostingSchema = ({
   const authorNode: Record<string, unknown> = {
     "@type": "Person",
     name: resolvedAuthorName,
+    // Same @id as the enriched Person on /authors/{slug} (ProfilePage.mainEntity),
+    // so engines merge the two into one entity instead of treating each post's
+    // author as a separate stub. The full sameAs/image/knowsAbout live there.
     ...(resolvedAuthorName !== ORG_NAME && authorSlug
-      ? { url: `${SITE_URL}/authors/${authorSlug}` }
+      ? {
+          "@id": `${SITE_URL}/authors/${authorSlug}#person`,
+          url: `${SITE_URL}/authors/${authorSlug}`,
+        }
       : {}),
   };
   if (authorImage && !authorImage.includes("/images/author.png")) {
@@ -331,6 +337,7 @@ export const getBlogPostingSchema = ({
     const reviewerNode: Record<string, unknown> = {
       "@type": "Person",
       name: reviewerName,
+      "@id": `${SITE_URL}/authors/${sanitizeAuthorSlug(reviewerName)}#person`,
       url: `${SITE_URL}/authors/${sanitizeAuthorSlug(reviewerName)}`,
     };
     if (reviewerImage && !reviewerImage.includes("/images/author.png")) {
