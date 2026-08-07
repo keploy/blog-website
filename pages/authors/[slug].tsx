@@ -67,7 +67,7 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
     "@id": `${authorUrl}#person`,
     name: authorName,
     url: authorUrl,
-    jobTitle: "Contributor",
+    jobTitle: "Author",
     worksFor: {
       "@type": "Organization",
       "@id": ORG_ID,
