@@ -7,10 +7,10 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
   return (
     <section className="py-12 px-4 md:px-8 lg:px-16 ">
       <div className="mb-16">
-        <h2 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
+        <h3 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
         Recent Technology Blogs
           <span className="absolute left-0 bottom-0 w-16 h-1 bg-gradient-to-r from-orange-400 to-orange-600"></span>
-        </h2>
+        </h3>
 
         <PostGrid>
           {technologyPosts.map(({ node }) => (
@@ -49,10 +49,10 @@ const TopBlogs = ({ communityPosts, technologyPosts }) => {
       </div>
 
       <div>
-        <h2 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
+        <h3 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
          Recent Community Blogs
           <span className="absolute left-0 bottom-0 w-16 h-1 bg-gradient-to-r from-orange-400 to-orange-600"></span>
-        </h2>
+        </h3>
 
         <PostGrid>
           {communityPosts.map(({ node }) => (
