@@ -11,8 +11,8 @@ import Testimonials from "../components/testimonials";
 import Image from "next/image";
 import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import {
-  getBreadcrumbListSchema,
   getWebSiteSchema,
+  getItemListSchema,
   SITE_URL,
 } from "../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../lib/isr";
@@ -23,10 +23,22 @@ const BLOG_TITLE =
   "Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives";
 
 export default function Index({ communityPosts, technologyPosts, preview }) {
-  // Organization schema is in _document.tsx (global) — not duplicated here
+  // Organization schema is in _document.tsx (global) — not duplicated here.
+  // No BreadcrumbList: a single "Home" item is a no-op that SEMrush/Google flag,
+  // so the home route just carries WebSite + an ItemList of the featured posts.
+  const featuredItems = [
+    ...(communityPosts || []).map(({ node }: any) => ({
+      url: `${SITE_URL}/community/${node.slug}`,
+      name: node.title,
+    })),
+    ...(technologyPosts || []).map(({ node }: any) => ({
+      url: `${SITE_URL}/technology/${node.slug}`,
+      name: node.title,
+    })),
+  ];
   const structuredData = [
     getWebSiteSchema(),
-    getBreadcrumbListSchema([{ name: "Home", url: SITE_URL }]),
+    getItemListSchema(featuredItems, "Recent Keploy blog posts"),
   ];
 
   return (
