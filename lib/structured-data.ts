@@ -192,7 +192,7 @@ const toISODate = (value?: string): string | null => {
   return isNaN(d.getTime()) ? null : d.toISOString();
 };
 
-type ListEntry = { url: string; name: string };
+type ListEntry = { url: string; name: string; image?: string };
 
 const toListItems = (items: ListEntry[]) =>
   items.map((it, index) => ({
@@ -200,6 +200,9 @@ const toListItems = (items: ListEntry[]) =>
     position: index + 1,
     url: it.url,
     name: it.name,
+    ...(it.image
+      ? { image: getImageObjectSchema({ url: it.image, caption: it.name }) }
+      : {}),
   }));
 
 /**

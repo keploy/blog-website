@@ -27,6 +27,7 @@ export default function Index({ allPosts: { edges, pageInfo }, preview }) {
       items: edges.map(({ node }) => ({
         url: `${SITE_URL}/technology/${node.slug}`,
         name: node.title,
+        image: node.featuredImage?.node?.sourceUrl,
       })),
     }),
   ];

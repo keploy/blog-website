@@ -36,6 +36,7 @@ export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp 
             return {
               url: `${SITE_URL}/${isCommunity ? "community" : "technology"}/${node.slug}`,
               name: node.title,
+              image: node.featuredImage?.node?.sourceUrl,
             };
           }),
         }),

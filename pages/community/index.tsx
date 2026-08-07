@@ -26,6 +26,7 @@ export default function Community({ allPosts: { edges, pageInfo }, preview }) {
       items: edges.map(({ node }) => ({
         url: `${SITE_URL}/community/${node.slug}`,
         name: node.title,
+        image: node.featuredImage?.node?.sourceUrl,
       })),
     }),
   ];

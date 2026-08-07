@@ -30,10 +30,12 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
     ...(communityPosts || []).map(({ node }: any) => ({
       url: `${SITE_URL}/community/${node.slug}`,
       name: node.title,
+      image: node.featuredImage?.node?.sourceUrl,
     })),
     ...(technologyPosts || []).map(({ node }: any) => ({
       url: `${SITE_URL}/technology/${node.slug}`,
       name: node.title,
+      image: node.featuredImage?.node?.sourceUrl,
     })),
   ];
   const structuredData = [
