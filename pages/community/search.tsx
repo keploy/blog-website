@@ -10,7 +10,7 @@ import { getAllPostsForSearch } from "../../lib/api";
 import { Post } from "../../types/post";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { getExcerpt } from "../../utils/excerpt"; // Importing from utils instead of inline
-import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { getBreadcrumbListSchema, getSearchResultsPageSchema, SITE_URL } from "../../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../../lib/isr";
 
 export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }[] }) {
@@ -61,6 +61,7 @@ export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }
       { name: "Community", url: `${SITE_URL}/community` },
       { name: "Search", url: `${SITE_URL}/community/search` },
     ]),
+    getSearchResultsPageSchema({ url: `${SITE_URL}/community/search`, query: searchTerm }),
   ];
 
   return (

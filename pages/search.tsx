@@ -6,7 +6,7 @@ import MoreStories from "../components/more-stories";
 import { getAllPostsForSearch } from "../lib/api"; // This now exists
 import { Post } from "../types/post";
 import { HOME_OG_IMAGE_URL } from "../lib/constants";
-import { getBreadcrumbListSchema, SITE_URL } from "../lib/structured-data";
+import { getBreadcrumbListSchema, getSearchResultsPageSchema, SITE_URL } from "../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../lib/isr";
 
 export default function SearchPage({ allPosts }: { allPosts: { node: Post }[] }) {
@@ -23,6 +23,7 @@ export default function SearchPage({ allPosts }: { allPosts: { node: Post }[] })
       { name: "Home", url: SITE_URL },
       { name: "Search", url: `${SITE_URL}/search` },
     ]),
+    getSearchResultsPageSchema({ url: `${SITE_URL}/search`, query }),
   ];
 
   return (
