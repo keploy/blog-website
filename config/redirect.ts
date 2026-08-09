@@ -12,7 +12,8 @@ export const slugRedirects: Record<string, string> = {
     // Example redirects - add your mappings here
     // "old-post-slug": "new-post-slug",
     "everything-you-need-to-know-about-api-testing": "what-is-api-testing",
-    "regression-testing-tools-rankings-2025": "regression-testing-tools"
+    "regression-testing-tools-rankings-2025": "regression-testing-tools",
+    "how-cicd-is-changing-the-future-of-software-development": "ci-cd-testing-guide"
 
     // "deprecated-article": "updated-article",
 };
