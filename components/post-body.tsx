@@ -1,4 +1,5 @@
 import { useState, useEffect, Fragment, useMemo, ReactNode } from "react";
+import { useRouter } from "next/router";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
@@ -59,8 +60,8 @@ export default function PostBody({
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [headingCopySuccessList, setHeadingCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [replacedContent, setReplacedContent] = useState(content || "");
   const [isList, setIsList] = useState(false);
+  const { basePath } = useRouter();
   const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
   // Optional safety: handle malformed ReviewAuthorDetails gracefully
   const reviewer = ReviewAuthorDetails?.edges?.[0]?.node || null;
@@ -83,9 +84,18 @@ export default function PostBody({
     checkScreenSize(); // Initial screen size check
     window.addEventListener("resize", checkScreenSize);
 
-    if (!content) return;
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
+  }, []);
 
-    // Separate effect for initial content replacement
+  // Content rewrites (strip WP chrome, harden external links, route body images
+  // through next/image) run synchronously via useMemo so the transformed HTML is
+  // present in SSR + first client render — doing this in an effect would emit the
+  // raw <img src> first, then swap it post-hydration and double-fetch above-fold images.
+  const replacedContent = useMemo(() => {
+    if (!content) return "";
+
     let initialReplacedContent = content.replace(
       /<div class="post-toc-header">[\s\S]*?<\/div>/gm,
       ""
@@ -210,7 +220,7 @@ export default function PostBody({
           if (absolute) {
             const { hostname } = new URL(absolute);
             if (OPTIMIZABLE_IMG_HOSTS.has(hostname)) {
-              const optimized = `/blog/_next/image?url=${encodeURIComponent(absolute)}&w=1200&q=75`;
+              const optimized = `${basePath}/_next/image?url=${encodeURIComponent(absolute)}&w=1200&q=75`;
               nextAttrs = nextAttrs.replace(
                 /(^|\s)src\s*=\s*(["'])([^"']*)\2/i,
                 `$1src=$2${optimized}$2`
@@ -232,12 +242,8 @@ export default function PostBody({
       }
     );
 
-    setReplacedContent(initialReplacedContent);
-
-    return () => {
-      window.removeEventListener("resize", checkScreenSize);
-    };
-  }, [content]);
+    return initialReplacedContent;
+  }, [content, basePath]);
 
   useEffect(() => {
     const postBodyEl = document.getElementById('post-body-check');

@@ -63,6 +63,17 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <div className={`${baloo2.variable} ${dmSans.variable} ${lexend.variable}`}>
+      {/* Also expose the font variables at :root so nodes portaled into
+          document.body (TOC/keyword tooltips) inherit them — CSS variables
+          inherit down the DOM tree, not the React tree, so the wrapper div
+          above doesn't reach portals living outside it. */}
+      <style jsx global>{`
+        :root {
+          --font-baloo: ${baloo2.style.fontFamily};
+          --font-dm-sans: ${dmSans.style.fontFamily};
+          --font-lexend: ${lexend.style.fontFamily};
+        }
+      `}</style>
       <Script
         id="keploy-telemetry-sdk"
         src="https://telemetry.keploy.io/sessions/sdk.js"
