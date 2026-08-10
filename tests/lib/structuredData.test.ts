@@ -79,11 +79,27 @@ test("an invalid datePublished falls back to a valid dateModified", () => {
   );
 });
 
-test("author always resolves to a linked Keploy Team Person when missing", () => {
+test("a missing author falls back to a url-less Keploy Team Person (no soft-404 link)", () => {
   const author = nullPost.author as Record<string, unknown>;
   assert.equal(author["@type"], "Person");
   assert.equal(author.name, AUTHOR_FALLBACK_NAME);
-  assert.equal(author.url, "https://keploy.io/blog/authors/keploy-team");
+  // The fallback has no /authors/{slug} page, so it must not link out to one.
+  assert.ok(!("url" in author), "fallback author must be url-less");
+  assert.ok(!("@id" in author), "fallback author carries no profile @id");
+});
+
+test("a real author gets its /authors/{slug} profile url and @id", () => {
+  const post = getBlogPostingSchema({
+    title: "Named author post",
+    url: "https://keploy.io/blog/community/named",
+    datePublished: "2024-01-02",
+    authorName: "Jane Doe",
+  });
+  const author = post.author as Record<string, unknown>;
+  assert.equal(author.url, "https://keploy.io/blog/authors/jane-doe");
+  assert.equal(author["@id"], "https://keploy.io/blog/authors/jane-doe#person");
+  const worksFor = author.worksFor as Record<string, unknown>;
+  assert.equal(worksFor["@id"], ORG_ID);
 });
 
 test("description is stripped of HTML tags before entering the schema", () => {

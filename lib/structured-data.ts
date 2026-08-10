@@ -276,8 +276,11 @@ export const getBlogPostingSchema = ({
   reviewerDescription,
   speakableSelectors,
 }: BlogPostingInput) => {
-  const resolvedAuthorName =
-    (Array.isArray(authorName) ? authorName[0] : authorName) || AUTHOR_FALLBACK_NAME;
+  const providedAuthorName = Array.isArray(authorName) ? authorName[0] : authorName;
+  const resolvedAuthorName = providedAuthorName || AUTHOR_FALLBACK_NAME;
+  // True when the name came from AUTHOR_FALLBACK_NAME rather than WordPress. The
+  // fallback has no /authors/{slug} page, so its Person node must stay url-less.
+  const isFallbackAuthor = !providedAuthorName;
   const authorSlug = sanitizeAuthorSlug(resolvedAuthorName);
 
   // GEO-13: blog/technology posts render as TechArticle
@@ -288,25 +291,28 @@ export const getBlogPostingSchema = ({
   const authorNode: Record<string, unknown> = {
     "@type": "Person",
     name: resolvedAuthorName,
-    // Same @id as the enriched Person on /authors/{slug} (ProfilePage.mainEntity),
-    // so engines merge the two into one entity instead of treating each post's
-    // author as a separate stub. The full sameAs/image/knowsAbout live there.
-    // worksFor is repeated here rather than left to that merge because a crawler
-    // that only fetches this post never sees the author page, and the Keploy
-    // affiliation is the E-E-A-T signal we most need on the article itself.
-    ...(resolvedAuthorName !== ORG_NAME && authorSlug
-      ? {
-          "@id": `${SITE_URL}/authors/${authorSlug}#person`,
-          url: `${SITE_URL}/authors/${authorSlug}`,
-          worksFor: {
-            "@type": "Organization",
-            "@id": ORG_ID,
-            name: ORG_NAME,
-            url: MAIN_SITE_URL,
-          },
-        }
-      : {}),
   };
+  // @id/url point at the enriched Person on /authors/{slug} (ProfilePage.mainEntity)
+  // so engines merge the two into one entity instead of treating each post's author
+  // as a separate stub. Skipped for the "Keploy Team" fallback: it has no author
+  // page, and authors/[slug] renders an empty div for unknown slugs, so linking it
+  // would point the article's author at a soft-404.
+  if (!isFallbackAuthor && resolvedAuthorName !== ORG_NAME && authorSlug) {
+    authorNode["@id"] = `${SITE_URL}/authors/${authorSlug}#person`;
+    authorNode.url = `${SITE_URL}/authors/${authorSlug}`;
+  }
+  // worksFor is repeated on the article's author (rather than left to the merge
+  // with the author page) because a crawler that only fetches this post never sees
+  // that page, and the Keploy affiliation is the E-E-A-T signal we most need here.
+  // It stays valid on the url-less fallback too.
+  if (resolvedAuthorName !== ORG_NAME) {
+    authorNode.worksFor = {
+      "@type": "Organization",
+      "@id": ORG_ID,
+      name: ORG_NAME,
+      url: MAIN_SITE_URL,
+    };
+  }
   if (authorImage && !authorImage.includes("/images/author.png")) {
     authorNode.image = authorImage;
   }
@@ -467,16 +473,21 @@ export const getSoftwareSourceCodeSchema = ({
   language,
   url,
   name,
+  codeRepository,
 }: {
   language: string;
   url: string;
   name?: string;
+  codeRepository?: string;
 }) => ({
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
   programmingLanguage: language,
   ...(name ? { name } : {}),
-  codeRepository: "https://github.com/keploy/keploy",
+  // Only claim a source repo when the caller actually knows the snippet lives in
+  // one. A post can contain incidental python/js unrelated to keploy/keploy, so
+  // hardcoding that repo for every detected language would be a misleading claim.
+  ...(codeRepository ? { codeRepository } : {}),
   isPartOf: {
     "@type": "WebPage",
     "@id": url,
