@@ -66,6 +66,15 @@ export default function Authors({
           <h1 className="bg-gradient-to-r ml-10 from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
             AUTHORS
           </h1>
+          {/* Visible intro prose so this archive isn't a bare grid — lifts the
+              thin-content / low-text-to-HTML flag and gives AI engines context
+              on who writes here. */}
+          <p className="text-gray-600 max-w-3xl mb-10 ml-10">
+            Meet the engineers, testers, and open-source contributors behind the
+            Keploy blog. Each author shares hands-on experience across API
+            testing, test automation, eBPF, and developer tooling — browse their
+            profiles to explore everything they&apos;ve written.
+          </p>
           <AuthorMapping AuthorArray={authorArray} />
         </Container>
       </Layout>
