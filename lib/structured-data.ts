@@ -506,6 +506,47 @@ export const getSearchResultsPageSchema = ({
   },
 });
 
+/**
+ * Community testimonials (the "What our community thinks" wall on /blog) as
+ * Review nodes attached to the Keploy Organization by @id.
+ *
+ * Two deliberate choices, both to keep the payload valid (this repo's P0 is
+ * "0 invalid structured data"):
+ *  - We emit ONE partial Organization node carrying a `review` array rather
+ *    than a dozen free-floating Review nodes. It shares ORG_ID with the global
+ *    Organization, so consumers merge them into the single Keploy entity
+ *    instead of fragmenting it.
+ *  - No `reviewRating` / `AggregateRating`. These testimonials are tweets with
+ *    no star values; schema.org requires `ratingValue` on a Rating, so a
+ *    rating-less Review is the only valid representation. Fabricating stars —
+ *    or an AggregateRating with only a reviewCount — would be invalid and
+ *    self-serving, the exact failure this branch is clearing.
+ */
+export const getReviewSchema = (
+  reviews: { author: string; body: string; url?: string }[],
+) => {
+  const reviewNodes = reviews
+    .filter((r) => r?.author && r?.body)
+    .map((r) => {
+      const node: Record<string, unknown> = {
+        "@type": "Review",
+        author: { "@type": "Person", name: r.author },
+        reviewBody: r.body,
+      };
+      if (r.url) node.url = r.url;
+      return node;
+    });
+  if (!reviewNodes.length) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": ORG_ID,
+    name: ORG_NAME,
+    url: MAIN_SITE_URL,
+    review: reviewNodes,
+  };
+};
+
 export const getBlogSchema = () => ({
   "@context": "https://schema.org",
   "@type": "Blog",
