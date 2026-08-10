@@ -214,6 +214,16 @@ export const getSoftwareApplicationSchema = () => ({
   ],
 });
 
+// schema.org image URLs must be absolute; some fixtures/runtime data carry
+// root-relative ("/blog/...") or protocol-relative ("//...") URLs. Coerce those
+// to absolute so crawlers don't get a non-canonical image URL.
+const toAbsoluteImageUrl = (url: string): string => {
+  if (!url) return url;
+  if (url.startsWith("//")) return `https:${url}`;
+  if (url.startsWith("/")) return `${MAIN_SITE_URL}${url}`;
+  return url;
+};
+
 /**
  * Reusable ImageObject node. Google/AI engines prefer a typed ImageObject over
  * a bare URL string (it can carry caption + dimensions), and it's the shape the
@@ -231,7 +241,7 @@ export const getImageObjectSchema = ({
   height?: number;
 }) => ({
   "@type": "ImageObject",
-  url,
+  url: toAbsoluteImageUrl(url),
   ...(caption ? { caption } : {}),
   ...(typeof width === "number" ? { width } : {}),
   ...(typeof height === "number" ? { height } : {}),

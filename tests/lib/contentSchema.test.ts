@@ -45,3 +45,13 @@ test("countWords is 0 for empty/nullish input", () => {
   assert.equal(countWords(undefined), 0);
   assert.equal(countWords("<div></div>"), 0);
 });
+
+test("detectCodeLanguages recognizes c++ / c# / csharp classes", () => {
+  const html = `<pre class="language-c++"></pre><code class="language-c#"></code><pre class="language-csharp"></pre>`;
+  assert.deepEqual([...detectCodeLanguages(html)].sort(), ["C#", "C++"]);
+});
+
+test("countWords survives malformed numeric entities without throwing", () => {
+  assert.doesNotThrow(() => countWords("&#9999999999; hello world"));
+  assert.equal(countWords("&#9999999999; hello world"), 2);
+});

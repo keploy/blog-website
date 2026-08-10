@@ -265,3 +265,14 @@ test("wordCount / timeRequired / keywords are emitted only when provided", () =>
   // De-duped + empties dropped, comma-joined.
   assert.equal(rich.keywords, "Testing, Go");
 });
+
+test("root-relative image URLs are coerced to absolute in the schema", () => {
+  const post = getBlogPostingSchema({
+    title: "Rel image",
+    url: "https://keploy.io/blog/community/rel",
+    datePublished: "2024-01-02",
+    imageUrl: "/blog/favicon/Group.png",
+  });
+  const image = post.image as Record<string, unknown>;
+  assert.equal(image.url, "https://keploy.io/blog/favicon/Group.png");
+});

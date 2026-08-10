@@ -24,7 +24,10 @@ const LANG_ALIASES: Record<string, string> = {
   php: "PHP",
   c: "C",
   cpp: "C++",
+  "c++": "C++",
   cs: "C#",
+  "c#": "C#",
+  csharp: "C#",
   sql: "SQL",
   bash: "Shell",
   sh: "Shell",
@@ -51,14 +54,26 @@ export function detectCodeLanguages(html: string | undefined | null): string[] {
   return Array.from(found);
 }
 
+// String.fromCodePoint throws RangeError on out-of-range values, so a malformed
+// entity like &#9999999999; in untrusted WP content would crash the build.
+// Guard the range and drop anything invalid rather than throw.
+function safeFromCodePoint(n: number): string {
+  if (!Number.isInteger(n) || n < 0 || n > 0x10ffff) return "";
+  try {
+    return String.fromCodePoint(n);
+  } catch {
+    return "";
+  }
+}
+
 function stripTags(s: string): string {
   return s
     .replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;/g, " ")
     // Decode numeric/hex entities (WP emits &#8217; &#8220; &#8211; etc.) so
     // smart quotes/dashes don't leak into FAQ/Answer text as raw entities.
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&#(\d+);/g, (_, n) => safeFromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => safeFromCodePoint(parseInt(n, 16)))
     .replace(/&quot;/g, '"')
     .replace(/&apos;/g, "'")
     .replace(/&lt;/g, "<")

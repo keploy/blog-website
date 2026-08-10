@@ -91,10 +91,11 @@ const PAGE_TITLE = "Browse All Blog Topics & Tags";
           description:
             "All topic tags on the Keploy blog — API testing, test automation, CI/CD, developer tools, and software quality.",
           // Cap the directory at 150 entries so the JSON-LD payload stays lean.
-          // Normalize whitespace to dashes so the URL matches the canonical the
-          // /tag/[slug] route resolves (getStaticProps: slug.replace(/\s+/g,"-")).
+          // Normalize whitespace to dashes (matches the canonical the /tag/[slug]
+          // route resolves: slug.replace(/\s+/g,"-")) and percent-encode so tags
+          // with reserved chars (e.g. "c#") don't emit broken URLs in the JSON-LD.
           items: (edgesAllTags || []).slice(0, 150).map(({ name }: { name: string }) => ({
-            url: `${SITE_URL}/tag/${name.trim().replace(/\s+/g, "-")}`,
+            url: `${SITE_URL}/tag/${encodeURIComponent(name.trim().replace(/\s+/g, "-"))}`,
             name,
           })),
         }),
