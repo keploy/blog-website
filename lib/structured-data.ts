@@ -18,6 +18,11 @@ export const ORG_ID = `${MAIN_SITE_URL}/#organization`;
 // of one blog and one site.
 export const BLOG_ID = `${SITE_URL}/#blog`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
+// Stable @id for the Keploy product as a SoftwareApplication entity. Emitted
+// once as a global node (pages/_document.tsx) and referenced by @id from every
+// article's `mentions`, so AI/search engines resolve "Keploy" to one known
+// developer tool instead of loose brand text scattered across posts.
+export const SOFTWARE_ID = `${MAIN_SITE_URL}/#software`;
 // Default article image when a post's WordPress featuredImage is null (common on
 // older/migrated posts). Mirrors HOME_OG_IMAGE_URL in lib/constants.ts so the
 // schema image matches the og:image the page actually renders.
@@ -103,6 +108,21 @@ type BlogPostingInput = {
    * (e.g. the intro + key-takeaways). Emits a SpeakableSpecification.
    */
   speakableSelectors?: string[];
+  /**
+   * Approximate body word count (utils/contentSchema.countWords). Emitted as
+   * schema.org `wordCount`.
+   */
+  wordCount?: number;
+  /**
+   * Estimated reading time in minutes. Emitted as ISO-8601 `timeRequired`
+   * (e.g. 7 -> "PT7M").
+   */
+  readingTimeMinutes?: number;
+  /**
+   * Topical keywords (post categories + detected code languages). De-duped and
+   * emitted as a comma-separated schema.org `keywords` string.
+   */
+  keywords?: string[];
 };
 
 export const getOrganizationSchema = () => ({
@@ -162,6 +182,43 @@ export const getWebSiteSchema = (searchTarget = `${SITE_URL}/search?q={search_te
  * a bare URL string (it can carry caption + dimensions), and it's the shape the
  * Article `image` field and listing/cover images should share.
  */
+/**
+ * The Keploy product modeled as a SoftwareApplication. This is the single
+ * highest-leverage entity for AI citation on a product blog: answer engines
+ * resolve "what is Keploy / best API-testing tool" against a typed software
+ * entity, not against prose. Emitted once globally (pages/_document.tsx) with a
+ * stable @id that every article's `mentions` points back at.
+ *
+ * No aggregateRating on purpose — same policy as getReviewSchema: there are no
+ * first-party rating values, and a fabricated/self-serving rating is the exact
+ * invalid structured data this work is clearing. Authority rides on `sameAs`.
+ */
+export const getSoftwareApplicationSchema = () => ({
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": SOFTWARE_ID,
+  name: ORG_NAME,
+  applicationCategory: "DeveloperApplication",
+  applicationSubCategory: "API Testing",
+  operatingSystem: "Linux, macOS, Windows",
+  url: MAIN_SITE_URL,
+  downloadUrl: "https://github.com/keploy/keploy/releases",
+  softwareHelp: { "@type": "CreativeWork", url: `${MAIN_SITE_URL}/docs` },
+  description:
+    "Keploy is an open-source, developer-centric API testing platform that auto-generates test cases and data mocks from real API traffic.",
+  isAccessibleForFree: true,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  author: { "@type": "Organization", "@id": ORG_ID, name: ORG_NAME, url: MAIN_SITE_URL },
+  publisher: { "@type": "Organization", "@id": ORG_ID },
+  sameAs: [
+    "https://github.com/keploy/keploy",
+    "https://www.g2.com/products/keploy/reviews",
+    "https://www.gartner.com/reviews/product/keploy-618993540",
+    "https://www.capterra.in/software/1070466/Keploy",
+    "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio",
+  ],
+});
+
 export const getImageObjectSchema = ({
   url,
   caption,
@@ -275,6 +332,9 @@ export const getBlogPostingSchema = ({
   reviewerImage,
   reviewerDescription,
   speakableSelectors,
+  wordCount,
+  readingTimeMinutes,
+  keywords,
 }: BlogPostingInput) => {
   const providedAuthorName = Array.isArray(authorName) ? authorName[0] : authorName;
   const resolvedAuthorName = providedAuthorName || AUTHOR_FALLBACK_NAME;
@@ -417,6 +477,29 @@ export const getBlogPostingSchema = ({
       schema.proficiencyLevel = proficiencyLevel;
     }
   }
+
+  // Content signals AI/search engines weight for developer-intent ranking.
+  // Reading time is already computed for the UI (calculateReadingTime); this
+  // just serializes it (+ word count + topical keywords) into the schema.
+  schema.inLanguage = "en-US";
+  if (typeof wordCount === "number" && wordCount > 0) {
+    schema.wordCount = wordCount;
+  }
+  if (typeof readingTimeMinutes === "number" && readingTimeMinutes > 0) {
+    schema.timeRequired = `PT${readingTimeMinutes}M`;
+  }
+  if (keywords && keywords.length > 0) {
+    schema.keywords = Array.from(new Set(keywords.filter(Boolean))).join(", ");
+  }
+
+  // Link every post to the single Keploy SoftwareApplication entity by @id (the
+  // full node is emitted globally in _document.tsx). `mentions`, not `about`:
+  // the product is discussed in every post but isn't necessarily each post's
+  // primary topic. This is the connective tissue that lets an AI engine attach
+  // "Keploy does X" claims from any article to the one known tool entity.
+  schema.mentions = [
+    { "@type": "SoftwareApplication", "@id": SOFTWARE_ID, name: ORG_NAME },
+  ];
 
   return schema;
 };

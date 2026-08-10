@@ -1,5 +1,9 @@
 import { Html, Head, Main, NextScript } from "next/document";
-import { getOrganizationSchema, getBlogSchema } from "../lib/structured-data";
+import {
+  getOrganizationSchema,
+  getBlogSchema,
+  getSoftwareApplicationSchema,
+} from "../lib/structured-data";
 import { safeJsonLdStringify } from "../utils/seo";
 
 export default function Document() {
@@ -59,6 +63,14 @@ export default function Document() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: safeJsonLdStringify(getBlogSchema()),
+          }}
+        />
+        {/* SoftwareApplication (Keploy) — global node with a stable @id that
+            every article's `mentions` links back to (AI-citation entity anchor) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLdStringify(getSoftwareApplicationSchema()),
           }}
         />
       </Head>

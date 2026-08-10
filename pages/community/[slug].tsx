@@ -34,7 +34,7 @@ import {
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
 import { getHowToSchema } from "../../lib/howToSchema";
-import { detectCodeLanguages, extractFaqs } from "../../utils/contentSchema";
+import { detectCodeLanguages, extractFaqs, countWords } from "../../utils/contentSchema";
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
@@ -191,8 +191,15 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         // is "Reviewer" (placeholder) or equals the author (self-review).
         // Populate dependencies from the post's actual code languages.
         dependencies: codeLanguages.length ? codeLanguages : undefined,
-        // Voice-assistant spoken summary target.
-        speakableSelectors: ["h1"],
+        // Voice-assistant spoken summary: title + section headings.
+        speakableSelectors: ["h1", "h2"],
+        // Developer-intent content signals (serialized from existing UI data).
+        wordCount: countWords(post?.content),
+        readingTimeMinutes: time,
+        keywords: [
+          ...(post?.categories?.edges?.map((e) => e?.node?.name).filter(Boolean) || []),
+          ...codeLanguages,
+        ],
         reviewerName: reviewAuthorName || undefined,
         reviewerImage: reviewAuthorImageUrl || undefined,
         reviewerDescription: reviewAuthorDescription || undefined,

@@ -32,7 +32,7 @@ import {
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
 import { getHowToSchema } from "../../lib/howToSchema";
-import { detectCodeLanguages, extractFaqs } from "../../utils/contentSchema";
+import { detectCodeLanguages, extractFaqs, countWords } from "../../utils/contentSchema";
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
@@ -167,8 +167,15 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         // Populate TechArticle.dependencies from the code languages actually
         // present in the post (was defined but never set).
         dependencies: codeLanguages.length ? codeLanguages : undefined,
-        // Let a voice assistant read the post title as the spoken summary.
-        speakableSelectors: ["h1"],
+        // Voice-assistant spoken summary: title + section headings.
+        speakableSelectors: ["h1", "h2"],
+        // Developer-intent content signals (serialized from existing UI data).
+        wordCount: countWords(post?.content),
+        readingTimeMinutes: time,
+        keywords: [
+          ...(post?.categories?.edges?.map((e) => e?.node?.name).filter(Boolean) || []),
+          ...codeLanguages,
+        ],
         // LIVE-22: emit reviewedBy Person schema. Skipped by the
         // generator when the reviewer equals the author or when the
         // name falls back to the "Reviewer" placeholder.

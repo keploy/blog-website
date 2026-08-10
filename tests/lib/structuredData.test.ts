@@ -21,9 +21,11 @@ import {
   getCollectionPageSchema,
   getSearchResultsPageSchema,
   getReviewSchema,
+  getSoftwareApplicationSchema,
   ORG_ID,
   BLOG_ID,
   WEBSITE_ID,
+  SOFTWARE_ID,
   DEFAULT_ARTICLE_IMAGE_URL,
   AUTHOR_FALLBACK_NAME,
 } from "../../lib/structured-data";
@@ -209,4 +211,57 @@ test("each Review is valid and rating-less, url only when present", () => {
   assert.equal(reviews[0].url, sampleReviews[0].url);
   assert.ok(!("url" in reviews[1]), "no url key when the source has none");
   assert.ok(!("aggregateRating" in node), "no self-serving AggregateRating");
+});
+
+// ── SoftwareApplication (AI-citation entity anchor) ──────────────────────────
+
+test("getSoftwareApplicationSchema is a valid, free, rating-less software entity", () => {
+  const app = getSoftwareApplicationSchema() as Record<string, unknown>;
+  assert.equal(app["@type"], "SoftwareApplication");
+  assert.equal(app["@id"], SOFTWARE_ID);
+  assert.equal(app.applicationCategory, "DeveloperApplication");
+  assert.ok(typeof app.operatingSystem === "string" && (app.operatingSystem as string).length > 0);
+  const offers = app.offers as Record<string, unknown>;
+  assert.equal(offers["@type"], "Offer");
+  assert.equal(offers.price, "0");
+  // Shares the one Keploy Organization @id so the graph stays a single entity.
+  const publisher = app.publisher as Record<string, unknown>;
+  assert.equal(publisher["@id"], ORG_ID);
+  assert.ok(Array.isArray(app.sameAs) && (app.sameAs as unknown[]).length > 0);
+  // Same policy as reviews/ratings: no fabricated aggregate rating.
+  assert.ok(!("aggregateRating" in app), "no self-serving AggregateRating");
+});
+
+// ── Article entity-graph + content signals ───────────────────────────────────
+
+test("every post mentions the single Keploy SoftwareApplication by @id", () => {
+  const mentions = (nullPost.mentions as Record<string, unknown>[]) || [];
+  assert.ok(mentions.length >= 1, "mentions must be present");
+  const soft = mentions.find((m) => m["@type"] === "SoftwareApplication");
+  assert.ok(soft, "a SoftwareApplication mention must exist");
+  assert.equal(soft!["@id"], SOFTWARE_ID);
+});
+
+test("post always declares inLanguage", () => {
+  assert.equal(nullPost.inLanguage, "en-US");
+});
+
+test("wordCount / timeRequired / keywords are emitted only when provided", () => {
+  // Omitted on the all-null post.
+  assert.ok(!("wordCount" in nullPost), "no wordCount when unset");
+  assert.ok(!("timeRequired" in nullPost), "no timeRequired when unset");
+  assert.ok(!("keywords" in nullPost), "no keywords when unset");
+
+  const rich = getBlogPostingSchema({
+    title: "Rich signals post",
+    url: "https://keploy.io/blog/technology/rich",
+    datePublished: "2024-01-02",
+    wordCount: 1200,
+    readingTimeMinutes: 7,
+    keywords: ["Testing", "Go", "Testing", ""],
+  });
+  assert.equal(rich.wordCount, 1200);
+  assert.equal(rich.timeRequired, "PT7M");
+  // De-duped + empties dropped, comma-joined.
+  assert.equal(rich.keywords, "Testing, Go");
 });

@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { detectCodeLanguages, extractFaqs } from "../../utils/contentSchema";
+import { detectCodeLanguages, extractFaqs, countWords } from "../../utils/contentSchema";
 
 test("detectCodeLanguages dedupes and normalizes language- classes", () => {
   const html = `<pre class="language-go"></pre><code class="language-py"></code><pre class="language-golang"></pre>`;
@@ -32,4 +32,16 @@ test("extractFaqs pulls question headings + answers, needs >= 2", () => {
 test("extractFaqs returns empty when fewer than 2 question headings", () => {
   assert.deepEqual(extractFaqs("<h2>What is X?</h2><p>An answer long enough here.</p>"), []);
   assert.deepEqual(extractFaqs("<h2>Not a question</h2><p>body</p>"), []);
+});
+
+test("countWords ignores HTML tags and entities, counts real words", () => {
+  assert.equal(countWords("<p>Hello <strong>world</strong> here</p>"), 3);
+  assert.equal(countWords("one&nbsp;two &amp; three"), 4);
+});
+
+test("countWords is 0 for empty/nullish input", () => {
+  assert.equal(countWords(""), 0);
+  assert.equal(countWords(null), 0);
+  assert.equal(countWords(undefined), 0);
+  assert.equal(countWords("<div></div>"), 0);
 });

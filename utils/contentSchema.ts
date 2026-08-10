@@ -83,3 +83,15 @@ export function extractFaqs(
   }
   return faqs.length >= 2 ? faqs : [];
 }
+
+/**
+ * Approximate word count of a post's rendered text (HTML tags + entities
+ * stripped first so markup tokens don't inflate the count). Feeds the
+ * schema.org `wordCount` on Article nodes.
+ */
+export function countWords(html: string | undefined | null): number {
+  if (!html) return 0;
+  const text = stripTags(html);
+  if (!text) return 0;
+  return text.split(/\s+/).filter(Boolean).length;
+}
