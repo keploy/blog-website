@@ -71,11 +71,8 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
     hasOccupation: {
       "@type": "Occupation",
       name: "Technical Author",
-      occupationLocation: {
-        "@type": "Organization",
-        "@id": ORG_ID,
-        name: "Keploy",
-      },
+      // No occupationLocation: schema.org expects a geographic Place there, not
+      // an employer. The Keploy affiliation is already modeled via worksFor.
     },
     worksFor: {
       "@type": "Organization",

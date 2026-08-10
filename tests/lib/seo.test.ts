@@ -21,13 +21,15 @@ test("a title that fits without the suffix drops the suffix rather than overflow
 });
 
 test("an over-long title is truncated at a word boundary, never mid-word", () => {
-  const out = buildPageTitle(
-    "The Complete Definitive Comprehensive Guide To End To End Integration Testing In Modern Microservices",
-  );
+  const raw =
+    "The Complete Definitive Comprehensive Guide To End To End Integration Testing In Modern Microservices";
+  const out = buildPageTitle(raw);
   assert.ok(out.length <= 60, `got ${out.length}`);
   assert.ok(!out.endsWith(" "));
-  // last token is a whole word (truncation happened at a space)
-  assert.ok(!/\S$/.test(out) === false); // ends with a non-space char
+  // Actually prove the cut landed on a word boundary: the output is a prefix of
+  // the input and the very next character in the input is a space.
+  assert.ok(raw.startsWith(out), "output must be a prefix of the input");
+  assert.equal(raw[out.length], " ", "the char after the cut is a space (word boundary)");
 });
 
 test("null/undefined/empty falls back to a valid title", () => {

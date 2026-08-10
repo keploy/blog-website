@@ -55,6 +55,15 @@ function stripTags(s: string): string {
   return s
     .replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;/g, " ")
+    // Decode numeric/hex entities (WP emits &#8217; &#8220; &#8211; etc.) so
+    // smart quotes/dashes don't leak into FAQ/Answer text as raw entities.
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    // &amp; last so we never double-decode (e.g. "&amp;#8217;" stays literal).
     .replace(/&amp;/g, "&")
     .replace(/\s+/g, " ")
     .trim();

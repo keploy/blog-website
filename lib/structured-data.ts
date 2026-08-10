@@ -178,11 +178,6 @@ export const getWebSiteSchema = (searchTarget = `${SITE_URL}/search?q={search_te
 });
 
 /**
- * Reusable ImageObject node. Google/AI engines prefer a typed ImageObject over
- * a bare URL string (it can carry caption + dimensions), and it's the shape the
- * Article `image` field and listing/cover images should share.
- */
-/**
  * The Keploy product modeled as a SoftwareApplication. This is the single
  * highest-leverage entity for AI citation on a product blog: answer engines
  * resolve "what is Keploy / best API-testing tool" against a typed software
@@ -219,6 +214,11 @@ export const getSoftwareApplicationSchema = () => ({
   ],
 });
 
+/**
+ * Reusable ImageObject node. Google/AI engines prefer a typed ImageObject over
+ * a bare URL string (it can carry caption + dimensions), and it's the shape the
+ * Article `image` field and listing/cover images should share.
+ */
 export const getImageObjectSchema = ({
   url,
   caption,

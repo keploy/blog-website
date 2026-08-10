@@ -130,7 +130,9 @@ export function buildPageTitle(rawTitle: string | undefined | null): string {
   if (base.length <= MAX_TITLE_LENGTH) return base;
   const clipped = base.slice(0, MAX_TITLE_LENGTH);
   const lastSpace = clipped.lastIndexOf(" ");
-  return (lastSpace > 40 ? clipped.slice(0, lastSpace) : clipped).trimEnd();
+  // Always cut at the last word boundary in the window; hard-clip only when the
+  // window has no space at all (a single token longer than the limit).
+  return (lastSpace > 0 ? clipped.slice(0, lastSpace) : clipped).trimEnd();
 }
 
 /**
