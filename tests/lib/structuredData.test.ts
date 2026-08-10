@@ -20,6 +20,7 @@ import {
   getWebSiteSchema,
   getCollectionPageSchema,
   getSearchResultsPageSchema,
+  getReviewSchema,
   ORG_ID,
   BLOG_ID,
   WEBSITE_ID,
@@ -147,4 +148,49 @@ test("technology posts render as TechArticle", () => {
     categorySlug: "technology",
   });
   assert.equal(tech["@type"], "TechArticle");
+});
+
+// Review schema (home testimonials). The community wall carries no star
+// values, so these pin that the builder emits VALID, rating-less reviews and
+// never fabricates a Rating/AggregateRating (which require a ratingValue and
+// would re-introduce the invalid-structured-data failures this branch clears).
+const sampleReviews = [
+  { author: "Jay Vasant", body: "Keploy makes maintaining tests far easier.", url: "https://x.com/a/status/1" },
+  { author: "matsuu", body: "eBPF-based test generation is amazing." },
+];
+
+test("getReviewSchema returns null when there are no usable reviews", () => {
+  assert.equal(getReviewSchema([]), null);
+  assert.equal(getReviewSchema([{ author: "", body: "" }]), null);
+});
+
+test("reviews attach to the Keploy Organization by the shared @id (no fragmentation)", () => {
+  const node = getReviewSchema(sampleReviews) as Record<string, unknown>;
+  assert.equal(node["@type"], "Organization");
+  assert.equal(node["@id"], ORG_ID);
+  assert.ok(Array.isArray(node.review));
+});
+
+test("entries missing an author or body are dropped", () => {
+  const node = getReviewSchema([
+    ...sampleReviews,
+    { author: "No body", body: "" },
+    { author: "", body: "No author" },
+  ]) as Record<string, unknown>;
+  assert.equal((node.review as unknown[]).length, sampleReviews.length);
+});
+
+test("each Review is valid and rating-less, url only when present", () => {
+  const node = getReviewSchema(sampleReviews) as Record<string, unknown>;
+  const reviews = node.review as Record<string, unknown>[];
+  for (const r of reviews) {
+    assert.equal(r["@type"], "Review");
+    const author = r.author as Record<string, unknown>;
+    assert.equal(author["@type"], "Person");
+    assert.ok(typeof r.reviewBody === "string" && (r.reviewBody as string).length > 0);
+    assert.ok(!("reviewRating" in r), "no fabricated star rating");
+  }
+  assert.equal(reviews[0].url, sampleReviews[0].url);
+  assert.ok(!("url" in reviews[1]), "no url key when the source has none");
+  assert.ok(!("aggregateRating" in node), "no self-serving AggregateRating");
 });
