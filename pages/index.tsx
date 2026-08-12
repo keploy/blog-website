@@ -80,6 +80,8 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
                 alt="hero image"
                 width={600}
                 height={600}
+                priority
+                sizes="(max-width: 768px) 80vw, 600px"
               />
             </div>
           </div>
