@@ -88,29 +88,13 @@ export default function Layout({
         }}
       />
 
-      {/* Google News SWG — lazyOnload since it's non-critical */}
-      <Script
-        id="swg-basic"
-        src="https://news.google.com/swg/js/v1/swg-basic.js"
-        strategy="lazyOnload"
-      />
-
-      <Script
-        id="publisher"
-        strategy="lazyOnload"
-        dangerouslySetInnerHTML={{
-          __html: `
-              (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
-                  basicSubscriptions.init({
-                    type: "NewsArticle",
-                    isPartOfType: ["Product"],
-                    isPartOfProductId: "CAowiLC8DA:openaccess",
-                    clientOptions: { theme: "light", lang: "en" },
-                  });
-                });
-            `,
-        }}
-      />
+      {/* Google News SWG (Subscribe with Google) removed: the publication was
+          configured for open-access content, so it rendered nothing user-facing
+          and its API call 400'd on every page (news.google.com/.../CAowiLC8DA).
+          It cost ~80 KiB, threw console errors (tanking Best Practices), set
+          3rd-party cookies, and injected 3 unused preconnects
+          (news.google.com / gstatic.com / google.com). If SWG is wanted later,
+          it needs a properly registered publication set up off-repo. */}
 
       {/* Apollo Tracking Script — lazyOnload */}
       <Script
