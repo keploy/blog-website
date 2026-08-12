@@ -29,6 +29,12 @@ const lexend = Lexend({
   weight: ['500', '700', '800'],
   variable: '--font-lexend',
   display: 'swap',
+  // Lexend is used only by the InlinePromoCard, which is dynamically imported
+  // deep in the article body (below the fold). Don't preload it — that would
+  // put its font files on the critical path on post pages for content the user
+  // hasn't scrolled to yet. It still loads on demand (display:swap) when the
+  // card renders. No effect on routes that don't use the card.
+  preload: false,
 });
 
 const PageLoader = dynamic(() => import('../components/PageLoader'), {
