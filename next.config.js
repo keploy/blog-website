@@ -22,6 +22,13 @@ module.exports = {
   basePath: '/blog',
   assetPrefix: "/blog",
 
+  experimental: {
+    // Inline critical CSS and defer the rest (via Critters) so the ~18 KiB
+    // stylesheet — ~87% of which is unused above the fold — no longer
+    // render-blocks first paint. EXPERIMENTAL: verify no FOUC before merge.
+    optimizeCss: true,
+  },
+
   // --- ADD THIS BLOCK ---
   // This exposes the server-side variable to the browser
   env: {
