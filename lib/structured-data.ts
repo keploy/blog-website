@@ -270,15 +270,20 @@ const toISODate = (value?: string): string | null => {
 type ListEntry = { url: string; name: string; image?: string };
 
 const toListItems = (items: ListEntry[]) =>
-  items.map((it, index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    url: it.url,
-    name: it.name,
-    ...(it.image
-      ? { image: getImageObjectSchema({ url: it.image, caption: it.name }) }
-      : {}),
-  }));
+  items
+    // Drop entries without a usable name/url — a ListItem with an empty name is
+    // invalid schema (e.g. a WP post with a null title). Filtering before the
+    // map keeps `position` sequential (1, 2, 3, …).
+    .filter((it) => it.url && it.url.trim() && it.name && it.name.trim())
+    .map((it, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: it.url,
+      name: it.name,
+      ...(it.image
+        ? { image: getImageObjectSchema({ url: it.image, caption: it.name }) }
+        : {}),
+    }));
 
 /**
  * ItemList for a grid/collection of posts. Emitted standalone (has @context) so
