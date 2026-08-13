@@ -90,7 +90,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/7-principles-of-software-testing</loc>
-    <lastmod>2026-07-01</lastmod>
+    <lastmod>2026-08-12</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Principles-of-Software-Testing.webp</image:loc>
@@ -2027,6 +2027,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/maintenance-testing-guide</loc>
+    <lastmod>2026-08-12</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/08/Maintenance-Testing-Types-Challenges-Tools-2026.webp</image:loc>
+      <image:title>Maintenance Testing: Types, Challenges &amp; Tools (2026)</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/manage-config-files-on-aws-s3</loc>
     <lastmod>2025-06-24</lastmod>
     <priority>0.70</priority>
@@ -2163,7 +2172,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/modified-condition-decision-coverage</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-08-12</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/11/Modified-Condition-Decision-Coverage.webp</image:loc>
@@ -2815,7 +2824,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-testing-basics</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-08-12</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/Software-Testing-Basics-Simplified-A-Guide-for-Beginners.webp</image:loc>
@@ -3037,7 +3046,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/test-data-management</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-08-12</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/ChatGPT-Image-May-27-2026-05_23_46-PM.webp</image:loc>
@@ -3117,7 +3126,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/testing-methodologies-in-software-testing</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-08-12</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/Testing-Methodologies-in-Software-Testing.webp</image:loc>
@@ -3458,7 +3467,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/uft-testing-guide</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-08-12</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/UFT-Testing.webp</image:loc>
@@ -3682,7 +3691,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/verification-vs-validation</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-08-12</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/Verification-vs-Validation-for-API-first-Software-Development.webp</image:loc>
@@ -4131,7 +4140,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-scripting</loc>
-    <lastmod>2025-06-18</lastmod>
+    <lastmod>2026-08-12</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/What-is-Scripting-1-e1742209007267.png</image:loc>
