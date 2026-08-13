@@ -22,6 +22,7 @@ import { useEffect, useRef } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
+import { AUTHOR_AVATAR_PLACEHOLDER } from "../../lib/constants";
 import dynamic from "next/dynamic";
 import "./styles.module.css"
 import {
@@ -87,7 +88,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
       ? post.ppmaAuthorImage
       : "";
-  const writerAvatarUrl = ppmaImage || "/blog/images/author.webp";
+  const writerAvatarUrl = ppmaImage || AUTHOR_AVATAR_PLACEHOLDER;
 
   // Writer description — pulled from the first paragraph with the
   // pp-author-boxes-description class in the post content. Kept here as
@@ -119,7 +120,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       // genuinely have no reviewer data. When the data is present the
       // real name renders server-side and reaches AI crawlers.
       name: reviewAuthorName || "Reviewer",
-      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.webp",
+      ImageUrl: reviewAuthorImageUrl || AUTHOR_AVATAR_PLACEHOLDER,
       description: reviewAuthorDescription || "A Reviewer for keploy's blog",
     },
   ];
@@ -249,7 +250,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 post?.ppmaAuthorName,
               )}
               authorName={post?.ppmaAuthorName || ""}
-              authorImageUrl={avatarImgSrc || "/blog/images/author.webp"}
+              authorImageUrl={avatarImgSrc || AUTHOR_AVATAR_PLACEHOLDER}
               authorDescription={blogWriterDescription || "An author for keploy's blog."}
               ReviewAuthorDetails={
                 reviewAuthorDetails &&

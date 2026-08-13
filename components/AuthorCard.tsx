@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+import { AUTHOR_AVATAR_PLACEHOLDER } from "../lib/constants";
 
 /* ── Small arrow icon ── */
 const ArrowRightIcon = () => (
@@ -58,7 +59,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
   /* Resolve avatar src (handle external URLs via proxy) */
   const resolvedSrc =
     !imageUrl || imageUrl === "n/a"
-      ? "/blog/images/author.webp"
+      ? AUTHOR_AVATAR_PLACEHOLDER
       : /^https?:\/\//i.test(imageUrl) && basePath
         ? `${basePath}/api/proxy-image?url=${encodeURIComponent(imageUrl)}`
         : imageUrl;

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Post } from "../types/post";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+import { AUTHOR_AVATAR_PLACEHOLDER } from "../lib/constants";
 
 export default function AuthorMapping({
   AuthorArray,
@@ -77,7 +78,7 @@ export default function AuthorMapping({
                   />
                 ) : (
                   <Image
-                    src={`/blog/images/author.webp`}
+                    src={AUTHOR_AVATAR_PLACEHOLDER}
                     alt={`${author.ppmaAuthorName}'s Avatar`}
                     className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
                     height={48}

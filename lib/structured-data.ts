@@ -1,4 +1,5 @@
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+import { AUTHOR_AVATAR_PLACEHOLDER } from "./constants";
 
 export const SITE_URL = "https://keploy.io/blog";
 export const MAIN_SITE_URL = "https://keploy.io";
@@ -173,7 +174,7 @@ export const getBlogPostingSchema = ({
       ? { url: `${SITE_URL}/authors/${authorSlug}` }
       : {}),
   };
-  if (authorImage && !authorImage.includes("/images/author.png")) {
+  if (authorImage && !authorImage.includes(AUTHOR_AVATAR_PLACEHOLDER)) {
     authorNode.image = authorImage;
   }
 
@@ -219,7 +220,7 @@ export const getBlogPostingSchema = ({
       name: reviewerName,
       url: `${SITE_URL}/authors/${sanitizeAuthorSlug(reviewerName)}`,
     };
-    if (reviewerImage && !reviewerImage.includes("/images/author.png")) {
+    if (reviewerImage && !reviewerImage.includes(AUTHOR_AVATAR_PLACEHOLDER)) {
       reviewerNode.image = reviewerImage;
     }
     if (reviewerDescription) {

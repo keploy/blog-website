@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+import { AUTHOR_AVATAR_PLACEHOLDER } from "../lib/constants";
 const ReviewingAuthor = ({ name, avatar, description }) => {
   const { basePath } = useRouter();
   const [showMore, setShowMore] = useState(false);
@@ -42,7 +43,7 @@ const ReviewingAuthor = ({ name, avatar, description }) => {
           )}
           {avatar === "n/a" && (
             <Image
-              src={"/blog/images/author.webp"}
+              src={AUTHOR_AVATAR_PLACEHOLDER}
               alt="Author Avatar"
               width={200}
               height={200}

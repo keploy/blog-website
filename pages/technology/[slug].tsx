@@ -20,6 +20,7 @@ import { useRef, useEffect } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
+import { AUTHOR_AVATAR_PLACEHOLDER } from "../../lib/constants";
 import dynamic from "next/dynamic";
 import { getRedirectSlug, hasRedirect } from "../../config/redirect";
 import {
@@ -71,7 +72,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
       ? post.ppmaAuthorImage
       : "";
-  const writerAvatarUrl = ppmaImage || "/blog/images/author.webp";
+  const writerAvatarUrl = ppmaImage || AUTHOR_AVATAR_PLACEHOLDER;
 
   // Writer description — extract synchronously from post content (no effect).
   const writerDescriptionMatch =
@@ -96,7 +97,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const blogreviewer = [
     {
       name: reviewAuthorName || "Reviewer",
-      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.webp",
+      ImageUrl: reviewAuthorImageUrl || AUTHOR_AVATAR_PLACEHOLDER,
       description: reviewAuthorDescription || "A Reviewer for keploy's blog",
     },
   ];
@@ -225,7 +226,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 post?.content && postBody({ content: post?.content, post })
               }
               authorName={post?.ppmaAuthorName || ""}
-              authorImageUrl={avatarImgSrc || "/blog/images/author.webp"}
+              authorImageUrl={avatarImgSrc || AUTHOR_AVATAR_PLACEHOLDER}
               authorDescription={blogWriterDescription || "An author for keploy's blog."}
               slug={slug}
               ReviewAuthorDetails={
