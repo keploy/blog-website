@@ -1,6 +1,11 @@
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
 import { AUTHOR_AVATAR_PLACEHOLDER } from "./constants";
 
+// Match the placeholder by filename (e.g. "/author.webp") rather than its full
+// basePath'd path, so a basePath-less "/images/author.webp" is also recognised
+// and never leaks the generic avatar into an author's JSON-LD `image`.
+const AUTHOR_AVATAR_FILE = `/${AUTHOR_AVATAR_PLACEHOLDER.split("/").pop()}`;
+
 export const SITE_URL = "https://keploy.io/blog";
 export const MAIN_SITE_URL = "https://keploy.io";
 export const ORG_NAME = "Keploy";
@@ -174,7 +179,7 @@ export const getBlogPostingSchema = ({
       ? { url: `${SITE_URL}/authors/${authorSlug}` }
       : {}),
   };
-  if (authorImage && !authorImage.includes(AUTHOR_AVATAR_PLACEHOLDER)) {
+  if (authorImage && !authorImage.includes(AUTHOR_AVATAR_FILE)) {
     authorNode.image = authorImage;
   }
 
@@ -220,7 +225,7 @@ export const getBlogPostingSchema = ({
       name: reviewerName,
       url: `${SITE_URL}/authors/${sanitizeAuthorSlug(reviewerName)}`,
     };
-    if (reviewerImage && !reviewerImage.includes(AUTHOR_AVATAR_PLACEHOLDER)) {
+    if (reviewerImage && !reviewerImage.includes(AUTHOR_AVATAR_FILE)) {
       reviewerNode.image = reviewerImage;
     }
     if (reviewerDescription) {
