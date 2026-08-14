@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-08-12</lastmod>
+    <lastmod>2026-08-14</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-08-12</lastmod>
+    <lastmod>2026-08-14</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -700,7 +700,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/black-box-testing-and-white-box-testing-a-complete-guide</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-08-14</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Black-box-Testing-and-White-Box-Testing.webp</image:loc>
@@ -1663,7 +1663,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-get-your-chatgpt-api-key</loc>
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/06/How-to-get-your-ChatGPT-API-key.webp</image:loc>
@@ -1984,11 +1984,10 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/know-about-record-and-replay-testing</loc>
-    <lastmod>2026-06-08</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/Know-about-Record-e1711083608287.webp</image:loc>
-      <image:title>Record and replay testing is an automated testing method. The tool records the user’s actions, then it replays them.</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/Frame-145-1-scaled.webp</image:loc>
     </image:image>
   </url>
   <url>
@@ -2601,7 +2600,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/sandbox-testing</loc>
-    <lastmod>2026-08-12</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/What-Is-Sandbox-Testing.webp</image:loc>
@@ -4105,7 +4104,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-rapid-application-development</loc>
-    <lastmod>2025-06-19</lastmod>
+    <lastmod>2026-08-14</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/04/What-is-Rapid-Application-Development.webp</image:loc>
@@ -4185,10 +4184,11 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-test-automation</loc>
-    <lastmod>2026-08-04</lastmod>
+    <lastmod>2026-08-14</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/Test-Automation-Cover-Image.webp</image:loc>
+      <image:title>Test Automation in Software Testing</image:title>
     </image:image>
   </url>
   <url>
