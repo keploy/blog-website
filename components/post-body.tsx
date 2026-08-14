@@ -209,7 +209,9 @@ export default function PostBody({
           return match;
         }
 
-        let nextAttrs = attrs;
+        // Strip a self-closing trailing slash up front so later appends don't
+        // produce "<img ... / loading=...>" (invalid markup).
+        let nextAttrs = attrs.replace(/\s*\/\s*$/, "");
         try {
           const absolute =
             src.startsWith("//")
@@ -221,10 +223,16 @@ export default function PostBody({
             const { hostname } = new URL(absolute);
             if (OPTIMIZABLE_IMG_HOSTS.has(hostname)) {
               const optimized = `${basePath}/_next/image?url=${encodeURIComponent(absolute)}&w=1200&q=75`;
-              nextAttrs = nextAttrs.replace(
-                /(^|\s)src\s*=\s*(["'])([^"']*)\2/i,
-                `$1src=$2${optimized}$2`
-              );
+              nextAttrs = nextAttrs
+                .replace(
+                  /(^|\s)src\s*=\s*(["'])([^"']*)\2/i,
+                  `$1src=$2${optimized}$2`
+                )
+                // Drop srcset/sizes: an <img> that keeps its original srcset uses
+                // that and ignores src entirely, so the optimization would be a
+                // no-op (e.g. the PublishPress avatar ships a wp.keploy.io srcset).
+                .replace(/(^|\s)srcset\s*=\s*(["'])[^"']*\2/gi, "")
+                .replace(/(^|\s)sizes\s*=\s*(["'])[^"']*\2/gi, "");
             }
           }
         } catch {
