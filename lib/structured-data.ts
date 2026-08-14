@@ -312,23 +312,27 @@ export const getCollectionPageSchema = ({
   url: string;
   description?: string;
   items: ListEntry[];
-}) => ({
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  name,
-  url,
-  ...(description ? { description } : {}),
-  isPartOf: {
-    "@type": "Blog",
-    "@id": BLOG_ID,
-    name: BLOG_NAME,
-    url: SITE_URL,
-  },
-  mainEntity: {
-    "@type": "ItemList",
-    itemListElement: toListItems(items),
-  },
-});
+}) => {
+  const listItems = toListItems(items);
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name,
+    url,
+    ...(description ? { description } : {}),
+    isPartOf: {
+      "@type": "Blog",
+      "@id": BLOG_ID,
+      name: BLOG_NAME,
+      url: SITE_URL,
+    },
+    // Omit the ItemList entirely when the collection is empty (e.g. an orphan
+    // tag with no posts) — an ItemList with an empty itemListElement is invalid.
+    ...(listItems.length
+      ? { mainEntity: { "@type": "ItemList", itemListElement: listItems } }
+      : {}),
+  };
+};
 
 export const getBlogPostingSchema = ({
   title,
