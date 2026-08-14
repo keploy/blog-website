@@ -290,12 +290,19 @@ const toListItems = (items: ListEntry[]) =>
  * AI/search engines can map the ordered set of links on listing pages, which
  * currently ship zero collection schema.
  */
-export const getItemListSchema = (items: ListEntry[], listName?: string) => ({
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  ...(listName ? { name: listName } : {}),
-  itemListElement: toListItems(items),
-});
+export const getItemListSchema = (items: ListEntry[], listName?: string) => {
+  const itemListElement = toListItems(items);
+  // Return null (not an empty ItemList) when nothing survives the name/url
+  // filter — an ItemList with an empty itemListElement is invalid schema, and
+  // this standalone builder needs the same guard as getCollectionPageSchema.
+  if (!itemListElement.length) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    ...(listName ? { name: listName } : {}),
+    itemListElement,
+  };
+};
 
 /**
  * CollectionPage for an archive/listing route (community, technology, tag,

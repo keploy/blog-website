@@ -124,7 +124,7 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
             { name: authorName, url: authorUrl },
           ]),
           profilePageSchema,
-          authoredWorksSchema,
+          ...(authoredWorksSchema ? [authoredWorksSchema] : []),
         ]}
         canonicalUrl={authorUrl}
       >

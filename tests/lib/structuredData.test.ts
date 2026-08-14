@@ -20,6 +20,7 @@ import {
   getWebSiteSchema,
   getCollectionPageSchema,
   getSearchResultsPageSchema,
+  getItemListSchema,
   getReviewSchema,
   getSoftwareApplicationSchema,
   ORG_ID,
@@ -166,6 +167,15 @@ test("technology posts render as TechArticle", () => {
     categorySlug: "technology",
   });
   assert.equal(tech["@type"], "TechArticle");
+});
+
+test("getItemListSchema returns null when no items survive the name/url filter", () => {
+  // An ItemList with an empty itemListElement is invalid schema — the builder
+  // must return null (e.g. an author whose posts all have null titles).
+  assert.equal(getItemListSchema([]), null);
+  assert.equal(getItemListSchema([{ url: "", name: "" }]), null);
+  const ok = getItemListSchema([{ url: "https://keploy.io/blog/community/x", name: "X" }]);
+  assert.ok(ok && (ok as any).itemListElement.length === 1);
 });
 
 // Review schema (home testimonials). The community wall carries no star
