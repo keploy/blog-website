@@ -76,8 +76,10 @@ function stripTags(s: string): string {
     .replace(/&#x([0-9a-f]+);/gi, (_, n) => safeFromCodePoint(parseInt(n, 16)))
     .replace(/&quot;/g, '"')
     .replace(/&apos;/g, "'")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
+    // Deliberately DO NOT decode &lt; / &gt;: leaving angle brackets encoded is
+    // the same defence-in-depth layer utils/seo.ts's decodeEntities documents,
+    // behind safeJsonLdStringify. Decoding them here would silently remove that
+    // layer for any text that flows into JSON-LD. See PR review #3.
     // &amp; last so we never double-decode (e.g. "&amp;#8217;" stays literal).
     .replace(/&amp;/g, "&")
     .replace(/\s+/g, " ")
