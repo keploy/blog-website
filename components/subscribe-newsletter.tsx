@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useRouter } from "next/router";
 import styles from "./subscribe-newsletter.module.css";
 import { newsLetterSubscriptionUrl } from '../services/constants'
 import { useInvisibleRecaptcha, RecaptchaAttribution } from "../lib/use-invisible-recaptcha";
@@ -39,6 +40,7 @@ export const subscribeMutation = (formData: { fullName: string, email: string, c
 
 
 export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) {
+  const router = useRouter();
   const myComponent = useRef<HTMLDivElement>(null);
   const [isVisible, setVisible] = useState<boolean>(true);
   const [fullName, setFullName] = useState('');
@@ -107,6 +109,21 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
         recaptchaToken,
       });
     });
+
+    // Google Chat notification — fire-and-forget, fail-open. Forwards the lead
+    // to a Chat space via the server-side /api/blog-lead-notify handler (which
+    // holds the webhook secret). Never gates the subscription.
+    fetch(`${router.basePath || ''}/api/blog-lead-notify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify({
+        fullName: fullName.trim(),
+        email: email.trim().toLowerCase(),
+        companyName: companyName.trim(),
+        page,
+      }),
+    }).catch(() => {});
 
     handleSubscribe(payload)
   };
