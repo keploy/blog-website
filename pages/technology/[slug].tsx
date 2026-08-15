@@ -16,7 +16,7 @@ import {
   getReviewAuthors,
 } from "../../lib/api";
 import ContainerSlug from "../../components/containerSlug";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
@@ -25,14 +25,13 @@ import { getRedirectSlug, hasRedirect } from "../../config/redirect";
 import {
   getBlogPostingSchema,
   getBreadcrumbListSchema,
-  getFAQPageSchema,
   getSoftwareSourceCodeSchema,
   getDefinedTermSetSchema,
   SITE_URL,
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
 import { getHowToSchema } from "../../lib/howToSchema";
-import { detectCodeLanguages, extractFaqs, countWords } from "../../utils/contentSchema";
+import { detectCodeLanguages, countWords } from "../../utils/contentSchema";
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
@@ -137,8 +136,16 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
 
   const postUrl = post?.slug ? `${SITE_URL}/technology/${post.slug}` : `${SITE_URL}/technology`;
-  const codeLanguages = detectCodeLanguages(post?.content);
-  const faqs = extractFaqs(post?.content);
+  // These scan the full post HTML; memoize so the passes run once on hydration
+  // and never again on the frequent re-renders this page triggers (scroll
+  // progress, router state) — see PR review #5.
+  const { codeLanguages, wordCount } = useMemo(
+    () => ({
+      codeLanguages: detectCodeLanguages(post?.content),
+      wordCount: countWords(post?.content),
+    }),
+    [post?.content],
+  );
   const tooltipTerms = post?.slug ? getTooltipsForSlug(post.slug) : [];
   const structuredData = [];
   if (post?.slug) {
@@ -170,7 +177,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         // Voice-assistant spoken summary: title + section headings.
         speakableSelectors: ["h1", "h2"],
         // Developer-intent content signals (serialized from existing UI data).
-        wordCount: countWords(post?.content),
+        wordCount,
         readingTimeMinutes: time,
         keywords: [
           ...(post?.categories?.edges?.map((e) => e?.node?.name).filter(Boolean) || []),
@@ -188,9 +195,12 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     if (howTo) {
       structuredData.push(howTo);
     }
-    if (faqs.length) {
-      structuredData.push(getFAQPageSchema(faqs));
-    }
+    // FAQPage intentionally NOT emitted from article templates: it was
+    // auto-extracted from any heading ending in "?", which flattened code /
+    // tables into the answer and clipped at 900 chars (mangled text is what an
+    // AI engine would cite), and it declared a second page type alongside the
+    // BlogPosting on the same URL. Re-enable only behind an explicit in-post
+    // FAQ marker with clean Q/A pairs. See PR review #2.
     for (const language of codeLanguages) {
       structuredData.push(
         getSoftwareSourceCodeSchema({ language, url: postUrl, name: `${safeTitle} — ${language} example` }),
