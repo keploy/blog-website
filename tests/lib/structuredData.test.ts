@@ -241,15 +241,17 @@ test("each Review is valid and rating-less, url only when present", () => {
 
 // ── SoftwareApplication (AI-citation entity anchor) ──────────────────────────
 
-test("getSoftwareApplicationSchema is a valid, free, rating-less software entity", () => {
+test("getSoftwareApplicationSchema is a valid, price-less, rating-less software entity", () => {
   const app = getSoftwareApplicationSchema() as Record<string, unknown>;
   assert.equal(app["@type"], "SoftwareApplication");
   assert.equal(app["@id"], SOFTWARE_ID);
   assert.equal(app.applicationCategory, "DeveloperApplication");
   assert.ok(typeof app.operatingSystem === "string" && (app.operatingSystem as string).length > 0);
-  const offers = app.offers as Record<string, unknown>;
-  assert.equal(offers["@type"], "Offer");
-  assert.equal(offers.price, "0");
+  // No free/price claim: the node is named "Keploy" (the whole product), which
+  // ships paid tiers, so a blanket offers price 0 / isAccessibleForFree would
+  // be inaccurate. See PR review #6.
+  assert.ok(!("offers" in app), "no blanket price claim");
+  assert.ok(!("isAccessibleForFree" in app), "no blanket free claim");
   // Shares the one Keploy Organization @id so the graph stays a single entity.
   const publisher = app.publisher as Record<string, unknown>;
   assert.equal(publisher["@id"], ORG_ID);
