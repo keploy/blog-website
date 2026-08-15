@@ -14,6 +14,11 @@ export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp 
   const posts = postsByTags?.edges || [];
   const router = useRouter();
   const tagSlug = tagSlugProp || (Array.isArray(router.query.slug) ? router.query.slug[0] : (router.query.slug || ''));
+  // Percent-encode the slug for every emitted URL — the tag hub already does
+  // (pages/tag/index.tsx), so without this a tag like "c#" produces /tag/c%23
+  // on the hub but a raw /tag/c# here, where everything after # is a fragment.
+  // The ItemList entry and the canonical would then disagree.
+  const encodedTagSlug = encodeURIComponent(tagSlug);
   const tagDisplay = tagSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) || 'All Topics';
   // "{tag} posts" is a SEMrush "title too short" on the shorter tags (/tag/ai,
   // /tag/go, /tag/qa ...). buildPageTitle caps the long end, so the only risk
@@ -29,11 +34,11 @@ export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp 
         getBreadcrumbListSchema([
           { name: "Home", url: SITE_URL },
           { name: "Tags", url: `${SITE_URL}/tag` },
-          { name: `${tagDisplay || "Tag"}`, url: `${SITE_URL}/tag/${tagSlug || ""}` },
+          { name: `${tagDisplay || "Tag"}`, url: `${SITE_URL}/tag/${encodedTagSlug || ""}` },
         ]),
         getCollectionPageSchema({
           name: `${tagDisplay} posts`,
-          url: `${SITE_URL}/tag/${tagSlug || ""}`,
+          url: `${SITE_URL}/tag/${encodedTagSlug || ""}`,
           description: `Keploy blog posts tagged "${tagDisplay}".`,
           items: posts.map(({ node }: any) => {
             const isCommunity =
@@ -46,7 +51,7 @@ export default function PostByTags({ postsByTags, preview, tagSlug: tagSlugProp 
           }),
         }),
       ]}
-      canonicalUrl={tagSlug ? `${SITE_URL}/tag/${tagSlug}` : `${SITE_URL}/tag`}
+      canonicalUrl={tagSlug ? `${SITE_URL}/tag/${encodedTagSlug}` : `${SITE_URL}/tag`}
     >
       <Head>
         <title>{buildPageTitle(pageTitle)}</title>
