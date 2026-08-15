@@ -3008,6 +3008,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/test-automation-roi</loc>
+    <lastmod>2026-08-14</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/08/Test-Automation-ROI-Cover-Image.webp</image:loc>
+      <image:title>Test Automation ROI: Formula, Examples &amp; Benchmarks</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/test-automation-tools</loc>
     <lastmod>2026-07-21</lastmod>
     <priority>0.70</priority>
