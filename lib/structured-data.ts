@@ -200,9 +200,11 @@ export const getSoftwareApplicationSchema = () => ({
   downloadUrl: "https://github.com/keploy/keploy/releases",
   softwareHelp: { "@type": "CreativeWork", url: `${MAIN_SITE_URL}/docs` },
   description:
-    "Keploy is an open-source, developer-centric API testing platform that auto-generates test cases and data mocks from real API traffic.",
-  isAccessibleForFree: true,
-  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    "Keploy is a developer-centric API testing platform with an open-source core that auto-generates test cases and data mocks from real API traffic.",
+  // No isAccessibleForFree/offers: this node is named "Keploy" (the whole
+  // product), which ships paid Cloud/Enterprise tiers, so a blanket price: 0 /
+  // free claim would be inaccurate. The open-source core is conveyed by the
+  // GitHub downloadUrl and the description instead of a fabricated price.
   author: { "@type": "Organization", "@id": ORG_ID, name: ORG_NAME, url: MAIN_SITE_URL },
   publisher: { "@type": "Organization", "@id": ORG_ID },
   sameAs: [
