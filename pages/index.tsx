@@ -17,6 +17,7 @@ import {
   SITE_URL,
 } from "../lib/structured-data";
 import Tweets from "../services/Tweets";
+import { buildPageTitle } from "../utils/seo";
 import { REVALIDATE_CONTENT } from "../lib/isr";
 // Canonical /blog title. Shared by Layout's `Title` prop (which Meta.tsx
 // turns into og:title / twitter:title) and the <Head><title>, so the
@@ -86,7 +87,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
             prop but does NOT emit a <title> tag (see LIVE-11 note in
             authors/[slug].tsx). Without this <Head><title>, /blog ships
             with no document title — same regression that hit author pages. */}
-        <title>{BLOG_TITLE}</title>
+        <title>{buildPageTitle(BLOG_TITLE)}</title>
       </Head>
       <Header />
       <Container>
