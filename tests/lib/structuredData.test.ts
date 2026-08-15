@@ -63,9 +63,23 @@ test("a real featuredImage is used and carries the title as caption", () => {
   assert.equal(image.caption, "Real Image Post");
 });
 
-test("datePublished is always a valid ISO date, never empty or invalid", () => {
-  assert.ok(isValidISODate(nullPost.datePublished), "datePublished must be valid ISO");
-  assert.ok(isValidISODate(nullPost.dateModified), "dateModified must be valid ISO");
+test("dates are omitted (never fabricated) when WP gives nothing usable", () => {
+  // The builder must not invent a date via new Date() — that ran in the page
+  // render body and caused an ld+json hydration mismatch + a publish date that
+  // drifted on every ISR revalidate. A missing date is a soft warning; a
+  // fabricated one is invalid data.
+  assert.ok(!("datePublished" in nullPost), "no fabricated datePublished");
+  assert.ok(!("dateModified" in nullPost), "no fabricated dateModified");
+});
+
+test("a valid date is emitted as ISO and dateModified falls back to it", () => {
+  const post = getBlogPostingSchema({
+    title: "Dated post",
+    url: "https://keploy.io/blog/community/dated",
+    datePublished: "2024-01-02",
+  });
+  assert.ok(isValidISODate(post.datePublished), "datePublished must be valid ISO");
+  assert.equal(post.dateModified, post.datePublished);
 });
 
 test("an invalid datePublished falls back to a valid dateModified", () => {
@@ -154,7 +168,9 @@ test("the author Person links to the same Organization @id via worksFor", () => 
 });
 
 test("core required Article fields are always present", () => {
-  for (const field of ["@context", "@type", "headline", "author", "publisher", "image", "datePublished"]) {
+  // datePublished intentionally excluded — it's omitted, not fabricated, when
+  // WP has no usable date (see the date-omission test above).
+  for (const field of ["@context", "@type", "headline", "author", "publisher", "image"]) {
     assert.ok(nullPost[field] !== undefined, `${field} must be present`);
   }
 });

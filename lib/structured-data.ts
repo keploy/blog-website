@@ -403,10 +403,14 @@ export const getBlogPostingSchema = ({
     authorNode.image = authorImage;
   }
 
-  // Never emit an empty/invalid datePublished. Prefer the post's own date,
-  // then its modified date, and only as a last resort the current build time.
-  const resolvedPublished =
-    toISODate(datePublished) || toISODate(dateModified) || new Date().toISOString();
+  // Resolve dates from the post's own values only — never invent one. An
+  // earlier version fell back to `new Date()`, but this builder runs in the
+  // page render body (client + server), so a build-time clock produced a
+  // hydration mismatch on the ld+json script AND a publish date that shifted
+  // on every ISR revalidate. When WP gives us nothing usable we omit the
+  // field: a missing datePublished is a soft "recommended" warning, whereas a
+  // fabricated one is exactly the invalid/misleading data this work refuses.
+  const resolvedPublished = toISODate(datePublished) || toISODate(dateModified);
   const resolvedModified = toISODate(dateModified) || resolvedPublished;
 
   const schema: Record<string, unknown> = {
@@ -417,8 +421,8 @@ export const getBlogPostingSchema = ({
       "@type": "WebPage",
       "@id": url,
     },
-    datePublished: resolvedPublished,
-    dateModified: resolvedModified,
+    ...(resolvedPublished ? { datePublished: resolvedPublished } : {}),
+    ...(resolvedModified ? { dateModified: resolvedModified } : {}),
     author: authorNode,
     publisher: {
       "@type": "Organization",
