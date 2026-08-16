@@ -26,21 +26,42 @@ const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 // pulling in an external store.
 const RATE_LIMIT_MAX = 5; // requests
 const RATE_LIMIT_WINDOW_MS = 60_000; // per minute, per IP
+const RATE_MAP_MAX_KEYS = 10_000; // evict stale IPs past this so the map can't grow unbounded
 const rateHits = new Map<string, number[]>();
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
   const cutoff = now - RATE_LIMIT_WINDOW_MS;
+
+  // Opportunistically drop IPs whose most recent hit is outside the window, so
+  // the map doesn't accumulate an entry per distinct IP for the instance's life.
+  if (rateHits.size > RATE_MAP_MAX_KEYS) {
+    rateHits.forEach((times, key) => {
+      if (times.length === 0 || times[times.length - 1] <= cutoff) rateHits.delete(key);
+    });
+  }
+
   const hits = (rateHits.get(ip) || []).filter((t) => t > cutoff);
   hits.push(now);
   rateHits.set(ip, hits);
   return hits.length > RATE_LIMIT_MAX;
 }
 
+// Identify the client for rate limiting. On Vercel the trustworthy client IP is
+// `x-real-ip` (set by the platform). Do NOT use the leftmost x-forwarded-for
+// token — that end is client-supplied and lets an attacker rotate it to dodge
+// the limit; the real IP is the LAST hop the trusted proxy appends.
 function clientIp(req: NextApiRequest): string {
+  const realIp = req.headers["x-real-ip"];
+  if (typeof realIp === "string" && realIp.trim()) return realIp.trim();
+
   const fwd = req.headers["x-forwarded-for"];
   const raw = Array.isArray(fwd) ? fwd[0] : fwd;
-  return (raw?.split(",")[0].trim() || req.socket.remoteAddress || "unknown");
+  if (raw) {
+    const parts = raw.split(",").map((s) => s.trim()).filter(Boolean);
+    if (parts.length) return parts[parts.length - 1];
+  }
+  return req.socket.remoteAddress || "unknown";
 }
 
 // Strip characters that carry meaning in Google Chat `text` messages so user
