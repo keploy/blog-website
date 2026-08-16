@@ -12,72 +12,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 //     the webhook URL is never exposed to the client, git, or logs.
 //   • Create it in Google Chat: open the space → Apps & integrations → Webhooks
 //     → add one → copy the URL into the env var. Rotate by deleting/recreating.
-//   • Abuse: a hidden honeypot field + a best-effort per-IP rate limit keep
-//     casual flooding out. Stronger gating (reCAPTCHA Enterprise verification,
-//     matching the /blog-mql path) is tracked as a follow-up.
 // If the env var is unset the submission still succeeds for the user, but the
 // lead is NOT delivered.
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-
-// Best-effort in-memory per-IP rate limit. On serverless this is per-instance,
-// not global, so it caps bursts against a hot instance rather than guaranteeing
-// a hard ceiling — enough to blunt casual flooding of the chat space without
-// pulling in an external store.
-const RATE_LIMIT_MAX = 5; // requests
-const RATE_LIMIT_WINDOW_MS = 60_000; // per minute, per IP
-const RATE_MAP_MAX_KEYS = 10_000; // evict stale IPs past this so the map can't grow unbounded
-const rateHits = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const cutoff = now - RATE_LIMIT_WINDOW_MS;
-
-  // Opportunistically drop IPs whose most recent hit is outside the window, so
-  // the map doesn't accumulate an entry per distinct IP for the instance's life.
-  if (rateHits.size > RATE_MAP_MAX_KEYS) {
-    rateHits.forEach((times, key) => {
-      if (times.length === 0 || times[times.length - 1] <= cutoff) rateHits.delete(key);
-    });
-  }
-
-  const hits = (rateHits.get(ip) || []).filter((t) => t > cutoff);
-  hits.push(now);
-  rateHits.set(ip, hits);
-  return hits.length > RATE_LIMIT_MAX;
-}
-
-// Identify the client for rate limiting. On Vercel the trustworthy client IP is
-// `x-real-ip` (set by the platform). Do NOT use the leftmost x-forwarded-for
-// token — that end is client-supplied and lets an attacker rotate it to dodge
-// the limit; the real IP is the LAST hop the trusted proxy appends.
-function clientIp(req: NextApiRequest): string {
-  const realIp = req.headers["x-real-ip"];
-  if (typeof realIp === "string" && realIp.trim()) return realIp.trim();
-
-  const fwd = req.headers["x-forwarded-for"];
-  const raw = Array.isArray(fwd) ? fwd[0] : fwd;
-  if (raw) {
-    const parts = raw.split(",").map((s) => s.trim()).filter(Boolean);
-    if (parts.length) return parts[parts.length - 1];
-  }
-  return req.socket.remoteAddress || "unknown";
-}
-
-// Strip characters that carry meaning in Google Chat `text` messages so user
-// input can't inject formatting (*bold* / _italic_), fake clickable links
-// (<url|label>), or break the layout with newlines. Also caps length.
-function sanitize(value: string, max = 200): string {
-  return value
-    .replace(/[<>|*_`\r\n]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, max);
-}
-
-// Track the "webhook not configured" warning so it's logged once per instance
-// instead of on every submit — the off state is expected until the env is set.
-let warnedMissingWebhook = false;
 
 export default async function handler(
   req: NextApiRequest,
@@ -93,14 +31,9 @@ export default async function handler(
     unknown
   >;
 
-  // Honeypot — the form renders a hidden `company_website` input that humans
-  // never see; a filled value means a bot. Silently accept and drop.
+  // Honeypot — silently accept (and drop) bot submissions.
   if (data.company_website) {
     return res.status(200).json({ ok: true, delivered: false });
-  }
-
-  if (isRateLimited(clientIp(req))) {
-    return res.status(429).json({ ok: false, error: "rate_limited" });
   }
 
   const name = String(data.fullName ?? "").trim();
@@ -112,29 +45,24 @@ export default async function handler(
   }
 
   const lead = {
-    name: sanitize(name, 120),
-    email: sanitize(email, 254),
-    company: sanitize(String(data.companyName ?? ""), 160),
-    page: sanitize(String(data.page ?? ""), 500),
+    name,
+    email,
+    company: String(data.companyName ?? "").trim(),
+    page: String(data.page ?? ""),
     submittedAt: new Date().toISOString(),
   };
 
   const webhook = process.env.GOOGLE_CHAT_WEBHOOK_URL;
   if (!webhook) {
     // No PII in logs. Set GOOGLE_CHAT_WEBHOOK_URL to deliver leads to the space.
-    // Expected steady state until the env is set, so warn once, not every submit.
-    if (!warnedMissingWebhook) {
-      warnedMissingWebhook = true;
-      console.warn(
-        "[blog-lead] GOOGLE_CHAT_WEBHOOK_URL is not configured — leads accepted but NOT delivered. Set the env var to enable delivery.",
-      );
-    }
+    console.error(
+      "[blog-lead] GOOGLE_CHAT_WEBHOOK_URL is not configured — lead accepted but NOT delivered. Set the env var to enable delivery.",
+    );
     return res.status(200).json({ ok: true, delivered: false });
   }
 
   try {
-    // page is rendered as plain (sanitized) text, not a <url|label> link, so a
-    // direct POST can't inject a misleading clickable URL.
+    // Google Chat renders *bold* / _italic_ and <url|label> in `text` messages.
     const text =
       `*📨 New Keploy blog subscriber*\n` +
       `*Name:* ${lead.name}\n` +
