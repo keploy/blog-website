@@ -17,6 +17,16 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
+// Field caps mirror blog-mql.ts. Google Chat rejects `text` over ~4096 chars, so
+// an oversized page URL or a long paste would silently fail delivery (chatRes.ok
+// false) even for a legit user. Truncate client-visible fields to stay safe.
+const CAPS = { name: 120, email: 254, company: 160, page: 500 };
+const cap = (value: string, max: number) => value.slice(0, max);
+
+// Abort a hung Google Chat request so a slow webhook can't hold a serverless
+// slot open until the platform hard-timeout. Mirrors blog-mql.ts (15s).
+const CHAT_TIMEOUT_MS = 15000;
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -45,22 +55,28 @@ export default async function handler(
   }
 
   const lead = {
-    name,
-    email,
-    company: String(data.companyName ?? "").trim(),
-    page: String(data.page ?? ""),
+    name: cap(name, CAPS.name),
+    email: cap(email, CAPS.email),
+    company: cap(String(data.companyName ?? "").trim(), CAPS.company),
+    page: cap(String(data.page ?? ""), CAPS.page),
     submittedAt: new Date().toISOString(),
   };
 
   const webhook = process.env.GOOGLE_CHAT_WEBHOOK_URL;
   if (!webhook) {
     // No PII in logs. Set GOOGLE_CHAT_WEBHOOK_URL to deliver leads to the space.
-    console.error(
-      "[blog-lead] GOOGLE_CHAT_WEBHOOK_URL is not configured — lead accepted but NOT delivered. Set the env var to enable delivery.",
-    );
+    // Gated on non-production (matching blog-mql.ts) so the shipped-off default
+    // doesn't spam prod logs / alerting with an expected steady state.
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        "[blog-lead] GOOGLE_CHAT_WEBHOOK_URL is not configured — lead accepted but NOT delivered. Set the env var to enable delivery.",
+      );
+    }
     return res.status(200).json({ ok: true, delivered: false });
   }
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), CHAT_TIMEOUT_MS);
   try {
     // Google Chat renders *bold* / _italic_ and <url|label> in `text` messages.
     const text =
@@ -75,14 +91,19 @@ export default async function handler(
       method: "POST",
       headers: { "Content-Type": "application/json; charset=UTF-8" },
       body: JSON.stringify({ text }),
+      signal: controller.signal,
     });
     return res.status(200).json({ ok: true, delivered: chatRes.ok });
   } catch (err) {
-    console.error(
-      "[blog-lead] delivery to Google Chat failed — verify GOOGLE_CHAT_WEBHOOK_URL is a valid incoming-webhook URL. Lead was NOT delivered.",
-      err,
-    );
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        "[blog-lead] delivery to Google Chat failed — verify GOOGLE_CHAT_WEBHOOK_URL is a valid incoming-webhook URL. Lead was NOT delivered.",
+        err,
+      );
+    }
     // Never fail the user — the newsletter subscription path is unaffected.
     return res.status(200).json({ ok: true, delivered: false });
+  } finally {
+    clearTimeout(timer);
   }
 }
