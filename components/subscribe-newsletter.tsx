@@ -46,6 +46,8 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
+  // Honeypot — hidden from humans; bots that auto-fill every field trip it.
+  const [companyWebsite, setCompanyWebsite] = useState('');
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [emailError, setEmailError] = useState('');
   const message = "NEWSLETTER"
@@ -121,6 +123,7 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
         fullName: fullName.trim(),
         email: email.trim().toLowerCase(),
         companyName: companyName.trim(),
+        company_website: companyWebsite,
         page,
       }),
     }).catch(() => {});
@@ -146,6 +149,18 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
               onSubmit={submitHandler}
               onFocusCapture={() => setCaptchaActive(true)}
             >
+              {/* Honeypot — hidden from humans (off-screen, not tabbable, no
+                  autofill); a filled value marks the submit as a bot. */}
+              <input
+                type="text"
+                name="company_website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                value={companyWebsite}
+                onChange={(e) => setCompanyWebsite(e.target.value)}
+                style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+              />
               <input
                 type="text"
                 className="rounded px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
