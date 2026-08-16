@@ -56,9 +56,14 @@ export default async function handler(
 
   const lead = {
     name: cap(name, CAPS.name),
-    email: cap(email, CAPS.email),
+    // Lowercase server-side too (the client already does), so a direct hit
+    // can't create case-variant leads — same normalization the blog-mql path uses.
+    email: cap(email.toLowerCase(), CAPS.email),
     company: cap(String(data.companyName ?? "").trim(), CAPS.company),
     page: cap(String(data.page ?? ""), CAPS.page),
+    // Where the lead came from, mirroring blog-mql's `source` so both
+    // destinations tell the same story. Defaults if a direct hit omits it.
+    source: cap(String(data.source ?? "blog-newsletter").trim(), 80),
     submittedAt: new Date().toISOString(),
   };
 
@@ -84,6 +89,7 @@ export default async function handler(
       `*Name:* ${lead.name}\n` +
       `*Email:* ${lead.email}\n` +
       `*Company:* ${lead.company || "—"}\n` +
+      `*Source:* ${lead.source}\n` +
       `*Page:* ${lead.page || "—"}\n` +
       `*Submitted:* ${lead.submittedAt}`;
 

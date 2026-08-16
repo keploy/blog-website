@@ -128,6 +128,7 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
         email: email.trim().toLowerCase(),
         companyName: companyName.trim(),
         company_website: companyWebsite,
+        source: 'blog-newsletter',
         page,
       }),
     }).catch(() => {});
