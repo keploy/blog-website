@@ -80,6 +80,10 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
   const submitHandler = (e) => {
     e.preventDefault();
 
+    // Honeypot — bots fill the hidden company_website field; humans don't.
+    // Drop silently client-side too (the endpoint re-checks server-side).
+    if (companyWebsite) return;
+
       if (!isValidEmail(email)) {
     setEmailError("Please enter a valid email address."); 
 
