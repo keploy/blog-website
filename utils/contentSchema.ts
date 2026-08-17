@@ -76,10 +76,12 @@ function stripTags(s: string): string {
     .replace(/&#x([0-9a-f]+);/gi, (_, n) => safeFromCodePoint(parseInt(n, 16)))
     .replace(/&quot;/g, '"')
     .replace(/&apos;/g, "'")
-    // Deliberately DO NOT decode &lt; / &gt;: leaving angle brackets encoded is
-    // the same defence-in-depth layer utils/seo.ts's decodeEntities documents,
-    // behind safeJsonLdStringify. Decoding them here would silently remove that
-    // layer for any text that flows into JSON-LD. See PR review #3.
+    // Decode &lt; / &gt; too: an AI citing an answer should read "<keploy record>",
+    // not the literal entity text. This runs AFTER tags are stripped, and every
+    // JSON-LD sink goes through safeJsonLdStringify (the hard </script> guard), so
+    // decoding here is safe — it doesn't remove any real defence layer.
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
     // &amp; last so we never double-decode (e.g. "&amp;#8217;" stays literal).
     .replace(/&amp;/g, "&")
     .replace(/\s+/g, " ")
@@ -100,7 +102,8 @@ const FAQ_SECTION_HEADING = /^(faqs?|faq's|frequently asked questions)$/i;
  *   1. find the marker heading (FAQ / Frequently Asked Questions),
  *   2. bound the section at the next heading of the same-or-higher level,
  *   3. inside it, each sub-heading ending in "?" is a question and the answer is
- *      the text of the following <p> paragraphs only (code/tables/lists skipped).
+ *      the text of the following <p> paragraphs and <li> list items (code blocks
+ *      and tables skipped, since WP FAQ answers are often bulleted lists).
  * Still requires ≥2 clean pairs, so a stray "FAQ" heading alone emits nothing.
  */
 export function extractFaqs(
@@ -149,16 +152,20 @@ export function extractFaqs(
   while ((q = qRe.exec(section)) !== null && faqs.length < max) {
     const question = stripTags(q[2]);
     if (!question.endsWith("?")) continue;
-    const paragraphs: string[] = [];
-    // `<p(?:\s[^>]*)?>` matches <p> / <p class="…"> but NOT <pre> — otherwise a
-    // code block leaks into the answer (the exact flattening review #2 flagged).
-    const pRe = /<p(?:\s[^>]*)?>([\s\S]*?)<\/p>/gi;
-    let p: RegExpExecArray | null;
-    while ((p = pRe.exec(q[3])) !== null) {
-      const t = stripTags(p[1]);
-      if (t) paragraphs.push(t);
+    // Answer = text of <p> paragraphs AND <li> list items, in document order
+    // (WP FAQ sections often answer with a <ul>/<ol>). Drop <pre>/<table> blocks
+    // first so code/tables never leak in — the flattening review #2 flagged.
+    const body = q[3]
+      .replace(/<pre[\s\S]*?<\/pre>/gi, " ")
+      .replace(/<table[\s\S]*?<\/table>/gi, " ");
+    const parts: string[] = [];
+    const partRe = /<(p|li)(?:\s[^>]*)?>([\s\S]*?)<\/\1>/gi;
+    let part: RegExpExecArray | null;
+    while ((part = partRe.exec(body)) !== null) {
+      const t = stripTags(part[2]);
+      if (t) parts.push(t);
     }
-    const answer = paragraphs.join(" ").slice(0, 900);
+    const answer = parts.join(" ").slice(0, 900);
     if (question.length > 8 && answer.length > 20) {
       faqs.push({ question, answer });
     }

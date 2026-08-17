@@ -68,6 +68,30 @@ test("extractFaqs answers skip code/tables, taking paragraph text only", () => {
   assert.ok(faqs[0].answer.includes("Run the installer"));
 });
 
+test("extractFaqs includes <li> list answers (WP FAQ sections often use bullets)", () => {
+  const html = `
+    <h2>FAQ</h2>
+    <h3>What does Keploy record?</h3><ul><li>HTTP calls and their dependencies during a real run.</li></ul>
+    <h3>Does it need code changes?</h3><ul><li>No code changes are required to start recording.</li></ul>
+  `;
+  const faqs = extractFaqs(html);
+  assert.equal(faqs.length, 2);
+  assert.ok(faqs[0].answer.includes("HTTP calls"), "bulleted answer must be captured");
+  assert.ok(faqs[1].answer.includes("No code changes"));
+});
+
+test("extractFaqs decodes &lt;/&gt; so answers carry real angle brackets, not entities", () => {
+  const html = `
+    <h2>FAQ</h2>
+    <h3>How do I start recording traffic?</h3><p>Run &lt;keploy record&gt; in your terminal to begin.</p>
+    <h3>Is it open source?</h3><p>Yes, the core is open source on GitHub for everyone.</p>
+  `;
+  const faqs = extractFaqs(html);
+  assert.equal(faqs.length, 2);
+  assert.ok(faqs[0].answer.includes("<keploy record>"), "angle brackets should be decoded");
+  assert.ok(!faqs[0].answer.includes("&lt;"), "no literal entity should remain");
+});
+
 test("extractFaqs returns empty for an FAQ marker with fewer than 2 pairs", () => {
   assert.deepEqual(
     extractFaqs("<h2>FAQ</h2><h3>What is X?</h3><p>An answer long enough here to pass.</p>"),
