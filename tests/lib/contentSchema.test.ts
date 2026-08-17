@@ -18,10 +18,13 @@ test("detectCodeLanguages returns empty for no code", () => {
   assert.deepEqual(detectCodeLanguages(undefined), []);
 });
 
-test("extractFaqs pulls question headings + answers, needs >= 2", () => {
+test("extractFaqs pulls Q&A only from an explicit FAQ section, needs >= 2", () => {
   const html = `
-    <h2>What is API testing?</h2><p>It validates API behavior against expectations.</p>
+    <h2>Intro</h2><p>Some framing prose that is not a FAQ answer at all.</p>
+    <h2>Frequently Asked Questions</h2>
+    <h3>What is API testing?</h3><p>It validates API behavior against expectations.</p>
     <h3>How does Keploy record traffic?</h3><p>It captures real calls and turns them into test cases automatically.</p>
+    <h2>Conclusion</h2><p>Wrap up prose.</p>
   `;
   const faqs = extractFaqs(html);
   assert.equal(faqs.length, 2);
@@ -29,9 +32,47 @@ test("extractFaqs pulls question headings + answers, needs >= 2", () => {
   assert.ok(faqs[0].answer.includes("validates API behavior"));
 });
 
-test("extractFaqs returns empty when fewer than 2 question headings", () => {
-  assert.deepEqual(extractFaqs("<h2>What is X?</h2><p>An answer long enough here.</p>"), []);
-  assert.deepEqual(extractFaqs("<h2>Not a question</h2><p>body</p>"), []);
+test("extractFaqs requires the FAQ marker — stray '?' headings are ignored", () => {
+  // Two question headings but NO FAQ marker section → nothing (this was the
+  // over-eager scrape the review flagged).
+  const noMarker = `
+    <h2>What is X?</h2><p>An answer long enough to pass the length gate here.</p>
+    <h2>Why does Y matter?</h2><p>Another sufficiently long answer paragraph here.</p>
+  `;
+  assert.deepEqual(extractFaqs(noMarker), []);
+});
+
+test("extractFaqs accepts questions at the same heading level as the marker", () => {
+  const html = `
+    <h2>FAQ</h2>
+    <h2>What is API testing?</h2><p>It validates API behavior against expectations.</p>
+    <h2>How does Keploy help?</h2><p>It generates tests and mocks from real traffic.</p>
+    <h2>Conclusion</h2><p>Not part of the FAQ.</p>
+  `;
+  const faqs = extractFaqs(html);
+  assert.equal(faqs.length, 2);
+  assert.ok(!faqs.some((f) => f.question.toLowerCase().includes("conclusion")));
+});
+
+test("extractFaqs answers skip code/tables, taking paragraph text only", () => {
+  const html = `
+    <h2>FAQ</h2>
+    <h3>How do I install it?</h3>
+    <pre><code>npm install keploy && keploy --version</code></pre>
+    <p>Run the installer, then verify the version from your terminal.</p>
+    <h3>Is it open source?</h3><p>Yes, the core is open source on GitHub.</p>
+  `;
+  const faqs = extractFaqs(html);
+  assert.equal(faqs.length, 2);
+  assert.ok(!faqs[0].answer.includes("npm install"), "code block must not leak into the answer");
+  assert.ok(faqs[0].answer.includes("Run the installer"));
+});
+
+test("extractFaqs returns empty for an FAQ marker with fewer than 2 pairs", () => {
+  assert.deepEqual(
+    extractFaqs("<h2>FAQ</h2><h3>What is X?</h3><p>An answer long enough here to pass.</p>"),
+    [],
+  );
 });
 
 test("countWords ignores HTML tags and entities, counts real words", () => {

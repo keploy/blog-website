@@ -86,25 +86,81 @@ function stripTags(s: string): string {
     .trim();
 }
 
+// A post opts into FAQPage by adding a heading whose text is exactly "FAQ",
+// "FAQs", "FAQ's", or "Frequently Asked Questions" (trailing ":" / whitespace
+// ignored). Only Q&A *under that heading* are extracted.
+const FAQ_SECTION_HEADING = /^(faqs?|faq's|frequently asked questions)$/i;
+
 /**
- * Extract FAQ Q&A pairs: a heading (h2–h4) whose text ends in "?", followed by
- * the prose up to the next heading. Only returns a set when at least 2 real
- * pairs are found, so ordinary posts don't get a spurious FAQPage.
+ * Extract FAQ Q&A pairs — but ONLY from an explicit FAQ section, not from every
+ * "?" heading in the post. An earlier version scraped any heading ending in "?"
+ * and swept everything up to the next heading into the answer, so code blocks
+ * and tables got flattened and clipped into mangled "answers" an AI would cite
+ * (PR review #2). Now:
+ *   1. find the marker heading (FAQ / Frequently Asked Questions),
+ *   2. bound the section at the next heading of the same-or-higher level,
+ *   3. inside it, each sub-heading ending in "?" is a question and the answer is
+ *      the text of the following <p> paragraphs only (code/tables/lists skipped).
+ * Still requires ≥2 clean pairs, so a stray "FAQ" heading alone emits nothing.
  */
 export function extractFaqs(
   html: string | undefined | null,
   max = 10,
 ): { question: string; answer: string }[] {
   if (!html) return [];
+
+  // 1. Locate the FAQ marker heading and its level.
+  const headingRe = /<h([2-4])[^>]*>([\s\S]*?)<\/h\1>/gi;
+  let marker: RegExpExecArray | null;
+  let sectionStart = -1;
+  let markerLevel = 0;
+  while ((marker = headingRe.exec(html)) !== null) {
+    const text = stripTags(marker[2]).replace(/[:\s]+$/, "").trim();
+    if (FAQ_SECTION_HEADING.test(text)) {
+      markerLevel = Number(marker[1]);
+      sectionStart = headingRe.lastIndex;
+      break;
+    }
+  }
+  if (sectionStart === -1) return [];
+
+  // 2. The section ends at the next heading of level <= the marker that is NOT
+  // itself a question — so "FAQ (h2) → questions at h2" still works (a same-
+  // level "?" heading stays a question; a same-level "Conclusion" closes it).
+  let sectionEnd = html.length;
+  const boundaryRe = /<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi;
+  boundaryRe.lastIndex = sectionStart;
+  let boundary: RegExpExecArray | null;
+  while ((boundary = boundaryRe.exec(html)) !== null) {
+    if (
+      Number(boundary[1]) <= markerLevel &&
+      !stripTags(boundary[2]).endsWith("?")
+    ) {
+      sectionEnd = boundary.index;
+      break;
+    }
+  }
+  const section = html.slice(sectionStart, sectionEnd);
+
+  // 3. Question sub-headings ending in "?", answer = following <p> text only.
   const faqs: { question: string; answer: string }[] = [];
-  const re = /<h[2-4][^>]*>([\s\S]*?)<\/h[2-4]>([\s\S]*?)(?=<h[2-4][^>]*>|$)/gi;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(html)) !== null && faqs.length < max) {
-    const question = stripTags(m[1]);
+  const qRe = /<h([2-6])[^>]*>([\s\S]*?)<\/h\1>([\s\S]*?)(?=<h[2-6][^>]*>|$)/gi;
+  let q: RegExpExecArray | null;
+  while ((q = qRe.exec(section)) !== null && faqs.length < max) {
+    const question = stripTags(q[2]);
     if (!question.endsWith("?")) continue;
-    const answer = stripTags(m[2]);
+    const paragraphs: string[] = [];
+    // `<p(?:\s[^>]*)?>` matches <p> / <p class="…"> but NOT <pre> — otherwise a
+    // code block leaks into the answer (the exact flattening review #2 flagged).
+    const pRe = /<p(?:\s[^>]*)?>([\s\S]*?)<\/p>/gi;
+    let p: RegExpExecArray | null;
+    while ((p = pRe.exec(q[3])) !== null) {
+      const t = stripTags(p[1]);
+      if (t) paragraphs.push(t);
+    }
+    const answer = paragraphs.join(" ").slice(0, 900);
     if (question.length > 8 && answer.length > 20) {
-      faqs.push({ question, answer: answer.slice(0, 900) });
+      faqs.push({ question, answer });
     }
   }
   return faqs.length >= 2 ? faqs : [];

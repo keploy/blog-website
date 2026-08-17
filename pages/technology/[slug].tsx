@@ -25,13 +25,14 @@ import { getRedirectSlug, hasRedirect } from "../../config/redirect";
 import {
   getBlogPostingSchema,
   getBreadcrumbListSchema,
+  getFAQPageSchema,
   getSoftwareSourceCodeSchema,
   getDefinedTermSetSchema,
   SITE_URL,
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
 import { getHowToSchema } from "../../lib/howToSchema";
-import { detectCodeLanguages, countWords } from "../../utils/contentSchema";
+import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/contentSchema";
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
@@ -139,10 +140,11 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   // These scan the full post HTML; memoize so the passes run once on hydration
   // and never again on the frequent re-renders this page triggers (scroll
   // progress, router state) — see PR review #5.
-  const { codeLanguages, wordCount } = useMemo(
+  const { codeLanguages, wordCount, faqs } = useMemo(
     () => ({
       codeLanguages: detectCodeLanguages(post?.content),
       wordCount: countWords(post?.content),
+      faqs: extractFaqs(post?.content),
     }),
     [post?.content],
   );
@@ -195,12 +197,13 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     if (howTo) {
       structuredData.push(howTo);
     }
-    // FAQPage intentionally NOT emitted from article templates: it was
-    // auto-extracted from any heading ending in "?", which flattened code /
-    // tables into the answer and clipped at 900 chars (mangled text is what an
-    // AI engine would cite), and it declared a second page type alongside the
-    // BlogPosting on the same URL. Re-enable only behind an explicit in-post
-    // FAQ marker with clean Q/A pairs. See PR review #2.
+    // FAQPage only when the post has an explicit "FAQ" / "Frequently Asked
+    // Questions" section with ≥2 clean Q&A pairs (see utils/contentSchema
+    // extractFaqs). Marker-gated so we never scrape stray "?" headings or
+    // flatten code/tables into answers. Linked to the post WebPage via @id.
+    if (faqs.length) {
+      structuredData.push(getFAQPageSchema(faqs, postUrl));
+    }
     for (const language of codeLanguages) {
       structuredData.push(
         getSoftwareSourceCodeSchema({ language, url: postUrl, name: `${safeTitle} — ${language} example` }),

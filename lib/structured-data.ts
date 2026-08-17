@@ -541,9 +541,19 @@ export const getBlogPostingSchema = ({
  * engines cite FAQ Q&A directly, so surfacing them as structured data is high
  * leverage. Only call this when real Q&A pairs were detected.
  */
-export const getFAQPageSchema = (faqs: { question: string; answer: string }[]) => ({
+// `url` is the post URL. FAQPage gets its own `@id` (`…#faq`) and an `isPartOf`
+// back to the article's WebPage (same `@id` the BlogPosting's mainEntityOfPage
+// uses), so the FAQ reads as part of the post rather than a competing page-type
+// node on the same URL (PR review #2).
+export const getFAQPageSchema = (
+  faqs: { question: string; answer: string }[],
+  url?: string,
+) => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  ...(url
+    ? { "@id": `${url}#faq`, url, isPartOf: { "@type": "WebPage", "@id": url } }
+    : {}),
   mainEntity: faqs.map((f) => ({
     "@type": "Question",
     name: f.question,
