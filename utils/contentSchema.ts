@@ -143,7 +143,11 @@ export function extractFaqs(
       break;
     }
   }
-  const section = html.slice(sectionStart, sectionEnd);
+  // Bound the section: malformed WP markup (e.g. an unclosed heading) can leave
+  // no boundary match, so cap the length rather than sweeping to end-of-document
+  // and degrading back toward the old scrape-everything behaviour.
+  const MAX_FAQ_SECTION = 20000;
+  const section = html.slice(sectionStart, Math.min(sectionEnd, sectionStart + MAX_FAQ_SECTION));
 
   // 3. Question sub-headings ending in "?", answer = following <p> text only.
   const faqs: { question: string; answer: string }[] = [];
