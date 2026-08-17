@@ -145,21 +145,46 @@ function trackBannerClick(bannerId: string) {
   whenReady(() => window.clarity, () => window.clarity!("set", "banner_clicked", bannerId));
 }
 
+function trackBannerImpression(bannerId: string) {
+  whenReady(() => window.gtag, () => window.gtag!("event", "banner_impression", { banner_id: bannerId }));
+  whenReady(() => window.clarity, () => window.clarity!("set", "banner_shown", bannerId));
+}
+
 /* ── Ad / CTA Banner ── */
 function SidebarAdBanner() {
   const [banner, setBanner] = React.useState<(typeof AD_BANNERS)[number] | null>(null);
   const [loaded, setLoaded] = React.useState(false);
   const [errored, setErrored] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const impressionFired = React.useRef(false);
 
   React.useEffect(() => {
     setBanner(AD_BANNERS[Math.floor(Math.random() * AD_BANNERS.length)]);
   }, []);
+
+  // Count a viewable impression once the picked banner scrolls ≥50% into view
+  // (fires a single time per load, so clicks / impressions gives a real CTR).
+  React.useEffect(() => {
+    if (!banner || impressionFired.current) return;
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting) && !impressionFired.current) {
+        impressionFired.current = true;
+        trackBannerImpression(banner.id);
+        io.disconnect();
+      }
+    }, { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [banner, errored]);
 
   // Text fallback so the ad slot is never blank if the artwork fails to load
   // (content blocker, S3 hiccup, etc.). Keeps a working CTA + click tracking.
   if (banner && errored) {
     return (
       <div
+        ref={containerRef}
         className="rounded-2xl p-5 flex flex-col justify-center"
         style={{ width: '100%', aspectRatio: AD_ASPECT, backgroundColor: '#FFF4EE' }}
       >
@@ -188,6 +213,7 @@ function SidebarAdBanner() {
   // slot, show a skeleton until the image decodes, then fade the artwork in.
   return (
     <div
+      ref={containerRef}
       className="rounded-2xl overflow-hidden"
       style={{
         position: 'relative',
