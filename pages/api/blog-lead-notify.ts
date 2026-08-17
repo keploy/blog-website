@@ -19,6 +19,20 @@ import type { NextApiRequest, NextApiResponse } from "next";
 //     tracked as a follow-up.
 // If the env var is unset the submission still succeeds for the user, but the
 // lead is NOT delivered.
+//
+// Data / PII & retention:
+//   • The Chat message carries the lead's name, email and company. That makes
+//     the Chat space a THIRD place this PII lives, alongside the api-server
+//     subscription and telemetry /blog-mql — deleting a lead from those two
+//     does NOT remove it from Chat.
+//   • Retention is therefore governed by the Google Chat space's own message
+//     retention policy (Workspace Admin → Apps → Google Chat → retention). The
+//     space MUST be configured with a bounded retention (e.g. auto-delete), and
+//     a GDPR/erasure request for a lead has to also purge the relevant Chat
+//     messages. Owner: the DevRel team that owns the space + webhook.
+//   • If that retention story ever becomes a burden, switch this to a PII-free
+//     ping ("new blog lead — see dashboard") and keep identity only in the two
+//     stores above.
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
