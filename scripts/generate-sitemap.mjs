@@ -170,11 +170,19 @@ function normalizePath(value) {
 // regex/param token is skipped so we never rewrite a URL by accident.
 async function loadRedirectMap() {
   const map = new Map();
-  const add = (source, destination, prefix = "") => {
-    if (typeof source !== "string" || typeof destination !== "string") return;
-    if (/[()*:?[\]+|]/.test(source)) return; // literal sources only
-    const from = normalizePath(`${prefix}${source}`);
-    const to = normalizePath(`${prefix}${destination}`);
+  const add = (r, prefix = "") => {
+    if (!r || typeof r.source !== "string" || typeof r.destination !== "string") return;
+    // Conditional redirects (has/missing) only fire for some requests, so we
+    // can't fold them into the sitemap unconditionally — skip them.
+    if (r.has || r.missing) return;
+    // Absolute destinations leave the site; normalizePath would mangle them into
+    // "/blog/https:/…", so skip — the target isn't a same-site path to rewrite.
+    if (/^https?:\/\//i.test(r.destination)) return;
+    if (/[()*:?[\]+|]/.test(r.source)) return; // literal sources only
+    // basePath:false means the rule isn't served under /blog, so don't prepend it.
+    const usePrefix = r.basePath === false ? "" : prefix;
+    const from = normalizePath(`${usePrefix}${r.source}`);
+    const to = normalizePath(`${usePrefix}${r.destination}`);
     if (from && to && from !== to) map.set(from, to);
   };
 
@@ -183,7 +191,7 @@ async function loadRedirectMap() {
     const vercel = JSON.parse(
       await readFile(path.join(repoRoot, "vercel.json"), "utf8")
     );
-    for (const r of vercel.redirects ?? []) add(r.source, r.destination);
+    for (const r of vercel.redirects ?? []) add(r);
   } catch (error) {
     console.warn("[generate-sitemap] Could not read vercel.json redirects:", error.message);
   }
@@ -194,7 +202,7 @@ async function loadRedirectMap() {
     const nextConfig = (await import(configUrl)).default;
     const list =
       typeof nextConfig?.redirects === "function" ? await nextConfig.redirects() : [];
-    for (const r of list ?? []) add(r.source, r.destination, BASE_PATH);
+    for (const r of list ?? []) add(r, BASE_PATH);
   } catch (error) {
     console.warn("[generate-sitemap] Could not load next.config.js redirects:", error.message);
   }
@@ -213,7 +221,23 @@ function resolveLoc(loc, redirectMap, mainSiteUrl) {
     p = redirectMap.get(p);
     hops += 1;
   }
+  // If the map still has `p`, we bailed on the hop cap or a cycle rather than a
+  // real terminus — the emitted <loc> may still 301. Surface it in the log.
+  if (redirectMap.has(p)) {
+    console.warn(
+      `[generate-sitemap] redirect chain for ${loc} did not terminate (hop cap or cycle); emitting ${mainSiteUrl}${p}, which may still redirect.`,
+    );
+  }
   return `${mainSiteUrl}${p}`;
+}
+
+// The category segment of a resolved /blog/<category>/<slug> loc, or null. Used
+// to bucket lastmod by where the post ACTUALLY lives after redirects, not where
+// WordPress filed it (a /community post can 301 to /technology).
+function categoryFromLoc(loc, mainSiteUrl) {
+  const p = normalizePath(loc.startsWith(mainSiteUrl) ? loc.slice(mainSiteUrl.length) : loc);
+  const m = p.match(/^\/blog\/([^/]+)\//);
+  return m && VALID_CATEGORIES.has(m[1]) ? m[1] : null;
 }
 
 function buildEntries(posts, mainSiteUrl, redirectMap = new Map()) {
@@ -278,8 +302,11 @@ function buildEntries(posts, mainSiteUrl, redirectMap = new Map()) {
       normalizeLastmod(post.modified) !== null ||
       normalizeLastmod(post.date) !== null;
     if (isFromWordPress) {
-      if (!latestByCategory.has(category) || lastmod > latestByCategory.get(category)) {
-        latestByCategory.set(category, lastmod);
+      // Bucket by the RESOLVED category so a /community post that 301s to
+      // /technology updates technology's lastmod, not community's.
+      const resolvedCategory = categoryFromLoc(loc, mainSiteUrl) ?? category;
+      if (!latestByCategory.has(resolvedCategory) || lastmod > latestByCategory.get(resolvedCategory)) {
+        latestByCategory.set(resolvedCategory, lastmod);
       }
       if (!latestOverall || lastmod > latestOverall) {
         latestOverall = lastmod;
@@ -290,7 +317,9 @@ function buildEntries(posts, mainSiteUrl, redirectMap = new Map()) {
   const fallbackLastmod = latestOverall ?? today;
 
   const resolvedStaticEntries = staticEntries.map(({ loc, priority, category }) => ({
-    loc,
+    // Resolve static entries through the redirect map too — none redirect today,
+    // so this is hardening against a future rule moving /blog/community etc.
+    loc: resolveLoc(loc, redirectMap, mainSiteUrl),
     priority,
     lastmod: category
       ? latestByCategory.get(category) ?? fallbackLastmod
@@ -355,4 +384,4 @@ if (invokedDirectly) {
   });
 }
 
-export { normalizePath, loadRedirectMap, resolveLoc, buildEntries };
+export { normalizePath, loadRedirectMap, resolveLoc, buildEntries, categoryFromLoc };
