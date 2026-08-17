@@ -162,10 +162,15 @@ function SidebarAdBanner() {
     setBanner(AD_BANNERS[Math.floor(Math.random() * AD_BANNERS.length)]);
   }, []);
 
-  // Count a viewable impression once the picked banner scrolls ≥50% into view
-  // (fires a single time per load, so clicks / impressions gives a real CTR).
+  // Count a viewable impression once the picked banner scrolls ≥50% into view,
+  // a single time per load, so clicks / impressions gives a real CTR. We gate on
+  // (loaded || errored) so it counts only when the artwork (or the fallback card)
+  // has actually painted — a slow/blocked banner showing just the skeleton
+  // shouldn't count toward the denominator.
+  // `loaded`/`errored` are deps so the observer re-attaches once the artwork
+  // paints, and to the swapped-in fallback card (different DOM node, same ref).
   React.useEffect(() => {
-    if (!banner || impressionFired.current) return;
+    if (!banner || impressionFired.current || !(loaded || errored)) return;
     const el = containerRef.current;
     if (!el || typeof IntersectionObserver === "undefined") return;
     const io = new IntersectionObserver((entries) => {
@@ -177,7 +182,7 @@ function SidebarAdBanner() {
     }, { threshold: 0.5 });
     io.observe(el);
     return () => io.disconnect();
-  }, [banner, errored]);
+  }, [banner, loaded, errored]);
 
   // Text fallback so the ad slot is never blank if the artwork fails to load
   // (content blocker, S3 hiccup, etc.). Keeps a working CTA + click tracking.
