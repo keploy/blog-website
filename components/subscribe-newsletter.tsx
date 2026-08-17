@@ -49,6 +49,10 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
   // Honeypot — hidden from humans; bots that auto-fill every field trip it.
   const [companyWebsite, setCompanyWebsite] = useState('');
   const [subscribed, setSubscribed] = useState<boolean>(false);
+  // In-flight guard: blocks repeat clicks so we don't fire duplicate lead /
+  // Chat-notify POSTs (the subscription upserts by email, but the Chat space
+  // gets one ping per click otherwise).
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [emailError, setEmailError] = useState('');
   const message = "NEWSLETTER"
   // Don't load Google's script for every reader — only once someone actually
@@ -93,6 +97,10 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
     return 
   }
 
+    // Guard against double-submits — one Chat ping per click otherwise.
+    if (submitting) return;
+    setSubmitting(true);
+
     const payload = {
       fullName,
       email,
@@ -133,10 +141,10 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
       }),
     }).catch(() => {});
 
-    handleSubscribe(payload)
+    handleSubscribe(payload).finally(() => setSubmitting(false));
   };
   const isSubscribeDisabled = ()=>{
-    return Boolean(!email || !fullName || !companyName)    
+    return Boolean(!email || !fullName || !companyName || submitting)
   }
   return (
     <div className="flex flex-col">
