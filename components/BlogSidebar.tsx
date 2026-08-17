@@ -124,20 +124,26 @@ declare global {
 }
 
 // Clarity (lazyOnload) and GA (afterInteractive) may be undefined on an early
-// click, so run each call once its global exists — poll briefly, then give up.
-function whenReady(get: () => unknown, use: () => void) {
-  if (typeof window === "undefined") return;
+// call, so run each once its global exists — poll briefly, then give up. Pass a
+// signal to drop the poller on unmount (impressions fire before the user acts,
+// so their poller can outlive the component; aborting avoids firing after an
+// SPA nav, which would attribute the event to the next page).
+function whenReady(get: () => unknown, use: () => void, signal?: AbortSignal) {
+  if (typeof window === "undefined" || signal?.aborted) return;
   if (typeof get() === "function") { use(); return; }
   let tries = 0;
   const timer = setInterval(() => {
     tries += 1;
-    if (typeof get() === "function") {
+    if (signal?.aborted) {
+      clearInterval(timer);
+    } else if (typeof get() === "function") {
       clearInterval(timer);
       use();
     } else if (tries >= 20) {
       clearInterval(timer); // ~5s elapsed; script never loaded (blocked?)
     }
   }, 250);
+  signal?.addEventListener("abort", () => clearInterval(timer));
 }
 
 function trackBannerClick(bannerId: string) {
@@ -145,9 +151,9 @@ function trackBannerClick(bannerId: string) {
   whenReady(() => window.clarity, () => window.clarity!("set", "banner_clicked", bannerId));
 }
 
-function trackBannerImpression(bannerId: string) {
-  whenReady(() => window.gtag, () => window.gtag!("event", "banner_impression", { banner_id: bannerId }));
-  whenReady(() => window.clarity, () => window.clarity!("set", "banner_shown", bannerId));
+function trackBannerImpression(bannerId: string, signal?: AbortSignal) {
+  whenReady(() => window.gtag, () => window.gtag!("event", "banner_impression", { banner_id: bannerId }), signal);
+  whenReady(() => window.clarity, () => window.clarity!("set", "banner_shown", bannerId), signal);
 }
 
 /* ── Ad / CTA Banner ── */
@@ -173,15 +179,18 @@ function SidebarAdBanner() {
     if (!banner || impressionFired.current || !(loaded || errored)) return;
     const el = containerRef.current;
     if (!el || typeof IntersectionObserver === "undefined") return;
+    // Abort any pending analytics-ready poller if we unmount (e.g. SPA nav)
+    // before gtag/clarity load, so the event never fires against the next page.
+    const ac = new AbortController();
     const io = new IntersectionObserver((entries) => {
       if (entries.some((e) => e.isIntersecting) && !impressionFired.current) {
         impressionFired.current = true;
-        trackBannerImpression(banner.id);
+        trackBannerImpression(banner.id, ac.signal);
         io.disconnect();
       }
     }, { threshold: 0.5 });
     io.observe(el);
-    return () => io.disconnect();
+    return () => { io.disconnect(); ac.abort(); };
   }, [banner, loaded, errored]);
 
   // Text fallback so the ad slot is never blank if the artwork fails to load
