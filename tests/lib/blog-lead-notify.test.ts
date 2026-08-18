@@ -134,6 +134,47 @@ test("sanitizes Chat markup: no injected newlines, links, or bold/italic reach t
   assert.ok(!/[<>|`_*]/.test(nameLine.replace(/^\*Name:\*/, "")));
 });
 
+test("keeps underscores: email local part and UTM-tagged page survive intact", async () => {
+  process.env.GOOGLE_CHAT_WEBHOOK_URL = WEBHOOK;
+  const res = mockRes();
+  await handler(mockReq({
+    body: {
+      fullName: "John Doe",
+      email: "john_doe@keploy.io",
+      companyName: "Acme",
+      page: "https://keploy.io/blog/technology/x?utm_source=twitter&utm_campaign=q3_launch",
+    },
+  }), res);
+  const text: string = fetchCalls[0].body.text;
+  // `_` is legal in emails and common in UTM params — stripping it corrupts the
+  // lead the team needs to reply to and the campaign attribution URL.
+  assert.match(text, /\*Email:\* john_doe@keploy\.io/);
+  assert.match(text, /utm_source=twitter&utm_campaign=q3_launch/);
+});
+
+test("surfaces a non-OK Chat status without failing the user", async () => {
+  process.env.GOOGLE_CHAT_WEBHOOK_URL = WEBHOOK;
+  const warnings: string[] = [];
+  const realWarn = console.warn;
+  console.warn = ((...args: any[]) => { warnings.push(args.join(" ")); }) as any;
+  // Chat rejects the message (e.g. revoked webhook) — fetch resolves, not rejects.
+  global.fetch = (async (url: any, opts: any) => {
+    fetchCalls.push({ url, body: opts?.body ? JSON.parse(opts.body) : undefined });
+    return { ok: false, status: 404 } as any;
+  }) as any;
+  try {
+    const res = mockRes();
+    await handler(mockReq(), res);
+    // User is never blocked, and the constant response gives no delivery oracle.
+    assert.equal(res.statusCode, 200);
+    assert.deepEqual(res.body, { ok: true });
+    // ...but the broken delivery is logged so it doesn't fail silently.
+    assert.ok(warnings.some((w) => w.includes("404") && /rejected the message/i.test(w)));
+  } finally {
+    console.warn = realWarn;
+  }
+});
+
 test("pins source server-side: a forged source falls back to the default", async () => {
   process.env.GOOGLE_CHAT_WEBHOOK_URL = WEBHOOK;
   const res = mockRes();

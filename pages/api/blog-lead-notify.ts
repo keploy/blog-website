@@ -86,12 +86,19 @@ function clientIp(req: NextApiRequest): string {
 }
 
 // Strip characters that carry meaning in Google Chat `text` messages so user
-// input can't inject formatting (*bold* / _italic_), fake clickable links
-// (<url|label>), or forge whole labelled fields with newlines. Also caps length.
-// Every user-supplied field passes through this before it reaches the message.
+// input can't inject formatting (*bold*), fake clickable links (<url|label>),
+// or forge whole labelled fields with newlines. Also caps length. Every
+// user-supplied field passes through this before it reaches the message.
+//
+// `_` is deliberately NOT stripped: it's legal in email local parts (which
+// EMAIL_RE accepts) and common in UTM-tagged page URLs (utm_source, q3_launch),
+// so stripping it corrupts real lead data. Chat italic needs a matching pair
+// (_text_) — a lone underscore can't format — and the link/field-forgery
+// vectors are already dead from removing < > | * and newlines, so the worst a
+// stray pair can do is cosmetic italics, never forge a field or a link.
 function sanitize(value: string, max = 200): string {
   return value
-    .replace(/[<>|*_`\r\n]/g, " ")
+    .replace(/[<>|*`\r\n]/g, " ")
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, max);
@@ -175,12 +182,24 @@ export default async function handler(
       `*Page:* ${lead.page || "—"}\n` +
       `*Submitted:* ${lead.submittedAt}`;
 
-    await fetch(webhook, {
+    const chatRes = await fetch(webhook, {
       method: "POST",
       headers: { "Content-Type": "application/json; charset=UTF-8" },
       body: JSON.stringify({ text }),
       signal: controller.signal,
     });
+    // fetch only rejects on network-level failure, not on an HTTP error status,
+    // so a revoked webhook / deleted space / bad URL / quota rejection returns
+    // 4xx-5xx and would otherwise look like success — "leads quietly stop
+    // arriving and nobody notices". Surface the status so delivery breakage is
+    // visible. Logged in production too (unlike the missing-webhook warning):
+    // it's the only signal that a *configured* webhook has broken, and the line
+    // carries no PII — just the HTTP status code.
+    if (!chatRes.ok) {
+      console.warn(
+        `[blog-lead] Google Chat rejected the message (HTTP ${chatRes.status}) — verify GOOGLE_CHAT_WEBHOOK_URL is a valid, active incoming-webhook URL. Lead was NOT delivered.`,
+      );
+    }
     return res.status(200).json({ ok: true });
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
