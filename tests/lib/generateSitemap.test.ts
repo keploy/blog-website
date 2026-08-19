@@ -98,3 +98,28 @@ test("buildEntries buckets lastmod by the RESOLVED category (N3 regression)", ()
   assert.ok(entries.some((e) => e.loc === `${SITE}/blog/technology/moved`));
   assert.ok(!entries.some((e) => e.loc === `${SITE}/blog/community/moved`));
 });
+
+test("buildEntries resolves + dedups a redirected archive root, bucketing by resolved category (R3)", () => {
+  // /blog/community 301s to /blog/technology. The static root entry must be
+  // emitted at the resolved URL, carry TECHNOLOGY's lastmod (not community's),
+  // and NOT duplicate the existing /blog/technology root — the same bug shape
+  // N3 fixed, one layer up (static entries instead of posts).
+  const posts = [
+    {
+      slug: "tpost",
+      modified: "2026-08-01T00:00:00",
+      date: "2026-08-01T00:00:00",
+      categories: { edges: [{ node: { slug: "technology" } }] },
+    },
+  ];
+  const redirectMap = new Map([["/blog/community", "/blog/technology"]]);
+  const entries = buildEntries(posts, SITE, redirectMap);
+
+  const techRoots = entries.filter((e) => e.loc === `${SITE}/blog/technology`);
+  assert.equal(techRoots.length, 1, "the redirected root must not duplicate /blog/technology");
+  assert.equal(techRoots[0].lastmod, "2026-08-01", "resolved root carries technology's lastmod");
+  assert.ok(
+    !entries.some((e) => e.loc === `${SITE}/blog/community`),
+    "the pre-redirect community root must not be emitted",
+  );
+});

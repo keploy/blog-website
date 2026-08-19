@@ -240,6 +240,16 @@ function categoryFromLoc(loc, mainSiteUrl) {
   return m && VALID_CATEGORIES.has(m[1]) ? m[1] : null;
 }
 
+// The category of a resolved archive-root loc (/blog/<category>, no slug).
+// categoryFromLoc intentionally only matches post URLs (/blog/<category>/<slug>);
+// this covers the static roots so a redirected root buckets lastmod by where it
+// actually lands, not where it started.
+function archiveRootCategory(loc, mainSiteUrl) {
+  const p = normalizePath(loc.startsWith(mainSiteUrl) ? loc.slice(mainSiteUrl.length) : loc);
+  const m = p.match(/^\/blog\/([^/]+)\/?$/);
+  return m && VALID_CATEGORIES.has(m[1]) ? m[1] : null;
+}
+
 function buildEntries(posts, mainSiteUrl, redirectMap = new Map()) {
   const today = new Date().toISOString().split("T")[0];
 
@@ -316,15 +326,34 @@ function buildEntries(posts, mainSiteUrl, redirectMap = new Map()) {
 
   const fallbackLastmod = latestOverall ?? today;
 
-  const resolvedStaticEntries = staticEntries.map(({ loc, priority, category }) => ({
-    // Resolve static entries through the redirect map too — none redirect today,
-    // so this is hardening against a future rule moving /blog/community etc.
-    loc: resolveLoc(loc, redirectMap, mainSiteUrl),
-    priority,
-    lastmod: category
-      ? latestByCategory.get(category) ?? fallbackLastmod
-      : fallbackLastmod,
-  }));
+  // Resolve static entries through the redirect map too — none redirect today,
+  // so this is hardening against a future rule moving /blog/community etc.
+  const staticSeen = new Set();
+  const resolvedStaticEntries = [];
+  for (const { loc, priority, category } of staticEntries) {
+    const resolvedLoc = resolveLoc(loc, redirectMap, mainSiteUrl);
+    // Dedup: a future redirect could collapse an archive root onto another
+    // static entry or a post URL — each <loc> must appear once (the same
+    // duplicate-<loc> failure N3 fixed for posts, one layer up).
+    if (staticSeen.has(resolvedLoc) || seen.has(resolvedLoc)) {
+      continue;
+    }
+    staticSeen.add(resolvedLoc);
+    // Bucket lastmod by where the entry RESOLVES to, not where it started: a
+    // redirected /blog/community must carry its destination's lastmod, not
+    // community's. Fall back to the declared category, then fallbackLastmod.
+    const resolvedCategory =
+      categoryFromLoc(resolvedLoc, mainSiteUrl) ??
+      archiveRootCategory(resolvedLoc, mainSiteUrl) ??
+      category;
+    resolvedStaticEntries.push({
+      loc: resolvedLoc,
+      priority,
+      lastmod: resolvedCategory
+        ? latestByCategory.get(resolvedCategory) ?? fallbackLastmod
+        : fallbackLastmod,
+    });
+  }
 
   postEntries.sort((left, right) => left.loc.localeCompare(right.loc));
   return [...resolvedStaticEntries, ...postEntries];
