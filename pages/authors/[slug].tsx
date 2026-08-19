@@ -14,9 +14,9 @@ import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
 import {
   getBreadcrumbListSchema,
   getItemListSchema,
-  MAIN_SITE_URL,
+  getPersonSchema,
+  getProfilePageSchema,
   SITE_URL,
-  ORG_ID,
 } from "../../lib/structured-data";
 
 // Server-safe author-box extraction. extractAuthorData (utils) relies on
@@ -50,54 +50,28 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
   const pageTitle = `${authorName} — Keploy Blog Author`;
   const pageDescription = `Read all articles by ${authorName} on the Keploy blog — covering software testing, API development, automation, and engineering best practices.`;
 
-  // Person JSON-LD for E-E-A-T author credibility (LIVE-11).
-  // AI models use Person.url + sameAs to resolve author identity and
-  // weight the authority of the pages they cite. worksFor.url points at
-  // MAIN_SITE_URL (https://keploy.io) — not the blog subpath — so the
-  // Organization entity is consistent across every JSON-LD payload.
+  // Person JSON-LD for E-E-A-T author credibility (LIVE-11). AI models use
+  // Person.url + sameAs to resolve author identity and weight the authority of
+  // the pages they cite. The node shape (incl. the worksFor Organization
+  // reference) is built by getPersonSchema in lib/structured-data.ts so it stays
+  // consistent with every other JSON-LD payload.
   const authorMeta = extractAuthorMeta(content || "");
   const authoredItems = filteredPosts.map(({ node }) => ({
     url: `${SITE_URL}/${node?.categories?.edges?.[0]?.node?.name === "community" ? "community" : "technology"}/${node.slug}`,
     name: node.title,
   }));
 
-  // Enriched Person node (no @context — it's nested as ProfilePage.mainEntity).
-  const personNode: Record<string, unknown> = {
-    "@type": "Person",
-    "@id": `${authorUrl}#person`,
+  // Person + ProfilePage schema is built centrally in lib/structured-data.ts so
+  // the author's `#person` @id, worksFor affiliation, and node shape stay in sync
+  // with the per-post author node that references it. The author's posts are
+  // modeled as an ItemList so AI engines see the body of work.
+  const personNode = getPersonSchema({
     name: authorName,
     url: authorUrl,
-    jobTitle: "Author",
-    hasOccupation: {
-      "@type": "Occupation",
-      name: "Technical Author",
-      // No occupationLocation: schema.org expects a geographic Place there, not
-      // an employer. The Keploy affiliation is already modeled via worksFor.
-    },
-    worksFor: {
-      "@type": "Organization",
-      "@id": ORG_ID,
-      name: "Keploy",
-      url: MAIN_SITE_URL,
-    },
-    knowsAbout: [
-      "API Testing",
-      "Test Automation",
-      "Software Engineering",
-      "Developer Tools",
-    ],
-  };
-  if (authorMeta.avatarUrl) personNode.image = authorMeta.avatarUrl;
-  if (authorMeta.linkedIn) personNode.sameAs = [authorMeta.linkedIn];
-
-  // Wrap the author identity in a ProfilePage (the route IS a profile), and
-  // model the author's posts as an ItemList so AI engines see the body of work.
-  const profilePageSchema = {
-    "@context": "https://schema.org",
-    "@type": "ProfilePage",
-    mainEntity: personNode,
-    mainEntityOfPage: authorUrl,
-  };
+    image: authorMeta.avatarUrl,
+    sameAs: authorMeta.linkedIn ? [authorMeta.linkedIn] : undefined,
+  });
+  const profilePageSchema = getProfilePageSchema(personNode, authorUrl);
   const authoredWorksSchema = getItemListSchema(authoredItems, `Posts by ${authorName}`);
 
   return (

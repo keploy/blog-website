@@ -1,6 +1,10 @@
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
 import { decodeEntities } from "../utils/seo";
 
+// Single schema.org @context value. Every builder below references this rather
+// than repeating the literal, so the vocabulary URL lives in exactly one place.
+export const SCHEMA_CONTEXT = "https://schema.org";
+
 export const SITE_URL = "https://keploy.io/blog";
 export const MAIN_SITE_URL = "https://keploy.io";
 export const ORG_NAME = "Keploy";
@@ -125,8 +129,28 @@ type BlogPostingInput = {
   keywords?: string[];
 };
 
+// Shared @id-reference nodes. The Keploy Organization and Blog are each emitted
+// as a full node exactly once (getOrganizationSchema / getBlogSchema), then
+// referenced by @id from many other nodes (author.worksFor, isPartOf, …). These
+// helpers keep every reference byte-identical so a crawler merges them into one
+// entity instead of seeing subtly-different inline copies — build any new
+// worksFor/isPartOf/publisher reference from here, never hand-rolled.
+export const orgReference = () => ({
+  "@type": "Organization",
+  "@id": ORG_ID,
+  name: ORG_NAME,
+  url: MAIN_SITE_URL,
+});
+
+export const blogReference = () => ({
+  "@type": "Blog",
+  "@id": BLOG_ID,
+  name: BLOG_NAME,
+  url: SITE_URL,
+});
+
 export const getOrganizationSchema = () => ({
-  "@context": "https://schema.org",
+  "@context": SCHEMA_CONTEXT,
   "@type": "Organization",
   "@id": ORG_ID,
   name: ORG_NAME,
@@ -162,7 +186,7 @@ export const getOrganizationSchema = () => ({
 });
 
 export const getWebSiteSchema = (searchTarget = `${SITE_URL}/search?q={search_term_string}`) => ({
-  "@context": "https://schema.org",
+  "@context": SCHEMA_CONTEXT,
   "@type": "WebSite",
   "@id": WEBSITE_ID,
   name: BLOG_NAME,
@@ -189,7 +213,7 @@ export const getWebSiteSchema = (searchTarget = `${SITE_URL}/search?q={search_te
  * invalid structured data this work is clearing. Authority rides on `sameAs`.
  */
 export const getSoftwareApplicationSchema = () => ({
-  "@context": "https://schema.org",
+  "@context": SCHEMA_CONTEXT,
   "@type": "SoftwareApplication",
   "@id": SOFTWARE_ID,
   name: ORG_NAME,
@@ -205,7 +229,7 @@ export const getSoftwareApplicationSchema = () => ({
   // product), which ships paid Cloud/Enterprise tiers, so a blanket price: 0 /
   // free claim would be inaccurate. The open-source core is conveyed by the
   // GitHub downloadUrl and the description instead of a fabricated price.
-  author: { "@type": "Organization", "@id": ORG_ID, name: ORG_NAME, url: MAIN_SITE_URL },
+  author: orgReference(),
   publisher: { "@type": "Organization", "@id": ORG_ID },
   sameAs: [
     "https://github.com/keploy/keploy",
@@ -250,7 +274,7 @@ export const getImageObjectSchema = ({
 });
 
 export const getBreadcrumbListSchema = (items: BreadcrumbItem[]) => ({
-  "@context": "https://schema.org",
+  "@context": SCHEMA_CONTEXT,
   "@type": "BreadcrumbList",
   itemListElement: items.map((item, index) => ({
     "@type": "ListItem",
@@ -299,7 +323,7 @@ export const getItemListSchema = (items: ListEntry[], listName?: string) => {
   // this standalone builder needs the same guard as getCollectionPageSchema.
   if (!itemListElement.length) return null;
   return {
-    "@context": "https://schema.org",
+    "@context": SCHEMA_CONTEXT,
     "@type": "ItemList",
     ...(listName ? { name: listName } : {}),
     itemListElement,
@@ -324,17 +348,12 @@ export const getCollectionPageSchema = ({
 }) => {
   const listItems = toListItems(items);
   return {
-    "@context": "https://schema.org",
+    "@context": SCHEMA_CONTEXT,
     "@type": "CollectionPage",
     name,
     url,
     ...(description ? { description } : {}),
-    isPartOf: {
-      "@type": "Blog",
-      "@id": BLOG_ID,
-      name: BLOG_NAME,
-      url: SITE_URL,
-    },
+    isPartOf: blogReference(),
     // Omit the ItemList entirely when the collection is empty (e.g. an orphan
     // tag with no posts) — an ItemList with an empty itemListElement is invalid.
     ...(listItems.length
@@ -394,12 +413,7 @@ export const getBlogPostingSchema = ({
   // that page, and the Keploy affiliation is the E-E-A-T signal we most need here.
   // It stays valid on the url-less fallback too.
   if (resolvedAuthorName !== ORG_NAME) {
-    authorNode.worksFor = {
-      "@type": "Organization",
-      "@id": ORG_ID,
-      name: ORG_NAME,
-      url: MAIN_SITE_URL,
-    };
+    authorNode.worksFor = orgReference();
   }
   if (authorImage && !authorImage.includes("/images/author.png")) {
     authorNode.image = authorImage;
@@ -416,7 +430,7 @@ export const getBlogPostingSchema = ({
   const resolvedModified = toISODate(dateModified) || resolvedPublished;
 
   const schema: Record<string, unknown> = {
-    "@context": "https://schema.org",
+    "@context": SCHEMA_CONTEXT,
     "@type": schemaType,
     headline: title,
     mainEntityOfPage: {
@@ -437,12 +451,7 @@ export const getBlogPostingSchema = ({
         height: 512,
       },
     },
-    isPartOf: {
-      "@type": "Blog",
-      "@id": BLOG_ID,
-      name: BLOG_NAME,
-      url: SITE_URL,
-    },
+    isPartOf: blogReference(),
   };
 
   // E-E-A-T: reviewedBy Person. Only emit when we actually have a
@@ -549,7 +558,7 @@ export const getFAQPageSchema = (
   faqs: { question: string; answer: string }[],
   url?: string,
 ) => ({
-  "@context": "https://schema.org",
+  "@context": SCHEMA_CONTEXT,
   "@type": "FAQPage",
   ...(url
     ? { "@id": `${url}#faq`, url, isPartOf: { "@type": "WebPage", "@id": url } }
@@ -577,7 +586,7 @@ export const getDefinedTermSetSchema = ({
   url: string;
   terms: { term: string; description?: string }[];
 }) => ({
-  "@context": "https://schema.org",
+  "@context": SCHEMA_CONTEXT,
   "@type": "DefinedTermSet",
   name,
   url,
@@ -605,7 +614,7 @@ export const getSoftwareSourceCodeSchema = ({
   name?: string;
   codeRepository?: string;
 }) => ({
-  "@context": "https://schema.org",
+  "@context": SCHEMA_CONTEXT,
   "@type": "SoftwareSourceCode",
   programmingLanguage: language,
   ...(name ? { name } : {}),
@@ -630,7 +639,7 @@ export const getSearchResultsPageSchema = ({
   url: string;
   query?: string;
 }) => ({
-  "@context": "https://schema.org",
+  "@context": SCHEMA_CONTEXT,
   "@type": "SearchResultsPage",
   url,
   name: query ? `Search results for "${query}"` : "Search the Keploy blog",
@@ -674,7 +683,7 @@ export const getReviewSchema = (
     });
   if (!reviewNodes.length) return null;
   return {
-    "@context": "https://schema.org",
+    "@context": SCHEMA_CONTEXT,
     "@type": "Organization",
     "@id": ORG_ID,
     name: ORG_NAME,
@@ -683,8 +692,79 @@ export const getReviewSchema = (
   };
 };
 
+// Topics an author is credited as knowledgeable about (Person.knowsAbout).
+// Default for the author-profile pages; override per-author if that data ever
+// becomes available.
+export const AUTHOR_KNOWS_ABOUT = [
+  "API Testing",
+  "Test Automation",
+  "Software Engineering",
+  "Developer Tools",
+];
+
+type PersonInput = {
+  name: string;
+  /** The author's profile URL (…/authors/{slug}); also seeds the `#person` @id. */
+  url: string;
+  image?: string;
+  /** External identity links (e.g. the author's LinkedIn) for sameAs. */
+  sameAs?: string[];
+  jobTitle?: string;
+  knowsAbout?: string[];
+};
+
+/**
+ * Enriched Person node for a blog author. Meant to nest as ProfilePage.mainEntity
+ * (so it carries no @context) and shares the `{url}#person` @id that every post's
+ * `author` points at — engines merge the per-post author stub and this full
+ * profile into one entity. worksFor references the single Keploy Organization by
+ * @id (orgReference), same as the article author's affiliation.
+ */
+export const getPersonSchema = ({
+  name,
+  url,
+  image,
+  sameAs,
+  jobTitle = "Author",
+  knowsAbout = AUTHOR_KNOWS_ABOUT,
+}: PersonInput) => {
+  const node: Record<string, unknown> = {
+    "@type": "Person",
+    "@id": `${url}#person`,
+    name,
+    url,
+    jobTitle,
+    hasOccupation: {
+      "@type": "Occupation",
+      name: "Technical Author",
+      // No occupationLocation: schema.org expects a geographic Place there, not
+      // an employer. The Keploy affiliation is already modeled via worksFor.
+    },
+    worksFor: orgReference(),
+  };
+  if (knowsAbout && knowsAbout.length) node.knowsAbout = knowsAbout;
+  if (image) node.image = image;
+  if (sameAs && sameAs.length) node.sameAs = sameAs;
+  return node;
+};
+
+/**
+ * ProfilePage wrapper for an author route (the route IS a profile). Wraps the
+ * enriched Person as mainEntity so AI engines read the page as an author
+ * identity rather than an untyped list of posts.
+ */
+export const getProfilePageSchema = (
+  person: Record<string, unknown>,
+  url: string,
+) => ({
+  "@context": SCHEMA_CONTEXT,
+  "@type": "ProfilePage",
+  mainEntity: person,
+  mainEntityOfPage: url,
+});
+
 export const getBlogSchema = () => ({
-  "@context": "https://schema.org",
+  "@context": SCHEMA_CONTEXT,
   "@type": "Blog",
   "@id": BLOG_ID,
   name: BLOG_NAME,
