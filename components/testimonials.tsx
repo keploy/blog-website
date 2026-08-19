@@ -29,6 +29,13 @@ const ReviewCard = ({
   const [src, setSrc] = useState(proxiedAvatar);
   const [unoptimized, setUnoptimized] = useState(false);
 
+  // Re-sync if the derived avatar changes (Tweets are static today, so this is
+  // defensive) — otherwise the state seeded from the prop would go stale.
+  React.useEffect(() => {
+    setSrc(proxiedAvatar);
+    setUnoptimized(false);
+  }, [proxiedAvatar]);
+
   return (
     <a href={post} target="_blank" rel="noopener noreferrer" className="lg:mx-2" aria-label={`View tweet by ${name}`}>
       <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">

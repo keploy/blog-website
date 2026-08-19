@@ -1,5 +1,4 @@
 import { useState, useEffect, Fragment, useMemo, ReactNode } from "react";
-import { useRouter } from "next/router";
 import TOC from "./TableContents";
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import styles from "./post-body.module.css";
@@ -61,7 +60,6 @@ export default function PostBody({
   const [headingCopySuccessList, setHeadingCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isList, setIsList] = useState(false);
-  const { basePath } = useRouter();
   const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
   // Optional safety: handle malformed ReviewAuthorDetails gracefully
   const reviewer = ReviewAuthorDetails?.edges?.[0]?.node || null;
@@ -185,59 +183,26 @@ export default function PostBody({
       }
     );
 
-    // Optimize WP body images: route through next/image + lazy/async decode.
-    // Cover image (above-fold LCP) is handled separately in cover-image.tsx.
-    // Must stay a subset of next.config.js images (domains/remotePatterns) — routing an
-    // <img> through /_next/image for a host that isn't allowlisted there returns a 400.
-    const OPTIMIZABLE_IMG_HOSTS = new Set([
-      "wp.keploy.io",
-      "keploy.io",
-      "secure.gravatar.com",
-      "pbs.twimg.com",
-    ]);
+    // Body images: add lazy-load + async decode so below-the-fold images don't
+    // block first paint. Deliberately NOT routed through /_next/image — that
+    // would push every WP body image (~19k across the blog) through Vercel's
+    // billed image-optimizer quota. They load directly from WordPress, exactly
+    // as before this PR; this only defers off-screen ones. The above-the-fold
+    // cover image (LCP) is handled separately in cover-image.tsx.
     initialReplacedContent = initialReplacedContent.replace(
       /<img\b([^>]*)>/gi,
       (match, attrs: string) => {
-        const srcMatch = attrs.match(/(^|\s)src\s*=\s*(["'])([^"']*)\2/i);
-        if (!srcMatch) return match;
-        const src = srcMatch[3];
-        if (
-          !src ||
-          src.startsWith("data:") ||
-          src.includes("/_next/image")
-        ) {
-          return match;
-        }
+        // `[^>]*` stops at the first `>`, even one inside a quoted attribute
+        // (e.g. alt="a > b" from a raw Custom HTML block). If either quote type
+        // is unbalanced the match truncated mid-attribute, so leave it untouched
+        // rather than splicing attributes into the middle of a broken value.
+        const dq = (attrs.match(/"/g) || []).length;
+        const sq = (attrs.match(/'/g) || []).length;
+        if (dq % 2 !== 0 || sq % 2 !== 0) return match;
 
-        // Strip a self-closing trailing slash up front so later appends don't
-        // produce "<img ... / loading=...>" (invalid markup).
+        // Strip a self-closing trailing slash so appends don't produce
+        // "<img ... / loading=...>" (invalid markup).
         let nextAttrs = attrs.replace(/\s*\/\s*$/, "");
-        try {
-          const absolute =
-            src.startsWith("//")
-              ? `https:${src}`
-              : src.startsWith("http://") || src.startsWith("https://")
-                ? src
-                : null;
-          if (absolute) {
-            const { hostname } = new URL(absolute);
-            if (OPTIMIZABLE_IMG_HOSTS.has(hostname)) {
-              const optimized = `${basePath}/_next/image?url=${encodeURIComponent(absolute)}&w=1200&q=75`;
-              nextAttrs = nextAttrs
-                .replace(
-                  /(^|\s)src\s*=\s*(["'])([^"']*)\2/i,
-                  `$1src=$2${optimized}$2`
-                )
-                // Drop srcset/sizes: an <img> that keeps its original srcset uses
-                // that and ignores src entirely, so the optimization would be a
-                // no-op (e.g. the PublishPress avatar ships a wp.keploy.io srcset).
-                .replace(/(^|\s)srcset\s*=\s*(["'])[^"']*\2/gi, "")
-                .replace(/(^|\s)sizes\s*=\s*(["'])[^"']*\2/gi, "");
-            }
-          }
-        } catch {
-          // leave src unchanged on parse failure
-        }
 
         if (!/(^|\s)loading\s*=/i.test(nextAttrs)) {
           nextAttrs += ' loading="lazy"';
@@ -251,7 +216,7 @@ export default function PostBody({
     );
 
     return initialReplacedContent;
-  }, [content, basePath]);
+  }, [content]);
 
   useEffect(() => {
     const postBodyEl = document.getElementById('post-body-check');
