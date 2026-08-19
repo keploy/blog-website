@@ -191,6 +191,10 @@ export const getWebSiteSchema = (searchTarget = `${SITE_URL}/search?q={search_te
   "@id": WEBSITE_ID,
   name: BLOG_NAME,
   url: SITE_URL,
+  inLanguage: "en-US",
+  // Link the site to the single Keploy Organization entity by @id, same node
+  // the Blog's publisher uses — keeps the site/blog/org graph resolving to one.
+  publisher: orgReference(),
   potentialAction: {
     "@type": "SearchAction",
     target: {
@@ -326,6 +330,7 @@ export const getItemListSchema = (items: ListEntry[], listName?: string) => {
     "@context": SCHEMA_CONTEXT,
     "@type": "ItemList",
     ...(listName ? { name: listName } : {}),
+    numberOfItems: itemListElement.length,
     itemListElement,
   };
 };
@@ -357,7 +362,13 @@ export const getCollectionPageSchema = ({
     // Omit the ItemList entirely when the collection is empty (e.g. an orphan
     // tag with no posts) — an ItemList with an empty itemListElement is invalid.
     ...(listItems.length
-      ? { mainEntity: { "@type": "ItemList", itemListElement: listItems } }
+      ? {
+          mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: listItems.length,
+            itemListElement: listItems,
+          },
+        }
       : {}),
   };
 };
@@ -452,6 +463,10 @@ export const getBlogPostingSchema = ({
       },
     },
     isPartOf: blogReference(),
+    // The blog article itself is free to read (no paywall/registration) — a
+    // recognized signal, and accurate here in a way it is NOT for the paid-tier
+    // product (SoftwareApplication deliberately omits this; see that builder).
+    isAccessibleForFree: true,
   };
 
   // E-E-A-T: reviewedBy Person. Only emit when we actually have a

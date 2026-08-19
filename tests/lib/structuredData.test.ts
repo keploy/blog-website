@@ -194,6 +194,49 @@ test("getItemListSchema returns null when no items survive the name/url filter",
   assert.ok(ok && (ok as any).itemListElement.length === 1);
 });
 
+test("getItemListSchema declares numberOfItems matching the surviving elements", () => {
+  const list = getItemListSchema([
+    { url: "https://keploy.io/blog/community/a", name: "A" },
+    { url: "", name: "dropped" }, // filtered out
+    { url: "https://keploy.io/blog/community/b", name: "B" },
+  ]) as Record<string, unknown>;
+  // numberOfItems must reflect what actually shipped, not the raw input length.
+  assert.equal(list.numberOfItems, 2);
+  assert.equal((list.itemListElement as unknown[]).length, 2);
+});
+
+test("getCollectionPageSchema's ItemList carries a matching numberOfItems", () => {
+  const collection = getCollectionPageSchema({
+    name: "Community",
+    url: `${"https://keploy.io/blog"}/community`,
+    items: [
+      { url: "https://keploy.io/blog/community/a", name: "A" },
+      { url: "https://keploy.io/blog/community/b", name: "B" },
+    ],
+  }) as Record<string, unknown>;
+  const mainEntity = collection.mainEntity as Record<string, unknown>;
+  assert.equal(mainEntity.numberOfItems, 2);
+});
+
+test("getBlogPostingSchema marks the article as free to read", () => {
+  const post = getBlogPostingSchema({
+    title: "A Free Post",
+    url: "https://keploy.io/blog/community/free-post",
+    datePublished: "2024-01-01",
+  });
+  // The blog content is free (distinct from the paid-tier product, which
+  // deliberately omits this on getSoftwareApplicationSchema).
+  assert.equal(post.isAccessibleForFree, true);
+});
+
+test("getWebSiteSchema links to the Keploy Organization by the shared @id", () => {
+  const site = getWebSiteSchema();
+  const publisher = site.publisher as Record<string, unknown>;
+  assert.equal(publisher["@type"], "Organization");
+  assert.equal(publisher["@id"], ORG_ID);
+  assert.equal(site.inLanguage, "en-US");
+});
+
 // Review schema (home testimonials). The community wall carries no star
 // values, so these pin that the builder emits VALID, rating-less reviews and
 // never fabricates a Rating/AggregateRating (which require a ratingValue and
