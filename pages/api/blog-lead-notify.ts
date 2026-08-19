@@ -90,12 +90,13 @@ function clientIp(req: NextApiRequest): string {
 // or forge whole labelled fields with newlines. Also caps length. Every
 // user-supplied field passes through this before it reaches the message.
 //
-// `_` is deliberately NOT stripped: it's legal in email local parts (which
-// EMAIL_RE accepts) and common in UTM-tagged page URLs (utm_source, q3_launch),
-// so stripping it corrupts real lead data. Chat italic needs a matching pair
-// (_text_) — a lone underscore can't format — and the link/field-forgery
-// vectors are already dead from removing < > | * and newlines, so the worst a
-// stray pair can do is cosmetic italics, never forge a field or a link.
+// `_` and `~` are deliberately NOT stripped: both are legal in email local parts
+// (RFC atext, which EMAIL_RE accepts) and `_` is common in UTM-tagged page URLs
+// (utm_source, q3_launch), so stripping them corrupts real lead data. Chat italic
+// (_text_) and strikethrough (~text~) each need a matching pair — a lone one can't
+// format — and the link/field-forgery vectors are already dead from removing
+// < > | * and newlines, so the worst a stray pair can do is cosmetic styling,
+// never forge a field or a link.
 function sanitize(value: string, max = 200): string {
   return value
     .replace(/[<>|*`\r\n]/g, " ")

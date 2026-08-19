@@ -51,7 +51,11 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
   const [subscribed, setSubscribed] = useState<boolean>(false);
   // In-flight guard: blocks repeat clicks so we don't fire duplicate lead /
   // Chat-notify POSTs (the subscription upserts by email, but the Chat space
-  // gets one ping per click otherwise).
+  // gets one ping per click otherwise). The ref is the airtight guard — a fast
+  // double-click fires two handlers before React re-renders, so reading the
+  // `submitting` state (or the disabled button) still sees the stale `false`.
+  // The state drives the disabled/opacity UI; the ref decides who actually runs.
+  const submittingRef = useRef<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [emailError, setEmailError] = useState('');
   const message = "NEWSLETTER"
@@ -98,7 +102,10 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
   }
 
     // Guard against double-submits — one Chat ping per click otherwise.
-    if (submitting) return;
+    // Check/set the ref synchronously so a second click in the same tick can't
+    // slip through before the state re-renders.
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setSubmitting(true);
 
     const payload = {
@@ -141,7 +148,10 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
       }),
     }).catch(() => {});
 
-    handleSubscribe(payload).finally(() => setSubmitting(false));
+    handleSubscribe(payload).finally(() => {
+      submittingRef.current = false;
+      setSubmitting(false);
+    });
   };
   const isSubscribeDisabled = ()=>{
     return Boolean(!email || !fullName || !companyName || submitting)
