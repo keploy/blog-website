@@ -36,6 +36,7 @@ import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/s
 import { getHowToSchema } from "../../lib/howToSchema";
 import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/contentSchema";
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
+import { resolveAuthorAvatar } from "../../lib/constants";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
 
@@ -88,11 +89,14 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   // from post.content via regex inside a useEffect which meant the SSR
   // HTML used the /blog/images/author.png placeholder even when the real
   // image was available in the data.
-  const ppmaImage =
-    typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
-      ? post.ppmaAuthorImage
-      : "";
-  const writerAvatarUrl = ppmaImage || "/blog/images/author.png";
+  // resolveAuthorAvatar rejects junk ppmaAuthorImage values ("imag1", "image",
+  // "n/a", empty) that would otherwise 400 the next/image optimizer and render a
+  // broken byline avatar; a real URL passes through unchanged.
+  const writerAvatarUrl = resolveAuthorAvatar(post?.ppmaAuthorImage);
+  // For JSON-LD only: a genuine author photo (absolute URL) or nothing — never
+  // the placeholder or a junk value, either of which would be invalid in schema.
+  const rawPpmaImage = (post?.ppmaAuthorImage ?? "").trim();
+  const ppmaSchemaImage = /^https?:\/\//i.test(rawPpmaImage) ? rawPpmaImage : undefined;
 
   // Writer description — pulled from the first paragraph with the
   // pp-author-boxes-description class in the post content. Kept here as
@@ -193,7 +197,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         authorName: post?.ppmaAuthorName,
         // LIVE-22: use PublishPress author image, not the /blog/images/author.png
         // placeholder. The schema generator also filters the placeholder.
-        authorImage: ppmaImage || undefined,
+        authorImage: ppmaSchemaImage,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Community",
         // LIVE-22: emit reviewedBy Person schema when reviewer data is
         // present. The schema generator skips the emit when the reviewer

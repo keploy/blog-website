@@ -34,6 +34,7 @@ import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/s
 import { getHowToSchema } from "../../lib/howToSchema";
 import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/contentSchema";
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
+import { resolveAuthorAvatar } from "../../lib/constants";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
 
@@ -69,14 +70,15 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const reviewAuthorImageUrl = reviewerNode?.avatar?.url || "";
   const reviewAuthorDescription = reviewerNode?.description || "";
 
-  // Writer avatar — use ppmaAuthorImage directly (SSR). Previously this
-  // was extracted from post.content via regex inside a useEffect, which
-  // meant the SSR HTML rendered /blog/images/author.png as a placeholder.
-  const ppmaImage =
-    typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
-      ? post.ppmaAuthorImage
-      : "";
-  const writerAvatarUrl = ppmaImage || "/blog/images/author.png";
+  // Writer avatar — use ppmaAuthorImage directly (SSR). resolveAuthorAvatar
+  // rejects junk values ("imag1", "image", "n/a", empty) that would otherwise
+  // 400 the next/image optimizer and render a broken byline avatar; a real URL
+  // passes through unchanged.
+  const writerAvatarUrl = resolveAuthorAvatar(post?.ppmaAuthorImage);
+  // For JSON-LD only: a genuine author photo (absolute URL) or nothing — never
+  // the placeholder or a junk value, either of which would be invalid in schema.
+  const rawPpmaImage = (post?.ppmaAuthorImage ?? "").trim();
+  const ppmaSchemaImage = /^https?:\/\//i.test(rawPpmaImage) ? rawPpmaImage : undefined;
 
   // Writer description — extract synchronously from post content (no effect).
   const writerDescriptionMatch =
@@ -166,7 +168,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
         // LIVE-22: use PublishPress author image, not the placeholder.
-        authorImage: ppmaImage || undefined,
+        authorImage: ppmaSchemaImage,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Technology",
         // GEO-13: mark this as TechArticle (more specific than BlogPosting
         // for developer content). AI models weight TechArticle higher

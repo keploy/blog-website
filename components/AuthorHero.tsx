@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { IoLogoLinkedin } from "react-icons/io5";
+import { resolveAuthorAvatar } from "../lib/constants";
 
 interface AuthorHeroProps {
   name: string;
@@ -17,7 +18,7 @@ const AuthorHero: React.FC<AuthorHeroProps> = ({
   description,
   linkedIn,
 }) => {
-  const resolvedAvatar = !avatarUrl || avatarUrl === "n/a" ? "/blog/images/author.png" : avatarUrl;
+  const resolvedAvatar = resolveAuthorAvatar(avatarUrl);
 
   // Only show social links that actually exist
   const socialSlots = [linkedIn].filter(link => link && link !== "n/a");
