@@ -29,6 +29,10 @@ export const AD_BANNERS: Banner[] = [
   { id: "banner_4", src: "https://keploy-devrel.s3.us-west-2.amazonaws.com/landing/banner4.webp", btnBg: "#16324F", btnText: "#ffffff", btnCenter: "88.5%" },
 ];
 
+// Module-scoped mutable state. Safe ONLY because the sidebar is imported with
+// dynamic(..., { ssr: false }) — it runs client-side, one module instance per
+// tab. If BlogSidebar is ever server-rendered, this pick + latch would be shared
+// across concurrent requests; move it into request/component scope first.
 let pageKey: string | null = null;
 let picked: Banner | null = null;
 let impressionFired = false;
@@ -53,6 +57,12 @@ export function hasFiredImpression(): boolean {
 // Claim the single impression for this page view. Returns true exactly once
 // (the caller that should actually send the event); every later call — the other
 // instance, or a re-intersection — returns false and must NOT send.
+//
+// The latch is set here, BEFORE the event is confirmed sent. Deliberate: if
+// trackBannerImpression's analytics-ready poll times out (~20s, IMPRESSION_
+// READY_TRIES) the impression is dropped with no retry. That's the accepted
+// trade — latching only on a confirmed send would let the second sidebar
+// instance win the race and re-open the double-count this module exists to close.
 export function claimImpression(): boolean {
   if (impressionFired) return false;
   impressionFired = true;

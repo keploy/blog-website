@@ -184,11 +184,18 @@ function SidebarAdBanner() {
   const [errored, setErrored] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
+  // Key on the path WITHOUT the #fragment. A TOC click uses history.replaceState
+  // directly (TableContents/post-body), so asPath only picks up the hash on a
+  // later back/forward popstate — and nothing about the banner depends on the
+  // fragment. Keying on the hash would re-pick the banner and re-arm the
+  // impression latch, firing a second impression for the same page view.
+  const pagePath = router.asPath.split("#")[0];
+
   // Pick from shared state keyed by page: both sidebar instances get the same
   // banner, and a SPA nav to another post re-picks + re-arms the impression.
   React.useEffect(() => {
-    setBanner(pickBannerForPage(router.asPath));
-  }, [router.asPath]);
+    setBanner(pickBannerForPage(pagePath));
+  }, [pagePath]);
 
   // Count a viewable impression once the picked banner scrolls ≥50% into view,
   // a single time per page view, so clicks / impressions gives a real CTR. We
