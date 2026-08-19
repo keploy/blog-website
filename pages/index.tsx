@@ -13,10 +13,8 @@ import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import {
   getWebSiteSchema,
   getCollectionPageSchema,
-  getReviewSchema,
   SITE_URL,
 } from "../lib/structured-data";
-import Tweets from "../services/Tweets";
 import { buildPageTitle } from "../utils/seo";
 import { REVALIDATE_CONTENT } from "../lib/isr";
 // Canonical /blog title. Shared by Layout's `Title` prop (which Meta.tsx
@@ -45,17 +43,14 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       image: node.featuredImage?.node?.sourceUrl,
     })),
   ];
-  // The "What our community thinks" wall (components/testimonials.tsx) renders
-  // these same tweets. Emitting them as Review nodes on the Keploy Organization
-  // makes that community sentiment machine-readable for AI citation. Built from
-  // the same Tweets source the UI uses so the two can't drift.
-  const communityReview = getReviewSchema(
-    (Tweets || []).map((t: any) => ({
-      author: t.name,
-      body: t.content,
-      url: t.post,
-    })),
-  );
+  // No Review structured data here — deliberate. The "What our community thinks"
+  // wall (components/testimonials.tsx) is loaded client-only in PR #410
+  // (next/dynamic, ssr:false) to keep the animating marquee off the LCP path, so
+  // those reviews are NOT in the server HTML a crawler reads. Emitting Review
+  // markup for content that isn't server-rendered is markup for invisible
+  // content, which Google penalizes. getReviewSchema stays available (and tested)
+  // so this can be re-wired if the wall ever returns to SSR.
+  //
   // The home route is a listing like /technology and /tag/{slug}, so it gets the
   // same CollectionPage treatment. That also gives it a page-type node, which it
   // previously lacked: WebSite describes the site and ItemList the cards, but
@@ -68,7 +63,6 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       description: BLOG_DESCRIPTION,
       items: featuredItems,
     }),
-    ...(communityReview ? [communityReview] : []),
   ];
 
   return (
