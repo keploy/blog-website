@@ -37,6 +37,6 @@ test("a genuine http(s) avatar URL passes through unchanged", () => {
 });
 
 test("a root-relative local path (incl. the placeholder itself) passes through", () => {
-  assert.equal(resolveAuthorAvatar("/blog/images/author.png"), "/blog/images/author.png");
+  assert.equal(resolveAuthorAvatar("/blog/images/author.webp"), "/blog/images/author.webp");
   assert.equal(resolveAuthorAvatar(AUTHOR_AVATAR_PLACEHOLDER), AUTHOR_AVATAR_PLACEHOLDER);
 });

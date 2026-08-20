@@ -103,7 +103,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const blogreviewer = [
     {
       name: reviewAuthorName || "Reviewer",
-      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.png",
+      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.webp",
       description: reviewAuthorDescription || "A Reviewer for keploy's blog",
     },
   ];
@@ -277,7 +277,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 post?.content && postBody({ content: post?.content, post })
               }
               authorName={post?.ppmaAuthorName || ""}
-              authorImageUrl={avatarImgSrc || "/blog/images/author.png"}
+              authorImageUrl={avatarImgSrc || "/blog/images/author.webp"}
               authorDescription={blogWriterDescription || "An author for keploy's blog."}
               slug={slug}
               ReviewAuthorDetails={

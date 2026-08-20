@@ -1,4 +1,3 @@
-import BlogThumbnil from '../public/images/thumbnil.png';
 export const EXAMPLE_PATH = 'cms-wordpress'
 export const CMS_NAME = 'WordPress'
 export const CMS_URL = 'https://wordpress.org'
@@ -6,7 +5,7 @@ export const HOME_OG_IMAGE_URL =
   'https://wp.keploy.io/wp-content/uploads/2023/11/thumbnil-.png'
 
 // Local placeholder avatar shown when an author has no usable image.
-export const AUTHOR_AVATAR_PLACEHOLDER = '/blog/images/author.png'
+export const AUTHOR_AVATAR_PLACEHOLDER = '/blog/images/author.webp'
 
 // Resolve an author avatar to a real, loadable src. Some WordPress authors carry
 // junk in ppmaAuthorImage (e.g. the literal strings "imag1" / "image", "n/a", or

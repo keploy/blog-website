@@ -426,7 +426,7 @@ export const getBlogPostingSchema = ({
   if (resolvedAuthorName !== ORG_NAME) {
     authorNode.worksFor = orgReference();
   }
-  if (authorImage && !authorImage.includes("/images/author.png")) {
+  if (authorImage && !authorImage.includes("/images/author.webp")) {
     authorNode.image = authorImage;
   }
 
@@ -484,7 +484,7 @@ export const getBlogPostingSchema = ({
       "@id": `${SITE_URL}/authors/${sanitizeAuthorSlug(reviewerName)}#person`,
       url: `${SITE_URL}/authors/${sanitizeAuthorSlug(reviewerName)}`,
     };
-    if (reviewerImage && !reviewerImage.includes("/images/author.png")) {
+    if (reviewerImage && !reviewerImage.includes("/images/author.webp")) {
       reviewerNode.image = reviewerImage;
     }
     if (reviewerDescription) {
