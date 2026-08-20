@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Post } from "../types/post";
 import Alert from "./alert";
 import Footer from "./footer";
@@ -26,6 +27,16 @@ export default function Layout({
   ogType?: "article" | "website";
   publishedDate?: string;
 }) {
+  // Load Clarity only after the first user interaction (not on page load) — it's
+  // a heavy session-recording script, so keep it off the initial load path.
+  const [interacted, setInteracted] = useState(false);
+  useEffect(() => {
+    const events = ["scroll", "pointerdown", "keydown", "touchstart"];
+    const onInteract = () => setInteracted(true);
+    events.forEach((e) => window.addEventListener(e, onInteract, { once: true, passive: true }));
+    return () => events.forEach((e) => window.removeEventListener(e, onInteract));
+  }, []);
+
   return (
     <>
       <Meta
@@ -50,51 +61,48 @@ export default function Layout({
       <ScrollToTop />
 
       {/* ── Analytics & third-party scripts ──
-           All non-essential scripts use lazyOnload to keep TBT/TTI low.
-           They fire after the page is fully interactive. */}
-      {/* update: changing this to afterInteractive since this is not a non essential script, due to lazyload on this we 
-           are losing on the important data becasue the script for analytics never gets loaded until the page is fully interavtive
-           and if the user navigates before the page is fully interactive, the script is never triggerred and hence we are losing data */}
+           GA4 loads at site load via beforeInteractive in _document.tsx.
+           Clarity loads on first interaction; Apollo + SWG stay lazyOnload. */}
 
-      <Script
-        id="gtag-loader"
-        src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS"
-        strategy="afterInteractive"
-      />
-      <Script
-        id="google-ga"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-GYS09X6KHS');
-        `,
-        }}
-      />
-
-      <Script
-        id="msclarity"
-        strategy="lazyOnload"
-        dangerouslySetInnerHTML={{
-          __html: `
+      {/* Microsoft Clarity — mounted only after the first user interaction. */}
+      {interacted && (
+        <Script
+          id="msclarity"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
           (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           })(window,document,"clarity","script","jymj0ktwcp");
         `,
+          }}
+        />
+      )}
+
+      {/* Google News SWG (Subscribe with Google) — lazyOnload, non-critical. */}
+      <Script
+        id="swg-basic"
+        src="https://news.google.com/swg/js/v1/swg-basic.js"
+        strategy="lazyOnload"
+      />
+      <Script
+        id="publisher"
+        strategy="lazyOnload"
+        dangerouslySetInnerHTML={{
+          __html: `
+              (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
+                  basicSubscriptions.init({
+                    type: "NewsArticle",
+                    isPartOfType: ["Product"],
+                    isPartOfProductId: "CAowiLC8DA:openaccess",
+                    clientOptions: { theme: "light", lang: "en" },
+                  });
+                });
+            `,
         }}
       />
-
-      {/* Google News SWG (Subscribe with Google) removed: the publication was
-          configured for open-access content, so it rendered nothing user-facing
-          and its API call 400'd on every page (news.google.com/.../CAowiLC8DA).
-          It cost ~80 KiB, threw console errors (tanking Best Practices), set
-          3rd-party cookies, and injected 3 unused preconnects
-          (news.google.com / gstatic.com / google.com). If SWG is wanted later,
-          it needs a properly registered publication set up off-repo. */}
 
       {/* Apollo Tracking Script — lazyOnload */}
       <Script
