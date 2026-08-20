@@ -90,13 +90,18 @@ function clientIp(req: NextApiRequest): string {
 // or forge whole labelled fields with newlines. Also caps length. Every
 // user-supplied field passes through this before it reaches the message.
 //
-// `_` and `~` are deliberately NOT stripped: both are legal in email local parts
-// (RFC atext, which EMAIL_RE accepts) and `_` is common in UTM-tagged page URLs
-// (utm_source, q3_launch), so stripping them corrupts real lead data. Chat italic
-// (_text_) and strikethrough (~text~) each need a matching pair — a lone one can't
-// format — and the link/field-forgery vectors are already dead from removing
-// < > | * and newlines, so the worst a stray pair can do is cosmetic styling,
-// never forge a field or a link.
+// We strip `< > | * ` \r \n` but deliberately KEEP `_` and `~`. The test is NOT
+// "is it atext" — `|`, `*` and `` ` `` are atext too, yet we strip them, because
+// each injects something concrete: `|` completes a clickable <url|label>, `*`
+// bolds, and `` ` `` opens a code span. The distinction that actually earns `_`
+// and `~` a pass is two-sided:
+//   • Risk: with `< > |` and newlines already gone, all `_`/`~` can still do is
+//     cosmetic matched-pair styling (_italic_, ~strike~; a lone one can't format)
+//     — never a forged field or a forged link.
+//   • Cost: `_`/`~` are legal in email local parts (RFC atext, which EMAIL_RE
+//     accepts) and `_` is common in UTM page URLs (utm_source, q3_launch), so
+//     unlike `* | ` ` ``, they appear in real lead data and stripping them would
+//     corrupt real leads.
 function sanitize(value: string, max = 200): string {
   return value
     .replace(/[<>|*`\r\n]/g, " ")
