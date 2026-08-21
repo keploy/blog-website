@@ -175,6 +175,17 @@ test("surfaces a non-OK Chat status without failing the user", async () => {
   }
 });
 
+test("rejects an email that only validates before sanitizing (a*b@x.com -> 400)", async () => {
+  process.env.GOOGLE_CHAT_WEBHOOK_URL = WEBHOOK;
+  const res = mockRes();
+  // `a*b@x.com` passes EMAIL_RE raw, but sanitize turns the `*` into a space, so
+  // validating the sanitized value must 400 rather than deliver "a b@x.com".
+  await handler(mockReq({ body: { fullName: "Jane", email: "a*b@x.com" } }), res);
+  assert.equal(res.statusCode, 400);
+  assert.deepEqual(res.body, { ok: false, error: "validation" });
+  assert.equal(fetchCalls.length, 0);
+});
+
 test("pins source server-side: a forged source falls back to the default", async () => {
   process.env.GOOGLE_CHAT_WEBHOOK_URL = WEBHOOK;
   const res = mockRes();
@@ -211,4 +222,32 @@ test("fail-open: a Chat webhook error still returns 200 (never blocks the user)"
   await handler(mockReq(), res);
   assert.equal(res.statusCode, 200);
   assert.deepEqual(res.body, { ok: true });
+});
+
+test("surfaces a network failure in production without leaking the webhook URL", async () => {
+  // The !chatRes.ok branch already logs in production; a network-level failure
+  // (DNS / refused connection / TLS / abort) is just as silent and permanent,
+  // so it must be visible too — otherwise leads quietly stop arriving.
+  process.env.GOOGLE_CHAT_WEBHOOK_URL = WEBHOOK;
+  const realEnv = process.env.NODE_ENV;
+  const warnings: string[] = [];
+  const realWarn = console.warn;
+  console.warn = ((...args: any[]) => { warnings.push(args.join(" ")); }) as any;
+  // undici surfaces network failures as a `fetch failed` TypeError whose detail
+  // lives in `cause` (host only, never the query string that holds the secret).
+  global.fetch = (async () => { throw new Error("fetch failed"); }) as any;
+  try {
+    (process.env as any).NODE_ENV = "production";
+    const res = mockRes();
+    await handler(mockReq(), res);
+    assert.equal(res.statusCode, 200);
+    assert.deepEqual(res.body, { ok: true });
+    // Logged even in production...
+    assert.ok(warnings.some((w) => /delivery to Google Chat failed/i.test(w)));
+    // ...but the secret webhook URL (key/token) never lands in the log.
+    assert.ok(!warnings.some((w) => w.includes("key=k") || w.includes("token=t") || w.includes(WEBHOOK)));
+  } finally {
+    console.warn = realWarn;
+    (process.env as any).NODE_ENV = realEnv;
+  }
 });

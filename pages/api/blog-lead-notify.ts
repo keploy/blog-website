@@ -34,6 +34,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 //     ping ("new blog lead — see dashboard") and keep identity only in the two
 //     stores above.
 
+// Cap how long this function may run. The delivery fetch is aborted at 5s
+// (see the AbortController below); this ceiling has to sit ABOVE that abort, or
+// the platform kills the invocation before the abort can fire and the catch —
+// the branch that logs a stuck webhook — never runs. 10s leaves headroom for
+// the abort to trip, log, and respond, and is within every Vercel plan's limit.
+export const maxDuration = 10;
+
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 // `source` is pinned to a known set server-side — never echoed from the request
@@ -47,7 +54,11 @@ const DEFAULT_SOURCE = "blog-newsletter";
 // pulling in an external store.
 const RATE_LIMIT_MAX = 5; // requests
 const RATE_LIMIT_WINDOW_MS = 60_000; // per minute, per IP
-const RATE_MAP_MAX_KEYS = 10_000; // evict stale IPs past this so the map can't grow unbounded
+// Soft cap on tracked IPs. Only IPs idle past the window are evictable, so a
+// flood rotating more than this many IPs *within* a single window can still push
+// the map past it — acceptable for an in-memory best-effort limiter (the real
+// ceiling against distributed abuse is the reCAPTCHA-verification follow-up).
+const RATE_MAP_MAX_KEYS = 10_000;
 const rateHits = new Map<string, number[]>();
 
 function isRateLimited(ip: string): boolean {
@@ -63,6 +74,9 @@ function isRateLimited(ip: string): boolean {
   }
 
   const hits = (rateHits.get(ip) || []).filter((t) => t > cutoff);
+  // Record this hit even when it's the one that trips the limit. Deliberate: a
+  // sustained flooder keeps their own window sliding forward and stays limited,
+  // rather than earning a fresh allowance the instant they pause for a beat.
   hits.push(now);
   rateHits.set(ip, hits);
   return hits.length > RATE_LIMIT_MAX;
@@ -139,7 +153,13 @@ export default async function handler(
   }
 
   const name = String(data.fullName ?? "").trim();
-  const email = String(data.email ?? "").trim();
+  // Sanitize the email BEFORE validating, so the value we check is the value we
+  // deliver. EMAIL_RE accepts `*`, `|` and `` ` `` in a local part, but
+  // sanitize() turns each into a space — so validating the raw value could pass
+  // an address that sanitize then mangles (a*b@x.com -> "a b@x.com"), delivering
+  // a broken *Email:* line. Validating the sanitized form 400s those instead,
+  // and never harms real leads (`_`/`~` survive sanitize, see its note).
+  const email = sanitize(String(data.email ?? "").toLowerCase(), 254);
   // Re-validate server-side: a request could hit this endpoint directly and
   // bypass the client-side checks.
   if (!name || !EMAIL_RE.test(email)) {
@@ -149,9 +169,9 @@ export default async function handler(
   const rawSource = String(data.source ?? "").trim();
   const lead = {
     name: sanitize(name, 120),
-    // Lowercase server-side too (the client already does), so a direct hit
+    // Already sanitized + lowercased above (before validation), so a direct hit
     // can't create case-variant leads — same normalization the blog-mql path uses.
-    email: sanitize(email.toLowerCase(), 254),
+    email,
     company: sanitize(String(data.companyName ?? ""), 160),
     page: sanitize(String(data.page ?? ""), 500),
     source: ALLOWED_SOURCES.has(rawSource) ? rawSource : DEFAULT_SOURCE,
@@ -175,7 +195,10 @@ export default async function handler(
   }
 
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 15000);
+  // Abort a stuck webhook well under maxDuration (10s) so the catch runs and
+  // logs while the function is still alive; a Chat webhook answers in <1s, so
+  // 5s is generous headroom, not a tight bound.
+  const timer = setTimeout(() => controller.abort(), 5000);
   try {
     // page is rendered as plain (sanitized) text, not a <url|label> link, and
     // every field is sanitized, so a direct POST can't inject markup.
@@ -208,11 +231,20 @@ export default async function handler(
     }
     return res.status(200).json({ ok: true });
   } catch (err) {
+    // A network-level failure (DNS / refused connection / TLS / the 15s abort)
+    // is just as silent and permanent as a 4xx — leads quietly stop arriving —
+    // so surface it in production too, matching the !chatRes.ok branch above.
+    // The message is a fixed, PII-free string that never carries the webhook
+    // URL; the raw error (PII-free itself for undici, but belt-and-suspenders)
+    // is only attached off production.
+    const aborted = err instanceof Error && err.name === "AbortError";
+    const msg =
+      `[blog-lead] delivery to Google Chat failed (${aborted ? "timed out" : "network error"}) — ` +
+      "verify GOOGLE_CHAT_WEBHOOK_URL is a valid incoming-webhook URL. Lead was NOT delivered.";
     if (process.env.NODE_ENV !== "production") {
-      console.warn(
-        "[blog-lead] delivery to Google Chat failed — verify GOOGLE_CHAT_WEBHOOK_URL is a valid incoming-webhook URL. Lead was NOT delivered.",
-        err,
-      );
+      console.warn(msg, err);
+    } else {
+      console.warn(msg);
     }
     // Never fail the user — the newsletter subscription path is unaffected.
     return res.status(200).json({ ok: true });
