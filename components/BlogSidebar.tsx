@@ -197,6 +197,19 @@ function SidebarAdBanner() {
     setBanner(pickBannerForPage(pagePath));
   }, [pagePath]);
 
+  // Reset the paint gate whenever the artwork changes. Today the whole post
+  // subtree remounts on every SPA nav (_app.tsx swaps <Component/> for
+  // <PageLoader/> on routeChangeStart), so loaded/errored already start false —
+  // but that couples this component's correctness to a distant ancestor. Reset
+  // here so the gate stays correct on its own: otherwise a stale loaded=true
+  // could let the impression fire before the new artwork paints, and a stuck
+  // errored=true could pin the fallback card. Keyed on src (not banner) so
+  // re-picking the same banner keeps an already-painted image marked loaded.
+  React.useEffect(() => {
+    setLoaded(false);
+    setErrored(false);
+  }, [banner?.src]);
+
   // Count a viewable impression once the picked banner scrolls ≥50% into view,
   // a single time per page view, so clicks / impressions gives a real CTR. We
   // gate on (loaded || errored) so it counts only when the artwork (or the
