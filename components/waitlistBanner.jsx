@@ -1,6 +1,9 @@
 import Image from "next/image";
-import waitlistBannerImage from "../public/images/waitlistedBanner-1.webp";
 import Link from "next/link";
+import { S3_ASSET_BASE } from "../lib/constants";
+
+// Served from S3 (see S3_ASSET_BASE) instead of a static import.
+const waitlistBannerImage = `${S3_ASSET_BASE}/images/waitlistedBanner-1.webp`;
 const waitlistBanner = () => {
   return (
     <div className="flex md:items-center flex-col rounded-xl">
@@ -14,6 +17,8 @@ const waitlistBanner = () => {
           className="rounded-tl-xl w-full !h-[350px]"
           alt="Schedule a Keploy demo call"
           src={waitlistBannerImage}
+          width={1200}
+          height={350}
         />
         </Link>
     </div>

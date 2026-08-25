@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
+import { S3_ASSET_BASE } from "../lib/constants";
 const firstRow = Tweets.slice(0, Tweets.length / 2);
 const secondRow = Tweets.slice(Tweets.length / 2);
 
@@ -20,9 +21,12 @@ const ReviewCard = ({
   content: string;
 }) => {
   const { basePath } = useRouter();
-  const localPlaceholder = "/blog/avatars/avatar-placeholder.svg";
+  const localPlaceholder = `${S3_ASSET_BASE}/avatars/avatar-placeholder.svg`;
   const isExternal = typeof avatar === "string" && /^https?:\/\//i.test(avatar);
-  const proxiedAvatar = isExternal
+  // Our own S3 assets are allowlisted for next/image, so serve them directly;
+  // only proxy genuinely third-party avatars (e.g. Twitter) through the endpoint.
+  const isOwnAsset = typeof avatar === "string" && avatar.startsWith(S3_ASSET_BASE);
+  const proxiedAvatar = isExternal && !isOwnAsset
     ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
     : avatar;
 

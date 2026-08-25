@@ -51,6 +51,13 @@ module.exports = {
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     domains: ['secure.gravatar.com', 'wp.keploy.io', 'keploy.io', 'pbs.twimg.com'],
+    // First-party static assets now served from S3 (see S3_ASSET_BASE in
+    // lib/constants). Some of them are SVGs (logo, nav icons) rendered through
+    // next/image, so dangerouslyAllowSVG is required; the CSP + attachment
+    // disposition below keep it safe (own trusted bucket, no inline scripts).
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: 'https',
@@ -61,6 +68,12 @@ module.exports = {
       {
         protocol: 'https',
         hostname: 'wp.keploy.io',
+        port,
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'keploy-devrel.s3.us-west-2.amazonaws.com',
         port,
         pathname: '/**',
       },

@@ -5,11 +5,10 @@ import Layout from "../components/layout";
 import { getAllPostsForCommunity, getAllPostsForTechnology } from "../lib/api";
 import Header from "../components/header";
 import Link from "next/link";
-import { HOME_OG_IMAGE_URL } from "../lib/constants";
+import { HOME_OG_IMAGE_URL, S3_ASSET_BASE } from "../lib/constants";
 import dynamic from "next/dynamic";
 import TopBlogs from "../components/topBlogs";
 import Image from "next/image";
-import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import {
   getBreadcrumbListSchema,
   getWebSiteSchema,
@@ -86,7 +85,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
 
             <div className="blog-hero-img">
               <Image
-                src="/blog/images/blog-bunny.webp"
+                src={`${S3_ASSET_BASE}/images/blog-bunny.webp`}
                 alt="hero image"
                 width={600}
                 height={600}

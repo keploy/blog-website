@@ -6,7 +6,7 @@ interface InfoCardProps {
   title: string;
   subtitle?: string;
   href: string;
-  icon?: StaticImageData;
+  icon?: string | StaticImageData;
   badge?: string;
   backgroundImage?: string | StaticImageData;
 }

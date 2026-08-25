@@ -5,7 +5,7 @@ import Layout from "../components/layout";
 import MoreStories from "../components/more-stories";
 import { getAllPostsForSearch } from "../lib/api"; // This now exists
 import { Post } from "../types/post";
-import { HOME_OG_IMAGE_URL } from "../lib/constants";
+import { HOME_OG_IMAGE_URL, S3_ASSET_BASE } from "../lib/constants";
 import { getBreadcrumbListSchema, SITE_URL } from "../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../lib/isr";
 
@@ -30,7 +30,7 @@ export default function SearchPage({ allPosts }: { allPosts: { node: Post }[] })
       preview={false} // Required prop
       Title={pageTitle} // Required prop
       Description={query ? `Search results for "${query}" on the Keploy Blog — find articles on testing, automation, and developer tools.` : `Search the Keploy Blog for articles on API testing, test automation, CI/CD, developer tools, and software quality engineering.`}
-      featuredImage={HOME_OG_IMAGE_URL || "/blog/images/blog-bunny.webp"} // Fallback to string if constant fails
+      featuredImage={HOME_OG_IMAGE_URL || `${S3_ASSET_BASE}/images/blog-bunny.webp`} // Fallback to string if constant fails
       structuredData={structuredData}
     >
       <Head>
