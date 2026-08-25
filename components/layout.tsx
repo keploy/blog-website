@@ -61,8 +61,29 @@ export default function Layout({
       <ScrollToTop />
 
       {/* ── Analytics & third-party scripts ──
-           GA4 loads at site load via beforeInteractive in _document.tsx.
-           Clarity loads on first interaction; Apollo + SWG stay lazyOnload. */}
+           GA4 uses afterInteractive: it fires right after hydration (not the
+           idle-wait of lazyOnload), so we don't lose early pageviews, while
+           staying off the pre-hydration critical path so it doesn't compete
+           with LCP. Clarity loads on first interaction; Apollo + SWG stay
+           lazyOnload. */}
+
+      <Script
+        id="gtag-loader"
+        src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS"
+        strategy="afterInteractive"
+      />
+      <Script
+        id="google-ga"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-GYS09X6KHS');
+        `,
+        }}
+      />
 
       {/* Microsoft Clarity — mounted only after the first user interaction. */}
       {interacted && (
