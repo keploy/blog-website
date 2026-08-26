@@ -1,5 +1,7 @@
+import SkeletonCard from '../components/SkeletonCard';
 import Head from "next/head";
 import { GetStaticProps } from "next";
+import { useRouter } from "next/router";
 import Container from "../components/container";
 import Layout from "../components/layout";
 import { getAllPostsForCommunity, getAllPostsForTechnology } from "../lib/api";
@@ -16,21 +18,19 @@ import {
   SITE_URL,
 } from "../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../lib/isr";
-// Canonical /blog title. Shared by Layout's `Title` prop (which Meta.tsx
-// turns into og:title / twitter:title) and the <Head><title>, so the
-// document title and social metadata can't drift apart.
+
 const BLOG_TITLE =
   "Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives";
 
 export default function Index({ communityPosts, technologyPosts, preview }) {
-  // Organization schema is in _document.tsx (global) — not duplicated here
+  const router = useRouter();
+
   const structuredData = [
     getWebSiteSchema(),
     getBreadcrumbListSchema([{ name: "Home", url: SITE_URL }]),
   ];
 
   return (
-
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
@@ -41,10 +41,6 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       ogType="website"
     >
       <Head>
-        {/* Meta.tsx renders og:title / twitter:title from Layout's `Title`
-            prop but does NOT emit a <title> tag (see LIVE-11 note in
-            authors/[slug].tsx). Without this <Head><title>, /blog ships
-            with no document title — same regression that hit author pages. */}
         <title>{BLOG_TITLE}</title>
       </Head>
       <Header />
@@ -84,10 +80,21 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
             </div>
           </div>
         </div>
-        <TopBlogs
-          communityPosts={communityPosts}
-          technologyPosts={technologyPosts}
-        />
+
+        {/* Loading State Check: Router fallback ya posts empty hone par Skeleton Loader render hoga */}
+        {router.isFallback || (!communityPosts && !technologyPosts) ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-10">
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </div>
+        ) : (
+          <TopBlogs
+            communityPosts={communityPosts}
+            technologyPosts={technologyPosts}
+          />
+        )}
+
         <Testimonials />
       </Container>
     </Layout>
