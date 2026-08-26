@@ -39,7 +39,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 // the platform kills the invocation before the abort can fire and the catch —
 // the branch that logs a stuck webhook — never runs. 10s leaves headroom for
 // the abort to trip, log, and respond, and is within every Vercel plan's limit.
-export const maxDuration = 10;
+// NOTE: this MUST be `export const config = { maxDuration }`, not a bare
+// `export const maxDuration`. This is a Pages Router route; Next 14's static-info
+// extractor only reads the bare export for the app router (pageType === "app")
+// and reads maxDuration from `config` for pages routes — a bare export here is
+// silently ignored, leaving the ceiling at the platform default.
+export const config = { maxDuration: 10 };
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
@@ -152,7 +157,12 @@ export default async function handler(
     return res.status(429).json({ ok: false, error: "rate_limited" });
   }
 
-  const name = String(data.fullName ?? "").trim();
+  // Sanitize BEFORE validating, same reason as the email below: sanitize() maps
+  // < > | * ` and newlines to spaces, so a raw-passing value like "***" would
+  // pass the non-empty check and then collapse to "", shipping a blank *Name:*
+  // line. Validating the sanitized form 400s those instead ('_'/'~' and real
+  // names survive sanitize, see its note).
+  const name = sanitize(String(data.fullName ?? ""), 120);
   // Sanitize the email BEFORE validating, so the value we check is the value we
   // deliver. EMAIL_RE accepts `*`, `|` and `` ` `` in a local part, but
   // sanitize() turns each into a space — so validating the raw value could pass
@@ -168,7 +178,7 @@ export default async function handler(
 
   const rawSource = String(data.source ?? "").trim();
   const lead = {
-    name: sanitize(name, 120),
+    name,
     // Already sanitized + lowercased above (before validation), so a direct hit
     // can't create case-variant leads — same normalization the blog-mql path uses.
     email,
@@ -231,7 +241,7 @@ export default async function handler(
     }
     return res.status(200).json({ ok: true });
   } catch (err) {
-    // A network-level failure (DNS / refused connection / TLS / the 15s abort)
+    // A network-level failure (DNS / refused connection / TLS / the 5s abort)
     // is just as silent and permanent as a 4xx — leads quietly stop arriving —
     // so surface it in production too, matching the !chatRes.ok branch above.
     // The message is a fixed, PII-free string that never carries the webhook
