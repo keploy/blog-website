@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useRouter } from "next/router";
 import styles from "./subscribe-newsletter.module.css";
 import { newsLetterSubscriptionUrl } from '../services/constants'
 import { useInvisibleRecaptcha, RecaptchaAttribution } from "../lib/use-invisible-recaptcha";
@@ -39,12 +40,23 @@ export const subscribeMutation = (formData: { fullName: string, email: string, c
 
 
 export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) {
+  const router = useRouter();
   const myComponent = useRef<HTMLDivElement>(null);
   const [isVisible, setVisible] = useState<boolean>(true);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
+  // Honeypot — hidden from humans; bots that auto-fill every field trip it.
+  const [companyWebsite, setCompanyWebsite] = useState('');
   const [subscribed, setSubscribed] = useState<boolean>(false);
+  // In-flight guard: blocks repeat clicks so we don't fire duplicate lead /
+  // Chat-notify POSTs (the subscription upserts by email, but the Chat space
+  // gets one ping per click otherwise). The ref is the airtight guard — a fast
+  // double-click fires two handlers before React re-renders, so reading the
+  // `submitting` state (or the disabled button) still sees the stale `false`.
+  // The state drives the disabled/opacity UI; the ref decides who actually runs.
+  const submittingRef = useRef<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [emailError, setEmailError] = useState('');
   const message = "NEWSLETTER"
   // Don't load Google's script for every reader — only once someone actually
@@ -76,6 +88,10 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
   const submitHandler = (e) => {
     e.preventDefault();
 
+    // Honeypot — bots fill the hidden company_website field; humans don't.
+    // Drop silently client-side too (the endpoint re-checks server-side).
+    if (companyWebsite) return;
+
       if (!isValidEmail(email)) {
     setEmailError("Please enter a valid email address."); 
 
@@ -84,6 +100,13 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
     }, 2000);
     return 
   }
+
+    // Guard against double-submits — one Chat ping per click otherwise.
+    // Check/set the ref synchronously so a second click in the same tick can't
+    // slip through before the state re-renders.
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+    setSubmitting(true);
 
     const payload = {
       fullName,
@@ -108,10 +131,30 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
       });
     });
 
-    handleSubscribe(payload)
+    // Google Chat notification — fire-and-forget, fail-open. Forwards the lead
+    // to a Chat space via the server-side /api/blog-lead-notify handler (which
+    // holds the webhook secret). Never gates the subscription.
+    fetch(`${router.basePath || ''}/api/blog-lead-notify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify({
+        fullName: fullName.trim(),
+        email: email.trim().toLowerCase(),
+        companyName: companyName.trim(),
+        company_website: companyWebsite,
+        source: 'blog-newsletter',
+        page,
+      }),
+    }).catch(() => {});
+
+    handleSubscribe(payload).finally(() => {
+      submittingRef.current = false;
+      setSubmitting(false);
+    });
   };
   const isSubscribeDisabled = ()=>{
-    return Boolean(!email || !fullName || !companyName)    
+    return Boolean(!email || !fullName || !companyName || submitting)
   }
   return (
     <div className="flex flex-col">
@@ -129,6 +172,18 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
               onSubmit={submitHandler}
               onFocusCapture={() => setCaptchaActive(true)}
             >
+              {/* Honeypot — hidden from humans (off-screen, not tabbable, no
+                  autofill); a filled value marks the submit as a bot. */}
+              <input
+                type="text"
+                name="company_website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                value={companyWebsite}
+                onChange={(e) => setCompanyWebsite(e.target.value)}
+                style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+              />
               <input
                 type="text"
                 className="rounded px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
