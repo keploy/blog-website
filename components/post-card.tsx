@@ -54,6 +54,10 @@ export default function PostCard({
             slug={slug}
             isCommunity={isCommunity}
             imgClassName="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            // Grid is 1/2/3 columns (mobile/sm/lg). CoverImage's default sizes
+            // assumes a full-width image, so cards fetched an 828px variant for
+            // a ~345px slot. Match the grid so next/image serves a right-sized file.
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         )}
       </div>
