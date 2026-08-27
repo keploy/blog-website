@@ -23,7 +23,9 @@ import { REVALIDATE_CONTENT } from "../lib/isr";
 // shift on-screen content (it's below the fold, so CLS impact is nil).
 const Testimonials = dynamic(() => import("../components/testimonials"), {
   ssr: false,
-  loading: () => <div className="min-h-[420px]" aria-hidden="true" />,
+  // Reserve the loaded section's real height (~760px: heading + the h-[700px]
+  // marquee) so the footer doesn't shift down when the chunk mounts.
+  loading: () => <div className="min-h-[760px]" aria-hidden="true" />,
 });
 // Canonical /blog title. Shared by Layout's `Title` prop (which Meta.tsx
 // turns into og:title / twitter:title) and the <Head><title>, so the

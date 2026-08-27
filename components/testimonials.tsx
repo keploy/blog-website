@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Marquee } from "./Marquee";
@@ -71,19 +71,44 @@ const ReviewCard = ({
 
 
 const TwitterTestimonials = () => {
+  const marqueeRef = useRef<HTMLDivElement | null>(null);
+  // Pause the infinite marquees while the section is off-screen so they don't
+  // burn compositor/CPU (and battery on mobile) when nobody's watching. Start
+  // paused; the observer resumes them ~200px before they scroll into view, so
+  // the viewer always sees continuous motion — resume is seamless (CSS
+  // animation-play-state continues, no reset).
+  const [paused, setPaused] = useState(true);
+
+  useEffect(() => {
+    const node = marqueeRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") {
+      setPaused(false); // fail open — animate if we can't observe.
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => setPaused(!entry.isIntersecting),
+      { rootMargin: "200px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="">
       <h3 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
         What our community thinks
       </h3>
-      <div className="relative flex mb-8 h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent marquee-mask">
+      <div
+        ref={marqueeRef}
+        className="relative flex mb-8 h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent marquee-mask"
+      >
 
-        <Marquee pauseOnHover repeat={2} className="[--duration:17s]">
+        <Marquee paused={paused} pauseOnHover repeat={2} className="[--duration:17s]">
           {firstRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-        <Marquee reverse pauseOnHover repeat={2} className="[--duration:17s]">
+        <Marquee paused={paused} reverse pauseOnHover repeat={2} className="[--duration:17s]">
           {secondRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
