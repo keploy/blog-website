@@ -15,7 +15,11 @@ export function GitHubStars({ className = "" }) {
         className="relative overflow-hidden px-4 py-1 flex items-center gap-2 transition-all duration-200 border-2 border-transparent hover:border-orange-400/80 rounded-full bg-white/90 hover:bg-orange-400/10 hover:text-orange-500 text-lg group/link"
       >
         <GitHubIcon />
-        <span className="tracking-wider font-medium text-[1rem]">{stars}</span>
+        {/* Fixed width + tabular figures so the pill doesn't resize (CLS) when
+            the count updates from the default to the fetched value. */}
+        <span className="tracking-wider font-medium text-[1rem] tabular-nums inline-block min-w-[3.5rem] text-center">
+          {stars}
+        </span>
         <div className="absolute inset-0 -translate-x-full group-hover/link:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-orange-400/20 to-transparent" />
       </Link>
     </div>
