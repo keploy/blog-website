@@ -3,7 +3,7 @@ import Date from "./date";
 import CoverImage from "./cover-image";
 import Link from "next/link";
 import { Post } from "../types/post";
-import { animated, easings, useInView } from "@react-spring/web";
+import { animated, easings, useSpring } from "@react-spring/web";
 
 export default function PostPreview({
   title,
@@ -24,29 +24,24 @@ export default function PostPreview({
 }) {
   const basePath = isCommunity ? "/community" : "/technology";
   excerpt = excerpt.replace("Table of Contents", "");
-  const [ref, springStyles] = useInView(
-    () => ({
-      from: {
-        opacity: 0,
-      },
-      to: {
-        opacity: 100,
-      },
-      config: {
-        duration: 500,
-        delay: 100,
-        easing: easings.easeInCubic,
-      },
-    }),
-    {
-      rootMargin: "-200px 0px",
-    }
-  );
+  // Fade in on mount instead of gating visibility on an IntersectionObserver
+  // (react-spring useInView). The observer never fired under `next dev`, so
+  // previews stayed stuck at opacity 0 / invisible. useSpring runs on mount and
+  // always settles at opacity 1, so a misfiring reveal can never leave the
+  // content hidden.
+  const springStyles = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+    config: {
+      duration: 500,
+      delay: 100,
+      easing: easings.easeInCubic,
+    },
+  });
   return (
     <animated.div
       data-testid="post-preview"
       className="bg-gray-100 border p-6 rounded-md   lg:hover:shadow-md transition group"
-      ref={ref}
       style={springStyles}
     >
       <div className="mb-5">

@@ -3,7 +3,7 @@ import Date from "./date";
 import CoverImage from "./cover-image";
 import Link from "next/link";
 import { Post } from "../types/post";
-import { animated, easings, useInView } from "@react-spring/web";
+import { animated, easings, useSpring } from "@react-spring/web";
 
 export default function PostCard({
   title,
@@ -25,30 +25,25 @@ export default function PostCard({
   const basePath = isCommunity ? "/community" : "/technology";
   const cleanedExcerpt = (excerpt || "").replace("Table of Contents", "");
 
-  const [ref, springStyles] = useInView(
-    () => ({
-      from: {
-        opacity: 0,
-      },
-      to: {
-        opacity: 100,
-      },
-      config: {
-        duration: 500,
-        delay: 100,
-        easing: easings.easeInCubic,
-      },
-    }),
-    {
-      rootMargin: "-200px 0px",
-    }
-  );
+  // Fade in on mount instead of gating visibility on an IntersectionObserver
+  // (react-spring useInView). The observer never fired under `next dev`, so
+  // cards stayed stuck at opacity 0 / invisible. useSpring runs on mount and
+  // always settles at opacity 1, so a misfiring reveal can never leave the
+  // content hidden.
+  const springStyles = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+    config: {
+      duration: 500,
+      delay: 100,
+      easing: easings.easeInCubic,
+    },
+  });
 
   return (
     <animated.div
       data-testid="post-card"
       className="bg-white rounded-lg border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all duration-300 overflow-hidden group"
-      ref={ref}
       style={springStyles}
     >
       <div className="aspect-video overflow-hidden">
