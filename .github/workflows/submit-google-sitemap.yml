@@ -1,26 +1,36 @@
 name: Submit Sitemap to Google
 
+# Runs after Sync Sitemap. That workflow regenerates public/sitemap.xml and, if
+# anything changed, pushes it to main — which is what triggers the Vercel
+# production deploy that puts the new sitemap live.
+#
+# The trigger is workflow_run rather than `push`, because Sync Sitemap pushes
+# with GITHUB_TOKEN and GitHub deliberately does not start `push`-triggered
+# workflows from those commits. workflow_run fires on the workflow completing,
+# so it is unaffected.
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - public/sitemap.xml
+  workflow_run:
+    workflows: ["Sync Sitemap"]
+    types: [completed]
   workflow_dispatch:
+
+concurrency:
+  group: submit-google-sitemap
+  cancel-in-progress: false
 
 jobs:
   submit-google-sitemap:
+    # A failed sync pushed nothing, so there is nothing to announce.
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     env:
       GOOGLE_SITEMAP_URL: https://keploy.io/blog/sitemap.xml
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
       - name: Install googleapis
         run: npm install --no-save googleapis@171.4.0
@@ -35,15 +45,76 @@ jobs:
 
           for name in GOOGLE_SERVICE_ACCOUNT_EMAIL GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY GOOGLE_SEARCH_CONSOLE_SITE_URL; do
             if [ -z "${!name}" ]; then
-              echo "::error::Missing required secret: ${name}. Add it in GitHub Settings > Secrets and variables > Actions."
+              echo "::error::Missing required secret: ${name}. Add it in Settings > Secrets and variables > Actions."
               exit 1
             fi
           done
 
-      - name: Wait for Vercel deploy to propagate
-        run: sleep 90
+      # Poll rather than sleep a fixed interval: a deploy normally appears within
+      # ~5 minutes, but a slow build must not be missed, and there is no point
+      # waiting an hour when it is already live.
+      #
+      # Only deployments created after the sync run started count. Without that
+      # bound, yesterday's deployment would satisfy the check and we would submit
+      # even when today's sync pushed nothing.
+      - name: Wait for a successful production deployment
+        id: deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SINCE: ${{ github.event.workflow_run.created_at }}
+        run: |
+          set -uo pipefail
+
+          # workflow_dispatch has no triggering run, so accept any recent deploy.
+          since="${SINCE:-1970-01-01T00:00:00Z}"
+          echo "looking for a successful Production deployment in ${REPO} created at or after ${since}"
+
+          # Timestamps are same-format UTC, so a string compare is a date compare.
+          find_deployment() {
+            for id in $(gh api "repos/${REPO}/deployments?environment=Production&per_page=20" \
+                          --jq ".[] | select(.created_at >= \"${since}\") | .id" 2>/dev/null); do
+              state="$(gh api "repos/${REPO}/deployments/${id}/statuses?per_page=10" \
+                         --jq '[.[] | .state] | if index("success") then "success" else (.[0] // "none") end' 2>/dev/null)"
+              echo "  deployment ${id}: ${state}" >&2
+              if [ "${state}" = "success" ]; then
+                echo "${id}"
+                return 0
+              fi
+            done
+            return 1
+          }
+
+          for attempt in $(seq 1 18); do   # 18 x 5 min = 90 minutes
+            if id="$(find_deployment)"; then
+              echo "found successful deployment ${id} on attempt ${attempt}"
+              echo "found=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "attempt ${attempt}/18: no successful deployment yet, waiting 5 minutes"
+            sleep 300
+          done
+
+          echo "::notice::No successful production deployment appeared within 90 minutes. Nothing to submit."
+          echo "found=false" >> "$GITHUB_OUTPUT"
+
+      # A truncated sitemap is still well-formed XML, so validity proves nothing.
+      # Refuse to point Google at a build that lost most of its URLs.
+      - name: Sanity-check the live sitemap
+        if: steps.deploy.outputs.found == 'true'
+        run: |
+          set -euo pipefail
+
+          count="$(curl -sS --max-time 30 "${GOOGLE_SITEMAP_URL}" | grep -c '<loc>' || true)"
+          echo "live sitemap URL count: ${count}"
+
+          if [ "${count}" -lt 400 ]; then
+            echo "::error::Live sitemap has only ${count} URLs (expected 400+). Refusing to submit."
+            exit 1
+          fi
 
       - name: Submit sitemap to Google Search Console
+        if: steps.deploy.outputs.found == 'true'
         env:
           GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
           GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
@@ -55,12 +126,14 @@ jobs:
           // GH Actions stores multi-line secrets with literal \n — normalise them.
           const key = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, '\n');
 
-          const auth = new google.auth.JWT(
-            process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-            null,
+          // Must be the options-object form. google-auth-library v10, which
+          // googleapis@171 depends on, ignores the old positional signature:
+          // email and key both resolve to undefined and every call 401s.
+          const auth = new google.auth.JWT({
+            email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
             key,
-            ['https://www.googleapis.com/auth/webmasters']
-          );
+            scopes: ['https://www.googleapis.com/auth/webmasters'],
+          });
 
           const sc = google.webmasters({ version: 'v3', auth });
 
@@ -73,11 +146,24 @@ jobs:
                   feedpath: process.env.GOOGLE_SITEMAP_URL,
                 });
                 console.log('Submitted', process.env.GOOGLE_SITEMAP_URL, 'to Google Search Console');
+
+                // Read it back so a green run reports what Google recorded
+                // rather than just an HTTP 200.
+                const { data } = await sc.sitemaps.get({
+                  siteUrl: process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL,
+                  feedpath: process.env.GOOGLE_SITEMAP_URL,
+                });
+                console.log('lastSubmitted :', data.lastSubmitted);
+                console.log('lastDownloaded:', data.lastDownloaded);
+                console.log('warnings      :', data.warnings, '| errors:', data.errors);
+                for (const c of data.contents ?? []) {
+                  console.log(`contents      : ${c.type} submitted=${c.submitted}`);
+                }
                 process.exit(0);
               } catch (err) {
                 if (attempt === MAX_ATTEMPTS) {
                   console.error('::error::Google Search Console submission failed after', MAX_ATTEMPTS, 'attempts:', err.message);
-                  console.error('Next step: verify the service account email and private key match, ensure the Search Console API is enabled, and confirm the service account has access to the Search Console property.');
+                  console.error('Next step: verify the service account email and private key match, that the Search Console API is enabled, and that the service account is an owner on the property.');
                   process.exit(1);
                 }
                 const delayMs = attempt * 15000;
