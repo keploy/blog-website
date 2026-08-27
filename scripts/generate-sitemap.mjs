@@ -193,7 +193,14 @@ async function loadRedirectMap() {
     );
     for (const r of vercel.redirects ?? []) add(r);
   } catch (error) {
-    console.warn("[generate-sitemap] Could not read vercel.json redirects:", error.message);
+    // Fail loud, don't warn-and-continue: an incomplete map silently emits
+    // redirecting <loc>s — the exact SEO regression this script exists to
+    // prevent — and sync-sitemap.yml auto-commits the output to main, so a
+    // swallowed error would ship a degraded sitemap with no human in the loop.
+    throw new Error(
+      `[generate-sitemap] Could not read vercel.json redirects: ${error.message}`,
+      { cause: error },
+    );
   }
 
   // next.config.js redirects() — sources omit the basePath, so prepend it.
@@ -204,7 +211,12 @@ async function loadRedirectMap() {
       typeof nextConfig?.redirects === "function" ? await nextConfig.redirects() : [];
     for (const r of list ?? []) add(r, BASE_PATH);
   } catch (error) {
-    console.warn("[generate-sitemap] Could not load next.config.js redirects:", error.message);
+    // Same rationale as the vercel.json load above — an unreadable config means
+    // an incomplete redirect map, so fail rather than ship a degraded sitemap.
+    throw new Error(
+      `[generate-sitemap] Could not load next.config.js redirects: ${error.message}`,
+      { cause: error },
+    );
   }
 
   return map;
