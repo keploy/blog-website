@@ -7,7 +7,14 @@ import Script from 'next/script';
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
 import { trackAiReferral } from '@/utils/aiReferralTracker';
-import { Announcements } from '../components/Announcements';
+// Lazy + client-only: the bar is a non-critical global widget (often disabled
+// via ANNOUNCEMENT_ENABLED). Code-splitting it keeps Marquee + lucide icons out
+// of the shared _app bundle. Safe because --announcement-h defaults to 0px in
+// styles/index.css, so offsets are correct before this chunk loads.
+const Announcements = dynamic(
+  () => import('../components/Announcements').then((m) => m.Announcements),
+  { ssr: false }
+);
 
 const baloo2 = Baloo_2({
   subsets: ['latin'],
