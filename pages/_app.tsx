@@ -7,9 +7,12 @@ import Script from 'next/script';
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
 import { trackAiReferral } from '@/utils/aiReferralTracker';
+import { ANNOUNCEMENT_ENABLED } from '../components/announcementConfig';
 // Lazy + client-only: the bar is a non-critical global widget (often disabled
 // via ANNOUNCEMENT_ENABLED). Code-splitting it keeps Marquee + lucide icons out
-// of the shared _app bundle. Safe because --announcement-h defaults to 0px in
+// of the shared _app bundle, and gating the render on ANNOUNCEMENT_ENABLED (a
+// flag from a Marquee-free module) means the chunk is never even fetched while
+// the bar is off. Safe because --announcement-h defaults to 0px in
 // styles/index.css, so offsets are correct before this chunk loads.
 const Announcements = dynamic(
   () => import('../components/Announcements').then((m) => m.Announcements),
@@ -94,7 +97,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         data-source="blog"
         strategy="lazyOnload"
       />
-      <Announcements />
+      {ANNOUNCEMENT_ENABLED && <Announcements />}
       {loading ? <PageLoader /> : <Component {...pageProps} />}
     </div>
   );

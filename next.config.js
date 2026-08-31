@@ -49,8 +49,12 @@ module.exports = {
     domains: ['secure.gravatar.com', 'wp.keploy.io', 'keploy.io', 'pbs.twimg.com'],
     // First-party static assets now served from S3 (see S3_ASSET_BASE in
     // lib/constants). Some of them are SVGs (logo, nav icons) rendered through
-    // next/image, so dangerouslyAllowSVG is required; the CSP + attachment
-    // disposition below keep it safe (own trusted bucket, no inline scripts).
+    // next/image, so dangerouslyAllowSVG is required. Note the flag is global:
+    // it also permits SVGs from every host above (wp.keploy.io WordPress
+    // uploads, gravatar, twimg) and remotePatterns, not just our S3 bucket.
+    // What keeps it safe regardless of source is the CSP + attachment
+    // disposition below — SVGs are served with script-src 'none'; sandbox and
+    // Content-Disposition: attachment, so they can't execute inline scripts.
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
