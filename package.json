@@ -47,7 +47,7 @@
     "highlight.js": "^11.9.0",
     "json-diff-kit": "^1.0.29",
     "lucide-react": "^0.524.0",
-    "next": "14.0.1",
+    "next": "14.2.35",
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
