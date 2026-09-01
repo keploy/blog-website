@@ -55,6 +55,9 @@ export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }
   const heroPost = filteredPosts[0]?.node;
   const morePosts = filteredPosts.slice(1);
   const excerpt = heroPost ? getExcerpt(heroPost.excerpt, 50) : "";
+  // This page is noindex, so search engines don't process its structured data.
+  // SearchResultsPage was dead markup here (review #8); the breadcrumb is kept
+  // only as a lightweight nav hint.
   const structuredData = [
     getBreadcrumbListSchema([
       { name: "Home", url: SITE_URL },

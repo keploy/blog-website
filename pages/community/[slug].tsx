@@ -18,7 +18,7 @@ import {
   getReviewAuthors,
 } from "../../lib/api";
 import ContainerSlug from "../../components/containerSlug";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
@@ -27,10 +27,16 @@ import "./styles.module.css"
 import {
   getBlogPostingSchema,
   getBreadcrumbListSchema,
+  getFAQPageSchema,
+  getSoftwareSourceCodeSchema,
+  getDefinedTermSetSchema,
   SITE_URL,
 } from "../../lib/structured-data";
-import { sanitizeTitle, getSafeDescription } from "../../utils/seo";
+import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
 import { getHowToSchema } from "../../lib/howToSchema";
+import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/contentSchema";
+import { getTooltipsForSlug } from "../../config/keyword-tooltips";
+import { resolveAuthorAvatar } from "../../lib/constants";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
 
@@ -81,13 +87,16 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   // PublishPress Multiple Authors plugin. Fall back to a safe placeholder
   // only if that field is genuinely missing. Previously this was extracted
   // from post.content via regex inside a useEffect which meant the SSR
-  // HTML used the /blog/images/author.png placeholder even when the real
+  // HTML used the /blog/images/author.webp placeholder even when the real
   // image was available in the data.
-  const ppmaImage =
-    typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
-      ? post.ppmaAuthorImage
-      : "";
-  const writerAvatarUrl = ppmaImage || "/blog/images/author.png";
+  // resolveAuthorAvatar rejects junk ppmaAuthorImage values ("imag1", "image",
+  // "n/a", empty) that would otherwise 400 the next/image optimizer and render a
+  // broken byline avatar; a real URL passes through unchanged.
+  const writerAvatarUrl = resolveAuthorAvatar(post?.ppmaAuthorImage);
+  // For JSON-LD only: a genuine author photo (absolute URL) or nothing — never
+  // the placeholder or a junk value, either of which would be invalid in schema.
+  const rawPpmaImage = (post?.ppmaAuthorImage ?? "").trim();
+  const ppmaSchemaImage = /^https?:\/\//i.test(rawPpmaImage) ? rawPpmaImage : undefined;
 
   // Writer description — pulled from the first paragraph with the
   // pp-author-boxes-description class in the post content. Kept here as
@@ -119,7 +128,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       // genuinely have no reviewer data. When the data is present the
       // real name renders server-side and reaches AI crawlers.
       name: reviewAuthorName || "Reviewer",
-      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.png",
+      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.webp",
       description: reviewAuthorDescription || "A Reviewer for keploy's blog",
     },
   ];
@@ -158,6 +167,18 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
 
   const postUrl = post?.slug ? `${SITE_URL}/community/${post.slug}` : `${SITE_URL}/community`;
+  // These scan the full post HTML; memoize so the passes run once on hydration
+  // and never again on the frequent re-renders this page triggers (scroll
+  // progress, router state) — see PR review #5.
+  const { codeLanguages, wordCount, faqs } = useMemo(
+    () => ({
+      codeLanguages: detectCodeLanguages(post?.content),
+      wordCount: countWords(post?.content),
+      faqs: extractFaqs(post?.content),
+    }),
+    [post?.content],
+  );
+  const tooltipTerms = post?.slug ? getTooltipsForSlug(post.slug) : [];
   const structuredData = [];
   if (post?.slug) {
     structuredData.push(
@@ -174,13 +195,24 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         description: safeDescription,
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
-        // LIVE-22: use PublishPress author image, not the /blog/images/author.png
+        // LIVE-22: use PublishPress author image, not the /blog/images/author.webp
         // placeholder. The schema generator also filters the placeholder.
-        authorImage: ppmaImage || undefined,
+        authorImage: ppmaSchemaImage,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Community",
         // LIVE-22: emit reviewedBy Person schema when reviewer data is
         // present. The schema generator skips the emit when the reviewer
         // is "Reviewer" (placeholder) or equals the author (self-review).
+        // Populate dependencies from the post's actual code languages.
+        dependencies: codeLanguages.length ? codeLanguages : undefined,
+        // Voice-assistant spoken summary: title + section headings.
+        speakableSelectors: ["h1", "h2"],
+        // Developer-intent content signals (serialized from existing UI data).
+        wordCount,
+        readingTimeMinutes: time,
+        keywords: [
+          ...(post?.categories?.edges?.map((e) => e?.node?.name).filter(Boolean) || []),
+          ...codeLanguages,
+        ],
         reviewerName: reviewAuthorName || undefined,
         reviewerImage: reviewAuthorImageUrl || undefined,
         reviewerDescription: reviewAuthorDescription || undefined,
@@ -189,6 +221,27 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     const howTo = getHowToSchema(post, postUrl, safeTitle, safeDescription);
     if (howTo) {
       structuredData.push(howTo);
+    }
+    // FAQPage only when the post has an explicit "FAQ" / "Frequently Asked
+    // Questions" section with ≥2 clean Q&A pairs (see utils/contentSchema
+    // extractFaqs). Marker-gated so we never scrape stray "?" headings or
+    // flatten code/tables into answers. Linked to the post WebPage via @id.
+    if (faqs.length) {
+      structuredData.push(getFAQPageSchema(faqs, postUrl));
+    }
+    for (const language of codeLanguages) {
+      structuredData.push(
+        getSoftwareSourceCodeSchema({ language, url: postUrl, name: `${safeTitle} — ${language} example` }),
+      );
+    }
+    if (tooltipTerms.length) {
+      structuredData.push(
+        getDefinedTermSetSchema({
+          name: `${safeTitle} — glossary`,
+          url: postUrl,
+          terms: tooltipTerms.map((t) => ({ term: t.keyword, description: t.heading })),
+        }),
+      );
     }
   } else {
     structuredData.push(
@@ -219,7 +272,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           <>
             <article>
               <Head>
-                <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
+                <title>{buildPageTitle(post?.title)}</title>
                 {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
               </Head>
               <PostHeader
@@ -249,7 +302,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 post?.ppmaAuthorName,
               )}
               authorName={post?.ppmaAuthorName || ""}
-              authorImageUrl={avatarImgSrc || "/blog/images/author.png"}
+              authorImageUrl={avatarImgSrc || "/blog/images/author.webp"}
               authorDescription={blogWriterDescription || "An author for keploy's blog."}
               ReviewAuthorDetails={
                 reviewAuthorDetails &&

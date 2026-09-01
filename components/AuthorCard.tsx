@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+import { resolveAuthorAvatar } from "../lib/constants";
 
 /* ── Small arrow icon ── */
 const ArrowRightIcon = () => (
@@ -55,13 +56,13 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
   const roleBg = role === "Writer" ? "#FFF7ED" : "#F5F3FF";
   const profileHref = `/authors/${sanitizeAuthorSlug(name)}`;
 
-  /* Resolve avatar src (handle external URLs via proxy) */
+  /* Resolve avatar src: normalize junk (imag1/image/n/a/empty) to the local
+     placeholder first, then route real external URLs through the proxy. */
+  const safeUrl = resolveAuthorAvatar(imageUrl);
   const resolvedSrc =
-    !imageUrl || imageUrl === "n/a"
-      ? "/blog/images/author.png"
-      : /^https?:\/\//i.test(imageUrl) && basePath
-        ? `${basePath}/api/proxy-image?url=${encodeURIComponent(imageUrl)}`
-        : imageUrl;
+    /^https?:\/\//i.test(safeUrl) && basePath
+      ? `${basePath}/api/proxy-image?url=${encodeURIComponent(safeUrl)}`
+      : safeUrl;
 
   /* Clean description sentences */
   const descriptionText =

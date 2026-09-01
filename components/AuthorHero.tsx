@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { IoLogoLinkedin } from "react-icons/io5";
+import { resolveAuthorAvatar } from "../lib/constants";
 
 interface AuthorHeroProps {
   name: string;
@@ -17,7 +18,7 @@ const AuthorHero: React.FC<AuthorHeroProps> = ({
   description,
   linkedIn,
 }) => {
-  const resolvedAvatar = !avatarUrl || avatarUrl === "n/a" ? "/blog/images/author.png" : avatarUrl;
+  const resolvedAvatar = resolveAuthorAvatar(avatarUrl);
 
   // Only show social links that actually exist
   const socialSlots = [linkedIn].filter(link => link && link !== "n/a");
@@ -53,9 +54,10 @@ const AuthorHero: React.FC<AuthorHeroProps> = ({
                   href={link!}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`${name} on LinkedIn`}
                   className="group flex items-center justify-center w-11 h-11 rounded-full bg-gray-100 text-[#637277] shadow-sm hover:bg-[#0077B5] hover:text-white hover:shadow-md transition-all duration-300"
                 >
-                  <IoLogoLinkedin className="w-5 h-5" />
+                  <IoLogoLinkedin className="w-5 h-5" aria-hidden="true" />
                 </Link>
               ))}
             </div>

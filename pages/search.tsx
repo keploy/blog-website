@@ -18,6 +18,9 @@ export default function SearchPage({ allPosts }: { allPosts: { node: Post }[] })
     ? `Search Results for "${query}" | Keploy Blog` 
     : "Search | Keploy Blog";
 
+  // This page is noindex, so search engines don't process its structured data.
+  // SearchResultsPage was dead markup here (review #8); the breadcrumb is kept
+  // only as a lightweight nav hint. `query` is still used for the visible UI.
   const structuredData = [
     getBreadcrumbListSchema([
       { name: "Home", url: SITE_URL },

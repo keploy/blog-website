@@ -111,6 +111,30 @@ export function sanitizeTitle(rawTitle: string | undefined | null): string {
   return decodeEntitiesForAttribute(rawTitle);
 }
 
+const TITLE_SUFFIX = " | Keploy Blog";
+const MAX_TITLE_LENGTH = 60;
+
+/**
+ * Build a <title> that stays within the ~60-char SERP limit (SEMrush "title
+ * too long", 113 posts). Order of preference:
+ *   1. `Title | Keploy Blog` when it fits,
+ *   2. the bare title when adding the suffix would overflow but the title fits,
+ *   3. the title truncated at a word boundary as a last resort.
+ * Entity-decoded via sanitizeTitle so WP entities don't inflate the length.
+ */
+export function buildPageTitle(rawTitle: string | undefined | null): string {
+  const base = sanitizeTitle(rawTitle).trim();
+  if (!base) return "Keploy Blog";
+  const withSuffix = `${base}${TITLE_SUFFIX}`;
+  if (withSuffix.length <= MAX_TITLE_LENGTH) return withSuffix;
+  if (base.length <= MAX_TITLE_LENGTH) return base;
+  const clipped = base.slice(0, MAX_TITLE_LENGTH);
+  const lastSpace = clipped.lastIndexOf(" ");
+  // Always cut at the last word boundary in the window; hard-clip only when the
+  // window has no space at all (a single token longer than the limit).
+  return (lastSpace > 0 ? clipped.slice(0, lastSpace) : clipped).trimEnd();
+}
+
 /**
  * Generate a safe meta description for a blog post.
  * Uses Yoast metaDesc if available and long enough, otherwise generates from title.

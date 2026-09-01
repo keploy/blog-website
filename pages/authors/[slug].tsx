@@ -11,7 +11,28 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
-import { getBreadcrumbListSchema, MAIN_SITE_URL, SITE_URL } from "../../lib/structured-data";
+import {
+  getBreadcrumbListSchema,
+  getItemListSchema,
+  getPersonSchema,
+  getProfilePageSchema,
+  SITE_URL,
+} from "../../lib/structured-data";
+
+// Server-safe author-box extraction. extractAuthorData (utils) relies on
+// `document`, so it can't run in getStaticProps/SSR — these regexes pull the
+// same fields from the raw PublishPress author-box HTML for the JSON-LD.
+function extractAuthorMeta(html: string): { avatarUrl?: string; linkedIn?: string } {
+  if (!html) return {};
+  const avatar = html.match(
+    /pp-author-boxes-avatar[\s\S]{0,200}?<img[^>]+src=["']([^"']+)["']/i,
+  );
+  const linkedIn = html.match(/href=["'](https?:\/\/[^"']*linkedin\.com[^"']*)["']/i);
+  return {
+    avatarUrl: avatar?.[1],
+    linkedIn: linkedIn?.[1],
+  };
+}
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 
 export default function AuthorPage({ preview, filteredPosts, content }) {
@@ -29,29 +50,29 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
   const pageTitle = `${authorName} — Keploy Blog Author`;
   const pageDescription = `Read all articles by ${authorName} on the Keploy blog — covering software testing, API development, automation, and engineering best practices.`;
 
-  // Person JSON-LD for E-E-A-T author credibility (LIVE-11).
-  // AI models use Person.url + sameAs to resolve author identity and
-  // weight the authority of the pages they cite. worksFor.url points at
-  // MAIN_SITE_URL (https://keploy.io) — not the blog subpath — so the
-  // Organization entity is consistent across every JSON-LD payload.
-  const personSchema = {
-    "@context": "https://schema.org",
-    "@type": "Person",
+  // Person JSON-LD for E-E-A-T author credibility (LIVE-11). AI models use
+  // Person.url + sameAs to resolve author identity and weight the authority of
+  // the pages they cite. The node shape (incl. the worksFor Organization
+  // reference) is built by getPersonSchema in lib/structured-data.ts so it stays
+  // consistent with every other JSON-LD payload.
+  const authorMeta = extractAuthorMeta(content || "");
+  const authoredItems = filteredPosts.map(({ node }) => ({
+    url: `${SITE_URL}/${node?.categories?.edges?.[0]?.node?.name === "community" ? "community" : "technology"}/${node.slug}`,
+    name: node.title,
+  }));
+
+  // Person + ProfilePage schema is built centrally in lib/structured-data.ts so
+  // the author's `#person` @id, worksFor affiliation, and node shape stay in sync
+  // with the per-post author node that references it. The author's posts are
+  // modeled as an ItemList so AI engines see the body of work.
+  const personNode = getPersonSchema({
     name: authorName,
     url: authorUrl,
-    jobTitle: "Contributor",
-    worksFor: {
-      "@type": "Organization",
-      name: "Keploy",
-      url: MAIN_SITE_URL,
-    },
-    knowsAbout: [
-      "API Testing",
-      "Test Automation",
-      "Software Engineering",
-      "Developer Tools",
-    ],
-  };
+    image: authorMeta.avatarUrl,
+    sameAs: authorMeta.linkedIn ? [authorMeta.linkedIn] : undefined,
+  });
+  const profilePageSchema = getProfilePageSchema(personNode, authorUrl);
+  const authoredWorksSchema = getItemListSchema(authoredItems, `Posts by ${authorName}`);
 
   return (
     <div className="bg-accent-1">
@@ -76,7 +97,8 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
             { name: "Authors", url: `${SITE_URL}/authors` },
             { name: authorName, url: authorUrl },
           ]),
-          personSchema,
+          profilePageSchema,
+          ...(authoredWorksSchema ? [authoredWorksSchema] : []),
         ]}
         canonicalUrl={authorUrl}
       >

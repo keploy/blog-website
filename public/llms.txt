@@ -17,6 +17,8 @@ contributors, and guest writers.
 - Sitemap: https://keploy.io/blog/sitemap.xml
 - CMS: Headless WordPress with WPGraphQL (content API at https://wp.keploy.io/graphql)
 - Framework: Next.js (Pages Router) with server-side rendering and ISR
+- Structured data: schema.org JSON-LD in the server-rendered HTML of every page
+  (per-page type map and attribution guidance in llms-full.txt)
 
 ## Top Categories
 
