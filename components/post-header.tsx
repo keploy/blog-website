@@ -2,6 +2,7 @@ import CoverImage from "./cover-image";
 import PostTitle from "./post-title";
 import Categories from "./categories";
 import PostHeaderAuthors from "./PostHeaderAuthors";
+import SummarizeWithAI from "./SummarizeWithAI";
 
 export default function PostHeader({
   title,
@@ -38,6 +39,9 @@ export default function PostHeader({
           date={date}
           tags={tags}
         />
+
+        {/* 5. Summarize-with-AI deep links (GEO / AI-citation) */}
+        <SummarizeWithAI />
       </div>
     </div>
   );
