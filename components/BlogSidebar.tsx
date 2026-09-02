@@ -45,7 +45,7 @@ function SidebarShare() {
     <div>
       <h3
         className="font-bold text-base mb-3"
-        style={{ fontFamily: "'DM Sans', sans-serif", color: "#1D2022" }}
+        style={{ fontFamily: 'var(--font-dm-sans), sans-serif', color: "#1D2022" }}
       >
         Share
       </h3>
@@ -245,10 +245,10 @@ function SidebarAdBanner() {
         className="rounded-2xl p-5 flex flex-col justify-center"
         style={{ width: '100%', aspectRatio: AD_ASPECT, backgroundColor: '#FFF4EE' }}
       >
-        <h4 className="font-bold text-base leading-snug mb-1.5" style={{ fontFamily: "'DM Sans', sans-serif", color: '#1D2022' }}>
+        <h4 className="font-bold text-base leading-snug mb-1.5" style={{ fontFamily: 'var(--font-dm-sans), sans-serif', color: '#1D2022' }}>
           Try Keploy for free
         </h4>
-        <p className="text-sm leading-relaxed mb-3" style={{ fontFamily: "'DM Sans', sans-serif", color: '#4b5563' }}>
+        <p className="text-sm leading-relaxed mb-3" style={{ fontFamily: 'var(--font-dm-sans), sans-serif', color: '#4b5563' }}>
           Generate test cases and data mocks with one click. Reduce unit test development time by 90%.
         </p>
         <Link
@@ -258,7 +258,7 @@ function SidebarAdBanner() {
           data-banner-id={banner.id}
           onClick={() => trackBannerClick(banner.id)}
           className="inline-flex items-center gap-1 font-semibold text-sm transition-colors duration-150 hover:opacity-80"
-          style={{ fontFamily: "'DM Sans', sans-serif", color: '#ED5D0F' }}
+          style={{ fontFamily: 'var(--font-dm-sans), sans-serif', color: '#ED5D0F' }}
         >
           Sign up <span aria-hidden="true">→</span>
         </Link>
@@ -332,7 +332,7 @@ function SidebarAdBanner() {
               background: banner.btnBg,
               color: banner.btnText,
               boxShadow: '0 2px 10px rgba(0,0,0,0.12)',
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: 'var(--font-dm-sans), sans-serif',
               opacity: loaded ? 1 : 0,
               transition: 'opacity 0.3s ease',
             }}

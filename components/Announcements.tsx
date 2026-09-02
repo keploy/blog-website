@@ -1,18 +1,8 @@
-"use client";
-
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, X } from "lucide-react";
 import { Marquee } from "./Marquee";
-
-const ANNOUNCEMENT_ENABLED = false;
-
-const ANNOUNCEMENT = {
-  enabled: ANNOUNCEMENT_ENABLED,
-  eyebrow: "Event LIVE",
-  href: "https://luma.com/lr79szro",
-  ctaLabel: "Register NOW",
-};
+import { ANNOUNCEMENT } from "./announcementConfig";
 
 const setAnnouncementHeight = (value: string) => {
   document.documentElement.style.setProperty("--announcement-h", value);

@@ -5,13 +5,16 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import sideBySideSvg from "../../public/images/sidebyside-transparent.svg";
+import { S3_ASSET_BASE } from "../../lib/constants";
 import { GitHubStars } from "./github-stars";
 import { Vscode } from "./vscode-number";
 import { Menu, X, ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+
+// Served from S3 (see S3_ASSET_BASE); usage below sets explicit width/height.
+const sideBySideSvg = `${S3_ASSET_BASE}/images/sidebyside-transparent.svg`;
 
 const glassDropdown =
   "relative overflow-hidden backdrop-blur-[60px] bg-gray-200/95 bg-gradient-to-br from-white/85 via-gray-200/95 to-gray-300/90 border border-gray-200/70 shadow-[0_22px_54px_rgba(15,23,42,0.22)]";

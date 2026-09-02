@@ -36,7 +36,7 @@
 .k5y-badge-img-mobile { display: none; }
 
 .k5y-heading {
-  font-family: "Lexend", sans-serif;
+  font-family: var(--font-lexend), sans-serif;
   font-weight: 700;
   font-size: 28px;
   line-height: 1.28;
@@ -68,7 +68,7 @@
   color: #ffffff;
   border-radius: 9999px;
   border: none;
-  font-family: "Lexend", sans-serif;
+  font-family: var(--font-lexend), sans-serif;
   font-weight: 500;
   font-size: 20px;
   text-decoration: none;
