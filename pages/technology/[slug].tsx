@@ -16,20 +16,25 @@ import {
   getReviewAuthors,
 } from "../../lib/api";
 import ContainerSlug from "../../components/containerSlug";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
-import { AUTHOR_AVATAR_PLACEHOLDER } from "../../lib/constants";
+import { AUTHOR_AVATAR_PLACEHOLDER, resolveAuthorAvatar } from "../../lib/constants";
 import dynamic from "next/dynamic";
 import { getRedirectSlug, hasRedirect } from "../../config/redirect";
 import {
   getBlogPostingSchema,
   getBreadcrumbListSchema,
+  getFAQPageSchema,
+  getSoftwareSourceCodeSchema,
+  getDefinedTermSetSchema,
   SITE_URL,
 } from "../../lib/structured-data";
-import { sanitizeTitle, getSafeDescription } from "../../utils/seo";
+import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
 import { getHowToSchema } from "../../lib/howToSchema";
+import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/contentSchema";
+import { getTooltipsForSlug } from "../../config/keyword-tooltips";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
 
@@ -65,14 +70,16 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const reviewAuthorImageUrl = reviewerNode?.avatar?.url || "";
   const reviewAuthorDescription = reviewerNode?.description || "";
 
-  // Writer avatar — use ppmaAuthorImage directly (SSR). Previously this
-  // was extracted from post.content via regex inside a useEffect, which
-  // meant the SSR HTML rendered /blog/images/author.webp as a placeholder.
-  const ppmaImage =
-    typeof post?.ppmaAuthorImage === "string" && post.ppmaAuthorImage.length > 0
-      ? post.ppmaAuthorImage
-      : "";
-  const writerAvatarUrl = ppmaImage || AUTHOR_AVATAR_PLACEHOLDER;
+  // Writer avatar — use ppmaAuthorImage directly (SSR). resolveAuthorAvatar
+  // rejects junk values ("imag1", "image", "n/a", empty) that would otherwise
+  // 400 the next/image optimizer and render a broken byline avatar; a real URL
+  // passes through unchanged (and it falls back to the S3 AUTHOR_AVATAR_PLACEHOLDER
+  // when missing).
+  const writerAvatarUrl = resolveAuthorAvatar(post?.ppmaAuthorImage);
+  // For JSON-LD only: a genuine author photo (absolute URL) or nothing — never
+  // the placeholder or a junk value, either of which would be invalid in schema.
+  const rawPpmaImage = (post?.ppmaAuthorImage ?? "").trim();
+  const ppmaSchemaImage = /^https?:\/\//i.test(rawPpmaImage) ? rawPpmaImage : undefined;
 
   // Writer description — extract synchronously from post content (no effect).
   const writerDescriptionMatch =
@@ -133,6 +140,18 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const safeDescription = getSafeDescription(router.isFallback, post?.seo?.metaDesc, safeTitle);
 
   const postUrl = post?.slug ? `${SITE_URL}/technology/${post.slug}` : `${SITE_URL}/technology`;
+  // These scan the full post HTML; memoize so the passes run once on hydration
+  // and never again on the frequent re-renders this page triggers (scroll
+  // progress, router state) — see PR review #5.
+  const { codeLanguages, wordCount, faqs } = useMemo(
+    () => ({
+      codeLanguages: detectCodeLanguages(post?.content),
+      wordCount: countWords(post?.content),
+      faqs: extractFaqs(post?.content),
+    }),
+    [post?.content],
+  );
+  const tooltipTerms = post?.slug ? getTooltipsForSlug(post.slug) : [];
   const structuredData = [];
   if (post?.slug) {
     structuredData.push(
@@ -150,13 +169,25 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         imageUrl: post?.featuredImage?.node?.sourceUrl,
         authorName: post?.ppmaAuthorName,
         // LIVE-22: use PublishPress author image, not the placeholder.
-        authorImage: ppmaImage || undefined,
+        authorImage: ppmaSchemaImage,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Technology",
         // GEO-13: mark this as TechArticle (more specific than BlogPosting
         // for developer content). AI models weight TechArticle higher
         // for technical queries.
         categorySlug: "technology",
         proficiencyLevel: "Intermediate",
+        // Populate TechArticle.dependencies from the code languages actually
+        // present in the post (was defined but never set).
+        dependencies: codeLanguages.length ? codeLanguages : undefined,
+        // Voice-assistant spoken summary: title + section headings.
+        speakableSelectors: ["h1", "h2"],
+        // Developer-intent content signals (serialized from existing UI data).
+        wordCount,
+        readingTimeMinutes: time,
+        keywords: [
+          ...(post?.categories?.edges?.map((e) => e?.node?.name).filter(Boolean) || []),
+          ...codeLanguages,
+        ],
         // LIVE-22: emit reviewedBy Person schema. Skipped by the
         // generator when the reviewer equals the author or when the
         // name falls back to the "Reviewer" placeholder.
@@ -168,6 +199,27 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
     const howTo = getHowToSchema(post, postUrl, safeTitle, safeDescription);
     if (howTo) {
       structuredData.push(howTo);
+    }
+    // FAQPage only when the post has an explicit "FAQ" / "Frequently Asked
+    // Questions" section with ≥2 clean Q&A pairs (see utils/contentSchema
+    // extractFaqs). Marker-gated so we never scrape stray "?" headings or
+    // flatten code/tables into answers. Linked to the post WebPage via @id.
+    if (faqs.length) {
+      structuredData.push(getFAQPageSchema(faqs, postUrl));
+    }
+    for (const language of codeLanguages) {
+      structuredData.push(
+        getSoftwareSourceCodeSchema({ language, url: postUrl, name: `${safeTitle} — ${language} example` }),
+      );
+    }
+    if (tooltipTerms.length) {
+      structuredData.push(
+        getDefinedTermSetSchema({
+          name: `${safeTitle} — glossary`,
+          url: postUrl,
+          terms: tooltipTerms.map((t) => ({ term: t.keyword, description: t.heading })),
+        }),
+      );
     }
   } else {
     structuredData.push(
@@ -198,7 +250,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           <>
             <article>
               <Head>
-                <title>{`${post?.title || "Loading..."} | Keploy Blog`}</title>
+                <title>{buildPageTitle(post?.title)}</title>
                 {/* Fonts self-hosted via next/font in _app.tsx */}
               </Head>
               <PostHeader

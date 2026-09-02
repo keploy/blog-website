@@ -10,10 +10,11 @@ import dynamic from "next/dynamic";
 import TopBlogs from "../components/topBlogs";
 import Image from "next/image";
 import {
-  getBreadcrumbListSchema,
   getWebSiteSchema,
+  getCollectionPageSchema,
   SITE_URL,
 } from "../lib/structured-data";
+import { buildPageTitle } from "../utils/seo";
 import { REVALIDATE_CONTENT } from "../lib/isr";
 
 // Testimonials is the bottom-of-page marquee (below the fold) and animates
@@ -32,12 +33,47 @@ const Testimonials = dynamic(() => import("../components/testimonials"), {
 // document title and social metadata can't drift apart.
 const BLOG_TITLE =
   "Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives";
+// Shared by Layout's `Description` prop and the CollectionPage schema below so
+// the rendered meta description and the structured data can't drift apart.
+const BLOG_DESCRIPTION =
+  "The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications.";
 
 export default function Index({ communityPosts, technologyPosts, preview }) {
-  // Organization schema is in _document.tsx (global) — not duplicated here
+  // Organization schema is in _document.tsx (global) — not duplicated here.
+  // No BreadcrumbList: a single "Home" item is a no-op that SEMrush/Google flag,
+  // so the home route carries WebSite plus the CollectionPage below.
+  const featuredItems = [
+    ...(communityPosts || []).map(({ node }: any) => ({
+      url: `${SITE_URL}/community/${node.slug}`,
+      name: node.title,
+      image: node.featuredImage?.node?.sourceUrl,
+    })),
+    ...(technologyPosts || []).map(({ node }: any) => ({
+      url: `${SITE_URL}/technology/${node.slug}`,
+      name: node.title,
+      image: node.featuredImage?.node?.sourceUrl,
+    })),
+  ];
+  // No Review structured data here — deliberate. The "What our community thinks"
+  // wall (components/testimonials.tsx) is loaded client-only in PR #410
+  // (next/dynamic, ssr:false) to keep the animating marquee off the LCP path, so
+  // those reviews are NOT in the server HTML a crawler reads. Emitting Review
+  // markup for content that isn't server-rendered is markup for invisible
+  // content, which Google penalizes. getReviewSchema stays available (and tested)
+  // so this can be re-wired if the wall ever returns to SSR.
+  //
+  // The home route is a listing like /technology and /tag/{slug}, so it gets the
+  // same CollectionPage treatment. That also gives it a page-type node, which it
+  // previously lacked: WebSite describes the site and ItemList the cards, but
+  // neither says what this page is. The featured ItemList is the mainEntity.
   const structuredData = [
     getWebSiteSchema(),
-    getBreadcrumbListSchema([{ name: "Home", url: SITE_URL }]),
+    getCollectionPageSchema({
+      name: BLOG_TITLE,
+      url: SITE_URL,
+      description: BLOG_DESCRIPTION,
+      items: featuredItems,
+    }),
   ];
 
   return (
@@ -46,7 +82,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
       Title={BLOG_TITLE}
-      Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}
+      Description={BLOG_DESCRIPTION}
       structuredData={structuredData}
       canonicalUrl={SITE_URL}
       ogType="website"
@@ -56,7 +92,7 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
             prop but does NOT emit a <title> tag (see LIVE-11 note in
             authors/[slug].tsx). Without this <Head><title>, /blog ships
             with no document title — same regression that hit author pages. */}
-        <title>{BLOG_TITLE}</title>
+        <title>{buildPageTitle(BLOG_TITLE)}</title>
       </Head>
       <Header />
       <Container>

@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
-import { AUTHOR_AVATAR_PLACEHOLDER } from "../lib/constants";
+import { resolveAuthorAvatar } from "../lib/constants";
 
 /* ── Small arrow icon ── */
 const ArrowRightIcon = () => (
@@ -56,13 +56,13 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
   const roleBg = role === "Writer" ? "#FFF7ED" : "#F5F3FF";
   const profileHref = `/authors/${sanitizeAuthorSlug(name)}`;
 
-  /* Resolve avatar src (handle external URLs via proxy) */
+  /* Resolve avatar src: normalize junk (imag1/image/n/a/empty) to the local
+     placeholder first, then route real external URLs through the proxy. */
+  const safeUrl = resolveAuthorAvatar(imageUrl);
   const resolvedSrc =
-    !imageUrl || imageUrl === "n/a"
-      ? AUTHOR_AVATAR_PLACEHOLDER
-      : /^https?:\/\//i.test(imageUrl) && basePath
-        ? `${basePath}/api/proxy-image?url=${encodeURIComponent(imageUrl)}`
-        : imageUrl;
+    /^https?:\/\//i.test(safeUrl) && basePath
+      ? `${basePath}/api/proxy-image?url=${encodeURIComponent(safeUrl)}`
+      : safeUrl;
 
   /* Clean description sentences */
   const descriptionText =
@@ -102,7 +102,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
               color: roleColor,
               border: `1.5px solid ${roleColor}`,
               background: roleBg,
-              fontFamily: 'var(--font-dm-sans), sans-serif',
+              fontFamily: "'DM Sans', sans-serif",
             }}
           >
             {role}
@@ -111,7 +111,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
           {/* Name */}
           <h3
             className="text-lg font-bold text-gray-900 mb-1"
-            style={{ fontFamily: 'var(--font-dm-sans), sans-serif' }}
+            style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
             {name}
           </h3>
@@ -119,7 +119,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
           {/* Description */}
           <p
             className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-3"
-            style={{ fontFamily: 'var(--font-dm-sans), sans-serif' }}
+            style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
             {descriptionText}
           </p>
@@ -131,7 +131,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
               href={profileHref}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold transition-colors duration-150"
               style={{
-                fontFamily: 'var(--font-dm-sans), sans-serif',
+                fontFamily: "'DM Sans', sans-serif",
                 color: roleColor,
                 border: `1.5px solid ${roleColor}`,
                 background: "transparent",
@@ -153,7 +153,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#0A66C2] transition-colors duration-150"
-                style={{ fontFamily: 'var(--font-dm-sans), sans-serif' }}
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
                 <LinkedInIcon /> LinkedIn
               </Link>

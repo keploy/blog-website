@@ -10,8 +10,12 @@ import { useMemo, useState } from "react";
 import { FaSearch } from 'react-icons/fa';
 import { useEffect, useRef } from "react";
 import { getIconComponentForTag } from "../../utils/tagIcons";
-import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../../lib/isr";
+import { buildPageTitle } from "../../utils/seo";
+
+// "Tags" alone is a SEMrush "title too short".
+const PAGE_TITLE = "Browse All Blog Topics & Tags";
  
  export default function Tags({ edgesAllTags, preview }) {
    const [searchTerm, setSearchTerm] = useState("");
@@ -74,18 +78,32 @@ import { REVALIDATE_CONTENT } from "../../lib/isr";
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`Tags`}
+      Title={PAGE_TITLE}
       Description={`Browse all topic tags on the Keploy blog — find articles on API testing, test automation, CI/CD, developer tools, and software quality.`}
       structuredData={[
         getBreadcrumbListSchema([
           { name: "Home", url: SITE_URL },
           { name: "Tags", url: `${SITE_URL}/tag` },
         ]),
+        getCollectionPageSchema({
+          name: "Keploy Blog Tags",
+          url: `${SITE_URL}/tag`,
+          description:
+            "All topic tags on the Keploy blog — API testing, test automation, CI/CD, developer tools, and software quality.",
+          // Cap the directory at 150 entries so the JSON-LD payload stays lean.
+          // Normalize whitespace to dashes (matches the canonical the /tag/[slug]
+          // route resolves: slug.replace(/\s+/g,"-")) and percent-encode so tags
+          // with reserved chars (e.g. "c#") don't emit broken URLs in the JSON-LD.
+          items: (edgesAllTags || []).slice(0, 150).map(({ name }: { name: string }) => ({
+            url: `${SITE_URL}/tag/${encodeURIComponent(name.trim().replace(/\s+/g, "-"))}`,
+            name,
+          })),
+        }),
       ]}
       canonicalUrl={`${SITE_URL}/tag`}
     >
       <Head>
-        <title>{`Tags`}</title>
+        <title>{buildPageTitle(PAGE_TITLE)}</title>
       </Head>
       <Header />
       <Container>

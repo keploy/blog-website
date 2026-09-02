@@ -6,8 +6,17 @@ import Container from "../../components/container";
 import AuthorMapping from "../../components/AuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { Post } from "../../types/post";
-import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import { getBreadcrumbListSchema, getCollectionPageSchema, SITE_URL } from "../../lib/structured-data";
+import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
 import { REVALIDATE_CONTENT } from "../../lib/isr";
+import Head from "next/head";
+import { buildPageTitle } from "../../utils/seo";
+
+// "Authors Page" is a SEMrush "title too short", and it only ever reached
+// og:title: this route had no <Head><title> at all, and components/meta.tsx
+// does not emit one, so /authors shipped an empty <title> — the same LIVE-11
+// bug already fixed on /authors/{slug}.
+const PAGE_TITLE = "Blog Authors & Contributors";
 
 export default function Authors({
   AllAuthors: { edges },
@@ -24,16 +33,31 @@ export default function Authors({
 
   return (
     <div className="bg-accent-1">
+      <Head>
+        <title>{buildPageTitle(PAGE_TITLE)}</title>
+      </Head>
       <Layout
         preview={preview}
         featuredImage={HOME_OG_IMAGE_URL}
-        Title={`Authors Page`}
+        Title={PAGE_TITLE}
         Description={`Meet the authors behind the Keploy blog — engineers, developers, and QA experts sharing insights on testing, automation, and software quality.`}
         structuredData={[
           getBreadcrumbListSchema([
             { name: "Home", url: SITE_URL },
             { name: "Authors", url: `${SITE_URL}/authors` },
           ]),
+          getCollectionPageSchema({
+            name: "Keploy Blog Authors",
+            url: `${SITE_URL}/authors`,
+            description:
+              "Engineers, developers, and QA experts writing on the Keploy blog about testing, automation, and software quality.",
+            items: authorArray
+              .filter((node) => node.ppmaAuthorName)
+              .map((node) => ({
+                url: `${SITE_URL}/authors/${sanitizeAuthorSlug(node.ppmaAuthorName)}`,
+                name: node.ppmaAuthorName,
+              })),
+          }),
         ]}
         canonicalUrl={`${SITE_URL}/authors`}
       >
@@ -42,6 +66,15 @@ export default function Authors({
           <h1 className="bg-gradient-to-r ml-10 from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
             AUTHORS
           </h1>
+          {/* Visible intro prose so this archive isn't a bare grid — lifts the
+              thin-content / low-text-to-HTML flag and gives AI engines context
+              on who writes here. */}
+          <p className="text-gray-600 max-w-3xl mb-10 ml-10">
+            Meet the engineers, testers, and open-source contributors behind the
+            Keploy blog. Each author shares hands-on experience across API
+            testing, test automation, eBPF, and developer tooling — browse their
+            profiles to explore everything they&apos;ve written.
+          </p>
           <AuthorMapping AuthorArray={authorArray} />
         </Container>
       </Layout>

@@ -16,6 +16,7 @@
  */
 
 import { decodeEntities } from "../utils/seo";
+import { SCHEMA_CONTEXT, getImageObjectSchema } from "./structured-data";
 
 type RawTagEdge = {
   node?: {
@@ -204,13 +205,21 @@ export function getHowToSchema(
   if (steps.length < 2) return null;
 
   const schema: HowToJsonLd = {
-    "@context": "https://schema.org",
+    "@context": SCHEMA_CONTEXT,
     "@type": "HowTo",
     name: safeTitle,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": pageUrl,
     },
+    // Keploy is the tool every Keploy tutorial walks the reader through — a
+    // real HowToTool, not fabricated supply/section metadata.
+    tool: [
+      {
+        "@type": "HowToTool",
+        name: "Keploy",
+      },
+    ],
     step: steps.map((s, i) => {
       const step: Record<string, unknown> = {
         "@type": "HowToStep",
@@ -228,14 +237,10 @@ export function getHowToSchema(
     // Google's HowTo rich-result docs use a full ImageObject (with url and,
     // when known, width/height) rather than a bare URL string. We only know
     // the source URL at this layer — WPGraphQL's `featuredImage` doesn't
-    // surface intrinsic dimensions here — so emit just `@type` + `url`. A
+    // surface intrinsic dimensions here — so emit just `@type` + `url` via the
+    // shared ImageObject builder (which also coerces the URL to absolute). A
     // future enrichment can add height/width by querying `mediaDetails`.
-    schema.image = [
-      {
-        "@type": "ImageObject",
-        url: post.featuredImage.node.sourceUrl,
-      },
-    ];
+    schema.image = [getImageObjectSchema({ url: post.featuredImage.node.sourceUrl })];
   }
   if (post.date) schema.datePublished = post.date;
 

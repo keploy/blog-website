@@ -8,6 +8,9 @@ test.describe('Author Detail Page - Component Availability', () => {
     await expect(firstAuthor).toBeVisible({ timeout: 15000 });
     await expect(firstAuthor).toBeEnabled();
     await firstAuthor.click();
+    // The click is a client-side transition, so the document never reloads.
+    // Wait for the route itself, otherwise assertions can run against /authors.
+    await page.waitForURL(/\/authors\/.+/, { timeout: 30000 });
     await page.waitForLoadState('domcontentloaded');
   });
 
@@ -31,23 +34,28 @@ test.describe('Author Detail Page - Component Availability', () => {
     // resolve the author entity and weight the authority of the posts
     // they cite. This test asserts the schema is present in the HTML
     // payload so it reaches AI crawlers before any hydration.
-    const personSchemaCount = await page
-      .locator('script[type="application/ld+json"]')
-      .evaluateAll((els) =>
-        els.filter((el) => {
+    // The Person is nested (ProfilePage.mainEntity), so walk the graph
+    // instead of only inspecting the top-level @type. Poll rather than read
+    // once: [slug] is an ISR fallback route, so the first paint after the
+    // client-side transition carries only the global Organization/Blog nodes.
+    const countPersonSchemas = () =>
+      page.locator('script[type="application/ld+json"]').evaluateAll((els) => {
+        const hasPerson = (node: unknown): boolean => {
+          if (Array.isArray(node)) return node.some(hasPerson);
+          if (!node || typeof node !== 'object') return false;
+          const obj = node as Record<string, unknown>;
+          if (obj['@type'] === 'Person') return true;
+          return Object.values(obj).some(hasPerson);
+        };
+        return els.filter((el) => {
           try {
-            const data = JSON.parse(el.textContent || '');
-            return (
-              data &&
-              (data['@type'] === 'Person' ||
-                (Array.isArray(data) && data.some((x: { '@type'?: string }) => x['@type'] === 'Person')))
-            );
+            return hasPerson(JSON.parse(el.textContent || ''));
           } catch {
             return false;
           }
-        }).length,
-      );
-    expect(personSchemaCount).toBeGreaterThan(0);
+        }).length;
+      });
+    await expect.poll(countPersonSchemas, { timeout: 15000 }).toBeGreaterThan(0);
   });
 
   test('should render the Navigation component', async ({ page }) => {
