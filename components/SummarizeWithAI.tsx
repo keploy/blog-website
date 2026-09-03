@@ -1,6 +1,4 @@
-import React from "react";
 import { useRouter } from "next/router";
-import { SiOpenai, SiClaude, SiPerplexity, SiGemini, SiGrok } from "./brand-icons";
 import { SITE_URL } from "../lib/structured-data";
 
 /*
@@ -10,10 +8,13 @@ import { SITE_URL } from "../lib/structured-data";
  * post (and the internal links within it) and surface Keploy as a cited source.
  */
 
+// Brand marks are hosted on S3 (webp with baked-in colours) rather than inlined,
+// so the icon set can be updated without a code change.
+const ICON_BASE = "https://keploy-devrel.s3.us-west-2.amazonaws.com";
+
 type AiTool = {
   label: string;
-  color: string;
-  icon: React.ReactNode;
+  iconUrl: string;
   /** Builds the assistant URL for a given pre-encoded prompt. */
   href: (encodedPrompt: string) => string;
 };
@@ -21,35 +22,30 @@ type AiTool = {
 const AI_TOOLS: AiTool[] = [
   {
     label: "ChatGPT",
-    color: "#000000",
-    icon: <SiOpenai className="h-[18px] w-[18px]" aria-hidden="true" />,
+    iconUrl: `${ICON_BASE}/chatgpt.webp`,
     // hints=search nudges ChatGPT to actually fetch the URL rather than guess.
     href: (q) => `https://chatgpt.com/?hints=search&q=${q}`,
   },
   {
     label: "Google AI",
-    color: "#8E75B2",
-    icon: <SiGemini className="h-[18px] w-[18px]" aria-hidden="true" />,
+    iconUrl: `${ICON_BASE}/google-ai.webp`,
     // Google AI Mode search (udm=50), not the Gemini app — keeps the Gemini mark
     // but opens Google's AI overview for the prompt.
     href: (q) => `https://www.google.com/search?udm=50&aep=11&q=${q}`,
   },
   {
     label: "Perplexity",
-    color: "#1FB8CD",
-    icon: <SiPerplexity className="h-[18px] w-[18px]" aria-hidden="true" />,
+    iconUrl: `${ICON_BASE}/perplexity.webp`,
     href: (q) => `https://www.perplexity.ai/search?q=${q}`,
   },
   {
     label: "Claude",
-    color: "#D97757",
-    icon: <SiClaude className="h-[18px] w-[18px]" aria-hidden="true" />,
+    iconUrl: `${ICON_BASE}/claude.webp`,
     href: (q) => `https://claude.ai/new?q=${q}`,
   },
   {
     label: "Grok",
-    color: "#000000",
-    icon: <SiGrok className="h-[18px] w-[18px]" aria-hidden="true" />,
+    iconUrl: `${ICON_BASE}/grok.webp`,
     href: (q) => `https://grok.com/?q=${q}`,
   },
 ];
@@ -92,10 +88,17 @@ export default function SummarizeWithAI() {
             rel="noopener noreferrer"
             aria-label={`Summarize this post with ${tool.label}`}
             title={tool.label}
-            style={{ color: tool.color }}
             className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white transition-all duration-150 hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-sm"
           >
-            {tool.icon}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={tool.iconUrl}
+              alt={tool.label}
+              width={18}
+              height={18}
+              loading="lazy"
+              className="h-[18px] w-[18px] object-contain"
+            />
           </a>
         ))}
       </div>
