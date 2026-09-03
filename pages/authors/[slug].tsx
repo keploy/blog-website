@@ -102,7 +102,7 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
         ]}
         canonicalUrl={authorUrl}
       >
-        {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
+        {/* Fonts self-hosted via next/font in _app.tsx */}
         <Header />
         <Container>
           <PostByAuthorMapping filteredPosts={filteredPosts} Content={content} />

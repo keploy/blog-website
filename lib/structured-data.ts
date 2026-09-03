@@ -1,5 +1,11 @@
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+import { AUTHOR_AVATAR_PLACEHOLDER } from "./constants";
 import { decodeEntities } from "../utils/seo";
+
+// Match the placeholder by filename (e.g. "/author.webp") rather than its full
+// basePath'd or S3 path, so a basePath-less "/images/author.webp" is also
+// recognised and never leaks the generic avatar into an author's JSON-LD `image`.
+const AUTHOR_AVATAR_FILE = `/${AUTHOR_AVATAR_PLACEHOLDER.split("/").pop()}`;
 
 // Single schema.org @context value. Every builder below references this rather
 // than repeating the literal, so the vocabulary URL lives in exactly one place.
@@ -426,7 +432,7 @@ export const getBlogPostingSchema = ({
   if (resolvedAuthorName !== ORG_NAME) {
     authorNode.worksFor = orgReference();
   }
-  if (authorImage && !authorImage.includes("/images/author.webp")) {
+  if (authorImage && !authorImage.includes(AUTHOR_AVATAR_FILE)) {
     authorNode.image = authorImage;
   }
 
@@ -484,7 +490,7 @@ export const getBlogPostingSchema = ({
       "@id": `${SITE_URL}/authors/${sanitizeAuthorSlug(reviewerName)}#person`,
       url: `${SITE_URL}/authors/${sanitizeAuthorSlug(reviewerName)}`,
     };
-    if (reviewerImage && !reviewerImage.includes("/images/author.webp")) {
+    if (reviewerImage && !reviewerImage.includes(AUTHOR_AVATAR_FILE)) {
       reviewerNode.image = reviewerImage;
     }
     if (reviewerDescription) {

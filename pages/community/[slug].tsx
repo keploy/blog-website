@@ -22,6 +22,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useScroll, useSpringValue } from "@react-spring/web";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 import { calculateReadingTime } from "../../utils/calculateReadingTime";
+import { AUTHOR_AVATAR_PLACEHOLDER, resolveAuthorAvatar } from "../../lib/constants";
 import dynamic from "next/dynamic";
 import "./styles.module.css"
 import {
@@ -36,7 +37,6 @@ import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/s
 import { getHowToSchema } from "../../lib/howToSchema";
 import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/contentSchema";
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
-import { resolveAuthorAvatar } from "../../lib/constants";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
 
@@ -91,7 +91,8 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   // image was available in the data.
   // resolveAuthorAvatar rejects junk ppmaAuthorImage values ("imag1", "image",
   // "n/a", empty) that would otherwise 400 the next/image optimizer and render a
-  // broken byline avatar; a real URL passes through unchanged.
+  // broken byline avatar; a real URL passes through unchanged (and it falls back
+  // to the S3 AUTHOR_AVATAR_PLACEHOLDER when missing).
   const writerAvatarUrl = resolveAuthorAvatar(post?.ppmaAuthorImage);
   // For JSON-LD only: a genuine author photo (absolute URL) or nothing — never
   // the placeholder or a junk value, either of which would be invalid in schema.
@@ -128,7 +129,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
       // genuinely have no reviewer data. When the data is present the
       // real name renders server-side and reaches AI crawlers.
       name: reviewAuthorName || "Reviewer",
-      ImageUrl: reviewAuthorImageUrl || "/blog/images/author.webp",
+      ImageUrl: reviewAuthorImageUrl || AUTHOR_AVATAR_PLACEHOLDER,
       description: reviewAuthorDescription || "A Reviewer for keploy's blog",
     },
   ];
@@ -273,7 +274,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
             <article>
               <Head>
                 <title>{buildPageTitle(post?.title)}</title>
-                {/* DM Sans + Baloo 2 are preloaded globally in _document.tsx */}
+                {/* Fonts self-hosted via next/font in _app.tsx */}
               </Head>
               <PostHeader
                 title={post?.title || "Loading..."}
@@ -292,7 +293,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         </div>
       </Container>
       {/* DM Sans wrapper — scoped to blog article content only */}
-      <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div style={{ fontFamily: 'var(--font-dm-sans), sans-serif' }}>
         <ContainerSlug>
           {/* PostBody component placed outside the Container */}
           <div ref={postBodyRef}>
@@ -302,7 +303,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 post?.ppmaAuthorName,
               )}
               authorName={post?.ppmaAuthorName || ""}
-              authorImageUrl={avatarImgSrc || "/blog/images/author.webp"}
+              authorImageUrl={avatarImgSrc || AUTHOR_AVATAR_PLACEHOLDER}
               authorDescription={blogWriterDescription || "An author for keploy's blog."}
               ReviewAuthorDetails={
                 reviewAuthorDetails &&

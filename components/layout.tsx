@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Post } from "../types/post";
 import Alert from "./alert";
 import Footer from "./footer";
@@ -26,6 +27,16 @@ export default function Layout({
   ogType?: "article" | "website";
   publishedDate?: string;
 }) {
+  // Load Clarity only after the first user interaction (not on page load) — it's
+  // a heavy session-recording script, so keep it off the initial load path.
+  const [interacted, setInteracted] = useState(false);
+  useEffect(() => {
+    const events = ["scroll", "pointerdown", "keydown", "touchstart"];
+    const onInteract = () => setInteracted(true);
+    events.forEach((e) => window.addEventListener(e, onInteract, { once: true, passive: true }));
+    return () => events.forEach((e) => window.removeEventListener(e, onInteract));
+  }, []);
+
   return (
     <>
       <Meta
@@ -50,11 +61,11 @@ export default function Layout({
       <ScrollToTop />
 
       {/* ── Analytics & third-party scripts ──
-           All non-essential scripts use lazyOnload to keep TBT/TTI low.
-           They fire after the page is fully interactive. */}
-      {/* update: changing this to afterInteractive since this is not a non essential script, due to lazyload on this we 
-           are losing on the important data becasue the script for analytics never gets loaded until the page is fully interavtive
-           and if the user navigates before the page is fully interactive, the script is never triggerred and hence we are losing data */}
+           GA4 uses afterInteractive: it fires right after hydration (not the
+           idle-wait of lazyOnload), so we don't lose early pageviews, while
+           staying off the pre-hydration critical path so it doesn't compete
+           with LCP. Clarity loads on first interaction; Apollo + SWG stay
+           lazyOnload. */}
 
       <Script
         id="gtag-loader"
@@ -74,27 +85,29 @@ export default function Layout({
         }}
       />
 
-      <Script
-        id="msclarity"
-        strategy="lazyOnload"
-        dangerouslySetInnerHTML={{
-          __html: `
+      {/* Microsoft Clarity — mounted only after the first user interaction. */}
+      {interacted && (
+        <Script
+          id="msclarity"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
           (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           })(window,document,"clarity","script","jymj0ktwcp");
         `,
-        }}
-      />
+          }}
+        />
+      )}
 
-      {/* Google News SWG — lazyOnload since it's non-critical */}
+      {/* Google News SWG (Subscribe with Google) — lazyOnload, non-critical. */}
       <Script
         id="swg-basic"
         src="https://news.google.com/swg/js/v1/swg-basic.js"
         strategy="lazyOnload"
       />
-
       <Script
         id="publisher"
         strategy="lazyOnload"

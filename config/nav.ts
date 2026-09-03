@@ -25,23 +25,28 @@ import {
   GitFork,
 } from "lucide-react";
 
-import IntegrationTest from "../public/images/nav/integration-test.webp";
-import UnitTest from "../public/images/nav/unit-test.webp";
-import APITest from "../public/images/nav/api-test.webp";
-import DocsImg from "../public/images/nav/doc.svg";
-import BlogImg from "../public/images/nav/blogs.svg";
-import CodeCoverage from "../public/images/nav/code-coverages.webp";
-import DeveloperProductivity from "../public/images/nav/developer-productivity.webp";
-import Cicd from "../public/images/nav/ci-cd.webp";
-import AboutUs from "../public/images/nav/about-us.webp";
-import Events from "../public/images/nav/events.svg";
-import PartnerWithUs from "../public/images/nav/partner-with-us.webp";
-import ContactUs from "../public/images/nav/resource-1.webp";
-import CommunityBg from "../public/images/nav/resource-2.webp";
-import circleArrow from "../public/images/nav/circle-arrow.webp";
-import heart from "../public/images/nav/heart.webp";
-import books from "../public/images/nav/book.webp";
-import MigrationGuide from "../public/images/nav/user-manual.webp"
+import { S3_ASSET_BASE } from "../lib/constants";
+
+// Nav icons served from S3 (see S3_ASSET_BASE). String URLs instead of static
+// imports; every consuming <Image> already sets width/height or fill.
+const NAV = `${S3_ASSET_BASE}/images/nav`;
+const IntegrationTest = `${NAV}/integration-test.webp`;
+const UnitTest = `${NAV}/unit-test.webp`;
+const APITest = `${NAV}/api-test.webp`;
+const DocsImg = `${NAV}/doc.svg`;
+const BlogImg = `${NAV}/blogs.svg`;
+const CodeCoverage = `${NAV}/code-coverages.webp`;
+const DeveloperProductivity = `${NAV}/developer-productivity.webp`;
+const Cicd = `${NAV}/ci-cd.webp`;
+const AboutUs = `${NAV}/about-us.webp`;
+const Events = `${NAV}/events.webp`;
+const PartnerWithUs = `${NAV}/partner-with-us.webp`;
+const ContactUs = `${NAV}/resource-1.webp`;
+const CommunityBg = `${NAV}/resource-2.webp`;
+const circleArrow = `${NAV}/circle-arrow.webp`;
+const heart = `${NAV}/heart.webp`;
+const books = `${NAV}/book.webp`;
+const MigrationGuide = `${NAV}/user-manual.webp`;
 
 export const productsNav = {
   mainColumns: [

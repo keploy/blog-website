@@ -9,6 +9,7 @@ import { Button } from "./ui/button";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import { FaSearch } from 'react-icons/fa';
+import { S3_ASSET_BASE } from "../lib/constants";
 
 interface NotFoundPageProps {
   latestPosts?: { edges: Array<{ node: Post }> };
@@ -168,7 +169,7 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
           <div className="flex-1 lg:pl-12">
             <div className="w-full h-80 lg:h-[500px] relative">
               <Image
-                src="/blog/images/error404.png"
+                src={`${S3_ASSET_BASE}/images/error404.webp`}
                 alt="404 Error Illustration"
                 fill
                 className="object-contain"

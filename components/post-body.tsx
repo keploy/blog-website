@@ -59,7 +59,6 @@ export default function PostBody({
   const [copySuccessList, setCopySuccessList] = useState([]);
   const [headingCopySuccessList, setHeadingCopySuccessList] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [replacedContent, setReplacedContent] = useState(content || "");
   const [isList, setIsList] = useState(false);
   const [isUserEnteredURL, setIsUserEnteredURL] = useState(false);
   // Optional safety: handle malformed ReviewAuthorDetails gracefully
@@ -83,9 +82,18 @@ export default function PostBody({
     checkScreenSize(); // Initial screen size check
     window.addEventListener("resize", checkScreenSize);
 
-    if (!content) return;
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
+  }, []);
 
-    // Separate effect for initial content replacement
+  // Content rewrites (strip WP chrome, harden external links, route body images
+  // through next/image) run synchronously via useMemo so the transformed HTML is
+  // present in SSR + first client render — doing this in an effect would emit the
+  // raw <img src> first, then swap it post-hydration and double-fetch above-fold images.
+  const replacedContent = useMemo(() => {
+    if (!content) return "";
+
     let initialReplacedContent = content.replace(
       /<div class="post-toc-header">[\s\S]*?<\/div>/gm,
       ""
@@ -175,11 +183,44 @@ export default function PostBody({
       }
     );
 
-    setReplacedContent(initialReplacedContent);
+    // Body images: add lazy-load + async decode so below-the-fold images don't
+    // block first paint. Deliberately NOT routed through /_next/image — that
+    // would push every WP body image (~19k across the blog) through Vercel's
+    // billed image-optimizer quota. They load directly from WordPress, exactly
+    // as before this PR; this only defers off-screen ones. The above-the-fold
+    // cover image (LCP) is handled separately in cover-image.tsx.
+    initialReplacedContent = initialReplacedContent.replace(
+      /<img\b([^>]*)>/gi,
+      (match, attrs: string) => {
+        // `[^>]*` stops at the first `>`, even one inside a quoted attribute
+        // (e.g. alt="a > b" from a raw Custom HTML block), which truncates the
+        // match mid-attribute. Detect that by consuming well-formed attributes
+        // (name, name="...", name='...', name=bare) and bailing only if any
+        // non-whitespace is left over — a leftover means a value was cut off.
+        // (Counting raw quotes would wrongly bail on a legit apostrophe inside
+        // a value, e.g. alt="Keploy's dashboard", dropping the optimization.)
+        const leftover = attrs.replace(
+          /\s+[^\s=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'>]+))?/g,
+          ""
+        );
+        if (leftover.trim() !== "") return match;
 
-    return () => {
-      window.removeEventListener("resize", checkScreenSize);
-    };
+        // Strip a self-closing trailing slash so appends don't produce
+        // "<img ... / loading=...>" (invalid markup).
+        let nextAttrs = attrs.replace(/\s*\/\s*$/, "");
+
+        if (!/(^|\s)loading\s*=/i.test(nextAttrs)) {
+          nextAttrs += ' loading="lazy"';
+        }
+        if (!/(^|\s)decoding\s*=/i.test(nextAttrs)) {
+          nextAttrs += ' decoding="async"';
+        }
+
+        return `<img${nextAttrs}>`;
+      }
+    );
+
+    return initialReplacedContent;
   }, [content]);
 
   useEffect(() => {

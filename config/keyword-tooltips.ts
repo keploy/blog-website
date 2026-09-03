@@ -1,3 +1,4 @@
+import { S3_ASSET_BASE } from "../lib/constants";
 export interface TooltipMedia {
   type: "image" | "gif" | "video";
   src: string;
@@ -26,7 +27,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "captured production traffic",
     media: {
       type: "image",
-      src: "/blog/images/captured-production-traffic-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/captured-production-traffic-tooltip.webp`,
       alt: "Live user traffic captured for automated test generation",
     },
     heading: "Real traffic. Real tests. Zero manual effort.",
@@ -39,7 +40,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "measurable quality signals",
     media: {
       type: "image",
-      src: "/blog/images/measurable-quality-signals-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/measurable-quality-signals-tooltip.webp`,
       alt: "Quality signals dashboard showing coverage reliability and release confidence",
     },
     heading: "Coverage that reflects real production behavior.",
@@ -57,7 +58,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "unit testing",
     media: {
       type: "image",
-      src: "/blog/images/unit-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/unit-testing-tooltip.webp`,
       alt: "Unit testing coverage report showing generated tests and passed assertions",
     },
     heading: "Auto-generate unit tests from real traffic — zero scripting.",
@@ -70,7 +71,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "integration testing",
     media: {
       type: "image",
-      src: "/blog/images/integration-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/integration-testing-tooltip.webp`,
       alt: "Schema coverage report showing improved integration test coverage",
     },
     heading: "Record real service calls and replay them as integration tests.",
@@ -83,7 +84,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "acceptance testing",
     media: {
       type: "image",
-      src: "/blog/images/acceptance-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/acceptance-testing-tooltip.webp`,
       alt: "Acceptance testing dashboard showing passed specs and release gate status",
     },
     heading: "Validate end-user flows with auto-generated tests.",
@@ -96,7 +97,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "automated testing",
     media: {
       type: "image",
-      src: "/blog/images/test-automation-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/test-automation-tooltip.webp`,
       alt: "Test automation dashboard showing generated tests in seconds",
     },
     heading: "Generate your entire test suite from real traffic.",
@@ -109,7 +110,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "API testing",
     media: {
       type: "image",
-      src: "/blog/images/api-testing-tooltip.jpg",
+      src: `${S3_ASSET_BASE}/images/api-testing-tooltip.webp`,
       alt: "API testing dashboard showing generated tests and request validation",
     },
     heading: "Auto-generate API tests — no scripting required.",
@@ -122,7 +123,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "shift-left",
     media: {
       type: "image",
-      src: "/blog/images/shift-left-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/shift-left-testing-tooltip.webp`,
       alt: "Shift-left testing pipeline catching risks before release",
     },
     heading: "Shift left without writing a single test manually.",
@@ -140,7 +141,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "CI/CD pipelines",
     media: {
       type: "image",
-      src: "/blog/images/test-automation-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/test-automation-tooltip.webp`,
       alt: "Test automation dashboard showing CI/CD test generation in seconds",
     },
     heading: "Plug auto-generated tests straight into your CI pipeline.",
@@ -153,7 +154,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "microservices",
     media: {
       type: "image",
-      src: "/blog/images/microservices-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/microservices-tooltip.webp`,
       alt: "Microservices architecture with replayed service traces and mocked dependencies",
     },
     heading: "Test microservices end-to-end from real traffic recordings.",
@@ -166,7 +167,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "test automation",
     media: {
       type: "image",
-      src: "/blog/images/test-automation-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/test-automation-tooltip.webp`,
       alt: "Test automation dashboard showing generated tests in seconds",
     },
     heading: "Generate your automation suite from real production traffic.",
@@ -179,7 +180,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "regression testing",
     media: {
       type: "image",
-      src: "/blog/images/regression-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/regression-testing-tooltip.webp`,
       alt: "Regression testing comparison catching changed behavior before release",
     },
     heading: "Replay production traffic to catch every regression before release.",
@@ -192,7 +193,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "API testing",
     media: {
       type: "image",
-      src: "/blog/images/api-testing-tooltip.jpg",
+      src: `${S3_ASSET_BASE}/images/api-testing-tooltip.webp`,
       alt: "API testing dashboard showing generated tests and request validation",
     },
     heading: "Auto-generate battle-tested API tests from real traffic.",
@@ -205,7 +206,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "shift-left testing",
     media: {
       type: "image",
-      src: "/blog/images/shift-left-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/shift-left-testing-tooltip.webp`,
       alt: "Shift-left testing pipeline catching risks before release",
     },
     heading: "Shift left without writing a single test manually.",
@@ -223,7 +224,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "functional testing",
     media: {
       type: "image",
-      src: "/blog/images/functional-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/functional-testing-tooltip.webp`,
       alt: "Functional testing flow validating expected and actual feature behavior",
     },
     heading: "Validate API behavior automatically with traffic-based tests.",
@@ -236,7 +237,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "integration testing",
     media: {
       type: "image",
-      src: "/blog/images/integration-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/integration-testing-tooltip.webp`,
       alt: "Schema coverage report showing improved integration test coverage",
     },
     heading: "Record real service calls and replay them as integration tests.",
@@ -249,7 +250,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "contract testing",
     media: {
       type: "image",
-      src: "/blog/images/contract-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/contract-testing-tooltip.webp`,
       alt: "Contract testing validation between consumer and provider API schemas",
     },
     heading: "Auto-capture service contracts from real API interactions.",
@@ -262,7 +263,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "performance testing",
     media: {
       type: "image",
-      src: "/blog/images/performance-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/performance-testing-tooltip.webp`,
       alt: "Performance testing visualization showing stable latency and throughput",
     },
     heading: "Stress-test your APIs with generated load test suites.",
@@ -275,7 +276,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "shift-left testing",
     media: {
       type: "image",
-      src: "/blog/images/shift-left-testing-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/shift-left-testing-tooltip.webp`,
       alt: "Shift-left testing pipeline catching risks before release",
     },
     heading: "Shift left without manual test authoring — Keploy records it all.",
@@ -288,7 +289,7 @@ export const keywordTooltips: KeywordTooltipConfig[] = [
     keyword: "flaky tests",
     media: {
       type: "image",
-      src: "/blog/images/flaky-tests-tooltip.png",
+      src: `${S3_ASSET_BASE}/images/flaky-tests-tooltip.webp`,
       alt: "Flaky tests eliminated with stable deterministic test replays",
     },
     heading: "Replace flaky tests with deterministic traffic replays.",

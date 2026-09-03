@@ -5,11 +5,10 @@ import Layout from "../components/layout";
 import { getAllPostsForCommunity, getAllPostsForTechnology } from "../lib/api";
 import Header from "../components/header";
 import Link from "next/link";
-import { HOME_OG_IMAGE_URL } from "../lib/constants";
+import { HOME_OG_IMAGE_URL, S3_ASSET_BASE } from "../lib/constants";
+import dynamic from "next/dynamic";
 import TopBlogs from "../components/topBlogs";
-import Testimonials from "../components/testimonials";
 import Image from "next/image";
-import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import {
   getWebSiteSchema,
   getCollectionPageSchema,
@@ -17,6 +16,18 @@ import {
 } from "../lib/structured-data";
 import { buildPageTitle } from "../utils/seo";
 import { REVALIDATE_CONTENT } from "../lib/isr";
+
+// Testimonials is the bottom-of-page marquee (below the fold) and animates
+// continuously, which keeps the main thread busy. Lazy-load it so its JS +
+// render stay off the critical path and don't delay first paint / LCP of the
+// hero. The min-height placeholder reserves space so the deferred mount doesn't
+// shift on-screen content (it's below the fold, so CLS impact is nil).
+const Testimonials = dynamic(() => import("../components/testimonials"), {
+  ssr: false,
+  // Reserve the loaded section's real height (~760px: heading + the h-[700px]
+  // marquee) so the footer doesn't shift down when the chunk mounts.
+  loading: () => <div className="min-h-[760px]" aria-hidden="true" />,
+});
 // Canonical /blog title. Shared by Layout's `Title` prop (which Meta.tsx
 // turns into og:title / twitter:title) and the <Head><title>, so the
 // document title and social metadata can't drift apart.
@@ -112,10 +123,12 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
 
             <div className="blog-hero-img">
               <Image
-                src="/blog/images/blog-bunny.png"
+                src={`${S3_ASSET_BASE}/images/blog-bunny.webp`}
                 alt="hero image"
                 width={600}
                 height={600}
+                priority
+                sizes="(max-width: 768px) 80vw, 600px"
               />
             </div>
           </div>

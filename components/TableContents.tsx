@@ -36,7 +36,7 @@ function TocTooltip({ text, children }: { text: string; children: React.ReactNod
             style={{
               top: coords.top,
               left: coords.left,
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: 'var(--font-dm-sans), sans-serif',
             }}
           >
             {text}
