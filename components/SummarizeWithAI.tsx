@@ -69,7 +69,7 @@ export default function SummarizeWithAI() {
 
   return (
     <div
-      className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2"
+      className="flex flex-wrap items-center gap-x-3 gap-y-2"
       style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
       {/* Plain text label, not a heading — avoids polluting the TOC, document

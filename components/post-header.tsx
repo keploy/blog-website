@@ -3,6 +3,7 @@ import PostTitle from "./post-title";
 import Categories from "./categories";
 import PostHeaderAuthors from "./PostHeaderAuthors";
 import SummarizeWithAI from "./SummarizeWithAI";
+import PreferredSourceButton from "./PreferredSourceButton";
 
 export default function PostHeader({
   title,
@@ -40,8 +41,12 @@ export default function PostHeader({
           tags={tags}
         />
 
-        {/* 5. Summarize-with-AI deep links (GEO / AI-citation) */}
-        <SummarizeWithAI />
+        {/* 5. GEO / discovery row — Summarize-with-AI deep links + "Add as a
+               preferred source on Google", sharing one wrapping line. */}
+        <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3">
+          <SummarizeWithAI />
+          <PreferredSourceButton />
+        </div>
       </div>
     </div>
   );
