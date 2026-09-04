@@ -7,34 +7,46 @@ import { sendBlogLead } from "../lib/blog-mql";
 
 export const subscribeMutation = (formData: { fullName: string, email: string, companyName: string, message: string }) => {
 
-  if (newsLetterSubscriptionUrl){
-    return fetch(newsLetterSubscriptionUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Origin': 'https://keploy.io',
-      },
-      body: JSON.stringify({
-        query: 'mutation Subscribe($input: GuestInput!) { subscription(guestInput: $input) }',
-        variables: {
-          input: {
-            fullName: formData.fullName,
-            email: formData.email,
-            company: formData.companyName,
-            message: formData.message
-          }
-        }
-      }),
-    }).then(async (response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    }).catch((error) => {
-      console.error("Error during subscription:", error);
-      throw error;
-    });
+  // Missing config must surface as a rejected promise, not a silent `undefined`
+  // return — otherwise the caller does `response.data` on undefined and throws a
+  // swallowed TypeError, leaving the user with a dead button and no feedback.
+  if (!newsLetterSubscriptionUrl) {
+    return Promise.reject(new Error("newsletter subscription URL is not configured"));
   }
+
+  // Abort a stalled backend so a hung request can't strand the submit button —
+  // `submitting` is only cleared in handleSubscribe's .finally, which never runs
+  // while this fetch is pending.
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 8000);
+
+  return fetch(newsLetterSubscriptionUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Origin': 'https://keploy.io',
+    },
+    body: JSON.stringify({
+      query: 'mutation Subscribe($input: GuestInput!) { subscription(guestInput: $input) }',
+      variables: {
+        input: {
+          fullName: formData.fullName,
+          email: formData.email,
+          company: formData.companyName,
+          message: formData.message
+        }
+      }
+    }),
+    signal: controller.signal,
+  }).then(async (response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  }).catch((error) => {
+    console.error("Error during subscription:", error);
+    throw error;
+  }).finally(() => clearTimeout(timer));
 
 };
 
@@ -58,6 +70,9 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
   const submittingRef = useRef<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [emailError, setEmailError] = useState('');
+  // Surfaced to the user when a subscribe attempt fails, so a failure is visible
+  // instead of dying silently in the console (the old behaviour).
+  const [submitError, setSubmitError] = useState('');
   const message = "NEWSLETTER"
   // Don't load Google's script for every reader — only once someone actually
   // interacts with the form (filling three fields leaves it ample time to load).
@@ -69,20 +84,23 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
   const handleSubscribe = async (payload) => {
     try {
       const response = await subscribeMutation(payload);
-      if (response.data.subscription) {
+      // Optional-chain the whole path: `response` is undefined on a
+      // misconfigured URL and `response.data` is absent on a GraphQL error
+      // shape ({ errors: [...] }) — both used to throw "cannot read 'data'"
+      // here and get swallowed, leaving the user with no feedback.
+      if (response?.data?.subscription) {
+        // Persist the thank-you (no auto-hide) — the form is replaced by it, so
+        // the user clearly sees the subscription landed.
         setSubscribed(true);
         setFullName('')
         setEmail('')
         setCompanyName('')
-        setTimeout(() => {
-
-          setSubscribed(false);
-        }, 3000)
       } else {
-        console.error('Subscribe request failed.');
+        setSubmitError('Something went wrong. Please try again.');
       }
     } catch (error) {
       console.error('Error sending subscribe request:', error);
+      setSubmitError('Something went wrong. Please try again.');
     }
   };
   const submitHandler = (e) => {
@@ -107,6 +125,8 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
     if (submittingRef.current) return;
     submittingRef.current = true;
     setSubmitting(true);
+    // Clear any stale failure from a previous attempt before retrying.
+    setSubmitError('');
 
     const payload = {
       fullName,
@@ -163,6 +183,18 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
           className={`${isVisible ? styles["slide-in"] : "translate-x-full opacity-0"
             }`}
         >
+          {subscribed ? (
+            // Success replaces the form entirely so the user unmistakably knows
+            // the subscription landed (the old tiny 3s green line was easy to miss).
+            <div className="flex flex-col items-center justify-center text-center gap-y-3 py-8">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="12" cy="12" r="11" fill="#DCFCE7" stroke="#16a34a" strokeWidth="1.5" />
+                <path d="M7.5 12.5l3 3 6-6.5" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <p className="text-base font-bold text-green-800">Thank you for subscribing!</p>
+              <p className="text-sm text-gray-600">You&#39;ll get the latest Keploy blogs straight to your inbox.</p>
+            </div>
+          ) : (
           <div className={"flex flex-col gap-y-2"}>
             <p className="text-sm text-black pb-2 text-center">
               To get the latest blogs and updates straight to your inbox.
@@ -223,10 +255,11 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
               *<strong>We won&#39;t spam you</strong> only one Email every month.
             </span>
             <RecaptchaAttribution />
+            {emailError && <p className="text-sm text-red-500 text-center font-semibold mt-1">{emailError}</p>}
+            {submitError && <p className="text-sm text-red-500 text-center font-semibold mt-1">{submitError}</p>}
           </div>
+          )}
           {recaptchaScript}
-          {emailError && <p className="text-sm text-red-500 text-center font-semibold mt-3">{emailError}</p>}
-          {subscribed && <p className="text-sm text-green-800 text-center font-semibold mt-3">Thanks for subscribing!</p>}
         </div>
       </div>
     </div>
