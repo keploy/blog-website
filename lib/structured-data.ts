@@ -446,14 +446,21 @@ export const getBlogPostingSchema = ({
   const resolvedPublished = toISODate(datePublished) || toISODate(dateModified);
   const resolvedModified = toISODate(dateModified) || resolvedPublished;
 
+  // The WebPage this article is the main entity of. Held in its own variable so
+  // reviewedBy can hang off it below: `reviewedBy` is a WebPage-only property in
+  // schema.org, and emitting it directly on the Article/BlogPosting/TechArticle
+  // node makes validator.schema.org warn ("not a known property for this type").
+  // The WebPage is the schema-correct home for "who reviewed this page".
+  const mainEntityOfPage: Record<string, unknown> = {
+    "@type": "WebPage",
+    "@id": url,
+  };
+
   const schema: Record<string, unknown> = {
     "@context": SCHEMA_CONTEXT,
     "@type": schemaType,
     headline: title,
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": url,
-    },
+    mainEntityOfPage,
     ...(resolvedPublished ? { datePublished: resolvedPublished } : {}),
     ...(resolvedModified ? { dateModified: resolvedModified } : {}),
     author: authorNode,
@@ -475,10 +482,11 @@ export const getBlogPostingSchema = ({
     isAccessibleForFree: true,
   };
 
-  // E-E-A-T: reviewedBy Person. Only emit when we actually have a
-  // reviewer name AND it is different from the author — a post being
-  // "reviewed by" its own author is not a useful credibility signal
-  // and AI models weight the review less.
+  // E-E-A-T: reviewedBy Person on the WebPage (mainEntityOfPage), not the
+  // Article — see the mainEntityOfPage note above for why. Only emit when we
+  // actually have a reviewer name AND it is different from the author — a post
+  // being "reviewed by" its own author is not a useful credibility signal and
+  // AI models weight the review less.
   if (
     reviewerName &&
     reviewerName !== resolvedAuthorName &&
@@ -496,7 +504,7 @@ export const getBlogPostingSchema = ({
     if (reviewerDescription) {
       reviewerNode.description = reviewerDescription;
     }
-    schema.reviewedBy = reviewerNode;
+    mainEntityOfPage.reviewedBy = reviewerNode;
   }
 
   if (articleSection) {
