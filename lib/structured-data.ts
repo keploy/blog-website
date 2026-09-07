@@ -788,8 +788,12 @@ export const getProfilePageSchema = (
 ) => ({
   "@context": SCHEMA_CONTEXT,
   "@type": "ProfilePage",
+  // Identify the page node by @id (same pattern as the article WebPage node),
+  // not `mainEntityOfPage`. mainEntityOfPage points from a thing TO the page it's
+  // described on; on the page node itself it's circular, and Google's Profile
+  // page rich result flags it as an unrecognized field.
+  "@id": url,
   mainEntity: person,
-  mainEntityOfPage: url,
 });
 
 export const getBlogSchema = () => ({
