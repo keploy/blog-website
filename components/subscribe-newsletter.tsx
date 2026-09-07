@@ -186,7 +186,7 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
           {subscribed ? (
             // Success replaces the form entirely so the user unmistakably knows
             // the subscription landed (the old tiny 3s green line was easy to miss).
-            <div className="flex flex-col items-center justify-center text-center gap-y-3 py-8">
+            <div role="status" className="flex flex-col items-center justify-center text-center gap-y-3 py-8">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <circle cx="12" cy="12" r="11" fill="#DCFCE7" stroke="#16a34a" strokeWidth="1.5" />
                 <path d="M7.5 12.5l3 3 6-6.5" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -258,8 +258,8 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
               *<strong>We won&#39;t spam you</strong> only one Email every month.
             </span>
             <RecaptchaAttribution />
-            {emailError && <p className="text-sm text-red-500 text-center font-semibold mt-1">{emailError}</p>}
-            {submitError && <p className="text-sm text-red-500 text-center font-semibold mt-1">{submitError}</p>}
+            {emailError && <p role="alert" className="text-sm text-red-500 text-center font-semibold mt-1">{emailError}</p>}
+            {submitError && <p role="alert" className="text-sm text-red-500 text-center font-semibold mt-1">{submitError}</p>}
           </div>
           )}
           {recaptchaScript}
