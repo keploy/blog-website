@@ -21,7 +21,7 @@ node instead of duplicates:
 | Blog | `…#blog` |
 | WebSite | `…#website` |
 | SoftwareApplication | `…#software` |
-| Author (per person) | `/authors/{slug}#person` |
+| Author (per person) | `…/authors/{slug}#person` |
 
 ---
 
