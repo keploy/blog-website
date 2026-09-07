@@ -242,7 +242,10 @@ export default function SubscribeNewsletter(props: { isSmallScreen?: boolean }) 
               />
               <div>
                 <button
-                  className={`btn text-secondary-300 bg-primary-300 w-full mb-4 sm:mb-0 px-2 py-1 rounded font-bold border-1 border-transparent text-white shadow mt-2 ${isSubscribeDisabled() ? "opacity-50 cursor-not-allowed" : "hover:text-white"}`}
+                  className={`btn text-secondary-300 w-full mb-4 sm:mb-0 px-2 py-1 rounded font-bold border-1 border-transparent text-white shadow mt-2 ${isSubscribeDisabled() ? "bg-primary-300 opacity-50 cursor-not-allowed" : "hover:brightness-95 hover:text-white"}`}
+                  // Active state uses the ad-banner orange (#ED5D0F). Inline style
+                  // so it reliably overrides the .btn/bg utility classes.
+                  style={isSubscribeDisabled() ? undefined : { backgroundColor: "#ED5D0F" }}
                   type="submit"
                   disabled={isSubscribeDisabled()}
                 >
