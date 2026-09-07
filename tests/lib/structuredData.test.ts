@@ -30,6 +30,7 @@ import {
   DEFAULT_ARTICLE_IMAGE_URL,
   AUTHOR_FALLBACK_NAME,
 } from "../../lib/structured-data";
+import { lintBlocks } from "../../scripts/validate-schema";
 
 const isValidISODate = (v: unknown): boolean =>
   typeof v === "string" && v.length > 0 && !isNaN(new Date(v).getTime());
@@ -346,4 +347,31 @@ test("root-relative image URLs are coerced to absolute in the schema", () => {
   });
   const image = post.image as Record<string, unknown>;
   assert.equal(image.url, "https://keploy.io/blog/favicon/Group.png");
+});
+
+test("reviewedBy rides on the WebPage (mainEntityOfPage), not the Article", () => {
+  // schema.org defines reviewedBy only for WebPage; on a BlogPosting/TechArticle
+  // it makes validator.schema.org warn. It must live on mainEntityOfPage.
+  const post = getBlogPostingSchema({
+    title: "Reviewed post",
+    url: "https://keploy.io/blog/community/reviewed",
+    datePublished: "2024-01-02",
+    authorName: "Sancharini Panda",
+    reviewerName: "Neha Gupta",
+    reviewerDescription: "Building Keploy.io",
+  });
+  assert.ok(!("reviewedBy" in post), "reviewedBy must NOT be on the Article node");
+  const web = post.mainEntityOfPage as Record<string, unknown>;
+  assert.equal(web["@type"], "WebPage");
+  const reviewer = web.reviewedBy as Record<string, unknown>;
+  assert.ok(reviewer, "reviewedBy must be on the WebPage");
+  assert.equal(reviewer["@type"], "Person");
+  assert.equal(reviewer.name, "Neha Gupta");
+
+  // End-to-end: the schema linter must find no reviewedby-non-webpage warning.
+  const findings = lintBlocks([JSON.stringify(post)]);
+  assert.ok(
+    !findings.some((f) => f.rule === "reviewedby-non-webpage"),
+    "linter must not flag reviewedBy once it's on the WebPage",
+  );
 });

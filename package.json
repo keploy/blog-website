@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
+    "validate:schema": "tsx scripts/validate-schema.ts",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
