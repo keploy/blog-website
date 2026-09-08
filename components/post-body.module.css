@@ -1,7 +1,7 @@
 
 /* ── Base body text ── */
 .content {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: clamp(0.9375rem, 2vw, 1.25rem);
   /* 15px mobile → 20px desktop */
   line-height: 1.6;
@@ -34,7 +34,7 @@
 
 /* ── Headings ── */
 .content h1 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 2.25rem;
   font-weight: 700 !important;
   line-height: 1.35;
@@ -45,7 +45,7 @@
 }
 
 .content h2 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 1.875rem;
   font-weight: 700 !important;
   line-height: 1.4;    
@@ -63,8 +63,14 @@
   margin-top: 0;
 }
 
+.contentAfterPromo h2:first-child {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+  margin-top: 2.25rem;
+}
+
 .content h3 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 1.5rem;
   font-weight: 700 !important;
   line-height: 1.45;
@@ -75,7 +81,7 @@
 }
 
 .content h4 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 1.25rem;
   font-weight: 700 !important;
   line-height: 1.5;
@@ -85,7 +91,7 @@
 }
 
 .content h5 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 1.125rem;
   font-weight: 700 !important;
   line-height: 1.5;
@@ -95,7 +101,7 @@
 }
 
 .content h6 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 1rem;
   font-weight: 700 !important;
   font-style: italic;
@@ -114,14 +120,52 @@
 
 /* ── Links ── */
 .content a {
-  color: #f97316;
   text-decoration: none;
   font-weight: inherit;
   transition: color 0.15s;
 }
 
-.content a:hover {
+/* keploy.io (absolute), relative paths, same-page anchors, mailto/tel — orange and clickable */
+.content a[href*="keploy.io" i],
+.content a[href^="/"],
+.content a[href^="#"],
+.content a[href^="mailto:" i],
+.content a[href^="tel:" i] {
+  color: #f97316;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.content a[href*="keploy.io" i]:hover,
+.content a[href^="/"]:hover,
+.content a[href^="#"]:hover,
+.content a[href^="mailto:" i]:hover,
+.content a[href^="tel:" i]:hover {
   color: #ea6d10;
+}
+
+/* External http/https and protocol-relative links — present in HTML for SEO, unstyled to readers.
+   These selectors have higher specificity (0,3,1) than the [href^="/"] internal rule (0,2,1),
+   so they correctly override color for protocol-relative external URLs like //example.com. */
+.content a[href^="http://" i]:not([href*="keploy.io" i]),
+.content a[href^="https://" i]:not([href*="keploy.io" i]),
+.content a[href^="//"]:not([href*="keploy.io" i]) {
+  color: inherit;
+}
+
+.content a[href^="http://" i]:not([href*="keploy.io" i]):hover,
+.content a[href^="https://" i]:not([href*="keploy.io" i]):hover,
+.content a[href^="//"]:not([href*="keploy.io" i]):hover {
+  color: inherit;
+}
+
+/* Keyboard focus affordance for external links — hidden visually but discoverable when tabbing */
+.content a[href^="http://" i]:not([href*="keploy.io" i]):focus-visible,
+.content a[href^="https://" i]:not([href*="keploy.io" i]):focus-visible,
+.content a[href^="//"]:not([href*="keploy.io" i]):focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* ── Lists ── */

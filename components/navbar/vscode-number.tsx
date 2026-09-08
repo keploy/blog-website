@@ -38,11 +38,10 @@ export function Vscode({ className = "" }) {
 
 const VscodeIcon = () => (
   <svg
-    width="20"
-    height="20"
     viewBox="0 0 100 100"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    className="w-5 h-5"
   >
     <mask
       id="mask0"

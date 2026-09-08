@@ -5,21 +5,75 @@ import Layout from "../components/layout";
 import { getAllPostsForCommunity, getAllPostsForTechnology } from "../lib/api";
 import Header from "../components/header";
 import Link from "next/link";
-import { HOME_OG_IMAGE_URL } from "../lib/constants";
+import { HOME_OG_IMAGE_URL, S3_ASSET_BASE } from "../lib/constants";
+import dynamic from "next/dynamic";
 import TopBlogs from "../components/topBlogs";
-import Testimonials from "../components/testimonials";
 import Image from "next/image";
-import OpenSourceVectorPng from "../public/images/open-source-vector.png";
 import {
-  getBreadcrumbListSchema,
   getWebSiteSchema,
+  getCollectionPageSchema,
   SITE_URL,
 } from "../lib/structured-data";
+import { buildPageTitle } from "../utils/seo";
+import { REVALIDATE_CONTENT } from "../lib/isr";
+
+// Testimonials is the bottom-of-page marquee (below the fold) and animates
+// continuously, which keeps the main thread busy. Lazy-load it so its JS +
+// render stay off the critical path and don't delay first paint / LCP of the
+// hero. The min-height placeholder reserves space so the deferred mount doesn't
+// shift on-screen content (it's below the fold, so CLS impact is nil).
+const Testimonials = dynamic(() => import("../components/testimonials"), {
+  ssr: false,
+  // Reserve the loaded section's real height (~760px: heading + the h-[700px]
+  // marquee) so the footer doesn't shift down when the chunk mounts.
+  loading: () => <div className="min-h-[760px]" aria-hidden="true" />,
+});
+// Canonical /blog title. Shared by Layout's `Title` prop (which Meta.tsx
+// turns into og:title / twitter:title) and the <Head><title>, so the
+// document title and social metadata can't drift apart.
+const BLOG_TITLE =
+  "Keploy Blog — API Testing, Test Automation & eBPF Deep-Dives";
+// Shared by Layout's `Description` prop and the CollectionPage schema below so
+// the rendered meta description and the structured data can't drift apart.
+const BLOG_DESCRIPTION =
+  "The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications.";
+
 export default function Index({ communityPosts, technologyPosts, preview }) {
-  // Organization schema is in _document.tsx (global) — not duplicated here
+  // Organization schema is in _document.tsx (global) — not duplicated here.
+  // No BreadcrumbList: a single "Home" item is a no-op that SEMrush/Google flag,
+  // so the home route carries WebSite plus the CollectionPage below.
+  const featuredItems = [
+    ...(communityPosts || []).map(({ node }: any) => ({
+      url: `${SITE_URL}/community/${node.slug}`,
+      name: node.title,
+      image: node.featuredImage?.node?.sourceUrl,
+    })),
+    ...(technologyPosts || []).map(({ node }: any) => ({
+      url: `${SITE_URL}/technology/${node.slug}`,
+      name: node.title,
+      image: node.featuredImage?.node?.sourceUrl,
+    })),
+  ];
+  // No Review structured data here — deliberate. The "What our community thinks"
+  // wall (components/testimonials.tsx) is loaded client-only in PR #410
+  // (next/dynamic, ssr:false) to keep the animating marquee off the LCP path, so
+  // those reviews are NOT in the server HTML a crawler reads. Emitting Review
+  // markup for content that isn't server-rendered is markup for invisible
+  // content, which Google penalizes. getReviewSchema stays available (and tested)
+  // so this can be re-wired if the wall ever returns to SSR.
+  //
+  // The home route is a listing like /technology and /tag/{slug}, so it gets the
+  // same CollectionPage treatment. That also gives it a page-type node, which it
+  // previously lacked: WebSite describes the site and ItemList the cards, but
+  // neither says what this page is. The featured ItemList is the mainEntity.
   const structuredData = [
     getWebSiteSchema(),
-    getBreadcrumbListSchema([{ name: "Home", url: SITE_URL }]),
+    getCollectionPageSchema({
+      name: BLOG_TITLE,
+      url: SITE_URL,
+      description: BLOG_DESCRIPTION,
+      items: featuredItems,
+    }),
   ];
 
   return (
@@ -27,23 +81,27 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
     <Layout
       preview={preview}
       featuredImage={HOME_OG_IMAGE_URL}
-      Title={`Blog - Keploy`}
-      Description={"The Keploy Blog offers in-depth articles and expert insights on software testing, automation, and quality assurance, empowering developers to enhance their testing strategies and deliver robust applications."}
+      Title={BLOG_TITLE}
+      Description={BLOG_DESCRIPTION}
       structuredData={structuredData}
       canonicalUrl={SITE_URL}
       ogType="website"
     >
       <Head>
-        <title>{`Engineering | Keploy Blog`}</title>
+        {/* Meta.tsx renders og:title / twitter:title from Layout's `Title`
+            prop but does NOT emit a <title> tag (see LIVE-11 note in
+            authors/[slug].tsx). Without this <Head><title>, /blog ships
+            with no document title — same regression that hit author pages. */}
+        <title>{buildPageTitle(BLOG_TITLE)}</title>
       </Head>
       <Header />
       <Container>
         <div className="">
           <div className="home-container md:mb-0 mb-4 flex lg:flex-nowrap flex-wrap-reverse justify-evenly items-center">
             <div className="content">
-              <h2 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
-                Keploy Blog
-              </h2>
+              <h1 className="heading1 font-bold 2xl:text-7xl text-6xl text-orange-400">
+                Keploy Engineering Blog
+              </h1>
               <p className="content-body body 2xl:text-2xl text-lg mt-6">
                 Empowering your tech journey with expert advice and analysis
               </p>
@@ -65,10 +123,12 @@ export default function Index({ communityPosts, technologyPosts, preview }) {
 
             <div className="blog-hero-img">
               <Image
-                src="/blog/images/blog-bunny.png"
+                src={`${S3_ASSET_BASE}/images/blog-bunny.webp`}
                 alt="hero image"
                 width={600}
                 height={600}
+                priority
+                sizes="(max-width: 768px) 80vw, 600px"
               />
             </div>
           </div>
@@ -99,6 +159,6 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
           : allTehcnologyPosts.edges,
       preview,
     },
-    revalidate: 10,
+    revalidate: REVALIDATE_CONTENT,
   };
 };

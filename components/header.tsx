@@ -30,9 +30,10 @@ export default function Header({
     <div className="h-28 md:h-32 border-b border-gray-200/50">
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-30 w-full transition duration-300 ease-in-out border-none bg-transparent",
+          "fixed left-0 right-0 z-30 w-full transition duration-300 ease-in-out border-none bg-transparent",
           isBlogReadingPage && "bg-white"
         )}
+        style={{ top: "var(--announcement-h, 0px)" }}
       >
         <FloatingNavbar isBlogReadingPage={isBlogReadingPage} />
         {readProgress && (

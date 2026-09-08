@@ -10,7 +10,7 @@ const TagPill = ({ name }: { name: string }) => {
     <Link href={`/tag/${name}`}>
       <span
         className="inline-block border border-gray-300 text-gray-600 text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap transition-colors duration-150 hover:border-orange-400 hover:text-orange-500 cursor-pointer"
-        style={{ fontFamily: "'DM Sans', sans-serif" }}
+        style={{ fontFamily: 'var(--font-dm-sans), sans-serif' }}
       >
         {label}
       </span>
@@ -110,7 +110,7 @@ const AuthorHoverCard = ({
           />
           <p
             className="font-bold text-gray-900 truncate"
-            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.8125rem" }}
+            style={{ fontFamily: 'var(--font-dm-sans), sans-serif', fontSize: "0.8125rem" }}
           >
             {person.name}
           </p>
@@ -119,7 +119,7 @@ const AuthorHoverCard = ({
         {/* Description */}
         <p
           className="text-[11px] text-gray-500 leading-relaxed mb-2 line-clamp-2"
-          style={{ fontFamily: "'DM Sans', sans-serif" }}
+          style={{ fontFamily: 'var(--font-dm-sans), sans-serif' }}
         >
           {person.description}
         </p>
@@ -132,7 +132,7 @@ const AuthorHoverCard = ({
           href={profileHref}
           className="flex items-center justify-center gap-1 w-full py-1.5 rounded-md text-xs font-semibold transition-colors duration-150"
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: 'var(--font-dm-sans), sans-serif',
             color: roleColor,
             border: `1.5px solid ${roleColor}`,
             background: "transparent",
@@ -234,7 +234,7 @@ const PostHeaderAuthors = ({
           <div className="relative inline-flex items-baseline gap-1">
             <span
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: 'var(--font-dm-sans), sans-serif',
                 fontWeight: 700,
                 fontSize: "clamp(0.9375rem, 2vw, 1.25rem)",
                 lineHeight: "150%",
@@ -248,7 +248,7 @@ const PostHeaderAuthors = ({
               onMouseLeave={writer.hide}
               className="cursor-pointer border-b border-dashed border-gray-400 hover:border-orange-400 hover:text-orange-600 transition-colors duration-100"
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: 'var(--font-dm-sans), sans-serif',
                 fontWeight: 700,
                 fontSize: "clamp(0.9375rem, 2vw, 1.25rem)",
                 lineHeight: "150%",
@@ -272,7 +272,7 @@ const PostHeaderAuthors = ({
             <div className="relative inline-flex items-baseline gap-1">
               <span
                 style={{
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: 'var(--font-dm-sans), sans-serif',
                   fontWeight: 400,
                   fontSize: "clamp(0.875rem, 1.8vw, 1.125rem)",
                   lineHeight: "150%",
@@ -286,7 +286,7 @@ const PostHeaderAuthors = ({
                 onMouseLeave={reviewer.hide}
                 className="cursor-pointer border-b border-dashed border-gray-400 hover:border-purple-400 hover:text-purple-600 transition-colors duration-100"
                 style={{
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: 'var(--font-dm-sans), sans-serif',
                   fontWeight: 500,
                   fontSize: "clamp(0.875rem, 1.8vw, 1.125rem)",
                   lineHeight: "150%",
@@ -307,7 +307,7 @@ const PostHeaderAuthors = ({
           ) : (
             <p
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: 'var(--font-dm-sans), sans-serif',
                 fontWeight: 400,
                 fontSize: "clamp(0.875rem, 1.8vw, 1.125rem)",
                 lineHeight: "150%",

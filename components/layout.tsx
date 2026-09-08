@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Post } from "../types/post";
 import Alert from "./alert";
 import Footer from "./footer";
@@ -14,6 +15,7 @@ export default function Layout({
   structuredData = [],
   canonicalUrl,
   ogType = "website",
+  publishedDate,
 }: {
   preview: any;
   Description: any;
@@ -23,7 +25,18 @@ export default function Layout({
   structuredData?: Record<string, unknown>[];
   canonicalUrl?: string;
   ogType?: "article" | "website";
+  publishedDate?: string;
 }) {
+  // Load Clarity only after the first user interaction (not on page load) — it's
+  // a heavy session-recording script, so keep it off the initial load path.
+  const [interacted, setInteracted] = useState(false);
+  useEffect(() => {
+    const events = ["scroll", "pointerdown", "keydown", "touchstart"];
+    const onInteract = () => setInteracted(true);
+    events.forEach((e) => window.addEventListener(e, onInteract, { once: true, passive: true }));
+    return () => events.forEach((e) => window.removeEventListener(e, onInteract));
+  }, []);
+
   return (
     <>
       <Meta
@@ -33,6 +46,7 @@ export default function Layout({
         structuredData={structuredData}
         canonicalUrl={canonicalUrl}
         ogType={ogType}
+        publishedDate={publishedDate}
       />
       {/* Replaced the Layout wrapper's framer-motion animation with a CSS
           animation so this fade-in no longer depends on framer-motion here.
@@ -41,23 +55,26 @@ export default function Layout({
         className="min-h-screen animate-[fadeIn_0.3s_ease-out] motion-reduce:animate-none"
       >
         {/* <Alert preview={preview} /> */}
-        <main className="pt-20 md:pt-24">{children}</main>
+        <main className="layout-content-padded">{children}</main>
       </div>
       <Footer />
       <ScrollToTop />
 
       {/* ── Analytics & third-party scripts ──
-           All non-essential scripts use lazyOnload to keep TBT/TTI low.
-           They fire after the page is fully interactive. */}
+           GA4 uses afterInteractive: it fires right after hydration (not the
+           idle-wait of lazyOnload), so we don't lose early pageviews, while
+           staying off the pre-hydration critical path so it doesn't compete
+           with LCP. Clarity loads on first interaction; Apollo + SWG stay
+           lazyOnload. */}
 
       <Script
         id="gtag-loader"
         src="https://www.googletagmanager.com/gtag/js?id=G-GYS09X6KHS"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
       />
       <Script
         id="google-ga"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
           window.dataLayer = window.dataLayer || [];
@@ -68,27 +85,29 @@ export default function Layout({
         }}
       />
 
-      <Script
-        id="msclarity"
-        strategy="lazyOnload"
-        dangerouslySetInnerHTML={{
-          __html: `
+      {/* Microsoft Clarity — mounted only after the first user interaction. */}
+      {interacted && (
+        <Script
+          id="msclarity"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
           (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           })(window,document,"clarity","script","jymj0ktwcp");
         `,
-        }}
-      />
+          }}
+        />
+      )}
 
-      {/* Google News SWG — lazyOnload since it's non-critical */}
+      {/* Google News SWG (Subscribe with Google) — lazyOnload, non-critical. */}
       <Script
         id="swg-basic"
         src="https://news.google.com/swg/js/v1/swg-basic.js"
         strategy="lazyOnload"
       />
-
       <Script
         id="publisher"
         strategy="lazyOnload"

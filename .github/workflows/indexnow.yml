@@ -1,0 +1,98 @@
+name: Submit to IndexNow
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # Run once every 24 hours — picks up daily WordPress edits and new posts
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch 20 most recently modified blog posts and submit to IndexNow
+        env:
+          INDEXNOW_HOST: keploy.io
+          INDEXNOW_KEY: feeeddbe661a4686ba6e4d5cb663b2cb
+        run: |
+          set -euo pipefail
+
+          INDEXNOW_KEY_LOC="https://${INDEXNOW_HOST}/${INDEXNOW_KEY}.txt"
+
+          # Fetch 20 most recently modified posts from WordPress GraphQL.
+          # --fail-with-body makes curl exit non-zero on HTTP errors while still
+          # printing the body, so failures are visible in CI logs.
+          QUERY='{"query":"{ posts(first:20, where:{orderby:{field:MODIFIED,order:DESC}}) { edges { node { slug modified categories { edges { node { slug } } } } } } }"}'
+          RESPONSE=$(curl -sS --fail-with-body -X POST "https://wp.keploy.io/graphql" \
+            -H "Content-Type: application/json" \
+            -d "$QUERY")
+
+          # WPGraphQL can return HTTP 200 with a top-level errors array and
+          # partial/empty data. Treat that as a hard failure so the scheduled
+          # run surfaces CMS/query issues instead of silently submitting an
+          # incomplete URL list (or falling back to just the blog index).
+          if printf '%s' "$RESPONSE" | jq -e 'has("errors") and (.errors | length > 0)' >/dev/null; then
+            echo "::error::WordPress GraphQL returned errors:"
+            printf '%s' "$RESPONSE" | jq '.errors'
+            echo ""
+            echo "Troubleshooting:"
+            echo "  1. Check WPGraphQL endpoint health: curl -sS https://wp.keploy.io/graphql -X POST -H 'Content-Type: application/json' -d '{\"query\":\"{ __typename }\"}'"
+            echo "  2. Validate the query against the schema at https://wp.keploy.io/wp-admin/admin.php?page=graphiql-ide (or open /graphql in the WP admin)"
+            echo "  3. Common causes: WPGraphQL plugin disabled/updated, rate-limiting on wp.keploy.io, or a field rename in the Posts type. Re-run this workflow via Actions -> Run workflow once resolved."
+            exit 1
+          fi
+
+          # Map each post's category -> route. Only community/technology are
+          # exposed as blog URLs (see pages/community/[slug].tsx and
+          # pages/technology/[slug].tsx).
+          URLS=$(printf '%s' "$RESPONSE" | jq -r '
+            .data.posts.edges[].node |
+            . as $post |
+            .categories.edges[].node.slug |
+            select(. == "community" or . == "technology") |
+            "https://'"${INDEXNOW_HOST}"'/blog/\(.)/\($post.slug)"
+          ' | sort -u)
+
+          if [ -z "$URLS" ]; then
+            echo "No URLs found from WordPress; submitting blog index instead"
+            URLS="https://${INDEXNOW_HOST}/blog/"
+          fi
+
+          URL_COUNT=$(printf '%s\n' "$URLS" | wc -l | tr -d '[:space:]')
+          echo "Submitting $URL_COUNT URLs to IndexNow"
+
+          JSON_URLS=$(printf '%s\n' "$URLS" | jq -R -s 'split("\n") | map(select(length > 0))')
+
+          # Capture curl exit status separately from HTTP code so network/DNS
+          # failures are distinguishable from real non-2xx HTTP responses.
+          CURL_EXIT=0
+          HTTP_CODE=$(curl -sS -o /tmp/indexnow-resp.txt -w "%{http_code}" \
+            -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json" \
+            -d "{\"host\":\"${INDEXNOW_HOST}\",\"key\":\"${INDEXNOW_KEY}\",\"keyLocation\":\"${INDEXNOW_KEY_LOC}\",\"urlList\":${JSON_URLS}}") || CURL_EXIT=$?
+
+          if [ "$CURL_EXIT" -ne 0 ]; then
+            echo "::error::IndexNow request failed to execute (curl exit $CURL_EXIT)."
+            echo "  Check connectivity: curl -I https://api.indexnow.org/"
+            exit 1
+          fi
+
+          # IndexNow returns 200 for processed and 202 for accepted-pending-verification;
+          # both are success per the spec.
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "Submitted $URL_COUNT URLs to IndexNow (HTTP $HTTP_CODE)"
+            exit 0
+          fi
+
+          echo "::error::IndexNow returned HTTP $HTTP_CODE. Response body:"
+          cat /tmp/indexnow-resp.txt 2>/dev/null || true
+          echo ""
+          echo "Troubleshooting:"
+          echo "  1. Verify key file is publicly reachable: curl -sS $INDEXNOW_KEY_LOC"
+          echo "  2. Reproduce request:"
+          echo "     curl -sS -X POST https://api.indexnow.org/indexnow -H 'Content-Type: application/json' \\"
+          echo "       -d '{\"host\":\"${INDEXNOW_HOST}\",\"key\":\"${INDEXNOW_KEY}\",\"keyLocation\":\"${INDEXNOW_KEY_LOC}\",\"urlList\":[\"https://${INDEXNOW_HOST}/blog/\"]}'"
+          exit 1

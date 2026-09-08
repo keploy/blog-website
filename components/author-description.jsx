@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { IoLogoLinkedin } from "react-icons/io"; // Import LinkedIn icon from react-icons/io
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+import { AUTHOR_AVATAR_PLACEHOLDER } from "../lib/constants";
 
 const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
   const { basePath } = useRouter();
@@ -120,7 +121,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
         )}
         {avatarImgSrc === "n/a" && (
           <Image
-            src={"/blog/images/author.png"}
+            src={AUTHOR_AVATAR_PLACEHOLDER}
             alt="Author Avatar"
             width={200}
             height={200}

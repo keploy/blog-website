@@ -1,8 +1,11 @@
 import Link from "next/link";
-import sideBySideSvg from "../public/images/sidebyside-transparent.svg";
 import Image from "next/image";
-import CNCF from "../public/images/cncf-landscape.png";
-import GSA from "../public/images/gsa.png";
+import { S3_ASSET_BASE } from "../lib/constants";
+
+// Served from S3 (see S3_ASSET_BASE) instead of static imports.
+const sideBySideSvg = `${S3_ASSET_BASE}/images/sidebyside-transparent.svg`;
+const CNCF = `${S3_ASSET_BASE}/images/cncf-landscape.webp`;
+const GSA = `${S3_ASSET_BASE}/images/gsa.webp`;
 
 export default function Footer() {
   const sections = [
@@ -66,6 +69,8 @@ export default function Footer() {
                 <Image
                   src={sideBySideSvg}
                   alt="Keploy Logo"
+                  width={100}
+                  height={50}
                   className="h-[50px] w-[100px] mb-2"
                 />
               </Link>

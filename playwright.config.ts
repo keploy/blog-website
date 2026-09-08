@@ -26,6 +26,14 @@ const GRAPHQL_API_URL = process.env.PLAYWRIGHT_GRAPHQL_URL || 'http://localhost:
 export default defineConfig({
   testDir: './tests',
 
+  // tests/lib/** are node:test unit tests, run by `npm run test:unit` — not
+  // Playwright specs. Playwright's default testMatch is
+  // `**/*.@(spec|test).?(c|m)[jt]s?(x)`, which matches *.test.ts, so without
+  // this Playwright imports them during collection. Importing a node:test file
+  // outside node's own runner EXECUTES it, leaking its console output and
+  // process.env mutations into the e2e run.
+  testIgnore: '**/lib/**',
+
   /* Output directory for test artifacts */
   outputDir: 'test-results',
 

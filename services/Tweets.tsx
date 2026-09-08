@@ -1,3 +1,4 @@
+import { S3_ASSET_BASE } from "../lib/constants";
 const Tweets = [
   {
     avatar:
@@ -9,7 +10,7 @@ const Tweets = [
       "The point being, maintaining unit tests is terribly difficult, and in general requires more efforts than the actual development itself. I've hardly seen any startups even at good scale able to manage unit tests. If you really think it's a requirement you can try tools like Keploy. But I feel even if you honestly think, manual testing should be always feasible",
   },
   {
-    avatar: "/blog/avatars/matsuu.png",
+    avatar: `${S3_ASSET_BASE}/avatars/matsuu.png`,
     name: "matsuu@充電期間",
     id: "matsuu",
     post: "https://x.com/matsuu/status/1747448928575099236?s=20",
@@ -36,7 +37,7 @@ const Tweets = [
       "I think the problem with mock data is that it is difficult to maintain, so if it makes it easier, I think it would be a good idea. The automated testing tool “Keploy” using eBPF is amazing",
   },
   {
-    avatar: "/blog/avatars/kyongshiii06.png",
+    avatar: `${S3_ASSET_BASE}/avatars/kyongshiii06.png`,
     name: "きょん/kyong",
     id: "kyongshiii06",
     post: "https://x.com/kyongshiii06/status/1746532217336250821?s=20",
@@ -53,7 +54,7 @@ const Tweets = [
       "It is quite easy to create normal tests. On the other hand, abnormal systems may be a little difficult. I think it's okay to use it only for normal systems.",
   },
   {
-    avatar: "/blog/avatars/kyongshiii06.png",
+    avatar: `${S3_ASSET_BASE}/avatars/kyongshiii06.png`,
     name: "きょん/kyong",
     id: "kyongshiii06",
     post: "https://x.com/kyongshiii06/status/1753030333128495470?s=20",
@@ -73,7 +74,7 @@ const Tweets = [
 
   
   {
-    avatar: "/blog/avatars/TadasG.png",
+    avatar: `${S3_ASSET_BASE}/avatars/TadasG.png`,
     name: "TadasG",
     id: "JustADude404",
     post: "https://x.com/JustADude404/status/1746888711491424681?s=20",
@@ -82,7 +83,7 @@ const Tweets = [
   },
 
   {
-    avatar: "/blog/avatars/yadon.png",
+    avatar: `${S3_ASSET_BASE}/avatars/yadon.png`,
     name: "yadon",
     id: "Seipann11",
     post: "https://x.com/Seipann11/status/1755989987039064103?s=20",
@@ -102,7 +103,7 @@ const Tweets = [
   },
   
   {
-    avatar: "/blog/avatars/AndooBomber.png",
+    avatar: `${S3_ASSET_BASE}/avatars/AndooBomber.png`,
     name: "あんどーぼんばー",
     id: "AndooBomber",
     post: "https://x.com/AndooBomber/status/1747663021747691808?s=20",
