@@ -1082,6 +1082,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/dependency-mocking-service-virtualization</loc>
+    <lastmod>2026-09-10</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/09/Dependency-Mocking-and-Service-Virtualization-Make-Every-CI-Test-Deterministic.webp</image:loc>
+      <image:title>Dependency Mocking and Service Virtualization Make Every CI Test Deterministic</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/deployment-strategies</loc>
     <lastmod>2026-09-09</lastmod>
     <priority>0.70</priority>
