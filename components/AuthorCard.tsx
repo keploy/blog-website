@@ -126,9 +126,10 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
 
           {/* Actions row */}
           <div className="flex items-center gap-3 flex-wrap">
-            {/* View Profile button */}
+            {/* View all posts button */}
             <Link
               href={profileHref}
+              aria-label={`View all posts by ${name}`}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold transition-colors duration-150"
               style={{
                 fontFamily: "'DM Sans', sans-serif",
@@ -148,15 +149,16 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
 
             {/* LinkedIn link */}
             {linkedIn && linkedIn !== "n/a" && (
-              <Link
+              <a
                 href={linkedIn}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={`${name}'s LinkedIn profile`}
                 className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#0A66C2] transition-colors duration-150"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
                 <LinkedInIcon /> LinkedIn
-              </Link>
+              </a>
             )}
           </div>
         </div>
