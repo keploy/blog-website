@@ -1,21 +1,19 @@
-import Image from "next/image";
 import { Post } from "../types/post";
-export default function Avatar({ author }: { author: Post["ppmaAuthorName"] }) {
-  // const isAuthorHaveFullName = author?.node?.firstName && author?.node?.lastName
-  // const name = isAuthorHaveFullName
-  //   ? `${author.node.firstName} ${author.node.lastName}`
-  //   : author.node.name || null
+
+interface AvatarProps {
+  author?: Post["ppmaAuthorName"] | null;
+  className?: string;
+}
+
+export default function Avatar({ author, className = "" }: AvatarProps) {
+  if (!author) return null;
+
   return (
-    <div className="flex items-center">
-      {/* <div className="w-8 h-8 relative mr-4">
-        <Image
-          src={author.node.avatar.url}
-          layout="fill"
-          className="rounded-full"
-          alt={name}
-        />
-      </div> */}
-      <div data-testid="hero-post-author" className="text-md font-medium heading1">{author}</div>
+    <div className={`flex items-center ${className}`.trim()}>
+      <div data-testid="hero-post-author" className="text-md font-medium heading1">
+        {author}
+      </div>
     </div>
   );
 }
+
