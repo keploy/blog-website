@@ -148,7 +148,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
 
             {/* LinkedIn link */}
             {linkedIn && linkedIn !== "n/a" && (
-              <Link
+              <a
                 href={linkedIn}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -156,7 +156,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
                 <LinkedInIcon /> LinkedIn
-              </Link>
+              </a>
             )}
           </div>
         </div>
