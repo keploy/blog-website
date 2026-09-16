@@ -3,23 +3,27 @@ import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import { Post } from "../types/post";
 import { safeJsonLdStringify } from "../utils/seo";
 
-export default function Meta({
-  featuredImage,
-  Title,
-  Description,
-  structuredData = [],
-  canonicalUrl,
-  ogType = "article",
-  publishedDate,
-}: {
-  featuredImage: Post["featuredImage"]["node"]["sourceUrl"];
-  Title: Post["title"];
-  Description: string;
+export interface MetaProps {
+  featuredImage?: string;
+  Title?: string;
+  Description?: string;
   structuredData?: Record<string, unknown>[];
   canonicalUrl?: string;
   ogType?: "article" | "website";
   publishedDate?: string;
-}) {
+}
+
+export default function Meta({
+  featuredImage,
+  Title = "",
+  Description = "",
+  structuredData = [],
+  canonicalUrl,
+  ogType = "article",
+  publishedDate,
+}: MetaProps) {
+  const ogImageUrl = featuredImage || HOME_OG_IMAGE_URL;
+
   return (
     <Head>
       <link
@@ -50,8 +54,7 @@ export default function Meta({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={Title} />
       <meta name="twitter:description" content={Description} />
-      {/* Twitter Summary card images must be at least 120x120px */}
-      <meta name="twitter:image" content={featuredImage} />
+      <meta name="twitter:image" content={ogImageUrl} />
 
       <meta name="msapplication-TileColor" content="#FF914D" />
       <meta
@@ -75,22 +78,9 @@ export default function Meta({
           <meta property="og:url" content={canonicalUrl} />
         </>
       )}
-      {featuredImage && (
-        <>
-          <meta property="og:image" content={featuredImage} />
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="627" />
-          <meta name="twitter:image" content={featuredImage} />
-        </>
-      )}
-      {!featuredImage && (
-        <>
-          <meta property="og:image" content={HOME_OG_IMAGE_URL} />
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="627" />
-          <meta name="twitter:image" content={HOME_OG_IMAGE_URL} />
-        </>
-      )}
+      <meta property="og:image" content={ogImageUrl} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="627" />
       {structuredData.map((schema, index) => (
         <script
           key={`jsonld-${index}`}
