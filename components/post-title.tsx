@@ -1,23 +1,20 @@
-export default function PostTitle({ children }: { children: string }) {
-  function toTitleCase(str: string) {
-    return str
-      .toLowerCase()
-      .replace(/\b\w/g, (word) => word.toUpperCase());
-  }
-  const finalString = toTitleCase(children);
+import { ReactNode } from 'react'
+
+export interface PostTitleProps {
+  children?: ReactNode;
+  className?: string;
+  as?: 'h1' | 'h2' | 'h3';
+}
+
+export default function PostTitle({ children, className = '', as: Component = 'h1' }: PostTitleProps) {
+  if (!children) return null;
+
   return (
-    <h1
-      style={{
-        fontFamily: 'var(--font-dm-sans), sans-serif',
-        fontWeight: 800,
-        fontSize: "clamp(1.375rem, 5vw, 2.625rem)",   /* 22px → 42px, smooth across all screens */
-        lineHeight: "1.25",
-        letterSpacing: "-0.011em",
-        color: "#111827",
-        margin: "0.5rem 0 1.25rem 0",
-      }}
+    <Component
+      className={	ext-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-tight md:leading-none mb-6 text-center md:text-left }
+      dangerouslySetInnerHTML={typeof children === 'string' ? { __html: children } : undefined}
     >
-      {finalString}
-    </h1>
-  );
+      {typeof children !== 'string' ? children : null}
+    </Component>
+  )
 }
