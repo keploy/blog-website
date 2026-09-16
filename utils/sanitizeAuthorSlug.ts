@@ -1,14 +1,23 @@
 /**
- * Sanitizes an author name to create a URL-safe slug.
- * Converts to lowercase, replaces whitespace with dashes,
- * and strips non-alphanumeric characters.
- * @param authorName - The author name to sanitize
- * @returns A sanitized slug (lowercase, URL-safe)
+ * Sanitizes author and tag slugs for URL routing.
  */
-import { sanitizeStringForURL } from "./sanitizeStringForUrl";
-
-export function sanitizeAuthorSlug(authorName: string): string {
-  if (!authorName) return "";
-  return sanitizeStringForURL(authorName, true);
+export function sanitizeAuthorSlug(name: string): string {
+  if (!name) return '';
+  return encodeURIComponent(
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9\-]/g, '')
+  );
 }
 
+export function sanitizeTagSlug(tag: string): string {
+  if (!tag) return '';
+  return encodeURIComponent(
+    tag
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+  );
+}
