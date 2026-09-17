@@ -1,8 +1,19 @@
 import PostPreview from './post-preview'
 
-export default function MoreStories({ posts }) {
-  console.log(posts);
+export interface MoreStoriesProps {
+  posts: Array<{
+    node: {
+      slug: string;
+      title: string;
+      featuredImage?: any;
+      date: string;
+      author?: any;
+      excerpt?: string;
+    };
+  }>;
+}
 
+export default function MoreStories({ posts }: MoreStoriesProps) {
   return (
     <section>
       <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight">
