@@ -14,14 +14,23 @@ import Tags from '../../components/tags'
 import { getAllPostsWithSlug, getPostAndMorePosts } from '../../lib/api'
 import { CMS_NAME } from '../../lib/constants'
 
-export default function Post({ post, posts, preview }) {
+export interface PostSlugProps {
+  post: any
+  posts?: {
+    edges?: any[]
+  }
+  preview?: boolean
+}
+
+export default function Post({ post, posts, preview }: PostSlugProps) {
   const router = useRouter()
-  const morePosts = posts?.edges
-  console.log();
+  const morePosts = posts?.edges || []
 
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />
   }
+
+  const tagsEdges = post?.tags?.edges || []
 
   return (
     <Layout preview={preview}>
@@ -34,23 +43,23 @@ export default function Post({ post, posts, preview }) {
             <article>
               <Head>
                 <title>
-                  {`${post.title} | Next.js Blog Example with ${CMS_NAME}`}
+                  {`${post?.title || ''} | Next.js Blog Example with ${CMS_NAME}`}
                 </title>
                 <meta
                   property="og:image"
-                  content={post.featuredImage?.node.sourceUrl}
+                  content={post?.featuredImage?.node?.sourceUrl}
                 />
               </Head>
               <PostHeader
-                title={post.title}
-                coverImage={post.featuredImage}
-                date={post.date}
-                author={post.author}
-                categories={post.categories}
+                title={post?.title}
+                coverImage={post?.featuredImage}
+                date={post?.date}
+                author={post?.author}
+                categories={post?.categories}
               />
-              <PostBody content={post.content} />
+              <PostBody content={post?.content} />
               <footer>
-                {post.tags.edges.length > 0 && <Tags tags={post.tags} />}
+                {tagsEdges.length > 0 && <Tags tags={post.tags} />}
               </footer>
             </article>
 
@@ -73,8 +82,8 @@ export const getStaticProps: GetStaticProps = async ({
   return {
     props: {
       preview,
-      post: data.post,
-      posts: data.posts,
+      post: data?.post || null,
+      posts: data?.posts || null,
     },
     revalidate: 10,
   }
@@ -82,9 +91,11 @@ export const getStaticProps: GetStaticProps = async ({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allPosts = await getAllPostsWithSlug()
+  const edges = allPosts?.edges || []
 
   return {
-    paths: allPosts.edges.map(({ node }) => `/posts/${node.slug}`) || [],
+    paths: edges.map(({ node }: any) => `/posts/${node.slug}`) || [],
     fallback: true,
   }
 }
+
