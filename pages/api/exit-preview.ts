@@ -1,10 +1,17 @@
-import { NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function exit(_, res: NextApiResponse) {
-  // Exit Draft Mode by removing the cookie
-  res.setDraftMode({ enable: false })
+export default async function exit(
+  _req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (typeof res.clearPreviewData === 'function') {
+    res.clearPreviewData()
+  }
 
-  // Redirect the user back to the index page.
+  if (typeof (res as any).setDraftMode === 'function') {
+    ;(res as any).setDraftMode({ enable: false })
+  }
+
   res.writeHead(307, { Location: '/' })
   res.end()
 }
