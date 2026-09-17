@@ -3,19 +3,40 @@ import Date from './date'
 import CoverImage from './cover-image'
 import Link from 'next/link'
 
+export interface PostPreviewProps {
+  title: string
+  coverImage?: {
+    node?: {
+      sourceUrl?: string
+    }
+  }
+  date?: string
+  excerpt?: string
+  author?: {
+    node?: {
+      name?: string
+      firstName?: string
+      lastName?: string
+      avatar?: {
+        url?: string
+      }
+    }
+  }
+  slug: string
+}
+
 export default function PostPreview({
   title,
   coverImage,
   date,
-  excerpt,
   author,
   slug,
-}) {
+}: PostPreviewProps) {
   return (
     <div>
       <div className="mb-5">
-        {coverImage && (
-          <CoverImage title={title} coverImage={coverImage} slug={slug} />
+        {coverImage?.node?.sourceUrl && (
+          <CoverImage title={title} coverImage={coverImage as any} slug={slug} />
         )}
       </div>
       <h3 className="text-2xl mb-3 leading-snug heading1 font-bold">
