@@ -1,7 +1,20 @@
-import Avatar from './avatar'
-import Date from './date'
-import CoverImage from './cover-image'
+import Avatar, { AvatarAuthor } from './avatar'
+import DateComponent from './date'
+import CoverImage, { CoverImageNode } from './cover-image'
 import Link from 'next/link'
+
+export interface PostPreviewProps {
+  title: string
+  coverImage?: {
+    node?: CoverImageNode
+  }
+  date: string
+  excerpt?: string
+  author?: {
+    node?: AvatarAuthor
+  }
+  slug: string
+}
 
 export default function PostPreview({
   title,
@@ -10,32 +23,35 @@ export default function PostPreview({
   excerpt,
   author,
   slug,
-}) {
+}: PostPreviewProps) {
   return (
-    <div>
+    <article className="flex flex-col h-full">
       <div className="mb-5">
-        {coverImage && (
-          <CoverImage title={title} coverImage={coverImage} slug={slug} />
-        )}
+        <CoverImage title={title} coverImage={coverImage} slug={slug} />
       </div>
-      <h3 className="text-2xl mb-3 leading-snug heading1 font-bold">
+      <h3 className="text-3xl mb-3 leading-snug">
         <Link
           href={`/posts/${slug}`}
-          className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_10px] group-hover:bg-[length:100%_10px]"
-          dangerouslySetInnerHTML={{ __html: title }}
-        ></Link>
+          className="hover:underline"
+          dangerouslySetInnerHTML={title ? { __html: title } : undefined}
+        >
+          {!title ? 'Untitled' : null}
+        </Link>
       </h3>
-      <div className="flex items-center gap-4">
-      <Avatar author={author} />
-      <div className="divider bg-orange-700 h-1 w-1 rounded-full"></div>
-      <div className="text-md mb-4 pt-4">
-        <Date dateString={date} />
+      <div className="text-lg mb-4 text-accent-7">
+        <DateComponent dateString={date} />
       </div>
-      </div>
-      {/* <div
-        className="text-lg leading-normal mb-4 body"
-        dangerouslySetInnerHTML={{ __html: excerpt }}
-      /> */}
-    </div>
+      {excerpt && (
+        <div
+          className="text-lg leading-relaxed mb-4 flex-grow text-accent-8"
+          dangerouslySetInnerHTML={{ __html: excerpt }}
+        />
+      )}
+      {author?.node && (
+        <div className="mt-auto pt-2">
+          <Avatar author={author.node} />
+        </div>
+      )}
+    </article>
   )
 }
