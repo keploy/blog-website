@@ -3,20 +3,42 @@ import Date from "./date";
 import CoverImage from "./cover-image";
 import Link from "next/link";
 
+export interface HeroPostProps {
+  title: string
+  coverImage?: {
+    node?: {
+      sourceUrl?: string
+    }
+  }
+  date?: string
+  excerpt?: string
+  author?: {
+    node?: {
+      name?: string
+      firstName?: string
+      lastName?: string
+      avatar?: {
+        url?: string
+      }
+    }
+  }
+  slug: string
+}
+
 export default function HeroPost({
   title,
   coverImage,
   date,
-  excerpt,
+  excerpt = '',
   author,
   slug,
-}) {
+}: HeroPostProps) {
   return (
     <section>
       <div className="lg:grid lg:grid-cols-2 lg:gap-x-16 mb-20 md:mb-28">
         <div className="mb-8 md:mb-16">
-          {coverImage && (
-            <CoverImage title={title} coverImage={coverImage} slug={slug} />
+          {coverImage?.node?.sourceUrl && (
+            <CoverImage title={title} coverImage={coverImage as any} slug={slug} priority={true} />
           )}
         </div>
         <div className="">
