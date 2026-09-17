@@ -1,10 +1,16 @@
+import cn from 'classnames'
 import { CMS_NAME, CMS_URL } from '../lib/constants'
 
-export default function Intro() {
+export interface IntroProps {
+  title?: string;
+  className?: string;
+}
+
+export default function Intro({ title = 'Blog.', className }: IntroProps = {}) {
   return (
-    <section className="flex-col md:flex-row flex items-center md:justify-between mt-16 mb-16 md:mb-12">
+    <section className={cn("flex-col md:flex-row flex items-center md:justify-between mt-16 mb-16 md:mb-12", className)}>
       <h1 className="text-6xl md:text-8xl font-bold tracking-tighter leading-tight md:pr-8">
-        Blog.
+        {title}
       </h1>
       {/* <h4 className="text-center md:text-left text-lg mt-5 md:pl-8">
         A statically generated blog example using{' '}
