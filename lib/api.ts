@@ -1,12 +1,78 @@
 const API_URL = process.env.WORDPRESS_API_URL
 
-async function fetchAPI(query = '', { variables }: Record<string, any> = {}) {
-  const headers = { 'Content-Type': 'application/json' }
+export interface WPAuthor {
+  name?: string
+  firstName?: string
+  lastName?: string
+  avatar?: {
+    url?: string
+  }
+}
+
+export interface WPCategory {
+  node: {
+    name: string
+  }
+}
+
+export interface WPTag {
+  node: {
+    name: string
+  }
+}
+
+export interface WPFeaturedImage {
+  node: {
+    sourceUrl: string
+  }
+}
+
+export interface WPPostNode {
+  title?: string
+  excerpt?: string
+  slug?: string
+  date?: string
+  databaseId?: number | string
+  status?: string
+  content?: string
+  featuredImage?: WPFeaturedImage
+  author?: {
+    node?: WPAuthor
+  }
+  categories?: {
+    edges?: WPCategory[]
+  }
+  tags?: {
+    edges?: WPTag[]
+  }
+}
+
+export interface WPPostsConnection {
+  edges: Array<{
+    node: WPPostNode
+  }>
+}
+
+export interface PreviewDataPost {
+  id?: number | string
+  slug?: string
+  status?: string
+}
+
+async function fetchAPI(
+  query = '',
+  { variables }: { variables?: Record<string, any> } = {}
+) {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
 
   if (process.env.WORDPRESS_AUTH_REFRESH_TOKEN) {
     headers[
       'Authorization'
     ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`
+  }
+
+  if (!API_URL) {
+    throw new Error('WORDPRESS_API_URL environment variable is not defined')
   }
 
   // WPGraphQL Plugin must be enabled
@@ -27,7 +93,10 @@ async function fetchAPI(query = '', { variables }: Record<string, any> = {}) {
   return json.data
 }
 
-export async function getPreviewPost(id, idType = 'DATABASE_ID') {
+export async function getPreviewPost(
+  id: string | number | string[] | undefined,
+  idType: 'DATABASE_ID' | 'SLUG' = 'DATABASE_ID'
+): Promise<WPPostNode | undefined> {
   const data = await fetchAPI(
     `
     query PreviewPost($id: ID!, $idType: PostIdType!) {
@@ -41,10 +110,10 @@ export async function getPreviewPost(id, idType = 'DATABASE_ID') {
       variables: { id, idType },
     }
   )
-  return data.post
+  return data?.post
 }
 
-export async function getAllPostsWithSlug() {
+export async function getAllPostsWithSlug(): Promise<WPPostsConnection | undefined> {
   const data = await fetchAPI(`
     {
       posts(first: 10000) {
@@ -59,7 +128,10 @@ export async function getAllPostsWithSlug() {
   return data?.posts
 }
 
-export async function getAllPostsForHome(preview) {
+export async function getAllPostsForHome(
+  preview?: boolean
+): Promise<WPPostsConnection | undefined> {
+
   const data = await fetchAPI(
     `
     query AllPosts {
@@ -104,9 +176,10 @@ export async function getAllPostsForHome(preview) {
 }
 
 
-// Fnction for fetching post with technology category
-
-export async function getAllPostsForTechnology(preview) {
+// Function for fetching post with technology category
+export async function getAllPostsForTechnology(
+  preview?: boolean
+): Promise<WPPostsConnection | undefined> {
   const data = await fetchAPI(
     `
     query AllPostsForCategory{
@@ -154,17 +227,21 @@ export async function getAllPostsForTechnology(preview) {
   return data?.posts
 }
 
-
-export async function getPostAndMorePosts(slug, preview, previewData) {
+export async function getPostAndMorePosts(
+  slug: string | number | string[] | undefined,
+  preview?: boolean,
+  previewData?: { post?: PreviewDataPost }
+): Promise<{ post: WPPostNode; posts: WPPostsConnection }> {
   const postPreview = preview && previewData?.post
   // The slug may be the id of an unpublished post
   const isId = Number.isInteger(Number(slug))
   const isSamePost = isId
-    ? Number(slug) === postPreview.id
-    : slug === postPreview.slug
+    ? Number(slug) === postPreview?.id
+    : slug === postPreview?.slug
   const isDraft = isSamePost && postPreview?.status === 'draft'
   const isRevision = isSamePost && postPreview?.status === 'publish'
   const data = await fetchAPI(
+
     `
     fragment AuthorFields on User {
       name
