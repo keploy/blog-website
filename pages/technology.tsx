@@ -3,37 +3,35 @@ import { GetStaticProps } from 'next'
 import Container from '../components/container'
 import MoreStories from '../components/more-stories'
 import HeroPost from '../components/hero-post'
-import Intro from '../components/intro'
 import Layout from '../components/layout'
 import { getAllPostsForTechnology } from '../lib/api'
-import { CMS_NAME } from '../lib/constants'
 import Header from '../components/header'
+import { IndexProps } from './index'
 
-export default function Technology({ allPosts: { edges }, preview }) {
+export interface TechnologyProps extends IndexProps {}
+
+export default function Technology({ allPosts, preview = false }: TechnologyProps) {
+  const edges = allPosts?.edges ?? []
   const heroPost = edges[0]?.node
-  const excerpt = getExcerpt(edges[0]?.node.excerpt); 
-  const morePosts = edges.slice(1) 
+  const excerpt = getExcerpt(heroPost?.excerpt)
+  const morePosts = edges.slice(1)
 
-  function getExcerpt(content) {
-    const maxWords = 50;
-    // Split the content into an array of words
-    const words = content.split(' ');
-  
-    // Ensure the excerpt does not exceed the maximum number of words
+  function getExcerpt(content?: string) {
+    if (!content) return ''
+    const maxWords = 50
+    const words = content.split(' ')
     if (words.length > maxWords) {
-      return words.slice(0, maxWords).join(' ') + '...';
+      return words.slice(0, maxWords).join(' ') + '...'
     }
-  
-    return content;
+    return content
   }
 
   return (
     <Layout preview={preview}>
       <Head>
-        <title>{`Keploy`}</title>
+        <title>Keploy Technology Blog</title>
       </Head>
       <Container>
-        {/* <Intro /> */}
         <Header />
         {heroPost && (
           <HeroPost
@@ -55,7 +53,7 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   const allPosts = await getAllPostsForTechnology(preview)
 
   return {
-    props: { allPosts, preview },
+    props: { allPosts: allPosts ?? { edges: [] }, preview },
     revalidate: 10,
   }
 }
