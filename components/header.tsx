@@ -1,8 +1,13 @@
 "use client"
 import Link from 'next/link'
 import { useState } from 'react'
+import cn from 'classnames'
 
-export default function Header() {
+export interface HeaderProps {
+  className?: string;
+}
+
+export default function Header({ className }: HeaderProps = {}) {
 
   const [ToggleMenu, setToggleMenu] = useState(false);
 
@@ -17,7 +22,7 @@ export default function Header() {
     //   </Link>
     //   .
     // </h2>
-    <div className="header-container mb-20 mt-8 flex justify-between">
+    <div className={cn("header-container mb-20 mt-8 flex justify-between", className)}>
       <Link href={"https://keploy.io/"} className="logo w-40 relative z-20">
         <img src="/images/sidebyside-transparent.svg" alt="" />
       </Link>
