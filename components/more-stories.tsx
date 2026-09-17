@@ -1,7 +1,37 @@
 import PostPreview from './post-preview'
 
-export default function MoreStories({ posts }) {
-  console.log(posts);
+export interface PostNode {
+  node: {
+    title: string
+    featuredImage?: {
+      node?: {
+        sourceUrl?: string
+      }
+    }
+    date?: string
+    author?: {
+      node?: {
+        name?: string
+        firstName?: string
+        lastName?: string
+        avatar?: {
+          url?: string
+        }
+      }
+    }
+    slug: string
+    excerpt?: string
+  }
+}
+
+export interface MoreStoriesProps {
+  posts?: PostNode[]
+}
+
+export default function MoreStories({ posts }: MoreStoriesProps) {
+  if (!posts || posts.length === 0) {
+    return null
+  }
 
   return (
     <section>
