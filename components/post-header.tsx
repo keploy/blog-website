@@ -4,13 +4,21 @@ import CoverImage from './cover-image'
 import PostTitle from './post-title'
 import Categories from './categories'
 
+export interface PostHeaderProps {
+  title: string;
+  coverImage?: any;
+  date: string;
+  author?: any;
+  categories?: any;
+}
+
 export default function PostHeader({
   title,
   coverImage,
   date,
   author,
   categories,
-}) {
+}: PostHeaderProps) {
   return (
     <>
       <PostTitle>{title}</PostTitle>
