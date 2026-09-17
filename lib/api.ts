@@ -1,12 +1,19 @@
 const API_URL = process.env.WORDPRESS_API_URL
 
-async function fetchAPI(query = '', { variables }: Record<string, any> = {}) {
-  const headers = { 'Content-Type': 'application/json' }
+export interface FetchAPIOptions {
+  variables?: Record<string, any>
+}
+
+async function fetchAPI(query = '', { variables }: FetchAPIOptions = {}) {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
 
   if (process.env.WORDPRESS_AUTH_REFRESH_TOKEN) {
-    headers[
-      'Authorization'
-    ] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`
+    headers['Authorization'] = `Bearer ${process.env.WORDPRESS_AUTH_REFRESH_TOKEN}`
+  }
+
+  if (!API_URL) {
+    console.warn('WORDPRESS_API_URL is not defined in environment variables.')
+    return {}
   }
 
   // WPGraphQL Plugin must be enabled
@@ -27,7 +34,7 @@ async function fetchAPI(query = '', { variables }: Record<string, any> = {}) {
   return json.data
 }
 
-export async function getPreviewPost(id, idType = 'DATABASE_ID') {
+export async function getPreviewPost(id: string | number, idType = 'DATABASE_ID') {
   const data = await fetchAPI(
     `
     query PreviewPost($id: ID!, $idType: PostIdType!) {
@@ -41,7 +48,7 @@ export async function getPreviewPost(id, idType = 'DATABASE_ID') {
       variables: { id, idType },
     }
   )
-  return data.post
+  return data?.post
 }
 
 export async function getAllPostsWithSlug() {
@@ -56,10 +63,10 @@ export async function getAllPostsWithSlug() {
       }
     }
   `)
-  return data?.posts
+  return data?.posts ?? { edges: [] }
 }
 
-export async function getAllPostsForHome(preview) {
+export async function getAllPostsForHome(preview = false) {
   const data = await fetchAPI(
     `
     query AllPosts {
@@ -100,16 +107,14 @@ export async function getAllPostsForHome(preview) {
     }
   )
 
-  return data?.posts
+  return data?.posts ?? { edges: [] }
 }
 
-
-// Fnction for fetching post with technology category
-
-export async function getAllPostsForTechnology(preview) {
+// Function for fetching post with technology category
+export async function getAllPostsForTechnology(preview = false) {
   const data = await fetchAPI(
     `
-    query AllPostsForCategory{
+    query AllPostsForCategory {
       posts(first: 20, where: { orderby: { field: DATE, order: DESC } categoryName: "technology" }) {
         edges {
           node {
@@ -149,19 +154,18 @@ export async function getAllPostsForTechnology(preview) {
         preview,
       },
     }
-  );
+  )
 
-  return data?.posts
+  return data?.posts ?? { edges: [] }
 }
 
-
-export async function getPostAndMorePosts(slug, preview, previewData) {
+export async function getPostAndMorePosts(slug?: string | string[], preview = false, previewData?: any) {
   const postPreview = preview && previewData?.post
   // The slug may be the id of an unpublished post
   const isId = Number.isInteger(Number(slug))
   const isSamePost = isId
-    ? Number(slug) === postPreview.id
-    : slug === postPreview.slug
+    ? Number(slug) === postPreview?.id
+    : slug === postPreview?.slug
   const isDraft = isSamePost && postPreview?.status === 'draft'
   const isRevision = isSamePost && postPreview?.status === 'publish'
   const data = await fetchAPI(
@@ -209,7 +213,6 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
         ...PostFields
         content
         ${
-          // Only some of the fields of a revision are considered as there are some inconsistencies
           isRevision
             ? `
         revisions(first: 1, where: { orderby: { field: MODIFIED, order: DESC } }) {
@@ -241,26 +244,30 @@ export async function getPostAndMorePosts(slug, preview, previewData) {
   `,
     {
       variables: {
-        id: isDraft ? postPreview.id : slug,
+        id: isDraft ? postPreview?.id : slug,
         idType: isDraft ? 'DATABASE_ID' : 'SLUG',
       },
     }
   )
 
-  // Draft posts may not have an slug
-  if (isDraft) data.post.slug = postPreview.id
-  // Apply a revision (changes in a published post)
-  if (isRevision && data.post.revisions) {
-    const revision = data.post.revisions.edges[0]?.node
+  if (!data) {
+    return { post: null, posts: { edges: [] } }
+  }
 
+  // Draft posts may not have a slug
+  if (isDraft && data.post) data.post.slug = postPreview.id
+  // Apply a revision (changes in a published post)
+  if (isRevision && data.post?.revisions) {
+    const revision = data.post.revisions.edges[0]?.node
     if (revision) Object.assign(data.post, revision)
     delete data.post.revisions
   }
 
   // Filter out the main post
-  data.posts.edges = data.posts.edges.filter(({ node }) => node.slug !== slug)
-  // If there are still 3 posts, remove the last one
-  if (data.posts.edges.length > 2) data.posts.edges.pop()
+  if (data.posts?.edges) {
+    data.posts.edges = data.posts.edges.filter(({ node }: any) => node.slug !== slug)
+    if (data.posts.edges.length > 2) data.posts.edges.pop()
+  }
 
   return data
 }
