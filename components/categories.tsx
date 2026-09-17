@@ -1,16 +1,34 @@
-export default function Categories({ categories }) {
+export interface CategoryNode {
+  name: string
+  slug?: string
+}
+
+export interface CategoryEdge {
+  node: CategoryNode
+}
+
+export interface CategoriesProps {
+  categories?: {
+    edges?: CategoryEdge[]
+  }
+  className?: string
+}
+
+export default function Categories({ categories, className }: CategoriesProps) {
+  const edges = categories?.edges || []
+  if (edges.length === 0) {
+    return null
+  }
+
   return (
-    <span className="ml-1">
+    <span className={`ml-1 ${className || ''}`}>
       under
-      {categories.edges.length > 0 ? (
-        categories.edges.map((category, index) => (
-          <span key={index} className="ml-1">
-            {category.node.name}
-          </span>
-        ))
-      ) : (
-        <span className="ml-1">{categories.edges.node.name}</span>
-      )}
+      {edges.map((category, index) => (
+        <span key={index} className="ml-1">
+          {category?.node?.name}
+        </span>
+      ))}
     </span>
   )
 }
+
