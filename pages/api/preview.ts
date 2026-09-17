@@ -7,25 +7,29 @@ export default async function preview(
 ) {
   const { secret, id, slug } = req.query
 
-  // Check the secret and next parameters
-  // This secret should only be known by this API route
+  const secretVal = Array.isArray(secret) ? secret[0] : secret
+  const idVal = Array.isArray(id) ? id[0] : id
+  const slugVal = Array.isArray(slug) ? slug[0] : slug
+
   if (
     !process.env.WORDPRESS_PREVIEW_SECRET ||
-    secret !== process.env.WORDPRESS_PREVIEW_SECRET ||
-    (!id && !slug)
+    secretVal !== process.env.WORDPRESS_PREVIEW_SECRET ||
+    (!idVal && !slugVal)
   ) {
     return res.status(401).json({ message: 'Invalid token' })
   }
 
-  // Fetch WordPress to check if the provided `id` or `slug` exists
-  const post = await getPreviewPost(id || slug, id ? 'DATABASE_ID' : 'SLUG')
-
-  // If the post doesn't exist prevent preview mode from being enabled
-  if (!post) {
-    return res.status(401).json({ message: 'Post not found' })
+  const targetIdentifier = idVal || slugVal
+  if (!targetIdentifier) {
+    return res.status(400).json({ message: 'Missing target identifier' })
   }
 
-  // Enable Preview Mode by setting the cookies
+  const post = await getPreviewPost(targetIdentifier, idVal ? 'DATABASE_ID' : 'SLUG')
+
+  if (!post) {
+    return res.status(404).json({ message: 'Post not found' })
+  }
+
   res.setPreviewData({
     post: {
       id: post.databaseId,
@@ -34,8 +38,6 @@ export default async function preview(
     },
   })
 
-  // Redirect to the path from the fetched post
-  // We don't redirect to `req.query.slug` as that might lead to open redirect vulnerabilities
   res.writeHead(307, { Location: `/posts/${post.slug || post.databaseId}` })
   res.end()
 }
