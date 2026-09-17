@@ -2,23 +2,30 @@ import cn from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
 
-interface Props {
+export interface CoverImageProps {
   title: string
-  coverImage: {
-    node: {
-      sourceUrl: string
+  coverImage?: {
+    node?: {
+      sourceUrl?: string
     }
   }
   slug?: string
+  priority?: boolean
 }
 
-export default function CoverImage({ title, coverImage, slug }: Props) {
+export default function CoverImage({ title, coverImage, slug, priority = false }: CoverImageProps) {
+  const imageUrl = coverImage?.node?.sourceUrl
+  if (!imageUrl) {
+    return null
+  }
+
   const image = (
     <Image
       width={2000}
       height={1000}
       alt={`Cover Image for ${title}`}
-      src={coverImage?.node.sourceUrl}
+      src={imageUrl}
+      priority={priority}
       className={cn('shadow-small rounded-xl hover:rounded-3xl transition-border duration-300', {
         'hover:scale-105  transition-scale duration-300': slug,
       })}
