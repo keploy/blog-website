@@ -1,3 +1,8 @@
-export default function SectionSeparator() {
-  return <hr className="border-accent-2 mt-28 mb-24" />
+export interface SectionSeparatorProps {
+  className?: string
 }
+
+export default function SectionSeparator({ className }: SectionSeparatorProps) {
+  return <hr className={`border-accent-2 mt-28 mb-24 ${className || ''}`} />
+}
+
