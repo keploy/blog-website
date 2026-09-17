@@ -9,12 +9,28 @@ import { getAllPostsForHome } from '../lib/api'
 import { CMS_NAME } from '../lib/constants'
 import Header from '../components/header'
 
-export default function Index({ allPosts: { edges }, preview }) {
+export interface IndexProps {
+  allPosts: {
+    edges: Array<{
+      node: {
+        title: string;
+        featuredImage?: any;
+        date: string;
+        author?: any;
+        slug: string;
+        excerpt?: string;
+      };
+    }>;
+  };
+  preview?: boolean;
+}
+
+export default function Index({ allPosts: { edges }, preview }: IndexProps) {
   const heroPost = edges[0]?.node
-  const excerpt = getExcerpt(edges[0]?.node.excerpt); 
+  const excerpt = getExcerpt(edges[0]?.node.excerpt || ''); 
   const morePosts = edges.slice(1) 
 
-  function getExcerpt(content) {
+  function getExcerpt(content: string) {
     const maxWords = 50;
     // Split the content into an array of words
     const words = content.split(' ');
