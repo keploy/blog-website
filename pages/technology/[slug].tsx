@@ -32,6 +32,7 @@ import {
   SITE_URL,
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
+import { extractAuthorBio } from "../../lib/author-box";
 import { getHowToSchema } from "../../lib/howToSchema";
 import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/contentSchema";
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
@@ -82,14 +83,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const ppmaSchemaImage = /^https?:\/\//i.test(rawPpmaImage) ? rawPpmaImage : undefined;
 
   // Writer description — extract synchronously from post content (no effect).
-  const writerDescriptionMatch =
-    post?.content?.match(
-      /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i,
-    );
-  const blogWriterDescription =
-    writerDescriptionMatch && writerDescriptionMatch[1]?.trim().length > 0
-      ? writerDescriptionMatch[1].trim()
-      : "An author for Keploy's blog.";
+  // realWriterBio is the actual author-box bio (or undefined); it feeds the
+  // schema's "real bio only" guard so the generic UI fallback never enters JSON-LD.
+  const realWriterBio = extractAuthorBio(post?.content);
+  const blogWriterDescription = realWriterBio ?? "An author for Keploy's blog.";
 
   // Back-compat alias for any downstream reference to avatarImgSrc.
   const avatarImgSrc = writerAvatarUrl;
@@ -170,6 +167,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         authorName: post?.ppmaAuthorName,
         // LIVE-22: use PublishPress author image, not the placeholder.
         authorImage: ppmaSchemaImage,
+        // E-E-A-T author bio → Person.description. Only the real extracted bio;
+        // the generic "An author for Keploy's blog." fallback is never emitted
+        // into schema (the "never fabricate" rule from the A1/AI1 schema work).
+        authorDescription: realWriterBio,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Technology",
         // GEO-13: mark this as TechArticle (more specific than BlogPosting
         // for developer content). AI models weight TechArticle higher

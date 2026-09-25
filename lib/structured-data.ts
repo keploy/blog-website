@@ -81,6 +81,13 @@ type BlogPostingInput = {
    * can use to render a real author photo in rich results.
    */
   authorImage?: string;
+  /**
+   * E-E-A-T author bio (from the PublishPress author box). Sanitized here and
+   * emitted as the per-post author Person.description — the stub that merges
+   * (via @id) with the enriched author-page Person. Pass only the real bio,
+   * never the generic fallback, per the "never fabricate" schema rule.
+   */
+  authorDescription?: string;
   articleSection?: string;
   /**
    * WordPress category slug. When "technology", emit TechArticle
@@ -388,6 +395,7 @@ export const getBlogPostingSchema = ({
   imageUrl,
   authorName,
   authorImage,
+  authorDescription,
   articleSection,
   categorySlug,
   dependencies,
@@ -435,6 +443,10 @@ export const getBlogPostingSchema = ({
   if (authorImage && !authorImage.includes(AUTHOR_AVATAR_FILE)) {
     authorNode.image = authorImage;
   }
+  // E-E-A-T bio on the per-post author stub (decodeEntities strips the WP
+  // author-box markup and is script-safe). Only emit when real text survives.
+  const cleanAuthorBio = authorDescription ? decodeEntities(authorDescription) : "";
+  if (cleanAuthorBio) authorNode.description = cleanAuthorBio;
 
   // Resolve dates from the post's own values only — never invent one. An
   // earlier version fell back to `new Date()`, but this builder runs in the
@@ -740,6 +752,12 @@ type PersonInput = {
   sameAs?: string[];
   jobTitle?: string;
   knowsAbout?: string[];
+  /**
+   * E-E-A-T author bio (from the PublishPress author box). Sanitized here and
+   * emitted as Person.description. Pass only a real bio — never a generic
+   * placeholder — so the "author bio" GEO signal reflects actual content.
+   */
+  description?: string;
 };
 
 /**
@@ -756,6 +774,7 @@ export const getPersonSchema = ({
   sameAs,
   jobTitle = "Author",
   knowsAbout = AUTHOR_KNOWS_ABOUT,
+  description,
 }: PersonInput) => {
   const node: Record<string, unknown> = {
     "@type": "Person",
@@ -774,6 +793,10 @@ export const getPersonSchema = ({
   if (knowsAbout && knowsAbout.length) node.knowsAbout = knowsAbout;
   if (image) node.image = image;
   if (sameAs && sameAs.length) node.sameAs = sameAs;
+  // decodeEntities also strips tags (the WP author box wraps the bio in markup)
+  // and is script-safe. Only emit when real text survives.
+  const cleanBio = description ? decodeEntities(description) : "";
+  if (cleanBio) node.description = cleanBio;
   return node;
 };
 

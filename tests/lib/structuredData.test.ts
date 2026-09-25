@@ -22,6 +22,7 @@ import {
   getSearchResultsPageSchema,
   getItemListSchema,
   getReviewSchema,
+  getPersonSchema,
   getSoftwareApplicationSchema,
   ORG_ID,
   BLOG_ID,
@@ -130,6 +131,42 @@ test("description is stripped of HTML tags before entering the schema", () => {
   const desc = post.description as string;
   assert.ok(!/[<>]/.test(desc), "no raw HTML tags should remain");
   assert.ok(desc.includes("Hello world"), "text content is preserved");
+});
+
+test("getPersonSchema emits a tag-stripped Person.description when a bio is given", () => {
+  const person = getPersonSchema({
+    name: "Jane Doe",
+    url: "https://keploy.io/blog/authors/jane-doe",
+    description: "<p>Staff engineer at <a href='#'>Keploy</a> &amp; API-testing nerd.</p>",
+  });
+  const desc = person.description as string;
+  assert.ok(!/[<>]/.test(desc), "no raw HTML tags should remain in the bio");
+  assert.ok(desc.includes("Staff engineer at Keploy"), "bio text is preserved");
+});
+
+test("getPersonSchema omits description when no bio is provided (never fabricated)", () => {
+  const person = getPersonSchema({
+    name: "Jane Doe",
+    url: "https://keploy.io/blog/authors/jane-doe",
+  });
+  assert.ok(!("description" in person), "no bio → no description slot");
+});
+
+test("a post author carries a tag-stripped description when authorDescription is set", () => {
+  const post = getBlogPostingSchema({
+    title: "Bio post",
+    url: "https://keploy.io/blog/community/bio",
+    datePublished: "2024-01-02",
+    authorName: "Jane Doe",
+    authorDescription: "<p>Builds developer tools.</p>",
+  });
+  const author = post.author as Record<string, unknown>;
+  assert.equal(author.description, "Builds developer tools.");
+});
+
+test("a post author omits description when no authorDescription is provided", () => {
+  const author = nullPost.author as Record<string, unknown>;
+  assert.ok(!("description" in author), "no author bio → no description slot");
 });
 
 test("publisher and the Organization node share one stable @id", () => {
