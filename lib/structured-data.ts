@@ -43,7 +43,7 @@ export const DEFAULT_ARTICLE_IMAGE_URL =
 // fallback ("Keploy") produced a URL-less Person, a weaker E-E-A-T signal.
 export const AUTHOR_FALLBACK_NAME = "Keploy Team";
 export const SOCIAL_LINKS = [
-  "https://twitter.com/Keployio",
+  "https://x.com/keployio",
   "https://www.linkedin.com/company/keploy/",
   "https://www.youtube.com/@keploy",
   "https://www.instagram.com/keploy.io/",

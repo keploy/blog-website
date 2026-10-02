@@ -385,8 +385,8 @@ export const developersNav = {
         iconColor: "text-indigo-600",
       },
       {
-        title: "Twitter",
-        href: "https://twitter.com/keployio",
+        title: "X (Twitter)",
+        href: "https://x.com/keployio",
         icon: Library,
         iconColor: "text-violet-600",
       },
