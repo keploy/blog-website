@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-10-01</lastmod>
+    <lastmod>2026-10-02</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-10-01</lastmod>
+    <lastmod>2026-10-02</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -234,7 +234,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ai-in-software-testing</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-10-02</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/11/AI-Testing-A-Complete-Technical-Guide-to-Intelligent-Software-Quality.webp</image:loc>
