@@ -41,8 +41,14 @@ const ReviewCard = ({
   }, [proxiedAvatar]);
 
   return (
-    <a href={post} target="_blank" rel="noopener noreferrer" className="lg:mx-2" aria-label={`View tweet by ${name}`}>
-      <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
+    <a
+      href={post}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block lg:mx-2 cursor-pointer no-underline text-inherit transition-transform duration-200 hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 rounded-xl"
+      aria-label={`View tweet by ${name}`}
+    >
+      <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border p-4 border-gray-950/[.1] bg-white/80 backdrop-blur-sm hover:bg-white hover:shadow-md transition-all">
         <div className="flex flex-row items-center gap-2">
           <Image
             className="rounded-full"
@@ -59,11 +65,11 @@ const ReviewCard = ({
             }}
           />
           <div className="flex flex-col">
-            <figcaption className="text-sm font-bold">{name}</figcaption>
-            <p className="text-xs font-medium ">{id}</p>
+            <figcaption className="text-sm font-bold text-gray-900">{name}</figcaption>
+            <p className="text-xs font-medium text-gray-500">{id}</p>
           </div>
         </div>
-        <blockquote className="mt-2 text-sm">{content}</blockquote>
+        <blockquote className="mt-2 text-sm text-gray-700 leading-relaxed">{content}</blockquote>
       </figure>
     </a>
   );
@@ -103,14 +109,14 @@ const TwitterTestimonials = () => {
         className="relative flex mb-8 h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent marquee-mask"
       >
 
-        <Marquee paused={paused} pauseOnHover repeat={2} className="[--duration:17s]">
-          {firstRow.map((tweet) => (
-            <ReviewCard key={tweet.id} {...tweet} />
+        <Marquee paused={paused} pauseOnHover repeat={2} className="[--duration:25s]">
+          {firstRow.map((tweet, idx) => (
+            <ReviewCard key={`first-${tweet.id}-${idx}`} {...tweet} />
           ))}
         </Marquee>
-        <Marquee paused={paused} reverse pauseOnHover repeat={2} className="[--duration:17s]">
-          {secondRow.map((tweet) => (
-            <ReviewCard key={tweet.id} {...tweet} />
+        <Marquee paused={paused} reverse pauseOnHover repeat={2} className="[--duration:25s]">
+          {secondRow.map((tweet, idx) => (
+            <ReviewCard key={`second-${tweet.id}-${idx}`} {...tweet} />
           ))}
         </Marquee>
 
