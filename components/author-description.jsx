@@ -144,8 +144,7 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
           {authorDescription !== "n/a" && (
             <div>
               <span className="font-semibold">Author Description:</span>{" "}
-              {length > 0 ? (
-                <ul className="list-disc ml-5">
+              {length > 0 ? (\n                <ul className="list-disc ml-5">
                   {newAuthorDescription.map((item, index) => (
                     <li
                       key={index}
@@ -174,6 +173,8 @@ const AuthorDescription = ({ authorData, AuthorName, isPost }) => {
               <IoLogoLinkedin className="h-5 w-5 inline mr-1" />
               <Link
                 href={authorLinkedIn}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="heading1 text-slate-500 hover:underline"
               >
                 LinkedIn
