@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { S3_ASSET_BASE } from "../../lib/constants";
 import { GitHubStars } from "./github-stars";
 import { Vscode } from "./vscode-number";
-import { Menu, X, ChevronDown, ChevronRight, Search } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight, Search, Tag, Users, GitFork, Cloud, CodeXml, CircleDot, BookOpen, PenLine } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
@@ -18,6 +18,17 @@ const sideBySideSvg = `${S3_ASSET_BASE}/images/sidebyside-transparent.svg`;
 
 const glassDropdown =
   "relative overflow-hidden backdrop-blur-[60px] bg-gray-200/95 bg-gradient-to-br from-white/85 via-gray-200/95 to-gray-300/90 border border-gray-200/70 shadow-[0_22px_54px_rgba(15,23,42,0.22)]";
+
+const resourceLinks = [
+  { href: "/tag", title: "Tags", desc: "Explore blog posts by topics", icon: Tag },
+  { href: "/authors", title: "Authors", desc: "Browse articles from our writers", icon: Users },
+  { href: "https://github.com/keploy", title: "Keploy Integration Testing", desc: "Open-source testing infrastructure", icon: GitFork },
+  { href: "https://app.keploy.io", title: "Keploy API Testing Console", desc: "Run API tests in the cloud", icon: Cloud },
+  { href: "https://keploy.io/unit-test-generator", title: "Keploy Unit Testing Extension", desc: "Generate unit tests with mocks", icon: CodeXml },
+  { href: "https://keploy.io/docs/concepts/what-is-keploy/#step-1--record-unique-network-interactions-as-test-case", title: "Keploy Test Recorder", desc: "Record and replay API calls", icon: CircleDot },
+  { href: "https://keploy.io/docs", title: "Keploy Documentation", desc: "Guides, references, tutorials", icon: BookOpen },
+  { href: "https://www.writers.keploy.io/", title: "Writers Program", desc: "Be a part of the blog writing for Keploy", icon: PenLine },
+];
 
 // Reusable component for mobile category dropdown (Technology/Community)
 function MobileCategoryDropdown({
@@ -376,7 +387,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           </div>
           {resourcesOpen && (
             <div
-              className={`absolute z-[100] top-full left-0 pt-7 transform ${isScrolled ? '-translate-x-[25%]' : '-translate-x-[12%]'}`}
+              className={`absolute z-[100] top-full left-0 pt-7 transform -translate-x-1/2 ${isScrolled ? 'xl:-translate-x-[25%]' : 'xl:-translate-x-[12%]'}`}
               style={{
                 width: '780px',
                 maxWidth: isScrolled ? 'min(780px, calc(82vw - 6rem), 960px)' : 'min(780px, calc(96vw - 6rem), 1024px)'
@@ -384,28 +395,22 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
               onMouseEnter={() => { setResourcesOpen(true); setHoveredNav('resources'); }}
               onMouseLeave={() => { setResourcesOpen(false); setHoveredNav(null); }}
             >
-              <div className={`${glassDropdown} rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-gray-200/60`}>
+              <div className={`${glassDropdown} max-h-[calc(100vh-9rem)] overflow-y-auto rounded-[22px] p-6 animate-in fade-in slide-in-from-top-2 duration-200 border border-gray-200/60`}>
                 <div className="relative z-10 grid grid-cols-2 gap-3">
                   <div className="col-span-2 grid grid-cols-2 gap-3">
                     {/* Grid items with thin gradient borders + subtle shadows */}
-                    {[
-                      { href: "/tag", title: "Tags", desc: "Explore blog posts by topics" },
-                      { href: "/authors", title: "Authors", desc: "Browse articles from our writers" },
-                      { href: "https://github.com/keploy", title: "Keploy Integration Testing", desc: "Open-source testing infrastructure" },
-                      { href: "https://app.keploy.io", title: "Keploy API Testing Console", desc: "Run API tests in the cloud" },
-                      { href: "https://keploy.io/unit-test-generator", title: "Keploy Unit Testing Extension", desc: "Generate unit tests with mocks" },
-                      { href: "https://keploy.io/docs/concepts/what-is-keploy/#step-1--record-unique-network-interactions-as-test-case", title: "Keploy Test Recorder", desc: "Record and replay API calls" },
-                      { href: "https://keploy.io/docs", title: "Keploy Documentation", desc: "Guides, references, tutorials" },
-                      { href: "https://www.writers.keploy.io/", title: "Writers Program", desc: "Be a part of the blog writing for Keploy" },
-                    ].map((item, idx) => (
-                      <div key={idx} className="rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all">
+                    {resourceLinks.map((item) => (
+                      <div key={item.href} className="rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all">
                         <Link
                           href={item.href}
                           target={item.href.startsWith("http") ? "_blank" : undefined}
                           rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                          className="group relative block rounded-[calc(0.75rem-3px)] p-4 transition-all bg-white shadow-[0_6px_14px_rgba(0,0,0,0.10)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
+                          className="group relative flex h-full items-center gap-3 rounded-[calc(0.75rem-3px)] p-4 transition-all bg-white shadow-[0_6px_14px_rgba(0,0,0,0.10)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
                         >
-                          <div className="relative z-[1]">
+                          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-600 ring-1 ring-orange-100 transition-colors group-hover:bg-orange-100" aria-hidden="true">
+                            <item.icon className="h-6 w-6" />
+                          </span>
+                          <div className="relative z-[1] min-w-0">
                             <div className="text-[15px] font-semibold transition-colors group-hover:text-orange-600">{item.title}</div>
                             <div className="text-[12px] text-neutral-600 mt-1">{item.desc}</div>
                           </div>
@@ -571,82 +576,22 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                     <CollapsibleContent className="mt-2.5 space-y-2">
                       {/* Nested sub-items with visual hierarchy */}
                       <div className="space-y-2 border-l-2 border-neutral-200/40 pl-4 ml-2">
-                        <Link
-                          href="/tag"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
-                        >
-                          <span className="font-medium text-sm text-black/75">Tags</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                        </Link>
-                        <Link
-                          href="/authors"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
-                        >
-                          <span className="font-medium text-sm text-black/75">Authors</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                        </Link>
-                        <Link
-                          href="https://github.com/keploy"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
-                        >
-                          <span className="font-medium text-sm text-black/75">Keploy Integration Testing</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                        </Link>
-                        <Link
-                          href="https://app.keploy.io"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
-                        >
-                          <span className="font-medium text-sm text-black/75">Keploy API Testing Console</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                        </Link>
-                        <Link
-                          href="https://keploy.io/unit-test-generator"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
-                        >
-                          <span className="font-medium text-sm text-black/75">Keploy Unit Testing Extension</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                        </Link>
-                        <Link
-                          href="https://keploy.io/docs/concepts/what-is-keploy/#step-1--record-unique-network-interactions-as-test-case"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
-                        >
-                          <span className="font-medium text-sm text-black/75">Keploy Test Recorder</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                        </Link>
-                        <Link
-                          href="https://keploy.io/docs"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
-                        >
-                          <span className="font-medium text-sm text-black/75">Keploy Documentation</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                        </Link>
-                        <Link
-                          href="https://www.writers.keploy.io/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px]"
-                        >
-                          <span className="font-medium text-sm text-black/75">Writers Program</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                        </Link>
+                        {resourceLinks.map((item) => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            target={item.href.startsWith("http") ? "_blank" : undefined}
+                            rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="group flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white/60 ring-1 ring-neutral-200/50 hover:bg-white/80 hover:ring-orange-400/60 transition-all duration-200 shadow-sm hover:shadow-md min-h-[48px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+                          >
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-orange-600 ring-1 ring-orange-100 transition-colors group-hover:bg-orange-100" aria-hidden="true">
+                              <item.icon className="h-5 w-5" />
+                            </span>
+                            <span className="flex-1 min-w-0 font-medium text-sm text-black/75">{item.title}</span>
+                            <ChevronRight className="w-3.5 h-3.5 text-neutral-400 shrink-0" aria-hidden="true" />
+                          </Link>
+                        ))}
                         {/* Reports row: full external reports, above the About/Security bottom row */}
                         {[
                           { href: "https://keploy.io/saas-api-testing", title: "SaaS API Testing Report" },
