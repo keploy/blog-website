@@ -10,13 +10,24 @@ import Script from "next/script";
 // matches). Public value: it appears verbatim in the page source of every site
 // that runs the tag, so it is not a secret and lives here like the GA id does.
 //
-// Rendered only in production builds so `next dev` stays quiet. Vercel
-// previews build as production too; their *.vercel.app URLs match no audience
-// rule, so preview hits never land in an audience.
+// Rendered only on production deployments: `next dev` is excluded by NODE_ENV,
+// and Vercel previews (which also build with NODE_ENV=production) by
+// NEXT_PUBLIC_VERCEL_ENV. Preview hits would match no audience rule (their
+// *.vercel.app URLs never start with https://keploy.io) but would still show up
+// in the shared ad account's Insight Tag stats, so they are kept out. The check
+// is an exclusion rather than `=== "production"` on purpose: a build where
+// Vercel's system env vars are not exposed leaves the variable unset, and the
+// tag must still ship there.
+//
+// Loaded with lazyOnload: the tag pulls ~62 KB of LinkedIn JS, and a
+// retargeting pixel is lower priority than the page settling (same strategy as
+// the telemetry SDK in _app.tsx). A visitor who leaves before `load` is not
+// counted, which is fine for retargeting.
 //
 // insight.min.js records the first page view itself. The blog is a pages-router
 // SPA, so client-side navigations never reload the document; the Router
-// listener below re-fires a page view on each completed route change.
+// listener below re-fires a page view on each completed route change (the
+// `typeof lintrk` guard makes it a no-op for navigations before the tag loads).
 const LINKEDIN_PARTNER_ID = "3176938";
 
 type LintrkFn = ((action: string, payload?: Record<string, unknown>) => void) & {
@@ -50,12 +61,15 @@ function LinkedInInsightRouteTracker() {
   return null;
 }
 
+const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV;
+
 export default function LinkedInInsightScript() {
   if (process.env.NODE_ENV !== "production") return null;
+  if (VERCEL_ENV === "preview" || VERCEL_ENV === "development") return null;
 
   return (
     <>
-      <Script id="linkedin-insight-base" strategy="afterInteractive">
+      <Script id="linkedin-insight-base" strategy="lazyOnload">
         {`
           window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
           window._linkedin_data_partner_ids.push("${LINKEDIN_PARTNER_ID}");
