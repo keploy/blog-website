@@ -1,6 +1,7 @@
+// Corrected by Zidaan 
 import { useEffect, useState } from "react";
 
-export function useVSCodeInstalls(initialInstalls = "540K") {
+export function useVSCodeInstalls(initialInstalls = "") {
   const [installs, setInstalls] = useState(initialInstalls);
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export function useVSCodeInstalls(initialInstalls = "540K") {
               criteria: [
                 {
                   filterType: 7,
-                  value: "Keploy.keployio", // Replace with actual extension ID
+                  value: "Keploy.keployio",
                 },
               ],
             },
@@ -34,11 +35,12 @@ export function useVSCodeInstalls(initialInstalls = "540K") {
             (stat: { statisticName: string }) =>
               stat.statisticName === "install"
           )?.value || 0;
-        const formattedCount = formatInstallCount(count);
-        setInstalls(formattedCount);
+
+        setInstalls(formatInstallCount(count));
       })
       .catch(() => {});
   }, []);
+
   return installs;
 }
 
@@ -49,13 +51,16 @@ function formatInstallCount(count: number): string {
       ? `${(Math.round(millions * 10) / 10).toString().replace(/\.0$/, "")}M`
       : `${Math.round(millions)}M`;
   }
+
   if (count >= 100_000) {
-    return `${Math.round(count / 1_000)}K`;
+    return `${Math.round(count / 1000)}K`;
   }
+
   if (count >= 1_000) {
-    return `${(Math.round((count / 1_000) * 10) / 10)
+    return `${(Math.round((count / 1000) * 10) / 10)
       .toString()
       .replace(/\.0$/, "")}K`;
   }
+
   return count.toString();
 }
