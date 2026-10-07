@@ -48,8 +48,11 @@ function LinkedInInsightRouteTracker() {
     const onRouteChangeComplete = (url: string) => {
       if (lastTrackedUrlRef.current === url) return;
       lastTrackedUrlRef.current = url;
-      // The inline snippet defines a queueing stub for lintrk before the real
-      // script downloads, so this call is never lost once the tag is mounted.
+      // Once the snippet has run, lintrk is a queueing stub, so calls made
+      // before insight.min.js downloads are kept. Before the snippet runs
+      // (lazyOnload, so until after `load`) there is no lintrk and the
+      // navigation is dropped; the tag's own first page view covers whatever
+      // page is open when it loads.
       if (typeof window.lintrk === "function") window.lintrk("track");
     };
     Router.events.on("routeChangeComplete", onRouteChangeComplete);
