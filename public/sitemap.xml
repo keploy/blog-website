@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -3045,7 +3045,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/test-data-management</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/ChatGPT-Image-May-27-2026-05_23_46-PM.webp</image:loc>
