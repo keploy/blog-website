@@ -39,10 +39,7 @@ test.describe('Mobile Navigation — Responsive', () => {
         const closeButton = page.locator('button[aria-label="Close menu"]').first();
         await expect(closeButton).toBeVisible({ timeout: 5000 });
 
-        const mobileMenu = page
-            .locator('xpath=//div[contains(@class,"fixed") and contains(@class,"-translate-x-1/2") and contains(@class,"z-[1000]")]')
-            .filter({ has: page.getByRole('link', { name: /sign in/i }) })
-            .first();
+        const mobileMenu = page.getByTestId('mobile-navbar-menu');
         await expect(mobileMenu).toBeVisible();
 
         await expect(mobileMenu.getByText(/^Technology$/).first()).toBeVisible();
@@ -59,6 +56,29 @@ test.describe('Mobile Navigation — Responsive', () => {
         await expect(closeButton).toBeVisible();
         const resourcesSection = page.locator('button:visible').filter({ hasText: 'Resources' }).first();
         await expect(resourcesSection).toBeVisible();
+    });
+
+    test('should keep the mobile menu full-width with sign-in visible', async ({ page }) => {
+        await page.locator('button[aria-label="Open menu"]').first().click();
+
+        const mobileMenu = page.getByTestId('mobile-navbar-menu');
+        await expect(mobileMenu).toBeVisible();
+
+        const menuBounds = await mobileMenu.boundingBox();
+        if (!menuBounds) {
+            throw new Error('Mobile menu has no layout bounds');
+        }
+        expect(menuBounds.width).toBeGreaterThanOrEqual(375 * 0.9);
+        expect(menuBounds.x).toBeGreaterThanOrEqual(0);
+        expect(menuBounds.x + menuBounds.width).toBeLessThanOrEqual(375);
+
+        const signIn = mobileMenu.getByRole('link', { name: /sign in/i });
+        await expect(signIn).toBeVisible();
+        const signInBounds = await signIn.boundingBox();
+        if (!signInBounds) {
+            throw new Error('Mobile sign-in action has no layout bounds');
+        }
+        expect(signInBounds.y + signInBounds.height).toBeLessThanOrEqual(812);
     });
 
     test('should expand Technology dropdown in mobile menu', async ({ page }) => {
