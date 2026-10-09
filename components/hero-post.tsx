@@ -40,6 +40,13 @@ export default function HeroPost({
           coverImage={coverImage}
           slug={slug}
           isCommunity={isCommunity}
+          // The hero post is the largest above-the-fold element on the
+          // community and technology index pages, so it is the LCP candidate.
+          // Load it eagerly with high fetch priority instead of lazily.
+          priority
+          // Full width below `lg`, one of two grid columns (minus padding and
+          // gap) above it, so next/image serves a right-sized variant.
+          sizes="(max-width: 1024px) 100vw, 50vw"
         />
       )}
     </div>
