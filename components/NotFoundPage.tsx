@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useRouter } from "next/router";
 import Header from "./header";
 import Container from "./container";
 import Image from "next/image";
@@ -10,6 +11,7 @@ import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import { FaSearch } from 'react-icons/fa';
 import { S3_ASSET_BASE } from "../lib/constants";
+import { getNotFoundRedirectTarget } from "../lib/not-found-redirect";
 
 interface NotFoundPageProps {
   latestPosts?: { edges: Array<{ node: Post }> };
@@ -18,23 +20,41 @@ interface NotFoundPageProps {
 }
 
 const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFoundPageProps) => {
+  const router = useRouter();
   const [countdown, setCountdown] = useState(12);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // The destination depends on the missing path (a missing community post goes
+  // back to the community index, etc). The 404 page is prerendered, so the
+  // server never sees the real URL: start from the blog home and update once
+  // mounted, which keeps the first client render identical to the server HTML.
+  const [redirectTarget, setRedirectTarget] = useState("/");
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          window.location.href = '/blog';
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    setRedirectTarget(getNotFoundRedirectTarget(router.asPath));
+  }, [router.asPath]);
+  // Read through refs when the countdown ends, so a late `asPath` update never
+  // restarts the countdown.
+  const redirectTargetRef = useRef(redirectTarget);
+  redirectTargetRef.current = redirectTarget;
+  const routerRef = useRef(router);
+  routerRef.current = router;
+  // `basePath` is prepended so the visible destination matches the URL the
+  // visitor will actually land on (e.g. /blog/community).
+  const redirectLabel =
+    redirectTarget === "/" ? router.basePath || "/" : `${router.basePath}${redirectTarget}`;
 
-    return () => clearInterval(interval);
-  }, []);
+  // This is the only redirect on the 404 page: tick once a second and navigate
+  // when the countdown reaches zero. The cleanup cancels the pending tick on
+  // unmount, so leaving the page (Back To Home, a post card) never fires a
+  // stale redirect afterwards.
+  useEffect(() => {
+    if (countdown <= 0) {
+      routerRef.current.replace(redirectTargetRef.current);
+      return;
+    }
+    const timer = setTimeout(() => setCountdown((prev) => prev - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -161,7 +181,7 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
                 </Button>
               </div>
               <p className="text-sm text-gray-500 italic">
-                Wait for <span className="text-orange-500 font-bold text-lg animate-pulse">{formatTime(countdown)}</span> for automatic redirect or click the buttons above or explore our latest blog posts below.
+                Wait for <span className="text-orange-500 font-bold text-lg animate-pulse">{formatTime(countdown)}</span> for automatic redirect to <span className="font-medium">{redirectLabel}</span> or click the buttons above or explore our latest blog posts below.
               </p>
             </div>
           </div>
