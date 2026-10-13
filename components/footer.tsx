@@ -80,9 +80,10 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-gray-500 transition-colors"
-                href="https://x.com/Keployio"
+                href="https://x.com/keployio"
+                aria-label="X (formerly Twitter)"
               >
-                <span className="sr-only">Twitter</span>
+                <span className="sr-only">X (Twitter)</span>
                 <svg
                   className="w-4 h-4 fill-current"
                   viewBox="0 0 20 20"

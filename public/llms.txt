@@ -74,7 +74,7 @@ Author profiles are available at: https://keploy.io/blog/authors/{slug}/
 
 ## Contact
 
-- Twitter/X: https://twitter.com/Keployio
+- Twitter/X: https://x.com/keployio
 - LinkedIn: https://www.linkedin.com/company/keploy/
 - YouTube: https://www.youtube.com/@keploy
 - Discord: https://discord.gg/keploy
