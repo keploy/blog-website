@@ -65,8 +65,8 @@ const Tweets = [
     avatar:
       "https://pbs.twimg.com/profile_images/1741543460115812352/8x4aAI9k_400x400.jpg",
     name: "Shivam Sourav Jha",
-    id: "ShivamSouravJha",
-    post: "https://x.com/ShivamSouravJha/status/1747517726749286713?s=20",
+    id: "ShivamSourav_",
+    post: "https://x.com/ShivamSourav_/status/1747517726749286713?s=20",
     content:
       "Why do I like keploy so much? Literally I see many tools and so hard to integrate. I mean update VScode , use the sdk , make this change make that change. With Keploy, don't worry buddy just run your application, we will literally do everything for you. You need to 0 efforts.",
   },
