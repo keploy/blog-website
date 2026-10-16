@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import { Player } from "@lottiefiles/react-lottie-player";
 import LoadingAnimation from "../lottiefiles/loading.json";
 
 const PageLoader = () => {
