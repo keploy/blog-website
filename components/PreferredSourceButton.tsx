@@ -62,7 +62,11 @@ const ArrowUpRightIcon = () => (
   </svg>
 );
 
-export default function PreferredSourceButton() {
+interface PreferredSourceButtonProps {
+  className?: string;
+}
+
+export default function PreferredSourceButton({ className = "" }: PreferredSourceButtonProps) {
   return (
     <a
       href={PREFERRED_SOURCE_URL}
@@ -70,7 +74,7 @@ export default function PreferredSourceButton() {
       rel="noopener noreferrer"
       aria-label="Add Keploy as a preferred source on Google"
       title="Add as a preferred source on Google"
-      className="group inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 h-9 text-gray-700 transition-all duration-150 hover:-translate-y-0.5 hover:border-orange-300 hover:text-orange-600 hover:shadow-sm"
+      className={`group inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 h-9 text-gray-700 transition-all duration-150 hover:-translate-y-0.5 hover:border-orange-300 hover:text-orange-600 hover:shadow-sm ${className}`.trim()}
       style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
       <GoogleGIcon />
