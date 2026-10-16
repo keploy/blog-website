@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -108,7 +108,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/a-guide-to-test-cases-in-software-testing</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/08/test-cases-in-software-testing-featured.webp</image:loc>
@@ -368,7 +368,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-automation-testing</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/API-Automation-Testing.webp</image:loc>
@@ -421,6 +421,14 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/api-mocking-tools</loc>
+    <lastmod>2026-10-14</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/api-mocking-tools-featured-1.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/api-observability-guide</loc>
     <lastmod>2026-01-19</lastmod>
     <priority>0.70</priority>
@@ -458,7 +466,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-testing-tools</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/api_testing_tools_featured_image_v2-scaled.webp</image:loc>
@@ -494,7 +502,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/automated-regression-testing</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/Cover-Image-Automated-Regression-Testing.webp</image:loc>
@@ -521,11 +529,20 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/automation-framework-for-api-first-testing</loc>
-    <lastmod>2025-11-17</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/11/How-to-Build-an-Automation-Framework-for-API-First-Testing.webp</image:loc>
       <image:title>How to Build an Automation Framework for API First Testing</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/bdd-testing-tools</loc>
+    <lastmod>2026-10-14</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/bdd-testing-tools-featured-1.webp</image:loc>
+      <image:title>BDD testing tools 2026 cover showing a Gherkin feature file and tools including Cucumber, Reqnroll, Behave, and Karate</image:title>
     </image:image>
   </url>
   <url>
@@ -1092,7 +1109,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/dependency-mocking-service-virtualization</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/09/Dependency-Mocking-and-Service-Virtualization-Make-Every-CI-Test-Deterministic.webp</image:loc>
@@ -1547,7 +1564,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-choose-your-api-performance-testing-tool-a-guide</loc>
-    <lastmod>2026-06-05</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/01/API-Performance-testing-e1705516202665.webp</image:loc>
@@ -2322,7 +2339,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/postman-alternative</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/featured-postman-alternative1.webp</image:loc>
@@ -2492,7 +2509,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/regression-testing-an-introductory-guide</loc>
-    <lastmod>2026-09-21</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/03/Regression-Testing-Guide-Tools-Best-Practices.webp</image:loc>
@@ -2501,7 +2518,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/regression-testing-tools</loc>
-    <lastmod>2026-08-06</lastmod>
+    <lastmod>2026-10-13</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Top-Regression-Testing-Tools-for-2026-Compared.png</image:loc>
@@ -2582,7 +2599,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/sandbox-testing</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/What-Is-Sandbox-Testing.webp</image:loc>
@@ -2635,11 +2652,19 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/service-virtualization</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/09/What-Is-Service-Virtualization-Definition-Types-Tools.webp</image:loc>
       <image:title>What Is Service Virtualization Definition, Types &amp; Tools</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/service-virtualization-tools</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/10-Best-Service-Virtualization-Tools-in-2026-Compared-by-Use-Case.webp</image:loc>
     </image:image>
   </url>
   <url>
@@ -2868,7 +2893,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/staging-vs-production-key-differences-explained</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/09/Staging-vs-Production-Explained.webp</image:loc>
@@ -3421,7 +3446,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/types-of-regression-testing-in-software-testing</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-10-13</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/d85dfd11-e481-426c-9aa1-098dfe27.webp</image:loc>
@@ -3915,11 +3940,20 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-api-mocking</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/10/API-Mocking-Benefits-Tools-and-Guide.webp</image:loc>
       <image:title>API Mocking: Benefits, Tools, and Guide</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/what-is-api-simulation</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/4905eeba-3ae0-4d80-b82f-26ed3dccced3.webp</image:loc>
+      <image:title>What is API Simulation</image:title>
     </image:image>
   </url>
   <url>
