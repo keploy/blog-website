@@ -43,8 +43,8 @@ export default function Footer() {
       title: "Resources",
       links: [
         { text: "Integrations", url: "https://keploy.io/docs/ci-cd/github/" },
-        { text: "Tech Blog", url: "https://keploy.io/blog/technology/" },
-        { text: "Community Blog", url: "https://keploy.io/blog/community/" },
+        { text: "Tech Blog", url: "/technology" },
+        { text: "Community Blog", url: "/community" },
       ],
     },
     {
