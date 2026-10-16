@@ -18,21 +18,7 @@ import {
   getProfilePageSchema,
   SITE_URL,
 } from "../../lib/structured-data";
-
-// Server-safe author-box extraction. extractAuthorData (utils) relies on
-// `document`, so it can't run in getStaticProps/SSR — these regexes pull the
-// same fields from the raw PublishPress author-box HTML for the JSON-LD.
-function extractAuthorMeta(html: string): { avatarUrl?: string; linkedIn?: string } {
-  if (!html) return {};
-  const avatar = html.match(
-    /pp-author-boxes-avatar[\s\S]{0,200}?<img[^>]+src=["']([^"']+)["']/i,
-  );
-  const linkedIn = html.match(/href=["'](https?:\/\/[^"']*linkedin\.com[^"']*)["']/i);
-  return {
-    avatarUrl: avatar?.[1],
-    linkedIn: linkedIn?.[1],
-  };
-}
+import { extractAuthorBox } from "../../lib/author-box";
 import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 
 export default function AuthorPage({ preview, filteredPosts, content }) {
@@ -55,7 +41,7 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
   // the pages they cite. The node shape (incl. the worksFor Organization
   // reference) is built by getPersonSchema in lib/structured-data.ts so it stays
   // consistent with every other JSON-LD payload.
-  const authorMeta = extractAuthorMeta(content || "");
+  const authorMeta = extractAuthorBox(content);
   const authoredItems = filteredPosts.map(({ node }) => ({
     url: `${SITE_URL}/${node?.categories?.edges?.[0]?.node?.name === "community" ? "community" : "technology"}/${node.slug}`,
     name: node.title,
@@ -70,6 +56,7 @@ export default function AuthorPage({ preview, filteredPosts, content }) {
     url: authorUrl,
     image: authorMeta.avatarUrl,
     sameAs: authorMeta.linkedIn ? [authorMeta.linkedIn] : undefined,
+    description: authorMeta.bio,
   });
   const profilePageSchema = getProfilePageSchema(personNode, authorUrl);
   const authoredWorksSchema = getItemListSchema(authoredItems, `Posts by ${authorName}`);

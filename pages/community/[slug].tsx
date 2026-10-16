@@ -34,6 +34,7 @@ import {
   SITE_URL,
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
+import { extractAuthorBio } from "../../lib/author-box";
 import { getHowToSchema } from "../../lib/howToSchema";
 import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/contentSchema";
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
@@ -99,18 +100,12 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   const rawPpmaImage = (post?.ppmaAuthorImage ?? "").trim();
   const ppmaSchemaImage = /^https?:\/\//i.test(rawPpmaImage) ? rawPpmaImage : undefined;
 
-  // Writer description — pulled from the first paragraph with the
-  // pp-author-boxes-description class in the post content. Kept here as
-  // a one-time synchronous regex so the SSR HTML has the real bio. No
-  // state, no effect.
-  const writerDescriptionMatch =
-    post?.content?.match(
-      /<p[^>]*class="[^"]*pp-author-boxes-description[^"]*"[^>]*>([\s\S]*?)<\/p>/i,
-    );
-  const blogWriterDescription =
-    writerDescriptionMatch && writerDescriptionMatch[1]?.trim().length > 0
-      ? writerDescriptionMatch[1].trim()
-      : "An author for Keploy's blog.";
+  // Writer description — pulled synchronously from the author box in the post
+  // content so the real bio is in the SSR HTML (no state, no effect).
+  // realWriterBio is the actual author-box bio (or undefined); it feeds the
+  // schema's "real bio only" guard so the generic UI fallback never enters JSON-LD.
+  const realWriterBio = extractAuthorBio(post?.content);
+  const blogWriterDescription = realWriterBio ?? "An author for Keploy's blog.";
 
   // Back-compat alias: other parts of this component previously used
   // avatarImgSrc. Keep the name so references below continue to work.
@@ -199,6 +194,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
         // LIVE-22: use PublishPress author image, not the /blog/images/author.webp
         // placeholder. The schema generator also filters the placeholder.
         authorImage: ppmaSchemaImage,
+        // E-E-A-T author bio → Person.description. Only the real extracted bio;
+        // the generic "An author for Keploy's blog." fallback is never emitted
+        // into schema (the "never fabricate" rule from the A1/AI1 schema work).
+        authorDescription: realWriterBio,
         articleSection: post?.categories?.edges?.[0]?.node?.name || "Community",
         // LIVE-22: emit reviewedBy Person schema when reviewer data is
         // present. The schema generator skips the emit when the reviewer
