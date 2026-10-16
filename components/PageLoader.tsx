@@ -1,8 +1,20 @@
 import { motion } from "framer-motion";
-import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import { Player } from "@lottiefiles/react-lottie-player";
 import LoadingAnimation from "../lottiefiles/loading.json";
 
-const PageLoader = () => {
+export interface PageLoaderProps {
+  className?: string;
+  size?: number | string;
+  ariaLabel?: string;
+}
+
+const PageLoader = ({
+  className,
+  size = 150,
+  ariaLabel = "Loading page content",
+}: PageLoaderProps = {}) => {
+  const dimension = typeof size === "number" ? `${size}px` : size;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -13,15 +25,18 @@ const PageLoader = () => {
         stiffness: 260,
         damping: 20,
       }}
-      className="flex items-center justify-center min-h-screen"
+      className={`flex items-center justify-center min-h-screen${className ? ` ${className}` : ""}`}
+      role="status"
+      aria-label={ariaLabel}
     >
       <Player
         autoplay
         loop
         src={LoadingAnimation}
-        style={{ height: "150px", width: "150px" }}
+        style={{ height: dimension, width: dimension }}
       />
     </motion.div>
   );
 };
+
 export default PageLoader;
