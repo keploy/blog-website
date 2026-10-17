@@ -422,7 +422,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-mocking-tools</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/api-mocking-tools-featured-1.webp</image:loc>
@@ -861,7 +861,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/chaos-testing-explained-a-comprehensive-guide</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Chaos-Testing.webp</image:loc>
@@ -994,7 +994,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/contract-testing-tools</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/12-Best-Contract-Testing-Tools-in-2026.webp</image:loc>
@@ -1395,7 +1395,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/getting-started-with-microservices-testing</loc>
-    <lastmod>2026-07-29</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/06/Getting-Started-with-Microservices-Testing.webp</image:loc>
@@ -1538,7 +1538,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-i-simulated-a-response-from-a-third-party-app</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/04/How-I-simulate-a-response-from-a-Third-Party-e1714026688253.webp</image:loc>
@@ -1983,7 +1983,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/know-about-record-and-replay-testing</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/Frame-145-1-scaled.webp</image:loc>
@@ -2071,7 +2071,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mastering-mocking-a-complete-guide-to-mocks-and-other-test-doubles</loc>
-    <lastmod>2025-01-22</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Mastering-Mocking.webp</image:loc>
@@ -2125,7 +2125,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mock-testing</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/Mock-Testing-A-Complete-Guide-for-Developers-2026.webp</image:loc>
@@ -2134,7 +2134,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mock-vs-stub-vs-fake-understand-the-difference</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/02/Mock-vs-Stub-vs-Fake-e1708339991637.webp</image:loc>
@@ -3070,7 +3070,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/test-data-management</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/ChatGPT-Image-May-27-2026-05_23_46-PM.webp</image:loc>
@@ -3195,7 +3195,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/the-game-of-shadow-testing-the-core-of-test-generation</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/06/The-Game-of-Shadow-Testing-e1711086649127.webp</image:loc>
@@ -3841,7 +3841,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-a-flaky-test</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/What-is-Flaky-Test.webp</image:loc>
