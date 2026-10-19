@@ -3,17 +3,17 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/technology</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -511,7 +511,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/automated-software-testing-tools</loc>
-    <lastmod>2026-07-17</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/Automated-Software-Testing-Tools-Cover-Image.webp</image:loc>
@@ -681,7 +681,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/best-practices-for-using-accessibility-testing-tools</loc>
-    <lastmod>2025-06-25</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/Best-Practices-for-Using-Accessibility-Testing-Tools.webp</image:loc>
@@ -1804,7 +1804,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/in-depth-testing</loc>
-    <lastmod>2026-06-02</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/In-Depth-Testing-Stop-Shipping-Bugs-Your-Tests-Missed.webp</image:loc>
@@ -2303,7 +2303,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/playwright-api-testing</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/09/Playwright-API-Testing-A-Complete-Guide-2026.webp</image:loc>
@@ -2312,7 +2312,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/playwright-vs-cypress-choosing-the-best-e2e-testing-framework</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/11/Playwright-vs-Cypress.webp</image:loc>
@@ -2321,7 +2321,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/playwright-vs-selenium</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/Playwright-vs-Selenium.webp</image:loc>
@@ -2446,7 +2446,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/qa-testing-tools</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/08/QA-Testing-Tools-The-Best-Options-by-Category-2026.webp</image:loc>
@@ -2482,7 +2482,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/react-testing-on-vs-code</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/React-Testing-on-VS-Code.webp</image:loc>
@@ -2518,7 +2518,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/regression-testing-tools</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Top-Regression-Testing-Tools-for-2026-Compared.png</image:loc>
@@ -2545,7 +2545,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/rest-assured-alternatives-for-api-testing</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/Screenshot-2025-03-22-101148.png</image:loc>
@@ -3025,7 +3025,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/test-automation-tools</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Best-Test-Automation-Tools-Comparison-Cover-Image.webp</image:loc>
@@ -3240,7 +3240,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-10-futuristic-open-source-testing-tools</loc>
-    <lastmod>2026-10-01</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/Top-10-Open-Source-Testing-Tools.webp</image:loc>
@@ -3249,7 +3249,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-10-open-source-automation-tools</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/Top-10-Open-Source-Automation-Tools-for-Modern-Software-Testing.webp</image:loc>
@@ -3374,7 +3374,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-integration-testing-tools</loc>
-    <lastmod>2026-09-23</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/Top-10-Tools-for-Integration-Testing-in-2026.webp</image:loc>
@@ -3392,7 +3392,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-selenium-alternatives-for-your-node-js-application</loc>
-    <lastmod>2026-04-03</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Selenium-Alternatives.webp</image:loc>
@@ -3401,7 +3401,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-test-automation-frameworks</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/08/Top-Test-Automation-Frameworks-Explained-and-Compared.webp</image:loc>
@@ -3428,7 +3428,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/types-of-api-testing</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/api_testing_feature_image-e1776413750405.webp</image:loc>
@@ -3652,7 +3652,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/unit-testing-vs-functional-testing</loc>
-    <lastmod>2025-07-16</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/06/Unit-Testing-vs-Functional-Testing.webp</image:loc>
@@ -4562,7 +4562,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/integration-of-e2e-testing-in-a-cicd-pipeline</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/05/Integration-of-E2E-Testing.jpg</image:loc>
@@ -4632,7 +4632,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/playwright-alternative-for-api-testing</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/Playwright-Alternative-for-API-Testing.webp</image:loc>
