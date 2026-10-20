@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -2071,11 +2071,11 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/mastering-mocking-a-complete-guide-to-mocks-and-other-test-doubles</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Mastering-Mocking.webp</image:loc>
-      <image:title>Learn everything about mocks in software testing with this complete guide. Explore different types of mocks, their use cases, and how they help isolate unit</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/Mocks-and-Test-Doubles-Diagram.webp</image:loc>
+      <image:title>Mocks and Test Doubles</image:title>
     </image:image>
   </url>
   <url>
