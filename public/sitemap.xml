@@ -3,17 +3,17 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/technology</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -63,7 +63,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/5-best-open-source-api-testing-tools-in-2025</loc>
-    <lastmod>2026-07-15</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/5-Best-Open-Source-API-Testing-Tools-in-2025.webp</image:loc>
@@ -368,7 +368,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-automation-testing</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/API-Automation-Testing.webp</image:loc>
@@ -466,7 +466,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/api-testing-tools</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/api_testing_tools_featured_image_v2-scaled.webp</image:loc>
@@ -520,7 +520,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/automated-test-equipment</loc>
-    <lastmod>2025-06-24</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/06/Automated-Test-Equipment.webp</image:loc>
@@ -2044,7 +2044,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/manual-vs-automation-testing</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/Manual-Vs-Automation-Testing.webp</image:loc>
@@ -2312,7 +2312,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/playwright-vs-cypress-choosing-the-best-e2e-testing-framework</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/11/Playwright-vs-Cypress.webp</image:loc>
@@ -2321,7 +2321,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/playwright-vs-selenium</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/Playwright-vs-Selenium.webp</image:loc>
@@ -4632,7 +4632,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/technology/playwright-alternative-for-api-testing</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-10-21</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/12/Playwright-Alternative-for-API-Testing.webp</image:loc>
