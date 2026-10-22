@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -717,7 +717,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/black-box-testing-and-white-box-testing-a-complete-guide</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/05/Black-box-Testing-and-White-Box-Testing.webp</image:loc>
@@ -1395,7 +1395,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/getting-started-with-microservices-testing</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/06/Getting-Started-with-Microservices-Testing.webp</image:loc>
@@ -2509,7 +2509,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/regression-testing-an-introductory-guide</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/03/Regression-Testing-Guide-Tools-Best-Practices.webp</image:loc>
@@ -2839,7 +2839,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/software-testing-life-cycle</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/03/software-testing-life-cycle-1.webp</image:loc>
@@ -3401,7 +3401,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-test-automation-frameworks</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/08/Top-Test-Automation-Frameworks-Explained-and-Compared.webp</image:loc>
@@ -3643,7 +3643,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/unit-testing-vs-end-to-end-testing</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/02/Unit-Testing-vs.-End-to-End-Testing.webp</image:loc>
@@ -4021,7 +4021,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-delta-testing</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/What-Is-Delta-Testing-How-It-Works-Benefits-Best-Practices.webp</image:loc>
@@ -4137,7 +4137,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-regression-analysis</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/09/Regression-Analysis.webp</image:loc>
