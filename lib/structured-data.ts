@@ -60,6 +60,8 @@ export const SOCIAL_LINKS = [
   "https://www.g2.com/products/keploy/reviews",
   "https://www.capterra.in/software/1070466/Keploy",
   "https://aws.amazon.com/marketplace/reviews/reviews-list/prodview-xgwmdk4ivjjv4",
+  // Wikidata item for Keploy — the entity anchor LLMs use to resolve the brand.
+  "https://www.wikidata.org/wiki/Q137395272",
 ];
 
 type BreadcrumbItem = {
@@ -480,12 +482,16 @@ export const getBlogPostingSchema = ({
       "@type": "Organization",
       "@id": ORG_ID,
       name: ORG_NAME,
+      url: MAIN_SITE_URL,
       logo: {
         "@type": "ImageObject",
         url: ORG_LOGO_URL,
         width: 512,
         height: 512,
       },
+      // Repeated here (not only on the global Organization node) so a crawler
+      // that reads just this article still links the publisher to Wikidata.
+      sameAs: SOCIAL_LINKS,
     },
     isPartOf: blogReference(),
     // The blog article itself is free to read (no paywall/registration) — a
@@ -580,7 +586,12 @@ export const getBlogPostingSchema = ({
   // primary topic. This is the connective tissue that lets an AI engine attach
   // "Keploy does X" claims from any article to the one known tool entity.
   schema.mentions = [
-    { "@type": "SoftwareApplication", "@id": SOFTWARE_ID, name: ORG_NAME },
+    {
+      "@type": "SoftwareApplication",
+      "@id": SOFTWARE_ID,
+      name: ORG_NAME,
+      applicationCategory: "DeveloperApplication",
+    },
   ];
 
   return schema;

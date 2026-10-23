@@ -44,3 +44,38 @@ export function extractAuthorBox(html?: string): AuthorBoxMeta {
     bio: extractAuthorBio(html),
   };
 }
+
+// PublishPress injects its own author box into post content. On keploy.io it
+// renders empty (only an `#author-description-placeholder` div) and carries the
+// plugin's hardcoded `box-post-id-16` on every post, so crawlers saw an empty,
+// identical author block on all pages. The page renders its own per-post
+// AuthorCard from ppmaAuthorName/ppmaAuthorImage + the WP user bio, so the
+// plugin markup (and its scoped <style> block) is removed from the body.
+// Call extractAuthorBio on the RAW content first if you need its bio.
+const PP_BOX_COMMENT_RE = /<!--\s*begin code\s*-->[\s\S]*?pp-multiple-authors[\s\S]*?<!--\s*end code\s*-->/gi;
+const PP_BOX_STYLE_RE = /<style[^>]*>[^<]*pp-multiple-authors-boxes-wrapper[\s\S]*?<\/style>/gi;
+
+export function stripPublishPressAuthorBox(html?: string | null): string {
+  if (!html) return "";
+  return html.replace(PP_BOX_COMMENT_RE, "").replace(PP_BOX_STYLE_RE, "");
+}
+
+type WpUserNode = { name?: string; avatar?: { url?: string }; description?: string };
+
+/**
+ * Pick the WP user whose display name matches the post's PublishPress author
+ * exactly (case-insensitive). `users(where:{search})` is a fuzzy match, so a
+ * loose first-hit would attach another person's bio to the post.
+ */
+export function pickWpUserForAuthor(
+  users: { edges?: { node?: WpUserNode }[] } | null | undefined,
+  authorName?: string | null,
+): WpUserNode | null {
+  const target = (authorName || "").trim().toLowerCase();
+  if (!target) return null;
+  return (
+    users?.edges
+      ?.map((e) => e?.node)
+      .find((n) => (n?.name || "").trim().toLowerCase() === target) ?? null
+  );
+}
