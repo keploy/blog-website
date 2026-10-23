@@ -52,12 +52,17 @@ export function extractAuthorBox(html?: string): AuthorBoxMeta {
 // AuthorCard from ppmaAuthorName/ppmaAuthorImage + the WP user bio, so the
 // plugin markup (and its scoped <style> block) is removed from the body.
 // Call extractAuthorBio on the RAW content first if you need its bio.
-const PP_BOX_COMMENT_RE = /<!--\s*begin code\s*-->[\s\S]*?pp-multiple-authors[\s\S]*?<!--\s*end code\s*-->/gi;
+// Match each complete begin/end block on its own (the body may not contain
+// another "begin code"), then drop only blocks that are PublishPress boxes, so
+// an earlier unrelated code block can never be swallowed.
+const CODE_BLOCK_RE = /<!--\s*begin code\s*-->(?:(?!<!--\s*begin code\s*-->)[\s\S])*?<!--\s*end code\s*-->/gi;
 const PP_BOX_STYLE_RE = /<style[^>]*>[^<]*pp-multiple-authors-boxes-wrapper[\s\S]*?<\/style>/gi;
 
 export function stripPublishPressAuthorBox(html?: string | null): string {
   if (!html) return "";
-  return html.replace(PP_BOX_COMMENT_RE, "").replace(PP_BOX_STYLE_RE, "");
+  return html
+    .replace(CODE_BLOCK_RE, (block) => (block.includes("pp-multiple-authors") ? "" : block))
+    .replace(PP_BOX_STYLE_RE, "");
 }
 
 type WpUserNode = { name?: string; avatar?: { url?: string }; description?: string };
@@ -78,4 +83,16 @@ export function pickWpUserForAuthor(
       ?.map((e) => e?.node)
       .find((n) => (n?.name || "").trim().toLowerCase() === target) ?? null
   );
+}
+
+export type PublicAuthor = { name: string; avatar: { url: string } | null; description: string };
+
+/** Whitelist public author fields only — never email or other private data. */
+export function toPublicAuthor(node: WpUserNode | null | undefined): PublicAuthor | null {
+  if (!node?.name) return null;
+  return {
+    name: node.name,
+    avatar: node.avatar?.url ? { url: node.avatar.url } : null,
+    description: node.description || "",
+  };
 }

@@ -239,7 +239,6 @@ export async function getReviewAuthorDetails(authorName) {
         edges {
           node {
             name
-            email
             avatar {
               url
             }

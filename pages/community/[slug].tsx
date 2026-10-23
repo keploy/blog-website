@@ -38,6 +38,7 @@ import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/s
 import {
   extractAuthorBio,
   pickWpUserForAuthor,
+  toPublicAuthor,
   stripPublishPressAuthorBox,
 } from "../../lib/author-box";
 import { getHowToSchema } from "../../lib/howToSchema";
@@ -99,7 +100,8 @@ export default function Post({ post, posts, reviewAuthorDetails, writerDetails, 
   // "n/a", empty) that would otherwise 400 the next/image optimizer and render a
   // broken byline avatar; a real URL passes through unchanged (and it falls back
   // to the S3 AUTHOR_AVATAR_PLACEHOLDER when missing).
-  const wpWriter = pickWpUserForAuthor(writerDetails, post?.ppmaAuthorName);
+  // Already reduced server-side to public fields (name, avatar, bio).
+  const wpWriter = writerDetails;
   const ppmaAvatarUrl = resolveAuthorAvatar(post?.ppmaAuthorImage);
   const writerAvatarUrl =
     ppmaAvatarUrl === AUTHOR_AVATAR_PLACEHOLDER
@@ -412,9 +414,14 @@ export const getStaticProps: GetStaticProps = async ({
     const authorDetails = await getReviewAuthors();
     // Per-post writer profile (bio/avatar) for the author card. Memoized by
     // name; a failure here must never 404 the post, so it degrades to null.
-    const writerDetails = data.post?.ppmaAuthorName
+    // Select the exact-name WP user here and keep only public fields, so
+    // nothing private (e.g. email) is serialized into __NEXT_DATA__.
+    const writerUsers = data.post?.ppmaAuthorName
       ? await getReviewAuthorDetailsCached(data.post.ppmaAuthorName).catch(() => null)
       : null;
+    const writerDetails = toPublicAuthor(
+      pickWpUserForAuthor(writerUsers, data.post?.ppmaAuthorName),
+    );
 
     return {
       props: {

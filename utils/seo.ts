@@ -134,7 +134,7 @@ export function buildPageTitle(rawTitle: string | undefined | null): string {
 // Words/punctuation that must never end a clipped title: a title ending in
 // "Tools &" or "Guide to" reads as broken in the SERP (audit 2026-10).
 const DANGLING_TAIL_RE =
-  /(?:\s+(?:&|and|or|with|for|to|of|the|a|an|in|on|vs\.?|from|by|\+)|[\s,;:\-\u2013\u2014|(&+])+$/i;
+  /(?:\s+(?:&|and|or|with|for|to|of|the|a|an|in|on|vs\.?|from|by|\+)|[\s,;:\-\u2013\u2014|(&])+$/i;
 
 /**
  * Clip a title to `limit` chars at a phrase/word boundary. Never leaves an
@@ -147,8 +147,23 @@ export function clipTitleAtBoundary(title: string, limit: number): string {
   // Hard-clip only when the window has no space at all (one giant token).
   let out = lastSpace > 0 ? window.slice(0, lastSpace) : title.slice(0, limit);
   // Drop an unclosed parenthetical: "Guide (Types, Tools" -> "Guide".
-  const open = out.lastIndexOf("(");
-  if (open > 0 && out.indexOf(")", open) === -1) out = out.slice(0, open);
+  // Trim before the FIRST unmatched "(" (nested/multiple groups included).
+  const unmatched: number[] = [];
+  for (let i = 0; i < out.length; i++) {
+    if (out[i] === "(") unmatched.push(i);
+    else if (out[i] === ")" && unmatched.length) unmatched.pop();
+  }
+  if (unmatched.length) {
+    // Unmatched "(" at the very start: trimming would empty the title, so
+    // drop just the stray bracket(s) instead.
+    out =
+      unmatched[0] > 0
+        ? out.slice(0, unmatched[0])
+        : out
+            .split("")
+            .filter((_, idx) => !unmatched.includes(idx))
+            .join("");
+  }
   let prev;
   do {
     prev = out;

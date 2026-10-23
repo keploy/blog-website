@@ -5,7 +5,8 @@
 // (API, gRPC, iOS, CI/CD, JavaScript), forces a known-acronym list to its
 // canonical form, and keeps "vs" lowercase.
 
-const ACRONYMS: Record<string, string> = {};
+// Prototype-free so words like "constructor" never hit Object.prototype.
+const ACRONYMS = new Map<string, string>();
 [
   "API", "APIs", "QA", "AI", "ML", "LLM", "LLMs", "CI", "CD", "CI/CD", "SDK",
   "SDKs", "JSON", "YAML", "XML", "UI", "UX", "HTTP", "HTTPS", "REST", "gRPC",
@@ -15,7 +16,7 @@ const ACRONYMS: Record<string, string> = {};
   "iOS", "macOS", "npm", "SRE", "SLA", "MVP", "ROI", "B2B", "TCP", "UDP",
   "DNS", "RPC", "GUI", "JVM", "PDF", "CSV", "ORM", "QAs",
 ].forEach((word) => {
-  ACRONYMS[word.toLowerCase()] = word;
+  ACRONYMS.set(word.toLowerCase(), word);
 });
 // "vs" as in "Jest vs Mocha" stays lowercase; "VS Code" is handled below.
 const LOWERCASE_WORDS = new Set(["vs", "vs."]);
@@ -34,11 +35,11 @@ function caseWord(word: string, index: number, words: string[]): string {
     if (lower === "vs" && next === "code") return `${lead}VS${trail}`;
     return index === 0 ? word : `${lead}${lower}${trail}`;
   }
-  if (ACRONYMS[lower]) return `${lead}${ACRONYMS[lower]}${trail}`;
+  if (ACRONYMS.has(lower)) return `${lead}${ACRONYMS.get(lower)}${trail}`;
   // Plural/possessive acronyms: "API's", "APIs'".
   const possessive = lower.match(/^(.+?)('s|’s|s'|s’)$/);
-  if (possessive && ACRONYMS[possessive[1]]) {
-    return `${lead}${ACRONYMS[possessive[1]]}${core.slice(possessive[1].length)}${trail}`;
+  if (possessive && ACRONYMS.has(possessive[1])) {
+    return `${lead}${ACRONYMS.get(possessive[1])}${core.slice(possessive[1].length)}${trail}`;
   }
   // Leave mixed-case / all-caps words (JavaScript, gRPC, NodeJS) as written.
   if (/[A-Z]/.test(core.slice(1)) || /^[a-z]+[A-Z]/.test(core)) {

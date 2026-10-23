@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { toHeadlineCase } from "../../utils/titleCase";
 import { buildPageTitle, clipTitleAtBoundary } from "../../utils/seo";
-import { stripPublishPressAuthorBox, pickWpUserForAuthor } from "../../lib/author-box";
+import { stripPublishPressAuthorBox, pickWpUserForAuthor, toPublicAuthor } from "../../lib/author-box";
 
 test("acronyms, apostrophes and vs are preserved", () => {
   assert.equal(toHeadlineCase("Playwright API Testing"), "Playwright API Testing");
@@ -31,4 +31,33 @@ test("WP user is matched by exact name only", () => {
   const users = { edges: [{ node: { name: "Alok Kumar Singh" } }, { node: { name: "Alok Kumar", description: "bio" } }] };
   assert.equal(pickWpUserForAuthor(users, "alok kumar")?.description, "bio");
   assert.equal(pickWpUserForAuthor(users, "Neha"), null);
+});
+
+test("prototype keys are not acronyms", () => {
+  assert.equal(toHeadlineCase("the constructor pattern and toString"), "The Constructor Pattern And toString");
+  assert.equal(toHeadlineCase("valueof hasownproperty"), "Valueof Hasownproperty");
+});
+
+test("C++ survives clipping", () => {
+  assert.equal(clipTitleAtBoundary("Unit Testing in C++ Using GoogleTest and Catch2 Frameworks Today", 20), "Unit Testing in C++");
+  assert.equal(clipTitleAtBoundary("Testing tips + tricks for great modern backend developers here", 15), "Testing tips");
+});
+
+test("unmatched parens, nested and at position 0", () => {
+  assert.equal(clipTitleAtBoundary("Guide (Types (Unit, API), Tools and more stuff here", 30), "Guide");
+  assert.equal(clipTitleAtBoundary("Guide (Types) and (More, Tools and stuff here", 30), "Guide (Types)");
+  const out = clipTitleAtBoundary("(Draft) Testing (Unit, Integration, Contract, E2E things", 40);
+  assert.equal(out, "(Draft) Testing");
+  const zero = clipTitleAtBoundary("(Unclosed testing guide for API and more words here", 30);
+  assert.ok(!zero.includes("("), zero);
+});
+
+test("strip keeps an earlier unrelated code block", () => {
+  const html = `<!--begin code --><pre>keep me</pre><!--end code --><p>Mid</p><!--begin code --><div class="pp-multiple-authors-boxes-wrapper"></div><!--end code --><p>End</p>`;
+  assert.equal(stripPublishPressAuthorBox(html), `<!--begin code --><pre>keep me</pre><!--end code --><p>Mid</p><p>End</p>`);
+});
+
+test("toPublicAuthor never carries email", () => {
+  const pub = toPublicAuthor({ name: "A", description: "b", avatar: { url: "u" }, email: "a@x.io" } as any);
+  assert.deepEqual(pub, { name: "A", avatar: { url: "u" }, description: "b" });
 });
