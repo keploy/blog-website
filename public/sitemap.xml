@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -63,7 +63,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/5-best-open-source-api-testing-tools-in-2025</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/5-Best-Open-Source-API-Testing-Tools-in-2025.webp</image:loc>
@@ -502,7 +502,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/automated-regression-testing</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/04/Cover-Image-Automated-Regression-Testing.webp</image:loc>
@@ -1109,7 +1109,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/dependency-mocking-service-virtualization</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/09/Dependency-Mocking-and-Service-Virtualization-Make-Every-CI-Test-Deterministic.webp</image:loc>
@@ -1680,7 +1680,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-to-integrate-keploy-in-github-actions</loc>
-    <lastmod>2025-12-17</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/45d417e8-f549-47b9-8d07-d51eb8af.webp</image:loc>
@@ -2339,7 +2339,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/postman-alternative</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/01/featured-postman-alternative1.webp</image:loc>
@@ -2509,11 +2509,20 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/regression-testing-an-introductory-guide</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/03/Regression-Testing-Guide-Tools-Best-Practices.webp</image:loc>
       <image:title>Regression Testing: Guide, Tools &amp; Best Practices</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/regression-testing-in-agile</loc>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/Regression-Testing-in-Agile-Test-Every-Sprint-Without-Slowing-Down.webp</image:loc>
+      <image:title>Regression Testing in Agile Test Every Sprint Without Slowing Down</image:title>
     </image:image>
   </url>
   <url>
