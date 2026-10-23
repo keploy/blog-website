@@ -128,11 +128,48 @@ export function buildPageTitle(rawTitle: string | undefined | null): string {
   const withSuffix = `${base}${TITLE_SUFFIX}`;
   if (withSuffix.length <= MAX_TITLE_LENGTH) return withSuffix;
   if (base.length <= MAX_TITLE_LENGTH) return base;
-  const clipped = base.slice(0, MAX_TITLE_LENGTH);
-  const lastSpace = clipped.lastIndexOf(" ");
-  // Always cut at the last word boundary in the window; hard-clip only when the
-  // window has no space at all (a single token longer than the limit).
-  return (lastSpace > 0 ? clipped.slice(0, lastSpace) : clipped).trimEnd();
+  return clipTitleAtBoundary(base, MAX_TITLE_LENGTH);
+}
+
+// Words/punctuation that must never end a clipped title: a title ending in
+// "Tools &" or "Guide to" reads as broken in the SERP (audit 2026-10).
+const DANGLING_TAIL_RE =
+  /(?:\s+(?:&|and|or|with|for|to|of|the|a|an|in|on|vs\.?|from|by|\+)|[\s,;:\-\u2013\u2014|(&])+$/i;
+
+/**
+ * Clip a title to `limit` chars at a phrase/word boundary. Never leaves an
+ * unclosed "(" group or a dangling connector ("&", "and", "vs", ":") at the end.
+ */
+export function clipTitleAtBoundary(title: string, limit: number): string {
+  if (title.length <= limit) return title;
+  const window = title.slice(0, limit + 1);
+  const lastSpace = window.lastIndexOf(" ");
+  // Hard-clip only when the window has no space at all (one giant token).
+  let out = lastSpace > 0 ? window.slice(0, lastSpace) : title.slice(0, limit);
+  // Drop an unclosed parenthetical: "Guide (Types, Tools" -> "Guide".
+  // Trim before the FIRST unmatched "(" (nested/multiple groups included).
+  const unmatched: number[] = [];
+  for (let i = 0; i < out.length; i++) {
+    if (out[i] === "(") unmatched.push(i);
+    else if (out[i] === ")" && unmatched.length) unmatched.pop();
+  }
+  if (unmatched.length) {
+    // Unmatched "(" at the very start: trimming would empty the title, so
+    // drop just the stray bracket(s) instead.
+    out =
+      unmatched[0] > 0
+        ? out.slice(0, unmatched[0])
+        : out
+            .split("")
+            .filter((_, idx) => !unmatched.includes(idx))
+            .join("");
+  }
+  let prev;
+  do {
+    prev = out;
+    out = out.replace(DANGLING_TAIL_RE, "").trimEnd();
+  } while (out !== prev && out.length > 0);
+  return out || title.slice(0, limit).trimEnd();
 }
 
 /**

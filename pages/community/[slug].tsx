@@ -16,6 +16,7 @@ import {
   getMoreStoriesForSlugs,
   getPostAndMorePosts,
   getReviewAuthors,
+  getReviewAuthorDetailsCached,
 } from "../../lib/api";
 import ContainerSlug from "../../components/containerSlug";
 import { useEffect, useMemo, useRef } from "react";
@@ -34,7 +35,12 @@ import {
   SITE_URL,
 } from "../../lib/structured-data";
 import { sanitizeTitle, getSafeDescription, buildPageTitle } from "../../utils/seo";
-import { extractAuthorBio } from "../../lib/author-box";
+import {
+  extractAuthorBio,
+  pickWpUserForAuthor,
+  toPublicAuthor,
+  stripPublishPressAuthorBox,
+} from "../../lib/author-box";
 import { getHowToSchema } from "../../lib/howToSchema";
 import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/contentSchema";
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
@@ -63,7 +69,7 @@ const transformPostContent = (content: string, ppmaAuthorName: string) => {
     );
 };
 
-export default function Post({ post, posts, reviewAuthorDetails, preview }) {
+export default function Post({ post, posts, reviewAuthorDetails, writerDetails, preview }) {
   const router = useRouter();
   const { slug } = router.query;
   const morePosts = posts?.edges;
@@ -94,7 +100,13 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   // "n/a", empty) that would otherwise 400 the next/image optimizer and render a
   // broken byline avatar; a real URL passes through unchanged (and it falls back
   // to the S3 AUTHOR_AVATAR_PLACEHOLDER when missing).
-  const writerAvatarUrl = resolveAuthorAvatar(post?.ppmaAuthorImage);
+  // Already reduced server-side to public fields (name, avatar, bio).
+  const wpWriter = writerDetails;
+  const ppmaAvatarUrl = resolveAuthorAvatar(post?.ppmaAuthorImage);
+  const writerAvatarUrl =
+    ppmaAvatarUrl === AUTHOR_AVATAR_PLACEHOLDER
+      ? resolveAuthorAvatar(wpWriter?.avatar?.url)
+      : ppmaAvatarUrl;
   // For JSON-LD only: a genuine author photo (absolute URL) or nothing — never
   // the placeholder or a junk value, either of which would be invalid in schema.
   const rawPpmaImage = (post?.ppmaAuthorImage ?? "").trim();
@@ -104,7 +116,10 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
   // content so the real bio is in the SSR HTML (no state, no effect).
   // realWriterBio is the actual author-box bio (or undefined); it feeds the
   // schema's "real bio only" guard so the generic UI fallback never enters JSON-LD.
-  const realWriterBio = extractAuthorBio(post?.content);
+  // Bio priority: PublishPress author-box bio in the content, then the
+  // author's WordPress user bio (Users > Profile > Biographical Info).
+  const realWriterBio =
+    extractAuthorBio(post?.content) || wpWriter?.description?.trim() || undefined;
   const blogWriterDescription = realWriterBio ?? "An author for Keploy's blog.";
 
   // Back-compat alias: other parts of this component previously used
@@ -279,6 +294,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 title={post?.title || "Loading..."}
                 coverImage={post?.featuredImage}
                 date={post?.date || ""}
+                modified={post?.modified || ""}
                 author={post?.ppmaAuthorName || ""}
                 categories={post?.categories || []}
                 BlogWriter={blogwriter}
@@ -298,7 +314,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
           <div ref={postBodyRef}>
             <PostBody
               content={transformPostContent(
-                post?.content,
+                stripPublishPressAuthorBox(post?.content),
                 post?.ppmaAuthorName,
               )}
               authorName={post?.ppmaAuthorName || ""}
@@ -396,6 +412,16 @@ export const getStaticProps: GetStaticProps = async ({
     // Same two records for every post — memoized in lib/api so a build makes
     // this request twice in total instead of twice per post.
     const authorDetails = await getReviewAuthors();
+    // Per-post writer profile (bio/avatar) for the author card. Memoized by
+    // name; a failure here must never 404 the post, so it degrades to null.
+    // Select the exact-name WP user here and keep only public fields, so
+    // nothing private (e.g. email) is serialized into __NEXT_DATA__.
+    const writerUsers = data.post?.ppmaAuthorName
+      ? await getReviewAuthorDetailsCached(data.post.ppmaAuthorName).catch(() => null)
+      : null;
+    const writerDetails = toPublicAuthor(
+      pickWpUserForAuthor(writerUsers, data.post?.ppmaAuthorName),
+    );
 
     return {
       props: {
@@ -403,6 +429,7 @@ export const getStaticProps: GetStaticProps = async ({
         post: data.post,
         posts: moreStories?.communityMoreStories || { edges: [] },
         reviewAuthorDetails: authorDetails,
+        writerDetails: writerDetails ?? null,
       },
       revalidate: REVALIDATE_CONTENT,
     };

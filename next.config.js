@@ -87,15 +87,8 @@ module.exports = {
           },
         ],
       },
-      {
-        source: '/robots.txt',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, s-maxage=86400, stale-while-revalidate=86400',
-          },
-        ],
-      },
+      // No /blog/robots.txt: crawlers only read robots.txt at the host root
+      // (RFC 9309), so all rules live in keploy.io/robots.txt (keploy/landing).
       {
         source: '/(.*)',
         headers: [

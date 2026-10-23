@@ -9,6 +9,7 @@ export default function PostHeader({
   title,
   coverImage,
   date,
+  modified = "",
   author,
   categories,
   BlogWriter,
@@ -31,13 +32,17 @@ export default function PostHeader({
       {/* 3. Title */}
       <PostTitle>{title}</PostTitle>
 
-      {/* 4. Author card + social share icons */}
-      <div className="mb-8">
+      {/* 4. Author card + social share icons. An <aside> (not a <div>) so
+             readers/LLM extractors treat byline, date, tags and the
+             Summarize-with-AI CTAs as page chrome, and the article's first
+             paragraph is the first real content passage. Same box, same layout. */}
+      <aside aria-label="Post details" className="mb-8">
         <PostHeaderAuthors
           blogwriter={BlogWriter}
           blogreviewer={BlogReviewer}
           timetoRead={TimeToRead}
           date={date}
+          modified={modified}
           tags={tags}
         />
 
@@ -47,7 +52,7 @@ export default function PostHeader({
           <SummarizeWithAI />
           <PreferredSourceButton />
         </div>
-      </div>
+      </aside>
     </div>
   );
 }

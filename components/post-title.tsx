@@ -1,10 +1,7 @@
+import { toHeadlineCase } from "../utils/titleCase";
+
 export default function PostTitle({ children }: { children: string }) {
-  function toTitleCase(str: string) {
-    return str
-      .toLowerCase()
-      .replace(/\b\w/g, (word) => word.toUpperCase());
-  }
-  const finalString = toTitleCase(children);
+  const finalString = toHeadlineCase(children);
   return (
     <h1
       style={{

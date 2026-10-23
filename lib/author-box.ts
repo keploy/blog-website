@@ -44,3 +44,55 @@ export function extractAuthorBox(html?: string): AuthorBoxMeta {
     bio: extractAuthorBio(html),
   };
 }
+
+// PublishPress injects its own author box into post content. On keploy.io it
+// renders empty (only an `#author-description-placeholder` div) and carries the
+// plugin's hardcoded `box-post-id-16` on every post, so crawlers saw an empty,
+// identical author block on all pages. The page renders its own per-post
+// AuthorCard from ppmaAuthorName/ppmaAuthorImage + the WP user bio, so the
+// plugin markup (and its scoped <style> block) is removed from the body.
+// Call extractAuthorBio on the RAW content first if you need its bio.
+// Match each complete begin/end block on its own (the body may not contain
+// another "begin code"), then drop only blocks that are PublishPress boxes, so
+// an earlier unrelated code block can never be swallowed.
+const CODE_BLOCK_RE = /<!--\s*begin code\s*-->(?:(?!<!--\s*begin code\s*-->)[\s\S])*?<!--\s*end code\s*-->/gi;
+const PP_BOX_STYLE_RE = /<style[^>]*>[^<]*pp-multiple-authors-boxes-wrapper[\s\S]*?<\/style>/gi;
+
+export function stripPublishPressAuthorBox(html?: string | null): string {
+  if (!html) return "";
+  return html
+    .replace(CODE_BLOCK_RE, (block) => (block.includes("pp-multiple-authors") ? "" : block))
+    .replace(PP_BOX_STYLE_RE, "");
+}
+
+type WpUserNode = { name?: string; avatar?: { url?: string }; description?: string };
+
+/**
+ * Pick the WP user whose display name matches the post's PublishPress author
+ * exactly (case-insensitive). `users(where:{search})` is a fuzzy match, so a
+ * loose first-hit would attach another person's bio to the post.
+ */
+export function pickWpUserForAuthor(
+  users: { edges?: { node?: WpUserNode }[] } | null | undefined,
+  authorName?: string | null,
+): WpUserNode | null {
+  const target = (authorName || "").trim().toLowerCase();
+  if (!target) return null;
+  return (
+    users?.edges
+      ?.map((e) => e?.node)
+      .find((n) => (n?.name || "").trim().toLowerCase() === target) ?? null
+  );
+}
+
+export type PublicAuthor = { name: string; avatar: { url: string } | null; description: string };
+
+/** Whitelist public author fields only — never email or other private data. */
+export function toPublicAuthor(node: WpUserNode | null | undefined): PublicAuthor | null {
+  if (!node?.name) return null;
+  return {
+    name: node.name,
+    avatar: node.avatar?.url ? { url: node.avatar.url } : null,
+    description: node.description || "",
+  };
+}
