@@ -31,29 +31,30 @@ export interface ContentModalConfig {
   ctas?: ContentModalCta[];
 }
 
-export const contentModals: ContentModalConfig[] = [
-  {
-    // https://keploy.io/blog/community/software-testing-basics
-    id: "software-testing-basics-strong-foundation",
-    blogSlug: "software-testing-basics",
-    anchorText: "strong foundation",
-    title: "What a strong testing foundation looks like",
-    tag: "Deep dive",
-    body: [
-      "A strong foundation means every layer of your stack has the right kind of test: fast unit tests for logic, integration tests for service boundaries, and end-to-end tests for critical user journeys.",
-      "Teams that skip the middle layer usually end up with slow, flaky suites that nobody trusts.",
-    ],
-    bullets: [
-      "Unit tests: catch logic bugs in milliseconds",
-      "Integration and API tests: verify contracts between services",
-      "End-to-end tests: protect the few flows that make money",
-    ],
-    ctas: [
-      { label: "Try Keploy Free", href: "https://app.keploy.io/signin", variant: "primary" },
-      { label: "Read the docs", href: "https://keploy.io/docs/", variant: "secondary" },
-    ],
-  },
-];
+// Add entries here. Template (copy, uncomment, replace every value):
+// {
+//   // https://keploy.io/blog/community/software-testing-basics
+//   id: "software-testing-basics-strong-foundation",
+//   blogSlug: "software-testing-basics",
+//   anchorText: "strong foundation",
+//   title: "What a strong testing foundation looks like",
+//   tag: "Deep dive",
+//   body: [
+//     "A strong foundation means every layer of your stack has the right kind of test: fast unit tests for logic, integration tests for service boundaries, and end-to-end tests for critical user journeys.",
+//     "Teams that skip the middle layer usually end up with slow, flaky suites that nobody trusts.",
+//   ],
+//   bullets: [
+//     "Unit tests: catch logic bugs in milliseconds",
+//     "Integration and API tests: verify contracts between services",
+//     "End-to-end tests: protect the few flows that make money",
+//   ],
+//   ctas: [
+//     { label: "Try Keploy Free", href: "https://app.keploy.io/signin", variant: "primary" },
+//     { label: "Read the docs", href: "https://keploy.io/docs/", variant: "secondary" },
+//   ],
+// },
+
+export const contentModals: ContentModalConfig[] = [];
 
 export function getContentModalsForSlug(slug: string): ContentModalConfig[] {
   return contentModals.filter((m) => m.blogSlug === slug);
