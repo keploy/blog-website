@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -507,6 +507,15 @@
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/02/Automate-Testing-on-BitBucket-for-Golang-CRUD-App-with-Docker-e1740557583999.webp</image:loc>
       <image:title>Learn how to set up automated testing on Bitbucket for a Golang CRUD app using Docker, Docker Compose, and CI/CD for efficient DevOps workflows.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/automated-functional-testing</loc>
+    <lastmod>2026-10-29</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/a1-cover.webp</image:loc>
+      <image:title>automated functional testing</image:title>
     </image:image>
   </url>
   <url>
@@ -1082,7 +1091,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/decoding-brd-a-devs-guide-to-functional-and-non-functional-requirements-in-testing</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2023/11/Decoding-BRD-e1709276501622.webp</image:loc>
@@ -1359,11 +1368,11 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/functionality-testing-software-improves-quality</loc>
-    <lastmod>2026-10-28</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/How-Functionality-Testing-Software-Improves-Product-Quality.webp</image:loc>
-      <image:title>Functionality Testing Software</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/11/fsw-cover.webp</image:loc>
+      <image:title>functional testing software best tools</image:title>
     </image:image>
   </url>
   <url>
@@ -1831,7 +1840,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/integration-testing-a-comprehensive-guide</loc>
-    <lastmod>2026-10-27</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/07/ChatGPT-Image-Jun-30-2026-04_35_54-PM.webp</image:loc>
@@ -2017,7 +2026,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/levels-of-software-testing</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/levels-of-software-testing-feature.png</image:loc>
@@ -3401,7 +3410,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-integration-testing-tools</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/02/Top-10-Tools-for-Integration-Testing-in-2026.webp</image:loc>
@@ -3509,7 +3518,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/uft-testing-guide</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/UFT-Testing.webp</image:loc>
@@ -4057,7 +4066,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-etl-testing</loc>
-    <lastmod>2025-10-08</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/10/What-is-ETL-Testing.webp</image:loc>
