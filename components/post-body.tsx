@@ -11,7 +11,7 @@ import KeywordTooltipLayer from "./KeywordTooltipLayer";
 import { getTooltipsForSlug } from "../config/keyword-tooltips";
 import ContentModalLayer from "./ContentModalLayer";
 import { getContentModalsForSlug } from "../config/content-modals";
-import { injectModalTriggers } from "../lib/content-modals";
+import { injectInlineMarkers } from "../lib/content-modals";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
 const InlinePromoCard = dynamic(() => import("./InlinePromoCard"), {
@@ -379,27 +379,11 @@ export default function PostBody({
   const { parts: parsedParts, injectedModalIds } = useMemo((): { parts: ParsedPart[]; injectedModalIds: Set<string> } => {
     const safeContent = replacedContent || "";
 
-    // Modal triggers piggyback on the tooltip pass, which already runs on every rendered HTML chunk.
-    const injectedModalIds = new Set<string>();
-    const injectedKeywords = new Set<string>();
-    const injectTooltipSpans = (rawHtml: string): string => {
-      const html = injectModalTriggers(rawHtml, contentModalConfigs, injectedModalIds);
-      if (!tooltipConfigs.length) return html;
-      let result = html;
-      for (const t of tooltipConfigs) {
-        if (injectedKeywords.has(t.key)) continue;
-        const escaped = t.keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const regex = new RegExp(escaped, "i");
-        if (regex.test(result)) {
-          injectedKeywords.add(t.key);
-          result = result.replace(
-            regex,
-            (match) => `<span class="keploy-tt" data-tt-key="${t.key}" style="border-bottom:1.5px dotted #f97316;cursor:help;">${match}</span>`
-          );
-        }
-      }
-      return result;
-    };
+    // One tag-aware pass for modal triggers and tooltips, run on every rendered HTML chunk.
+    const inlineState = { modalIds: new Set<string>(), tooltipKeys: new Set<string>() };
+    const injectedModalIds = inlineState.modalIds;
+    const injectInline = (html: string): string =>
+      injectInlineMarkers(html, contentModalConfigs, tooltipConfigs, inlineState);
 
     const inlinePromoConfigs = blogSlug ? getInlinePromosForSlug(blogSlug) : [];
     // Tracks which promoIds actually found their anchor somewhere in the post.
@@ -419,7 +403,7 @@ export default function PostBody({
         const parts = html.split(splitRegex);
         if (parts.length > 1) {
           promoIdInjected.add(config.promoId);
-          const beforeAndBlock = injectTooltipSpans(parts[0] + (parts[1] || ""));
+          const beforeAndBlock = injectInline(parts[0] + (parts[1] || ""));
           const after = parts.slice(2).join("");
           return (
             <Fragment key={key}>
@@ -438,7 +422,7 @@ export default function PostBody({
         <div
           key={key}
           className={contentClass}
-          dangerouslySetInnerHTML={{ __html: injectTooltipSpans(html) }}
+          dangerouslySetInnerHTML={{ __html: injectInline(html) }}
           suppressHydrationWarning
         />
       );
