@@ -28,6 +28,12 @@ test("never rewrites attributes or URLs", () => {
   assert.equal(injectModalTriggers(html, [modal("m1", "mock apis")], new Set()), html);
 });
 
+test("a > inside a quoted attribute does not end the tag", () => {
+  const html = `<p title="comparison > strong foundation" data-x='a > mock apis'>A strong foundation matters.</p>`;
+  const out = injectModalTriggers(html, [modal("m1", "strong foundation")], new Set());
+  assert.ok(out.startsWith(`<p title="comparison > strong foundation" data-x='a > mock apis'>A <button`));
+});
+
 test("skips text inside links, headings, code and nested tags, then matches later text", () => {
   const html = `<h2>Mock APIs</h2><p><a href="/x">mock <b>apis</b> mock apis</a> <code>mock apis</code> then mock apis</p>`;
   const out = injectModalTriggers(html, [modal("m1", "mock apis")], new Set());

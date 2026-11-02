@@ -21,7 +21,8 @@ export function injectModalTriggers(
   const pending = modals.filter((m) => !injected.has(m.id));
   if (!pending.length) return html;
 
-  const tokens = html.split(/(<[^>]+>)/);
+  // Quote-aware: a `>` inside a quoted attribute value does not end the tag.
+  const tokens = html.split(/(<(?:[^>"']|"[^"]*"|'[^']*')+>)/);
   const skipStack: string[] = [];
 
   for (let i = 0; i < tokens.length; i++) {
