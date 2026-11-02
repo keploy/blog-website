@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { motion } from "framer-motion";
 import { XIcon } from "lucide-react";
 import type { ContentModalConfig } from "../config/content-modals";
@@ -63,7 +63,24 @@ function ContentModal({
   onClose: () => void;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = `cm-${config.id}-title`;
+
+  // Keep Tab / Shift+Tab inside the dialog while it is open (aria-modal contract).
+  const onKeyDown = (e: ReactKeyboardEvent) => {
+    if (e.key !== "Tab" || !dialogRef.current) return;
+    const focusable = dialogRef.current.querySelectorAll<HTMLElement>("a[href], button:not([disabled])");
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
 
   // Deferred: framer-motion flips `visibility` after this effect runs, and a
   // still-hidden element can't take focus.
@@ -90,6 +107,8 @@ function ContentModal({
       className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 backdrop-blur-md px-4"
     >
       <motion.div
+        ref={dialogRef}
+        onKeyDown={onKeyDown}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -97,7 +116,7 @@ function ContentModal({
         animate={isOpen ? { scale: 1, opacity: 1 } : { scale: 0.9, opacity: 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl md:max-w-3xl mx-auto bg-gradient-to-br from-orange-50 via-white to-amber-50 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 shadow-[0_24px_80px_rgba(15,23,42,0.45)] border border-orange-100/60"
+        className="relative w-full max-w-2xl md:max-w-3xl mx-auto max-h-[calc(100dvh-2rem)] overflow-y-auto bg-gradient-to-br from-orange-50 via-white to-amber-50 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 shadow-[0_24px_80px_rgba(15,23,42,0.45)] border border-orange-100/60"
       >
         <button
           ref={closeRef}
@@ -125,7 +144,7 @@ function ContentModal({
             )}
           </div>
 
-          <div className="max-h-[55vh] overflow-y-auto pr-1 md:pr-2 space-y-4">
+          <div className="space-y-4">
             {config.image && (
               <img
                 src={config.image.src}
