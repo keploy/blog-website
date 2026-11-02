@@ -32,14 +32,24 @@ export default function ContentModalLayer({ modals }: { modals: ContentModalConf
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setActiveId(null);
     };
-    const prevOverflow = document.body.style.overflow;
+    // Pad by the scrollbar width so hiding overflow does not shift the page sideways.
+    const { overflow: prevOverflow, paddingRight: prevPadding } = document.body.style;
+    const scrollbar = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = "hidden";
+    if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
     document.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prevOverflow;
+      document.body.style.paddingRight = prevPadding;
       document.removeEventListener("keydown", onKey);
-      triggerRef.current?.focus();
     };
+  }, [activeId]);
+
+  // Restore focus only on a real close, not when switching straight to another modal.
+  useEffect(() => {
+    if (activeId !== null || !triggerRef.current) return;
+    triggerRef.current.focus();
+    triggerRef.current = null;
   }, [activeId]);
 
   if (!modals.length) return null;
@@ -116,7 +126,7 @@ function ContentModal({
         animate={isOpen ? { scale: 1, opacity: 1 } : { scale: 0.9, opacity: 0 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl md:max-w-3xl mx-auto max-h-[calc(100dvh-2rem)] overflow-y-auto bg-gradient-to-br from-orange-50 via-white to-amber-50 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 shadow-[0_24px_80px_rgba(15,23,42,0.45)] border border-orange-100/60"
+        className="relative w-full max-w-2xl md:max-w-3xl mx-auto flex flex-col max-h-[calc(100dvh-2rem)] bg-gradient-to-br from-orange-50 via-white to-amber-50 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 shadow-[0_24px_80px_rgba(15,23,42,0.45)] border border-orange-100/60"
       >
         <button
           ref={closeRef}
@@ -129,7 +139,8 @@ function ContentModal({
           <XIcon className="h-6 w-6" aria-hidden="true" />
         </button>
 
-        <div className="space-y-5 md:space-y-6">
+        {/* Scroll lives here, not on the card, so the absolute Close button stays put. */}
+        <div className="min-h-0 overflow-y-auto space-y-5 md:space-y-6">
           <div className="flex flex-wrap items-center gap-2 md:gap-3 pr-10">
             <h2
               id={titleId}
@@ -171,9 +182,9 @@ function ContentModal({
 
           {config.ctas?.length ? (
             <div className="flex flex-wrap gap-3 pt-1">
-              {config.ctas.map((cta) => (
+              {config.ctas.map((cta, i) => (
                 <a
-                  key={cta.href}
+                  key={`${i}-${cta.href}`}
                   href={cta.href}
                   tabIndex={isOpen ? 0 : -1}
                   className={
