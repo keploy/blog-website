@@ -9,6 +9,9 @@ import { getInlinePromosForSlug } from "../config/inline-promos";
 import { getGatedReportConfig } from "../config/gated-reports";
 import KeywordTooltipLayer from "./KeywordTooltipLayer";
 import { getTooltipsForSlug } from "../config/keyword-tooltips";
+import ContentModalLayer from "./ContentModalLayer";
+import { getContentModalsForSlug } from "../config/content-modals";
+import { injectModalTriggers } from "../lib/content-modals";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
 const InlinePromoCard = dynamic(() => import("./InlinePromoCard"), {
@@ -71,6 +74,10 @@ export default function PostBody({
   const blogSlug = typeof slug === "string" ? slug : Array.isArray(slug) ? slug[0] : null;
   const tooltipConfigs = useMemo(
     () => (blogSlug ? getTooltipsForSlug(blogSlug) : []),
+    [blogSlug]
+  );
+  const contentModalConfigs = useMemo(
+    () => (blogSlug ? getContentModalsForSlug(blogSlug) : []),
     [blogSlug]
   );
 
@@ -369,11 +376,14 @@ export default function PostBody({
 
   // Expensive: HTML parsing, tooltip injection, promo/gated splitting \u2014 no copySuccessList dep
 
-  const parsedParts = useMemo((): ParsedPart[] => {
+  const { parts: parsedParts, injectedModalIds } = useMemo((): { parts: ParsedPart[]; injectedModalIds: Set<string> } => {
     const safeContent = replacedContent || "";
 
+    // Modal triggers piggyback on the tooltip pass, which already runs on every rendered HTML chunk.
+    const injectedModalIds = new Set<string>();
     const injectedKeywords = new Set<string>();
-    const injectTooltipSpans = (html: string): string => {
+    const injectTooltipSpans = (rawHtml: string): string => {
+      const html = injectModalTriggers(rawHtml, contentModalConfigs, injectedModalIds);
       if (!tooltipConfigs.length) return html;
       let result = html;
       for (const t of tooltipConfigs) {
@@ -486,7 +496,7 @@ export default function PostBody({
     const codeBlocks = safeContent.match(/<pre[\s\S]*?<\/pre>/gm);
 
     if (!codeBlocks) {
-      return appendMissedPromos([{ type: "text", node: processHtmlPart(safeContent, 0, 0) }]);
+      return { parts: appendMissedPromos([{ type: "text", node: processHtmlPart(safeContent, 0, 0) }]), injectedModalIds };
     }
 
     const decodeHtmlEntities = (str: string): string => {
@@ -551,8 +561,14 @@ export default function PostBody({
         return { type: "text", node: processHtmlPart(part, index, 0, isContinuation) };
       });
 
-    return appendMissedPromos(mappedParts);
-  }, [replacedContent, blogSlug, tooltipConfigs]);
+    return { parts: appendMissedPromos(mappedParts), injectedModalIds };
+  }, [replacedContent, blogSlug, tooltipConfigs, contentModalConfigs]);
+
+  // Only modals whose anchor was found get rendered: hidden copy with no way to open it would read as cloaking.
+  const renderedModals = useMemo(
+    () => contentModalConfigs.filter((m) => injectedModalIds.has(m.id)),
+    [contentModalConfigs, injectedModalIds]
+  );
 
   // Cheap: renders code blocks with current copy state \u2014 no HTML parsing
   const renderedContent = useMemo(() => {
@@ -669,6 +685,7 @@ export default function PostBody({
         <BlogSidebar />
       </div>
       <KeywordTooltipLayer tooltips={tooltipConfigs} />
+      <ContentModalLayer modals={renderedModals} />
     </div>
   );
 }
