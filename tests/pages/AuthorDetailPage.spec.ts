@@ -1,17 +1,18 @@
 import { test, expect } from '@playwright/test';
+import { openLink } from '../support/openLink';
 
 test.describe('Author Detail Page - Component Availability', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(`${baseURL!}/authors`, { waitUntil: 'domcontentloaded', timeout: 60000 });
     await page.waitForLoadState('domcontentloaded');
-    const firstAuthor = page.locator('a[href*="/authors/"]').first();
-    await expect(firstAuthor).toBeVisible({ timeout: 15000 });
-    await expect(firstAuthor).toBeEnabled();
-    await firstAuthor.click();
-    // The click is a client-side transition, so the document never reloads.
-    // Wait for the route itself, otherwise assertions can run against /authors.
-    await page.waitForURL(/\/authors\/.+/, { timeout: 30000 });
-    await page.waitForLoadState('domcontentloaded');
+    // Ready once the author's own post list is up. The URL commits before the
+    // page renders, and until then _app shows its PageLoader, which has no
+    // <title>: the title check below, run there, read "" and failed.
+    await openLink(
+      page,
+      page.locator('a[href*="/authors/"]').first(),
+      page.getByRole('heading', { level: 2, name: /^Latest Posts by / }),
+    );
   });
 
   test('should load author detail page successfully', async ({ page }) => {
