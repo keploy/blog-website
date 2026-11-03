@@ -1,14 +1,12 @@
 import { test, expect } from '@playwright/test';
+import { openLink } from '../support/openLink';
 
 test.describe('Tag Detail Page - Component Availability', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     await page.goto(`${baseURL!}/tag`);
     await page.waitForLoadState('domcontentloaded');
-    const firstTag = page.locator('a[href*="/tag/"]').first();
-    await expect(firstTag).toBeVisible({ timeout: 15000 });
-    await expect(firstTag).toBeEnabled();
-    await firstTag.click();
-    await page.waitForLoadState('domcontentloaded');
+    // Ready once the tag's own story list (components/TagsStories.tsx) is up.
+    await openLink(page, page.locator('a[href*="/tag/"]').first(), page.locator('section.pb-16').first());
   });
 
   test('should load tag detail page successfully', async ({ page }) => {
