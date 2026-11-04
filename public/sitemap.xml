@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -1082,11 +1082,11 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/datadog-vs-sentry-comparison</loc>
-    <lastmod>2026-10-27</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/Datadog-vs-Sentry-Comparison-in-2025.webp</image:loc>
-      <image:title>Datadog vs Sentry Comparison in 2025</image:title>
+      <image:title>Datadog vs Sentry Comparison in 2026</image:title>
     </image:image>
   </url>
   <url>
