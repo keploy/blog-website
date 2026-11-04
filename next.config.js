@@ -284,6 +284,16 @@ module.exports = {
         destination: '/community/test-automation-tools',
         permanent: true,
       },
+      {
+        source: '/community/exploring-the-effectiveness-of-e2e-testing-in-comparison-with-integration-testing',
+        destination: '/technology/integration-vs-e2e-testing-what-worked-for-me-as-a-charm',
+        permanent: true,
+      },
+      {
+        source: '/community/functional-testing-unveiling-types-and-real-world-applications',
+        destination: '/community/functional-testing-an-in-depth-overview',
+        permanent: true,
+      },
     ]
   },
 }
