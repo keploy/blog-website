@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { openPost } from '../support/openLink';
 
 const WIDTH_EPSILON = 2;
 const HORIZONTAL_OVERFLOW_EPSILON = WIDTH_EPSILON;
@@ -125,11 +126,7 @@ test.describe('Mobile Layout — Blog Post Page', () => {
         await page.goto(`${baseURL!}/technology`);
         await page.waitForLoadState('domcontentloaded');
 
-        const firstPost = page.locator('a[href*="/technology/"]').first();
-        await expect(firstPost).toBeVisible({ timeout: 15000 });
-        await expect(firstPost).toBeEnabled();
-        await firstPost.click();
-        await page.waitForLoadState('domcontentloaded');
+        await openPost(page, page.locator('a[href*="/technology/"]').first());
     });
 
     test('blog post content should be readable on mobile (not clipped)', async ({ page }) => {

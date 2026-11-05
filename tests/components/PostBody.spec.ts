@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { openPost } from '../support/openLink';
 
 test.describe('PostBody Component', () => {
     test.beforeEach(async ({ page, baseURL }) => {
@@ -8,11 +9,7 @@ test.describe('PostBody Component', () => {
         await page.goto(targetUrl);
         await page.waitForLoadState('domcontentloaded');
 
-        const firstPost = page.locator('a[href*="/technology/"]').first();
-        await expect(firstPost).toBeVisible({ timeout: 15000 });
-        await expect(firstPost).toBeEnabled();
-        await firstPost.click();
-        await page.waitForLoadState('domcontentloaded');
+        await openPost(page, page.locator('a[href*="/technology/"]').first());
     });
 
     test('should display post content area', async ({ page }) => {
