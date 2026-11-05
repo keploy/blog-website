@@ -10,7 +10,11 @@ jobs:
   test:
     name: E2E Tests (chromium)
     timeout-minutes: 20
-    runs-on: ubuntu-latest
+    # Pinned, not ubuntu-latest: Playwright ships browser builds and apt
+    # dependency lists per Ubuntu release, so an OS bump under the job broke
+    # `playwright install` ("does not support chromium on ubuntu26.04-x64").
+    # Move this label together with @playwright/test.
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
     
@@ -21,7 +25,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          # @playwright/test 1.64 requires Node >= 20.
+          node-version: '24'
           cache: 'npm'
       
       - name: Install dependencies
