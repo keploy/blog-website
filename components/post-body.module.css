@@ -378,3 +378,30 @@
     font-size: 1.125rem;
   }
 }
+/* ── Content modal inline trigger (injected by lib/content-modals.ts) ── */
+.content :global(.keploy-cm-trigger) {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: #ea580c;
+  text-align: inherit;
+  text-decoration: underline dashed #f97316;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.content :global(.keploy-cm-trigger:hover) {
+  color: #c2410c;
+  text-decoration-style: solid;
+}
+
+.content :global(.keploy-cm-trigger:focus-visible) {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
