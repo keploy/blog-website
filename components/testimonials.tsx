@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
 import { S3_ASSET_BASE } from "../lib/constants";
+
 const firstRow = Tweets.slice(0, Tweets.length / 2);
 const secondRow = Tweets.slice(Tweets.length / 2);
 
@@ -25,29 +26,74 @@ const ReviewCard = ({
   const isExternal = typeof avatar === "string" && /^https?:\/\//i.test(avatar);
   // Our own S3 assets are allowlisted for next/image, so serve them directly;
   // only proxy genuinely third-party avatars (e.g. Twitter) through the endpoint.
-  const isOwnAsset = typeof avatar === "string" && avatar.startsWith(S3_ASSET_BASE);
-  const proxiedAvatar = isExternal && !isOwnAsset
-    ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
-    : avatar;
+  const isOwnAsset =
+    typeof avatar === "string" && avatar.startsWith(S3_ASSET_BASE);
+  const proxiedAvatar =
+    isExternal && !isOwnAsset
+      ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
+      : avatar;
 
   const [src, setSrc] = useState(proxiedAvatar);
   const [unoptimized, setUnoptimized] = useState(false);
 
   // Re-sync if the derived avatar changes (Tweets are static today, so this is
   // defensive) — otherwise the state seeded from the prop would go stale.
-  React.useEffect(() => {
+  useEffect(() => {
     setSrc(proxiedAvatar);
     setUnoptimized(false);
   }, [proxiedAvatar]);
 
   return (
-    <a href={post} target="_blank" rel="noopener noreferrer" className="lg:mx-2" aria-label={`View tweet by ${name}`}>
-      <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
-        <div className="flex flex-row items-center gap-2">
+    <a
+      href={post}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mx-4"
+      aria-label={`View tweet by ${name}`}
+    >
+      <figure
+        className="
+          relative
+          w-[360px]
+          rounded-2xl
+          bg-white
+          px-6
+          pt-6
+          pb-5
+          border
+          border-gray-200
+          shadow-[0_8px_26px_rgba(0,0,0,0.08)]
+          overflow-hidden
+        "
+      >
+        {/* decorative orange circle */}
+        <div
+          className="
+            absolute
+            top-0
+            right-0
+            h-28
+            w-28
+            translate-x-1/3
+            -translate-y-1/3
+            rounded-full
+            bg-orange-50
+            pointer-events-none
+            z-0
+          "
+        />
+
+        {/* content */}
+        <blockquote className="relative z-10 text-[14.5px] leading-relaxed text-gray-600">
+          {content}
+        </blockquote>
+
+        {/* author */}
+        <div className="relative z-10 mt-6 flex items-center gap-3">
           <Image
-            className="rounded-full"
-            width={32}
-            height={32}
+            className="h-9 w-9 rounded-full object-cover"
+            width={36}
+            height={36}
             alt={`${name}'s avatar`}
             src={src}
             unoptimized={unoptimized}
@@ -58,17 +104,17 @@ const ReviewCard = ({
               }
             }}
           />
-          <div className="flex flex-col">
-            <figcaption className="text-sm font-bold">{name}</figcaption>
-            <p className="text-xs font-medium ">{id}</p>
+          <div>
+            <figcaption className="text-sm font-semibold text-gray-900">
+              {name}
+            </figcaption>
+            <p className="text-sm text-orange-500">{id}</p>
           </div>
         </div>
-        <blockquote className="mt-2 text-sm">{content}</blockquote>
       </figure>
     </a>
   );
 };
-
 
 const TwitterTestimonials = () => {
   const marqueeRef = useRef<HTMLDivElement | null>(null);
@@ -94,28 +140,53 @@ const TwitterTestimonials = () => {
   }, []);
 
   return (
-    <div className="">
-      <h3 className="text-center lg:text-left bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-6 text-3xl lg:text-4xl heading1 md:text-4xl font-bold tracking-tighter leading-tight mt-16">
-        What our community thinks
-      </h3>
-      <div
-        ref={marqueeRef}
-        className="relative flex mb-8 h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent marquee-mask"
-      >
+    <section className="relative py-20 bg-transparent overflow-hidden">
+      {/* Header */}
+      <div className="text-center mb-16">
+        <span className="inline-block mb-4 rounded-full bg-orange-100 px-4 py-1 text-sm font-medium text-orange-600">
+          Testimonials
+        </span>
 
-        <Marquee paused={paused} pauseOnHover repeat={2} className="[--duration:17s]">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          What our{" "}
+          <span className="relative inline-block">
+            <span className="relative z-10">community</span>
+            <span className="absolute bottom-0 left-0 right-0 h-3 bg-orange-200 rounded -z-0" />
+          </span>{" "}
+          thinks
+        </h2>
+
+        <p className="mt-4 text-gray-500 max-w-2xl mx-auto text-lg">
+          Join thousands of developers who trust Keploy for their testing needs.
+        </p>
+      </div>
+
+      {/* Testimonials (edge fade comes from the marquee-mask class) */}
+      <div ref={marqueeRef} className="relative marquee-mask">
+        <Marquee
+          paused={paused}
+          pauseOnHover
+          repeat={2}
+          className="[--duration:17s] py-4"
+        >
           {firstRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-        <Marquee paused={paused} reverse pauseOnHover repeat={2} className="[--duration:17s]">
+
+        <Marquee
+          paused={paused}
+          reverse
+          pauseOnHover
+          repeat={2}
+          className="[--duration:17s] mt-8"
+        >
           {secondRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-
       </div>
-    </div>
+    </section>
   );
 };
 
