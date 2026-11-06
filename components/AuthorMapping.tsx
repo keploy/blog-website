@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Post } from "../types/post";
 import { sanitizeAuthorSlug } from "../utils/sanitizeAuthorSlug";
+import { resolveAuthorAvatar } from "../lib/constants";
 
 export default function AuthorMapping({
   AuthorArray,
@@ -67,23 +68,15 @@ export default function AuthorMapping({
           <Link href={`/authors/${author.slug}`} key={index}>
             <div className="p-5 rounded-lg mt-5 mb-5 flex flex-col justify-between  border border-transparent transform transition-colors  hover:border-accent-2 hover:dark:bg-neutral-400/30 hover:scale-105 cursor-pointer">
               <div className="flex items-center mb-3 sm:mb-0">
-                {author.avatarUrl != "imag1" &&  author.avatarUrl != "image" ? (
-                  <Image
-                    src={author.avatarUrl}
-                    alt={`${author.ppmaAuthorName}'s Avatar`}
-                    className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
-                    height={48}
-                    width={48}
-                  />
-                ) : (
-                  <Image
-                    src={`/blog/images/author.png`}
-                    alt={`${author.ppmaAuthorName}'s Avatar`}
-                    className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
-                    height={48}
-                    width={48}
-                  />
-                )}
+                {/* resolveAuthorAvatar handles any junk value (imag1/image/n/a/
+                    empty), not just the two hardcoded strings this checked before */}
+                <Image
+                  src={resolveAuthorAvatar(author.avatarUrl)}
+                  alt={`${author.ppmaAuthorName}'s Avatar`}
+                  className="w-12 h-12 rounded-full mr-3 sm:mr-2 "
+                  height={48}
+                  width={48}
+                />
                 <h2 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-2xl heading1 md:text-xl font-bold tracking-tighter leading-tight">
                   {author.ppmaAuthorName}
                 </h2>

@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { Marquee } from "./Marquee";
 import Tweets from "../services/Tweets";
+import { S3_ASSET_BASE } from "../lib/constants";
 
 const firstRow = Tweets.slice(0, Tweets.length / 2);
 const secondRow = Tweets.slice(Tweets.length / 2);
@@ -20,12 +22,26 @@ const ReviewCard = ({
   content: string;
 }) => {
   const { basePath } = useRouter();
-  const isExternal =
-    typeof avatar === "string" && /^https?:\/\//i.test(avatar);
+  const localPlaceholder = `${S3_ASSET_BASE}/avatars/avatar-placeholder.svg`;
+  const isExternal = typeof avatar === "string" && /^https?:\/\//i.test(avatar);
+  // Our own S3 assets are allowlisted for next/image, so serve them directly;
+  // only proxy genuinely third-party avatars (e.g. Twitter) through the endpoint.
+  const isOwnAsset =
+    typeof avatar === "string" && avatar.startsWith(S3_ASSET_BASE);
+  const proxiedAvatar =
+    isExternal && !isOwnAsset
+      ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
+      : avatar;
 
-  const proxiedAvatar = isExternal
-    ? `${basePath}/api/proxy-image?url=${encodeURIComponent(avatar)}`
-    : avatar;
+  const [src, setSrc] = useState(proxiedAvatar);
+  const [unoptimized, setUnoptimized] = useState(false);
+
+  // Re-sync if the derived avatar changes (Tweets are static today, so this is
+  // defensive) — otherwise the state seeded from the prop would go stale.
+  useEffect(() => {
+    setSrc(proxiedAvatar);
+    setUnoptimized(false);
+  }, [proxiedAvatar]);
 
   return (
     <a
@@ -33,6 +49,7 @@ const ReviewCard = ({
       target="_blank"
       rel="noopener noreferrer"
       className="mx-4"
+      aria-label={`View tweet by ${name}`}
     >
       <figure
         className="
@@ -50,7 +67,9 @@ const ReviewCard = ({
         "
       >
         {/* decorative orange circle */}
-        <div className="absolute
+        <div
+          className="
+            absolute
             top-0
             right-0
             h-28
@@ -61,10 +80,8 @@ const ReviewCard = ({
             bg-orange-50
             pointer-events-none
             z-0
-          " />
-
-
-
+          "
+        />
 
         {/* content */}
         <blockquote className="relative z-10 text-[14.5px] leading-relaxed text-gray-600">
@@ -73,10 +90,19 @@ const ReviewCard = ({
 
         {/* author */}
         <div className="relative z-10 mt-6 flex items-center gap-3">
-          <img
-            src={proxiedAvatar}
-            alt={name}
+          <Image
             className="h-9 w-9 rounded-full object-cover"
+            width={36}
+            height={36}
+            alt={`${name}'s avatar`}
+            src={src}
+            unoptimized={unoptimized}
+            onError={() => {
+              if (src !== localPlaceholder) {
+                setUnoptimized(true);
+                setSrc(localPlaceholder);
+              }
+            }}
           />
           <div>
             <figcaption className="text-sm font-semibold text-gray-900">
@@ -90,13 +116,31 @@ const ReviewCard = ({
   );
 };
 
-
-
-
 const TwitterTestimonials = () => {
+  const marqueeRef = useRef<HTMLDivElement | null>(null);
+  // Pause the infinite marquees while the section is off-screen so they don't
+  // burn compositor/CPU (and battery on mobile) when nobody's watching. Start
+  // paused; the observer resumes them ~200px before they scroll into view, so
+  // the viewer always sees continuous motion — resume is seamless (CSS
+  // animation-play-state continues, no reset).
+  const [paused, setPaused] = useState(true);
+
+  useEffect(() => {
+    const node = marqueeRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") {
+      setPaused(false); // fail open — animate if we can't observe.
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => setPaused(!entry.isIntersecting),
+      { rootMargin: "200px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section className="relative py-20 bg-transparent overflow-hidden">
-
       {/* Header */}
       <div className="text-center mb-16">
         <span className="inline-block mb-4 rounded-full bg-orange-100 px-4 py-1 text-sm font-medium text-orange-600">
@@ -117,29 +161,33 @@ const TwitterTestimonials = () => {
         </p>
       </div>
 
-      {/* Testimonials */}
-      <div className="relative">
-        <Marquee pauseOnHover className="[--duration:28s] py-4">
-
+      {/* Testimonials (edge fade comes from the marquee-mask class) */}
+      <div ref={marqueeRef} className="relative marquee-mask">
+        <Marquee
+          paused={paused}
+          pauseOnHover
+          repeat={2}
+          className="[--duration:17s] py-4"
+        >
           {firstRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
 
-        <Marquee reverse pauseOnHover className="[--duration:25s] mt-8">
+        <Marquee
+          paused={paused}
+          reverse
+          pauseOnHover
+          repeat={2}
+          className="[--duration:17s] mt-8"
+        >
           {secondRow.map((tweet) => (
             <ReviewCard key={tweet.id} {...tweet} />
           ))}
         </Marquee>
-
-        {/* Gradient fade */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-transparent" />
-
       </div>
     </section>
   );
 };
-
 
 export default TwitterTestimonials;

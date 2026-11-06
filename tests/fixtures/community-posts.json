@@ -1,0 +1,129 @@
+{
+    "data": {
+        "posts": {
+            "edges": [
+                {
+                    "node": {
+                        "title": "How the Keploy Community Shares Testing Playbooks",
+                        "excerpt": "<p>See how contributors document repeatable API testing workflows for real-world teams.</p>",
+                        "slug": "keploy-community-testing-playbooks",
+                        "date": "2024-06-14T10:00:00",
+                        "modified": "2024-06-14T10:00:00",
+                        "postId": 3001,
+                        "featuredImage": {
+                            "node": {
+                                "sourceUrl": "/blog/favicon/Group.png"
+                            }
+                        },
+                        "author": {
+                            "node": {
+                                "name": "Community Author One",
+                                "firstName": "Community",
+                                "lastName": "Author One",
+                                "avatar": {
+                                    "url": "/blog/favicon/Group.png"
+                                }
+                            }
+                        },
+                        "ppmaAuthorName": "Community Author One",
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "community"
+                                    }
+                                }
+                            ]
+                        },
+                        "seo": {
+                            "metaDesc": "See how contributors share practical testing playbooks in the Keploy community.",
+                            "title": "How the Keploy Community Shares Testing Playbooks | Keploy Blog"
+                        }
+                    }
+                },
+                {
+                    "node": {
+                        "title": "Community Spotlight: Building Better API Test Reviews",
+                        "excerpt": "<p>Learn how reviewers in the Keploy community improve test quality with lightweight checklists.</p>",
+                        "slug": "community-spotlight-api-test-reviews",
+                        "date": "2024-06-09T09:30:00",
+                        "modified": "2024-06-09T09:30:00",
+                        "postId": 3002,
+                        "featuredImage": {
+                            "node": {
+                                "sourceUrl": "/blog/favicon/Group.png"
+                            }
+                        },
+                        "author": {
+                            "node": {
+                                "name": "Community Author Two",
+                                "firstName": "Community",
+                                "lastName": "Author Two",
+                                "avatar": {
+                                    "url": "/blog/favicon/Group.png"
+                                }
+                            }
+                        },
+                        "ppmaAuthorName": "Community Author Two",
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "community"
+                                    }
+                                }
+                            ]
+                        },
+                        "seo": {
+                            "metaDesc": "How community reviewers keep API tests clear, stable, and maintainable.",
+                            "title": "Community Spotlight: Building Better API Test Reviews | Keploy Blog"
+                        }
+                    }
+                },
+                {
+                    "node": {
+                        "title": "From Discord to Docs: Community-Led Quality Improvements",
+                        "excerpt": "<p>Discover how support conversations in the Keploy community turn into practical documentation updates.</p>",
+                        "slug": "discord-to-docs-community-quality-improvements",
+                        "date": "2024-06-03T08:45:00",
+                        "modified": "2024-06-03T08:45:00",
+                        "postId": 3003,
+                        "featuredImage": {
+                            "node": {
+                                "sourceUrl": "/blog/favicon/Group.png"
+                            }
+                        },
+                        "author": {
+                            "node": {
+                                "name": "Community Contributor",
+                                "firstName": "Community",
+                                "lastName": "Contributor",
+                                "avatar": {
+                                    "url": "/blog/favicon/Group.png"
+                                }
+                            }
+                        },
+                        "ppmaAuthorName": "Community Contributor",
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "community"
+                                    }
+                                }
+                            ]
+                        },
+                        "seo": {
+                            "metaDesc": "How community conversations become reusable quality improvements.",
+                            "title": "From Discord to Docs: Community-Led Quality Improvements | Keploy Blog"
+                        }
+                    }
+                }
+            ],
+            "pageInfo": {
+                "hasNextPage": false,
+                "endCursor": null
+            }
+        }
+    }
+}

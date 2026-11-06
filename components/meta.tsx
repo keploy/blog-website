@@ -1,40 +1,51 @@
 import Head from "next/head";
-import { CMS_NAME, HOME_OG_IMAGE_URL } from "../lib/constants";
+import { HOME_OG_IMAGE_URL } from "../lib/constants";
 import { Post } from "../types/post";
+import { safeJsonLdStringify } from "../utils/seo";
 
 export default function Meta({
   featuredImage,
   Title,
   Description,
   structuredData = [],
+  canonicalUrl,
+  ogType = "article",
+  publishedDate,
 }: {
   featuredImage: Post["featuredImage"]["node"]["sourceUrl"];
   Title: Post["title"];
   Description: string;
   structuredData?: Record<string, unknown>[];
+  canonicalUrl?: string;
+  ogType?: "article" | "website";
+  publishedDate?: string;
 }) {
   return (
     <Head>
       <link
         rel="apple-touch-icon"
         sizes="180x180"
-        href="/blog/favicon/Group.png"
+        href="/blog/favicon/apple-touch-icon.png"
       />
       <link
         rel="icon"
         type="image/png"
         sizes="32x32"
-        href="/blog/favicon/Group.png"
+        href="/blog/favicon/favicon-32x32.png"
       />
       <link
         rel="icon"
         type="image/png"
         sizes="16x16"
-        href="/blog/favicon/Group.png"
+        href="/blog/favicon/favicon-16x16.png"
       />
-      <link rel="manifest" href="blog/favicon/site.webmanifest" />
-      <link rel="mask-icon" href="blog/favicon/Group.svg" color="#000000" />
-      <link rel="shortcut icon" href="blog/favicon/Group" />
+      <link rel="manifest" href="/blog/favicon/site.webmanifest" />
+      <link
+        rel="mask-icon"
+        href="/blog/favicon/safari-pinned-tab.svg"
+        color="#000000"
+      />
+      <link rel="shortcut icon" href="/blog/favicon/favicon.ico" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={Title} />
@@ -42,16 +53,28 @@ export default function Meta({
       {/* Twitter Summary card images must be at least 120x120px */}
       <meta name="twitter:image" content={featuredImage} />
 
-      <meta name="msapplication-TileColor" content="#000000" />
+      <meta name="msapplication-TileColor" content="#FF914D" />
       <meta
         name="msapplication-config"
-        content="blog/favicon/browserconfig.xml"
+        content="/blog/favicon/browserconfig.xml"
       />
-      <meta name="theme-color" content="#000" />
-      <link rel="alternate" type="application/rss+xml" href="blog/feed.xml" />
+      <meta name="theme-color" content="#FF914D" />
+      <link rel="alternate" type="application/rss+xml" href="/blog/feed.xml" />
       <meta name="description" content={Description} />
+      <meta property="og:type" content={ogType} />
+      <meta property="og:site_name" content="Keploy Blog" />
+      <meta property="og:locale" content="en_US" />
+      {publishedDate && (
+        <meta property="article:published_time" content={publishedDate} />
+      )}
       <meta property="og:title" content={Title} />
       <meta property="og:description" content={Description} />
+      {canonicalUrl && (
+        <>
+          <link rel="canonical" href={canonicalUrl} />
+          <meta property="og:url" content={canonicalUrl} />
+        </>
+      )}
       {featuredImage && (
         <>
           <meta property="og:image" content={featuredImage} />
@@ -72,7 +95,12 @@ export default function Meta({
         <script
           key={`jsonld-${index}`}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          // Use safeJsonLdStringify (not raw JSON.stringify) so that field
+          // values containing `<`/`>`/`&`/U+2028/U+2029 (e.g. a WP title
+          // decoded through sanitizeTitle, or an inline-code paragraph in
+          // HowTo step text) can't terminate this <script> tag or trip
+          // JSONP/inline-JS parsers.
+          dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(schema) }}
         />
       ))}
       {/* <link

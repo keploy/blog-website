@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Container from "../../components/container";
@@ -10,9 +11,17 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import PostByAuthorMapping from "../../components/postByAuthorMapping";
 import { HOME_OG_IMAGE_URL } from "../../lib/constants";
 import { sanitizeAuthorSlug } from "../../utils/sanitizeAuthorSlug";
-import { getBreadcrumbListSchema, SITE_URL } from "../../lib/structured-data";
+import {
+  getBreadcrumbListSchema,
+  getItemListSchema,
+  getPersonSchema,
+  getProfilePageSchema,
+  SITE_URL,
+} from "../../lib/structured-data";
+import { extractAuthorBox } from "../../lib/author-box";
+import { REVALIDATE_CONTENT, REVALIDATE_ERROR, REVALIDATE_NOT_FOUND } from "../../lib/isr";
 
-export default function AuthorPage({ preview, filteredPosts ,content }) {
+export default function AuthorPage({ preview, filteredPosts, content }) {
   if (!filteredPosts || filteredPosts.length === 0) {
     return (
       <div>
@@ -21,39 +30,75 @@ export default function AuthorPage({ preview, filteredPosts ,content }) {
     );
   }
 
-  const authorName  =  filteredPosts[0]?.node?.ppmaAuthorName;
+  const authorName = filteredPosts[0]?.node?.ppmaAuthorName || "Keploy Author";
+  const authorSlug = sanitizeAuthorSlug(authorName);
+  const authorUrl = `${SITE_URL}/authors/${authorSlug}`;
+  const pageTitle = `${authorName} — Keploy Blog Author`;
+  const pageDescription = `Read all articles by ${authorName} on the Keploy blog — covering software testing, API development, automation, and engineering best practices.`;
+
+  // Person JSON-LD for E-E-A-T author credibility (LIVE-11). AI models use
+  // Person.url + sameAs to resolve author identity and weight the authority of
+  // the pages they cite. The node shape (incl. the worksFor Organization
+  // reference) is built by getPersonSchema in lib/structured-data.ts so it stays
+  // consistent with every other JSON-LD payload.
+  const authorMeta = extractAuthorBox(content);
+  const authoredItems = filteredPosts.map(({ node }) => ({
+    url: `${SITE_URL}/${node?.categories?.edges?.[0]?.node?.name === "community" ? "community" : "technology"}/${node.slug}`,
+    name: node.title,
+  }));
+
+  // Person + ProfilePage schema is built centrally in lib/structured-data.ts so
+  // the author's `#person` @id, worksFor affiliation, and node shape stay in sync
+  // with the per-post author node that references it. The author's posts are
+  // modeled as an ItemList so AI engines see the body of work.
+  const personNode = getPersonSchema({
+    name: authorName,
+    url: authorUrl,
+    image: authorMeta.avatarUrl,
+    sameAs: authorMeta.linkedIn ? [authorMeta.linkedIn] : undefined,
+    description: authorMeta.bio,
+  });
+  const profilePageSchema = getProfilePageSchema(personNode, authorUrl);
+  const authoredWorksSchema = getItemListSchema(authoredItems, `Posts by ${authorName}`);
 
   return (
     <div className="bg-accent-1">
+      {/*
+        LIVE-11 fix. Previously the <title> tag was absent from author
+        pages because components/meta.tsx does not emit a <title>, and
+        this page never added one locally. Authors pages returned 200
+        with empty <title></title>, which kills CTR and AI extraction
+        signal.
+      */}
+      <Head>
+        <title>{pageTitle}</title>
+      </Head>
       <Layout
         preview={preview}
         featuredImage={HOME_OG_IMAGE_URL}
-        Title={`${authorName} Page`}
-        Description={`Posts by ${authorName}`}
+        Title={pageTitle}
+        Description={pageDescription}
         structuredData={[
           getBreadcrumbListSchema([
             { name: "Home", url: SITE_URL },
             { name: "Authors", url: `${SITE_URL}/authors` },
-            {
-              name: authorName || "Author",
-              url: `${SITE_URL}/authors/${sanitizeAuthorSlug(authorName || "")}`,
-            },
+            { name: authorName, url: authorUrl },
           ]),
+          profilePageSchema,
+          ...(authoredWorksSchema ? [authoredWorksSchema] : []),
         ]}
+        canonicalUrl={authorUrl}
       >
+        {/* Fonts self-hosted via next/font in _app.tsx */}
         <Header />
         <Container>
-          <h1 className="bg-gradient-to-r from-orange-200 to-orange-100 bg-[length:100%_20px] bg-no-repeat bg-left-bottom w-max mb-8 text-4xl heading1 md:text-6xl sm:xl font-bold tracking-tighter leading-tight">
-            Author Details
-          </h1>
-
-          <PostByAuthorMapping filteredPosts={filteredPosts} Content={content}/>
+          <PostByAuthorMapping filteredPosts={filteredPosts} Content={content} />
         </Container>
       </Layout>
     </div>
   );
 }
-export const getStaticPaths: GetStaticPaths = async ({}) => {
+export const getStaticPaths: GetStaticPaths = async ({ }) => {
   try {
     const allPosts = await getAllPosts();
     const uniqueNames = new Set<string>();
@@ -69,13 +114,13 @@ export const getStaticPaths: GetStaticPaths = async ({}) => {
 
     return {
       paths,
-      fallback: true,
+      fallback: "blocking",
     };
   } catch (error) {
     console.error("authors/[slug] getStaticPaths error:", error);
     return {
       paths: [],
-      fallback: true,
+      fallback: "blocking",
     };
   }
 };
@@ -88,12 +133,8 @@ export const getStaticProps: GetStaticProps = async ({
 
   if (typeof slugParam !== "string" || slugParam.trim().length === 0) {
     return {
-      props: {
-        preview,
-        filteredPosts: [],
-        content: null,
-      },
-      revalidate: 60,
+      notFound: true,
+      revalidate: REVALIDATE_NOT_FOUND,
     };
   }
 
@@ -119,6 +160,13 @@ export const getStaticProps: GetStaticProps = async ({
 
   let filteredPosts = [];
 
+  // fetchAPI throws on GraphQL errors and on network failure, and every WP call
+  // below is individually caught — which makes "WordPress is down" look
+  // identical to "this author has no posts". They must not share a TTL: a
+  // genuine 404 should stick, but an outage must self-heal in a minute rather
+  // than pinning a real author page as a 404 for a day.
+  let wordpressFailed = false;
+
   for (const candidate of Array.from(candidateAuthorNames)) {
     if (!candidate) continue;
     try {
@@ -129,6 +177,7 @@ export const getStaticProps: GetStaticProps = async ({
         break;
       }
     } catch (error) {
+      wordpressFailed = true;
       console.error(`authors/[slug] failed to fetch posts for candidate "${candidate}":`, error);
     }
   }
@@ -145,9 +194,18 @@ export const getStaticProps: GetStaticProps = async ({
           return sanitizeAuthorSlug(candidateName) === sanitizeAuthorSlug(slugParam);
         }) || [];
     } catch (error) {
+      wordpressFailed = true;
       console.error("authors/[slug] fallback to getAllPosts failed:", error);
       filteredPosts = [];
     }
+  }
+
+  // Return a proper 404 instead of rendering a page with empty content (soft 404)
+  if (!filteredPosts.length) {
+    return {
+      notFound: true,
+      revalidate: wordpressFailed ? REVALIDATE_ERROR : REVALIDATE_NOT_FOUND,
+    };
   }
 
   let content = null;
@@ -166,6 +224,7 @@ export const getStaticProps: GetStaticProps = async ({
       filteredPosts,
       content,
     },
-    revalidate: 60,
+    revalidate: REVALIDATE_CONTENT,
   };
 };
+

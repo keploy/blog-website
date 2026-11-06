@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Header from "./header";
 import Container from "./container";
 import Image from "next/image";
@@ -9,6 +9,7 @@ import { Button } from "./ui/button";
 import { Post } from "../types/post";
 import { getExcerpt } from "../utils/excerpt";
 import { FaSearch } from 'react-icons/fa';
+import { S3_ASSET_BASE } from "../lib/constants";
 
 interface NotFoundPageProps {
   latestPosts?: { edges: Array<{ node: Post }> };
@@ -48,18 +49,21 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
     setSearchTerm(event.target.value);
   };
 
-  const allPosts = [
+  const allPosts = useMemo(() => [
     ...(latestPosts?.edges || []),
     ...(communityPosts?.edges || []),
     ...(technologyPosts?.edges || [])
-  ].filter((post, index, self) => 
+  ].filter((post, index, self) =>
     index === self.findIndex(p => p.node.slug === post.node.slug)
-  );
+  ), [latestPosts, communityPosts, technologyPosts]);
 
-  const filteredAllPosts = allPosts.filter(({ node }) => 
-    node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    node.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredAllPosts = useMemo(() => {
+    const term = searchTerm.toLowerCase();
+    return allPosts.filter(({ node }) =>
+      (node.title || '').toLowerCase().includes(term) ||
+      (node.excerpt || '').toLowerCase().includes(term)
+    );
+  }, [allPosts, searchTerm]);
 
   return (
     <>
@@ -165,7 +169,7 @@ const NotFoundPage = ({ latestPosts, communityPosts, technologyPosts }: NotFound
           <div className="flex-1 lg:pl-12">
             <div className="w-full h-80 lg:h-[500px] relative">
               <Image
-                src="/blog/images/error404.png"
+                src={`${S3_ASSET_BASE}/images/error404.webp`}
                 alt="404 Error Illustration"
                 fill
                 className="object-contain"

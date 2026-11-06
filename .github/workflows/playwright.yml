@@ -1,0 +1,62 @@
+name: Playwright E2E Tests
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: E2E Tests (chromium)
+    timeout-minutes: 20
+    # Pinned, not ubuntu-latest: Playwright ships browser builds and apt
+    # dependency lists per Ubuntu release, so an OS bump under the job broke
+    # `playwright install` ("does not support chromium on ubuntu26.04-x64").
+    # Move this label together with @playwright/test.
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # @playwright/test 1.64 requires Node >= 20.
+          node-version: '24'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      
+      - name: Run Playwright tests
+        run: npm run test:e2e -- --project=chromium
+        env:
+          CI: true
+          BASE_URL: http://localhost:3000/blog
+      
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-chromium
+          path: test-results/
+          retention-days: 7
+      
+      - name: Upload test report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-chromium
+          path: playwright-report/
+          retention-days: 7
+      

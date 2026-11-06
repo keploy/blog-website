@@ -1,0 +1,67 @@
+{
+    "data": {
+        "posts": {
+            "edges": [
+                {
+                    "node": {
+                        "title": "Mocked Technology Post",
+                        "excerpt": "<p>This is a mocked excerpt for the technology post. Playwright intercepted this.</p>",
+                        "slug": "mocked-tech-post",
+                        "date": "2024-01-01T12:00:00",
+                        "postId": 1001,
+                        "featuredImage": {
+                            "node": {
+                                "sourceUrl": "/blog/favicon/Group.png"
+                            }
+                        },
+                        "author": {
+                            "node": {
+                                "name": "Mock Author",
+                                "firstName": "Mock",
+                                "lastName": "Author",
+                                "avatar": {
+                                    "url": "/blog/favicon/Group.png"
+                                }
+                            }
+                        },
+                        "ppmaAuthorName": "Mocked Tech Author",
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "technology"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "node": {
+                        "title": "Mocked Community Post",
+                        "excerpt": "<p>This is a mocked excerpt for the community post. Also intercepted.</p>",
+                        "slug": "mocked-community-post",
+                        "date": "2024-01-02T12:00:00",
+                        "postId": 1002,
+                        "featuredImage": null,
+                        "author": null,
+                        "ppmaAuthorName": "Mocked Community Contributor",
+                        "categories": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "name": "community"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ],
+            "pageInfo": {
+                "hasNextPage": false,
+                "endCursor": null
+            }
+        }
+    }
+}

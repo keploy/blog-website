@@ -14,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const urlParam = req.query.url;
 
     if (typeof urlParam !== "string") {
+      res.setHeader("Cache-Control", "no-store");
       res.status(400).send("Missing url parameter");
       return;
     }
@@ -22,16 +23,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       targetUrl = new URL(urlParam);
     } catch {
+      res.setHeader("Cache-Control", "no-store");
       res.status(400).send("Invalid url parameter");
       return;
     }
 
     if (targetUrl.protocol !== "https:") {
+      res.setHeader("Cache-Control", "no-store");
       res.status(400).send("Only https protocol is allowed");
       return;
     }
 
     if (!ALLOWED_HOSTNAMES.has(targetUrl.hostname)) {
+      res.setHeader("Cache-Control", "no-store");
       res.status(403).send("Host not allowed");
       return;
     }
@@ -45,6 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     if (!upstream.ok || !upstream.body) {
+      res.setHeader("Cache-Control", "no-store");
       res.status(upstream.status).send("Failed to fetch image");
       return;
     }
@@ -64,6 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     res.end();
   } catch (err) {
+    res.setHeader("Cache-Control", "no-store");
     res.status(500).send("Unexpected error");
   }
 }
