@@ -181,7 +181,7 @@ The floating navbar is a mega-menu with multi-column dropdowns. The Technology a
 | **Icons** | React Icons | `post-body.tsx`, `more-stories.tsx`, `NotFoundPage.tsx`, `tagIcons.ts` |
 | **Date Formatting** | date-fns | `date.tsx` |
 | **SEO** | JSON-LD Structured Data | `lib/structured-data.ts` (Organization, WebSite, BlogPosting, TechArticle, BreadcrumbList schemas) |
-| **SEO** | Sitemap + robots.txt | `public/sitemap.xml`, `public/robots.txt` |
+| **SEO** | Sitemap (robots.txt lives at keploy.io root, keploy/landing) | `public/sitemap.xml` |
 | **Analytics** | Google Analytics, Microsoft Clarity, Apollo | `layout.tsx` (tracking scripts) |
 | **Deployment** | Vercel + CloudFront | Production at `keploy.io/blog` |
 | **CI/CD** | GitHub Actions | `build.yml`, `lighthouse_runner.yml`, `playwright.yml`, `indexnow.yml`, `submit-google-sitemap.yml`, `sync-sitemap.yml` |
@@ -254,7 +254,6 @@ blog-website/
 │   ├── images/             # Static images and illustrations
 │   ├── avatars/            # Testimonial avatars
 │   ├── favicon/            # Favicon set
-│   ├── robots.txt          # Crawl rules
 │   └── sitemap.xml         # Generated sitemap
 ├── styles/
 │   └── index.css           # Global styles + Tailwind directives
