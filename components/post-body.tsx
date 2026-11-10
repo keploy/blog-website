@@ -9,11 +9,12 @@ import { getInlinePromosForSlug } from "../config/inline-promos";
 import { getGatedReportConfig } from "../config/gated-reports";
 import KeywordTooltipLayer from "./KeywordTooltipLayer";
 import { getTooltipsForSlug } from "../config/keyword-tooltips";
-import ContentModalLayer from "./ContentModalLayer";
-import { getContentModalsForSlug } from "../config/content-modals";
+import type { ContentModalConfig } from "../config/content-modals";
 import { injectInlineMarkers } from "../lib/content-modals";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
+// SSR stays on, so modal copy is still in the HTML; the chunk only loads on posts that have modals.
+const ContentModalLayer = dynamic(() => import("./ContentModalLayer"));
 const InlinePromoCard = dynamic(() => import("./InlinePromoCard"), {
   loading: () => <div className="my-8 w-full min-h-[300px]" />,
 });
@@ -49,6 +50,7 @@ export default function PostBody({
   ReviewAuthorDetails,
   slug,
   categories,
+  contentModals,
 }: {
   content: Post["content"];
   authorName: Post["ppmaAuthorName"];
@@ -57,6 +59,8 @@ export default function PostBody({
   ReviewAuthorDetails: { edges: { node: { name: string; avatar: { url: string }; description: string } }[] };
   slug: string | string[] | undefined;
   categories?: Post["categories"];
+  /** Resolved in getStaticProps so modal copy never ships in the client bundle. */
+  contentModals?: ContentModalConfig[];
 }) {
   const [tocItems, setTocItems] = useState([]);
   const [copySuccessList, setCopySuccessList] = useState([]);
@@ -76,10 +80,7 @@ export default function PostBody({
     () => (blogSlug ? getTooltipsForSlug(blogSlug) : []),
     [blogSlug]
   );
-  const contentModalConfigs = useMemo(
-    () => (blogSlug ? getContentModalsForSlug(blogSlug) : []),
-    [blogSlug]
-  );
+  const contentModalConfigs = useMemo(() => contentModals ?? [], [contentModals]);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -554,6 +555,14 @@ export default function PostBody({
     [contentModalConfigs, injectedModalIds]
   );
 
+  // A modal whose anchor is not found disappears silently (WP copy edit, slug rename,
+  // unclosed tag). Surface it in dev; scripts/validate-content-modals.ts guards CI.
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    const missing = contentModalConfigs.filter((m) => !injectedModalIds.has(m.id)).map((m) => m.id);
+    if (missing.length) console.warn("[content-modals] anchor not found:", missing);
+  }, [contentModalConfigs, injectedModalIds]);
+
   // Cheap: renders code blocks with current copy state \u2014 no HTML parsing
   const renderedContent = useMemo(() => {
     const getLanguageExtension = (lang: string) => {
@@ -669,7 +678,7 @@ export default function PostBody({
         <BlogSidebar />
       </div>
       <KeywordTooltipLayer tooltips={tooltipConfigs} />
-      <ContentModalLayer modals={renderedModals} />
+      {renderedModals.length > 0 && <ContentModalLayer modals={renderedModals} />}
     </div>
   );
 }

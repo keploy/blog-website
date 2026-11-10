@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
-import { motion } from "framer-motion";
 import { XIcon } from "lucide-react";
 import type { ContentModalConfig } from "../config/content-modals";
 
@@ -7,7 +6,8 @@ import type { ContentModalConfig } from "../config/content-modals";
  * Renders every modal for the post in the server HTML (hidden until opened) so the
  * copy is indexable. Inline triggers are injected into the post body as
  * `[data-cm-id]` buttons; a single delegated click listener opens the matching modal.
- * Styling mirrors the landing site's FeatureModal.
+ * Styling mirrors the landing site's FeatureModal. Plain CSS transitions (no
+ * framer-motion) keep the animation engine off every post's critical path.
  */
 export default function ContentModalLayer({ modals }: { modals: ContentModalConfig[] }) {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -20,6 +20,8 @@ export default function ContentModalLayer({ modals }: { modals: ContentModalConf
       const el = (e.target as HTMLElement).closest?.("[data-cm-id]") as HTMLElement | null;
       if (!el || !ids.has(el.dataset.cmId!)) return;
       e.preventDefault();
+      triggerRef.current?.setAttribute("aria-expanded", "false");
+      el.setAttribute("aria-expanded", "true");
       triggerRef.current = el;
       setActiveId(el.dataset.cmId!);
     };
@@ -48,6 +50,7 @@ export default function ContentModalLayer({ modals }: { modals: ContentModalConf
   // Restore focus only on a real close, not when switching straight to another modal.
   useEffect(() => {
     if (activeId !== null || !triggerRef.current) return;
+    triggerRef.current.setAttribute("aria-expanded", "false");
     triggerRef.current.focus();
     triggerRef.current = null;
   }, [activeId]);
@@ -62,6 +65,9 @@ export default function ContentModalLayer({ modals }: { modals: ContentModalConf
     </>
   );
 }
+
+// Close button, CTA links and the (focusable) scroll region.
+const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function ContentModal({
   config,
@@ -79,7 +85,7 @@ function ContentModal({
   // Keep Tab / Shift+Tab inside the dialog while it is open (aria-modal contract).
   const onKeyDown = (e: ReactKeyboardEvent) => {
     if (e.key !== "Tab" || !dialogRef.current) return;
-    const focusable = dialogRef.current.querySelectorAll<HTMLElement>("a[href], button:not([disabled])");
+    const focusable = dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE);
     if (!focusable.length) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -92,7 +98,7 @@ function ContentModal({
     }
   };
 
-  // Deferred: framer-motion flips `visibility` after this effect runs, and a
+  // Deferred: `visibility` flips with the class change after this effect runs, and a
   // still-hidden element can't take focus.
   useEffect(() => {
     if (!isOpen) return;
@@ -102,45 +108,46 @@ function ContentModal({
 
   return (
     // Always mounted: closed state is `visibility: hidden` (not unmounted) so the
-    // content ships in the SSR HTML. `transitionEnd` keeps the fade-out visible.
-    <motion.div
+    // content ships in the SSR HTML. Visibility is in the transition list, so it
+    // flips at the end of the fade-out and at the start of the fade-in.
+    <div
       id={`cm-${config.id}`}
-      initial={false}
-      animate={
-        isOpen
-          ? { opacity: 1, visibility: "visible" }
-          : { opacity: 0, transitionEnd: { visibility: "hidden" } }
-      }
-      style={{ visibility: "hidden", opacity: 0 }}
       onClick={onClose}
       aria-hidden={!isOpen}
-      className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 backdrop-blur-md px-4"
+      className={`fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 backdrop-blur-md px-4 transition-[opacity,visibility] duration-200 motion-reduce:transition-none ${
+        isOpen ? "visible opacity-100" : "invisible opacity-0"
+      }`}
     >
-      <motion.div
+      <div
         ref={dialogRef}
         onKeyDown={onKeyDown}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        initial={false}
-        animate={isOpen ? { scale: 1, opacity: 1 } : { scale: 0.9, opacity: 0 }}
-        transition={{ type: "spring", damping: 30, stiffness: 300 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl md:max-w-3xl mx-auto flex flex-col max-h-[calc(100dvh-2rem)] bg-gradient-to-br from-orange-50 via-white to-amber-50 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 shadow-[0_24px_80px_rgba(15,23,42,0.45)] border border-orange-100/60"
+        className={`relative w-full max-w-2xl md:max-w-3xl mx-auto flex flex-col max-h-[calc(100dvh-2rem)] bg-gradient-to-br from-orange-50 via-white to-amber-50 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 shadow-[0_24px_80px_rgba(15,23,42,0.45)] border border-orange-100/60 transition-transform duration-200 ease-out motion-reduce:transition-none ${
+          isOpen ? "scale-100" : "scale-95"
+        }`}
       >
         <button
           ref={closeRef}
           type="button"
           onClick={onClose}
           aria-label="Close"
-          tabIndex={isOpen ? 0 : -1}
           className="absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/70 text-gray-500 hover:text-gray-800 shadow-sm hover:shadow-md transition-all"
         >
           <XIcon className="h-6 w-6" aria-hidden="true" />
         </button>
 
-        {/* Scroll lives here, not on the card, so the absolute Close button stays put. */}
-        <div className="min-h-0 overflow-y-auto space-y-5 md:space-y-6">
+        {/* Scroll lives here, not on the card, so Close and the CTA footer stay put.
+            Focusable so keyboard users can scroll it; overscroll-contain stops iOS
+            scroll chaining to the page behind. */}
+        <div
+          tabIndex={isOpen ? 0 : -1}
+          role="region"
+          aria-labelledby={titleId}
+          className="min-h-0 overflow-y-auto overscroll-contain space-y-5 md:space-y-6 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+        >
           <div className="flex flex-wrap items-center gap-2 md:gap-3 pr-10">
             <h2
               id={titleId}
@@ -179,27 +186,27 @@ function ContentModal({
               </ul>
             ) : null}
           </div>
-
-          {config.ctas?.length ? (
-            <div className="flex flex-wrap gap-3 pt-1">
-              {config.ctas.map((cta, i) => (
-                <a
-                  key={`${i}-${cta.href}`}
-                  href={cta.href}
-                  tabIndex={isOpen ? 0 : -1}
-                  className={
-                    cta.variant === "secondary"
-                      ? "inline-flex items-center rounded-full border border-orange-300 bg-white/80 px-5 py-2.5 text-sm font-semibold text-orange-600 hover:bg-orange-50 transition-colors"
-                      : "inline-flex items-center rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-lg hover:brightness-105 transition-all"
-                  }
-                >
-                  {cta.label}
-                </a>
-              ))}
-            </div>
-          ) : null}
         </div>
-      </motion.div>
-    </motion.div>
+
+        {/* Pinned footer: the conversion point stays visible however long the copy is. */}
+        {config.ctas?.length ? (
+          <div className="flex-shrink-0 flex flex-wrap gap-3 pt-5 mt-1 border-t border-orange-100/60">
+            {config.ctas.map((cta, i) => (
+              <a
+                key={`${i}-${cta.href}`}
+                href={cta.href}
+                className={
+                  cta.variant === "secondary"
+                    ? "inline-flex items-center rounded-full border border-orange-300 bg-white/80 px-5 py-2.5 text-sm font-semibold text-orange-700 hover:bg-orange-50 transition-colors"
+                    : "inline-flex items-center rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-lg hover:brightness-105 transition-all"
+                }
+              >
+                {cta.label}
+              </a>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
   );
 }
