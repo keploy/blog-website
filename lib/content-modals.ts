@@ -17,6 +17,47 @@ const TOOLTIP_SKIP_TAGS = new Set(["button", "code", "pre", "script", "style", "
 // or a comment (e.g. Gutenberg block JSON) does not end the token.
 const TOKEN_SPLIT = /(<!--[\s\S]*?-->|<(?:[^>"']|"[^"]*"|'[^']*')+>)/;
 
+// Raw-text elements: their body is not markup, so a `<` inside (e.g. `if (a < b)`)
+// must not be tokenized as a tag. The walker jumps straight to the closing tag.
+const RAW_TEXT_TAGS = new Set(["script", "style"]);
+
+// WordPress output vs plain config text: non-breaking spaces and wptexturize's
+// curly quotes. Matching runs on a normalized copy; the original slice is rendered.
+const NORMALIZE: [RegExp, string][] = [
+  [/^(?:&nbsp;|&#160;|&#xa0;|\u00a0)/i, " "],
+  [/^(?:&#8217;|&#8216;|&rsquo;|&lsquo;|[\u2018\u2019])/i, "'"],
+  [/^(?:&#8220;|&#8221;|&rdquo;|&ldquo;|[\u201c\u201d])/i, '"'],
+];
+
+/** Normalized text plus, for each normalized char, its start offset in `raw` (and raw.length at the end). */
+function normalizeWithMap(raw: string): { text: string; map: number[] } {
+  let text = "";
+  const map: number[] = [];
+  let i = 0;
+  outer: while (i < raw.length) {
+    if (raw[i] === "&" || raw.charCodeAt(i) > 127) {
+      const rest = raw.slice(i, i + 8);
+      for (const [re, rep] of NORMALIZE) {
+        const m = re.exec(rest);
+        if (m) {
+          text += rep;
+          map.push(i);
+          i += m[0].length;
+          continue outer;
+        }
+      }
+    }
+    text += raw[i];
+    map.push(i);
+    i++;
+  }
+  map.push(raw.length);
+  return { text, map };
+}
+
+const normalizeAnchor = (s: string) =>
+  s.replace(/\u00a0/g, " ").replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"');
+
 const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const escapeAttr = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
@@ -44,8 +85,8 @@ function injectMarkers(html: string, markers: Marker[], injected: Set<string>, s
     pending.map((m) => [
       m.id,
       m.wholeWord
-        ? new RegExp(`(^|[^\\w-])(${escapeRegex(m.text)})(?![\\w-])`, "i")
-        : new RegExp(`()(${escapeRegex(m.text)})`, "i"),
+        ? new RegExp(`(^|[^\\w-])(${escapeRegex(normalizeAnchor(m.text))})(?![\\w-])`, "i")
+        : new RegExp(`()(${escapeRegex(normalizeAnchor(m.text))})`, "i"),
     ]),
   );
 
@@ -60,6 +101,16 @@ function injectMarkers(html: string, markers: Marker[], injected: Set<string>, s
       const tag = /^<\s*(\/)?\s*([a-z0-9]+)/i.exec(token);
       if (!tag) continue;
       const name = tag[2].toLowerCase();
+      if (!tag[1] && RAW_TEXT_TAGS.has(name)) {
+        // Re-join the rest and skip past the matching close tag in one step.
+        const rest = tokens.slice(i + 1).join("");
+        const close = rest.toLowerCase().indexOf(`</${name}`);
+        if (close === -1) break;
+        const end = rest.indexOf(">", close) + 1 || rest.length;
+        tokens.splice(i + 1, tokens.length, rest.slice(0, end), ...rest.slice(end).split(TOKEN_SPLIT));
+        i++;
+        continue;
+      }
       if (!skipTags.has(name) || token.endsWith("/>")) continue;
       if (tag[1]) {
         const idx = skipStack.lastIndexOf(name);
@@ -77,18 +128,22 @@ function injectMarkers(html: string, markers: Marker[], injected: Set<string>, s
     let rest = token;
     let out = "";
     for (;;) {
-      let best: { m: Marker; start: number; match: string } | null = null;
+      const { text, map } = normalizeWithMap(rest);
+      let best: { m: Marker; start: number; end: number } | null = null;
       for (const m of pending) {
         if (injected.has(m.id)) continue;
-        const hit = patterns.get(m.id)!.exec(rest);
+        const hit = patterns.get(m.id)!.exec(text);
         if (!hit) continue;
         const start = hit.index + hit[1].length;
-        if (!best || start < best.start) best = { m, start, match: hit[2] };
+        if (!best || start < best.start) best = { m, start, end: start + hit[2].length };
       }
       if (!best) break;
       injected.add(best.m.id);
-      out += rest.slice(0, best.start) + best.m.render(best.match);
-      rest = rest.slice(best.start + best.match.length);
+      // Map back to raw offsets so the original (entity-encoded) text is kept.
+      const rawStart = map[best.start];
+      const rawEnd = map[best.end];
+      out += rest.slice(0, rawStart) + best.m.render(rest.slice(rawStart, rawEnd));
+      rest = rest.slice(rawEnd);
     }
     tokens[i] = out + rest;
     if (pending.every((m) => injected.has(m.id))) break;
@@ -107,7 +162,7 @@ export function injectModalTriggers(html: string, modals: ContentModalConfig[], 
         text: m.anchorText,
         wholeWord: true,
         render: (match: string) =>
-          `<button type="button" class="keploy-cm-trigger" data-cm-id="${id}" aria-haspopup="dialog" aria-controls="cm-${id}">${match}</button>`,
+          `<button type="button" class="keploy-cm-trigger" data-cm-id="${id}" aria-haspopup="dialog" aria-expanded="false" aria-controls="cm-${id}">${match}</button>`,
       };
     }),
     injected,

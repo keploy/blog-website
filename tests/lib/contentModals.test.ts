@@ -62,8 +62,8 @@ test("two anchors in one text node do not nest inside each other's markup", () =
   );
   assert.equal(
     out,
-    `<p><button type="button" class="keploy-cm-trigger" data-cm-id="cm-record" aria-haspopup="dialog" aria-controls="cm-cm-record">record</button> traffic and ` +
-      `<button type="button" class="keploy-cm-trigger" data-cm-id="replay" aria-haspopup="dialog" aria-controls="cm-replay">replay</button> tests</p>`,
+    `<p><button type="button" class="keploy-cm-trigger" data-cm-id="cm-record" aria-haspopup="dialog" aria-expanded="false" aria-controls="cm-cm-record">record</button> traffic and ` +
+      `<button type="button" class="keploy-cm-trigger" data-cm-id="replay" aria-haspopup="dialog" aria-expanded="false" aria-controls="cm-replay">replay</button> tests</p>`,
   );
 });
 
@@ -101,7 +101,7 @@ test("tooltip pass never rewrites modal trigger attributes", () => {
     [tooltip("t1", "shift-left")],
     freshState(),
   );
-  assert.match(out, /data-cm-id="basics-shift-left" aria-haspopup="dialog" aria-controls="cm-basics-shift-left">basics<\/button>/);
+  assert.match(out, /data-cm-id="basics-shift-left" aria-haspopup="dialog" aria-expanded="false" aria-controls="cm-basics-shift-left">basics<\/button>/);
   assert.match(out, /<span class="keploy-tt" data-tt-key="t1"[^>]*>Shift-left<\/span> wins/);
 });
 
@@ -129,4 +129,27 @@ test("tooltips skip attributes but still apply inside links", () => {
     out,
     `<p><a href="/mock-apis" title="mock apis"><span class="keploy-tt" data-tt-key="t1" style="border-bottom:1.5px dotted #f97316;cursor:help;">mock apis</span></a></p>`,
   );
+});
+
+test("a raw < inside <script> or <style> does not suppress later triggers", () => {
+  const html = `<script>if (a < b) run();</script><style>a<b{}</style><p>This prevents regressions.</p>`;
+  const out = injectModalTriggers(html, [modal("m1", "prevents regressions")], new Set());
+  assert.ok(out.startsWith(`<script>if (a < b) run();</script><style>a<b{}</style><p>This <button`));
+});
+
+test("text inside <script> never becomes a trigger", () => {
+  const out = injectModalTriggers(`<script>var s = "prevents regressions";</script><p>none</p>`, [modal("m1", "prevents regressions")], new Set());
+  assert.doesNotMatch(out, /<button/);
+});
+
+test("&nbsp; inside the phrase still matches and the original entity is kept", () => {
+  const out = injectModalTriggers("<p>It prevents&nbsp;regressions.</p>", [modal("m1", "prevents regressions")], new Set());
+  assert.match(out, /<button[^>]*>prevents&nbsp;regressions<\/button>\.<\/p>/);
+});
+
+test("curly quotes from wptexturize match straight quotes in config", () => {
+  const entity = injectModalTriggers("<p>It won&#8217;t fail.</p>", [modal("m1", "won't fail")], new Set());
+  assert.match(entity, /<button[^>]*>won&#8217;t fail<\/button>/);
+  const literal = injectModalTriggers("<p>It won\u2019t fail.</p>", [modal("m1", "won't fail")], new Set());
+  assert.match(literal, /<button[^>]*>won\u2019t fail<\/button>/);
 });
