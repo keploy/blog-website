@@ -1,6 +1,7 @@
 export interface ContentModalCta {
   label: string;
-  href: string;
+  /** https or site-relative only, so a `javascript:` or `http:` URL fails tsc. */
+  href: `https://${string}` | `/${string}`;
   variant?: "primary" | "secondary";
 }
 
@@ -148,6 +149,14 @@ export const contentModals: ContentModalConfig[] = [
     ],
   },
 ];
+
+if (process.env.NODE_ENV !== "production") {
+  const seen = new Set<string>();
+  for (const m of contentModals) {
+    if (seen.has(m.id)) console.warn("[content-modals] duplicate id:", m.id);
+    seen.add(m.id);
+  }
+}
 
 export function getContentModalsForSlug(slug: string): ContentModalConfig[] {
   return contentModals.filter((m) => m.blogSlug === slug);

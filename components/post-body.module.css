@@ -386,7 +386,7 @@
   border: 0;
   background: none;
   font: inherit;
-  color: #ea580c;
+  color: #c2410c;
   text-align: inherit;
   text-decoration: underline dashed #f97316;
   text-decoration-thickness: 1.5px;
@@ -396,7 +396,7 @@
 }
 
 .content :global(.keploy-cm-trigger:hover) {
-  color: #c2410c;
+  color: #9a3412;
   text-decoration-style: solid;
 }
 
