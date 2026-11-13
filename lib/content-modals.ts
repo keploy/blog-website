@@ -21,12 +21,13 @@ const TOKEN_SPLIT = /(<!--[\s\S]*?-->|<(?:[^>"']|"[^"]*"|'[^']*')+>)/;
 // must not be tokenized as a tag. The walker jumps straight to the closing tag.
 const RAW_TEXT_TAGS = new Set(["script", "style"]);
 
-// WordPress output vs plain config text: non-breaking spaces and wptexturize's
-// curly quotes. Matching runs on a normalized copy; the original slice is rendered.
+// WordPress output vs plain config text: non-breaking spaces, line breaks inside a
+// paragraph, wptexturize's curly quotes and encoded apostrophes. Matching runs on a
+// normalized copy; the original slice is rendered.
 const NORMALIZE: [RegExp, string][] = [
-  [/^(?:&nbsp;|&#160;|&#xa0;|\u00a0)/i, " "],
-  [/^(?:&#8217;|&#8216;|&rsquo;|&lsquo;|[\u2018\u2019])/i, "'"],
-  [/^(?:&#8220;|&#8221;|&rdquo;|&ldquo;|[\u201c\u201d])/i, '"'],
+  [/^(?:&nbsp;|&#160;|&#xa0;|\u00a0|[\t\n\r])/i, " "],
+  [/^(?:&#8217;|&#8216;|&#x2019;|&#x2018;|&rsquo;|&lsquo;|&#0?39;|&apos;|[\u2018\u2019])/i, "'"],
+  [/^(?:&#8220;|&#8221;|&#x201c;|&#x201d;|&rdquo;|&ldquo;|[\u201c\u201d])/i, '"'],
 ];
 
 /** Normalized text plus, for each normalized char, its start offset in `raw` (and raw.length at the end). */
@@ -35,7 +36,8 @@ function normalizeWithMap(raw: string): { text: string; map: number[] } {
   const map: number[] = [];
   let i = 0;
   outer: while (i < raw.length) {
-    if (raw[i] === "&" || raw.charCodeAt(i) > 127) {
+    const code = raw.charCodeAt(i);
+    if (raw[i] === "&" || code > 127 || code === 9 || code === 10 || code === 13) {
       const rest = raw.slice(i, i + 8);
       for (const [re, rep] of NORMALIZE) {
         const m = re.exec(rest);
@@ -57,6 +59,9 @@ function normalizeWithMap(raw: string): { text: string; map: number[] } {
 
 const normalizeAnchor = (s: string) =>
   s.replace(/\u00a0/g, " ").replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"');
+
+// A space in the anchor also matches a run of whitespace (e.g. a wrapped line).
+const anchorPattern = (s: string) => escapeRegex(normalizeAnchor(s)).replace(/ +/g, " +");
 
 const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const escapeAttr = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
@@ -85,8 +90,8 @@ function injectMarkers(html: string, markers: Marker[], injected: Set<string>, s
     pending.map((m) => [
       m.id,
       m.wholeWord
-        ? new RegExp(`(^|[^\\w-])(${escapeRegex(normalizeAnchor(m.text))})(?![\\w-])`, "i")
-        : new RegExp(`()(${escapeRegex(normalizeAnchor(m.text))})`, "i"),
+        ? new RegExp(`(^|[^\\w-])(${anchorPattern(m.text)})(?![\\w-])`, "i")
+        : new RegExp(`()(${anchorPattern(m.text)})`, "i"),
     ]),
   );
 

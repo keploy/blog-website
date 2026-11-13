@@ -1,6 +1,9 @@
 export interface ContentModalCta {
   label: string;
-  /** https or site-relative only, so a `javascript:` or `http:` URL fails tsc. */
+  /**
+   * https or site-relative only, so a `javascript:` or `http:` URL fails tsc.
+   * Protocol-relative `//host` slips through the type; validate:modals rejects it.
+   */
   href: `https://${string}` | `/${string}`;
   variant?: "primary" | "secondary";
 }
@@ -155,6 +158,9 @@ if (process.env.NODE_ENV !== "production") {
   for (const m of contentModals) {
     if (seen.has(m.id)) console.warn("[content-modals] duplicate id:", m.id);
     seen.add(m.id);
+    for (const cta of m.ctas ?? []) {
+      if (cta.href.startsWith("//")) console.warn("[content-modals] protocol-relative CTA href:", m.id, cta.href);
+    }
   }
 }
 

@@ -114,7 +114,7 @@ function ContentModal({
       id={`cm-${config.id}`}
       onClick={onClose}
       aria-hidden={!isOpen}
-      className={`fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 backdrop-blur-md px-4 transition-[opacity,visibility] duration-200 motion-reduce:transition-none ${
+      className={`fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 backdrop-blur-md px-4 touch-none transition-[opacity,visibility] duration-200 motion-reduce:transition-none ${
         isOpen ? "visible opacity-100" : "invisible opacity-0"
       }`}
     >
@@ -141,7 +141,8 @@ function ContentModal({
 
         {/* Scroll lives here, not on the card, so Close and the CTA footer stay put.
             Focusable so keyboard users can scroll it; overscroll-contain stops iOS
-            scroll chaining to the page behind. */}
+            scroll chaining to the page behind. The backdrop's touch-none stops page
+            panning from outside; it does not reach past this scroll container. */}
         <div
           tabIndex={isOpen ? 0 : -1}
           role="region"

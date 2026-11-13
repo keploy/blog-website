@@ -11,8 +11,11 @@
  *   npm run validate:modals
  *   CONTENT_MODALS_WP_URL=https://wp.keploy.io npm run validate:modals
  *
- * Exit code is non-zero on a duplicate id, a post that can't be found, or an
- * anchor that does not match.
+ * Exit code is non-zero on a duplicate id, a protocol-relative CTA href, a post
+ * that can't be found, or an anchor that does not match.
+ *
+ * Runs on every PR (playwright.yml) and daily (validate-content-modals.yml), since
+ * a WordPress edit after merge would otherwise only surface on an unrelated PR.
  */
 
 import { contentModals } from "../config/content-modals";
@@ -36,6 +39,9 @@ async function main() {
   for (const m of contentModals) {
     if (seen.has(m.id)) errors.push(`duplicate id: ${m.id}`);
     seen.add(m.id);
+    for (const cta of m.ctas ?? []) {
+      if (cta.href.startsWith("//")) errors.push(`${m.id}: protocol-relative CTA href "${cta.href}"`);
+    }
   }
 
   const slugs = Array.from(new Set(contentModals.map((m) => m.blogSlug)));

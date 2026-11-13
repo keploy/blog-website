@@ -153,3 +153,15 @@ test("curly quotes from wptexturize match straight quotes in config", () => {
   const literal = injectModalTriggers("<p>It won\u2019t fail.</p>", [modal("m1", "won't fail")], new Set());
   assert.match(literal, /<button[^>]*>won\u2019t fail<\/button>/);
 });
+
+test("hex and numeric apostrophe entities match a straight quote in config", () => {
+  for (const ent of ["&#x2019;", "&#039;", "&#39;", "&apos;"]) {
+    const out = injectModalTriggers(`<p>It won${ent}t fail.</p>`, [modal("m1", "won't fail")], new Set());
+    assert.match(out, new RegExp(`<button[^>]*>won${ent}t fail</button>`), ent);
+  }
+});
+
+test("a line break or repeated whitespace inside the phrase still matches", () => {
+  const out = injectModalTriggers("<p>It prevents\n  regressions.</p>", [modal("m1", "prevents regressions")], new Set());
+  assert.match(out, /<button[^>]*>prevents\n  regressions<\/button>\.<\/p>/);
+});
