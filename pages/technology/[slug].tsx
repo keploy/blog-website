@@ -38,6 +38,8 @@ import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/conten
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
+// Server-only: used in getStaticProps, so Next strips the modal copy from the client bundle.
+import { getContentModalsForSlug } from "../../config/content-modals";
 
 const postBody = ({ content, post }) => {
   const urlPattern = /https:\/\/keploy\.io\/wp\/author\/[^\/]+\//g;
@@ -50,7 +52,7 @@ const postBody = ({ content, post }) => {
   return replacedContent;
 };
 
-export default function Post({ post, posts, reviewAuthorDetails, preview }) {
+export default function Post({ post, posts, reviewAuthorDetails, preview, contentModals }) {
   const router = useRouter();
   const { slug } = router.query;
   const morePosts = posts?.edges;
@@ -282,6 +284,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
               authorImageUrl={avatarImgSrc || AUTHOR_AVATAR_PLACEHOLDER}
               authorDescription={blogWriterDescription || "An author for keploy's blog."}
               slug={slug}
+              contentModals={contentModals}
               ReviewAuthorDetails={
                 reviewAuthorDetails &&
                 reviewAuthorDetails?.length > 0 &&
@@ -387,6 +390,7 @@ export const getStaticProps: GetStaticProps = async ({
         post: data.post,
         posts: moreStories?.techMoreStories || { edges: [] },
         reviewAuthorDetails: authorDetails,
+        contentModals: getContentModalsForSlug(data.post?.slug || slugParam),
       },
       revalidate: REVALIDATE_CONTENT,
     };

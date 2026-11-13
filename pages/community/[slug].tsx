@@ -40,6 +40,8 @@ import { detectCodeLanguages, countWords, extractFaqs } from "../../utils/conten
 import { getTooltipsForSlug } from "../../config/keyword-tooltips";
 
 const PostBody = dynamic(() => import("../../components/post-body"));
+// Server-only: used in getStaticProps, so Next strips the modal copy from the client bundle.
+import { getContentModalsForSlug } from "../../config/content-modals";
 
 // Apply all HTML transformations in one synchronous pass so the
 // transformed content is available at render time (SSR-friendly) and
@@ -63,7 +65,7 @@ const transformPostContent = (content: string, ppmaAuthorName: string) => {
     );
 };
 
-export default function Post({ post, posts, reviewAuthorDetails, preview }) {
+export default function Post({ post, posts, reviewAuthorDetails, preview, contentModals }) {
   const router = useRouter();
   const { slug } = router.query;
   const morePosts = posts?.edges;
@@ -310,6 +312,7 @@ export default function Post({ post, posts, reviewAuthorDetails, preview }) {
                 reviewAuthorDetails[postBodyReviewerAuthor]
               }
               slug={slug}
+              contentModals={contentModals}
               categories={post?.categories}
             />
           </div>
@@ -403,6 +406,7 @@ export const getStaticProps: GetStaticProps = async ({
         post: data.post,
         posts: moreStories?.communityMoreStories || { edges: [] },
         reviewAuthorDetails: authorDetails,
+        contentModals: getContentModalsForSlug(data.post?.slug || slug),
       },
       revalidate: REVALIDATE_CONTENT,
     };

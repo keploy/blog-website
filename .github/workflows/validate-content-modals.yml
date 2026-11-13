@@ -1,0 +1,32 @@
+name: Validate Content Modals
+
+# validate:modals also runs on every PR (playwright.yml). This daily run catches a
+# WordPress edit made after merge that breaks a modal anchor, instead of letting it
+# surface as a red check on an unrelated PR.
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Content modal anchors vs WordPress
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate content modal anchors against WordPress
+        run: npm run validate:modals
