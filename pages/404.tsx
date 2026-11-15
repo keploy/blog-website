@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 import Head from "next/head";
 import NotFoundPage from "../components/NotFoundPage";
 import { getAllPostsForTechnology, getAllPostsForCommunity } from "../lib/api";
@@ -17,23 +15,6 @@ export default function Custom404({
   communityPosts,
   technologyPosts,
 }: Custom404Props) {
-  const router = useRouter();
-  const asPath = router.asPath;
-
-  useEffect(() => {
-    const redirectTimeout = setTimeout(() => {
-      if (asPath.startsWith("/community/")) {
-        router.replace("/community");
-      } else if (asPath.startsWith("/technology/")) {
-        router.replace("/technology");
-      } else {
-        router.replace("/");
-      }
-    }, 12000); //12 secs
-
-    return () => clearTimeout(redirectTimeout);
-  }, [asPath, router]);
-
   return (
     <>
       <Head>
