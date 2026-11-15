@@ -32,7 +32,8 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.pageYOffset > SCROLL_THRESHOLD) {
+      const scrollTop = window.scrollY ?? window.pageYOffset ?? document.documentElement.scrollTop;
+      if (scrollTop > SCROLL_THRESHOLD) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
@@ -40,11 +41,11 @@ const ScrollToTop = () => {
     };
 
     const updateScrollProgress = () => {
-      const scrollTop = window.pageYOffset;
+      const scrollTop = window.scrollY ?? window.pageYOffset ?? document.documentElement.scrollTop;
       const docHeight =
         document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = (scrollTop / docHeight) * 100;
-      setScrollProgress(scrollPercent);
+      const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      setScrollProgress(Number.isFinite(scrollPercent) ? Math.min(Math.max(scrollPercent, 0), 100) : 0);
     };
 
     const handleScroll = () => {
@@ -55,7 +56,7 @@ const ScrollToTop = () => {
     // Throttled scroll handler
     const throttledScrollHandler = throttle(handleScroll, THROTTLE_DELAY);
 
-    window.addEventListener("scroll", throttledScrollHandler);
+    window.addEventListener("scroll", throttledScrollHandler, { passive: true });
     return () => window.removeEventListener("scroll", throttledScrollHandler);
   }, [throttle]);
 
