@@ -5,17 +5,27 @@ import PostHeaderAuthors from "./PostHeaderAuthors";
 import SummarizeWithAI from "./SummarizeWithAI";
 import PreferredSourceButton from "./PreferredSourceButton";
 
+interface PostHeaderProps {
+  title: string;
+  coverImage?: any;
+  date?: string;
+  categories?: any[];
+  BlogWriter?: any;
+  BlogReviewer?: any;
+  TimeToRead?: string | number;
+  tags?: any[];
+}
+
 export default function PostHeader({
   title,
   coverImage,
   date,
-  author,
   categories,
   BlogWriter,
   BlogReviewer,
   TimeToRead,
   tags,
-}) {
+}: PostHeaderProps) {
   return (
     <div className="max-w-[780px] mx-auto px-4 sm:px-6">
       {/* 1. Cover image — top banner with rounded corners (LCP element, priority=true) */}
