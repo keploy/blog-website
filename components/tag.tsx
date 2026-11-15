@@ -183,7 +183,7 @@ export default function Tag({
 
       {/* Left-aligned heading */}
       <h3 className="mt-12 mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100 text-left">
-        tags
+        Tags
       </h3>
       
       {/* Left-aligned flex container */}
