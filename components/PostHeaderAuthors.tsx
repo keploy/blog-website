@@ -194,9 +194,13 @@ const PostHeaderAuthors = ({
   date: string;
   tags?: { edges: { node: { name: string } }[] };
 }) => {
+  const writerPerson = blogwriter?.[0] || { name: "", ImageUrl: "", description: "" };
+  const reviewerPerson = blogreviewer?.[0] || { name: "", ImageUrl: "", description: "" };
+
   const sameAuthor =
-    blogwriter[0].name.split(" ")[0].toLowerCase() ===
-    blogreviewer[0].name.toLowerCase();
+    writerPerson.name && reviewerPerson.name
+      ? writerPerson.name.split(" ")[0].toLowerCase() === reviewerPerson.name.toLowerCase()
+      : false;
 
   /* refs let each hook dismiss the other without circular deps */
   const reviewerDismissRef = useRef<() => void>(() => {});
@@ -216,56 +220,60 @@ const PostHeaderAuthors = ({
       <div className="flex flex-row items-center gap-3 sm:gap-4 py-2">
 
         {/* Avatar — no hover trigger here */}
-        <div className="flex-shrink-0">
-          <Image
-            src={blogwriter[0].ImageUrl}
-            alt={blogwriter[0].name}
-            height={96}
-            width={96}
-            className="rounded-full object-cover"
-            style={{ width: 96, height: 96, minWidth: 96 }}
-          />
-        </div>
+        {writerPerson.ImageUrl && (
+          <div className="flex-shrink-0">
+            <Image
+              src={writerPerson.ImageUrl}
+              alt={writerPerson.name}
+              height={96}
+              width={96}
+              className="rounded-full object-cover"
+              style={{ width: 96, height: 96, minWidth: 96 }}
+            />
+          </div>
+        )}
 
         {/* Text column */}
         <div className="flex flex-col" style={{ gap: "3px" }}>
 
           {/* Writer name — hover trigger */}
-          <div className="relative inline-flex items-baseline gap-1">
-            <span
-              style={{
-                fontFamily: 'var(--font-dm-sans), sans-serif',
-                fontWeight: 700,
-                fontSize: "clamp(0.9375rem, 2vw, 1.25rem)",
-                lineHeight: "150%",
-                color: "#111827",
-              }}
-            >
-              Written By:{" "}
-            </span>
-            <span
-              onMouseEnter={writer.show}
-              onMouseLeave={writer.hide}
-              className="cursor-pointer border-b border-dashed border-gray-400 hover:border-orange-400 hover:text-orange-600 transition-colors duration-100"
-              style={{
-                fontFamily: 'var(--font-dm-sans), sans-serif',
-                fontWeight: 700,
-                fontSize: "clamp(0.9375rem, 2vw, 1.25rem)",
-                lineHeight: "150%",
-                color: "inherit",
-              }}
-            >
-              {blogwriter[0].name}
-            </span>
+          {writerPerson.name && (
+            <div className="relative inline-flex items-baseline gap-1">
+              <span
+                style={{
+                  fontFamily: 'var(--font-dm-sans), sans-serif',
+                  fontWeight: 700,
+                  fontSize: "clamp(0.9375rem, 2vw, 1.25rem)",
+                  lineHeight: "150%",
+                  color: "#111827",
+                }}
+              >
+                Written By:{" "}
+              </span>
+              <span
+                onMouseEnter={writer.show}
+                onMouseLeave={writer.hide}
+                className="cursor-pointer border-b border-dashed border-gray-400 hover:border-orange-400 hover:text-orange-600 transition-colors duration-100"
+                style={{
+                  fontFamily: 'var(--font-dm-sans), sans-serif',
+                  fontWeight: 700,
+                  fontSize: "clamp(0.9375rem, 2vw, 1.25rem)",
+                  lineHeight: "150%",
+                  color: "inherit",
+                }}
+              >
+                {writerPerson.name}
+              </span>
 
-            <AuthorHoverCard
-              visible={writer.visible}
-              person={blogwriter[0]}
-              role="Writer"
-              onMouseEnter={writer.show}
-              onMouseLeave={writer.hide}
-            />
-          </div>
+              <AuthorHoverCard
+                visible={writer.visible}
+                person={writerPerson}
+                role="Writer"
+                onMouseEnter={writer.show}
+                onMouseLeave={writer.hide}
+              />
+            </div>
+          )}
 
           {/* Reviewer name — hover trigger (or description if same author) */}
           {!sameAuthor ? (
