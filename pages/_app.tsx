@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
 import { trackAiReferral } from '@/utils/aiReferralTracker';
 import { ANNOUNCEMENT_ENABLED } from '../components/announcementConfig';
+import LinkedInInsightScript from '../components/LinkedInInsightScript';
 // Lazy + client-only: the bar is a non-critical global widget (often disabled
 // via ANNOUNCEMENT_ENABLED). Code-splitting it keeps Marquee + lucide icons out
 // of the shared _app bundle, and gating the render on ANNOUNCEMENT_ENABLED (a
@@ -97,6 +98,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         data-source="blog"
         strategy="lazyOnload"
       />
+      {/* LinkedIn Insight Tag: retargeting audiences for the Keploy ad account.
+          Same partner id as keploy.io and /docs; see the component for why. */}
+      <LinkedInInsightScript />
       {ANNOUNCEMENT_ENABLED && <Announcements />}
       {loading ? <PageLoader /> : <Component {...pageProps} />}
     </div>

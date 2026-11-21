@@ -1,4 +1,5 @@
 import { test, expect, Route } from '@playwright/test';
+import { openPost } from '../support/openLink';
 
 /**
  * Newsletter lead capture → telemetry /blog-mql with an invisible reCAPTCHA
@@ -59,10 +60,7 @@ test.describe('Newsletter lead capture (blog-mql + reCAPTCHA)', () => {
     await page.goto(targetUrl);
     await page.waitForLoadState('domcontentloaded');
 
-    const firstPost = page.locator('a[href*="/technology/"]').first();
-    await expect(firstPost).toBeVisible({ timeout: 15000 });
-    await firstPost.click();
-    await page.waitForLoadState('domcontentloaded');
+    await openPost(page, page.locator('a[href*="/technology/"]').first());
   });
 
   test('submitting the newsletter form sends a lead with the reCAPTCHA token', async ({ page }) => {

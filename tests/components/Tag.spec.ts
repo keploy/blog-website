@@ -1,14 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { openPost } from '../support/openLink';
 
 test.describe('Tag Component', () => {
     test.beforeEach(async ({ page, baseURL }) => {
         await page.goto(`${baseURL!}/technology`, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
-        const firstPost = page.locator('a[href*="/technology/"]').first();
-        await expect(firstPost).toBeVisible({ timeout: 15000 });
-        await expect(firstPost).toBeEnabled();
-        await firstPost.click();
-        await page.waitForLoadState('domcontentloaded');
+        await openPost(page, page.locator('a[href*="/technology/"]').first());
     });
 
     test('should display tag section heading', async ({ page }) => {
