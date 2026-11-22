@@ -69,9 +69,10 @@ export default function CommunitySearch({ allPosts }: { allPosts: { node: Post }
   return (
     <Layout 
       preview={false} 
-      featuredImage={heroPost?.featuredImage?.node.sourceUrl || HOME_OG_IMAGE_URL} 
-      Title={heroPost?.title || `Search: ${searchTerm}`} 
-      Description={searchTerm ? `Search results for "${searchTerm}" in the Keploy community blog — developer stories, tutorials, and open-source guides.` : `Search the Keploy community blog for developer stories, open-source contributions, and hands-on engineering tutorials.`}
+      featuredImage={HOME_OG_IMAGE_URL} 
+      // Never echo what the visitor searched for (or result-derived metadata) into <head> (components/KeployUICapture.tsx).
+      Title="Keploy Community Search"
+      Description="Search the Keploy community blog for developer stories, open-source contributions, and hands-on engineering tutorials."
       structuredData={structuredData}
     >
       <Head>

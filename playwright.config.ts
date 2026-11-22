@@ -19,6 +19,7 @@ if (fs.existsSync(envTestPath)) {
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000/blog';
 const GRAPHQL_API_URL = process.env.PLAYWRIGHT_GRAPHQL_URL || 'http://localhost:4000/graphql';
+const UI_CAPTURE_INGEST_URL = new URL('/ui/v1/ingest', GRAPHQL_API_URL).href;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -124,6 +125,10 @@ export default defineConfig({
       env: {
         WORDPRESS_API_URL: GRAPHQL_API_URL,
         NEXT_PUBLIC_WORDPRESS_API_URL: GRAPHQL_API_URL,
+        // Keploy UI capture on for every test, posting to the mock server's
+        // ingest stub (tests/mock-server.js), as production posts to api.keploy.io.
+        NEXT_PUBLIC_KEPLOY_UI_CAPTURE_API_KEY: 'kep_e2e_ingest_stub',
+        NEXT_PUBLIC_KEPLOY_UI_CAPTURE_ENDPOINT: UI_CAPTURE_INGEST_URL,
       },
     },
   ],

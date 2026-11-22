@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic'
 import { trackAiReferral } from '@/utils/aiReferralTracker';
 import { ANNOUNCEMENT_ENABLED } from '../components/announcementConfig';
 import LinkedInInsightScript from '../components/LinkedInInsightScript';
+import KeployUICapture from '../components/KeployUICapture';
 // Lazy + client-only: the bar is a non-critical global widget (often disabled
 // via ANNOUNCEMENT_ENABLED). Code-splitting it keeps Marquee + lucide icons out
 // of the shared _app bundle, and gating the render on ANNOUNCEMENT_ENABLED (a
@@ -101,6 +102,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       {/* LinkedIn Insight Tag: retargeting audiences for the Keploy ad account.
           Same partner id as keploy.io and /docs; see the component for why. */}
       <LinkedInInsightScript />
+      {/* Keploy's own UI capture of the blog, off unless configured. */}
+      <KeployUICapture />
       {ANNOUNCEMENT_ENABLED && <Announcements />}
       {loading ? <PageLoader /> : <Component {...pageProps} />}
     </div>

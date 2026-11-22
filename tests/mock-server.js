@@ -2,6 +2,15 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+const zlib = require('zlib');
+/**
+ * Batches the UI capture SDK posted to the ingest stub, in arrival order: only
+ * those of browsers tests/e2e/UICapture.spec.ts marked (user agent containing
+ * "uic-e2e-"), so the store stays small while every other test records too.
+ */
+const uiCaptureBatches = [];
+/** Sessions whose first batch came from a marked browser: all their batches are kept. */
+const uiCaptureSessions = new Set();
 const PORT = 4000;
 const MOCK_SERVER_DEBUG = process.env.MOCK_SERVER_DEBUG === 'true';
 
@@ -272,11 +281,50 @@ const server = http.createServer((req, res) => {
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Encoding, X-API-Key');
 
     if (req.method === 'OPTIONS') {
         res.writeHead(204);
         res.end();
+        return;
+    }
+
+    // Keploy UI capture ingest stub: the e2e build points the SDK here
+    // (playwright.config.ts). Batches are kept in memory and read back by
+    // tests/e2e/UICapture.spec.ts through GET /ui/v1/_received.
+    if (req.method === 'GET' && req.url.startsWith('/ui/v1/_received')) {
+        // ?ua=<marker>: every batch of each session whose user agent carries it.
+        const marker = new URL(req.url, 'http://stub').searchParams.get('ua') || '';
+        const sessions = new Set(
+            uiCaptureBatches
+                .filter((b) => marker && (b.body.metadata?.userAgent || '').includes(marker))
+                .map((b) => b.body.sessionId)
+        );
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(uiCaptureBatches.filter((b) => sessions.has(b.body.sessionId))));
+        return;
+    }
+    if (req.method === 'POST' && req.url.startsWith('/ui/v1/')) {
+        const chunks = [];
+        req.on('data', (chunk) => chunks.push(chunk));
+        req.on('end', () => {
+            try {
+                let raw = Buffer.concat(chunks);
+                if (req.headers['content-encoding'] === 'gzip') raw = zlib.gunzipSync(raw);
+                const body = raw.length ? JSON.parse(raw.toString('utf8')) : {};
+                if (req.url === '/ui/v1/ingest') {
+                    if ((body.metadata?.userAgent || '').includes('uic-e2e-')) uiCaptureSessions.add(body.sessionId);
+                    if (uiCaptureSessions.has(body.sessionId)) {
+                        uiCaptureBatches.push({ apiKey: req.headers['x-api-key'] || null, body });
+                    }
+                }
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ ok: true, sessionId: body.sessionId }));
+            } catch (err) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: String(err) }));
+            }
+        });
         return;
     }
 

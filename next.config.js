@@ -5,8 +5,19 @@ if (!URL.canParse(process.env.WORDPRESS_API_URL)) {
   `)
 }
 
+// Keploy UI capture posts to its ingest endpoint (components/KeployUICapture.tsx):
+// production's api.keploy.io, or the endpoint this build was configured with.
+const uiCaptureIngestEndpoint =
+  process.env.NEXT_PUBLIC_KEPLOY_UI_CAPTURE_ENDPOINT || 'https://api.keploy.io/ui/v1/ingest'
+if (!URL.canParse(uiCaptureIngestEndpoint) || !/^https?:$/.test(new URL(uiCaptureIngestEndpoint).protocol)) {
+  throw new Error(
+    `NEXT_PUBLIC_KEPLOY_UI_CAPTURE_ENDPOINT must be an absolute http(s) URL; got "${uiCaptureIngestEndpoint}".`
+  )
+}
+const uiCaptureIngestOrigin = new URL(uiCaptureIngestEndpoint).origin
+
 const contentSecurityPolicy = `
-  connect-src 'self' https://telemetry.keploy.io https://www.google.com https://px.ads.linkedin.com https://px4.ads.linkedin.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://rp.liadm.com https://idx.liadm.com https://pagead2.googlesyndication.com https://*.clarity.ms https://news.google.com https://assets.apollo.io https://wp.keploy.io https://cdn.hashnode.com https://keploy-websites.vercel.app https://blog-website-phi-eight.vercel.app https://docbot.keploy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://*.youtube.com https://*.googlevideo.com https://googleads.g.doubleclick.net https://marketplace.visualstudio.com https://api.github.com https://pro.ip-api.com https://api.vector.co https://aplo-evnt.com https://ep1.adtrafficquality.google https://ppptg.com;
+  connect-src 'self' ${uiCaptureIngestOrigin} https://telemetry.keploy.io https://www.google.com https://px.ads.linkedin.com https://px4.ads.linkedin.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://rp.liadm.com https://idx.liadm.com https://pagead2.googlesyndication.com https://*.clarity.ms https://news.google.com https://assets.apollo.io https://wp.keploy.io https://cdn.hashnode.com https://keploy-websites.vercel.app https://blog-website-phi-eight.vercel.app https://docbot.keploy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://*.youtube.com https://*.googlevideo.com https://googleads.g.doubleclick.net https://marketplace.visualstudio.com https://api.github.com https://pro.ip-api.com https://api.vector.co https://aplo-evnt.com https://ep1.adtrafficquality.google https://ppptg.com;
   frame-src 'self' https://www.googletagmanager.com https://keploy-websites.vercel.app https://blog-website-phi-eight.vercel.app https://docbot.keploy.io https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://*.youtube.com https://news.google.com https://googleads.g.doubleclick.net https://*.google.com https://ppptg.com;
   img-src 'self' data: https://c.bing.com https://ppptg.com https://wp.keploy.io https://keploy.io https://secure.gravatar.com https://pbs.twimg.com https://*.wp.com https://*.wordpress.com *;
 `
