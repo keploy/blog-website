@@ -1358,15 +1358,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://keploy.io/blog/community/functional-testing-unveiling-types-and-real-world-applications</loc>
-    <lastmod>2025-06-19</lastmod>
-    <priority>0.70</priority>
-    <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2023/12/Functional-Testing-e1709239387537.webp</image:loc>
-      <image:title>Functional testing is a type of software testing that functionalities by testing its features against the specified requirements.</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://keploy.io/blog/community/functional-vs-non-functional-testing</loc>
     <lastmod>2026-10-29</lastmod>
     <priority>0.70</priority>
