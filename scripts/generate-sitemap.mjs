@@ -378,8 +378,10 @@ function buildSitemapXml(entries) {
   ].join("\n        ");
 
   const body = entries
-    .map(({ loc, lastmod, priority, image }) => {
-      let entry = `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    <lastmod>${escapeXml(lastmod)}</lastmod>\n    <priority>${priority}</priority>`;
+    // <priority>/<changefreq> are not emitted: Google ignores both. Only
+    // <lastmod> (each post's real WP `modified` date) is a used signal.
+    .map(({ loc, lastmod, image }) => {
+      let entry = `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    <lastmod>${escapeXml(lastmod)}</lastmod>`;
       if (image) {
         entry += `\n    <image:image>\n      <image:loc>${escapeXml(image.loc)}</image:loc>`;
         if (image.title) {

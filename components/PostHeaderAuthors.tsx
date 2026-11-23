@@ -186,12 +186,14 @@ const PostHeaderAuthors = ({
   blogreviewer,
   timetoRead,
   date,
+  modified = "",
   tags,
 }: {
   blogwriter: { name: string; ImageUrl: string; description: string }[];
   blogreviewer: { name: string; ImageUrl: string; description: string }[];
   timetoRead: number;
   date: string;
+  modified?: string;
   tags?: { edges: { node: { name: string } }[] };
 }) => {
   const sameAuthor =
@@ -209,6 +211,10 @@ const PostHeaderAuthors = ({
   writerDismissRef.current = writer.dismiss;
 
   const tagList = tags?.edges?.slice(0, 4) || [];
+  // Visible "Updated" date only when WP's modified date is a later calendar day
+  // than the publish date — matches the JSON-LD dateModified.
+  const showUpdated =
+    !!modified && !!date && modified.slice(0, 10) > date.slice(0, 10);
 
   return (
     <>
@@ -322,8 +328,13 @@ const PostHeaderAuthors = ({
           <div className="flex items-center gap-4 mt-0.5 flex-wrap">
             <span className="flex items-center gap-1.5 text-xs sm:text-sm text-gray-500">
               <CalendarIcon />
-              <span>{formatPostDate(date)}</span>
+              <time dateTime={date}>{formatPostDate(date)}</time>
             </span>
+            {showUpdated && (
+              <span className="flex items-center gap-1.5 text-xs sm:text-sm text-gray-500">
+                Updated <time dateTime={modified}>{formatPostDate(modified)}</time>
+              </span>
+            )}
             <span className="flex items-center gap-1.5 text-xs sm:text-sm text-gray-500">
               <ClockIcon />
               <span>{timetoRead} minutes</span>
