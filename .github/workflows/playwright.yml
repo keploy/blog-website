@@ -35,6 +35,9 @@ jobs:
       - name: Run unit tests
         run: npm run test:unit
 
+      - name: Validate content modal anchors against WordPress
+        run: npm run validate:modals
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
       
