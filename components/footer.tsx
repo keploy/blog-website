@@ -97,7 +97,8 @@ export default function Footer() {
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-500 transition-colors"
+                aria-label="Follow Keploy on GitHub"
+                className="text-gray-500 hover:text-gray-900 transition-colors"
                 href="https://github.com/keploy"
               >
                 <span className="sr-only">GitHub</span>
@@ -112,7 +113,8 @@ export default function Footer() {
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-500 transition-colors"
+                aria-label="Follow Keploy on LinkedIn"
+                className="text-gray-500 hover:text-gray-900 transition-colors"
                 href="https://linkedin.com/company/keploy"
               >
                 <span className="sr-only">LinkedIn</span>
@@ -127,7 +129,8 @@ export default function Footer() {
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-500 transition-colors"
+                aria-label="Follow Keploy on YouTube"
+                className="text-gray-500 hover:text-gray-900 transition-colors"
                 href="https://youtube.com/@keploy"
               >
                 <span className="sr-only">YouTube</span>
@@ -142,7 +145,8 @@ export default function Footer() {
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-500 transition-colors"
+                aria-label="Follow Keploy on Instagram"
+                className="text-gray-500 hover:text-gray-900 transition-colors"
                 href="https://www.instagram.com/keploy.io/"
               >
                 <span className="sr-only">Instagram</span>
