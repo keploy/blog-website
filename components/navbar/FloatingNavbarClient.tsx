@@ -227,6 +227,17 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           >
             <Link
               href="/technology"
+              onClick={(e) => {
+                if (typeof window !== 'undefined' && (window.innerWidth <= 1024 || window.matchMedia('(hover: none)').matches)) {
+                  if (!showTechDropdown) {
+                    e.preventDefault();
+                    setShowTechDropdown(true);
+                    setShowCommunityDropdown(false);
+                    setResourcesOpen(false);
+                    setHoveredNav('tech');
+                  }
+                }
+              }}
               onMouseEnter={() => { setHoveredNav('tech'); setLinkHoverTech(true); }}
               onMouseLeave={() => { setLinkHoverTech(false); setHoveredNav(null); }}
               className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showTechDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[13px] lg:text-[15px] font-medium py-2 px-0.5 lg:px-1 inline-flex items-center gap-0.5 lg:gap-1.5 align-middle whitespace-nowrap ${linkHoverTech ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
@@ -297,6 +308,17 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
           >
             <Link
               href="/community"
+              onClick={(e) => {
+                if (typeof window !== 'undefined' && (window.innerWidth <= 1024 || window.matchMedia('(hover: none)').matches)) {
+                  if (!showCommunityDropdown) {
+                    e.preventDefault();
+                    setShowCommunityDropdown(true);
+                    setShowTechDropdown(false);
+                    setResourcesOpen(false);
+                    setHoveredNav('community');
+                  }
+                }
+              }}
               onMouseEnter={() => { setHoveredNav('community'); setLinkHoverCommunity(true); }}
               onMouseLeave={() => { setLinkHoverCommunity(false); setHoveredNav(null); }}
               className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !showCommunityDropdown ? 'text-black/50' : 'text-foreground'} transition-colors text-[13px] lg:text-[15px] font-medium py-2 px-0.5 lg:px-1 inline-flex items-center gap-0.5 lg:gap-1.5 align-middle whitespace-nowrap ${linkHoverCommunity ? 'underline underline-offset-2 decoration-1 decoration-neutral-400' : ''}`}
@@ -366,6 +388,19 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             onMouseLeave={() => { setResourcesOpen(false); setHoveredNav(null); }}
           >
             <button
+              onClick={() => {
+                setResourcesOpen((prev) => {
+                  const next = !prev;
+                  if (next) {
+                    setShowTechDropdown(false);
+                    setShowCommunityDropdown(false);
+                    setHoveredNav('resources');
+                  } else {
+                    setHoveredNav(null);
+                  }
+                  return next;
+                });
+              }}
               onMouseEnter={() => { setHoveredNav('resources'); }}
               onMouseLeave={() => { if (!resourcesOpen) { setHoveredNav(null); } }}
               className={`${(showTechDropdown || showCommunityDropdown || resourcesOpen) && !resourcesOpen ? 'text-black/50' : 'text-foreground'} transition-colors text-[13px] lg:text-[15px] font-medium py-2 px-0.5 lg:px-1 inline-flex items-center gap-0.5 lg:gap-1.5 align-middle whitespace-nowrap`}
