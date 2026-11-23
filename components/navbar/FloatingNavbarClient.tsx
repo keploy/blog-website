@@ -110,6 +110,9 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
   const [techState, setTechState] = useState<any[]>(techLatest);
   const [communityState, setCommunityState] = useState<any[]>(communityLatest);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const mobileMenuTop = isScrolled
+    ? "calc(1.5rem + 2.25rem + 0.625rem + 1.25rem)"
+    : "calc(1.5rem + 3.5rem + 1rem + 0.75rem)";
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -516,16 +519,16 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
       {/* Mobile Menu Dropdown - Extends from top bar */}
       {mobileMenuOpen && typeof document !== 'undefined' && createPortal(
         <div
-          className={`fixed left-1/2 -translate-x-1/2 z-[1000] md:hidden transition-all duration-300 ease-in-out animate-in fade-in-0 slide-in-from-top-2 ${isScrolled ? 'w-[78%]' : 'w-[90%]'
-            }`}
+          data-testid="mobile-navbar-menu"
+          className="fixed left-3 right-3 mx-auto z-[1000] max-w-[40rem] md:hidden transition-all duration-300 ease-in-out animate-in fade-in-0 slide-in-from-top-2"
           style={{
-            top: isScrolled ? 'calc(1.5rem + 2.25rem + 0.625rem + 1.25rem)' : 'calc(1.5rem + 3.5rem + 1rem + 0.75rem)'
+            top: mobileMenuTop,
+            bottom: 'max(1rem, env(safe-area-inset-bottom))',
           }}
         >
           <div
-            className={`${glassDropdown} flex flex-col rounded-3xl overflow-hidden backdrop-blur-2xl border-gray-200/50`}
+            className={`${glassDropdown} flex h-full flex-col rounded-3xl overflow-hidden backdrop-blur-2xl border-gray-200/50`}
             onClick={(e) => e.stopPropagation()}
-            style={{ maxHeight: 'calc(100vh - 10rem)' }}
           >
             {/* Sheen + Vignette layers matching desktop */}
             <div className="pointer-events-none absolute inset-0 rounded-3xl">
@@ -534,7 +537,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
             </div>
 
             {/* Scrollable Content Area */}
-            <div className="relative z-10 flex flex-col flex-1 overflow-hidden min-h-0" style={{ maxHeight: 'calc(100vh - 18rem)' }}>
+            <div className="relative z-10 flex flex-col flex-1 overflow-hidden min-h-0">
               <div className="overflow-y-auto overscroll-contain px-5 py-5 flex-1 min-h-0">
                 <div className="space-y-2.5">
                   {/* Technology Collapsible */}
@@ -724,7 +727,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
         <div
           className="fixed inset-0 z-[999] bg-black/20 animate-in fade-in-0 duration-300 md:hidden"
           style={{
-            top: isScrolled ? 'calc(1.5rem + 2.25rem + 0.625rem + 1.25rem)' : 'calc(1.5rem + 3.5rem + 1rem + 0.75rem)',
+            top: mobileMenuTop,
             backdropFilter: 'none'
           }}
           onClick={() => setMobileMenuOpen(false)}
