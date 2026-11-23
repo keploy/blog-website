@@ -41,8 +41,8 @@ const ReviewCard = ({
   }, [proxiedAvatar]);
 
   return (
-    <a href={post} target="_blank" rel="noopener noreferrer" className="lg:mx-2" aria-label={`View tweet by ${name}`}>
-      <figure className="relative w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
+    <a href={post} target="_blank" rel="noopener noreferrer" className="flex lg:mx-2" aria-label={`View tweet by ${name}`}>
+      <figure className="relative h-full w-80 cursor-pointer overflow-hidden rounded-xl border  p-4  border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]">
         <div className="flex flex-row items-center gap-2">
           <Image
             className="rounded-full"
@@ -100,7 +100,7 @@ const TwitterTestimonials = () => {
       </h3>
       <div
         ref={marqueeRef}
-        className="relative flex mb-8 h-[700px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent marquee-mask"
+        className="relative flex mb-8 w-full flex-col items-center gap-4 overflow-hidden rounded-lg bg-transparent py-4 marquee-mask"
       >
 
         <Marquee paused={paused} pauseOnHover repeat={2} className="[--duration:17s]">
