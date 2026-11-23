@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import Head from "next/head";
 import Container from "../components/container";
 import Layout from "../components/layout";
@@ -10,17 +9,12 @@ import { getBreadcrumbListSchema, SITE_URL } from "../lib/structured-data";
 import { REVALIDATE_CONTENT } from "../lib/isr";
 
 export default function SearchPage({ allPosts }: { allPosts: { node: Post }[] }) {
-  const router = useRouter();
-  const query = (router.query.q as string) || "";
-
-  // Dynamic title based on query
-  const pageTitle = query 
-    ? `Search Results for "${query}" | Keploy Blog` 
-    : "Search | Keploy Blog";
+  // Never echo the visitor's query into <head> title or meta tags (defense in depth alongside strict mode; see components/KeployUICapture.tsx).
+  const pageTitle = "Search | Keploy Blog";
 
   // This page is noindex, so search engines don't process its structured data.
   // SearchResultsPage was dead markup here (review #8); the breadcrumb is kept
-  // only as a lightweight nav hint. `query` is still used for the visible UI.
+  // only as a lightweight nav hint.
   const structuredData = [
     getBreadcrumbListSchema([
       { name: "Home", url: SITE_URL },
@@ -32,7 +26,7 @@ export default function SearchPage({ allPosts }: { allPosts: { node: Post }[] })
     <Layout
       preview={false} // Required prop
       Title={pageTitle} // Required prop
-      Description={query ? `Search results for "${query}" on the Keploy Blog — find articles on testing, automation, and developer tools.` : `Search the Keploy Blog for articles on API testing, test automation, CI/CD, developer tools, and software quality engineering.`}
+      Description="Search the Keploy Blog for articles on API testing, test automation, CI/CD, developer tools, and software quality engineering."
       featuredImage={HOME_OG_IMAGE_URL || `${S3_ASSET_BASE}/images/blog-bunny.webp`} // Fallback to string if constant fails
       structuredData={structuredData}
     >

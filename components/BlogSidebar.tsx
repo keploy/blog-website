@@ -19,8 +19,9 @@ function SidebarShare() {
   const [copied, setCopied] = useState(false);
   const router = useRouter();
 
+  const cleanPath = router.asPath.split(/[?#]/)[0];
   const currentURL = encodeURIComponent(
-    `https://keploy.io${router.basePath + router.asPath}`
+    `https://keploy.io${router.basePath + cleanPath}`
   );
   const twitterShare = `https://twitter.com/share?url=${currentURL}`;
   const facebookShare = `https://www.facebook.com/sharer/sharer.php?u=${currentURL}`;
@@ -29,7 +30,7 @@ function SidebarShare() {
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(
-        `https://keploy.io/blog${router.asPath}`
+        `https://keploy.io/blog${cleanPath}`
       );
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
