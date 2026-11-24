@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -1002,6 +1002,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://keploy.io/blog/community/continuous-integration</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/11/What-Is-Continuous-Integration.webp</image:loc>
+      <image:title>Continuous Integration</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://keploy.io/blog/community/continuous-ui-testing-pipeline-browserstack-with-github-actions</loc>
     <lastmod>2026-07-17</lastmod>
     <priority>0.70</priority>
@@ -1136,11 +1145,10 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/deployment-strategies</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <priority>0.70</priority>
     <image:image>
-      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/06/Deployment-Strategies-Every-Developer-Should-Know.webp</image:loc>
-      <image:title>Deployment Strategies Every Developer Should Know</image:title>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/11/deployment-strategies-feature.webp</image:loc>
     </image:image>
   </url>
   <url>
