@@ -3,12 +3,12 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://keploy.io/blog</loc>
-    <lastmod>2026-11-24</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://keploy.io/blog/community</loc>
-    <lastmod>2026-11-24</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
@@ -297,7 +297,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ai-testing-tools</loc>
-    <lastmod>2026-09-10</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/08/best-ai-testing-tools-banner.webp</image:loc>
@@ -627,7 +627,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/best-ci-tools-to-streamline-your-testing-workflow</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/01/Best-CI-Tools-to-Streamline-Your-Testing-Workflow.webp</image:loc>
@@ -906,7 +906,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ci-cd-testing-guide</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/07/CICD-Testing-Complete-Guide-to-Continuous-Testing.webp</image:loc>
@@ -960,7 +960,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/complete-guide-to-ci-testing</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/12/A-Complete-Guide-to-CI-Testing-Benefits-Tools-Workflow.webp</image:loc>
@@ -1003,11 +1003,11 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/continuous-integration</loc>
-    <lastmod>2026-11-24</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/11/What-Is-Continuous-Integration.webp</image:loc>
-      <image:title>Continuous Integration</image:title>
+      <image:title>What is continuous integration: the CI loop of commit, trigger, build, test and feedback</image:title>
     </image:image>
   </url>
   <url>
@@ -1141,6 +1141,14 @@
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/09/Dependency-Mocking-and-Service-Virtualization-Make-Every-CI-Test-Deterministic.webp</image:loc>
       <image:title>Dependency Mocking and Service Virtualization Make Every CI Test Deterministic</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://keploy.io/blog/community/deployment-automation</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://wp.keploy.io/wp-content/uploads/2026/11/deployment-automation-feature.webp</image:loc>
     </image:image>
   </url>
   <url>
@@ -1529,7 +1537,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/how-cicd-is-changing-the-future-of-software-development</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/How-CICD-is-Changing-the-Future-of-Software-Development-e1741588628556.webp</image:loc>
@@ -2767,7 +2775,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/ship-faster-fix-less-a-guide-to-continuous-testing</loc>
-    <lastmod>2025-10-19</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2024/05/Ship-Faster-Fix-Less.webp</image:loc>
@@ -3454,7 +3462,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/top-ci-tools-for-efficient-software-development</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2025/03/Efficient-Software-Development-with-the-Best-CI-Tools.png</image:loc>
@@ -3930,7 +3938,7 @@
   </url>
   <url>
     <loc>https://keploy.io/blog/community/what-is-a-flaky-test</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.70</priority>
     <image:image>
       <image:loc>https://wp.keploy.io/wp-content/uploads/2026/10/What-is-Flaky-Test.webp</image:loc>
