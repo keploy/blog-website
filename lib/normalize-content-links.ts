@@ -47,8 +47,8 @@ function resolveRenamedPath(path: string): string {
 }
 
 export function normalizeKeployHref(href: string): string {
-  const hadEncodedAmp = href.includes("&amp;");
-  let candidate = (hadEncodedAmp ? href.replace(/&amp;/g, "&") : href).trim();
+  const hadEncodedAmp = /&(?:amp|#0*38);/.test(href);
+  let candidate = (hadEncodedAmp ? href.replace(/&(?:amp|#0*38);/g, "&") : href).trim();
 
   // href="keploy.io/slack" resolves relative to the post URL and 404s.
   const schemeless = /^(www\.)?keploy\.io(?=$|[/?#])/i.test(candidate);
