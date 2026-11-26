@@ -407,7 +407,7 @@ export const developersNav = {
   cardContent: [
     {
       title: "Docs",
-      href: "https://keploy.io/docs",
+      href: "https://keploy.io/docs/",
       image: DocsImg,
       minHeight: "min-h-[200px]",
     },
@@ -599,7 +599,7 @@ export const footerLinks = {
     { title: "CI/CD Integration", href: "/docs/ci-cd/github" },
   ],
   support: [
-    { title: "Documentation", href: "https://keploy.io/docs" },
+    { title: "Documentation", href: "https://keploy.io/docs/" },
     {
       title: "Help Center",
       href: "https://keploy.io/slack",

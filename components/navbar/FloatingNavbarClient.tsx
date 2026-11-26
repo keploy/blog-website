@@ -395,7 +395,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                       { href: "https://app.keploy.io", title: "Keploy API Testing Console", desc: "Run API tests in the cloud" },
                       { href: "https://keploy.io/unit-test-generator", title: "Keploy Unit Testing Extension", desc: "Generate unit tests with mocks" },
                       { href: "https://keploy.io/docs/concepts/what-is-keploy/#step-1--record-unique-network-interactions-as-test-case", title: "Keploy Test Recorder", desc: "Record and replay API calls" },
-                      { href: "https://keploy.io/docs", title: "Keploy Documentation", desc: "Guides, references, tutorials" },
+                      { href: "https://keploy.io/docs/", title: "Keploy Documentation", desc: "Guides, references, tutorials" },
                       { href: "https://www.writers.keploy.io/", title: "Writers Program", desc: "Be a part of the blog writing for Keploy" },
                     ].map((item, idx) => (
                       <div key={idx} className="rounded-xl p-[1.5px] hover:p-[2px] bg-gradient-to-r from-[#FF7A0C] to-[#FFA74F]/[0.36] transition-all">
@@ -628,7 +628,7 @@ export default function FloatingNavbarClient({ techLatest = [], communityLatest 
                           <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
                         </Link>
                         <Link
-                          href="https://keploy.io/docs"
+                          href="https://keploy.io/docs/"
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={() => setMobileMenuOpen(false)}
