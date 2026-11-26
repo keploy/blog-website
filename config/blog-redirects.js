@@ -72,6 +72,16 @@ const blogRedirects = [
     destination: '/technology/using-tc-bpf-program-to-redirect-dns-traffic-in-docker-containers',
     permanent: true,
   },
+  {
+    source: '/community/decoding-network-traffic-telemetry-with-network-activity',
+    destination: '/technology/decoding-network-traffic-telemetry-with-network-activity',
+    permanent: true,
+  },
+  {
+    source: '/community/efficient-dom-manipulation-with-the-virtual-dom-and-refs',
+    destination: '/technology/efficient-dom-manipulation-with-the-virtual-dom-and-refs',
+    permanent: true,
+  },
 
   // ──────────────────────────────────────────────────────────
   // /technology/:slug → /community/:slug
@@ -141,6 +151,11 @@ const blogRedirects = [
   {
     source: '/technology/writing-test-cases-for-cron-jobs-testing',
     destination: '/community/writing-test-cases-for-cron-jobs-testing',
+    permanent: true,
+  },
+  {
+    source: '/technology/mastering-test-coverage-quality-over-quantity-in-software-testing',
+    destination: '/community/mastering-test-coverage-quality-over-quantity-in-software-testing',
     permanent: true,
   },
 
