@@ -100,3 +100,10 @@ test("normalizeContentLinks rewrites only the href of anchor tags", () => {
       `<img src="${B}/community/foo/"><a href="https://github.com/keploy/">c</a></p>`,
   );
 });
+
+test("keeps wordpress-encoded ampersands as query separators", () => {
+  assert.equal(
+    normalizeKeployHref(`${B}/community/what-is-unit-testing/?utm_source=chatgpt.com&#038;ref=1`),
+    `${B}/community/what-is-unit-testing?ref=1`,
+  );
+});
