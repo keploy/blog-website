@@ -202,6 +202,50 @@ const blogRedirects = [
     destination: '/community/functional-testing-an-in-depth-overview',
     permanent: true,
   },
+
+  // ──────────────────────────────────────────────────────────
+  // Dead slugs linked from post content (no post at that URL)
+  // ──────────────────────────────────────────────────────────
+  {
+    source: '/community/blue-green-deployment',
+    destination: '/community/deployment-strategies',
+    permanent: true,
+  },
+  {
+    source: '/community/canary-deployment',
+    destination: '/community/deployment-strategies',
+    permanent: true,
+  },
+  {
+    source: '/community/rest-vs-graphql-whats-the-differenc',
+    destination: '/community/rest-vs-graphql-whats-the-difference',
+    permanent: true,
+  },
+  {
+    source: '/community/automated-unit-testing',
+    destination: '/community/what-is-unit-testing',
+    permanent: true,
+  },
+  {
+    source: '/community/importance-of-api-testing',
+    destination: '/community/what-is-api-testing',
+    permanent: true,
+  },
+  {
+    source: '/community/test-automation',
+    destination: '/community/what-is-test-automation',
+    permanent: true,
+  },
+  {
+    source: '/community/switching-from-jest-to-vitest',
+    destination: '/community/migrate-from-jest-to-vitest',
+    permanent: true,
+  },
+  {
+    source: '/community/running-react-code-in-visual-studio-code-and-online-2',
+    destination: '/community/running-react-code-in-visual-studio-code-and-online',
+    permanent: true,
+  },
 ]
 
 module.exports = { blogRedirects }
