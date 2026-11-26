@@ -246,6 +246,16 @@ const blogRedirects = [
     destination: '/community/running-react-code-in-visual-studio-code-and-online',
     permanent: true,
   },
+  {
+    source: '/technology/what-is-api-testing',
+    destination: '/community/what-is-api-testing',
+    permanent: true,
+  },
+  {
+    source: '/technology/regression-testing-tools',
+    destination: '/community/regression-testing-tools',
+    permanent: true,
+  },
 ]
 
 module.exports = { blogRedirects }
