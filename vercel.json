@@ -12,12 +12,12 @@
     },
     {
       "source": "/blog/technology/everything-you-need-to-know-about-api-testing",
-      "destination": "/blog/technology/what-is-api-testing",
+      "destination": "/blog/community/what-is-api-testing",
       "permanent": true
     },
     {
       "source": "/blog/technology/regression-testing-tools-rankings-2025",
-      "destination": "/blog/technology/regression-testing-tools",
+      "destination": "/blog/community/regression-testing-tools",
       "permanent": true
     },
     {
