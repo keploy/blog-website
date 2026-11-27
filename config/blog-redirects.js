@@ -207,11 +207,6 @@ const blogRedirects = [
   // Dead slugs linked from post content (no post at that URL)
   // ──────────────────────────────────────────────────────────
   {
-    source: '/community/blue-green-deployment',
-    destination: '/community/deployment-strategies',
-    permanent: true,
-  },
-  {
     source: '/community/canary-deployment',
     destination: '/community/deployment-strategies',
     permanent: true,
