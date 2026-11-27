@@ -12,12 +12,12 @@ export default function Footer() {
     {
       title: "Solutions",
       links: [
-        { text: "API Testing", url: "https://keploy.io/api-testing/" },
+        { text: "API Testing", url: "https://keploy.io/api-testing" },
         {
           text: "Integration Testing",
-          url: "https://keploy.io/integration-testing/",
+          url: "https://keploy.io/integration-testing",
         },
-        { text: "Unit Testing", url: "https://keploy.io/unit-test-generator/" },
+        { text: "Unit Testing", url: "https://keploy.io/unit-test-generator" },
         {
           text: "VS Code Extension",
           url: "https://marketplace.visualstudio.com/items?itemName=Keploy.keployio",
@@ -43,15 +43,15 @@ export default function Footer() {
       title: "Resources",
       links: [
         { text: "Integrations", url: "https://keploy.io/docs/ci-cd/github/" },
-        { text: "Tech Blog", url: "https://keploy.io/blog/technology/" },
-        { text: "Community Blog", url: "https://keploy.io/blog/community/" },
+        { text: "Tech Blog", url: "https://keploy.io/blog/technology" },
+        { text: "Community Blog", url: "https://keploy.io/blog/community" },
       ],
     },
     {
       title: "Company",
       links: [
-        { text: "Career", url: "https://keploy.io/about/" },
-        { text: "Privacy", url: "https://keploy.io/privacy-policy/" },
+        { text: "Career", url: "https://keploy.io/about" },
+        { text: "Privacy", url: "https://keploy.io/legal/privacy-policy" },
         {
           text: "Cookie Policy",
           url: "https://keploy.io/docs/privacy-policy/",

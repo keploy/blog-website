@@ -11,6 +11,7 @@ import KeywordTooltipLayer from "./KeywordTooltipLayer";
 import { getTooltipsForSlug } from "../config/keyword-tooltips";
 import type { ContentModalConfig } from "../config/content-modals";
 import { injectInlineMarkers } from "../lib/content-modals";
+import { normalizeContentLinks } from "../lib/normalize-content-links";
 
 /* ── Heavy components: lazy-loaded to reduce initial JS bundle ── */
 // SSR stays on, so modal copy is still in the HTML; the chunk only loads on posts that have modals.
@@ -122,6 +123,9 @@ export default function PostBody({
       /<(h[1-6])\b([^>]*?)\s*style\s*=\s*(['"])[^'"]*\3([^>]*?)>/gi,
       '<$1$2$4>'
     );
+
+    // Point keploy.io links at their final URL so posts don't link to 404s or redirects.
+    initialReplacedContent = normalizeContentLinks(initialReplacedContent);
 
     // For each external link: inject target="_blank", harden rel with noopener/noreferrer,
     // and stamp data-external-link so the mobile click handler can identify injected links.
